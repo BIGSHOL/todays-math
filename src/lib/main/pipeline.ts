@@ -109,7 +109,7 @@ export function remainingCount(rows: ClassRow[]): number {
 }
 
 export type PrimaryAction = {
-  label: "진도 입력" | "검수" | "인쇄" | "다시 보기";
+  label: "진도 입력" | "출제" | "검수" | "인쇄" | "다시 보기";
   href?: string;
 };
 
@@ -122,6 +122,9 @@ export function primaryAction(row: ClassRow): PrimaryAction {
   }
   if (row.stage === "done" && row.testId) {
     return { label: "다시 보기", href: `/tests/${row.testId}` };
+  }
+  if (row.stage === "generate") {
+    return { label: "출제", href: `/tests/new?classId=${row.classId}` };
   }
   return { label: "진도 입력" };
 }

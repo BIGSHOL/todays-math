@@ -63,7 +63,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           setErrors({ password: CREDENTIALS_ERROR });
           return;
         }
-        router.push("/");
+        router.push("/onboarding");
         router.refresh();
       } finally {
         setPending(false);

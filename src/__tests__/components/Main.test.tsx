@@ -83,7 +83,7 @@ describe("[T4.3 S-03] 메인 — MSW 기본 데이터 (스택)", () => {
     expect(screen.getByText("이번 주")).toBeInTheDocument();
   });
 
-  it("검수/인쇄 주 버튼은 해당 테스트 링크이고, 진도 입력은 링크가 아니다", async () => {
+  it("검수/인쇄/출제 주 버튼은 해당 경로 링크다", async () => {
     await renderMain();
 
     const review = screen.getByRole("link", { name: "검수" });
@@ -92,12 +92,11 @@ describe("[T4.3 S-03] 메인 — MSW 기본 데이터 (스택)", () => {
     const print = screen.getByRole("link", { name: "인쇄" });
     expect(print).toHaveAttribute("href", `/tests/${TEST_CONFIRMED_ID}/print`);
 
-    expect(
-      screen.getByRole("button", { name: "진도 입력" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("link", { name: "진도 입력" }),
-    ).not.toBeInTheDocument();
+    const generate = screen.getByRole("link", { name: "출제" });
+    expect(generate).toHaveAttribute(
+      "href",
+      `/tests/new?classId=${CLASS_STARVED_ID}`,
+    );
   });
 
   it("카드·완료 줄이 44 | 1fr | 232 | 112 그리드이고 hot 카드는 흰 배경이다", async () => {
@@ -177,10 +176,10 @@ describe("[T4.3 S-03] 메인 — 수동 전환·진도 1클릭", () => {
     });
   });
 
-  it("카드의 진도 입력을 누르면 패널 반 선택이 그 반으로 바뀐다", async () => {
+  it("카드의 문제부족반을 누르면 패널 반 선택이 그 반으로 바뀐다", async () => {
     const { user } = await renderMain();
 
-    await user.click(screen.getByRole("button", { name: "진도 입력" }));
+    await user.click(screen.getByRole("article", { name: /중2 문제부족반/ }));
 
     const select = screen.getByLabelText("반 선택");
     expect(select).toHaveValue(CLASS_STARVED_ID);

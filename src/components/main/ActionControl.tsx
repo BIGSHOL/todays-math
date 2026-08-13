@@ -13,6 +13,7 @@ type Props = {
 export function ActionControl({ row, onProgress }: Props) {
   const action = primaryAction(row);
   const filled =
+    action.label === "출제" ||
     action.label === "검수" ||
     action.label === "인쇄" ||
     action.label === "다시 보기";

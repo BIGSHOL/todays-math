@@ -159,7 +159,7 @@ describe("[T1.2] SignupForm", () => {
     );
   });
 
-  it("가입 성공 후 credentials 로그인하고 / 로 이동한다", async () => {
+  it("가입 성공 후 credentials 로그인하고 /onboarding 으로 이동한다", async () => {
     const user = userEvent.setup();
     signIn.mockResolvedValue({
       ok: true,
@@ -183,7 +183,7 @@ describe("[T1.2] SignupForm", () => {
           redirect: false,
         }),
       );
-      expect(push).toHaveBeenCalledWith("/");
+      expect(push).toHaveBeenCalledWith("/onboarding");
     });
   });
 
