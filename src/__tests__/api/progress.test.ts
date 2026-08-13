@@ -1,0 +1,160 @@
+/**
+ * 🔴 RED — 대응 구현 태스크: Phase 2, T2.2 (진도 기록/조회 API RED→GREEN)
+ *
+ * `src/app/api/progress/**`가 아직 존재하지 않으므로 아래 import들은 런타임에 모듈 해석에
+ * 실패해 이 파일 전체가 FAILED로 보고된다 — RED의 정상 상태다.
+ * (`@ts-expect-error` 사용 이유는 src/__tests__/api/auth.test.ts 상단 주석 참조.)
+ *
+ * 대응 계약: src/contracts/class.contract.ts (§진도)
+ * ⚠️ PROGRESS는 이력 누적(append-only) 엔티티다 — 수정/삭제 엔드포인트가 없다(계약 주석 참조).
+ */
+import { NextRequest } from "next/server";
+import { describe, expect, it } from "vitest";
+
+// ⚠️ named import를 문장별로 분리한 이유는 src/__tests__/api/class.test.ts 상단 주석 참조
+//    (Prettier 줄바꿈으로 인한 @ts-expect-error 위치 어긋남 방지).
+// @ts-expect-error TODO(T2.2) — src/app/api/progress/route.ts 구현 전까지 모듈이 없다.
+import { GET as getProgress } from "@/app/api/progress/route";
+// @ts-expect-error TODO(T2.2) — src/app/api/progress/route.ts 구현 전까지 모듈이 없다.
+import { POST as recordProgress } from "@/app/api/progress/route";
+// @ts-expect-error TODO(T2.2) — src/app/api/progress/advance/route.ts 구현 전까지 모듈이 없다.
+import { POST as advanceProgress } from "@/app/api/progress/advance/route";
+
+import { progressResponseSchema } from "@/contracts/class.contract";
+import { errorResponseSchema } from "@/contracts/common.contract";
+import {
+  CLASS_A_ID,
+  CLASS_OTHER_ID,
+  MOCK_CURRENT_PROGRESS_UNIT,
+  MOCK_UNITS,
+  STUDENT_IDS,
+} from "@/mocks/data";
+
+function jsonRequest(url: string, method: string, body?: unknown) {
+  return new NextRequest(url, {
+    method,
+    headers:
+      body === undefined ? undefined : { "content-type": "application/json" },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+}
+
+const STUDENT_3_ID = STUDENT_IDS[2]!;
+
+describe("[T2.2] POST /api/progress — 이력 누적(append-only)", () => {
+  it("반 전체 진도를 기록하면 201과 함께 새 진도 행을 반환한다", async () => {
+    const res = await recordProgress(
+      jsonRequest("http://localhost/api/progress", "POST", {
+        classId: CLASS_A_ID,
+        unitId: MOCK_UNITS[4]!.id,
+      }),
+    );
+    expect(res.status).toBe(201);
+    const body = progressResponseSchema.parse(await res.json());
+    expect(body.data.studentId).toBeNull();
+  });
+
+  it("studentId를 지정하면 해당 학생의 개별 진도로 기록된다", async () => {
+    const res = await recordProgress(
+      jsonRequest("http://localhost/api/progress", "POST", {
+        classId: CLASS_A_ID,
+        studentId: STUDENT_3_ID,
+        unitId: MOCK_UNITS[6]!.id,
+      }),
+    );
+    expect(res.status).toBe(201);
+    const body = progressResponseSchema.parse(await res.json());
+    expect(body.data.studentId).toBe(STUDENT_3_ID);
+  });
+
+  it("필수 필드(classId/unitId) 누락 시 VALIDATION_ERROR(400)를 반환한다", async () => {
+    const res = await recordProgress(
+      jsonRequest("http://localhost/api/progress", "POST", {
+        classId: CLASS_A_ID,
+      }),
+    );
+    expect(res.status).toBe(400);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.code).toBe("VALIDATION_ERROR");
+  });
+
+  it("타 사용자 소유 반에는 진도를 기록할 수 없다(FORBIDDEN 403)", async () => {
+    const res = await recordProgress(
+      jsonRequest("http://localhost/api/progress", "POST", {
+        classId: CLASS_OTHER_ID,
+        unitId: MOCK_UNITS[0]!.id,
+      }),
+    );
+    expect(res.status).toBe(403);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.code).toBe("FORBIDDEN");
+  });
+
+  it("같은 반에 여러 번 기록해도 이전 진도 기록은 삭제되지 않고 이력으로 남는다", async () => {
+    // 이 검증은 GREEN 단계에서 테스트 DB의 진도 이력 테이블 row 수 증가로 확인한다
+    // (append-only 원칙 — PROGRESS는 PATCH/DELETE 엔드포인트를 갖지 않는다).
+    const before = await recordProgress(
+      jsonRequest("http://localhost/api/progress", "POST", {
+        classId: CLASS_A_ID,
+        unitId: MOCK_UNITS[0]!.id,
+      }),
+    );
+    const after = await recordProgress(
+      jsonRequest("http://localhost/api/progress", "POST", {
+        classId: CLASS_A_ID,
+        unitId: MOCK_UNITS[1]!.id,
+      }),
+    );
+    const beforeBody = progressResponseSchema.parse(await before.json());
+    const afterBody = progressResponseSchema.parse(await after.json());
+    expect(beforeBody.data.id).not.toBe(afterBody.data.id);
+  });
+});
+
+describe("[T2.2] GET /api/progress — 현재 진도 조회(개별 우선 적용)", () => {
+  it("classId만 지정하면 반 전체의 최신 진도를 반환한다", async () => {
+    const res = await getProgress(
+      jsonRequest(`http://localhost/api/progress?classId=${CLASS_A_ID}`, "GET"),
+    );
+    expect(res.status).toBe(200);
+    const body = progressResponseSchema.parse(await res.json());
+    expect(body.data.studentId).toBeNull();
+  });
+
+  it("useIndividualProgress=true인 학생은 반 진도가 아닌 개별 진도가 우선 적용된다", async () => {
+    const res = await getProgress(
+      jsonRequest(
+        `http://localhost/api/progress?classId=${CLASS_A_ID}&studentId=${STUDENT_3_ID}`,
+        "GET",
+      ),
+    );
+    expect(res.status).toBe(200);
+    const body = progressResponseSchema.parse(await res.json());
+    expect(body.data.studentId).toBe(STUDENT_3_ID);
+  });
+
+  it("classId 없이 조회하면 VALIDATION_ERROR(400)를 반환한다", async () => {
+    const res = await getProgress(
+      jsonRequest("http://localhost/api/progress", "GET"),
+    );
+    expect(res.status).toBe(400);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.code).toBe("VALIDATION_ERROR");
+  });
+});
+
+describe("[T2.2] POST /api/progress/advance — 다음 소단원 1클릭 진행(D-19, order_index 기준)", () => {
+  it("현재 진도 소단원의 orderIndex+1에 해당하는 다음 소단원으로 진행한다", async () => {
+    const res = await advanceProgress(
+      jsonRequest("http://localhost/api/progress/advance", "POST", {
+        classId: CLASS_A_ID,
+      }),
+    );
+    expect(res.status).toBe(201);
+    const body = progressResponseSchema.parse(await res.json());
+    const nextUnit = MOCK_UNITS.find(
+      (u) => u.orderIndex === MOCK_CURRENT_PROGRESS_UNIT.orderIndex + 1,
+    );
+    expect(body.data.unitId).toBe(nextUnit?.id);
+  });
+});
