@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>오늘의수학 — T5.1 지면 베이스 시안 (Mathgen 6종)</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Serif+KR:wght@400;600;700;900&display=swap">
+<style>
+  :root {
+    --ink: #0E0E10;
+    --ink90: #1F1F23;
+    --ink70: #3A3A40;
+    --ink50: #6B6B72;
+    --ink30: #A0A0A8;
+    --ink15: #D4D4D8;
+    --ink08: #E8E8EB;
+    --ink04: #F4F4F6;
+    --paper: #FFFFFF;
+    --paper-warm: #FCFCF8;
+    --navy: #1B2A4E;
+    --red: #8B1A1A;
+    --gold: #A57F00;
+    --slate: #475569;
+    --serif: "Nanum Myeongjo", "Noto Serif KR", "Batang", serif;
+    --sans: Pretendard, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    --mono: "JetBrains Mono", "D2Coding", ui-monospace, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--sans);
+    background: #c9c9c7;
+    color: #161616;
+    padding: 36px 20px 120px;
+  }
+  .doc { max-width: 1680px; margin: 0 auto; }
+  .doc-head { max-width: 920px; margin-bottom: 28px; }
+  .doc-head .kicker {
+    font-size: 11px; font-weight: 800; letter-spacing: 2px;
+    color: #6a6a68; margin-bottom: 8px;
+  }
+  .doc-head h1 { font-size: 22px; font-weight: 900; letter-spacing: -0.4px; margin-bottom: 10px; }
+  .doc-head p { font-size: 13.5px; line-height: 1.75; color: #333; }
+  .doc-head .note {
+    margin-top: 12px; padding: 10px 14px; background: #ececea;
+    border-left: 4px solid #161616; font-size: 12.5px; line-height: 1.7;
+  }
+
+  .compare {
+    width: 100%; border-collapse: collapse; background: #fff;
+    font-size: 12px; margin: 22px 0 36px; box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  }
+  .compare th {
+    text-align: left; font-size: 10px; font-weight: 800; letter-spacing: 1.2px;
+    color: #6a6a68; padding: 10px 12px; border-bottom: 2.5px solid #161616;
+    background: #ececea;
+  }
+  .compare td { padding: 11px 12px; border-bottom: 1px solid #c2c2c0; vertical-align: top; }
+  .compare tr:hover td { background: #f7f7f5; }
+  .compare .name { font-weight: 900; font-size: 13.5px; }
+  .compare .id { font-size: 10.5px; color: #6a6a68; font-weight: 700; letter-spacing: 0.6px; }
+  .fit { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: 0.6px;
+         padding: 2px 6px; background: #161616; color: #ececea; margin-top: 4px; }
+
+  .gallery { display: flex; flex-wrap: wrap; gap: 28px 22px; }
+  .card { width: 420px; }
+  .card h2 { font-size: 14px; font-weight: 900; margin-bottom: 4px; }
+  .card .desc { font-size: 11.5px; color: #444; line-height: 1.55; margin-bottom: 10px; min-height: 52px; }
+  .stage {
+    width: 420px; height: 594px; overflow: hidden;
+    box-shadow: 0 14px 40px rgba(0,0,0,.28);
+    background: #fff;
+  }
+  .a4 {
+    width: 794px; height: 1123px;
+    transform: scale(0.529); transform-origin: top left;
+    background: #fff; color: var(--ink); overflow: hidden;
+    display: flex; flex-direction: column; position: relative;
+  }
+  .frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle;
+          font-size: 0.92em; line-height: 1.05; margin: 0 1px; }
+  .frac span { padding: 0 3px; }
+  .frac .n { border-bottom: 1px solid currentColor; }
+  .eq { font-family: "Cambria Math", "Times New Roman", serif; }
+
+  /* ── 평가원 ── */
+  .pyeongga { font-family: var(--serif); padding: 0; font-size: 13px; line-height: 1.6; }
+  .pyeongga .hdr { padding: 42px 56px 18px; flex-shrink: 0; }
+  .pyeongga .box { display: flex; align-items: stretch; border: 2.5px solid var(--ink); height: 56px; margin-bottom: 22px; }
+  .pyeongga .box .title { flex: 1; display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 800; letter-spacing: 0.18em; border-right: 2.5px solid var(--ink); }
+  .pyeongga .box .period { width: 124px; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; letter-spacing: 0.08em; }
+  .pyeongga .meta { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--ink70); }
+  .pyeongga .hol { display: inline-grid; place-items: center; width: 24px; height: 16;
+    border: 1.5px solid var(--ink); font-size: 10; font-weight: 700; margin-right: 8px; }
+  .pyeongga .body { padding: 0 56px 30px; flex: 1; font-size: 13.2px; line-height: 1.75; }
+  .pyeongga .q { display: flex; align-items: baseline; margin-bottom: 6px; }
+  .pyeongga .qn { font-weight: 800; font-size: 14px; margin-right: 6px; }
+  .pyeongga .pts { font-size: 11px; color: var(--ink70); margin-left: auto; }
+  .pyeongga .item { padding-bottom: 18px; }
+  .pyeongga .ftr { margin: 0 56px 12px; padding-top: 6px; border-top: 1px solid var(--ink);
+    display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; }
+
+  /* ── 정통 ── */
+  .jeongtong { font-family: var(--serif); padding: 40px 50px 24px; font-size: 13px; }
+  .jt-table { width: 100%; border-collapse: collapse; border: 2.5px solid var(--ink); font-size: 12px; }
+  .jt-table td { border: 1px solid var(--ink); padding: 6px 10px; text-align: center; }
+  .jt-table .lab { background: var(--ink04); font-weight: 700; }
+  .jt-title { font-size: 22px; font-weight: 800; letter-spacing: 0.12em; padding: 8px 12px !important; }
+  .jt-row { display: flex; margin-top: 8px; gap: 8px; }
+  .jt-row table { border-collapse: collapse; border: 2px solid var(--ink); font-size: 12px; }
+  .jt-row td { border: 1px solid var(--ink); padding: 6px 10px; text-align: center; }
+  .jt-notice { margin-top: 10px; padding: 8px 12px; border: 1px solid var(--ink70);
+    font-size: 10.5px; line-height: 1.55; color: var(--ink70); }
+  .jeongtong .body { margin-top: 18px; flex: 1; font-size: 13.5px; line-height: 1.8; }
+  .jeongtong .q { display: flex; align-items: baseline; margin-bottom: 4px; }
+  .jeongtong .qn { font-weight: 800; font-size: 14px; margin-right: 6px; }
+  .jeongtong .pts { font-size: 11px; color: var(--ink70); margin-left: auto; }
+  .jeongtong .item { padding-bottom: 16px; }
+  .jeongtong .ftr { text-align: center; font-size: 11px; font-weight: 600; }
+
+  /* ── 모던 ── */
+  .modern { font-family: var(--serif); padding: 40px 56px 24px; }
+  .md-head { display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 12px; border-bottom: 3px solid var(--navy); }
+  .md-k { font-size: 11px; font-weight: 700; color: var(--navy); letter-spacing: 0.32em;
+    font-family: var(--sans); margin-bottom: 4px; }
+  .md-h { font-size: 26px; font-weight: 800; font-family: var(--sans); letter-spacing: -0.02em; }
+  .md-h span { font-weight: 500; color: var(--ink50); }
+  .md-sub { margin-top: 4px; font-size: 12px; color: var(--ink70); font-family: var(--sans); }
+  .md-badge { padding: 8px 14px; border: 2px solid var(--navy); color: var(--navy);
+    font-family: var(--sans); font-weight: 800; font-size: 14px; letter-spacing: 0.12em; }
+  .md-grid { display: grid; grid-template-columns: repeat(5, 1fr) 1.2fr; margin-top: 18px; border: 1.5px solid var(--ink30); }
+  .md-cell { padding: 10px 14px; border-right: 1px solid var(--ink15); font-family: var(--sans); }
+  .md-cell:last-child { border-right: none; background: var(--ink04); }
+  .md-cell .l { font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; color: var(--navy); margin-bottom: 3px; }
+  .md-cell .v { font-size: 13px; font-weight: 600; }
+  .md-cell .blank { color: var(--ink15); }
+  .md-note { margin-top: 14px; padding: 8px 0; font-size: 10.5px; color: var(--ink70); font-family: var(--sans); }
+  .md-note b { color: var(--navy); }
+  .md-rule { height: 1px; background: var(--ink08); margin: 8px 0 20px; }
+  .modern .body { flex: 1; font-size: 13.5px; line-height: 1.85; }
+  .modern .q { display: flex; align-items: baseline; gap: 6px; margin-bottom: 6px; }
+  .modern .qn { font-size: 22px; font-weight: 800; color: var(--navy); font-family: var(--sans);
+    letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .modern .ptpill { font-family: var(--sans); font-size: 11px; font-weight: 700; color: var(--navy);
+    padding: 2px 8px; border: 1px solid var(--navy); border-radius: 999px; margin-left: auto; }
+  .modern .stem { padding-left: 28px; }
+  .modern .item { padding-bottom: 16px; }
+  .modern .ftr { display: flex; justify-content: space-between; font-family: var(--sans);
+    font-size: 10px; color: var(--ink50); letter-spacing: 0.04em; }
+  .modern .ftr b { color: var(--navy); }
+
+  /* ── 워크북 ── */
+  .workbook { font-family: var(--serif); padding: 32px 44px 20px; }
+  .wb-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .wb-brand { display: flex; align-items: center; gap: 12px; }
+  .wb-mark { width: 36px; height: 36px; background: var(--red); color: #fff;
+    display: grid; place-items: center; font-family: var(--sans); font-weight: 900; font-size: 18px; letter-spacing: -0.04em; }
+  .wb-name { font-family: var(--sans); font-weight: 800; font-size: 17px; letter-spacing: -0.01em; }
+  .wb-sub { font-family: var(--sans); font-size: 10.5px; color: var(--ink50); letter-spacing: 0.04em; }
+  .wb-meta { font-family: var(--sans); font-size: 11px; color: var(--ink70); text-align: right; }
+  .wb-meta .dim { color: var(--ink50); }
+  .wb-banner { display: flex; align-items: center; background: var(--ink); color: #fff; padding: 10px 16px; }
+  .wb-banner .t { flex: 1; font-family: var(--sans); font-weight: 800; font-size: 14px; }
+  .wb-banner .blanks { font-family: var(--sans); font-size: 11px; display: flex; gap: 14px; }
+  .wb-banner .dim { color: var(--ink30); }
+  .workbook .body { margin-top: 16px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+  .wb-card { flex: 1; display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px;
+    border: 1px solid var(--ink15); padding: 12px 14px; min-height: 0; }
+  .wb-qn { display: inline-grid; place-items: center; width: 22px; height: 22px;
+    background: var(--red); color: #fff; font-weight: 700; font-size: 12px; margin-right: 6px; }
+  .wb-topic { font-family: var(--sans); font-size: 10px; font-weight: 700; color: var(--ink50); letter-spacing: 0.1em; }
+  .wb-scratch { border-left: 1px dashed var(--ink30); padding: 0 6px 0 12px; position: relative;
+    background-image: linear-gradient(transparent 0px, transparent 23px, var(--ink08) 24px);
+    background-size: 100% 24px; }
+  .wb-scratch .lab { position: absolute; top: -2px; left: 12px; background: #fff; padding: 0 6px;
+    font-family: var(--sans); font-size: 9.5px; font-weight: 700; color: var(--red); letter-spacing: 0.1em; }
+  .workbook .ftr { margin-top: 10px; display: flex; justify-content: space-between;
+    font-family: var(--sans); font-size: 9.5px; color: var(--ink50); }
+  .workbook .ftr b { font-weight: 700; color: var(--ink70); }
+
+  /* ── 자습 ── */
+  .jaseup { font-family: var(--serif); padding: 36px 50px 20px; background: var(--paper-warm); }
+  .js-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .js-k { font-family: var(--sans); font-size: 10px; font-weight: 700; color: var(--gold); letter-spacing: 0.3em; margin-bottom: 4px; }
+  .js-h { font-family: var(--serif); font-size: 24px; font-weight: 800; letter-spacing: -0.01em; }
+  .js-goal { font-family: var(--sans); font-size: 11px; color: var(--ink70); margin-top: 4px; }
+  .js-date .l { font-family: var(--sans); font-size: 9.5px; color: var(--ink50); margin-bottom: 2px; }
+  .js-date .v { font-family: var(--serif); font-size: 14px; font-weight: 700; }
+  .js-concept { background: #fff; border: 1px solid var(--gold); border-left: 5px solid var(--gold);
+    padding: 12px 16px; margin-bottom: 18px; }
+  .js-concept .l { font-family: var(--sans); font-size: 10.5px; font-weight: 800; color: var(--gold); letter-spacing: 0.16em; margin-bottom: 6px; }
+  .js-concept .c { font-size: 12px; line-height: 1.7; color: var(--ink90); }
+  .jaseup .body { flex: 1; display: flex; flex-direction: column; }
+  .js-item { flex: 1; display: grid; grid-template-columns: 1.15fr 1fr; gap: 14px;
+    padding-bottom: 14px; border-bottom: 1px dashed var(--ink15); min-height: 0; }
+  .js-qn { font-family: var(--serif); font-weight: 800; font-size: 18px; color: var(--gold); margin-right: 8px; }
+  .js-ans { margin-top: 8px; padding: 6px 10px; background: var(--paper-warm); border: 1px solid var(--ink15);
+    display: flex; align-items: center; gap: 8px; font-family: var(--sans); font-size: 11px; }
+  .js-ans b { color: var(--gold); }
+  .js-line { flex: 1; border-bottom: 1px solid var(--ink30); height: 16px; }
+  .js-chk { width: 16px; height: 16px; border: 1.5px solid var(--ink30); display: inline-block; }
+  .js-grid { background-image: linear-gradient(var(--ink08) 1px, transparent 1px),
+              linear-gradient(90deg, var(--ink08) 1px, transparent 1px);
+    background-size: 16px 16px; background-color: #fff; border: 1px solid var(--ink15); position: relative; }
+  .js-grid .lab { position: absolute; top: 6px; right: 8px; font-family: var(--sans); font-size: 9px;
+    color: var(--ink30); letter-spacing: 0.12em; }
+  .jaseup .ftr { margin-top: 10px; display: flex; align-items: center; gap: 12px;
+    font-family: var(--sans); font-size: 10px; color: var(--ink50); }
+  .jaseup .ftr b { font-weight: 700; color: var(--gold); letter-spacing: 0.12em; }
+  .jaseup .dash { flex: 1; border-bottom: 1px dashed var(--ink30); height: 1px; }
+
+  /* ── 유형 ── */
+  .yuhyung { font-family: var(--serif); padding: 28px 44px 16px; }
+  .yh-ban { background: var(--ink); color: #fff; padding: 10px 16px; display: flex;
+    align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .yh-ban .k { font-family: var(--sans); font-size: 10px; font-weight: 800; letter-spacing: 0.32em; color: var(--ink30); margin-right: 12px; }
+  .yh-ban .t { font-family: var(--sans); font-size: 17px; font-weight: 800; letter-spacing: -0.01em; }
+  .yh-cnt { font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+    background: rgba(255,255,255,.12); padding: 4px 10px; }
+  .yh-strat { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; padding: 6px 0;
+    border-bottom: 1px solid var(--ink15); }
+  .yh-strat .l { font-family: var(--sans); font-size: 10.5px; font-weight: 700; color: var(--slate); letter-spacing: 0.12em; }
+  .yh-strat .c { font-size: 11.5px; color: var(--ink90); }
+  .yh-strat .nm { margin-left: auto; font-family: var(--sans); font-size: 10px; color: var(--ink50); }
+  .yuhyung .body { flex: 1; display: grid; grid-template-columns: 1fr 1px 1fr; gap: 0 22px; font-size: 12.5px; line-height: 1.65; }
+  .yh-rule { background: var(--ink08); }
+  .yh-qn { display: inline-grid; place-items: center; width: 22px; height: 22px;
+    border: 1.5px solid var(--slate); font-weight: 700; font-size: 12px; margin-right: 6px; color: var(--slate); }
+  .yuhyung .item { padding-bottom: 14px; }
+  .yh-prog { margin-top: 8px; display: flex; align-items: center; gap: 12px;
+    font-family: var(--sans); font-size: 9.5px; color: var(--ink50); }
+  .yh-prog .l { font-weight: 700; color: var(--slate); letter-spacing: 0.1em; }
+  .yh-bar { flex: 1; height: 3px; background: var(--ink08); }
+  .yh-bar i { display: block; width: 25%; height: 100%; background: var(--slate); }
+  .yh-prog .pg { font-family: var(--mono); font-weight: 700; color: var(--ink); }
+
+  /* ── 정답지 ── */
+  .answer { font-family: var(--sans); padding: 40px 48px 24px; }
+  .ans-h { display: flex; align-items: baseline; justify-content: space-between;
+    padding-bottom: 8px; margin-bottom: 14px; border-bottom: 2px solid var(--ink); }
+  .ans-h h3 { font-size: 18px; font-weight: 800; }
+  .ans-h h3 span { margin-left: 8px; font-size: 12px; font-weight: 700; color: var(--ink50); }
+  .ans-h .pg { font-size: 11px; font-family: var(--mono); color: var(--ink50); }
+  .quick { border: 1px solid var(--ink15); padding: 12px; margin-bottom: 16px; }
+  .quick h4 { font-size: 10px; font-weight: 800; color: var(--ink50); letter-spacing: 1px; margin-bottom: 8px; }
+  .quick .row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .quick .cell { flex: 1 1 18%; min-width: 90px; display: flex; align-items: center; gap: 6px;
+    padding: 4px 8px; background: var(--ink04); font-size: 11px; }
+  .quick .n { font-weight: 800; color: var(--ink50); width: 14px; }
+  .sol { columns: 2; column-gap: 2rem; font-size: 12px; line-height: 1.55; }
+  .sol .s { break-inside: avoid; margin-bottom: 14px; }
+  .sol .sh { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; font-weight: 800; }
+  .sol .ex { padding-left: 10px; border-left: 2px solid var(--ink15); color: var(--ink70); font-size: 11.5px; }
+
+  /* ── 폰트 비교 ── */
+  .fontbox { background: #fff; padding: 22px 26px; box-shadow: 0 8px 24px rgba(0,0,0,.12); margin: 40px 0 20px; }
+  .fontbox h2 { font-size: 15px; font-weight: 900; margin-bottom: 8px; }
+  .fontbox p.lead { font-size: 12.5px; color: #444; line-height: 1.7; margin-bottom: 16px; }
+  .fonts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .fcol { border: 1px solid #c2c2c0; padding: 14px 16px; }
+  .fcol .fl { font-size: 10px; font-weight: 800; letter-spacing: 1.2px; color: #6a6a68; margin-bottom: 8px; }
+  .fcol .sample { font-size: 15px; line-height: 1.8; }
+  .f-myeong { font-family: var(--serif); }
+  .f-gothic { font-family: var(--sans); }
+  .f-malgun { font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; }
+
+  .howto { max-width: 920px; margin-top: 28px; font-size: 13px; line-height: 1.75; }
+  .howto ol { padding-left: 20px; }
+  .howto li { margin: 4px 0; }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .doc-head, .compare, .card h2, .card .desc, .fontbox, .howto, .no-print { display: none !important; }
+    .gallery { display: block; }
+    .card { width: auto; page-break-after: always; break-after: page; }
+    .stage { width: auto; height: auto; box-shadow: none; overflow: visible; }
+    .a4 { transform: none; width: 210mm; height: 297mm; }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="doc">
+  <header class="doc-head">
+    <div class="kicker">T5.1 · WIRE · 지면 베이스 선택</div>
+    <h1>시험지 지면 6안 — 같은 일일테스트, 다른 틀</h1>
+    <p>
+      Mathgen 인쇄 템플릿 6종을 <b>오늘의수학 일일테스트</b>(중2-A · 일차부등식 · 8문항)로
+      다시 채운 시안입니다. 이 단계는 색·폰트 디테일이 아니라 <b>틀(헤더·이름칸·문항 배치·풀이공간)</b>을
+      고르는 단계입니다. 고르신 베이스 위에 학원명·여백·명조/고딕을 다음 질문에서 다듬습니다.
+    </p>
+    <div class="note">
+      화면 UI(H5 스위스 계기판)와 시험지 지면은 목적이 다릅니다. 화면은 원장님 작업대,
+      지면은 학생·학부모가 매일 보는 얼굴입니다. 둘을 억지로 맞출 필요는 없습니다.
+      브라우저에서 Ctrl+P 하면 A4 실물 크기로 출력할 수 있습니다.
+    </div>
+  </header>
+
+  <table class="compare">
+    <thead>
+      <tr>
+        <th>안</th>
+        <th>한 줄 성격</th>
+        <th>헤더</th>
+        <th>이름칸</th>
+        <th>풀이공간</th>
+        <th>일일/확인테스트와의 거리</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="name">A 평가원</div><div class="id">PYEONGGA</div></td>
+        <td>수능·모의평가 클론. 권위.</td>
+        <td>「수학 영역 / 제1교시」 박스. 학원명 없음.</td>
+        <td>없음</td>
+        <td>없음 (문항만)</td>
+        <td>공식 시험 느낌. 매일 쓰는 학원 테스트와는 결이 다름.</td>
+      </tr>
+      <tr>
+        <td><div class="name">B 정통</div><div class="id">JEONGTONG</div></td>
+        <td>학교 중간고사 표 양식.</td>
+        <td>학교·학년·과목·일시 표</td>
+        <td>학년/반/번호/이름 + 점수</td>
+        <td>없음</td>
+        <td>익숙함·신뢰. 필드를 학원/반/이름으로 바꾸면 쓸 수 있음.</td>
+      </tr>
+      <tr>
+        <td><div class="name">C 모던</div><div class="id">MODERN</div></td>
+        <td>세련된 학교 평가. 영문 라벨.</td>
+        <td>네이비 밑줄 + 배지</td>
+        <td>학년/반/번호/성명/감독/점수</td>
+        <td>없음</td>
+        <td>정돈됨. 영어 학기 표기는 학원 일일테스트에 이질적일 수 있음.</td>
+      </tr>
+      <tr>
+        <td><div class="name">D 워크북</div><div class="id">WORKBOOK</div><span class="fit">학원 직접 맞춤</span></td>
+        <td>학원 교재. 로고·강사·풀이칸.</td>
+        <td>학원 마크 + 검정 단원 배너</td>
+        <td>배너 안 이름/날짜 밑줄</td>
+        <td>줄 노트 풀이칸 (1단)</td>
+        <td>페르소나(동네 학원)와 가장 가깝다. 매일 써도 자연스러움.</td>
+      </tr>
+      <tr>
+        <td><div class="name">E 자습</div><div class="id">JASEUP</div></td>
+        <td>학습지. 개념박스 + 모눈.</td>
+        <td>SELF-STUDY + 학습일</td>
+        <td>내 정답 칸 + 채점 체크</td>
+        <td>모눈 스크래치</td>
+        <td>숙제·복습에 맞음. 확인테스트의 ‘시험’ 긴장감은 약함.</td>
+      </tr>
+      <tr>
+        <td><div class="name">F 유형</div><div class="id">YUHYUNG</div></td>
+        <td>같은 유형 반복 훈련. 빽빽함.</td>
+        <td>검정 PATTERN 배너</td>
+        <td>이름·날짜 한 줄</td>
+        <td>없음 (2단 컴팩트)</td>
+        <td>유형 드릴용. 혼합 일일테스트에는 유형명이 어색할 수 있음.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="gallery">
+
+    <!-- A 평가원 -->
+    <section class="card" id="a-pyeongga">
+      <h2>A · 평가원</h2>
+      <p class="desc">수능 지면 복제. 학원명·이름칸이 없다. 「공식 시험」 권위를 원할 때.</p>
+      <div class="stage">
+        <article class="a4 pyeongga">
+          <header class="hdr">
+            <div class="box">
+              <div class="title">수학 영역</div>
+              <div class="period">제 1 교시</div>
+            </div>
+            <div class="meta">
+              <span><span class="hol">홀</span><b>5지 선다형</b></span>
+              <span><b>● 다음 물음에 답하시오.</b></span>
+            </div>
+          </header>
+          <div class="body">
+            <div class="item">
+              <div class="q"><span class="qn">1.</span><span class="pts">[3점]</span></div>
+              부등식 <span class="eq">2x − 3 &lt; 7</span> 을 만족시키는 정수 <span class="eq">x</span> 의 개수는?
+            </div>
+            <div class="item">
+              <div class="q"><span class="qn">2.</span><span class="pts">[3점]</span></div>
+              일차부등식 <span class="eq">−2x + 5 ≥ 1</span> 의 해를 구하시오.
+            </div>
+            <div class="item">
+              <div class="q"><span class="qn">3.</span><span class="pts">[4점]</span></div>
+              농도 10%인 소금물 200g에 물을 넣어 농도 8%의 소금물을 만들려고 한다. 넣어야 할 물의 양은?
+            </div>
+            <div class="item">
+              <div class="q"><span class="qn">4.</span><span class="pts">[4점]</span></div>
+              절댓값 부등식 <span class="eq">|x − 2| &lt; 5</span> 를 풀어라.
+            </div>
+          </div>
+          <footer class="ftr"><span>수학 영역</span><span>1</span></footer>
+        </article>
+      </div>
+    </section>
+
+    <!-- B 정통 -->
+    <section class="card" id="b-jeongtong">
+      <h2>B · 정통</h2>
+      <p class="desc">학교 시험지 표. 정보 칸이 많다. 필드를 학원/반/이름으로 바꾸면 익숙한 시험지가 된다.</p>
+      <div class="stage">
+        <article class="a4 jeongtong">
+          <table class="jt-table">
+            <tr><td class="jt-title" colspan="6">일일테스트 · 일차부등식</td></tr>
+            <tr>
+              <td class="lab" style="width:80px">학 교</td><td>오늘의수학</td>
+              <td class="lab" style="width:60px">학 년</td><td style="width:50px">중2</td>
+              <td class="lab" style="width:70px">과 목</td><td>수학</td>
+            </tr>
+            <tr>
+              <td class="lab">일 시</td><td>2026.08.14</td>
+              <td class="lab">시 간</td><td>20분</td>
+              <td class="lab">출제</td><td>김강사</td>
+            </tr>
+          </table>
+          <div class="jt-row">
+            <table style="flex:1">
+              <tr>
+                <td class="lab" style="width:45px">학년</td><td style="width:55px"></td>
+                <td class="lab" style="width:45px">반</td><td style="width:55px"></td>
+                <td class="lab" style="width:45px">번호</td><td style="width:55px"></td>
+                <td class="lab" style="width:45px">이름</td><td></td>
+              </tr>
+            </table>
+            <table style="width:140px">
+              <tr>
+                <td class="lab" style="width:58px">점 수</td>
+                <td style="text-align:right;padding-right:10px;font-weight:700;color:var(--ink30)">/100</td>
+              </tr>
+            </table>
+          </div>
+          <div class="jt-notice">※ 풀이 과정을 문항 아래에 쓰시오. 답만 쓴 경우 부분 점수를 주지 않습니다.</div>
+          <div class="body">
+            <div class="item">
+              <div class="q"><span class="qn">1.</span><span class="pts">[3점]</span></div>
+              부등식 <span class="eq">2x − 3 &lt; 7</span> 을 만족시키는 정수 <span class="eq">x</span> 의 개수는?
+            </div>
+            <div class="item">
+              <div class="q"><span class="qn">2.</span><span class="pts">[3점]</span></div>
+              일차부등식 <span class="eq">−2x + 5 ≥ 1</span> 의 해를 구하시오.
+            </div>
+            <div class="item">
+              <div class="q"><span class="qn">3.</span><span class="pts">[4점]</span></div>
+              농도 10%인 소금물 200g에 물을 넣어 농도 8%의 소금물을 만들려고 한다. 넣어야 할 물의 양은?
+            </div>
+          </div>
+          <footer class="ftr">- 1 -</footer>
+        </article>
+      </div>
+    </section>
+
+    <!-- C 모던 -->
+    <section class="card" id="c-modern">
+      <h2>C · 모던</h2>
+      <p class="desc">큰 산세리프 제목, 네이비 액센트, 알약 배점. 정돈되어 보이지만 영문 학기 라벨이 강하다.</p>
+      <div class="stage">
+        <article class="a4 modern">
+          <div class="md-head">
+            <div>
+              <div class="md-k">2026 · DAILY · INEQUALITY</div>
+              <div class="md-h">오늘의수학 <span>· 중2-A 수학</span></div>
+              <div class="md-sub">2026.08.14 · 20분 · 8문항 (100점)</div>
+            </div>
+            <div class="md-badge">일일</div>
+          </div>
+          <div class="md-grid">
+            <div class="md-cell"><div class="l">학년</div><div class="v">중2</div></div>
+            <div class="md-cell"><div class="l">반</div><div class="v blank">______</div></div>
+            <div class="md-cell"><div class="l">번호</div><div class="v blank">______</div></div>
+            <div class="md-cell"><div class="l">성명</div><div class="v blank">______</div></div>
+            <div class="md-cell"><div class="l">감독</div><div class="v blank">______</div></div>
+            <div class="md-cell"><div class="l">점수</div><div class="v">/ 100</div></div>
+          </div>
+          <div class="md-note"><b>!</b> 풀이 과정을 쓰시오 · 계산기 사용 금지 · 답만 쓴 문항은 부분 점수 없음</div>
+          <div class="md-rule"></div>
+          <div class="body">
+            <div class="item">
+              <div class="q"><span class="qn">01.</span><span class="ptpill">3점</span></div>
+              <div class="stem">부등식 <span class="eq">2x − 3 &lt; 7</span> 을 만족시키는 정수 <span class="eq">x</span> 의 개수는?</div>
+            </div>
+            <div class="item">
+              <div class="q"><span class="qn">02.</span><span class="ptpill">3점</span></div>
+              <div class="stem">일차부등식 <span class="eq">−2x + 5 ≥ 1</span> 의 해를 구하시오.</div>
+            </div>
+          </div>
+          <footer class="ftr"><span>오늘의수학 · 중2-A 수학</span><b>1 / 2</b></footer>
+        </article>
+      </div>
+    </section>
+
+    <!-- D 워크북 -->
+    <section class="card" id="d-workbook">
+      <h2>D · 워크북</h2>
+      <p class="desc">학원 마크·강사·검정 단원 배너·줄 노트 풀이칸. 매일 학원에서 푸는 종이의 기본형.</p>
+      <div class="stage">
+        <article class="a4 workbook">
+          <div class="wb-head">
+            <div class="wb-brand">
+              <div class="wb-mark">오</div>
+              <div>
+                <div class="wb-name">오늘의수학</div>
+                <div class="wb-sub">MATH ACADEMY WORKBOOK</div>
+              </div>
+            </div>
+            <div class="wb-meta">
+              <div><span class="dim">강의</span> · 김강사 T</div>
+              <div><span class="dim">일자</span> · 2026.08.14</div>
+            </div>
+          </div>
+          <div class="wb-banner">
+            <div class="t">일일테스트 · 일차부등식</div>
+            <div class="blanks">
+              <span><span class="dim">이름</span> ___________</span>
+              <span><span class="dim">날짜</span> ___________</span>
+            </div>
+          </div>
+          <div class="body">
+            <div class="wb-card">
+              <div>
+                <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px">
+                  <span class="wb-qn">1</span>
+                  <span class="wb-topic">일차부등식</span>
+                  <span style="flex:1"></span>
+                  <span style="font-size:11px;color:var(--ink70)">[3점]</span>
+                </div>
+                부등식 <span class="eq">2x − 3 &lt; 7</span> 을 만족시키는 정수 <span class="eq">x</span> 의 개수는?
+              </div>
+              <div class="wb-scratch"><span class="lab">풀이 SCRATCH</span></div>
+            </div>
+            <div class="wb-card">
+              <div>
+                <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px">
+                  <span class="wb-qn">2</span>
+                  <span class="wb-topic">일차부등식</span>
+                  <span style="flex:1"></span>
+                  <span style="font-size:11px;color:var(--ink70)">[3점]</span>
+                </div>
+                일차부등식 <span class="eq">−2x + 5 ≥ 1</span> 의 해를 구하시오.
+              </div>
+              <div class="wb-scratch"><span class="lab">풀이 SCRATCH</span></div>
+            </div>
+            <div class="wb-card">
+              <div>
+                <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px">
+                  <span class="wb-qn">3</span>
+                  <span class="wb-topic">활용</span>
+                  <span style="flex:1"></span>
+                  <span style="font-size:11px;color:var(--ink70)">[4점]</span>
+                </div>
+                농도 10%인 소금물 200g에 물을 넣어 농도 8%의 소금물을 만들려고 한다. 넣어야 할 물의 양은?
+              </div>
+              <div class="wb-scratch"><span class="lab">풀이 SCRATCH</span></div>
+            </div>
+          </div>
+          <footer class="ftr"><span>오늘의수학 · 일일테스트 · 일차부등식</span><b>page 1</b></footer>
+        </article>
+      </div>
+    </section>
+
+    <!-- E 자습 -->
+    <section class="card" id="e-jaseup">
+      <h2>E · 자습</h2>
+      <p class="desc">개념 정리 박스, 모눈 풀이, 내 정답·채점 칸. 숙제·복습 학습지.</p>
+      <div class="stage">
+        <article class="a4 jaseup">
+          <div class="js-head">
+            <div>
+              <div class="js-k">SELF-STUDY</div>
+              <div class="js-h">일일테스트 · 일차부등식</div>
+              <div class="js-goal">오늘의 목표 · 부등식의 해를 수직선에 나타낼 수 있다</div>
+            </div>
+            <div class="js-date">
+              <div class="l">학습일</div>
+              <div class="v">2026.08.14</div>
+            </div>
+          </div>
+          <div class="js-concept">
+            <div class="l">◆ 핵심 개념 정리</div>
+            <div class="c">
+              <span class="eq">ax + b &gt; 0</span> 꼴로 정리한 뒤 <span class="eq">a</span>의 부호에 따라 不等호 방향을 결정한다.
+              양변에 음수를 곱하면 부등호 방향이 바뀐다.
+            </div>
+          </div>
+          <div class="body">
+            <div class="js-item">
+              <div>
+                <div style="margin-bottom:6px"><span class="js-qn">문 1</span></div>
+                부등식 <span class="eq">2x − 3 &lt; 7</span> 을 만족시키는 정수 <span class="eq">x</span> 의 개수는?
+                <div class="js-ans"><b>내 정답</b><span class="js-line"></span><span style="font-size:10px;color:var(--ink50)">✓ 채점</span><span class="js-chk"></span></div>
+              </div>
+              <div class="js-grid"><span class="lab">SCRATCH PAD</span></div>
+            </div>
+            <div class="js-item">
+              <div>
+                <div style="margin-bottom:6px"><span class="js-qn">문 2</span></div>
+                일차부등식 <span class="eq">−2x + 5 ≥ 1</span> 의 해를 구하시오.
+                <div class="js-ans"><b>내 정답</b><span class="js-line"></span><span style="font-size:10px;color:var(--ink50)">✓ 채점</span><span class="js-chk"></span></div>
+              </div>
+              <div class="js-grid"><span class="lab">SCRATCH PAD</span></div>
+            </div>
+          </div>
+          <footer class="ftr"><b>오늘의 메모</b><span class="dash"></span><span>p. 1</span></footer>
+        </article>
+      </div>
+    </section>
+
+    <!-- F 유형 -->
+    <section class="card" id="f-yuhyung">
+      <h2>F · 유형</h2>
+      <p class="desc">검정 배너 + 2단 빽빽한 반복. 한 유형을 여러 번 푸는 훈련지.</p>
+      <div class="stage">
+        <article class="a4 yuhyung">
+          <div class="yh-ban">
+            <div>
+              <span class="k">PATTERN</span>
+              <span class="t">일차부등식의 풀이</span>
+            </div>
+            <div class="yh-cnt">08 문항</div>
+          </div>
+          <div class="yh-strat">
+            <span class="l">핵심 전략</span>
+            <span class="c">양변을 정리한 뒤, 음수를 곱하면 부등호를 뒤집는다.</span>
+            <span class="nm">이름 ____________ · 날짜 ___________</span>
+          </div>
+          <div class="body">
+            <div>
+              <div class="item">
+                <div style="margin-bottom:4px"><span class="yh-qn">1</span></div>
+                <span class="eq">2x − 3 &lt; 7</span> 을 풀어라.
+              </div>
+              <div class="item">
+                <div style="margin-bottom:4px"><span class="yh-qn">2</span></div>
+                <span class="eq">−2x + 5 ≥ 1</span> 을 풀어라.
+              </div>
+              <div class="item">
+                <div style="margin-bottom:4px"><span class="yh-qn">3</span></div>
+                <span class="eq">3(x − 1) ≤ 2x + 4</span> 를 풀어라.
+              </div>
+              <div class="item">
+                <div style="margin-bottom:4px"><span class="yh-qn">4</span></div>
+                <span class="eq">5 − x &gt; 2x + 1</span> 을 풀어라.
+              </div>
+            </div>
+            <div class="yh-rule"></div>
+            <div>
+              <div class="item">
+                <div style="margin-bottom:4px"><span class="yh-qn">5</span></div>
+                <span class="eq">|x − 2| &lt; 5</span> 를 풀어라.
+              </div>
+              <div class="item">
+                <div style="margin-bottom:4px"><span class="yh-qn">6</span></div>
+                <span class="eq">|2x + 1| ≥ 3</span> 을 풀어라.
+              </div>
+              <div class="item">
+                <div style="margin-bottom:4px"><span class="yh-qn">7</span></div>
+                정수해의 개수: <span class="eq">−1 ≤ 2x &lt; 7</span>
+              </div>
+              <div class="item">
+                <div style="margin-bottom:4px"><span class="yh-qn">8</span></div>
+                소금물 10% 200g → 8% 로 만들 때 물의 양.
+              </div>
+            </div>
+          </div>
+          <div class="yh-prog">
+            <span class="l">PROGRESS</span>
+            <div class="yh-bar"><i></i></div>
+            <span class="pg">PG · 1</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 정답지 -->
+    <section class="card" id="g-answer">
+      <h2>정답지 (6안 공통)</h2>
+      <p class="desc">Mathgen 정답지는 템플릿과 무관하다. 빠른 정답 그리드 + 2단 해설. 베이스와 별도로 유지할지 묻는다.</p>
+      <div class="stage">
+        <article class="a4 answer">
+          <header class="ans-h">
+            <h3>일일테스트 · 일차부등식<span>Answer Key · 정답 및 해설</span></h3>
+            <span class="pg">1 / 1</span>
+          </header>
+          <div class="quick">
+            <h4>빠른 정답</h4>
+            <div class="row">
+              <div class="cell"><span class="n">1</span>4</div>
+              <div class="cell"><span class="n">2</span>x ≤ 2</div>
+              <div class="cell"><span class="n">3</span>50g</div>
+              <div class="cell"><span class="n">4</span>−3 &lt; x &lt; 7</div>
+              <div class="cell"><span class="n">5</span>x &lt; 2</div>
+              <div class="cell"><span class="n">6</span>x ≤ −2, x ≥ 1</div>
+              <div class="cell"><span class="n">7</span>4</div>
+              <div class="cell"><span class="n">8</span>x &gt; −1</div>
+            </div>
+          </div>
+          <div class="sol">
+            <div class="s">
+              <div class="sh">1. <span style="font-size:10px;font-weight:800;color:var(--ink50)">정답:</span> 4</div>
+              <div class="ex">2x − 3 &lt; 7 → 2x &lt; 10 → x &lt; 5. 조건을 만족하는 정수는 문항 보기에 따라 4.</div>
+            </div>
+            <div class="s">
+              <div class="sh">2. <span style="font-size:10px;font-weight:800;color:var(--ink50)">정답:</span> x ≤ 2</div>
+              <div class="ex">−2x ≥ −4. 양변을 −2로 나누면 부등호가 바뀌어 x ≤ 2.</div>
+            </div>
+            <div class="s">
+              <div class="sh">3. <span style="font-size:10px;font-weight:800;color:var(--ink50)">정답:</span> 50g</div>
+              <div class="ex">소금 20g 고정. 20 / (200 + w) = 0.08 → w = 50.</div>
+            </div>
+            <div class="s">
+              <div class="sh">4. <span style="font-size:10px;font-weight:800;color:var(--ink50)">정답:</span> −3 &lt; x &lt; 7</div>
+              <div class="ex">|x − 2| &lt; 5 → −5 &lt; x − 2 &lt; 5 → −3 &lt; x &lt; 7.</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <section class="fontbox">
+    <h2>참고 · 본문 폰트 3종 (지금은 고르지 않아도 됩니다)</h2>
+    <p class="lead">
+      베이스를 고른 다음 단계에서 명조/고딕을 실물로 비교합니다.
+      수식은 어느 안이든 KaTeX(Computer Modern)로 통일됩니다.
+    </p>
+    <div class="fonts">
+      <div class="fcol">
+        <div class="fl">명조 · NANUM MYEONGJO</div>
+        <div class="sample f-myeong">부등식 2x − 3 &lt; 7 을 풀어라. 양변에 음수를 곱하면 부등호 방향이 바뀐다.</div>
+      </div>
+      <div class="fcol">
+        <div class="fl">고딕 · PRETENDARD</div>
+        <div class="sample f-gothic">부등식 2x − 3 &lt; 7 을 풀어라. 양변에 음수를 곱하면 부등호 방향이 바뀐다.</div>
+      </div>
+      <div class="fcol">
+        <div class="fl">고딕 · 맑은 고딕 (프린터 기본)</div>
+        <div class="sample f-malgun">부등식 2x − 3 &lt; 7 을 풀어라. 양변에 음수를 곱하면 부등호 방향이 바뀐다.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="howto">
+    <p><b>이번 질문:</b> 베이스 틀을 하나만 고르세요. 두 안을 섞고 싶으면 “D의 헤더 + B의 이름표”처럼 구체적으로 적어 주세요.</p>
+    <ol>
+      <li>아래 6장(또는 인쇄물)을 같은 거리에서 훑고, 학생 책상에 놓인다고 상상한다.</li>
+      <li>학원 로고·이름칸·풀이공간이 필요한지부터 정한다. 이것이 A/B/C와 D/E를 가른다.</li>
+      <li>고른 뒤에 학원명 표기, 1단/2단, 배점 표시, 정답지 스타일을 묻는다.</li>
+    </ol>
+  </section>
+</div>
+</body>
+</html>

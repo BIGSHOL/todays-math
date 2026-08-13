@@ -52,6 +52,7 @@
 | 변형 엔진 설계 (parse/solve/render/vary/check 분리 + 원본 재현 검사) | `C:\Creative\sumaek\packages\core\src\variants\` | T3.2 |
 | 출제 엔진 참조 구현 (결정론적 버킷, shortfall 보고) | `C:\Creative\sumaek\packages\core\src\assessment\select.ts` + `F:\mathlab-lab-p1\...\smart-prescriber.ts` | T4.1 |
 | KaTeX 3단 방어 렌더 + 한국 수학 정규화 47KB | `F:\Mathgen\src\lib\katexRender.ts` + `textPreprocess.ts` | T3.3 |
+| **결정론적 SVG 도형 엔진** (2D 접선/각라벨 검산 + 3D 공간도형 `figure_solid` + `sanitize_svg`) | `F:\시험지변환기\core\figure_svg.py` + `figure_solid.py` + `figure_quality.py` (origin/master `d95a6be`, 2026-08-14 pull) | T3.0 그림 자산 · T5.2 작도. KaTeX와 계층이 다름 — 수식 렌더에 섞지 말 것 |
 | **A4 인쇄 엔진 일체** (템플릿 6종, 실측 높이 페이지 패킹, PDF 내보내기, 정답지) | `F:\Mathgen\src\components\print\` + `src\lib\printPack.ts` 등 | T5.2 |
 | 지뢰 문서 3종 (필독) | sumaek `docs\handoff.md` / mathlab-lab-p1 `docs\lab\HANDOFF.md` / Mathgen `CLAUDE.md` | 관련 태스크 착수 전 |
 
@@ -422,8 +423,8 @@ cd ../testautocreator-phase3-import
 1. **기출 3,094문항**: `F:\시험지변환기\db\ocr_pilot\*.json` (본문) + `*.answers.json` (정답)
    - ContentBlock 구조(text/equation/table/figure) → 우리 content(LaTeX 마크다운) 변환
    - source=`past_exam`, directUseAllowed=true
-   - ⚠️ figure 블록은 크롭 이미지 참조 — 이미지 자산 처리 방안 포함 (스토리지 업로드 or 1차 제외 후 목록 보고)
-   - ⚠️ `db\extracted\*.json`(HWP-EQ 표기)은 사용 금지
+   - ⚠️ figure 블록은 크롭 이미지 또는 **재작도 SVG** — 재작도는 `core/figure_svg`+`figure_solid`만 사용하고 `figure_quality.sanitize_svg`를 통과한 것만 적재. 라벨·접선은 손으로 좌표를 찍지 말 것(핸드오프 `docs/HANDOFF_FIGURE_ENGINE.md`)
+   - ⚠️ `db\extracted\*.json`(HWP-EQ 표기)은 사용 금지. HWP 수식이 들어오면 `core/hwpeq_to_latex.py`로 LaTeX 변환 후 KaTeX 게이트를 통과시킬 것
 2. **자작 시드 ~753문항**: `F:\math_test\backend\app\seeds\` (Python dict — 파싱 스크립트로 추출)
    - source=`manual`, directUseAllowed=true, 난이도 1~10 → easy/mid/hard 매핑 규칙 정의
 3. **RPM 5,035문항**: sumaek Supabase에서 **읽기 전용 SELECT**로 추출 (sumaek .env의 접속 정보 사용, 쓰기 절대 금지)
@@ -657,7 +658,7 @@ cd ../testautocreator-phase4-test-ui
 
 ## M5: FEAT-3 시험지 인쇄 (Phase 5 — Worktree 필수)
 
-### [] Phase 5, T5.1: 시험지 지면 디자인 확정 (협의 태스크 — 코드 없음)
+### [x] Phase 5, T5.1: 시험지 지면 디자인 확정 (협의 태스크 — 코드 없음)
 
 **담당**: 원장님 + AI (협의)
 **⚠️ D-24: 최우선 디자인 작업 — T5.2의 선행 게이트**
@@ -671,8 +672,8 @@ cd ../testautocreator-phase4-test-ui
 - 확정된 지면 스펙 (05 문서 갱신 + 선택된 베이스 템플릿 + 커스터마이즈 목록)
 
 **완료 조건**:
-- [ ] 원장님 확정 승인
-- [ ] 문제지/답안지 레이아웃 스펙 문서화
+- [x] 원장님 확정 승인 (2026-08-14 — 자습 H1 + 학원명/이름칸, 배점 없음)
+- [x] 문제지/답안지 레이아웃 스펙 문서화 (`05-design-system.md` §8.5, D-28)
 
 ### [] Phase 5, T5.2: 인쇄 미리보기 + 인쇄 CSS (S-06) RED→GREEN
 

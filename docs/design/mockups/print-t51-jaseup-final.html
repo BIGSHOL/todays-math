@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>오늘의수학 — T5.1 최종 합성 · 자습 H1</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Noto+Serif+KR:wght@400;600;700;900&display=swap">
+<style>
+  :root {
+    --ink: #0E0E10;
+    --ink90: #1F1F23;
+    --ink70: #3A3A40;
+    --ink50: #6B6B72;
+    --ink30: #A0A0A8;
+    --ink15: #D4D4D8;
+    --ink08: #E8E8EB;
+    --paper: #FCFCF8;
+    --gold: #A57F00;
+    --serif: "Nanum Myeongjo", "Noto Serif KR", Batang, serif;
+    --sans: Pretendard, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:var(--sans); background:#c9c9c7; color:#161616; padding:36px 20px 120px; }
+  .doc { max-width:1400px; margin:0 auto; }
+  .doc-head { max-width:860px; margin-bottom:24px; }
+  .kicker { font-size:11px; font-weight:800; letter-spacing:2px; color:#6a6a68; margin-bottom:8px; }
+  h1 { font-size:22px; font-weight:900; letter-spacing:-.4px; margin-bottom:10px; }
+  .lead { font-size:13.5px; line-height:1.75; color:#333; }
+  .spec { margin-top:14px; width:100%; max-width:860px; border-collapse:collapse; background:#fff; font-size:12.5px; }
+  .spec th { text-align:left; padding:8px 12px; border-bottom:2.5px solid #161616; font-size:10px; letter-spacing:1.2px; background:#ececea; }
+  .spec td { padding:8px 12px; border-bottom:1px solid #c2c2c0; vertical-align:top; }
+  .spec td:first-child { font-weight:800; width:140px; }
+
+  .gallery { display:flex; flex-wrap:wrap; gap:28px 22px; margin-top:28px; }
+  .card { width:420px; }
+  .card h2 { font-size:14px; font-weight:900; margin-bottom:8px; }
+  .stage { width:420px; height:594px; overflow:hidden; box-shadow:0 14px 40px rgba(0,0,0,.28); }
+  .a4 { width:794px; height:1123px; transform:scale(.529); transform-origin:top left;
+        background:var(--paper); color:var(--ink); font-family:var(--serif);
+        padding:36px 50px 20px; display:flex; flex-direction:column; overflow:hidden; }
+  .eq { font-family:"Cambria Math","Times New Roman",serif; }
+
+  .head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+  .acad { font-family:var(--sans); font-size:10px; font-weight:700; color:var(--gold); letter-spacing:.22em; }
+  .k { font-family:var(--sans); font-size:10px; font-weight:700; color:var(--gold); letter-spacing:.3em; margin:3px 0 4px; }
+  .title { font-size:24px; font-weight:800; letter-spacing:-.01em; }
+  .goal { font-family:var(--sans); font-size:11px; color:var(--ink70); margin-top:4px; }
+  .right { text-align:right; font-family:var(--sans); }
+  .right .l { font-size:9.5px; color:var(--ink50); margin-bottom:2px; }
+  .right .v { font-family:var(--serif); font-size:14px; font-weight:700; }
+  .right .name { margin-top:8px; font-size:11px; color:var(--ink70); }
+  .right .name b { font-weight:700; color:var(--ink50); margin-right:4px; }
+
+  .concept { background:#fff; border:1px solid var(--gold); border-left:5px solid var(--gold);
+             padding:12px 16px; margin-bottom:18px; }
+  .concept .l { font-family:var(--sans); font-size:10.5px; font-weight:800; color:var(--gold); letter-spacing:.16em; margin-bottom:6px; }
+  .concept .c { font-size:12px; line-height:1.7; color:var(--ink90); }
+
+  .body { flex:1; display:flex; flex-direction:column; }
+  .item { flex:1; display:grid; grid-template-columns:1.15fr 1fr; gap:14px;
+          padding-bottom:14px; border-bottom:1px dashed var(--ink15); min-height:0; }
+  .qn { font-weight:800; font-size:18px; color:var(--gold); margin-right:8px; }
+  .pts { font-family:var(--serif); font-size:11px; color:var(--ink70); }
+  .ans { margin-top:8px; padding:6px 10px; background:var(--paper); border:1px solid var(--ink15);
+         display:flex; align-items:center; gap:8px; font-family:var(--sans); font-size:11px; }
+  .ans b { color:var(--gold); }
+  .line { flex:1; border-bottom:1px solid var(--ink30); height:16px; }
+  .chk { width:16px; height:16px; border:1.5px solid var(--ink30); display:inline-block; }
+  .grid { background:#fff; border:1px solid var(--ink15); position:relative;
+    background-image:linear-gradient(var(--ink08) 1px,transparent 1px),linear-gradient(90deg,var(--ink08) 1px,transparent 1px);
+    background-size:16px 16px; }
+  .grid .lab { position:absolute; top:6px; right:8px; font-family:var(--sans); font-size:9px; color:var(--ink30); letter-spacing:.12em; }
+
+  .slim { padding:24px 50px 20px; }
+  .slim-h { display:flex; justify-content:space-between; align-items:baseline;
+            padding-bottom:8px; margin-bottom:14px; border-bottom:1px solid var(--gold); font-family:var(--sans); }
+  .slim-h .t { font-size:12px; font-weight:800; }
+  .slim-h .p { font-size:11px; color:var(--ink50); }
+
+  .ftr { margin-top:10px; display:flex; align-items:center; gap:12px;
+         font-family:var(--sans); font-size:10px; color:var(--ink50); }
+  .ftr b { font-weight:700; color:var(--gold); letter-spacing:.12em; }
+  .dash { flex:1; border-bottom:1px dashed var(--ink30); height:1px; }
+
+  /* answer styled to jaseup */
+  .anspage { }
+  .ans-h { display:flex; justify-content:space-between; align-items:flex-end;
+           padding-bottom:8px; margin-bottom:14px; border-bottom:2px solid var(--gold); }
+  .ans-h h3 { font-size:20px; font-weight:800; }
+  .ans-h h3 span { display:block; font-family:var(--sans); font-size:10px; font-weight:700;
+                   color:var(--gold); letter-spacing:.2em; margin-bottom:4px; }
+  .ans-h .pg { font-family:var(--sans); font-size:11px; color:var(--ink50); }
+  .quick { border:1px solid var(--gold); padding:12px; margin-bottom:16px; background:#fff; }
+  .quick h4 { font-family:var(--sans); font-size:10px; font-weight:800; color:var(--gold); letter-spacing:1.4px; margin-bottom:8px; }
+  .quick .row { display:flex; flex-wrap:wrap; gap:6px; }
+  .quick .cell { flex:1 1 18%; min-width:90px; display:flex; gap:6px; align-items:center;
+                 padding:4px 8px; background:var(--paper); font-size:11px; font-family:var(--sans); }
+  .quick .n { font-weight:800; color:var(--gold); width:14px; }
+  .sol { columns:2; column-gap:2rem; font-size:12px; line-height:1.55; }
+  .sol .s { break-inside:avoid; margin-bottom:14px; }
+  .sol .sh { font-weight:800; margin-bottom:4px; }
+  .sol .ex { padding-left:10px; border-left:2px solid var(--gold); color:var(--ink70); font-size:11.5px; }
+
+  .open { margin-top:22px; font-size:13px; line-height:1.7; max-width:860px; }
+  .open a { color:#161616; font-weight:800; }
+
+  @media print {
+    body { background:#fff; padding:0; }
+    .doc-head, .card h2, .open, .spec { display:none !important; }
+    .gallery { display:block; }
+    .card { width:auto; page-break-after:always; }
+    .stage { width:auto; height:auto; box-shadow:none; overflow:visible; }
+    .a4 { transform:none; width:210mm; height:297mm; }
+    @page { size:A4; margin:0; }
+  }
+</style>
+</head>
+<body>
+<div class="doc">
+  <header class="doc-head">
+    <div class="kicker">T5.1 · 최종 합성 · 확정 전 확인</div>
+    <h1>자습 H1 + 학원명·이름칸</h1>
+    <p class="lead">앞에서 고른 결정을 한 지면에 합쳤습니다. 1쪽은 일일 첫 장, 2쪽은 이어지는 장, 3쪽은 정답지 제안입니다. Ctrl+P로 A4 출력할 수 있습니다.</p>
+    <table class="spec">
+      <tr><th>항목</th><th>결정</th></tr>
+      <tr><td>베이스</td><td>E 자습 (JaseupTemplate)</td></tr>
+      <tr><td>얼굴</td><td>H1 원본 금색 · 따뜻한 종이 · 명조 · SELF-STUDY</td></tr>
+      <tr><td>개념 박스</td><td>일일·확인 항상 첫 장</td></tr>
+      <tr><td>학원명</td><td>좌측 상단 작은 금색 「오늘의수학」</td></tr>
+      <tr><td>이름칸</td><td>우측 상단 학습일 아래 「이름 ______ · 반 ______」</td></tr>
+      <tr><td>밀도</td><td>1단 + 큰 모눈 · 장당 2문항 · 8문항=문제지 4장</td></tr>
+      <tr><td>배점</td><td>없음. 채점은 맞은 개수 / 전체 개수</td></tr>
+    </table>
+  </header>
+
+  <div class="gallery">
+    <section class="card">
+      <h2>1 · 문제지 첫 장</h2>
+      <div class="stage"><article class="a4">
+        <div class="head">
+          <div>
+            <div class="acad">오늘의수학</div>
+            <div class="k">SELF-STUDY</div>
+            <div class="title">일일테스트 · 일차부등식</div>
+            <div class="goal">오늘의 목표 · 부등식의 해를 수직선에 나타낼 수 있다</div>
+          </div>
+          <div class="right">
+            <div class="l">학습일</div>
+            <div class="v">2026.08.14</div>
+            <div class="name"><b>이름</b> ________ · <b>반</b> ______</div>
+          </div>
+        </div>
+        <div class="concept">
+          <div class="l">◆ 핵심 개념 정리</div>
+          <div class="c"><span class="eq">ax + b &gt; 0</span> 꼴로 정리한 뒤 <span class="eq">a</span>의 부호에 따라 부등호 방향을 결정한다. 양변에 음수를 곱하면 부등호 방향이 바뀐다.</div>
+        </div>
+        <div class="body">
+          <div class="item">
+            <div>
+              <div style="margin-bottom:6px"><span class="qn">문 1</span></div>
+              부등식 <span class="eq">2x − 3 &lt; 7</span> 을 만족시키는 정수 <span class="eq">x</span> 의 개수는?
+              <div class="ans"><b>내 정답</b><span class="line"></span><span style="font-size:10px;color:var(--ink50)">✓ 채점</span><span class="chk"></span></div>
+            </div>
+            <div class="grid"><span class="lab">SCRATCH PAD</span></div>
+          </div>
+          <div class="item">
+            <div>
+              <div style="margin-bottom:6px"><span class="qn">문 2</span></div>
+              일차부등식 <span class="eq">−2x + 5 ≥ 1</span> 의 해를 구하시오.
+              <div class="ans"><b>내 정답</b><span class="line"></span><span style="font-size:10px;color:var(--ink50)">✓ 채점</span><span class="chk"></span></div>
+            </div>
+            <div class="grid"><span class="lab">SCRATCH PAD</span></div>
+          </div>
+        </div>
+        <div class="ftr"><b>오늘의 메모</b><span class="dash"></span><span>p. 1</span></div>
+      </article></div>
+    </section>
+
+    <section class="card">
+      <h2>2 · 문제지 이어지는 장</h2>
+      <div class="stage"><article class="a4 slim">
+        <div class="slim-h">
+          <span class="t">오늘의수학 · 일일테스트 · 일차부등식</span>
+          <span class="p">p. 2</span>
+        </div>
+        <div class="body">
+          <div class="item">
+            <div>
+              <div style="margin-bottom:6px"><span class="qn">문 3</span></div>
+              농도 10%인 소금물 200g에 물을 넣어 농도 8%의 소금물을 만들려고 한다. 넣어야 할 물의 양은?
+              <div class="ans"><b>내 정답</b><span class="line"></span><span style="font-size:10px;color:var(--ink50)">✓ 채점</span><span class="chk"></span></div>
+            </div>
+            <div class="grid"><span class="lab">SCRATCH PAD</span></div>
+          </div>
+          <div class="item">
+            <div>
+              <div style="margin-bottom:6px"><span class="qn">문 4</span></div>
+              절댓값 부등식 <span class="eq">|x − 2| &lt; 5</span> 를 풀어라.
+              <div class="ans"><b>내 정답</b><span class="line"></span><span style="font-size:10px;color:var(--ink50)">✓ 채점</span><span class="chk"></span></div>
+            </div>
+            <div class="grid"><span class="lab">SCRATCH PAD</span></div>
+          </div>
+        </div>
+        <div class="ftr"><b>오늘의 메모</b><span class="dash"></span><span>p. 2</span></div>
+      </article></div>
+    </section>
+
+    <section class="card">
+      <h2>3 · 정답지 (자습 금색으로 맞춤 · 제안)</h2>
+      <div class="stage"><article class="a4 anspage">
+        <div class="ans-h">
+          <h3><span>ANSWER KEY</span>일일테스트 · 일차부등식</h3>
+          <span class="pg">정답 및 해설 · 1 / 1</span>
+        </div>
+        <div class="quick">
+          <h4>빠른 정답</h4>
+          <div class="row">
+            <div class="cell"><span class="n">1</span>4</div>
+            <div class="cell"><span class="n">2</span>x ≤ 2</div>
+            <div class="cell"><span class="n">3</span>50g</div>
+            <div class="cell"><span class="n">4</span>−3 &lt; x &lt; 7</div>
+            <div class="cell"><span class="n">5</span>x &lt; 2</div>
+            <div class="cell"><span class="n">6</span>x ≤ −2, x ≥ 1</div>
+            <div class="cell"><span class="n">7</span>4</div>
+            <div class="cell"><span class="n">8</span>x &gt; −1</div>
+          </div>
+        </div>
+        <div class="sol">
+          <div class="s">
+            <div class="sh">문 1 · 4</div>
+            <div class="ex">2x − 3 &lt; 7 → 2x &lt; 10 → x &lt; 5.</div>
+          </div>
+          <div class="s">
+            <div class="sh">문 2 · x ≤ 2</div>
+            <div class="ex">−2x ≥ −4. 음수로 나누면 부등호가 바뀐다.</div>
+          </div>
+          <div class="s">
+            <div class="sh">문 3 · 50g</div>
+            <div class="ex">소금 20g 고정. 20 / (200 + w) = 0.08.</div>
+          </div>
+          <div class="s">
+            <div class="sh">문 4 · −3 &lt; x &lt; 7</div>
+            <div class="ex">|x − 2| &lt; 5 → −5 &lt; x − 2 &lt; 5.</div>
+          </div>
+        </div>
+      </article></div>
+    </section>
+  </div>
+
+  <p class="open">시안 파일:
+    <a href="print-t51-jaseup-final.html">print-t51-jaseup-final.html</a>
+    · 베이스 6안 <a href="print-t51-templates.html">print-t51-templates.html</a>
+  </p>
+</div>
+</body>
+</html>

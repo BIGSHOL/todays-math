@@ -336,3 +336,4 @@ feat(generator): 난이도 배분 알고리즘 구현
 | D-25 | 프로젝트 방향 | 오늘의수학 신규 진행 + 기존 자산(mathlab/sumaek/시험지변환기/Mathgen/math_test/math-report) 선별 이관 |
 | D-26 | RPM 문항 정책 | 원본 5,035문항 이관하되 `directUseAllowed=false` 잠금 — 직접 출제 금지, 앱 내 변형의 원본 전용 |
 | D-27 | Unit.orderIndex | 전역 연속값 (학년 경계 넘는 범위 계산 대비) |
+| D-28 | 시험지 지면 | 자습(Jaseup) H1 금색 명조. 학원명+이름/반. 배점 없음(맞은 개수/전체). 장당 2문항 |
