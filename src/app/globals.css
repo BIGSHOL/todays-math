@@ -35,6 +35,20 @@
   --color-red: var(--red);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-ink: #161616;
+  --color-canvas: #ececea;
+  --color-side: #e0e0de;
+  --color-divider: #c2c2c0;
+  --color-muted: #6a6a68;
+  --color-faint: #8a8a88;
+  --color-ghost: #a3a3a1;
+  --color-seg-empty: #cfcfcd;
+  --color-g-blue: #1a73e8;
+  --color-g-green: #34a853;
+  --color-g-yellow: #fbbc05;
+  --color-g-yellow-text: #c79102;
+  --color-g-red: #ea4335;
+  --color-g-red-text: #c5221f;
 }
 
 body {

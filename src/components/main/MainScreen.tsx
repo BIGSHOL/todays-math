@@ -1,0 +1,152 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+import type { ClassEntity, ProgressEntity } from "@/contracts/class.contract";
+import type { TestEntity } from "@/contracts/test.contract";
+import { advanceProgress } from "@/lib/main/advanceProgress";
+import { loadMainDashboard } from "@/lib/main/loadMainDashboard";
+import { buildClassRows, remainingCount, weekStats } from "@/lib/main/pipeline";
+
+import { ClassCard } from "./ClassCard";
+import { DoneSummaryRow } from "./DoneSummaryRow";
+import { LedgerTable } from "./LedgerTable";
+import { Masthead } from "./Masthead";
+import { ProgressPanel } from "./ProgressPanel";
+
+type LoadState =
+  | { status: "loading" }
+  | { status: "error"; message: string }
+  | {
+      status: "ready";
+      classes: ClassEntity[];
+      tests: TestEntity[];
+      progressByClass: Record<string, ProgressEntity | null>;
+    };
+
+export function MainScreen() {
+  const [state, setState] = useState<LoadState>({ status: "loading" });
+  const [selectedClassId, setSelectedClassId] = useState("");
+  const [viewOverride, setViewOverride] = useState<"stack" | "ledger" | null>(
+    null,
+  );
+  const [advanceError, setAdvanceError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadMainDashboard()
+      .then((data) => {
+        if (cancelled) return;
+        setState({ status: "ready", ...data });
+        const rows = buildClassRows(
+          data.classes,
+          data.tests,
+          data.progressByClass,
+        );
+        const firstOpen = rows.find((r) => r.stage !== "done");
+        setSelectedClassId(firstOpen?.classId ?? data.classes[0]?.id ?? "");
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setState({ status: "error", message: "목록을 불러오지 못했습니다" });
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const rows = useMemo(() => {
+    if (state.status !== "ready") return [];
+    return buildClassRows(state.classes, state.tests, state.progressByClass);
+  }, [state]);
+
+  const remaining = remainingCount(rows);
+  const autoView = remaining > 0 ? "stack" : "ledger";
+  const view = viewOverride ?? autoView;
+  const pending = rows.filter((r) => r.stage !== "done");
+  const done = rows.filter((r) => r.stage === "done");
+  const stats = state.status === "ready" ? weekStats(state.tests) : null;
+
+  const selectedUnitId =
+    state.status === "ready"
+      ? (state.progressByClass[selectedClassId]?.unitId ?? null)
+      : null;
+
+  const handleAdvance = useCallback(async () => {
+    if (!selectedClassId || state.status !== "ready") return;
+    setAdvanceError(null);
+    try {
+      const next = await advanceProgress(selectedClassId);
+      setState((prev) => {
+        if (prev.status !== "ready") return prev;
+        return {
+          ...prev,
+          progressByClass: { ...prev.progressByClass, [selectedClassId]: next },
+        };
+      });
+    } catch {
+      setAdvanceError("다음 소단원이 없습니다");
+    }
+  }, [selectedClassId, state.status]);
+
+  if (state.status === "loading") {
+    return (
+      <div className="min-h-screen bg-canvas px-7 py-8 text-ink">
+        불러오는 중
+      </div>
+    );
+  }
+
+  if (state.status === "error") {
+    return (
+      <div className="min-h-screen bg-canvas px-7 py-8 text-ink">
+        {state.message}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-screen flex-col bg-canvas text-ink">
+      <Masthead
+        remaining={remaining}
+        view={view}
+        onToggle={() => setViewOverride(view === "stack" ? "ledger" : "stack")}
+      />
+      <div className="flex min-h-0 flex-1">
+        <div className="min-w-0 flex-1">
+          {view === "stack" ? (
+            <>
+              {pending.map((row, i) => (
+                <ClassCard
+                  key={row.classId}
+                  row={row}
+                  index={i + 1}
+                  hot={i === 0}
+                  onProgress={setSelectedClassId}
+                />
+              ))}
+              {done.map((row) => (
+                <DoneSummaryRow key={row.classId} row={row} />
+              ))}
+            </>
+          ) : (
+            <LedgerTable rows={rows} onProgress={setSelectedClassId} />
+          )}
+        </div>
+        <ProgressPanel
+          classes={state.classes}
+          selectedClassId={selectedClassId}
+          selectedUnitId={selectedUnitId}
+          printedDays={stats?.printedDays ?? 0}
+          unmodifiedRate={stats?.unmodifiedRate ?? 0}
+          error={advanceError}
+          onSelectClass={setSelectedClassId}
+          onAdvance={() => {
+            void handleAdvance();
+          }}
+        />
+      </div>
+    </div>
+  );
+}
