@@ -22,7 +22,8 @@
  */
 import { PrismaClient } from "@prisma/client";
 
-import { CURRICULUM_UNITS } from "./seed-data/units";
+// Node 네이티브 TS 실행(strip-types)은 상대 경로에 확장자 명시가 필수
+import { CURRICULUM_UNITS } from "./seed-data/units.ts";
 
 const prisma = new PrismaClient();
 
