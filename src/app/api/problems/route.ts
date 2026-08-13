@@ -1,0 +1,80 @@
+/**
+ * POST/GET /api/problems — 문제 등록(수동 자작/기출 직접 입력) · 본인 소유 문제 목록 조회
+ * (필터: unitId/difficulty/problemType/source/reviewStatus, 페이지네이션).
+ * 대응 계약: src/contracts/problem.contract.ts
+ *
+ * ⚠️ reviewStatus는 등록 요청에 포함되지 않는다(계약이 strictObject로 거부) — 신규 문제는
+ * 항상 review_status='pending'으로 시작하며, 승격은 PATCH /api/problems/{id}/review-status
+ * 전용 엔드포인트를 통해서만 가능하다(D-22).
+ */
+import type { NextRequest } from "next/server";
+
+import {
+  problemCreateRequestSchema,
+  problemFilterQuerySchema,
+  problemListResponseSchema,
+  problemResponseSchema,
+} from "@/contracts/problem.contract";
+import { jsonOk, unauthorizedError, validationError } from "@/lib/apiResponse";
+import { db } from "@/lib/db";
+import { serializeProblem } from "@/lib/serializers";
+import { getSessionUser } from "@/lib/session";
+
+// POST /api/problems — 문제 등록(source: manual/past_exam만 허용 — 계약이 강제)
+export async function POST(request: NextRequest) {
+  const session = await getSessionUser();
+  if (!session) return unauthorizedError();
+
+  const body = await request.json().catch(() => undefined);
+  const parsed = problemCreateRequestSchema.safeParse(body);
+  if (!parsed.success) return validationError(parsed.error);
+
+  const created = await db.problem.create({
+    data: {
+      userId: session.id,
+      unitId: parsed.data.unitId,
+      source: parsed.data.source,
+      difficulty: parsed.data.difficulty,
+      problemType: parsed.data.problemType,
+      content: parsed.data.content,
+      answer: parsed.data.answer,
+      solution: parsed.data.solution ?? null,
+    },
+  });
+
+  return jsonOk(
+    problemResponseSchema,
+    { data: serializeProblem(created) },
+    { status: 201 },
+  );
+}
+
+// GET /api/problems — 본인 소유 문제 목록(필터 + 페이지네이션, 타 사용자 문제 제외)
+export async function GET(request: NextRequest) {
+  const session = await getSessionUser();
+  if (!session) return unauthorizedError();
+
+  const url = new URL(request.url);
+  const parsed = problemFilterQuerySchema.safeParse(
+    Object.fromEntries(url.searchParams),
+  );
+  if (!parsed.success) return validationError(parsed.error);
+
+  const { page, pageSize, ...filters } = parsed.data;
+  const where = { userId: session.id, ...filters };
+
+  const [rows, total] = await Promise.all([
+    db.problem.findMany({
+      where,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      orderBy: { createdAt: "desc" },
+    }),
+    db.problem.count({ where }),
+  ]);
+
+  return jsonOk(problemListResponseSchema, {
+    data: rows.map(serializeProblem),
+    meta: { page, pageSize, total },
+  });
+}

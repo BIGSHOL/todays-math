@@ -1,9 +1,9 @@
 /**
- * 🔴 RED — 대응 구현 태스크: Phase 3, T3.1 (문제 CRUD API RED→GREEN)
+ * 🟢 GREEN — 대응 구현 태스크: Phase 3, T3.1 (문제 CRUD API RED→GREEN)
  *
- * `src/app/api/problems/**`가 아직 존재하지 않으므로 아래 import들은 런타임에 모듈 해석에
- * 실패해 이 파일 전체가 FAILED로 보고된다 — RED의 정상 상태다.
- * (`@ts-expect-error` 사용 이유는 src/__tests__/api/auth.test.ts 상단 주석 참조.)
+ * 구현: src/app/api/problems/**
+ * (RED 단계의 `@ts-expect-error` 임시 주석은 구현 완료로 제거됨 — 이유는
+ * src/__tests__/api/auth.test.ts 상단 주석 참조.)
  *
  * ⚠️ AI 생성(/generate)·변형(/transform) 엔드포인트는 T3.2(Claude API 래퍼) 범위이므로
  *    이 파일이 아니라 src/__tests__/unit/aiGenerator.test.ts(T3.2에서 신설)에서 다룬다.
@@ -11,21 +11,24 @@
  * 대응 계약: src/contracts/problem.contract.ts
  */
 import { NextRequest } from "next/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-// ⚠️ named import를 문장별로 분리한 이유는 src/__tests__/api/class.test.ts 상단 주석 참조
-//    (Prettier 줄바꿈으로 인한 @ts-expect-error 위치 어긋남 방지).
-// @ts-expect-error TODO(T3.1) — src/app/api/problems/route.ts 구현 전까지 모듈이 없다.
+// T1.1(실제 Auth.js 세션) 병합 이후: 이 테스트는 인증 자체가 아니라 CRUD·소유권 검증이
+// 목적이므로 세션을 고정 강사(USER_TEACHER_ID)로 모킹한다(src/__tests__/api/class.test.ts와
+// 동일 패턴 — Mock 문제 픽스처가 모두 USER_TEACHER_ID 소유이므로 이 값과 맞춰야 한다).
+vi.mock("@/lib/session", () => ({
+  getSessionUser: vi.fn(async () => ({
+    id: "10000000-0000-4000-8000-000000000001",
+    email: "teacher@todaysmath.test",
+    name: "테스트 강사",
+  })),
+}));
+
 import { GET as listProblems } from "@/app/api/problems/route";
-// @ts-expect-error TODO(T3.1) — src/app/api/problems/route.ts 구현 전까지 모듈이 없다.
 import { POST as createProblem } from "@/app/api/problems/route";
-// @ts-expect-error TODO(T3.1) — src/app/api/problems/[id]/route.ts 구현 전까지 모듈이 없다.
 import { GET as getProblem } from "@/app/api/problems/[id]/route";
-// @ts-expect-error TODO(T3.1) — src/app/api/problems/[id]/route.ts 구현 전까지 모듈이 없다.
 import { PATCH as patchProblem } from "@/app/api/problems/[id]/route";
-// @ts-expect-error TODO(T3.1) — src/app/api/problems/[id]/route.ts 구현 전까지 모듈이 없다.
 import { DELETE as deleteProblem } from "@/app/api/problems/[id]/route";
-// @ts-expect-error TODO(T3.1) — src/app/api/problems/[id]/review-status/route.ts 구현 전까지 없다.
 import { PATCH as patchReviewStatus } from "@/app/api/problems/[id]/review-status/route";
 
 import {

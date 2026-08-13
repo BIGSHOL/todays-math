@@ -12,10 +12,17 @@
  */
 import { randomUUID } from "node:crypto";
 
+import type {
+  Difficulty,
+  ProblemSource,
+  ReviewStatus,
+} from "@/contracts/common.contract";
 import type { ClassEntity, StudentEntity } from "@/contracts/class.contract";
+import type { ProblemEntity } from "@/contracts/problem.contract";
 import {
   MOCK_CLASS_OTHER_USER,
   MOCK_CLASSES,
+  MOCK_PROBLEMS,
   MOCK_STUDENTS,
 } from "@/mocks/data";
 
@@ -39,6 +46,22 @@ interface StudentRow {
   updatedAt: Date;
 }
 
+interface ProblemRow {
+  id: string;
+  userId: string;
+  unitId: string;
+  source: ProblemSource;
+  originProblemId: string | null;
+  difficulty: Difficulty;
+  problemType: string;
+  content: string;
+  answer: string;
+  solution: string | null;
+  reviewStatus: ReviewStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 function toClassRow(entity: ClassEntity): ClassRow {
   return {
     ...entity,
@@ -55,13 +78,23 @@ function toStudentRow(entity: StudentEntity): StudentRow {
   };
 }
 
+function toProblemRow(entity: ProblemEntity): ProblemRow {
+  return {
+    ...entity,
+    createdAt: new Date(entity.createdAt),
+    updatedAt: new Date(entity.updatedAt),
+  };
+}
+
 let classRows: ClassRow[] = [];
 let studentRows: StudentRow[] = [];
+let problemRows: ProblemRow[] = [];
 
 /** 매 테스트 시작 전 Mock 픽스처(src/mocks/data) 상태로 되돌린다 — 테스트 간 상태 오염 방지. */
 export function resetPrismaTestDouble() {
   classRows = [...MOCK_CLASSES, MOCK_CLASS_OTHER_USER].map(toClassRow);
   studentRows = MOCK_STUDENTS.map(toStudentRow);
+  problemRows = MOCK_PROBLEMS.map(toProblemRow);
 }
 resetPrismaTestDouble();
 
@@ -77,6 +110,42 @@ interface FindManyArgs<T> {
   skip?: number;
   take?: number;
   orderBy?: unknown;
+}
+
+/** Problem 전용 where 조건 — unitId만 목록(`{in:[...]}`) 필터를 함께 지원한다
+ *  (findEligibleProblems가 여러 단원 id를 한 번에 조회하기 위해 필요, T4.2 재사용). */
+interface ProblemWhereInput {
+  id?: string;
+  userId?: string;
+  unitId?: string | { in: string[] };
+  difficulty?: Difficulty;
+  problemType?: string;
+  source?: ProblemSource;
+  reviewStatus?: ReviewStatus;
+}
+
+function matchesProblem(row: ProblemRow, where?: ProblemWhereInput): boolean {
+  if (!where) return true;
+  if (where.id !== undefined && row.id !== where.id) return false;
+  if (where.userId !== undefined && row.userId !== where.userId) return false;
+  if (where.unitId !== undefined) {
+    const unitMatches =
+      typeof where.unitId === "string"
+        ? row.unitId === where.unitId
+        : where.unitId.in.includes(row.unitId);
+    if (!unitMatches) return false;
+  }
+  if (where.difficulty !== undefined && row.difficulty !== where.difficulty)
+    return false;
+  if (where.problemType !== undefined && row.problemType !== where.problemType)
+    return false;
+  if (where.source !== undefined && row.source !== where.source) return false;
+  if (
+    where.reviewStatus !== undefined &&
+    row.reviewStatus !== where.reviewStatus
+  )
+    return false;
+  return true;
 }
 
 export const prismaTestDouble = {
@@ -182,6 +251,69 @@ export const prismaTestDouble = {
       const index = studentRows.findIndex((r) => r.id === where.id);
       if (index === -1) throw new Error(`student not found: ${where.id}`);
       const [removed] = studentRows.splice(index, 1);
+      return removed!;
+    },
+  },
+  problem: {
+    async create({
+      data,
+    }: {
+      data: Omit<
+        ProblemRow,
+        "id" | "originProblemId" | "reviewStatus" | "createdAt" | "updatedAt"
+      >;
+    }) {
+      const now = new Date();
+      const row: ProblemRow = {
+        id: randomUUID(),
+        ...data,
+        originProblemId: null,
+        reviewStatus: "pending",
+        createdAt: now,
+        updatedAt: now,
+      };
+      problemRows.push(row);
+      return row;
+    },
+    async findMany({
+      where,
+      skip = 0,
+      take,
+    }: {
+      where?: ProblemWhereInput;
+      skip?: number;
+      take?: number;
+      orderBy?: unknown;
+    } = {}) {
+      const filtered = problemRows.filter((row) => matchesProblem(row, where));
+      return take === undefined
+        ? filtered.slice(skip)
+        : filtered.slice(skip, skip + take);
+    },
+    async count({ where }: { where?: ProblemWhereInput } = {}) {
+      return problemRows.filter((row) => matchesProblem(row, where)).length;
+    },
+    async findUnique({ where }: { where: { id: string } }) {
+      return problemRows.find((row) => row.id === where.id) ?? null;
+    },
+    async update({
+      where,
+      data,
+    }: {
+      where: { id: string };
+      data: Partial<
+        Omit<ProblemRow, "id" | "userId" | "createdAt" | "updatedAt">
+      >;
+    }) {
+      const row = problemRows.find((r) => r.id === where.id);
+      if (!row) throw new Error(`problem not found: ${where.id}`);
+      Object.assign(row, data, { updatedAt: new Date() });
+      return row;
+    },
+    async delete({ where }: { where: { id: string } }) {
+      const index = problemRows.findIndex((r) => r.id === where.id);
+      if (index === -1) throw new Error(`problem not found: ${where.id}`);
+      const [removed] = problemRows.splice(index, 1);
       return removed!;
     },
   },
