@@ -38,6 +38,30 @@
 
 ---
 
+## 자산 이관 전략 (2026-08-13 확정 — D-25, D-26)
+
+기존 프로젝트 탐색 결과, 아래 자산을 이관한다. 신규 개발 태스크는 "이식+검증"으로 성격이 바뀐다.
+상세 위치는 메모리 `legacy-asset-map` 및 각 프로젝트 문서 참조.
+
+| 이관 자산 | 출처 | 반영 태스크 |
+|-----------|------|------------|
+| 교육과정 트리 초1~고3 (171노드) + 중고 3단 트리(대38/중76/소단원) + 초등 세분화 282개념 | `F:\mathlab\src\lib\constants\curriculum.ts` + `F:\math-report\...\upload-form\constants.ts` + `F:\math_test\backend\app\data\pdf_concept_map.py` | T0.3 |
+| 기출 문항 3,094 (LaTeX+정답 2,484+서술형 해설) | `F:\시험지변환기\db\ocr_pilot\*.json` (⚠️ `db\extracted`는 HWP-EQ라 사용 금지) | T3.0 (신설) |
+| 자작 시드 문항 ~753 (초3~고2, LaTeX+해설+힌트) | `F:\math_test\backend\app\seeds\` | T3.0 (신설) |
+| RPM 5,035문항 — **원본도 이관하되 직접 출제 잠금, 앱 내 변형의 원본 전용 (D-26)** | sumaek Supabase (읽기 전용 SELECT로 추출) | T3.0 — `directUseAllowed=false`로 적재, 변형본만 출제 풀 진입 |
+| 변형 엔진 설계 (parse/solve/render/vary/check 분리 + 원본 재현 검사) | `C:\Creative\sumaek\packages\core\src\variants\` | T3.2 |
+| 출제 엔진 참조 구현 (결정론적 버킷, shortfall 보고) | `C:\Creative\sumaek\packages\core\src\assessment\select.ts` + `F:\mathlab-lab-p1\...\smart-prescriber.ts` | T4.1 |
+| KaTeX 3단 방어 렌더 + 한국 수학 정규화 47KB | `F:\Mathgen\src\lib\katexRender.ts` + `textPreprocess.ts` | T3.3 |
+| **A4 인쇄 엔진 일체** (템플릿 6종, 실측 높이 페이지 패킹, PDF 내보내기, 정답지) | `F:\Mathgen\src\components\print\` + `src\lib\printPack.ts` 등 | T5.2 |
+| 지뢰 문서 3종 (필독) | sumaek `docs\handoff.md` / mathlab-lab-p1 `docs\lab\HANDOFF.md` / Mathgen `CLAUDE.md` | 관련 태스크 착수 전 |
+
+**이관 원칙**:
+1. 코드는 복사 후 이 프로젝트 컨벤션(07 문서)에 맞춰 정리 — 원본 저장소는 절대 수정하지 않는다
+2. mathlab 라이브 Supabase에는 **읽기 접근도 신중히** — 스키마/데이터 변경 절대 금지
+3. 이식 코드도 TDD 게이트 동일 적용 — 기존 테스트가 없으면 이식과 동시에 테스트 작성
+
+---
+
 ## 마일스톤 개요
 
 | 마일스톤 | Phase | 설명 | 주요 기능 |
@@ -91,20 +115,25 @@
 - [ ] `npx prisma migrate dev` 성공
 - [ ] `npx prisma studio`에서 전체 테이블 확인
 
-### [] Phase 0, T0.3: UNIT 교육과정 시드 데이터
+### [] Phase 0, T0.3: UNIT 교육과정 시드 데이터 (기존 자산 이관)
 
 **담당**: database-specialist
 
 **작업 내용**:
-- 한국 수학 교육과정(중1~고3) 학년>대단원>소단원 트리를 `prisma/seed.ts`로 작성
-- `order_index`는 교육과정 순서와 정확히 일치 (진도 "다음으로" 이동의 기준)
-- 우선 원장님 수업 학년부터 (범위는 원장님 확인 필요 — 예: 중1~중3 먼저)
+- **기존 자산 3종을 통합**하여 `prisma/seed.ts` 작성 (신규 작성 아님 — 이관·통합):
+  - 골격: `F:\mathlab\src\lib\constants\curriculum.ts` (초1~고3, 25학기, 171노드 — **초등 포함 요구 충족**)
+  - 중고 소단원 세분화: `F:\math-report\frontend\src\components\exam\upload-form\constants.ts`의 `CURRICULUM_HIERARCHY` (대38/중76/소단원)
+  - 초등 세분화 보강: `F:\math_test\backend\app\data\pdf_concept_map.py` (초3~초6, 282개념)
+- Unit 스키마 매핑: grade(학년/학기 블록) + chapter(대단원) + section(소단원)
+- `orderIndex`는 **전역 연속값** 채택 (T0.2 권장안 — 확인테스트 범위와 "다음 소단원" 이동이 학년 경계를 넘을 수 있음)
+- 원본 파일은 절대 수정하지 않음 (읽기 전용 참조)
 
 **산출물**:
-- `prisma/seed.ts`
+- `prisma/seed.ts`, `package.json`의 prisma.seed 설정
 
 **완료 조건**:
-- [ ] `npx prisma db seed` 성공
+- [ ] `npx prisma db seed` 성공 (DB 마이그레이션 완료 후)
+- [ ] 초1~고3 전 범위 커버 확인 (블록 수/노드 수 검증)
 - [ ] 원장님이 단원 트리 표기(교재 용어와 일치 여부) 확인
 
 ### [] Phase 0, T0.4: 테스트 인프라 구축
@@ -376,6 +405,47 @@ cd ../testautocreator-phase2-class-ui
 
 ## M3: FEAT-5 문제은행 (Phase 3 — Worktree 필수)
 
+### [] Phase 3, T3.0: 기존 문제 데이터 이관 (신설 — 자산 이관)
+
+**담당**: database-specialist
+
+**Git Worktree 설정**:
+```bash
+git worktree add ../testautocreator-phase3-import -b phase/3-import
+cd ../testautocreator-phase3-import
+```
+
+**선행 조건**: 스키마 보강 마이그레이션 — `Problem.directUseAllowed Boolean @default(true)` 추가
+(RPM 원본 잠금용, D-26)
+
+**작업 내용** (3개 소스 → Prisma 적재 컨버터 작성):
+1. **기출 3,094문항**: `F:\시험지변환기\db\ocr_pilot\*.json` (본문) + `*.answers.json` (정답)
+   - ContentBlock 구조(text/equation/table/figure) → 우리 content(LaTeX 마크다운) 변환
+   - source=`past_exam`, directUseAllowed=true
+   - ⚠️ figure 블록은 크롭 이미지 참조 — 이미지 자산 처리 방안 포함 (스토리지 업로드 or 1차 제외 후 목록 보고)
+   - ⚠️ `db\extracted\*.json`(HWP-EQ 표기)은 사용 금지
+2. **자작 시드 ~753문항**: `F:\math_test\backend\app\seeds\` (Python dict — 파싱 스크립트로 추출)
+   - source=`manual`, directUseAllowed=true, 난이도 1~10 → easy/mid/hard 매핑 규칙 정의
+3. **RPM 5,035문항**: sumaek Supabase에서 **읽기 전용 SELECT**로 추출 (sumaek .env의 접속 정보 사용, 쓰기 절대 금지)
+   - source=`transformed`의 원본으로 쓸 수 있게 별도 source 값 또는 기존 값 + **directUseAllowed=false** 적재
+   - 단원 매핑: sumaek의 개념 매핑 활용
+4. 전 문항 공통: 단원(unitId) 매핑 — T0.3 트리와 각 소스의 topic/개념 필드 연결 (매핑 불가분은 `unclassified` 리포트로 출력, 조용히 버리지 않음)
+
+**TDD**: 컨버터 순수 함수(블록→LaTeX 변환, 난이도 매핑, 단원 매핑)는 단위 테스트 선행 작성
+
+**산출물**:
+- `scripts/import/` 컨버터 3종 + `src/__tests__/unit/import.test.ts`
+- 적재 결과 리포트 (소스별 성공/실패/미분류 수)
+
+**인수 조건**:
+- [ ] 기출+자작 적재 완료, KaTeX 렌더 샘플 검수 (수식 깨짐 스팟 체크 20문항)
+- [ ] RPM 전량 directUseAllowed=false 확인 (출제 쿼리에서 제외되는지 테스트)
+- [ ] 원본 저장소/DB 무변경 확인
+- [ ] 미분류 문항 리포트 생성
+
+**완료 시**:
+- [ ] 사용자 승인 후 main 병합, worktree 정리
+
 ### [] Phase 3, T3.1: 문제 CRUD API RED→GREEN
 
 **담당**: backend-specialist
@@ -407,6 +477,9 @@ cd ../testautocreator-phase3-problem
 
 **담당**: backend-specialist
 **의존성**: 없음 (Claude API는 **MSW/vi.mock으로 모킹** — 실호출 없이 테스트)
+**이관 참조**: 변형은 sumaek `packages\core\src\variants\`의 역할 분리 설계를 따를 것 —
+parse(원문→파라미터) / solve(**정답의 유일한 권한** — AI가 정답 사슬에 끼지 않음) / render / vary(결정론적) / check(교육적 적절성).
+검증은 **원본 재현 검사**(원본 숫자 대입 시 원래 정답 재현). AI 생성 함정 목록은 mathlab-lab-p1 `problem-gen.ts`(JSON 잘림/LaTeX 백슬래시 salvage 등) 참조.
 
 **Git Worktree 설정**:
 ```bash
@@ -477,6 +550,9 @@ cd ../testautocreator-phase3-problem-ui
 
 **담당**: backend-specialist
 **의존성**: 없음 — **순수 함수 (DB/AI 미의존), 인메모리 픽스처로 테스트**
+**이관 참조**: sumaek `packages\core\src\assessment\select.ts` (결정론적 선택 — 같은 풀·정책·시드 → 같은 결과, 부족분은 조용히 메우지 않고 shortfall 보고, 문항별 선정 이유 저장)를 1차 참조.
+버킷 구조는 MVP에 맞게 축소: `today_concept`(일일) + `range_review`(확인) 2종부터. mathlab-lab-p1 `smart-prescriber.ts`의 선수개념 게이팅은 v2 후보.
+**출제 쿼리는 `directUseAllowed=false` 문항(RPM 원본)을 반드시 제외 (D-26)** — 전용 테스트 케이스 필수.
 
 **Git Worktree 설정**:
 ```bash
@@ -587,11 +663,12 @@ cd ../testautocreator-phase4-test-ui
 **⚠️ D-24: 최우선 디자인 작업 — T5.2의 선행 게이트**
 
 **작업 내용**:
-- 학원명/날짜/이름칸/문항 배치/폰트(명조 vs 고딕 실물 비교)/여백 등 A4 지면 시안 2~3안 제시
+- **Mathgen 인쇄 템플릿 6종**(평가원/정통/모던/워크북/자습/유형훈련 — `F:\Mathgen\src\components\print\templates\`)을 실물 출력해 시안으로 제시 → 원장님이 베이스 선택 + 커스터마이즈 방향 결정
+- 학원명/날짜/이름칸/문항 배치/폰트(명조 vs 고딕 실물 비교)/여백 확정
 - 원장님 피드백 → 확정 → `05-design-system.md`의 해당 항목 `[확정]`으로 갱신
 
 **산출물**:
-- 확정된 지면 스펙 (05 문서 갱신 + 시안 파일)
+- 확정된 지면 스펙 (05 문서 갱신 + 선택된 베이스 템플릿 + 커스터마이즈 목록)
 
 **완료 조건**:
 - [ ] 원장님 확정 승인
@@ -608,12 +685,18 @@ git worktree add ../testautocreator-phase5-print -b phase/5-print
 cd ../testautocreator-phase5-print
 ```
 
+**이관 참조 (신규 개발 아님 — 이식+검증)**: Mathgen 인쇄 엔진 일체를 이식:
+- `F:\Mathgen\src\components\print\` (T5.1에서 선택된 템플릿 + A4Page + PrintAnswerKeyPage + tokens/types)
+- `F:\Mathgen\src\lib\printPack.ts` (실측 높이 기반 페이지 패킹) + `printLayout.ts` + `printGeometry.ts`
+- `F:\Mathgen\src\lib\katexRender.ts` + `textPreprocess.ts` (KaTeX 3단 방어 + 한국 수학 정규화)
+- React 19 → Next.js 이식이므로 구조 호환. 우리 컨벤션(07 문서)에 맞춰 정리, 미사용 템플릿은 가져오지 않음
+
 **TDD 사이클**:
 1. **RED**: `src/__tests__/components/TestPrint.test.tsx` + `e2e/print-preview.spec.ts`
    - A4 레이아웃 구성 요소(학원명/날짜/이름칸) 렌더링
-   - 문항 페이지 나눔 (`break-inside: avoid`) 적용 확인
+   - 문항 페이지 나눔 (printPack 패킹 + `break-inside: avoid`) 적용 확인
    - 답안지 분리 출력 모드
-2. **GREEN**: `src/app/(main)/tests/[id]/print/page.tsx`, `src/components/print/**`, 인쇄 전용 CSS (`@media print`)
+2. **GREEN**: 이식 + `src/app/(main)/tests/[id]/print/page.tsx` 연결
 3. **REFACTOR**: 지면 스펙을 상수화 (`src/lib/print/layout.ts`)
 
 **테스트 명령어**: `npm run test -- src/__tests__/components/TestPrint.test.tsx`

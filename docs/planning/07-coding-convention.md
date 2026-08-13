@@ -333,3 +333,6 @@ feat(generator): 난이도 배분 알고리즘 구현
 | D-22 | AI 생성물 검수 | pending→approved 승격 후 출제 |
 | D-23 | 디자인 프로세스 | 제안→피드백→확정 후 구현 |
 | D-24 | 최우선 디자인 | 시험지 지면 (인쇄물) |
+| D-25 | 프로젝트 방향 | 오늘의수학 신규 진행 + 기존 자산(mathlab/sumaek/시험지변환기/Mathgen/math_test/math-report) 선별 이관 |
+| D-26 | RPM 문항 정책 | 원본 5,035문항 이관하되 `directUseAllowed=false` 잠금 — 직접 출제 금지, 앱 내 변형의 원본 전용 |
+| D-27 | Unit.orderIndex | 전역 연속값 (학년 경계 넘는 범위 계산 대비) |
