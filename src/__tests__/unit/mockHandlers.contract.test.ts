@@ -33,6 +33,7 @@ import {
   testPrintResponseSchema,
   testProblemReplaceResponseSchema,
 } from "@/contracts/test.contract";
+import { unitListResponseSchema } from "@/contracts/unit.contract";
 
 import {
   AI_GENERATION_FAILURE_UNIT_ID,
@@ -374,5 +375,13 @@ describe("[T0.5.2] MSW ↔ 계약 — test(출제/검수/교체/확정/인쇄)",
     });
     expect(res.status).toBe(200);
     testPrintResponseSchema.parse(await res.json());
+  });
+});
+
+describe("[T0.5.2] MSW ↔ 계약 — unit", () => {
+  it("GET /api/units 목록 응답은 unitListResponseSchema를 통과한다", async () => {
+    const res = await fetch("/api/units");
+    expect(res.status).toBe(200);
+    unitListResponseSchema.parse(await res.json());
   });
 });

@@ -1,0 +1,110 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+
+import type { TestEntity, TestProblemItem } from "@/contracts/test.contract";
+import {
+  testConfirmResponseSchema,
+  testDetailResponseSchema,
+  testProblemReplaceResponseSchema,
+} from "@/contracts/test.contract";
+
+type ReadyState = {
+  status: "ready";
+  test: TestEntity;
+  problems: TestProblemItem[];
+};
+
+type ReviewState =
+  | { status: "loading" }
+  | { status: "notfound" }
+  | { status: "error"; message: string }
+  | ReadyState;
+
+export function useTestReview(testId: string) {
+  const [state, setState] = useState<ReviewState>({ status: "loading" });
+  const [replacingSeq, setReplacingSeq] = useState<number | null>(null);
+  const [confirming, setConfirming] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/tests/${testId}`)
+      .then(async (res) => {
+        if (res.status === 404) {
+          if (!cancelled) setState({ status: "notfound" });
+          return;
+        }
+        if (!res.ok) throw new Error("fail");
+        const body = testDetailResponseSchema.parse(await res.json());
+        if (!cancelled) {
+          setState({
+            status: "ready",
+            test: body.data.test,
+            problems: body.data.problems,
+          });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setState({
+            status: "error",
+            message: "테스트를 불러오지 못했습니다",
+          });
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [testId]);
+
+  const replace = useCallback(
+    async (seq: number) => {
+      if (state.status !== "ready" || state.test.status !== "draft") return;
+      setReplacingSeq(seq);
+      try {
+        const res = await fetch(`/api/tests/${testId}/problems/${seq}`, {
+          method: "PUT",
+        });
+        if (!res.ok) return;
+        const body = testProblemReplaceResponseSchema.parse(await res.json());
+        setState((prev) => {
+          if (prev.status !== "ready") return prev;
+          return {
+            status: "ready",
+            test: body.data.test,
+            problems: prev.problems.map((item) =>
+              item.orderIndex === seq ? body.data.problem : item,
+            ),
+          };
+        });
+      } finally {
+        setReplacingSeq(null);
+      }
+    },
+    [state, testId],
+  );
+
+  const confirm = useCallback(async () => {
+    if (state.status !== "ready" || state.test.status !== "draft") return;
+    setConfirming(true);
+    try {
+      const res = await fetch(`/api/tests/${testId}/confirm`, {
+        method: "POST",
+      });
+      if (!res.ok) return;
+      const body = testConfirmResponseSchema.parse(await res.json());
+      setState((prev) =>
+        prev.status === "ready" ? { ...prev, test: body.data } : prev,
+      );
+    } finally {
+      setConfirming(false);
+    }
+  }, [state, testId]);
+
+  const replacedCount =
+    state.status === "ready"
+      ? state.problems.filter((item) => item.replaced).length
+      : 0;
+
+  return { state, replace, confirm, replacingSeq, confirming, replacedCount };
+}
