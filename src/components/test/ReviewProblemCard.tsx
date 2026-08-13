@@ -1,4 +1,4 @@
-import { MathText } from "@/components/math/MathText";
+import { ProblemExcerpt } from "@/components/problem/ProblemExcerpt";
 import { Button } from "@/components/ui/Button";
 import type { ProblemEntity } from "@/contracts/problem.contract";
 
@@ -11,7 +11,7 @@ type Props = {
   replacing?: boolean;
 };
 
-export function ProblemCard({
+export function ReviewProblemCard({
   orderIndex,
   problem,
   onReplace,
@@ -31,11 +31,7 @@ export function ProblemCard({
           <span className="ml-2">{problem.problemType}</span>
         </p>
       </div>
-      <MathText
-        text={problem.content}
-        as="div"
-        className="min-w-0 text-[12.5px] leading-relaxed"
-      />
+      <ProblemExcerpt problem={problem} className="leading-relaxed" />
       {onReplace ? (
         <Button
           variant="ghost"

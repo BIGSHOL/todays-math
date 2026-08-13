@@ -1,7 +1,7 @@
-import { MathText } from "@/components/math/MathText";
 import type { ProblemEntity } from "@/contracts/problem.contract";
 
 import { DIFFICULTY_LABEL, REVIEW_STATUS_LABEL } from "./labels";
+import { ProblemExcerpt } from "./ProblemExcerpt";
 
 type ProblemCardProps = {
   problem: ProblemEntity;
@@ -21,11 +21,7 @@ export function ProblemCard({ problem }: ProblemCardProps) {
           {REVIEW_STATUS_LABEL[problem.reviewStatus]}
         </span>
       </div>
-      <MathText
-        as="div"
-        className="mt-2 text-[12.5px] font-normal text-[#161616]"
-        text={problem.content}
-      />
+      <ProblemExcerpt problem={problem} className="mt-2" />
     </article>
   );
 }

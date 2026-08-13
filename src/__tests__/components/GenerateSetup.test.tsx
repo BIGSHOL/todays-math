@@ -18,6 +18,7 @@ import {
   CLASS_STARVED_ID,
   MOCK_CLASS_A,
   MOCK_CLASS_B,
+  MOCK_PROBLEMS,
   MOCK_REVIEW_RANGE_END_UNIT,
   MOCK_REVIEW_RANGE_START_UNIT,
   MOCK_STUDENT_1,
@@ -265,58 +266,44 @@ describe("[T4.3 S-04] 출제 설정 — 문제 부족", () => {
     expect(generateBodies.at(-1)).toMatchObject({ problemCount: 3 });
   });
 
-  it("AI 생성을 누르면 생성 후 다시 출제한다", async () => {
+  it("AI 생성은 pending으로 두고 승격 안내만 한다", async () => {
     let generated = false;
-    let retried = false;
+    let approved = false;
     server.use(
       http.post("/api/problems/generate", async () => {
         generated = true;
-        return HttpResponse.json({ data: [] }, { status: 201 });
-      }),
-      http.post("/api/tests/generate", async () => {
-        if (!generated) {
-          return HttpResponse.json(
-            {
-              error: {
-                code: "INSUFFICIENT_PROBLEMS",
-                message: "이 단원의 문제가 부족합니다.",
-                details: {
-                  unitId: MOCK_REVIEW_RANGE_START_UNIT.id,
-                  available: 0,
-                  required: 8,
-                },
-              },
-            },
-            { status: 422 },
-          );
-        }
-        retried = true;
         return HttpResponse.json(
           {
-            data: {
-              test: {
-                ...MOCK_TEST_DRAFT,
-                id: "90000000-0000-4000-8000-000000000044",
+            data: [
+              {
+                ...MOCK_PROBLEMS[0],
+                reviewStatus: "pending",
+                source: "ai_generated",
               },
-              problems: MOCK_TEST_DRAFT_PROBLEMS,
-              shortfall: [],
-            },
+            ],
           },
           { status: 201 },
         );
       }),
+      http.patch(/\/api\/problems\/.+\/review-status$/, () => {
+        approved = true;
+        return HttpResponse.json({ data: MOCK_PROBLEMS[0] });
+      }),
     );
 
     const { user } = await renderSetup();
+    await user.selectOptions(screen.getByLabelText("반"), CLASS_STARVED_ID);
     await user.click(screen.getByRole("button", { name: "출제" }));
     await user.click(await screen.findByRole("button", { name: "AI 생성" }));
 
-    await waitFor(() => {
-      expect(generated).toBe(true);
-      expect(retried).toBe(true);
-      expect(nav.push).toHaveBeenCalledWith(
-        "/tests/90000000-0000-4000-8000-000000000044",
-      );
-    });
+    expect(
+      await screen.findByText(/문제은행에서 승격한 뒤 다시 출제하세요/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("alert").querySelector('a[href="/problems"]'),
+    ).not.toBeNull();
+    expect(generated).toBe(true);
+    expect(approved).toBe(false);
+    expect(nav.push).not.toHaveBeenCalled();
   });
 });

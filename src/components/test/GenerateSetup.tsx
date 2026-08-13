@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
@@ -194,7 +196,7 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
                   type="button"
                   variant="primary"
                   disabled={form.busy}
-                  onClick={() => void form.generateAiThenRetry()}
+                  onClick={() => void form.generateAiDrafts()}
                 >
                   AI 생성
                 </Button>
@@ -207,6 +209,15 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
                   문항 수 줄이기
                 </Button>
               </div>
+              {form.generatedPendingCount > 0 ? (
+                <p className="mt-3">
+                  {form.generatedPendingCount}문항을 생성했습니다. 문제은행에서
+                  승격한 뒤 다시 출제하세요.{" "}
+                  <Link href="/problems" className="font-bold underline">
+                    문제은행
+                  </Link>
+                </p>
+              ) : null}
             </div>
           ) : null}
 

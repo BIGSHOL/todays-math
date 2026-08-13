@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/Button";
 
-import { ProblemCard } from "./ProblemCard";
+import { ReviewProblemCard } from "./ReviewProblemCard";
 import { useTestReview } from "./useTestReview";
 
 type Props = {
@@ -52,7 +52,7 @@ export function TestReview({ testId }: Props) {
         </div>
         <div>
           {state.problems.map((item) => (
-            <ProblemCard
+            <ReviewProblemCard
               key={item.id}
               orderIndex={item.orderIndex}
               problem={item.problem}

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { AppChrome } from "@/components/chrome/AppChrome";
 import type { ClassEntity, ProgressEntity } from "@/contracts/class.contract";
 import type { TestEntity } from "@/contracts/test.contract";
 import type { UnitEntity } from "@/contracts/unit.contract";
@@ -12,7 +13,6 @@ import { buildClassRows, remainingCount, weekStats } from "@/lib/main/pipeline";
 import { ClassCard } from "./ClassCard";
 import { DoneSummaryRow } from "./DoneSummaryRow";
 import { LedgerTable } from "./LedgerTable";
-import { Masthead } from "./Masthead";
 import { ProgressPanel } from "./ProgressPanel";
 
 type LoadState =
@@ -115,12 +115,18 @@ export function MainScreen() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-canvas text-ink">
-      <Masthead
-        remaining={remaining}
-        view={view}
-        onToggle={() => setViewOverride(view === "stack" ? "ledger" : "stack")}
-      />
+    <AppChrome
+      remaining={remaining}
+      extraNav={
+        <button
+          type="button"
+          onClick={() => setViewOverride(view === "stack" ? "ledger" : "stack")}
+          className="bg-[#161616] px-2.5 py-0.5 text-[10.5px] font-extrabold text-[#ECECEA]"
+        >
+          {view === "stack" ? "전체 표 ⇄" : "오늘 작업 ⇄"}
+        </button>
+      }
+    >
       <div className="flex min-h-0 flex-1">
         <div className="min-w-0 flex-1">
           {view === "stack" ? (
@@ -156,6 +162,6 @@ export function MainScreen() {
           }}
         />
       </div>
-    </div>
+    </AppChrome>
   );
 }

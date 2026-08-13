@@ -8,6 +8,7 @@ import {
 } from "./env";
 import { completeOnboarding, loginViaUi, signupViaUi } from "./helpers/auth";
 import {
+  approvePendingProblems,
   currentClassAndUnit,
   seedApprovedProblemsViaApi,
 } from "./helpers/bank";
@@ -125,6 +126,11 @@ test.describe("T6.1 여정 C — 문제 부족 후 AI 생성(모킹)", () => {
     await expect(page.getByText(/필요 8/)).toBeVisible();
 
     await page.getByRole("button", { name: "AI 생성" }).click();
+    await expect(
+      page.getByText(/문제은행에서 승격한 뒤 다시 출제하세요/),
+    ).toBeVisible();
+    await approvePendingProblems(page.request);
+    await page.getByRole("button", { name: "출제" }).click();
     await page.waitForURL(/\/tests\/[0-9a-f-]{36}$/i);
     await expect(page.getByRole("heading", { name: "검수" })).toBeVisible();
     await expect(page.getByRole("article", { name: "문 1" })).toBeVisible();

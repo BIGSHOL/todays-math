@@ -80,7 +80,7 @@
 
 ## M0: 프로젝트 셋업 (Phase 0 — main 직접 작업)
 
-### [] Phase 0, T0.1: Git 저장소 + Next.js 프로젝트 초기화
+### [x] Phase 0, T0.1: Git 저장소 + Next.js 프로젝트 초기화
 
 **담당**: frontend-specialist
 
@@ -99,7 +99,7 @@
 - [ ] `npm run lint` / `npm run type-check` 통과
 - [ ] 최초 커밋 완료
 
-### [] Phase 0, T0.2: Prisma 스키마 + DB 연결
+### [x] Phase 0, T0.2: Prisma 스키마 + DB 연결
 
 **담당**: database-specialist
 
@@ -116,7 +116,7 @@
 - [ ] `npx prisma migrate dev` 성공
 - [ ] `npx prisma studio`에서 전체 테이블 확인
 
-### [] Phase 0, T0.3: UNIT 교육과정 시드 데이터 (기존 자산 이관)
+### [x] Phase 0, T0.3: UNIT 교육과정 시드 데이터 (기존 자산 이관)
 
 **담당**: database-specialist
 
@@ -137,7 +137,7 @@
 - [ ] 초1~고3 전 범위 커버 확인 (블록 수/노드 수 검증)
 - [ ] 원장님이 단원 트리 표기(교재 용어와 일치 여부) 확인
 
-### [] Phase 0, T0.4: 테스트 인프라 구축
+### [x] Phase 0, T0.4: 테스트 인프라 구축
 
 **담당**: test-specialist
 
@@ -159,7 +159,7 @@
 
 ## M0.5: 계약 & 테스트 설계 (Phase 0 — main 직접 작업)
 
-### [] Phase 0, T0.5.1: Zod 계약 정의 (API SSOT)
+### [x] Phase 0, T0.5.1: Zod 계약 정의 (API SSOT)
 
 **담당**: backend-specialist
 
@@ -177,7 +177,7 @@
 - [ ] `03-user-flow.md`의 8개 화면이 필요로 하는 API가 계약으로 모두 커버됨
 - [ ] `npm run type-check` 통과
 
-### [] Phase 0, T0.5.2: MSW Mock 핸들러 + Mock 데이터
+### [x] Phase 0, T0.5.2: MSW Mock 핸들러 + Mock 데이터
 
 **담당**: test-specialist
 
@@ -193,7 +193,7 @@
 - [ ] 모든 핸들러 응답이 Zod 계약 파싱 통과
 - [ ] 화면 개발이 실제 API 없이 가능한 상태
 
-### [] Phase 0, T0.5.3: RED 테스트 선행 작성
+### [x] Phase 0, T0.5.3: RED 테스트 선행 작성
 
 **담당**: test-specialist
 
@@ -217,7 +217,7 @@
 
 ## M1: FEAT-0 인증/온보딩 (Phase 1 — Worktree 필수)
 
-### [] Phase 1, T1.1: Auth.js 인증 API RED→GREEN
+### [x] Phase 1, T1.1: Auth.js 인증 API RED→GREEN
 
 **담당**: backend-specialist
 
@@ -254,7 +254,7 @@ cd ../testautocreator-phase1-auth
 **완료 시**:
 - [ ] 사용자 승인 후 main 병합, worktree 정리
 
-### [] Phase 1, T1.2: 로그인/가입 화면 (S-01) RED→GREEN
+### [x] Phase 1, T1.2: 로그인/가입 화면 (S-01) RED→GREEN
 
 **담당**: frontend-specialist
 **의존성**: T1.1 — **MSW auth 핸들러로 독립 개발 가능**
@@ -287,7 +287,7 @@ cd ../testautocreator-phase1-auth-ui
 **완료 시**:
 - [ ] 사용자 승인 후 main 병합, worktree 정리
 
-### [] Phase 1, T1.3: 온보딩 플로우 (S-02) RED→GREEN
+### [x] Phase 1, T1.3: 온보딩 플로우 (S-02) RED→GREEN
 
 **담당**: frontend-specialist
 **의존성**: T2.1(반/학생 API) — **MSW class 핸들러로 독립 개발 가능**
@@ -319,7 +319,7 @@ cd ../testautocreator-phase1-onboarding
 
 ## M2: FEAT-4 반/학생/진도 관리 (Phase 2 — Worktree 필수)
 
-### [] Phase 2, T2.1: 반/학생 CRUD API RED→GREEN
+### [x] Phase 2, T2.1: 반/학생 CRUD API RED→GREEN
 
 **담당**: backend-specialist
 
@@ -347,7 +347,7 @@ cd ../testautocreator-phase2-class
 **완료 시**:
 - [ ] 사용자 승인 후 main 병합, worktree 정리
 
-### [] Phase 2, T2.2: 진도 기록/조회 API RED→GREEN
+### [x] Phase 2, T2.2: 진도 기록/조회 API RED→GREEN
 
 **담당**: backend-specialist
 
@@ -374,7 +374,7 @@ cd ../testautocreator-phase2-progress
 **완료 시**:
 - [ ] 사용자 승인 후 main 병합, worktree 정리
 
-### [] Phase 2, T2.3: 반/학생 관리 화면 (S-07) RED→GREEN
+### [x] Phase 2, T2.3: 반/학생 관리 화면 (S-07) RED→GREEN
 
 **담당**: frontend-specialist
 **의존성**: T2.1, T2.2 — **MSW 핸들러로 독립 개발 가능**
@@ -406,7 +406,7 @@ cd ../testautocreator-phase2-class-ui
 
 ## M3: FEAT-5 문제은행 (Phase 3 — Worktree 필수)
 
-### [] Phase 3, T3.0: 기존 문제 데이터 이관 (신설 — 자산 이관)
+### [] Phase 3, T3.0: 기존 문제 데이터 이관 (신설 — 자산 이관) — 컨버터/dry-run GREEN, DB 적재는 로컬 전용 대기
 
 **담당**: database-specialist
 
@@ -447,7 +447,7 @@ cd ../testautocreator-phase3-import
 **완료 시**:
 - [ ] 사용자 승인 후 main 병합, worktree 정리
 
-### [] Phase 3, T3.1: 문제 CRUD API RED→GREEN
+### [x] Phase 3, T3.1: 문제 CRUD API RED→GREEN
 
 **담당**: backend-specialist
 
@@ -474,7 +474,7 @@ cd ../testautocreator-phase3-problem
 **완료 시**:
 - [ ] 사용자 승인 후 main 병합, worktree 정리
 
-### [] Phase 3, T3.2: Claude API 래퍼 — 문제 생성/변형 RED→GREEN
+### [x] Phase 3, T3.2: Claude API 래퍼 — 문제 생성/변형 RED→GREEN
 
 **담당**: backend-specialist
 **의존성**: 없음 (Claude API는 **MSW/vi.mock으로 모킹** — 실호출 없이 테스트)
@@ -514,7 +514,7 @@ vi.mock('@anthropic-ai/sdk');
 **완료 시**:
 - [ ] 사용자 승인 후 main 병합, worktree 정리
 
-### [] Phase 3, T3.3: 문제은행 화면 (S-08) RED→GREEN
+### [x] Phase 3, T3.3: 문제은행 화면 (S-08) RED→GREEN
 
 **담당**: frontend-specialist
 **의존성**: T3.1, T3.2 — **MSW 핸들러로 독립 개발 가능**
@@ -547,7 +547,7 @@ cd ../testautocreator-phase3-problem-ui
 
 ## M4: FEAT-1+2 출제 엔진 (Phase 4 — Worktree 필수) ★ 심장
 
-### [] Phase 4, T4.1: 출제 엔진 순수 함수 RED→GREEN
+### [x] Phase 4, T4.1: 출제 엔진 순수 함수 RED→GREEN
 
 **담당**: backend-specialist
 **의존성**: 없음 — **순수 함수 (DB/AI 미의존), 인메모리 픽스처로 테스트**
@@ -587,7 +587,7 @@ cd ../testautocreator-phase4-generator
 **완료 시**:
 - [ ] 사용자 승인 후 main 병합, worktree 정리
 
-### [] Phase 4, T4.2: 자동 출제 API RED→GREEN
+### [x] Phase 4, T4.2: 자동 출제 API RED→GREEN
 
 **담당**: backend-specialist
 **의존성**: T4.1(엔진), T2.2(진도), T3.1(문제) — **엔진은 직접 import, 진도/문제 조회는 테스트 DB 픽스처로 독립 실행**
@@ -618,7 +618,7 @@ cd ../testautocreator-phase4-generate-api
 **완료 시**:
 - [ ] 사용자 승인 후 main 병합, worktree 정리
 
-### [] Phase 4, T4.3: 메인 + 출제 설정 + 검수 화면 (S-03, S-04, S-05) RED→GREEN
+### [x] Phase 4, T4.3: 메인 + 출제 설정 + 검수 화면 (S-03, S-04, S-05) RED→GREEN
 
 **담당**: frontend-specialist
 **의존성**: T4.2 — **MSW test 핸들러로 독립 개발 가능**
@@ -675,7 +675,7 @@ cd ../testautocreator-phase4-test-ui
 - [x] 원장님 확정 승인 (2026-08-14 — 자습 H1 + 학원명/이름칸, 배점 없음)
 - [x] 문제지/답안지 레이아웃 스펙 문서화 (`05-design-system.md` §8.5, D-28)
 
-### [] Phase 5, T5.2: 인쇄 미리보기 + 인쇄 CSS (S-06) RED→GREEN
+### [] Phase 5, T5.2: 인쇄 미리보기 + 인쇄 CSS (S-06) — 코드 GREEN, 실물 검수 대기
 
 **담당**: frontend-specialist
 **의존성**: T5.1(지면 확정 — **필수 게이트**), T4.3 — 데이터는 MSW로 독립
@@ -712,7 +712,7 @@ cd ../testautocreator-phase5-print
 **완료 시**:
 - [ ] 사용자 승인 후 main 병합, worktree 정리
 
-### [] Phase 5, T5.3: 사용 지표 기록 API RED→GREEN
+### [x] Phase 5, T5.3: 사용 지표 기록 API RED→GREEN
 
 **담당**: backend-specialist
 **의존성**: T4.2 — 테스트 DB 픽스처로 독립 실행
@@ -746,7 +746,7 @@ cd ../testautocreator-phase5-metrics
 
 ## M6: 통합 검증 (Phase 6 — Worktree 필수)
 
-### [] Phase 6, T6.1: E2E 핵심 여정 RED→GREEN
+### [x] Phase 6, T6.1: E2E 핵심 여정 RED→GREEN
 
 **담당**: test-specialist
 **의존성**: M1~M5 병합 완료 — **Mock 제거, 실제 API 연동 검증**

@@ -46,6 +46,27 @@ export async function seedApprovedProblemsViaApi(
   }
 }
 
+export async function approvePendingProblems(request: APIRequestContext) {
+  const res = await request.get(
+    "/api/problems?reviewStatus=pending&page=1&pageSize=100",
+  );
+  if (!res.ok()) {
+    throw new Error(`pending 조회 실패 (${res.status()}): ${await res.text()}`);
+  }
+  const body = (await res.json()) as { data: Array<{ id: string }> };
+  for (const problem of body.data) {
+    const approved = await request.patch(
+      `/api/problems/${problem.id}/review-status`,
+      { data: { reviewStatus: "approved" } },
+    );
+    if (!approved.ok()) {
+      throw new Error(
+        `문제 승인 실패 (${approved.status()}): ${await approved.text()}`,
+      );
+    }
+  }
+}
+
 export async function currentClassAndUnit(request: APIRequestContext) {
   const classesRes = await request.get("/api/classes?page=1&pageSize=100");
   if (!classesRes.ok()) {

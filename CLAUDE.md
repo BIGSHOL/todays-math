@@ -105,6 +105,12 @@ docker compose up -d # 로컬 PostgreSQL
   **이전 메이저**로 의도적으로 고정할 것. 또한 `prisma init`류 스캐폴딩 명령은 `.claude/` 등
   금지 디렉토리에 부수 파일을 설치할 수 있으므로 실행 직후 `git status`로 diff를 반드시 검사.
 
+### [2026-08-14] 출제 화면에서 AI pending 자동 승격 금지 (D-22, generate)
+- **상황**: T6.1 여정 C를 GREEN 맞추려 출제 설정이 AI 생성 직후 review-status를 approved로 PATCH 했다.
+- **문제**: D-22는 생성물 pending → 사람이 승격한 뒤에만 출제 풀 진입. 자동 승격은 검수 화면을 우회한다.
+- **해결**: 생성은 pending만 남기고 문제은행 승격 안내. E2E는 helper로 승격 후 재출제.
+- **교훈**: E2E GREEN을 위해 제품 정책을 풀지 말 것. 테스트가 승격 스텝을 밟게 할 것.
+
 ### [2026-08-14] T6.1 E2E는 실제 API+로컬 DB, 단원명/AI 승격은 통합에서만 드러난다 (e2e, playwright)
 - **상황**: 여정 A/B/C를 Playwright로 돌리려면 가입·온보딩·출제·검수·인쇄가 실제 Route Handler와
   DB를 타야 한다. 이 worktree에는 `.env`가 없고 main `.env`는 공유 Supabase라 쓸 수 없다.

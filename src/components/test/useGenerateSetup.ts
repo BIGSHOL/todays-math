@@ -76,6 +76,7 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
   );
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [generatedPendingCount, setGeneratedPendingCount] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -221,7 +222,7 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
     ],
   );
 
-  const generateAiThenRetry = useCallback(async () => {
+  const generateAiDrafts = useCallback(async () => {
     if (!insufficient) return;
     setBusy(true);
     setSubmitError(null);
@@ -243,29 +244,14 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
         setSubmitError("AI 문제 생성에 실패했습니다");
         return;
       }
-      // 부족 보충으로 만든 AI 문항은 곧바로 출제 풀에 넣는다. 품질 게이트는 이어지는 검수 화면이다.
       const created = problemGenerateResponseSchema.parse(await res.json());
-      for (const problem of created.data) {
-        const approved = await fetch(
-          `/api/problems/${problem.id}/review-status`,
-          {
-            method: "PATCH",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ reviewStatus: "approved" }),
-          },
-        );
-        if (!approved.ok) {
-          setSubmitError("AI 문제 생성에 실패했습니다");
-          return;
-        }
-      }
-      await generate();
+      setGeneratedPendingCount(created.data.length);
     } catch {
       setSubmitError("AI 문제 생성에 실패했습니다");
     } finally {
       setBusy(false);
     }
-  }, [generate, insufficient]);
+  }, [insufficient]);
 
   const reduceCount = useCallback(() => {
     if (!insufficient || insufficient.available < 1) return;
@@ -289,6 +275,7 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
     rangeStartUnitId,
     rangeEndUnitId,
     insufficient,
+    generatedPendingCount,
     submitError,
     busy,
     setStudentId,
@@ -302,7 +289,7 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
     setRangeEndUnitId,
     selectClass,
     generate,
-    generateAiThenRetry,
+    generateAiDrafts,
     reduceCount,
   };
 }
