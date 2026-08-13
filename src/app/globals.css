@@ -1,18 +1,46 @@
 @import "tailwindcss";
 
+/* H5×G2 tokens — 05-design-system.md §2, §8.4 */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #161616;
+  --bg: #ececea;
+  --surface: #ffffff;
+  --side: #e0e0de;
+  --divider: #c2c2c0;
+  --text-2: #6a6a68;
+  --text-3: #8a8a88;
+  --seg-empty: #cfcfcd;
+  --blue: #1a73e8;
+  --green: #34a853;
+  --yellow: #fbbc05;
+  --yellow-text: #c79102;
+  --red: #ea4335;
+  --red-text: #c5221f;
+  --background: var(--bg);
+  --foreground: var(--ink);
 }
 
 @theme inline {
+  --color-ink: var(--ink);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-side: var(--side);
+  --color-divider: var(--divider);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+  --color-seg-empty: var(--seg-empty);
+  --color-blue: var(--blue);
+  --color-green: var(--green);
+  --color-yellow: var(--yellow);
+  --color-red: var(--red);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Pretendard, "Malgun Gothic", system-ui, sans-serif;
 }
 
 /* Mathgen 3단 방어 폴백 — 붉은 katex-error 대신 중립 모노스페이스 */

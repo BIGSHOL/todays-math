@@ -337,3 +337,4 @@ feat(generator): 난이도 배분 알고리즘 구현
 | D-26 | RPM 문항 정책 | 원본 5,035문항 이관하되 `directUseAllowed=false` 잠금 — 직접 출제 금지, 앱 내 변형의 원본 전용 |
 | D-27 | Unit.orderIndex | 전역 연속값 (학년 경계 넘는 범위 계산 대비) |
 | D-28 | 시험지 지면 | 자습(Jaseup) H1 금색 명조. 학원명+이름/반. 배점 없음(맞은 개수/전체). 장당 2문항 |
+| D-29 | 잔여 UI 문법 | 원장님 overnight 위임. H5×G2를 S-01/S-02/S-04/S-05/S-07/S-08에 확장. 아이콘 없음. 화면 폰트 Pretendard+Malgun. 상세는 05 §8.6 |
