@@ -1,0 +1,155 @@
+/**
+ * 문제은행 계약 — FEAT-1, FEAT-5.
+ *
+ * 대응 API 경로:
+ *   POST   /api/problems                    — 문제 등록 (수동 자작/기출 직접 입력)
+ *   GET    /api/problems                     — 문제 목록 조회 (필터: unitId/difficulty/problemType/source/reviewStatus)
+ *   GET    /api/problems/{id}                — 문제 단건 조회
+ *   PATCH  /api/problems/{id}                — 문제 수정 (본문/정답/풀이 등)
+ *   DELETE /api/problems/{id}                — 문제 삭제
+ *   PATCH  /api/problems/{id}/review-status  — 검수 승격 (pending → approved 등, D-22)
+ *   POST   /api/problems/generate            — AI 문제 생성 (unitId, difficulty, count)
+ *   POST   /api/problems/transform           — 기존 문제 변형 (originProblemId, count)
+ *
+ * ⚠️ Problem.directUseAllowed(Boolean) 필드는 아직 prisma/schema.prisma에 없다
+ *    (T3.0에서 RPM 원본 잠금용으로 추가 예정 — D-26). 이 계약에는 아직 넣지 않으며,
+ *    T3.0 스키마 마이그레이션 완료 후 problemSchema/problemFilterQuerySchema에 반영해야 한다.
+ *
+ * ⚠️ reviewStatus는 등록/수정 요청에 포함하지 않는다 — 검수 승격은 반드시 전용 엔드포인트
+ *    (PATCH /api/problems/{id}/review-status)를 통하도록 강제해 클라이언트가 등록과 동시에
+ *    스스로 승인 처리하는 경로를 원천 차단한다(D-22 품질 리스크 완화).
+ *
+ * 참조: docs/planning/04-database-design.md §2.3 (PROBLEM)
+ *       docs/planning/07-coding-convention.md §2.3 (problemType: 계산/개념/활용/서술형)
+ */
+import { z } from "zod";
+
+import {
+  dataResponseSchema,
+  difficultySchema,
+  isoDateTimeSchema,
+  listResponseSchema,
+  paginationParamsSchema,
+  problemSourceSchema,
+  reviewStatusSchema,
+  uuidSchema,
+} from "./common.contract";
+
+// 07-coding-convention.md §2.3 — 확장 가능성 고려해 prisma는 자유 문자열이지만,
+// 앱(계약) 레벨에서는 아래 4종으로 제한한다.
+export const problemTypeSchema = z.enum(["계산", "개념", "활용", "서술형"], {
+  error: "문제 유형은 계산/개념/활용/서술형 중 하나여야 합니다.",
+});
+export type ProblemType = z.infer<typeof problemTypeSchema>;
+
+// content/answer/solution — TEXT(무제한)이지만 비정상적으로 큰 입력을 막기 위한 상한.
+const problemTextSchema = (label: string) =>
+  z
+    .string()
+    .min(1, { error: `${label}을(를) 입력해주세요.` })
+    .max(10_000, { error: `${label}은(는) 10,000자를 초과할 수 없습니다.` });
+
+// ── 등록 ────────────────────────────────────────────────
+export const problemCreateRequestSchema = z.strictObject({
+  unitId: uuidSchema,
+  /** 화면(S-08) 직접 등록은 manual/past_exam만 허용 — ai_generated/transformed는 전용 엔드포인트가 서버에서 부여 */
+  source: z.enum(["manual", "past_exam"], {
+    error: "등록 출처는 manual 또는 past_exam이어야 합니다.",
+  }),
+  difficulty: difficultySchema,
+  problemType: problemTypeSchema,
+  content: problemTextSchema("문제 본문"),
+  answer: problemTextSchema("정답"),
+  solution: problemTextSchema("풀이").optional(),
+});
+export type ProblemCreateRequest = z.infer<typeof problemCreateRequestSchema>;
+
+export const problemUpdateRequestSchema = z
+  .strictObject({
+    unitId: uuidSchema.optional(),
+    difficulty: difficultySchema.optional(),
+    problemType: problemTypeSchema.optional(),
+    content: problemTextSchema("문제 본문").optional(),
+    answer: problemTextSchema("정답").optional(),
+    solution: problemTextSchema("풀이").optional(),
+  })
+  .refine((v) => Object.keys(v).length > 0, { error: "수정할 값이 없습니다." });
+export type ProblemUpdateRequest = z.infer<typeof problemUpdateRequestSchema>;
+
+export const problemSchema = z.strictObject({
+  id: uuidSchema,
+  userId: uuidSchema,
+  unitId: uuidSchema,
+  source: problemSourceSchema,
+  originProblemId: uuidSchema.nullable(),
+  difficulty: difficultySchema,
+  problemType: problemTypeSchema,
+  content: problemTextSchema("문제 본문"),
+  answer: problemTextSchema("정답"),
+  solution: problemTextSchema("풀이").nullable(),
+  reviewStatus: reviewStatusSchema,
+  createdAt: isoDateTimeSchema,
+  updatedAt: isoDateTimeSchema,
+});
+export type ProblemEntity = z.infer<typeof problemSchema>;
+
+export const problemResponseSchema = dataResponseSchema(problemSchema);
+export const problemListResponseSchema = listResponseSchema(problemSchema);
+
+// ── 조회 필터 ────────────────────────────────────────────
+export const problemFilterQuerySchema = z.strictObject({
+  unitId: uuidSchema.optional(),
+  difficulty: difficultySchema.optional(),
+  problemType: problemTypeSchema.optional(),
+  source: problemSourceSchema.optional(),
+  reviewStatus: reviewStatusSchema.optional(),
+  page: paginationParamsSchema.shape.page,
+  pageSize: paginationParamsSchema.shape.pageSize,
+});
+export type ProblemFilterQuery = z.infer<typeof problemFilterQuerySchema>;
+
+// ── 검수 승격 ────────────────────────────────────────────
+export const problemReviewStatusUpdateRequestSchema = z.strictObject({
+  reviewStatus: reviewStatusSchema,
+});
+export type ProblemReviewStatusUpdateRequest = z.infer<
+  typeof problemReviewStatusUpdateRequestSchema
+>;
+
+// ── AI 생성 ─────────────────────────────────────────────
+export const problemGenerateRequestSchema = z.strictObject({
+  unitId: uuidSchema,
+  difficulty: difficultySchema,
+  /** 업무상 합리적 상한 — 1회 AI 호출로 과도한 생성을 막는다(문서에 명시된 상한 없음). */
+  count: z
+    .number()
+    .int()
+    .min(1, { error: "생성 개수는 1개 이상이어야 합니다." })
+    .max(10, { error: "생성 개수는 10개를 초과할 수 없습니다." })
+    .default(1),
+});
+export type ProblemGenerateRequest = z.infer<
+  typeof problemGenerateRequestSchema
+>;
+
+export const problemGenerateResponseSchema = dataResponseSchema(
+  z.array(problemSchema),
+);
+
+// ── 변형 ────────────────────────────────────────────────
+export const problemTransformRequestSchema = z.strictObject({
+  originProblemId: uuidSchema,
+  count: z
+    .number()
+    .int()
+    .min(1, { error: "변형 개수는 1개 이상이어야 합니다." })
+    .max(10, { error: "변형 개수는 10개를 초과할 수 없습니다." })
+    .default(1),
+});
+export type ProblemTransformRequest = z.infer<
+  typeof problemTransformRequestSchema
+>;
+
+export const problemTransformResponseSchema = dataResponseSchema(
+  z.array(problemSchema),
+);
