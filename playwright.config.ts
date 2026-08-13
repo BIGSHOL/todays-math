@@ -1,16 +1,22 @@
 import { defineConfig, devices } from "@playwright/test";
 
+import { E2E_ENV } from "./e2e/env";
+
 // 참조: docs/planning/02-trd.md §7.2 (E2E: 핵심 여정 — 진도 입력→출제→인쇄 미리보기)
-// MVP는 chromium 단독. 실제 E2E 시나리오는 T6.1에서 작성한다 (e2e/ 현재 비어있음).
+// T6.1: 로컬 Docker(5433)/todaysmath_e2e + 실제 Route Handler. Claude 는 E2E_MOCK_AI.
 export default defineConfig({
   testDir: "./e2e",
-  fullyParallel: true,
+  testMatch: "**/*.spec.ts",
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: "html",
+  timeout: 120_000,
+  expect: { timeout: 20_000 },
+  globalSetup: "./e2e/global-setup.ts",
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: "http://localhost:3001",
     trace: "on-first-retry",
   },
   projects: [
@@ -20,9 +26,10 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev",
-    url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    command: "npx next dev --port 3001",
+    url: "http://localhost:3001",
+    reuseExistingServer: false,
+    timeout: 180_000,
+    env: { ...process.env, ...E2E_ENV },
   },
 });

@@ -79,6 +79,7 @@ export function buildClassRows(
   classes: ClassEntity[],
   tests: TestEntity[],
   progressByClass: Record<string, ProgressEntity | null>,
+  units?: readonly { id: string; section: string }[],
 ): ClassRow[] {
   const rows = classes.map((cls) => {
     const classTests = tests.filter((t) => t.classId === cls.id);
@@ -88,6 +89,7 @@ export function buildClassRows(
     const stage = resolveStage(test, hasProgress);
     const unitLabel = unitSectionName(
       progress?.unitId ?? test?.rangeEndUnitId ?? null,
+      units,
     );
     return {
       classId: cls.id,

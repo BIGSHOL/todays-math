@@ -67,6 +67,20 @@ export async function generateProblems(
 ): Promise<GeneratedProblemDraft[]> {
   const { unitId, unitLabel, difficulty, count } = input;
 
+  if (process.env.E2E_MOCK_AI === "1") {
+    return Array.from({ length: count }, (_, index) => ({
+      unitId,
+      difficulty,
+      problemType: "계산",
+      content: `모의 생성 문제 ${index + 1}`,
+      answer: String(index + 1),
+      solution: null,
+      source: "ai_generated" as const,
+      originProblemId: null,
+      reviewStatus: "pending" as const,
+    }));
+  }
+
   const attempt = () =>
     callClaude({
       system: buildGenerateSystemPrompt(),

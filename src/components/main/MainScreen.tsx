@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { ClassEntity, ProgressEntity } from "@/contracts/class.contract";
 import type { TestEntity } from "@/contracts/test.contract";
+import type { UnitEntity } from "@/contracts/unit.contract";
 import { advanceProgress } from "@/lib/main/advanceProgress";
 import { loadMainDashboard } from "@/lib/main/loadMainDashboard";
 import { buildClassRows, remainingCount, weekStats } from "@/lib/main/pipeline";
@@ -22,6 +23,7 @@ type LoadState =
       classes: ClassEntity[];
       tests: TestEntity[];
       progressByClass: Record<string, ProgressEntity | null>;
+      units: UnitEntity[];
     };
 
 export function MainScreen() {
@@ -42,6 +44,7 @@ export function MainScreen() {
           data.classes,
           data.tests,
           data.progressByClass,
+          data.units,
         );
         const firstOpen = rows.find((r) => r.stage !== "done");
         setSelectedClassId(firstOpen?.classId ?? data.classes[0]?.id ?? "");
@@ -58,7 +61,12 @@ export function MainScreen() {
 
   const rows = useMemo(() => {
     if (state.status !== "ready") return [];
-    return buildClassRows(state.classes, state.tests, state.progressByClass);
+    return buildClassRows(
+      state.classes,
+      state.tests,
+      state.progressByClass,
+      state.units,
+    );
   }, [state]);
 
   const remaining = remainingCount(rows);
@@ -136,6 +144,7 @@ export function MainScreen() {
         </div>
         <ProgressPanel
           classes={state.classes}
+          units={state.units}
           selectedClassId={selectedClassId}
           selectedUnitId={selectedUnitId}
           printedDays={stats?.printedDays ?? 0}

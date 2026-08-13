@@ -105,6 +105,19 @@ docker compose up -d # 로컬 PostgreSQL
   **이전 메이저**로 의도적으로 고정할 것. 또한 `prisma init`류 스캐폴딩 명령은 `.claude/` 등
   금지 디렉토리에 부수 파일을 설치할 수 있으므로 실행 직후 `git status`로 diff를 반드시 검사.
 
+### [2026-08-14] T6.1 E2E는 실제 API+로컬 DB, 단원명/AI 승격은 통합에서만 드러난다 (e2e, playwright)
+- **상황**: 여정 A/B/C를 Playwright로 돌리려면 가입·온보딩·출제·검수·인쇄가 실제 Route Handler와
+  DB를 타야 한다. 이 worktree에는 `.env`가 없고 main `.env`는 공유 Supabase라 쓸 수 없다.
+- **문제**: (1) 로컬 5432는 다른 컨테이너가 점유. (2) S-03 `unitSectionName`이 MSW mock UUID만
+  알아 실제 시드 단원은 "—"로 나와 진도 갱신을 검증할 수 없음. (3) AI 생성물은 `pending`이라
+  `findEligibleProblems`(approved만)에 안 잡혀 "AI 생성 → 재출제"가 다시 422. (4) Next 라우트
+  안내 `role="alert"`가 부족 안내 alert와 충돌.
+- **해결**: Docker Postgres를 5433/`todaysmath_e2e`로 분리하고 globalSetup에서 migrate+시드.
+  메인은 `/api/units` 목록으로 소단원명을 조회. 출제 보충 AI 문항은 검수 화면 진입 전에
+  review-status를 approved로 승격. Claude는 `E2E_MOCK_AI=1`. 실물 인쇄는 `window.print` 스텁.
+- **교훈**: 화면 단위 테스트의 mock id 카탈로그를 메인 조회에 남기면 E2E에서만 침묵 회귀한다.
+  부족→AI→재출제 경로는 생성 API와 출제 풀 자격(D-22)이 맞는지 한 번에 검증할 것.
+
 ### [2026-08-14] KaTeX 0.16 unknown command 는 .katex-error 가 아니다 (katex, 렌더 안전망)
 - **상황**: Mathgen `renderKatexSafe`는 실패 판정을 `html.includes("katex-error")`만 본다.
   같은 가드를 이식한 뒤 알 수 없는 명령(`\\notacommand`)을 넣었더니 테스트가 빨강 스타일을

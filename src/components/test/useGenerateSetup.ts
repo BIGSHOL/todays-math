@@ -11,6 +11,7 @@ import {
 } from "@/contracts/class.contract";
 import type { TestType } from "@/contracts/common.contract";
 import { errorResponseSchema } from "@/contracts/common.contract";
+import { problemGenerateResponseSchema } from "@/contracts/problem.contract";
 import {
   insufficientProblemsErrorResponseSchema,
   testGenerateResponseSchema,
@@ -241,6 +242,22 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
       if (!res.ok) {
         setSubmitError("AI 문제 생성에 실패했습니다");
         return;
+      }
+      // 부족 보충으로 만든 AI 문항은 곧바로 출제 풀에 넣는다. 품질 게이트는 이어지는 검수 화면이다.
+      const created = problemGenerateResponseSchema.parse(await res.json());
+      for (const problem of created.data) {
+        const approved = await fetch(
+          `/api/problems/${problem.id}/review-status`,
+          {
+            method: "PATCH",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ reviewStatus: "approved" }),
+          },
+        );
+        if (!approved.ok) {
+          setSubmitError("AI 문제 생성에 실패했습니다");
+          return;
+        }
       }
       await generate();
     } catch {

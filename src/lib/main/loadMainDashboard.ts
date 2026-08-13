@@ -8,11 +8,16 @@ import {
   testListResponseSchema,
   type TestEntity,
 } from "@/contracts/test.contract";
+import {
+  unitListResponseSchema,
+  type UnitEntity,
+} from "@/contracts/unit.contract";
 
 export type MainDashboardData = {
   classes: ClassEntity[];
   tests: TestEntity[];
   progressByClass: Record<string, ProgressEntity | null>;
+  units: UnitEntity[];
 };
 
 async function parseOk<T>(
@@ -26,9 +31,10 @@ async function parseOk<T>(
 }
 
 export async function loadMainDashboard(): Promise<MainDashboardData> {
-  const [classesRes, testsRes] = await Promise.all([
+  const [classesRes, testsRes, unitsRes] = await Promise.all([
     fetch("/api/classes?page=1&pageSize=100"),
     fetch("/api/tests?page=1&pageSize=100"),
+    fetch("/api/units"),
   ]);
 
   const classesBody = await parseOk(classesRes, (json) =>
@@ -36,6 +42,9 @@ export async function loadMainDashboard(): Promise<MainDashboardData> {
   );
   const testsBody = await parseOk(testsRes, (json) =>
     testListResponseSchema.parse(json),
+  );
+  const unitsBody = await parseOk(unitsRes, (json) =>
+    unitListResponseSchema.parse(json),
   );
 
   const progressEntries = await Promise.all(
@@ -51,5 +60,6 @@ export async function loadMainDashboard(): Promise<MainDashboardData> {
     classes: classesBody.data,
     tests: testsBody.data,
     progressByClass: Object.fromEntries(progressEntries),
+    units: unitsBody.data,
   };
 }

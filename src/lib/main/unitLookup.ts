@@ -1,6 +1,6 @@
 /**
- * MSW 픽스처 단원 id → 소단원명.
- * 단원 전용 API가 없어 S-03은 mock 카탈로그(ids.ts)만 조회한다.
+ * 단원 id → 소단원명.
+ * 실제 GET /api/units 목록을 넘기면 그 목록을 쓰고, 없으면 MSW 픽스처 카탈로그로 폴백한다.
  */
 import { unitId } from "@/mocks/data/ids";
 
@@ -28,7 +28,11 @@ const BY_ID = new Map(
 
 export function unitSectionName(
   unitIdValue: string | null | undefined,
+  units?: readonly { id: string; section: string }[],
 ): string {
   if (!unitIdValue) return "—";
+  if (units) {
+    return units.find((unit) => unit.id === unitIdValue)?.section ?? "—";
+  }
   return BY_ID.get(unitIdValue) ?? "—";
 }

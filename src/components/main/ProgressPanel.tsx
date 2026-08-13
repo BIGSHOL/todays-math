@@ -1,9 +1,11 @@
 import type { ClassEntity } from "@/contracts/class.contract";
+import type { UnitEntity } from "@/contracts/unit.contract";
 
 import { unitSectionName } from "@/lib/main/unitLookup";
 
 type Props = {
   classes: ClassEntity[];
+  units: readonly Pick<UnitEntity, "id" | "section">[];
   selectedClassId: string;
   selectedUnitId: string | null;
   printedDays: number;
@@ -15,6 +17,7 @@ type Props = {
 
 export function ProgressPanel({
   classes,
+  units,
   selectedClassId,
   selectedUnitId,
   printedDays,
@@ -23,7 +26,7 @@ export function ProgressPanel({
   onSelectClass,
   onAdvance,
 }: Props) {
-  const lesson = unitSectionName(selectedUnitId);
+  const lesson = unitSectionName(selectedUnitId, units);
 
   return (
     <aside className="w-[250px] shrink-0 border-l-[3px] border-ink bg-side px-5 py-4">
