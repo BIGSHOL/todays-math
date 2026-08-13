@@ -1,12 +1,14 @@
 /**
  * Prisma 조회 결과(Date 객체 · Prisma.JsonValue) → 계약 엔티티(ISO 문자열 · 좁혀진 타입)
- * 직렬화 헬퍼. 반/학생/진도/문제 API가 공용으로 사용한다.
+ * 직렬화 헬퍼. 반/학생/진도/문제/시험지 API가 공용으로 사용한다.
  */
 import type {
   Class as ClassRow,
   Problem as ProblemRow,
   Progress as ProgressRow,
   Student as StudentRow,
+  Test as TestRow,
+  TestProblem as TestProblemRow,
 } from "@prisma/client";
 
 import type { DifficultyRatio } from "@/contracts/common.contract";
@@ -16,6 +18,7 @@ import type {
   StudentEntity,
 } from "@/contracts/class.contract";
 import type { ProblemEntity, ProblemType } from "@/contracts/problem.contract";
+import type { TestEntity, TestProblemItem } from "@/contracts/test.contract";
 
 export function serializeClass(row: ClassRow): ClassEntity {
   return {
@@ -71,5 +74,34 @@ export function serializeProblem(row: ProblemRow): ProblemEntity {
     reviewStatus: row.reviewStatus,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
+  };
+}
+
+export function serializeTest(row: TestRow): TestEntity {
+  return {
+    id: row.id,
+    userId: row.userId,
+    classId: row.classId,
+    studentId: row.studentId,
+    testType: row.testType,
+    rangeStartUnitId: row.rangeStartUnitId,
+    rangeEndUnitId: row.rangeEndUnitId,
+    status: row.status,
+    modified: row.modified,
+    testDate: row.testDate.toISOString().slice(0, 10),
+    printedAt: row.printedAt ? row.printedAt.toISOString() : null,
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+export function serializeTestProblemItem(
+  row: TestProblemRow & { problem: ProblemRow },
+): TestProblemItem {
+  return {
+    id: row.id,
+    problemId: row.problemId,
+    orderIndex: row.orderIndex,
+    replaced: row.replaced,
+    problem: serializeProblem(row.problem),
   };
 }
