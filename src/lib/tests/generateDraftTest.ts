@@ -1,0 +1,186 @@
+/**
+ * POST /api/tests/generate — 진도 해석 + 출제 엔진 + draft TEST/TEST_PROBLEM 원자 생성.
+ * 엔진(selectProblems)은 순수 함수이므로 여기서 DB 조회 결과만 조립해 넘긴다.
+ */
+import type { DifficultyRatio } from "@/contracts/common.contract";
+import type { TestGenerateRequest } from "@/contracts/test.contract";
+import {
+  insufficientProblemsErrorResponseSchema,
+  testGenerateResponseSchema,
+} from "@/contracts/test.contract";
+import { jsonError, jsonOk } from "@/lib/apiResponse";
+import { db } from "@/lib/db";
+import { findEligibleProblems } from "@/lib/findEligibleProblems";
+import { resolveRange } from "@/lib/generator/resolveRange";
+import { selectProblems } from "@/lib/generator/selectProblems";
+import { requireOwnedClass, requireOwnedStudentInClass } from "@/lib/ownership";
+import { getCurrentProgress } from "@/lib/progressResolver";
+import {
+  serializeProgress,
+  serializeTest,
+  serializeTestProblemItem,
+} from "@/lib/serializers";
+import type { SessionUser } from "@/lib/session";
+
+import { loadRecentProblemIds } from "./recentProblemIds";
+
+export async function generateDraftTest(
+  session: SessionUser,
+  input: TestGenerateRequest,
+) {
+  const owned = await requireOwnedClass(input.classId, session.id);
+  if (!owned.ok) return owned.response;
+
+  if (input.studentId) {
+    const studentOwned = await requireOwnedStudentInClass(
+      input.studentId,
+      input.classId,
+      session.id,
+    );
+    if (!studentOwned.ok) return studentOwned.response;
+  }
+
+  const [classProgress, studentProgressRows, student] = await Promise.all([
+    db.progress.findMany({
+      where: { classId: input.classId, studentId: null },
+    }),
+    input.studentId
+      ? db.progress.findMany({
+          where: { classId: input.classId, studentId: input.studentId },
+        })
+      : Promise.resolve([]),
+    input.studentId
+      ? db.student.findUnique({ where: { id: input.studentId } })
+      : Promise.resolve(null),
+  ]);
+
+  const current = getCurrentProgress({
+    classProgress: classProgress.map(serializeProgress),
+    studentProgress: studentProgressRows.map(serializeProgress),
+    useIndividualProgress: student?.useIndividualProgress ?? false,
+  });
+  if (!current) {
+    return jsonError("VALIDATION_ERROR", "진도가 기록되지 않았습니다.", 400);
+  }
+
+  const units = await db.unit.findMany();
+  let unitIds: string[];
+  try {
+    const range =
+      input.testType === "daily"
+        ? resolveRange({
+            testType: "daily",
+            currentProgressUnitId: current.unitId,
+            units,
+          })
+        : resolveRange({
+            testType: "review",
+            rangeStartUnitId: input.rangeStartUnitId!,
+            rangeEndUnitId: input.rangeEndUnitId!,
+            units,
+          });
+    unitIds = range.unitIds;
+  } catch {
+    return jsonError(
+      "VALIDATION_ERROR",
+      "확인테스트 범위 단원을 찾을 수 없습니다.",
+      400,
+    );
+  }
+
+  const count = input.problemCount ?? owned.data.defaultProblemCount;
+  const difficultyRatio = (input.difficultyRatio ??
+    owned.data.difficultyRatio) as DifficultyRatio;
+
+  const eligible = (await findEligibleProblems({ unitIds })).filter(
+    (problem) => problem.userId === session.id,
+  );
+  const recentProblemIds = await loadRecentProblemIds(
+    session.id,
+    input.testDate,
+  );
+
+  const selected = selectProblems({
+    pool: eligible,
+    difficultyRatio,
+    count,
+    recentProblemIds,
+    seed: `${input.classId}:${input.testDate}:${input.testType}`,
+  });
+
+  if (selected.problems.length < count) {
+    const recentSet = new Set(recentProblemIds);
+    const available = eligible.filter((p) => !recentSet.has(p.id)).length;
+    return jsonOk(
+      insufficientProblemsErrorResponseSchema,
+      {
+        error: {
+          code: "INSUFFICIENT_PROBLEMS",
+          message: "이 단원에 등록된 문제가 부족합니다.",
+          details: {
+            unitId:
+              input.testType === "daily"
+                ? current.unitId
+                : (input.rangeEndUnitId ?? current.unitId),
+            available,
+            required: count,
+          },
+        },
+      },
+      { status: 422 },
+    );
+  }
+
+  const rangeEndUnitId =
+    input.testType === "daily"
+      ? current.unitId
+      : (input.rangeEndUnitId ?? current.unitId);
+  const rangeStartUnitId =
+    input.testType === "daily" ? null : (input.rangeStartUnitId ?? null);
+
+  const created = await db.$transaction(async (tx) => {
+    const test = await tx.test.create({
+      data: {
+        userId: session.id,
+        classId: input.classId,
+        studentId: input.studentId ?? null,
+        testType: input.testType,
+        rangeStartUnitId,
+        rangeEndUnitId,
+        status: "draft",
+        modified: false,
+        testDate: new Date(`${input.testDate}T00:00:00.000Z`),
+      },
+    });
+
+    for (const [index, problem] of selected.problems.entries()) {
+      await tx.testProblem.create({
+        data: {
+          testId: test.id,
+          problemId: problem.id,
+          orderIndex: index + 1,
+          replaced: false,
+        },
+      });
+    }
+
+    const items = await tx.testProblem.findMany({
+      where: { testId: test.id },
+      include: { problem: true },
+      orderBy: { orderIndex: "asc" },
+    });
+    return { test, items };
+  });
+
+  return jsonOk(
+    testGenerateResponseSchema,
+    {
+      data: {
+        test: serializeTest(created.test),
+        problems: created.items.map(serializeTestProblemItem),
+        shortfall: selected.shortfall,
+      },
+    },
+    { status: 201 },
+  );
+}

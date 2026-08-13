@@ -13,8 +13,18 @@ import { server } from "@/mocks/server";
 // (src/mocks/prismaTestDouble.ts 참조 — MSW 기반 mockHandlers.contract.test.ts는 fetch를
 // 가로채므로 이 모킹과 무관하다.)
 vi.mock("@/lib/db", async () => {
-  const { prismaTestDouble } = await import("@/mocks/prismaTestDouble");
-  return { db: prismaTestDouble };
+  const mod = await import("@/mocks/prismaTestDouble");
+  // prismaTestDouble 모듈 초기화가 끝나기 전에 팩토리가 닫히면 named export가
+  // undefined일 수 있다. 프로퍼티 접근 시점에 실객체를 읽도록 프록시로 감싼다.
+  const db = new Proxy(
+    {},
+    {
+      get(_target, prop, receiver) {
+        return Reflect.get(mod.prismaTestDouble, prop, receiver);
+      },
+    },
+  );
+  return { db };
 });
 
 // MSW: 등록되지 않은 요청은 에러로 처리 — 실제 네트워크/AI 호출이 테스트에

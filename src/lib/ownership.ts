@@ -6,7 +6,11 @@
  *
  * MSW 목 핸들러 쪽 대응물: src/mocks/handlers/class.ts의 findClass().
  */
-import type { Class as ClassRow, Student as StudentRow } from "@prisma/client";
+import type {
+  Class as ClassRow,
+  Student as StudentRow,
+  Test as TestRow,
+} from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { forbiddenError, notFoundError } from "@/lib/apiResponse";
@@ -42,4 +46,35 @@ export async function requireOwnedStudent(
   if (!owned.ok) return owned;
 
   return { ok: true, data: student };
+}
+
+/**
+ * 학생이 존재·소유권 OK이고, 요청의 classId에 실제로 소속인지까지 확인한다.
+ * 진도 API·출제 API가 반·학생 조합을 받을 때 잘못된 조합을 "존재하지 않는 학생"으로
+ * 취급하기 위한 헬퍼 (T2.2와 동일 시그니처 — 이후 병합 시 충돌을 피한다).
+ */
+export async function requireOwnedStudentInClass(
+  studentId: string,
+  classId: string,
+  userId: string,
+): Promise<OwnershipResult<StudentRow>> {
+  const owned = await requireOwnedStudent(studentId, userId);
+  if (!owned.ok) return owned;
+  if (owned.data.classId !== classId) {
+    return { ok: false, response: notFoundError("학생") };
+  }
+  return owned;
+}
+
+/** 시험지가 존재하고, 로그인 사용자(userId) 소유인지 확인한다. */
+export async function requireOwnedTest(
+  testId: string,
+  userId: string,
+): Promise<OwnershipResult<TestRow>> {
+  const test = await db.test.findUnique({ where: { id: testId } });
+  if (!test) return { ok: false, response: notFoundError("테스트") };
+  if (test.userId !== userId) {
+    return { ok: false, response: forbiddenError() };
+  }
+  return { ok: true, data: test };
 }
