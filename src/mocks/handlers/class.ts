@@ -31,6 +31,7 @@ import {
   deleteResponseSchema,
   paginationParamsSchema,
 } from "@/contracts/common.contract";
+import { getCurrentProgress, nextOrderIndex } from "@/lib/progressResolver";
 
 import {
   CLASS_OTHER_ID,
@@ -191,6 +192,16 @@ export const classHandlers: HttpHandler[] = [
     if (entity && !owned) return forbiddenError();
     if (!entity) return notFoundError("반");
 
+    if (parsed.data.studentId) {
+      const student = MOCK_STUDENTS.find((s) => s.id === parsed.data.studentId);
+      if (!student || student.classId !== parsed.data.classId) {
+        return notFoundError("학생");
+      }
+    }
+
+    const unit = MOCK_UNITS.find((u) => u.id === parsed.data.unitId);
+    if (!unit) return notFoundError("소단원");
+
     return jsonOk(
       progressResponseSchema,
       {
@@ -219,17 +230,30 @@ export const classHandlers: HttpHandler[] = [
     const { entity, owned } = findClass(parsed.data.classId);
     if (entity && !owned) return forbiddenError();
 
-    const candidates = MOCK_PROGRESS.filter(
-      (p) =>
-        p.classId === parsed.data.classId &&
-        (parsed.data.studentId
-          ? p.studentId === parsed.data.studentId
-          : p.studentId === null),
-    ).sort((a, b) => (a.recordedAt < b.recordedAt ? 1 : -1));
+    let useIndividualProgress = false;
+    if (parsed.data.studentId) {
+      const student = MOCK_STUDENTS.find((s) => s.id === parsed.data.studentId);
+      if (!student || student.classId !== parsed.data.classId) {
+        return notFoundError("학생");
+      }
+      useIndividualProgress = student.useIndividualProgress;
+    }
 
-    const latest = candidates[0];
-    if (!latest) return notFoundError("진도 기록");
-    return jsonOk(progressResponseSchema, { data: latest });
+    const current = getCurrentProgress({
+      classProgress: MOCK_PROGRESS.filter(
+        (p) => p.classId === parsed.data.classId && p.studentId === null,
+      ),
+      studentProgress: parsed.data.studentId
+        ? MOCK_PROGRESS.filter(
+            (p) =>
+              p.classId === parsed.data.classId &&
+              p.studentId === parsed.data.studentId,
+          )
+        : [],
+      useIndividualProgress,
+    });
+    if (!current) return notFoundError("진도 기록");
+    return jsonOk(progressResponseSchema, { data: current });
   }),
 
   // POST /api/progress/advance — "다음 소단원 1클릭 진행"(order_index 기준, D-19)
@@ -241,20 +265,33 @@ export const classHandlers: HttpHandler[] = [
     if (entity && !owned) return forbiddenError();
     if (!entity) return notFoundError("반");
 
-    const candidates = MOCK_PROGRESS.filter(
-      (p) =>
-        p.classId === parsed.data.classId &&
-        (parsed.data.studentId
-          ? p.studentId === parsed.data.studentId
-          : p.studentId === null),
-    ).sort((a, b) => (a.recordedAt < b.recordedAt ? 1 : -1));
+    let useIndividualProgress = false;
+    if (parsed.data.studentId) {
+      const student = MOCK_STUDENTS.find((s) => s.id === parsed.data.studentId);
+      if (!student || student.classId !== parsed.data.classId) {
+        return notFoundError("학생");
+      }
+      useIndividualProgress = student.useIndividualProgress;
+    }
 
-    const current = candidates[0];
+    const current = getCurrentProgress({
+      classProgress: MOCK_PROGRESS.filter(
+        (p) => p.classId === parsed.data.classId && p.studentId === null,
+      ),
+      studentProgress: parsed.data.studentId
+        ? MOCK_PROGRESS.filter(
+            (p) =>
+              p.classId === parsed.data.classId &&
+              p.studentId === parsed.data.studentId,
+          )
+        : [],
+      useIndividualProgress,
+    });
     if (!current) return notFoundError("진도 기록");
 
     const currentUnit = MOCK_UNITS.find((u) => u.id === current.unitId);
     const nextUnit = MOCK_UNITS.find(
-      (u) => u.orderIndex === (currentUnit?.orderIndex ?? -1) + 1,
+      (u) => u.orderIndex === nextOrderIndex(currentUnit?.orderIndex ?? -1),
     );
     if (!nextUnit) return notFoundError("다음 소단원");
 

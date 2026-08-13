@@ -1,9 +1,9 @@
 /**
- * 🔴 RED — 대응 구현 태스크: Phase 4, T4.2 (자동 출제 API RED→GREEN)
+ * 🟢 GREEN — 대응 구현 태스크: Phase 4, T4.2 (자동 출제 API RED→GREEN)
  *
- * `src/app/api/tests/**`가 아직 존재하지 않으므로 아래 import들은 런타임에 모듈 해석에 실패해
- * 이 파일 전체가 FAILED로 보고된다 — RED의 정상 상태다.
- * (`@ts-expect-error` 사용 이유는 src/__tests__/api/auth.test.ts 상단 주석 참조.)
+ * 구현: src/app/api/tests/**
+ * (RED 단계의 `@ts-expect-error` 임시 주석은 구현 완료로 제거됨 — 이유는
+ * src/__tests__/api/auth.test.ts 상단 주석 참조.)
  *
  * ⚠️ 이 API는 T4.1(출제 엔진 순수 함수, src/__tests__/unit/generator.test.ts)을 직접 import해
  *    쓰고, 진도(T2.2)/문제(T3.1) 조회는 테스트 DB 픽스처로 독립 실행한다(06-tasks.md 참조).
@@ -11,23 +11,27 @@
  * 대응 계약: src/contracts/test.contract.ts
  */
 import { NextRequest } from "next/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-// @ts-expect-error TODO(T4.2) — src/app/api/tests/generate/route.ts 구현 전까지 모듈이 없다.
+vi.mock("@/lib/session", () => ({
+  getSessionUser: vi.fn(async () => ({
+    id: "10000000-0000-4000-8000-000000000001",
+    email: "teacher@todaysmath.test",
+    name: "테스트 강사",
+  })),
+}));
+
 import { POST as generateTest } from "@/app/api/tests/generate/route";
-// @ts-expect-error TODO(T4.2) — src/app/api/tests/route.ts 구현 전까지 모듈이 없다.
 import { GET as listTests } from "@/app/api/tests/route";
-// @ts-expect-error TODO(T4.2) — src/app/api/tests/[id]/route.ts 구현 전까지 모듈이 없다.
 import { GET as getTest } from "@/app/api/tests/[id]/route";
-// @ts-expect-error TODO(T4.2) — src/app/api/tests/[id]/problems/[seq]/route.ts 구현 전까지 모듈이 없다.
 import { PUT as replaceTestProblem } from "@/app/api/tests/[id]/problems/[seq]/route";
-// @ts-expect-error TODO(T4.2) — src/app/api/tests/[id]/confirm/route.ts 구현 전까지 모듈이 없다.
 import { POST as confirmTest } from "@/app/api/tests/[id]/confirm/route";
 
 import { errorResponseSchema } from "@/contracts/common.contract";
 import {
   insufficientProblemsErrorResponseSchema,
   testConfirmResponseSchema,
+  testDetailResponseSchema,
   testGenerateResponseSchema,
   testListResponseSchema,
   testProblemReplaceResponseSchema,
@@ -137,6 +141,16 @@ describe("[T4.2] GET /api/tests, GET /api/tests/{id}", () => {
     testListResponseSchema.parse(await res.json());
   });
 
+  it("단건 조회는 문항 목록을 포함한다", async () => {
+    const res = await getTest(
+      jsonRequest(`http://localhost/api/tests/${TEST_DRAFT_ID}`, "GET"),
+      withId(TEST_DRAFT_ID),
+    );
+    expect(res.status).toBe(200);
+    const body = testDetailResponseSchema.parse(await res.json());
+    expect(body.data.problems.length).toBeGreaterThan(0);
+  });
+
   it("존재하지 않는 id는 NOT_FOUND(404)를 반환한다", async () => {
     const res = await getTest(
       jsonRequest(`http://localhost/api/tests/${TEST_NOT_FOUND_ID}`, "GET"),
@@ -164,10 +178,6 @@ describe("[T4.2] PUT /api/tests/{id}/problems/{seq} — 1클릭 교체(중복 �
   });
 
   it("최근 14일 내 이미 출제된 문제는 교체 후보에서 제외된다(D-20)", async () => {
-    // GREEN 단계에서 테스트 DB에 "최근 14일 이내 출제 이력"을 시딩해 교체 결과 problemId가
-    // 그 목록에 포함되지 않음을 검증한다. 순수 로직 자체의 단위 테스트는
-    // src/__tests__/unit/generator.test.ts(excludeRecent)가 담당하고, 여기서는 API 계층이
-    // 그 로직을 실제로 호출하는지만 확인한다.
     const res = await replaceTestProblem(
       jsonRequest(
         `http://localhost/api/tests/${TEST_DRAFT_ID}/problems/2`,
@@ -177,6 +187,9 @@ describe("[T4.2] PUT /api/tests/{id}/problems/{seq} — 1클릭 교체(중복 �
     );
     const body = testProblemReplaceResponseSchema.parse(await res.json());
     expect(body.data.problem.problemId).toBeDefined();
+    expect(body.data.problem.problemId).not.toBe(
+      "50000000-0000-4000-8000-000000000111",
+    );
   });
 });
 
