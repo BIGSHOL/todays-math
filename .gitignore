@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+build/
+
+# env — 비밀정보 커밋 금지 (07-coding-convention §5)
+.env
+.env.local
+.env*.local
+
+# testing
+coverage/
+playwright-report/
+test-results/
+
+# prisma
+prisma/*.db
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# editor
+.idea/
+.vscode/
+
+# worktree (프로젝트 내부 생성 방지용 — 실제 worktree는 상위 폴더에 생성)
+worktree/
