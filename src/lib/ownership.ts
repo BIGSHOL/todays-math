@@ -48,6 +48,24 @@ export async function requireOwnedStudent(
   return { ok: true, data: student };
 }
 
+/**
+ * 학생이 존재·소유권 OK이고, 요청의 classId에 실제로 소속인지까지 확인한다.
+ * 진도 API(POST/GET /api/progress, POST /api/progress/advance)가 반·학생 조합을
+ * 받을 때 잘못된 조합을 "존재하지 않는 학생"으로 취급하기 위한 헬퍼.
+ */
+export async function requireOwnedStudentInClass(
+  studentId: string,
+  classId: string,
+  userId: string,
+): Promise<OwnershipResult<StudentRow>> {
+  const owned = await requireOwnedStudent(studentId, userId);
+  if (!owned.ok) return owned;
+  if (owned.data.classId !== classId) {
+    return { ok: false, response: notFoundError("학생") };
+  }
+  return owned;
+}
+
 /** 문제가 존재하고, 로그인 사용자(userId) 소유인지 확인한다(Problem.userId 직접 소유). */
 export async function requireOwnedProblem(
   problemId: string,
