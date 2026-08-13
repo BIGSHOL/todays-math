@@ -1,27 +1,69 @@
 /**
- * 🔴 RED — 대응 구현 태스크: Phase 1, T1.1 (Auth.js 인증 API RED→GREEN)
+ * 🟢 GREEN — Phase 1, T1.1 (Auth.js 인증 API RED→GREEN) 구현 완료.
  *
- * `src/app/api/auth/signup/route.ts`가 아직 존재하지 않으므로 아래 import는 런타임에 모듈
- * 해석에 실패해 이 파일 전체가 FAILED로 보고된다 — 이것이 RED의 정상 상태다(06-tasks.md
- * T0.5.3 완료 조건 "npm run test 실행 시 전부 FAILED"). GREEN 전환은 T1.1에서 아래 경로에
- * Route Handler를 구현하면서 이루어진다.
- *
- * `@ts-expect-error`는 "모듈이 아직 없다"는 예상된 타입 에러를 명시적으로 흡수해
- * `npm run type-check`가 이 RED 파일 때문에 실패하지 않도록 한다 — 구현이 생기면 해당 줄의
- * 에러가 사라져 `@ts-expect-error`가 "사용되지 않음" 에러로 즉시 드러나므로, 구현 완료를
- * 놓치지 않고 이 주석을 제거하도록 강제하는 효과도 있다.
- *
+ * 대응 구현: src/app/api/auth/signup/route.ts, src/lib/auth.ts
  * 대응 계약: src/contracts/auth.contract.ts
+ *
+ * ⚠️ `DATABASE_URL`은 공유 Supabase 프로덕션 DB를 가리킨다 — 이 파일이 실제 DB에 쓰기 시도를
+ * 하지 않도록 `@/lib/db`를 hermetic하게 모킹한다. `MOCK_EXISTING_SIGNUP_EMAIL`(=이미 가입된
+ * 이메일) 여부만 findUnique 결과로 재현하면 아래 5개 테스트 케이스를 모두 충분히 검증할 수
+ * 있다 — 실제 영속 상태를 흉내 낼 필요는 없다(같은 이메일로 두 번 가입 시도하는 테스트가
+ * 없으므로 create() 호출 간 상태를 공유하지 않아도 무방).
  */
 import { NextRequest } from "next/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-// @ts-expect-error TODO(T1.1) — src/app/api/auth/signup/route.ts 구현 전까지 모듈이 없다.
 import { POST as signup } from "@/app/api/auth/signup/route";
 
 import { authSignupResponseSchema } from "@/contracts/auth.contract";
 import { errorResponseSchema } from "@/contracts/common.contract";
 import { MOCK_EXISTING_SIGNUP_EMAIL } from "@/mocks/data";
+
+type MockDbUser = {
+  id: string;
+  email: string;
+  name: string;
+  passwordHash: string;
+  createdAt: Date;
+};
+
+vi.mock("@/lib/db", () => ({
+  db: {
+    user: {
+      findUnique: vi.fn(
+        async ({
+          where,
+        }: {
+          where: { email: string };
+        }): Promise<MockDbUser | null> => {
+          if (where.email !== MOCK_EXISTING_SIGNUP_EMAIL) {
+            return null;
+          }
+          return {
+            id: crypto.randomUUID(),
+            email: where.email,
+            name: "김원장",
+            passwordHash: "$2a$10$mockmockmockmockmockmockmo",
+            createdAt: new Date("2026-01-05T09:00:00Z"),
+          };
+        },
+      ),
+      create: vi.fn(
+        async ({
+          data,
+        }: {
+          data: { email: string; name: string; passwordHash: string };
+        }): Promise<MockDbUser> => ({
+          id: crypto.randomUUID(),
+          email: data.email,
+          name: data.name,
+          passwordHash: data.passwordHash,
+          createdAt: new Date(),
+        }),
+      ),
+    },
+  },
+}));
 
 function signupRequest(body: unknown) {
   return new NextRequest("http://localhost/api/auth/signup", {
