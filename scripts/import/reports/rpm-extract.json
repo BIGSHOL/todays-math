@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "rowCount": 6151,
+  "summary": {
+    "source": "transformed",
+    "total": 6151,
+    "ok": 4862,
+    "unclassified": 1289,
+    "skippedFigure": 0,
+    "okRate": 0.79044057876768
+  },
+  "lockedAll": true,
+  "method": "postgres-readonly"
+}

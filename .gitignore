@@ -39,3 +39,7 @@ next-env.d.ts
 
 # worktree (프로젝트 내부 생성 방지용 — 실제 worktree는 상위 폴더에 생성)
 worktree/
+
+# T3.0 이관 덤프(원문 본문) — 집계 리포트는 커밋한다
+scripts/import/reports/*-dump.json
+scripts/import/reports/*-classified.json

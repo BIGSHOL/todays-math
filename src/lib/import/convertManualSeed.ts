@@ -13,6 +13,8 @@ export interface ManualSeedQuestion {
   correct_answer?: string;
   explanation?: string;
   concept_name?: string;
+  concept_grade?: string;
+  grade?: string;
 }
 
 export function convertManualSeedQuestion(
@@ -40,5 +42,6 @@ export function convertManualSeedQuestion(
     solution: question.explanation ?? null,
     unitHint: question.concept_name ?? question.concept_id ?? "",
     hasFigure: false,
+    gradeHint: question.concept_grade ?? question.grade ?? question.concept_id,
   };
 }

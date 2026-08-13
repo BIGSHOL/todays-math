@@ -16,7 +16,9 @@ const GRADE_ALIASES: Record<string, string> = {
   공통수학2: "공통수학2",
 };
 
-export function normalizeGrade(raw: string | number | undefined): string | null {
+export function normalizeGrade(
+  raw: string | number | undefined,
+): string | null {
   if (raw === undefined || raw === "") return null;
   if (typeof raw === "number") {
     if (raw === 1) return "공통수학1";
@@ -24,7 +26,23 @@ export function normalizeGrade(raw: string | number | undefined): string | null 
     return null;
   }
   const trimmed = raw.trim();
-  return GRADE_ALIASES[trimmed] ?? trimmed;
+  if (GRADE_ALIASES[trimmed]) return GRADE_ALIASES[trimmed];
+
+  const conceptId = trimmed.match(/^(e|m|h)(\d)/i);
+  if (conceptId) {
+    const n = conceptId[2];
+    const kind = conceptId[1].toLowerCase();
+    if (kind === "e") return `초${n}`;
+    if (kind === "m") return `중${n}`;
+    if (kind === "h") return n === "1" ? "공통수학1" : "공통수학2";
+  }
+
+  const book = trimmed.match(/중([123])(?:\s*[-–]\s*[12])?/);
+  if (book) return `중${book[1]}`;
+  const elem = trimmed.match(/초([1-6])/);
+  if (elem) return `초${elem[1]}`;
+
+  return trimmed;
 }
 
 function includesLoose(haystack: string, needle: string): boolean {
@@ -42,27 +60,40 @@ export function mapUnitHint(
   }
 
   const grade = normalizeGrade(gradeHint);
-  const scoped = grade
-    ? units.filter((unit) => unit.grade === grade)
-    : units;
+  const scoped = grade ? units.filter((unit) => unit.grade === grade) : units;
   const pool = scoped.length > 0 ? scoped : units;
 
-  const sectionHit = pool.find(
-    (unit) =>
-      includesLoose(unit.section, cleaned) ||
-      includesLoose(cleaned, unit.section),
-  );
-  if (sectionHit) return { status: "mapped", unitId: sectionHit.id };
+  const tokens = cleaned
+    .split(/[~～,，/|·]+/)
+    .map((token) => token.trim())
+    .filter(Boolean);
+  const hints = tokens.length > 0 ? tokens : [cleaned];
 
-  const chapterHit = pool.find(
-    (unit) =>
-      includesLoose(unit.chapter, cleaned) ||
-      includesLoose(cleaned, unit.chapter),
-  );
-  if (chapterHit) return { status: "mapped", unitId: chapterHit.id };
+  for (const hint of hints) {
+    const sectionHit = longestHit(pool, hint, "section");
+    if (sectionHit) return { status: "mapped", unitId: sectionHit.id };
+  }
+  for (const hint of hints) {
+    const chapterHit = longestHit(pool, hint, "chapter");
+    if (chapterHit) return { status: "mapped", unitId: chapterHit.id };
+  }
 
   return {
     status: "unclassified",
     reason: `단원 힌트 '${cleaned}'를 교육과정 트리에 연결하지 못했습니다.`,
   };
+}
+
+function longestHit(
+  pool: UnitLike[],
+  hint: string,
+  field: "section" | "chapter",
+): UnitLike | undefined {
+  const hits = pool.filter(
+    (unit) =>
+      includesLoose(unit[field], hint) || includesLoose(hint, unit[field]),
+  );
+  if (hits.length === 0) return undefined;
+  hits.sort((a, b) => b[field].length - a[field].length);
+  return hits[0];
 }

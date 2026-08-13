@@ -17,6 +17,8 @@ export interface ImportDraft {
   solution: string | null;
   unitHint: string;
   hasFigure: boolean;
+  /** 문항별 학년/과목 힌트. classifyDrafts가 단원 매핑 범위를 좁힐 때 쓴다. */
+  gradeHint?: string | number;
 }
 
 export interface UnitLike {

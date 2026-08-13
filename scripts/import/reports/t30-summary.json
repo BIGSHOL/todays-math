@@ -1,0 +1,72 @@
+{
+  "generatedAt": "2026-08-13T16:41:58.829Z",
+  "database": {
+    "selectedSource": "none",
+    "selected": {
+      "kind": "missing",
+      "host": null,
+      "isLocalDev": false,
+      "canMigrateOrLoad": false,
+      "reason": "DATABASE_URL이 없습니다."
+    },
+    "env": {
+      "kind": "missing",
+      "host": null,
+      "isLocalDev": false,
+      "canMigrateOrLoad": false,
+      "reason": "DATABASE_URL이 없습니다."
+    },
+    "worktreeDotenv": {
+      "kind": "missing",
+      "host": null,
+      "isLocalDev": false,
+      "canMigrateOrLoad": false,
+      "reason": "DATABASE_URL이 없습니다."
+    },
+    "mainRepoDotenv": {
+      "kind": "supabase",
+      "canMigrateOrLoad": false,
+      "reason": "공유 Supabase — 프로덕션이라 적재 안 함"
+    }
+  },
+  "ocr": {
+    "source": "past_exam",
+    "total": 9173,
+    "ok": 3569,
+    "unclassified": 4618,
+    "skippedFigure": 986,
+    "okRate": 0.38907663795922814,
+    "papers": 415,
+    "parseErrors": 0
+  },
+  "manual": {
+    "source": "manual",
+    "total": 1318,
+    "ok": 758,
+    "unclassified": 560,
+    "skippedFigure": 0,
+    "okRate": 0.575113808801214
+  },
+  "rpm": {
+    "ok": true,
+    "rowCount": 6151,
+    "summary": {
+      "source": "transformed",
+      "total": 6151,
+      "ok": 4862,
+      "unclassified": 1289,
+      "skippedFigure": 0,
+      "okRate": 0.79044057876768
+    },
+    "lockedAll": true
+  },
+  "load": {
+    "loaded": false,
+    "inserted": 0,
+    "skippedOversized": 0,
+    "reason": "DATABASE_URL이 없습니다. / 메인 .env는 공유 Supabase — 프로덕션이라 적재 안 함",
+    "selectedSource": "none",
+    "selectedKind": "missing"
+  },
+  "originalReposUnchanged": true
+}

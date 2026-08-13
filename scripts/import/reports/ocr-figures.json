@@ -1,0 +1,7890 @@
+[
+  {
+    "externalId": "2661-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 최대, 촤소",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "2667-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식과 이차함수의 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "2696-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "2706-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4209-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "평면좌표 ~ 명제",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4209-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "평면좌표 ~ 명제",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4211-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4212-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식과 이차함수 ~ 행렬",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4212-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식과 이차함수 ~ 행렬",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4213-3",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4213-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4213-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4213-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4213-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4214-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4214-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4217-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4218-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4218-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4219-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4219-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4219-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4220-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4220-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4221-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4222-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4223-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4224-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4224-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4224-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4224-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4225-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4226-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4227-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4227-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4228-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4229-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4229-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4229-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4230-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4231-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4232-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4232-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4232-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4232-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4235-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4235-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4235-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4236-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4237-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4237-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4238-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4239-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "두 점 사이의 거리 ~ 절대부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4239-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "두 점 사이의 거리 ~ 절대부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4239-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "두 점 사이의 거리 ~ 절대부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4240-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4241-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4241-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4242-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4242-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4242-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4242-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4245-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4245-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4245-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4245-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4245-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4246-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4246-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4247-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4247-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4248-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4248-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4248-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4249-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4249-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4249-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4250-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4252-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4252-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4253-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4253-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4253-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4253-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4254-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4255-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4255-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4255-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4257-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4257-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4257-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4257-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4257-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4259-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4260-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4261-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4262-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4263-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4263-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4265-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4265-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4265-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4265-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4266-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4267-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "평면좌표 ~ 명제와 조건",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4267-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "평면좌표 ~ 명제와 조건",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4267-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "평면좌표 ~ 명제와 조건",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4267-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "평면좌표 ~ 명제와 조건",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4268-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4269-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4269-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4269-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4269-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4269-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4269-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4270-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4270-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4270-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4270-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4271-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4271-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4271-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4272-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4272-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4273-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4273-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4273-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4274-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4274-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4275-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4275-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4276-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4276-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4276-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4277-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4277-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4277-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4277-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4278-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4278-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4280-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4282-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4282-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4282-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4283-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4283-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4283-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4284-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4284-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4284-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4286-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4286-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4286-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4287-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4287-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4288-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4289-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4290-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4290-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4291-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4291-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4292-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4292-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4293-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4293-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4294-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "경우의 수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4294-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "순열",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4294-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4295-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4295-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4295-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4297-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4297-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4297-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4297-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4297-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4297-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4298-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4298-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4298-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4299-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4299-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4299-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4299-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4299-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4301-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4301-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4302-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4302-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4302-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4302-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4302-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4303-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4305-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4306-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4306-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4306-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4306-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4306-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4307-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4309-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4309-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4312-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4312-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4313-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4313-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4313-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4313-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4313-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4315-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4315-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4315-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4315-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4316-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4316-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4316-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4316-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4316-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4318-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4318-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4319-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4319-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4319-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4319-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4320-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4320-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4320-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4320-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4321-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4321-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4321-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4322-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4322-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4322-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4322-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4322-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4322-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4322-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4322-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4323-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4323-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4328-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4328-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4328-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4329-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4329-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4329-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4329-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4329-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4330-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4331-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4332-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4332-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4334-3",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4334-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4334-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4334-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4335-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4335-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4336-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4337-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4337-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4337-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4338-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4338-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4338-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4340-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4341-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4341-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4343-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4344-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4344-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4344-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4345-3",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4345-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4346-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4346-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4347-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4347-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4347-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4347-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4348-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4349-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4350-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4350-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4351-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4352-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4352-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4352-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4354-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4354-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4354-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4356-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4357-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4359-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4360-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4361-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4363-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4364-1",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4364-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4364-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4364-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4364-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4364-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4365-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4365-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4366-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4366-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4367-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4367-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4367-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4367-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4367-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4368-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4368-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4369-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4369-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4369-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4369-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4370-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4370-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4370-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4370-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4371-3",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4371-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4371-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4371-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4371-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4372-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4372-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4372-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4372-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4372-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4373-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4374-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4374-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4375-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4375-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4375-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4376-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4376-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4378-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4378-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4381-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4382-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4382-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4383-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "유리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4383-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "유리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4383-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "무리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4384-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "직선의 방정식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4388-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4388-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4388-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "순열",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4388-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "행렬",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4390-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "대칭이동",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4390-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "직선의 방정식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4391-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4406-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 최대, 최소",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4410-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4410-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 최대, 최소",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4410-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "순열",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4410-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "행렬",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4411-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "선분의 내분점",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4411-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "두 점 사이의 거리",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4411-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "점과 직선에 대한 대칭이동",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4417-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "경우의 수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4417-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4417-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4417-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 최대,최소",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4417-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4418-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "유리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4418-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "무리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4418-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "무리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4418-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "역함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4419-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "대칭이동",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4419-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "점과 직선에 대한 대칭이동",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4420-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 최대, 최소",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4423-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "경우의 수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4423-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "연립이차방정식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4423-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "행렬",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4423-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "행렬",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4425-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "점과 직선에 대한 대칭이동",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4425-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "두 직선의 위치 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4436-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4436-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "경우의 수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4441-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "두 직선의 위치 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4441-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "원의 접선의 방정식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4441-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "직선의 방정식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4441-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "점과 직선 사이의 거리",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4447-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4447-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "행렬의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4449-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "선분의 내분점",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4449-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "점과 직선 사이의 거리",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4449-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "점과 직선 사이의 거리",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4449-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "대칭이동",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4454-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 최대최소",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4456-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "무리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4464-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4464-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4464-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4464-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "순열",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4464-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4464-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "행렬의 뜻",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4464-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "행렬의 덧셈, 뺄셈과 실수배",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4465-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "유리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4465-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "합성항수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4466-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 최대,최소",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4490-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4492-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "경우의 수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4492-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "순열",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4492-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4493-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4496-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 최대, 최소",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4499-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "무리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4499-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "무리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4503-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "행렬의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4503-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4504-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "역함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4504-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "유리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4504-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "유리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4504-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "무리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4505-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 최대,최소",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4509-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼차방정식과 사차방정식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4509-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4510-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "무리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4520-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "무리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4521-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "원의 방정식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4521-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "집합의 연산법칙",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4521-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "평행이동",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4528-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "경우의 수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4528-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4528-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "행렬의 뜻",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4528-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "경우의 수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4528-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차부등식 해의 조건",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4528-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4532-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4535-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "행렬의 뜻",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4535-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "경우의 수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4535-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "조합",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4538-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 직선의 위치관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4539-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4539-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "경우의 수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4539-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "순열",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4540-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "유리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4540-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "무리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4540-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "유리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4540-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "무리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4540-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "유리함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4540-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "절대부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4544-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "평면좌표",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4544-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "원의 방정식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "4544-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "원의 방정식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5171-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5171-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5171-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5171-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5172-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5173-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5173-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5175-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5175-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5175-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5176-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5176-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5176-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5176-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5177-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5177-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5177-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5177-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5177-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5177-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5178-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5179-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5179-3",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5179-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5179-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5179-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5179-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5179-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5179-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5179-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5179-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5179-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5179-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5179-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5180-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5180-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5184-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5188-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5192-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5192-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5192-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5192-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5194-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "좌표와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5194-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "좌표와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5194-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "좌표와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5194-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5195-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "최대공약수와 최소공배수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5207-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5207-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5207-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "좌표와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5207-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5207-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "좌표와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5207-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5208-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "좌표와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5208-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5208-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5208-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5208-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5216-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5216-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5226-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5226-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5226-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5227-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5227-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5230-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5230-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5230-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "최대공약수와 최소공배수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5235-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5235-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5235-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5235-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5237-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산  \u0000",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5252-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차방정식의 풀이",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5252-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "좌표와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5252-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "좌표와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5252-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5252-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5252-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5252-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5252-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5252-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5253-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5253-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5253-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5254-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5254-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5265-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5265-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "좌표와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5265-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5265-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5272-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5276-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5276-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5276-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5276-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5279-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5281-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "좌표와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5281-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5283-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5283-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5283-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5286-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5295-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5296-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차방정식의 풀이",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5296-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5296-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5296-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5296-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5296-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "좌표와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5296-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5297-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5297-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5297-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5299-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5303-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5303-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5303-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5312-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5313-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차방정식의 풀이",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5313-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5313-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "좌표와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5313-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "좌표와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5313-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5313-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정비례와 반비례",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5324-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5333-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "최대공약수와 최소공배수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5333-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수  \u0000",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5336-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5336-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5340-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5340-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5340-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5358-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5358-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5358-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5358-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5358-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5358-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "정수와 유리수의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5358-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "문자의 사용과 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5359-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5359-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5359-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5359-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-1",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5360-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5362-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5362-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5363-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5363-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5363-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5363-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5363-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5363-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5364-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5364-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5364-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5364-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5365-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5366-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5366-3",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5366-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5366-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5366-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5366-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5366-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5366-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5366-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5366-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5366-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5366-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5368-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-1",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-3",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5369-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5371-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5371-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5374-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5374-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5382-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5382-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식의 활용 의 ㅗ",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5385-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5388-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5429-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5429-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5429-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5430-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5436-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5451-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5451-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5462-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "순환소수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5462-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5462-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5465-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "연립일차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5465-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5465-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5465-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5466-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5466-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5480-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5480-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 일차방정식의 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5480-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 일차방정식의 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5480-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 일차방정식의 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5491-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5491-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5491-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5491-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5492-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5492-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5492-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5492-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 일차방정식의 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5492-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 일차방정식의 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5493-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5493-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5493-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5500-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5500-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5516-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5516-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5520-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5520-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5520-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5520-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 일차방정식의 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5520-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 일차방정식의 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5520-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5521-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5521-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5521-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5523-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5523-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5523-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5532-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5532-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5538-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5538-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5538-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5539-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5539-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5539-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5539-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5544-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "순환소수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5544-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5547-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5547-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5552-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5552-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5565-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5565-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5567-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5567-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 일차방정식의 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5572-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5572-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5590-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5590-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5594-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차부등식",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5594-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5608-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5608-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5608-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5610-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5610-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 일차방정식의 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5610-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 일차방정식의 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5622-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5622-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "순환소수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5643-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5643-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5643-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "단항식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5645-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5645-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "일차함수와 일차방정식의 관계",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5649-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5649-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5649-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5649-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5649-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5649-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5650-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5650-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5650-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5650-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5651-1",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5651-2",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5651-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5651-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5651-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5651-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5651-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5651-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5652-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5652-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5652-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5652-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5652-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5652-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5653-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5654-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5654-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5654-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5655-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5655-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5655-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5655-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5655-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5655-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-1",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-3",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5656-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5657-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5657-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5657-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5657-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5657-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5658-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5658-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5658-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5661-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5661-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5663-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5663-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5663-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5667-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5668-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5668-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5668-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5672-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5672-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5674-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5674-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5674-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5674-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5674-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5675-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5678-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5681-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5681-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5681-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5681-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5682-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5682-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5682-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5694-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5694-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5694-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5694-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5746-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이치방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5747-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5752-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5752-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5756-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5759-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5759-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "실수와 그 연산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5759-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5759-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5759-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "실수와 그 연산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5763-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5764-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5765-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5765-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5765-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5765-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5765-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5765-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5765-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5765-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5765-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "원과 직선",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5765-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "삼각비의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5768-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5768-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5768-18",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5768-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5770-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5770-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5777-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5777-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5777-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5777-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5780-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5780-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5780-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5780-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5780-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5780-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5780-26",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5783-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5783-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5783-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5783-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5792-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5792-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5792-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5810-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5810-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5810-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5818-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5818-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5823-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5823-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5823-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5823-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5823-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5824-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5824-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5824-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5829-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5832-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5833-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5833-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5840-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5840-13",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5840-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5840-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5840-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5840-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5842-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5850-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5850-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5850-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5850-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5850-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5850-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5851-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "무리수와 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5859-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5859-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5859-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5863-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5866-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 풀이",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5866-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5867-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5867-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5869-7",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5870-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5870-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5870-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5873-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5873-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5873-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5873-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5874-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5874-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5874-23",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5874-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5874-25",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5875-8",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5875-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5875-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5875-24",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5887-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5891-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5891-10",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5891-14",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5891-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5899-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5908-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5908-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5909-6",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5909-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5909-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5909-12",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5909-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5909-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수와 그래프",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5909-21",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5916-4",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5916-11",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차방정식의 풀이",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5921-5",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5921-15",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5921-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "인수분해",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5921-19",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "근호를 포함한 식의 계산",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5921-20",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5923-16",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5923-17",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5923-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "이차함수의 활용",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5924-9",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "제곱근과 실수",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  },
+  {
+    "externalId": "5924-22",
+    "source": "past_exam",
+    "status": "skipped_figure",
+    "unitId": null,
+    "unitHint": "다항식의 곱셈",
+    "reason": "figure 블록은 1차에서 제외하고 목록만 보고합니다."
+  }
+]
