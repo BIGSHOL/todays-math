@@ -20,8 +20,8 @@ import {
   validationError,
 } from "@/lib/apiResponse";
 import { db } from "@/lib/db";
-import { requireOwnedClass, requireOwnedStudent } from "@/lib/ownership";
-import { getCurrentProgress } from "@/lib/progressResolver";
+import { requireOwnedClass, requireOwnedStudentInClass } from "@/lib/ownership";
+import { getCurrentProgress, nextOrderIndex } from "@/lib/progressResolver";
 import { serializeProgress } from "@/lib/serializers";
 import { getSessionUser } from "@/lib/session";
 
@@ -41,9 +41,12 @@ export async function POST(request: NextRequest) {
 
   let useIndividualProgress = false;
   if (studentId) {
-    const studentOwned = await requireOwnedStudent(studentId, session.id);
+    const studentOwned = await requireOwnedStudentInClass(
+      studentId,
+      classId,
+      session.id,
+    );
     if (!studentOwned.ok) return studentOwned.response;
-    if (studentOwned.data.classId !== classId) return notFoundError("학생");
     useIndividualProgress = studentOwned.data.useIndividualProgress;
   }
 
@@ -69,7 +72,7 @@ export async function POST(request: NextRequest) {
   if (!currentUnit) return notFoundError("현재 진도 소단원");
 
   const nextUnit = await db.unit.findFirst({
-    where: { orderIndex: currentUnit.orderIndex + 1 },
+    where: { orderIndex: nextOrderIndex(currentUnit.orderIndex) },
   });
   if (!nextUnit) return notFoundError("다음 소단원");
 

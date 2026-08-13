@@ -22,7 +22,7 @@ import {
   validationError,
 } from "@/lib/apiResponse";
 import { db } from "@/lib/db";
-import { requireOwnedClass, requireOwnedStudent } from "@/lib/ownership";
+import { requireOwnedClass, requireOwnedStudentInClass } from "@/lib/ownership";
 import { getCurrentProgress } from "@/lib/progressResolver";
 import { serializeProgress } from "@/lib/serializers";
 import { getSessionUser } from "@/lib/session";
@@ -40,12 +40,16 @@ export async function POST(request: NextRequest) {
   if (!owned.ok) return owned.response;
 
   if (parsed.data.studentId) {
-    const studentOwned = await requireOwnedStudent(
+    const studentOwned = await requireOwnedStudentInClass(
       parsed.data.studentId,
+      parsed.data.classId,
       session.id,
     );
     if (!studentOwned.ok) return studentOwned.response;
   }
+
+  const unit = await db.unit.findUnique({ where: { id: parsed.data.unitId } });
+  if (!unit) return notFoundError("소단원");
 
   const created = await db.progress.create({
     data: {
@@ -83,10 +87,12 @@ export async function GET(request: NextRequest) {
 
   let useIndividualProgress = false;
   if (studentId) {
-    const studentOwned = await requireOwnedStudent(studentId, session.id);
+    const studentOwned = await requireOwnedStudentInClass(
+      studentId,
+      classId,
+      session.id,
+    );
     if (!studentOwned.ok) return studentOwned.response;
-    // 소속 반이 쿼리의 classId와 다르면(잘못된 조합) 존재하지 않는 것으로 취급한다.
-    if (studentOwned.data.classId !== classId) return notFoundError("학생");
     useIndividualProgress = studentOwned.data.useIndividualProgress;
   }
 
