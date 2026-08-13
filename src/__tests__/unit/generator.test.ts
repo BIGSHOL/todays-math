@@ -14,13 +14,9 @@
  */
 import { describe, expect, it } from "vitest";
 
-// @ts-expect-error TODO(T4.1) — src/lib/generator/selectProblems.ts 구현 전까지 모듈이 없다.
 import { selectProblems } from "@/lib/generator/selectProblems";
-// @ts-expect-error TODO(T4.1) — src/lib/generator/balanceDifficulty.ts 구현 전까지 모듈이 없다.
 import { balanceDifficulty } from "@/lib/generator/balanceDifficulty";
-// @ts-expect-error TODO(T4.1) — src/lib/generator/excludeRecent.ts 구현 전까지 모듈이 없다.
 import { excludeRecent } from "@/lib/generator/excludeRecent";
-// @ts-expect-error TODO(T4.1) — src/lib/generator/resolveRange.ts 구현 전까지 모듈이 없다.
 import { resolveRange } from "@/lib/generator/resolveRange";
 
 import type { ProblemEntity } from "@/contracts/problem.contract";
