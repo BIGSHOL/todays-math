@@ -72,6 +72,7 @@ export function serializeProblem(row: ProblemRow): ProblemEntity {
     answer: row.answer,
     solution: row.solution,
     reviewStatus: row.reviewStatus,
+    directUseAllowed: row.directUseAllowed,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };

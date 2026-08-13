@@ -11,9 +11,7 @@
  *   POST   /api/problems/generate            — AI 문제 생성 (unitId, difficulty, count)
  *   POST   /api/problems/transform           — 기존 문제 변형 (originProblemId, count)
  *
- * ⚠️ Problem.directUseAllowed(Boolean) 필드는 아직 prisma/schema.prisma에 없다
- *    (T3.0에서 RPM 원본 잠금용으로 추가 예정 — D-26). 이 계약에는 아직 넣지 않으며,
- *    T3.0 스키마 마이그레이션 완료 후 problemSchema/problemFilterQuerySchema에 반영해야 한다.
+ * Problem.directUseAllowed — T3.0/D-26. RPM 원본은 false, 그 외 기본 true.
  *
  * ⚠️ reviewStatus는 등록/수정 요청에 포함하지 않는다 — 검수 승격은 반드시 전용 엔드포인트
  *    (PATCH /api/problems/{id}/review-status)를 통하도록 강제해 클라이언트가 등록과 동시에
@@ -88,6 +86,8 @@ export const problemSchema = z.strictObject({
   answer: problemTextSchema("정답"),
   solution: problemTextSchema("풀이").nullable(),
   reviewStatus: reviewStatusSchema,
+  /** RPM 원본은 false — 출제 풀에서 제외 (D-26). 응답에 없으면 true로 본다. */
+  directUseAllowed: z.boolean().default(true),
   createdAt: isoDateTimeSchema,
   updatedAt: isoDateTimeSchema,
 });

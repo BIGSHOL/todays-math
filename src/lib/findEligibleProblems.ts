@@ -3,9 +3,8 @@
  * T3.1 REFACTOR 산출물 — GET /api/problems의 범용 필터 조회에서 자동 출제 전용 조회를
  * 분리해 Phase 4, T4.2(자동 출제 API)가 그대로 재사용할 수 있게 한다(06-tasks.md T3.1 REFACTOR).
  *
- * 자동 출제 규칙: review_status='approved' 문제만 대상으로 한다 — pending(미검수)은
- * 시험지 검수 화면에서 검수를 거쳐야 승격된다(D-22, docs/planning/04-database-design.md §2.3
- * "출제 규칙").
+ * 자동 출제 규칙: review_status='approved' 이고 directUseAllowed=true 인 문제만
+ * 대상으로 한다(D-22, D-26).
  */
 import type { Difficulty } from "@/contracts/common.contract";
 import type { ProblemEntity } from "@/contracts/problem.contract";
@@ -34,6 +33,7 @@ export async function findEligibleProblems(
       userId: params.userId,
       unitId: { in: params.unitIds },
       reviewStatus: "approved",
+      directUseAllowed: true,
       ...(params.difficulty ? { difficulty: params.difficulty } : {}),
     },
   });

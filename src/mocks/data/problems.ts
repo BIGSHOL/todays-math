@@ -428,6 +428,7 @@ export const MOCK_PROBLEMS: ProblemEntity[] = PROBLEM_SPECS.map(
     answer: spec.answer,
     solution: spec.solution,
     reviewStatus: spec.reviewStatus,
+    directUseAllowed: true,
     createdAt: spec.createdAt,
     updatedAt: spec.updatedAt ?? spec.createdAt,
   }),
@@ -467,6 +468,7 @@ export const MOCK_PROBLEM_OTHER_USER: ProblemEntity = {
   answer: "0",
   solution: null,
   reviewStatus: "approved",
+  directUseAllowed: true,
   createdAt: "2026-05-01T09:00:00Z",
   updatedAt: "2026-05-01T09:00:00Z",
 };
