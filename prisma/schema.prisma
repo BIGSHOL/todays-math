@@ -209,8 +209,10 @@ model Problem {
   solution     String?      @db.Text
   /// AI 생성물은 pending으로 시작, 검수 후 approved (D-22)
   reviewStatus ReviewStatus @default(pending) @map("review_status")
-  createdAt    DateTime     @default(now()) @map("created_at")
-  updatedAt    DateTime     @updatedAt @map("updated_at")
+  /// RPM 원본 잠금 (D-26) — false면 출제 풀에서 제외하고 변형 원본으로만 쓴다.
+  directUseAllowed Boolean @default(true) @map("direct_use_allowed")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
 
   user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   unit                Unit          @relation(fields: [unitId], references: [id], onDelete: Restrict)
@@ -219,7 +221,7 @@ model Problem {
   testProblems        TestProblem[]
 
   // 자동 출제 조회 핵심 인덱스
-  @@index([unitId, difficulty, reviewStatus])
+  @@index([unitId, difficulty, reviewStatus, directUseAllowed])
   @@index([userId, unitId])
   @@index([originProblemId])
   @@map("problem")

@@ -82,6 +82,7 @@ interface ProblemRow {
   answer: string;
   solution: string | null;
   reviewStatus: ReviewStatus;
+  directUseAllowed: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -128,6 +129,7 @@ function extraEligibleProblems(): ProblemEntity[] {
       answer: "0",
       solution: null,
       reviewStatus: "approved",
+      directUseAllowed: true,
       createdAt: "2026-08-01T00:00:00.000Z",
       updatedAt: "2026-08-01T00:00:00.000Z",
     });
@@ -485,6 +487,7 @@ const prismaModels = {
         ...data,
         originProblemId: data.originProblemId ?? null,
         reviewStatus: data.reviewStatus ?? "pending",
+        directUseAllowed: data.directUseAllowed ?? true,
         createdAt: now,
         updatedAt: now,
       };

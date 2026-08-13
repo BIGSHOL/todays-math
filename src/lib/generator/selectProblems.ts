@@ -39,7 +39,9 @@ export function selectProblems(args: SelectProblemsArgs): SelectProblemsResult {
   const { pool, difficultyRatio, count, recentProblemIds, seed } = args;
 
   const excludedIds = new Set(recentProblemIds);
-  const candidates = pool.filter((p) => !excludedIds.has(p.id));
+  const candidates = pool.filter(
+    (p) => !excludedIds.has(p.id) && p.directUseAllowed !== false,
+  );
   const shuffled = seededShuffle(candidates, seed);
 
   const { selected, substitutions, shortfall } = balanceDifficulty(

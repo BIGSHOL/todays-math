@@ -85,6 +85,7 @@ export const problemHandlers: HttpHandler[] = [
           answer: parsed.data.answer,
           solution: parsed.data.solution ?? null,
           reviewStatus: "pending",
+          directUseAllowed: true,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },

@@ -221,11 +221,22 @@ describe("[T4.1] 결정론 — 같은 시드는 같은 결과를 반환한다", 
 });
 
 describe("[D-26] RPM 원본 잠금 — directUseAllowed=false 문항 제외", () => {
-  // ⚠️ Problem.directUseAllowed 필드는 T3.0(스키마 마이그레이션)에서 추가된다 — 현재
-  // src/contracts/problem.contract.ts와 prisma/schema.prisma 어디에도 없다(problem.contract.ts
-  // 상단 주석 참조). 그래서 여기서는 계약 스키마가 아닌 "픽스처 객체 레벨"(원시 객체 리터럴)로만
-  // 케이스를 남기고, 실행 가능한 단언은 T3.0 완료 후 작성한다(it.todo).
-  it.todo(
-    "directUseAllowed=false인 문항(RPM 원본)은 출제 후보 풀에서 제외된다 — T3.0 스키마 보강 후 활성화",
-  );
+  it("directUseAllowed=false인 문항은 출제 후보 풀에서 제외된다", () => {
+    const locked = {
+      ...MOCK_PROBLEMS[0]!,
+      id: "50000000-0000-4000-8000-000000000099",
+      directUseAllowed: false,
+    };
+    const result = selectProblems({
+      pool: [locked, ...BALANCED_POOL],
+      difficultyRatio: { easy: 1, mid: 0, hard: 0 },
+      count: 1,
+      recentProblemIds: [],
+      seed: "d26",
+    });
+    expect(result.problems.map((p) => p.id)).not.toContain(locked.id);
+    expect(result.problems.every((p) => p.directUseAllowed !== false)).toBe(
+      true,
+    );
+  });
 });

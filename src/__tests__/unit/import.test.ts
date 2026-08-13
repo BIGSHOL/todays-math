@@ -1,0 +1,179 @@
+import { describe, expect, it } from "vitest";
+
+import { blocksToLatex } from "@/lib/import/blocksToLatex";
+import { classifyDrafts } from "@/lib/import/buildReport";
+import { convertManualSeedQuestion } from "@/lib/import/convertManualSeed";
+import { convertPastExamPaper } from "@/lib/import/convertPastExam";
+import { convertRpmRow } from "@/lib/import/convertRpm";
+import { mapNumericDifficulty } from "@/lib/import/mapDifficulty";
+import { mapUnitHint } from "@/lib/import/mapUnit";
+
+const UNITS = [
+  {
+    id: "unit-finite",
+    grade: "중2",
+    chapter: "1. 수와 식",
+    section: "유리수와 소수",
+  },
+  {
+    id: "unit-coord",
+    grade: "공통수학2",
+    chapter: "1. 도형의 방정식",
+    section: "평면좌표",
+  },
+];
+
+describe("[T3.0] blocksToLatex", () => {
+  it("text/equation을 마크다운+LaTeX로 이어 붙인다", () => {
+    const result = blocksToLatex([
+      { type: "text", value: "무게중심의 좌표가" },
+      { type: "equation", value: "a+b" },
+    ]);
+    expect(result.content).toContain("무게중심의 좌표가");
+    expect(result.content).toContain("$a+b$");
+    expect(result.hasFigure).toBe(false);
+  });
+
+  it("figure 블록은 [그림]으로 남기고 hasFigure=true", () => {
+    const result = blocksToLatex([
+      { type: "figure", value: "좌표평면 위 삼각형" },
+    ]);
+    expect(result.hasFigure).toBe(true);
+    expect(result.content).toContain("[그림] 좌표평면 위 삼각형");
+  });
+});
+
+describe("[T3.0] 난이도 매핑", () => {
+  it("1~10을 easy/mid/hard로 나눈다", () => {
+    expect(mapNumericDifficulty(2)).toBe("easy");
+    expect(mapNumericDifficulty(5)).toBe("mid");
+    expect(mapNumericDifficulty(9)).toBe("hard");
+  });
+});
+
+describe("[T3.0] 기출 변환", () => {
+  it("본문+선지+정답을 한 문항으로 합친다", () => {
+    const drafts = convertPastExamPaper(
+      {
+        meta: { exam_id: 4209, subject: "공수2", unit: "평면좌표 ~ 명제" },
+        questions: [
+          {
+            number: 1,
+            score: 3,
+            type: "객관식",
+            contents: [{ type: "text", value: "무게중심의 좌표" }],
+            choices: [
+              { number: 1, contents: [{ type: "equation", value: "3" }] },
+              { number: 2, contents: [{ type: "equation", value: "4" }] },
+            ],
+          },
+        ],
+      },
+      [{ number: 1, answer: "⑤" }],
+    );
+    expect(drafts).toHaveLength(1);
+    expect(drafts[0]?.source).toBe("past_exam");
+    expect(drafts[0]?.directUseAllowed).toBe(true);
+    expect(drafts[0]?.answer).toBe("⑤");
+    expect(drafts[0]?.content).toContain("1. $3$");
+  });
+});
+
+describe("[T3.0] 자작 시드 변환", () => {
+  it("객관식 옵션과 난이도 1~10을 변환한다", () => {
+    const draft = convertManualSeedQuestion({
+      id: "m2-1-1-1-co-001",
+      concept_id: "m2-1-1-1",
+      concept_name: "유한소수 판별",
+      category: "computation",
+      question_type: "multiple_choice",
+      difficulty: 2,
+      content: "분수 7/20을 소수로 나타낼 때",
+      options: ["유한소수", "순환소수"],
+      correct_answer: "A",
+      explanation: "분모 20=2²×5",
+    });
+    expect(draft.source).toBe("manual");
+    expect(draft.directUseAllowed).toBe(true);
+    expect(draft.difficulty).toBe("easy");
+    expect(draft.problemType).toBe("계산");
+    expect(draft.content).toContain("유한소수");
+  });
+});
+
+describe("[T3.0] RPM 변환", () => {
+  it("전량 directUseAllowed=false 로 잠근다", () => {
+    const draft = convertRpmRow({
+      id: "rpm-1",
+      stem: "원본 RPM 문항",
+      answer: "1",
+      topic: "유리수와 소수",
+    });
+    expect(draft.source).toBe("transformed");
+    expect(draft.directUseAllowed).toBe(false);
+  });
+});
+
+describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
+  it("섹션 이름이 힌트에 있으면 매핑한다", () => {
+    const result = mapUnitHint("유한소수와 유리수와 소수", UNITS, "중2");
+    expect(result.status).toBe("mapped");
+    if (result.status === "mapped") expect(result.unitId).toBe("unit-finite");
+  });
+
+  it("매핑 실패분은 unclassified로 남기고 버리지 않는다", () => {
+    const { classified, report } = classifyDrafts(
+      "past_exam",
+      [
+        {
+          externalId: "1-1",
+          source: "past_exam",
+          directUseAllowed: true,
+          difficulty: "mid",
+          problemType: "개념",
+          content: "ok",
+          answer: "1",
+          solution: null,
+          unitHint: "평면좌표",
+          hasFigure: false,
+        },
+        {
+          externalId: "1-2",
+          source: "past_exam",
+          directUseAllowed: true,
+          difficulty: "mid",
+          problemType: "개념",
+          content: "nope",
+          answer: "1",
+          solution: null,
+          unitHint: "존재하지 않는 단원명",
+          hasFigure: false,
+        },
+        {
+          externalId: "1-3",
+          source: "past_exam",
+          directUseAllowed: true,
+          difficulty: "mid",
+          problemType: "개념",
+          content: "fig",
+          answer: "1",
+          solution: null,
+          unitHint: "평면좌표",
+          hasFigure: true,
+        },
+      ],
+      UNITS,
+      "공수2",
+    );
+
+    expect(classified).toHaveLength(1);
+    expect(report.ok).toBe(1);
+    expect(report.unclassified).toBe(1);
+    expect(report.skippedFigure).toBe(1);
+    expect(report.items.map((item) => item.status)).toEqual([
+      "ok",
+      "unclassified",
+      "skipped_figure",
+    ]);
+  });
+});
