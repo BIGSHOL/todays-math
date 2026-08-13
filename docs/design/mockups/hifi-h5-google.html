@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>오늘의수학 — H5 구글 스타일 강조색 3변형</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Malgun Gothic',system-ui,sans-serif; background:#c9c9c7; color:#222; padding:36px 16px 90px; }
+  .doc { max-width:1120px; margin:0 auto; }
+  .doc-head { margin-bottom:30px; }
+  .doc-head h1 { font-size:20px; font-weight:700; margin-bottom:6px; }
+  .doc-head p { font-size:13px; color:#444; line-height:1.7; }
+  .cap { font-size:14px; font-weight:800; margin:36px 4px 4px; }
+  .sub { font-size:12px; color:#555; margin:0 4px 10px; line-height:1.7; }
+  .frame { display:flex; flex-direction:column; overflow:hidden; box-shadow:0 10px 34px rgba(0,0,0,.28); background:#ececea; height:328px; }
+
+  .h5x { color:#161616; }
+  .h5x .mast { padding:13px 26px 10px; border-bottom:3px solid #161616; display:flex; align-items:baseline; gap:16px; }
+  .h5x .logo { font-size:18px; font-weight:900; letter-spacing:-.5px; }
+  .h5x .date { font-size:11px; color:#6a6a68; font-variant-numeric:tabular-nums; }
+  .h5x .left { font-size:11px; font-weight:900; }
+  .h5x .navs { margin-left:auto; display:flex; gap:18px; font-size:11px; font-weight:700; color:#5c5c5a; align-items:center; }
+  .h5x .tgl { background:#161616; color:#ececea; padding:3px 10px; font-size:10px; font-weight:800; }
+  .h5x .card { display:grid; grid-template-columns:44px minmax(0,1fr) 232px 112px; align-items:center; gap:16px;
+               padding:12px 24px; border-bottom:1px solid #c2c2c0; }
+  .h5x .card.hot { background:#fff; }
+  .h5x .card.wait { opacity:.62; }
+  .h5x .cno { font-size:23px; font-weight:900; color:#c6c6c4; font-variant-numeric:tabular-nums; line-height:1; }
+  .h5x .cls-row { display:flex; align-items:baseline; gap:8px; white-space:nowrap; overflow:hidden; }
+  .h5x .cls { font-size:15px; font-weight:900; }
+  .h5x .ctype { font-size:10.5px; font-weight:700; color:#8a8a88; }
+  .h5x .meta { font-size:11.5px; color:#6b6b69; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .h5x .segs { display:flex; gap:3px; height:8px; margin-bottom:4px; }
+  .h5x .seg { flex:1; background:#cfcfcd; }
+  .h5x .slabels { display:flex; }
+  .h5x .sl { flex:1; font-size:9px; font-weight:800; letter-spacing:1.2px; color:#a3a3a1; text-align:center; }
+  .h5x .act { width:112px; border:2px solid #161616; background:transparent; padding:8px 0; font-size:12.5px; font-weight:900; letter-spacing:1px; text-align:center; font-family:inherit; }
+
+  /* ── G1: 구글 블루 단일 ── */
+  .g1 .left { color:#1a73e8; }
+  .g1 .card.hot { box-shadow:inset 5px 0 0 #1a73e8; }
+  .g1 .card.hot .cno { color:#1a73e8; }
+  .g1 .seg.done { background:#161616; }
+  .g1 .seg.cur { background:#1a73e8; }
+  .g1 .sl.done { color:#161616; }
+  .g1 .sl.cur { color:#1a73e8; }
+  .g1 .act.pri { background:#161616; color:#ececea; }
+  .g1 .card.hot .act.pri { background:#1a73e8; border-color:#1a73e8; }
+
+  /* ── G2: 구글 4색 기능 배분 ── */
+  .g2 .left { color:#ea4335; }
+  .g2 .card.hot { box-shadow:inset 5px 0 0 #1a73e8; }
+  .g2 .card.hot .cno { color:#1a73e8; }
+  .g2 .seg.done { background:#34a853; }
+  .g2 .seg.cur { background:#1a73e8; }
+  .g2 .sl.done { color:#34a853; }
+  .g2 .sl.cur { color:#1a73e8; }
+  .g2 .card.wait .seg.cur { background:#fbbc05; }
+  .g2 .card.wait .sl.cur { color:#c79102; }
+  .g2 .act.pri { background:#1a73e8; color:#fff; border-color:#1a73e8; }
+  .g2 .warnmeta { color:#c5221f !important; font-weight:700; }
+
+  /* ── G3: 블루+그린 2색 절제 ── */
+  .g3 .left { color:#1a73e8; }
+  .g3 .card.hot { box-shadow:inset 5px 0 0 #1a73e8; }
+  .g3 .card.hot .cno { color:#1a73e8; }
+  .g3 .seg.done { background:#188038; }
+  .g3 .seg.cur { background:#1a73e8; }
+  .g3 .sl.done { color:#188038; }
+  .g3 .sl.cur { color:#1a73e8; }
+  .g3 .act.pri { background:#161616; color:#ececea; }
+  .g3 .card.hot .act.pri { background:#1a73e8; border-color:#1a73e8; }
+</style>
+</head>
+<body>
+<div class="doc">
+  <div class="doc-head">
+    <h1>H5 × 구글 스타일 — 강조색 3변형</h1>
+    <p>레이아웃·열맞춤·밀도는 확정본 그대로. <b>색 운용 방식만</b> 다릅니다.</p>
+  </div>
+
+  <!-- G1 -->
+  <div class="cap">G1 — 구글 블루 단일 강조</div>
+  <p class="sub">그레이 + <b>#1A73E8</b> 하나. 오렌지 자리를 블루가 그대로 대체 — 가장 절제된 해석.</p>
+  <div class="frame h5x g1">
+    <div class="mast"><span class="logo">오늘의수학</span><span class="date">2026-08-13 목</span><span class="left">남은 작업 3</span>
+      <span class="navs"><span class="tgl">전체 표 ⇄</span><span>문제은행</span><span>반 관리</span></span></div>
+    <div class="card hot">
+      <span class="cno">1</span>
+      <div><div class="cls-row"><span class="cls">중2-A</span><span class="ctype">일일 · 2교시</span></div><div class="meta">일차함수의 그래프 · 8문항 준비됨</div></div>
+      <div><div class="segs"><span class="seg done"></span><span class="seg done"></span><span class="seg cur"></span><span class="seg"></span></div>
+        <div class="slabels"><span class="sl done">진도</span><span class="sl done">출제</span><span class="sl cur">검수</span><span class="sl">인쇄</span></div></div>
+      <button class="act pri">검수</button>
+    </div>
+    <div class="card">
+      <span class="cno">2</span>
+      <div><div class="cls-row"><span class="cls">중1-B</span><span class="ctype">일일 · 3교시</span></div><div class="meta">정수와 유리수의 혼합계산 · 검수 완료</div></div>
+      <div><div class="segs"><span class="seg done"></span><span class="seg done"></span><span class="seg done"></span><span class="seg cur"></span></div>
+        <div class="slabels"><span class="sl done">진도</span><span class="sl done">출제</span><span class="sl done">검수</span><span class="sl cur">인쇄</span></div></div>
+      <button class="act pri">인쇄</button>
+    </div>
+    <div class="card wait">
+      <span class="cno">3</span>
+      <div><div class="cls-row"><span class="cls">중3-D</span><span class="ctype">일일 · 4교시</span></div><div class="meta">어제 진도가 비어 있습니다</div></div>
+      <div><div class="segs"><span class="seg cur"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span></div>
+        <div class="slabels"><span class="sl cur">진도</span><span class="sl">출제</span><span class="sl">검수</span><span class="sl">인쇄</span></div></div>
+      <button class="act">진도 입력</button>
+    </div>
+  </div>
+
+  <!-- G2 -->
+  <div class="cap">G2 — 구글 4색 기능 배분</div>
+  <p class="sub">색에 역할을 부여: <b style="color:#1a73e8;">블루=지금 할 일</b> · <b style="color:#34a853;">그린=끝난 단계</b> · <b style="color:#c79102;">옐로=입력 대기</b> · <b style="color:#ea4335;">레드=경고(남은 작업 등)</b>. 게이지가 신호등처럼 읽힘.</p>
+  <div class="frame h5x g2">
+    <div class="mast"><span class="logo">오늘의수학</span><span class="date">2026-08-13 목</span><span class="left">남은 작업 3</span>
+      <span class="navs"><span class="tgl">전체 표 ⇄</span><span>문제은행</span><span>반 관리</span></span></div>
+    <div class="card hot">
+      <span class="cno">1</span>
+      <div><div class="cls-row"><span class="cls">중2-A</span><span class="ctype">일일 · 2교시</span></div><div class="meta">일차함수의 그래프 · 8문항 준비됨</div></div>
+      <div><div class="segs"><span class="seg done"></span><span class="seg done"></span><span class="seg cur"></span><span class="seg"></span></div>
+        <div class="slabels"><span class="sl done">진도</span><span class="sl done">출제</span><span class="sl cur">검수</span><span class="sl">인쇄</span></div></div>
+      <button class="act pri">검수</button>
+    </div>
+    <div class="card">
+      <span class="cno">2</span>
+      <div><div class="cls-row"><span class="cls">중1-B</span><span class="ctype">일일 · 3교시</span></div><div class="meta">정수와 유리수의 혼합계산 · 검수 완료</div></div>
+      <div><div class="segs"><span class="seg done"></span><span class="seg done"></span><span class="seg done"></span><span class="seg cur"></span></div>
+        <div class="slabels"><span class="sl done">진도</span><span class="sl done">출제</span><span class="sl done">검수</span><span class="sl cur">인쇄</span></div></div>
+      <button class="act pri">인쇄</button>
+    </div>
+    <div class="card wait" style="opacity:.78;">
+      <span class="cno">3</span>
+      <div><div class="cls-row"><span class="cls">중3-D</span><span class="ctype">일일 · 4교시</span></div><div class="meta warnmeta">어제 진도가 비어 있습니다</div></div>
+      <div><div class="segs"><span class="seg cur"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span></div>
+        <div class="slabels"><span class="sl cur">진도</span><span class="sl">출제</span><span class="sl">검수</span><span class="sl">인쇄</span></div></div>
+      <button class="act">진도 입력</button>
+    </div>
+  </div>
+
+  <!-- G3 -->
+  <div class="cap">G3 — 블루 + 그린 2색 절제</div>
+  <p class="sub"><b style="color:#1a73e8;">블루=지금 할 일</b> · <b style="color:#188038;">그린=끝난 단계</b>만. 진행감(그린이 쌓임)과 절제를 동시에 — G1과 G2의 중간.</p>
+  <div class="frame h5x g3">
+    <div class="mast"><span class="logo">오늘의수학</span><span class="date">2026-08-13 목</span><span class="left">남은 작업 3</span>
+      <span class="navs"><span class="tgl">전체 표 ⇄</span><span>문제은행</span><span>반 관리</span></span></div>
+    <div class="card hot">
+      <span class="cno">1</span>
+      <div><div class="cls-row"><span class="cls">중2-A</span><span class="ctype">일일 · 2교시</span></div><div class="meta">일차함수의 그래프 · 8문항 준비됨</div></div>
+      <div><div class="segs"><span class="seg done"></span><span class="seg done"></span><span class="seg cur"></span><span class="seg"></span></div>
+        <div class="slabels"><span class="sl done">진도</span><span class="sl done">출제</span><span class="sl cur">검수</span><span class="sl">인쇄</span></div></div>
+      <button class="act pri">검수</button>
+    </div>
+    <div class="card">
+      <span class="cno">2</span>
+      <div><div class="cls-row"><span class="cls">중1-B</span><span class="ctype">일일 · 3교시</span></div><div class="meta">정수와 유리수의 혼합계산 · 검수 완료</div></div>
+      <div><div class="segs"><span class="seg done"></span><span class="seg done"></span><span class="seg done"></span><span class="seg cur"></span></div>
+        <div class="slabels"><span class="sl done">진도</span><span class="sl done">출제</span><span class="sl done">검수</span><span class="sl cur">인쇄</span></div></div>
+      <button class="act pri">인쇄</button>
+    </div>
+    <div class="card wait">
+      <span class="cno">3</span>
+      <div><div class="cls-row"><span class="cls">중3-D</span><span class="ctype">일일 · 4교시</span></div><div class="meta">어제 진도가 비어 있습니다</div></div>
+      <div><div class="segs"><span class="seg cur"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span></div>
+        <div class="slabels"><span class="sl cur">진도</span><span class="sl">출제</span><span class="sl">검수</span><span class="sl">인쇄</span></div></div>
+      <button class="act">진도 입력</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

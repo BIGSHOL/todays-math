@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>오늘의수학 — H5 최종안 (열맞춤·컴팩트)</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Malgun Gothic',system-ui,sans-serif; background:#c9c9c7; color:#222; padding:36px 16px 90px; }
+  .doc { max-width:1120px; margin:0 auto; }
+  .doc-head { margin-bottom:32px; }
+  .doc-head h1 { font-size:20px; font-weight:700; margin-bottom:6px; }
+  .doc-head p { font-size:13px; color:#444; line-height:1.7; }
+  .cap { font-size:13px; font-weight:700; margin:34px 4px 10px; }
+  .frame { display:flex; flex-direction:column; overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,.3); background:#ececea; }
+  .note { padding:12px 6px 0; font-size:12.5px; color:#333; line-height:1.8; }
+
+  /* ══ H5 토큰 ══ */
+  .h5x { color:#161616; }
+  .h5x .mast { padding:14px 28px 11px; border-bottom:3px solid #161616; display:flex; align-items:baseline; gap:16px; }
+  .h5x .logo { font-size:19px; font-weight:900; letter-spacing:-.5px; }
+  .h5x .date { font-size:11.5px; color:#6a6a68; font-variant-numeric:tabular-nums; }
+  .h5x .left { font-size:11.5px; font-weight:900; color:#e8590c; }
+  .h5x .navs { margin-left:auto; display:flex; gap:20px; font-size:11.5px; font-weight:700; color:#5c5c5a; align-items:center; }
+  .h5x .tgl { background:#161616; color:#ececea; padding:3px 11px; font-size:10.5px; font-weight:800; }
+  .h5x .body { flex:1; display:flex; }
+  .h5x .main { flex:1; display:flex; flex-direction:column; min-width:0; }
+
+  /* ★ 열맞춤: 모든 카드 동일 그리드 ★ */
+  .h5x .card { display:grid; grid-template-columns:44px minmax(0,1fr) 232px 112px; align-items:center; gap:16px;
+               padding:12px 24px; border-bottom:1px solid #c2c2c0; }
+  .h5x .card.hot { background:#fff; box-shadow:inset 5px 0 0 #e8590c; }
+  .h5x .card.wait { opacity:.62; }
+  .h5x .cno { font-size:24px; font-weight:900; color:#c6c6c4; font-variant-numeric:tabular-nums; line-height:1; }
+  .h5x .card.hot .cno { color:#e8590c; }
+  .h5x .cls-row { display:flex; align-items:baseline; gap:8px; white-space:nowrap; overflow:hidden; }
+  .h5x .cls { font-size:15px; font-weight:900; letter-spacing:-.3px; flex-shrink:0; }
+  .h5x .ctype { font-size:10.5px; font-weight:700; color:#8a8a88; flex-shrink:0; }
+  .h5x .meta { font-size:11.5px; color:#6b6b69; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-variant-numeric:tabular-nums; }
+  .h5x .steps { width:232px; }
+  .h5x .segs { display:flex; gap:3px; height:8px; margin-bottom:4px; }
+  .h5x .seg { flex:1; background:#cfcfcd; }
+  .h5x .seg.done { background:#161616; }
+  .h5x .seg.cur { background:#e8590c; }
+  .h5x .slabels { display:flex; }
+  .h5x .sl { flex:1; font-size:9px; font-weight:800; letter-spacing:1.2px; color:#a3a3a1; text-align:center; }
+  .h5x .sl.done { color:#161616; }
+  .h5x .sl.cur { color:#e8590c; }
+  .h5x .act { width:112px; border:2px solid #161616; background:transparent; padding:8px 0; font-size:12.5px; font-weight:900; letter-spacing:1px; text-align:center; font-family:inherit; }
+  .h5x .act.pri { background:#161616; color:#ececea; }
+  .h5x .card.hot .act.pri { background:#e8590c; border-color:#e8590c; }
+  .h5x .donee { display:grid; grid-template-columns:44px 1fr 232px 112px; gap:16px; padding:10px 24px; font-size:11px; font-weight:700; color:#8a8a88; align-items:center; }
+  .h5x .donee .dsegs { display:flex; gap:3px; height:8px; width:232px; }
+  .h5x .donee .dseg { flex:1; background:#161616; opacity:.32; }
+  .h5x .side { width:250px; border-left:3px solid #161616; padding:16px 20px; background:#e0e0de; }
+  .h5x .sh { font-size:10.5px; font-weight:900; letter-spacing:2.5px; border-top:3px solid #161616; padding-top:7px; margin-bottom:9px; }
+  .h5x .sv { font-size:11.5px; color:#4a4a48; line-height:2.1; }
+  .h5x .cur-lesson { font-size:13.5px; font-weight:900; display:block; margin:1px 0 8px; color:#161616; }
+  .h5x .sbtn { display:inline-block; border:2px solid #161616; padding:5px 12px; font-size:10.5px; font-weight:900; margin-right:4px; background:transparent; }
+  .h5x .sbtn.pri { background:#161616; color:#ececea; }
+  .h5x .stat { display:flex; gap:18px; margin-top:2px; }
+  .h5x .stat .n { font-size:26px; font-weight:900; color:#e8590c; font-variant-numeric:tabular-nums; line-height:1; }
+  .h5x .stat .n small { font-size:13px; color:#8a8a88; font-weight:800; }
+  .h5x .stat .l { font-size:9.5px; font-weight:800; color:#8a8a88; letter-spacing:1.2px; margin-top:4px; }
+
+  /* 상태 ② 표 */
+  .h5x table { width:100%; border-collapse:collapse; font-size:12px; font-variant-numeric:tabular-nums; }
+  .h5x thead th { text-align:left; font-size:10px; font-weight:900; letter-spacing:1.5px; color:#6a6a68; padding:8px 10px; border-bottom:2.5px solid #161616; }
+  .h5x tbody td { padding:10px; border-bottom:1px solid #c2c2c0; }
+  .h5x tbody tr:hover { background:#fff; }
+  .h5x .tcls { font-weight:900; font-size:13px; }
+  .h5x .tsegs { display:flex; gap:2.5px; height:7px; width:110px; }
+  .h5x .tseg { flex:1; background:#cfcfcd; }
+  .h5x .tseg.done { background:#161616; }
+  .h5x .tact { border:1.5px solid #161616; padding:3px 10px; font-size:10.5px; font-weight:800; background:transparent; display:inline-block; }
+  .h5x .tmut { color:#8a8a88; }
+  .h5x .foot { display:flex; align-items:center; gap:18px; padding:11px 24px; border-top:2.5px solid #161616; margin-top:auto; font-size:11px; font-weight:700; color:#6a6a68; font-variant-numeric:tabular-nums; }
+  .h5x .foot .fbtn { margin-left:auto; }
+</style>
+</head>
+<body>
+<div class="doc">
+  <div class="doc-head">
+    <h1>H5 스위스 계기판 — 최종안 (열맞춤 · 컴팩트)</h1>
+    <p>반영: ① 모든 카드가 <b>동일 컬럼 그리드</b> (번호 44px | 반 정보 | 게이지 232px | 버튼 112px — 전 카드 같은 x좌표)
+    ② 정보가 길면 줄바꿈 대신 말줄임 ③ 카드 높이 축소(컴팩트) ④ 상태 ② 표까지 같은 문법</p>
+  </div>
+
+  <div class="cap">상태 ① — 처리할 일이 남았을 때 (스택)</div>
+  <div class="frame h5x" style="height:430px;">
+    <div class="mast"><span class="logo">오늘의수학</span><span class="date">2026-08-13 목</span><span class="left">남은 작업 3</span>
+      <span class="navs"><span class="tgl">전체 표 ⇄</span><span>문제은행</span><span>반 관리</span><span>설정</span></span></div>
+    <div class="body">
+      <div class="main">
+        <div class="card hot">
+          <span class="cno">1</span>
+          <div><div class="cls-row"><span class="cls">중2-A</span><span class="ctype">일일 · 2교시</span></div>
+            <div class="meta">일차함수의 그래프 · 8문항 준비됨</div></div>
+          <div class="steps">
+            <div class="segs"><span class="seg done"></span><span class="seg done"></span><span class="seg cur"></span><span class="seg"></span></div>
+            <div class="slabels"><span class="sl done">진도</span><span class="sl done">출제</span><span class="sl cur">검수</span><span class="sl">인쇄</span></div>
+          </div>
+          <button class="act pri">검수</button>
+        </div>
+        <div class="card">
+          <span class="cno">2</span>
+          <div><div class="cls-row"><span class="cls">중1-B</span><span class="ctype">일일 · 3교시</span></div>
+            <div class="meta">정수와 유리수의 혼합계산 · 검수 완료</div></div>
+          <div class="steps">
+            <div class="segs"><span class="seg done"></span><span class="seg done"></span><span class="seg done"></span><span class="seg cur"></span></div>
+            <div class="slabels"><span class="sl done">진도</span><span class="sl done">출제</span><span class="sl done">검수</span><span class="sl cur">인쇄</span></div>
+          </div>
+          <button class="act pri">인쇄</button>
+        </div>
+        <div class="card wait">
+          <span class="cno">3</span>
+          <div><div class="cls-row"><span class="cls">중3-D</span><span class="ctype">일일 · 4교시</span></div>
+            <div class="meta">어제 진도가 비어 있습니다</div></div>
+          <div class="steps">
+            <div class="segs"><span class="seg cur"></span><span class="seg"></span><span class="seg"></span><span class="seg"></span></div>
+            <div class="slabels"><span class="sl cur">진도</span><span class="sl">출제</span><span class="sl">검수</span><span class="sl">인쇄</span></div>
+          </div>
+          <button class="act">진도 입력</button>
+        </div>
+        <div class="donee">
+          <span style="font-size:15px; color:#a3a3a1;">✓</span>
+          <span>초6-C — 확인테스트 10문항 인쇄됨</span>
+          <div class="dsegs"><span class="dseg"></span><span class="dseg"></span><span class="dseg"></span><span class="dseg"></span></div>
+          <span style="text-align:center;">완료</span>
+        </div>
+      </div>
+      <div class="side">
+        <div class="sh">진도 입력</div>
+        <div class="sv">중2-A ▾<span class="cur-lesson">일차함수의 그래프</span>
+          <span class="sbtn pri">다음 차시로</span><span class="sbtn">직접 선택</span></div>
+        <div class="sh" style="margin-top:20px;">이번 주</div>
+        <div class="stat">
+          <div><div class="n">4<small>/5</small></div><div class="l">출제 일수</div></div>
+          <div><div class="n">83<small>%</small></div><div class="l">무수정</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>열맞춤:</b> 번호·정보·게이지·버튼이 4개 카드(완료 줄 포함) 전부 같은 x좌표. 버튼 폭도 112px 고정이라 "검수/인쇄/진도 입력" 글자 수가 달라도 정렬 유지.</div>
+
+  <div class="cap">상태 ② — 오늘 완료 후 (대장부 표, 자동 전환)</div>
+  <div class="frame h5x" style="height:380px;">
+    <div class="mast"><span class="logo">오늘의수학</span><span class="date">2026-08-13 목</span><span class="left" style="color:#161616;">오늘 완료</span>
+      <span class="navs"><span class="tgl">오늘 작업 ⇄</span><span>문제은행</span><span>반 관리</span><span>설정</span></span></div>
+    <div class="body">
+      <div class="main" style="padding:6px 24px 0;">
+        <table>
+          <thead><tr><th>반</th><th>현재 진도</th><th>오늘</th><th>내일 테스트</th><th style="width:120px;">작업</th></tr></thead>
+          <tbody>
+            <tr><td class="tcls">중2-A</td><td>일차함수의 활용</td><td><div class="tsegs"><span class="tseg done"></span><span class="tseg done"></span><span class="tseg done"></span><span class="tseg done"></span></div></td><td>자동 준비 예약</td><td><span class="tact">다시 보기</span></td></tr>
+            <tr><td class="tcls">중1-B</td><td>혼합계산</td><td><div class="tsegs"><span class="tseg done"></span><span class="tseg done"></span><span class="tseg done"></span><span class="tseg done"></span></div></td><td>자동 준비 예약</td><td><span class="tact">다시 보기</span></td></tr>
+            <tr><td class="tcls">초6-C</td><td>비와 비율 <span class="tmut">완강</span></td><td><div class="tsegs"><span class="tseg done"></span><span class="tseg done"></span><span class="tseg done"></span><span class="tseg done"></span></div></td><td class="tmut">다음 단원 시작</td><td><span class="tact">범위 출제</span></td></tr>
+            <tr><td class="tcls">중3-D</td><td>이차방정식의 활용</td><td><div class="tsegs"><span class="tseg done"></span><span class="tseg"></span><span class="tseg"></span><span class="tseg"></span></div></td><td>자동 준비 예약</td><td><span class="tact">미리 검수</span></td></tr>
+          </tbody>
+        </table>
+        <div class="foot"><span>이번 주 출제 5/5 ✓</span><span>무수정 85%</span>
+          <span class="fbtn"><span class="tact" style="border-width:2px; font-weight:900;">내일 전체 미리 준비</span></span></div>
+      </div>
+      <div class="side">
+        <div class="sh">진도 입력</div>
+        <div class="sv">반 선택 ▾<span class="cur-lesson" style="color:#8a8a88;">—</span>
+          <span class="sbtn pri">다음 차시로</span><span class="sbtn">직접 선택</span></div>
+        <div class="sh" style="margin-top:20px;">이번 주</div>
+        <div class="stat">
+          <div><div class="n" style="color:#161616;">5<small>/5</small></div><div class="l">출제 일수</div></div>
+          <div><div class="n" style="color:#161616;">85<small>%</small></div><div class="l">무수정</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>표에도 같은 게이지:</b> "오늘" 열의 4칸 미니 게이지가 카드의 단계 표시기와 같은 문법 — 화면이 바뀌어도 언어는 하나.</div>
+</div>
+</body>
+</html>
