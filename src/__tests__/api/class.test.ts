@@ -1,35 +1,23 @@
 /**
- * 🔴 RED — 대응 구현 태스크: Phase 2, T2.1 (반/학생 CRUD API RED→GREEN)
+ * 🟢 GREEN — 대응 구현 태스크: Phase 2, T2.1 (반/학생 CRUD API RED→GREEN)
  *
- * `src/app/api/classes/**`, `src/app/api/students/**`가 아직 존재하지 않으므로 아래 import들은
- * 런타임에 모듈 해석에 실패해 이 파일 전체가 FAILED로 보고된다 — RED의 정상 상태다.
- * (`@ts-expect-error` 사용 이유는 src/__tests__/api/auth.test.ts 상단 주석 참조.)
+ * 구현: src/app/api/classes/**, src/app/api/students/**
+ * (RED 단계의 `@ts-expect-error` 임시 주석은 구현 완료로 제거됨 — 이유는
+ * src/__tests__/api/auth.test.ts 상단 주석 참조.)
  *
  * 대응 계약: src/contracts/class.contract.ts
  */
 import { NextRequest } from "next/server";
 import { describe, expect, it } from "vitest";
 
-// ⚠️ 아래 import는 각 named import마다 별도 문장으로 분리했다 — 여러 named import를 한
-//    문장(중괄호 여러 줄)으로 묶으면 Prettier가 줄바꿈하는 위치에 따라 "Cannot find module"
-//    진단이 찍히는 물리적 줄이 `@ts-expect-error` 바로 다음 줄과 어긋날 수 있기 때문이다.
-// @ts-expect-error TODO(T2.1) — src/app/api/classes/route.ts 구현 전까지 모듈이 없다.
 import { GET as listClasses } from "@/app/api/classes/route";
-// @ts-expect-error TODO(T2.1) — src/app/api/classes/route.ts 구현 전까지 모듈이 없다.
 import { POST as createClass } from "@/app/api/classes/route";
-// @ts-expect-error TODO(T2.1) — src/app/api/classes/[id]/route.ts 구현 전까지 모듈이 없다.
 import { GET as getClass } from "@/app/api/classes/[id]/route";
-// @ts-expect-error TODO(T2.1) — src/app/api/classes/[id]/route.ts 구현 전까지 모듈이 없다.
 import { PATCH as patchClass } from "@/app/api/classes/[id]/route";
-// @ts-expect-error TODO(T2.1) — src/app/api/classes/[id]/route.ts 구현 전까지 모듈이 없다.
 import { DELETE as deleteClass } from "@/app/api/classes/[id]/route";
-// @ts-expect-error TODO(T2.1) — src/app/api/students/route.ts 구현 전까지 모듈이 없다.
 import { GET as listStudents } from "@/app/api/students/route";
-// @ts-expect-error TODO(T2.1) — src/app/api/students/route.ts 구현 전까지 모듈이 없다.
 import { POST as createStudent } from "@/app/api/students/route";
-// @ts-expect-error TODO(T2.1) — src/app/api/students/[id]/route.ts 구현 전까지 모듈이 없다.
 import { PATCH as patchStudent } from "@/app/api/students/[id]/route";
-// @ts-expect-error TODO(T2.1) — src/app/api/students/[id]/route.ts 구현 전까지 모듈이 없다.
 import { DELETE as deleteStudent } from "@/app/api/students/[id]/route";
 
 import {
