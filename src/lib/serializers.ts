@@ -1,11 +1,20 @@
 /**
  * Prisma 조회 결과(Date 객체 · Prisma.JsonValue) → 계약 엔티티(ISO 문자열 · 좁혀진 타입)
- * 직렬화 헬퍼. `src/app/api/classes/**`, `src/app/api/students/**`가 공용으로 사용한다.
+ * 직렬화 헬퍼. `src/app/api/classes/**`, `src/app/api/students/**`, `src/app/api/progress/**`가
+ * 공용으로 사용한다.
  */
-import type { Class as ClassRow, Student as StudentRow } from "@prisma/client";
+import type {
+  Class as ClassRow,
+  Progress as ProgressRow,
+  Student as StudentRow,
+} from "@prisma/client";
 
 import type { DifficultyRatio } from "@/contracts/common.contract";
-import type { ClassEntity, StudentEntity } from "@/contracts/class.contract";
+import type {
+  ClassEntity,
+  ProgressEntity,
+  StudentEntity,
+} from "@/contracts/class.contract";
 
 export function serializeClass(row: ClassRow): ClassEntity {
   return {
@@ -29,5 +38,17 @@ export function serializeStudent(row: StudentRow): StudentEntity {
     useIndividualProgress: row.useIndividualProgress,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
+  };
+}
+
+export function serializeProgress(row: ProgressRow): ProgressEntity {
+  return {
+    id: row.id,
+    classId: row.classId,
+    studentId: row.studentId,
+    unitId: row.unitId,
+    // Progress.recordedAt은 @db.Date(날짜만) — 계약의 isoDateSchema(YYYY-MM-DD)에 맞춰 자른다.
+    recordedAt: row.recordedAt.toISOString().slice(0, 10),
+    createdAt: row.createdAt.toISOString(),
   };
 }

@@ -1,23 +1,34 @@
 /**
- * 🔴 RED — 대응 구현 태스크: Phase 2, T2.2 (진도 기록/조회 API RED→GREEN)
+ * 🟢 GREEN — 대응 구현 태스크: Phase 2, T2.2 (진도 기록/조회 API RED→GREEN)
  *
- * `src/app/api/progress/**`가 아직 존재하지 않으므로 아래 import들은 런타임에 모듈 해석에
- * 실패해 이 파일 전체가 FAILED로 보고된다 — RED의 정상 상태다.
- * (`@ts-expect-error` 사용 이유는 src/__tests__/api/auth.test.ts 상단 주석 참조.)
+ * 구현: src/app/api/progress/route.ts, src/app/api/progress/advance/route.ts,
+ *       src/lib/progressResolver.ts (반/개별 이중 구조 해석 순수 함수)
+ * (RED 단계의 `@ts-expect-error` 임시 주석은 구현 완료로 제거됨 — 이유는
+ * src/__tests__/api/auth.test.ts 상단 주석 참조.)
  *
  * 대응 계약: src/contracts/class.contract.ts (§진도)
  * ⚠️ PROGRESS는 이력 누적(append-only) 엔티티다 — 수정/삭제 엔드포인트가 없다(계약 주석 참조).
+ *
+ * ⚠️ RED 단계 원본에는 세션 모킹이 누락되어 있었다(버그) — class/student CRUD(T2.1)와 동일하게
+ * 소유권 검증(반/학생 owner=USER_TEACHER_ID)이 필요하므로 src/__tests__/api/class.test.ts 상단의
+ * vi.mock("@/lib/session") 패턴을 그대로 가져와 추가했다(테스트 기대값/시나리오는 변경하지 않음).
  */
 import { NextRequest } from "next/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+// T1.1(실제 Auth.js 세션) 병합 이후 패턴 — src/__tests__/api/class.test.ts 상단 주석 참조.
+vi.mock("@/lib/session", () => ({
+  getSessionUser: vi.fn(async () => ({
+    id: "10000000-0000-4000-8000-000000000001",
+    email: "teacher@todaysmath.test",
+    name: "테스트 강사",
+  })),
+}));
 
 // ⚠️ named import를 문장별로 분리한 이유는 src/__tests__/api/class.test.ts 상단 주석 참조
 //    (Prettier 줄바꿈으로 인한 @ts-expect-error 위치 어긋남 방지).
-// @ts-expect-error TODO(T2.2) — src/app/api/progress/route.ts 구현 전까지 모듈이 없다.
 import { GET as getProgress } from "@/app/api/progress/route";
-// @ts-expect-error TODO(T2.2) — src/app/api/progress/route.ts 구현 전까지 모듈이 없다.
 import { POST as recordProgress } from "@/app/api/progress/route";
-// @ts-expect-error TODO(T2.2) — src/app/api/progress/advance/route.ts 구현 전까지 모듈이 없다.
 import { POST as advanceProgress } from "@/app/api/progress/advance/route";
 
 import { progressResponseSchema } from "@/contracts/class.contract";
