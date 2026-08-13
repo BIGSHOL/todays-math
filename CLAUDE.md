@@ -104,3 +104,16 @@ docker compose up -d # 로컬 PostgreSQL
   해당 메이저 버전에서 여전히 지원되는지 `prisma validate`로 먼저 확인한 뒤 필요 시 최신 안정
   **이전 메이저**로 의도적으로 고정할 것. 또한 `prisma init`류 스캐폴딩 명령은 `.claude/` 등
   금지 디렉토리에 부수 파일을 설치할 수 있으므로 실행 직후 `git status`로 diff를 반드시 검사.
+
+### [2026-08-14] KaTeX 0.16 unknown command 는 .katex-error 가 아니다 (katex, 렌더 안전망)
+- **상황**: Mathgen `renderKatexSafe`는 실패 판정을 `html.includes("katex-error")`만 본다.
+  같은 가드를 이식한 뒤 알 수 없는 명령(`\\notacommand`)을 넣었더니 테스트가 빨강 스타일을
+  잡았다.
+- **문제**: KaTeX 0.16은 `throwOnError: false`일 때 unknown command를
+  `<span class="katex-error">`가 아니라 `style="color:#cc0000"`인 `.mord.text`로 그린다.
+  클래스 가드만 있으면 학생 화면에 붉은 raw 명령이 그대로 나간다.
+- **해결**: 실패 판정에 `#cc0000`을 포함. 1차 렌더가 붉으면 2차 aggressiveRepair, 그래도
+  붉으면 `.math-raw` 중립 폴백. CSS는 sumaek처럼 루트 레이아웃에서 `katex.min.css`를
+  한 번만 로드.
+- **교훈**: 업스트림 "3단 방어"를 이식할 때도 현재 KaTeX 메이저의 실제 실패 DOM을
+  픽스처로 한 번 찍어서 가드를 맞춰라. 클래스 이름만 믿으면 침묵 회귀가 난다.
