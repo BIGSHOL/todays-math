@@ -15,15 +15,29 @@ export function mapScoreToDifficulty(score: number | undefined): Difficulty {
   return "mid";
 }
 
-export function mapDifficultyLabel(raw: string | undefined, score?: number): Difficulty {
+export function mapDifficultyLabel(
+  raw: string | undefined,
+  score?: number,
+): Difficulty {
   const normalized = (raw ?? "").trim().toLowerCase();
-  if (normalized === "easy" || normalized === "하" || normalized === "low") {
+  const first = normalized.split(/\s+/)[0] ?? "";
+  if (
+    first === "easy" ||
+    first === "하" ||
+    first === "low" ||
+    first.startsWith("하")
+  ) {
     return "easy";
   }
-  if (normalized === "hard" || normalized === "상" || normalized === "high") {
+  if (
+    first === "hard" ||
+    first === "상" ||
+    first === "high" ||
+    first.startsWith("상")
+  ) {
     return "hard";
   }
-  if (normalized === "mid" || normalized === "중" || normalized === "medium") {
+  if (first === "mid" || first === "중" || first === "medium") {
     return "mid";
   }
   const asNumber = Number(raw);

@@ -11,7 +11,9 @@ function wrapMath(value: string): string {
   return `$${trimmed}$`;
 }
 
-export function blocksToLatex(blocks: ContentBlock[] | undefined): BlocksToLatexResult {
+export function blocksToLatex(
+  blocks: ContentBlock[] | undefined,
+): BlocksToLatexResult {
   if (!blocks || blocks.length === 0) {
     return { content: "", hasFigure: false };
   }
@@ -23,9 +25,12 @@ export function blocksToLatex(blocks: ContentBlock[] | undefined): BlocksToLatex
     const value = block.value ?? "";
     switch (block.type) {
       case "equation":
+      case "equation_block":
         parts.push(wrapMath(value));
         break;
       case "figure":
+      case "diagram":
+      case "image_crop":
         hasFigure = true;
         parts.push(`[그림] ${value}`.trim());
         break;

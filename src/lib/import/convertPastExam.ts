@@ -7,6 +7,8 @@ export interface PastExamQuestion {
   number: number;
   score?: number;
   type?: string;
+  topic?: string;
+  difficulty?: string;
   contents?: ContentBlock[];
   choices?: Array<{ number: number; contents?: ContentBlock[] }>;
   sub_questions?: unknown[];
@@ -22,13 +24,15 @@ export interface PastExamAnswer {
 
 export interface PastExamPaper {
   meta?: {
-    exam_id?: number;
+    exam_id?: number | string;
     school?: string;
     grade?: number | string;
     subject?: string;
     unit?: string;
   };
+  header?: { title?: string; school?: string; subject?: string };
   questions?: PastExamQuestion[];
+  _source?: { exam_id?: number | string };
 }
 
 export function convertPastExamQuestion(
@@ -37,29 +41,57 @@ export function convertPastExamQuestion(
   paper: PastExamPaper,
 ): ImportDraft {
   const stem = blocksToLatex(question.contents);
-  const choiceParts = (question.choices ?? []).map((choice) => {
-    const body = blocksToLatex(choice.contents).content;
-    return `${choice.number}. ${body}`;
-  });
+  const choiceLatex = (question.choices ?? []).map((choice) =>
+    blocksToLatex(choice.contents),
+  );
+  const choiceParts = choiceLatex.map(
+    (body, index) =>
+      `${question.choices?.[index]?.number ?? index + 1}. ${body.content}`,
+  );
   const content = [stem.content, choiceParts.join("\n")]
     .filter(Boolean)
     .join("\n\n");
 
-  const unitHint = [paper.meta?.subject, paper.meta?.unit, answer?.topic]
-    .filter(Boolean)
-    .join(" ");
+  const unitHint =
+    question.topic?.trim() ||
+    answer?.topic?.trim() ||
+    paper.meta?.unit?.trim() ||
+    "";
+  const gradeHint = paper.meta?.subject ?? paper.meta?.grade;
 
   return {
     externalId: `${paper.meta?.exam_id ?? "exam"}-${question.number}`,
     source: "past_exam",
     directUseAllowed: true,
-    difficulty: mapDifficultyLabel(answer?.difficulty, question.score),
+    difficulty: mapDifficultyLabel(
+      question.difficulty || answer?.difficulty,
+      question.score,
+    ),
     problemType: mapProblemType(question.type),
     content,
     answer: (answer?.answer ?? "").trim() || "(정답 없음)",
     solution: answer?.solution?.trim() ? answer.solution : null,
     unitHint,
-    hasFigure: stem.hasFigure,
+    hasFigure: stem.hasFigure || choiceLatex.some((choice) => choice.hasFigure),
+    gradeHint,
+  };
+}
+
+/** ocr_pilot의 header/_source/파일명을 meta로 정규화한다. */
+export function normalizePastExamPaper(
+  raw: PastExamPaper,
+  fileStem?: string,
+): PastExamPaper {
+  const examId =
+    raw.meta?.exam_id ?? raw._source?.exam_id ?? fileStem ?? "exam";
+  return {
+    ...raw,
+    meta: {
+      ...raw.meta,
+      exam_id: examId,
+      school: raw.meta?.school ?? raw.header?.school,
+      subject: raw.meta?.subject ?? raw.header?.subject,
+    },
   };
 }
 

@@ -17,7 +17,10 @@ export function classifyDrafts(
   units: UnitLike[],
   gradeHint?: string | number,
   options: ClassifyOptions = {},
-): { classified: Array<ImportDraft & { unitId: string }>; report: ImportReport } {
+): {
+  classified: Array<ImportDraft & { unitId: string }>;
+  report: ImportReport;
+} {
   const items: ImportReportItem[] = [];
   const classified: Array<ImportDraft & { unitId: string }> = [];
 
@@ -34,7 +37,11 @@ export function classifyDrafts(
       continue;
     }
 
-    const mapped = mapUnitHint(draft.unitHint, units, gradeHint);
+    const mapped = mapUnitHint(
+      draft.unitHint,
+      units,
+      draft.gradeHint ?? gradeHint,
+    );
     if (mapped.status === "unclassified") {
       items.push({
         externalId: draft.externalId,
@@ -63,7 +70,8 @@ export function classifyDrafts(
       source,
       total: drafts.length,
       ok: items.filter((item) => item.status === "ok").length,
-      unclassified: items.filter((item) => item.status === "unclassified").length,
+      unclassified: items.filter((item) => item.status === "unclassified")
+        .length,
       skippedFigure: items.filter((item) => item.status === "skipped_figure")
         .length,
       items,

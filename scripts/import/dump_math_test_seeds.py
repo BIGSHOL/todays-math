@@ -18,7 +18,13 @@ def main() -> None:
     questions = []
     for q in data.get("questions", []):
         concept = concepts.get(q.get("concept_id", ""), {})
-        questions.append({**q, "concept_name": concept.get("name", "")})
+        questions.append(
+            {
+                **q,
+                "concept_name": concept.get("name", ""),
+                "concept_grade": concept.get("grade", ""),
+            }
+        )
     json.dump(
         {"concepts": list(concepts.values()), "questions": questions},
         sys.stdout,

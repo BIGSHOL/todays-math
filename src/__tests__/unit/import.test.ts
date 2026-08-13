@@ -114,6 +114,182 @@ describe("[T3.0] RPM 변환", () => {
   });
 });
 
+describe("[T3.0] equation_block과 리포트 파서", () => {
+  it("equation_block을 equation과 같이 $...$로 감싼다", () => {
+    const result = blocksToLatex([{ type: "equation_block", value: "x^2" }]);
+    expect(result.content).toBe("$x^2$");
+  });
+
+  it("저장된 리포트를 검증하고 합계를 다시 계산한다", async () => {
+    const { parseImportReport, summarizeImportReport, mergeImportReports } =
+      await import("@/lib/import/parseReport");
+    const report = parseImportReport({
+      source: "past_exam",
+      total: 3,
+      ok: 1,
+      unclassified: 1,
+      skippedFigure: 1,
+      items: [
+        {
+          externalId: "1",
+          source: "past_exam",
+          status: "ok",
+          unitId: "u1",
+          unitHint: "평면좌표",
+        },
+        {
+          externalId: "2",
+          source: "past_exam",
+          status: "unclassified",
+          unitId: null,
+          unitHint: "없음",
+        },
+        {
+          externalId: "3",
+          source: "past_exam",
+          status: "skipped_figure",
+          unitId: null,
+          unitHint: "평면좌표",
+        },
+      ],
+    });
+    expect(summarizeImportReport(report)).toMatchObject({
+      total: 3,
+      ok: 1,
+      unclassified: 1,
+      skippedFigure: 1,
+      okRate: 1 / 3,
+    });
+    const merged = mergeImportReports("all", [report, report]);
+    expect(merged.total).toBe(6);
+    expect(merged.ok).toBe(2);
+  });
+
+  it("깨진 리포트는 파싱하지 않는다", async () => {
+    const { parseImportReport } = await import("@/lib/import/parseReport");
+    expect(() => parseImportReport({ source: "past_exam" })).toThrow(/items/);
+  });
+});
+
+describe("[T3.0] DATABASE_URL 안전 분류", () => {
+  it("로컬 docker만 migrate/적재를 허용한다", async () => {
+    const { classifyDatabaseUrl } =
+      await import("@/lib/import/classifyDatabaseUrl");
+    expect(
+      classifyDatabaseUrl("postgresql://postgres:postgres@localhost:5432/app")
+        .canMigrateOrLoad,
+    ).toBe(true);
+    expect(
+      classifyDatabaseUrl(
+        "postgresql://postgres.abc:secret@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres",
+      ),
+    ).toMatchObject({
+      kind: "supabase",
+      canMigrateOrLoad: false,
+    });
+    expect(classifyDatabaseUrl(undefined).kind).toBe("missing");
+  });
+});
+
+describe("[T3.0] 기출 header 정규화 + RPM 구조화", () => {
+  it("header/_source와 question.topic을 사용한다", async () => {
+    const { normalizePastExamPaper, convertPastExamPaper } =
+      await import("@/lib/import/convertPastExam");
+    const paper = normalizePastExamPaper(
+      {
+        header: { title: "강동고" },
+        questions: [
+          {
+            number: 1,
+            type: "객관식",
+            topic: "평면좌표",
+            contents: [{ type: "text", value: "좌표" }],
+          },
+        ],
+      },
+      "4209",
+    );
+    const drafts = convertPastExamPaper(paper, []);
+    expect(drafts[0]?.externalId).toBe("4209-1");
+    expect(drafts[0]?.unitHint).toBe("평면좌표");
+    expect(drafts[0]?.gradeHint).toBeUndefined();
+  });
+
+  it("범위 힌트는 잘린 토큰으로 매핑한다", () => {
+    const result = mapUnitHint("평면좌표 ~ 명제", UNITS, "공수2");
+    expect(result.status).toBe("mapped");
+    if (result.status === "mapped") expect(result.unitId).toBe("unit-coord");
+  });
+
+  it("RPM 구조화 body는 잠근 채 펼친다", async () => {
+    const { convertRpmExtractedRow } = await import("@/lib/import/convertRpm");
+    const draft = convertRpmExtractedRow({
+      id: "rpm-struct",
+      kind: "multiple_choice",
+      source_ref: { book: "중2-1", unit: "유리수와 소수" },
+      body: [
+        { type: "text", text: "다음 중" },
+        { type: "inline_math", math: { latex: "0.25" } },
+      ],
+      answer: { text: "1" },
+    });
+    expect(draft.directUseAllowed).toBe(false);
+    expect(draft.source).toBe("transformed");
+    expect(draft.content).toContain("다음 중");
+    expect(draft.content).toContain("$0.25$");
+    expect(draft.unitHint).toBe("유리수와 소수");
+    expect(draft.gradeHint).toBe("중2-1");
+  });
+
+  it("diagram 블록은 skipped_figure 대상이다", async () => {
+    const { convertRpmExtractedRow } = await import("@/lib/import/convertRpm");
+    const draft = convertRpmExtractedRow({
+      id: "rpm-fig",
+      body: [{ type: "diagram", altText: "삼각형" }],
+    });
+    expect(draft.hasFigure).toBe(true);
+  });
+
+  it("classified 행만 createMany 형태로 바꾼다", async () => {
+    const { toLoadRows } = await import("@/lib/import/toLoadRows");
+    const { rows, skipped } = toLoadRows(
+      [
+        {
+          externalId: "ok-1",
+          source: "manual",
+          directUseAllowed: true,
+          difficulty: "easy",
+          problemType: "계산",
+          content: "본문",
+          answer: "1",
+          solution: null,
+          unitHint: "유리수와 소수",
+          hasFigure: false,
+          unitId: "unit-finite",
+        },
+        {
+          externalId: "empty",
+          source: "manual",
+          directUseAllowed: true,
+          difficulty: "easy",
+          problemType: "계산",
+          content: "   ",
+          answer: "1",
+          solution: null,
+          unitHint: "유리수와 소수",
+          hasFigure: false,
+          unitId: "unit-finite",
+        },
+      ],
+      "user-1",
+    );
+    expect(rows).toHaveLength(1);
+    expect(rows[0]?.reviewStatus).toBe("pending");
+    expect(rows[0]?.directUseAllowed).toBe(true);
+    expect(skipped).toHaveLength(1);
+  });
+});
+
 describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
   it("섹션 이름이 힌트에 있으면 매핑한다", () => {
     const result = mapUnitHint("유한소수와 유리수와 소수", UNITS, "중2");
