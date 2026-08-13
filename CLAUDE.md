@@ -52,3 +52,28 @@ docker compose up -d # 로컬 PostgreSQL
 ## Lessons Learned
 
 (어려운 문제 해결 시 여기에 기록 — 형식은 .claude/agents/database-specialist.md 참조)
+
+### [2026-08-13] Prisma 7 설치 시 스키마 검증 실패 (prisma, datasource, 버전 고정)
+- **상황**: T0.2에서 `npm view prisma version`으로 최신 버전(7.9.1)을 설치하고
+  `prisma/schema.prisma`에 04-database-design.md 스펙대로 `url = env("DATABASE_URL")` +
+  `directUrl = env("DIRECT_URL")`를 작성함.
+- **문제**: `npx prisma validate` 실행 시 `Error code: P1012 — The datasource property 'url' is
+  no longer supported in schema files`로 검증 실패. 또한 `prisma init`이 `.claude/skills/`,
+  `.windsurf/`, `.agents/` 하위에 심볼릭 링크로 "에이전트 스킬" 문서를 무단 설치함(금지된
+  `.claude/` 디렉토리 변경).
+- **원인**: Prisma 7부터 datasource의 `url`/`directUrl`을 schema.prisma에 직접 쓰는 방식이
+  완전히 제거됨. 대신 `prisma.config.ts`(CLI/마이그레이션용)와 `PrismaClient` 생성자에 전달하는
+  드라이버 어댑터(`@prisma/adapter-pg` 등)로 연결 정보를 이원화해야 하는 구조로 변경됨.
+  이 구조는 `@auth/prisma-adapter` 등 생태계 패키지의 호환성이 아직 불확실하고, 프로젝트의
+  "관리 포인트 최소화"(D-12) 원칙과 배치되며, TRD/TASKS 문서가 가정하는 표준 `@prisma/client`
+  싱글턴 패턴과도 맞지 않음.
+- **해결**: `prisma`/`@prisma/client`를 최신 안정 6.x(6.19.3)로 고정 설치. `generator client`의
+  provider를 `prisma-client-js`로 되돌리고, `prisma.config.ts`는 삭제. datasource에
+  `url = env("DATABASE_URL")` + `directUrl = env("DIRECT_URL")`를 그대로 사용해 문서 스펙을
+  충족. `prisma init`이 만든 `.claude/skills/`, `.windsurf/`, `.agents/`, `skills-lock.json`은
+  즉시 삭제해 원상 복구.
+- **교훈**: Prisma처럼 메이저 버전이 빠르게 올라가는 도구는 `npm view <pkg> version`으로 무조건
+  최신을 설치하지 말고, 프로젝트 문서(TRD/DB 설계)가 가정하는 패턴(예: schema 내 url/directUrl)이
+  해당 메이저 버전에서 여전히 지원되는지 `prisma validate`로 먼저 확인한 뒤 필요 시 최신 안정
+  **이전 메이저**로 의도적으로 고정할 것. 또한 `prisma init`류 스캐폴딩 명령은 `.claude/` 등
+  금지 디렉토리에 부수 파일을 설치할 수 있으므로 실행 직후 `git status`로 diff를 반드시 검사.

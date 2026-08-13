@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -17,6 +20,7 @@
     ]
   },
   "dependencies": {
+    "@prisma/client": "^6.19.3",
     "next": "16.3.0",
     "react": "19.2.8",
     "react-dom": "19.2.8"
@@ -32,6 +36,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^17.3.0",
     "prettier": "^3.9.6",
+    "prisma": "^6.19.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

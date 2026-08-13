@@ -1,0 +1,334 @@
+// Prisma schema — 오늘의수학 (testautocreator)
+// 참조: docs/planning/04-database-design.md (ERD, 9개 엔티티)
+//       docs/planning/02-trd.md §2.2 (Prisma + Zod + Auth.js)
+//       docs/planning/07-coding-convention.md §2.2 (네이밍: 모델 PascalCase / 컬럼 camelCase → DB snake_case)
+//
+// 네이밍 규칙: 모델/필드는 Prisma Client 관례(PascalCase/camelCase)를 따르고,
+// @map/@@map으로 실제 DB 컬럼·테이블명을 snake_case로 매핑한다.
+// 예외: Account 모델의 OAuth 토큰 필드(refresh_token 등)는 @auth/prisma-adapter 표준 스키마가
+// 정확한 필드명을 요구하므로 그대로 snake_case 식별자를 사용한다 (아래 주석 참조).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // Supabase 전환 시 커넥션 풀러(pgbouncer) 우회용 직결 URL.
+  // 로컬 개발에서는 DATABASE_URL과 동일 값을 사용해도 무방.
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────────────────────
+// Enum
+// ─────────────────────────────────────────────
+
+/// 문제 출처 — D-04
+enum ProblemSource {
+  manual // 자작
+  past_exam // 기출
+  transformed // 변형
+  ai_generated // AI 생성
+
+  @@map("problem_source")
+}
+
+/// 난이도
+enum Difficulty {
+  easy
+  mid
+  hard
+
+  @@map("difficulty")
+}
+
+/// 문제 검수 상태 — D-22 (pending → approved 승격 후 출제)
+enum ReviewStatus {
+  pending
+  approved
+  rejected
+
+  @@map("review_status")
+}
+
+/// 시험지 유형 — 일일 / 확인
+enum TestType {
+  daily
+  review
+
+  @@map("test_type")
+}
+
+/// 시험지 상태 흐름 — draft → confirmed → printed
+enum TestStatus {
+  draft
+  confirmed
+  printed
+
+  @@map("test_status")
+}
+
+// ─────────────────────────────────────────────
+// FEAT-0: 사용자 (강사) — 04 §2.1
+// ─────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(uuid()) @db.Uuid
+  email         String    @unique @db.VarChar(255)
+  /// 이메일 가입 시만 값 존재 (bcrypt 해시). 구글 로그인은 NULL
+  passwordHash  String?   @map("password_hash") @db.VarChar(255)
+  name          String    @db.VarChar(50)
+  /// Auth.js(@auth/prisma-adapter) 표준 필드 — OAuth 이메일 인증 시각
+  emailVerified DateTime? @map("email_verified")
+  /// Auth.js 표준 필드 — OAuth 프로필 이미지 (최소 수집 원칙과 무관, 로그인 부가 정보)
+  image         String?   @db.VarChar(500)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  /// Soft delete — 탈퇴 후 30일 뒤 배치로 Hard delete (04 §4)
+  deletedAt     DateTime? @map("deleted_at")
+
+  classes  Class[]
+  problems Problem[]
+  tests    Test[]
+  accounts Account[]
+  sessions Session[]
+
+  @@map("user")
+}
+
+// ─────────────────────────────────────────────
+// FEAT-4: 반 — 04 §2.6
+// ─────────────────────────────────────────────
+
+model Class {
+  id                  String   @id @default(uuid()) @db.Uuid
+  userId              String   @map("user_id") @db.Uuid
+  name                String   @db.VarChar(100)
+  grade               String   @db.VarChar(10)
+  /// 기본 문항 수 (기본값 8)
+  defaultProblemCount Int      @default(8) @map("default_problem_count")
+  /// 난이도 배분 — 예: {"easy":3,"mid":4,"hard":1}
+  /// 기본값은 DB가 아닌 앱(계약) 레벨에서 적용 (04 §2.6)
+  difficultyRatio     Json     @map("difficulty_ratio") @db.JsonB
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  students   Student[]
+  progresses Progress[]
+  tests      Test[]
+
+  @@index([userId])
+  @@map("class")
+}
+
+// ─────────────────────────────────────────────
+// FEAT-4: 학생 — 04 §2.6 (최소 수집: 이름만)
+// ─────────────────────────────────────────────
+
+model Student {
+  id                    String   @id @default(uuid()) @db.Uuid
+  classId               String   @map("class_id") @db.Uuid
+  name                  String   @db.VarChar(50)
+  useIndividualProgress Boolean  @default(false) @map("use_individual_progress")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  class      Class      @relation(fields: [classId], references: [id], onDelete: Cascade)
+  progresses Progress[]
+  tests      Test[]
+
+  @@index([classId])
+  @@map("student")
+}
+
+// ─────────────────────────────────────────────
+// FEAT-1: 교육과정 단원 (기준 데이터) — 04 §2.2
+// ─────────────────────────────────────────────
+
+model Unit {
+  id         String @id @default(uuid()) @db.Uuid
+  grade      String @db.VarChar(10)
+  chapter    String @db.VarChar(100)
+  section    String @db.VarChar(100)
+  /// 교육과정 순서 — 진도 "다음으로" 이동, 확인테스트 범위 계산의 기준
+  orderIndex Int    @map("order_index")
+
+  progresses     Progress[]
+  problems       Problem[]
+  testRangeStart Test[]     @relation("TestRangeStartUnit")
+  testRangeEnd   Test[]     @relation("TestRangeEndUnit")
+
+  @@index([grade, orderIndex])
+  @@map("unit")
+}
+
+// ─────────────────────────────────────────────
+// FEAT-4: 진도 기록 — 04 §2.6
+// ─────────────────────────────────────────────
+
+model Progress {
+  id         String   @id @default(uuid()) @db.Uuid
+  classId    String   @map("class_id") @db.Uuid
+  /// NULL이면 반 전체 진도, 값이 있으면 해당 학생 개별 진도
+  studentId  String?  @map("student_id") @db.Uuid
+  unitId     String   @map("unit_id") @db.Uuid
+  /// 기록일 (날짜만 — 시각 불필요)
+  recordedAt DateTime @map("recorded_at") @db.Date
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  class   Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  student Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  unit    Unit     @relation(fields: [unitId], references: [id], onDelete: Restrict)
+
+  @@index([classId, recordedAt(sort: Desc)])
+  @@index([studentId, recordedAt(sort: Desc)])
+  @@map("progress")
+}
+
+// ─────────────────────────────────────────────
+// FEAT-1, 5: 문제은행 — 04 §2.3
+// ─────────────────────────────────────────────
+
+model Problem {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @map("user_id") @db.Uuid
+  unitId String @map("unit_id") @db.Uuid
+
+  source          ProblemSource
+  /// 변형 문제의 원본 참조 (원본 삭제 시 참조만 해제 — 변형본은 독립 자산으로 유지)
+  originProblemId String?       @map("origin_problem_id") @db.Uuid
+
+  difficulty   Difficulty
+  /// 계산 / 개념 / 활용 / 서술형 — 확장 가능성 고려해 자유 문자열로 유지 (열거형 아님)
+  problemType  String       @map("problem_type") @db.VarChar(20)
+  /// 문제 본문 — LaTeX 수식 포함 마크다운
+  content      String       @db.Text
+  answer       String       @db.Text
+  solution     String?      @db.Text
+  /// AI 생성물은 pending으로 시작, 검수 후 approved (D-22)
+  reviewStatus ReviewStatus @default(pending) @map("review_status")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  unit                Unit          @relation(fields: [unitId], references: [id], onDelete: Restrict)
+  originProblem       Problem?      @relation("ProblemOrigin", fields: [originProblemId], references: [id], onDelete: SetNull)
+  transformedProblems Problem[]     @relation("ProblemOrigin")
+  testProblems        TestProblem[]
+
+  // 자동 출제 조회 핵심 인덱스
+  @@index([unitId, difficulty, reviewStatus])
+  @@index([userId, unitId])
+  @@index([originProblemId])
+  @@map("problem")
+}
+
+// ─────────────────────────────────────────────
+// FEAT-1: 시험지 — 04 §2.4
+// ─────────────────────────────────────────────
+
+model Test {
+  id        String  @id @default(uuid()) @db.Uuid
+  userId    String  @map("user_id") @db.Uuid
+  classId   String  @map("class_id") @db.Uuid
+  /// NULL이면 반 전체 대상
+  studentId String? @map("student_id") @db.Uuid
+
+  testType TestType @map("test_type")
+
+  /// 확인테스트 범위 시작 (일일테스트는 NULL)
+  rangeStartUnitId String? @map("range_start_unit_id") @db.Uuid
+  /// 범위 끝 (일일테스트는 현재 진도 소단원)
+  rangeEndUnitId   String  @map("range_end_unit_id") @db.Uuid
+
+  status    TestStatus @default(draft)
+  /// 검수 중 문제 교체 발생 여부 — 무수정 사용률 측정 (입력 지표 ②)
+  modified  Boolean    @default(false)
+  /// 테스트 예정일
+  testDate  DateTime   @map("test_date") @db.Date
+  /// 인쇄 시각 — 노스스타(주 5일 사용) 측정
+  printedAt DateTime?  @map("printed_at")
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  class          Class         @relation(fields: [classId], references: [id], onDelete: Cascade)
+  student        Student?      @relation(fields: [studentId], references: [id], onDelete: SetNull)
+  rangeStartUnit Unit?         @relation("TestRangeStartUnit", fields: [rangeStartUnitId], references: [id], onDelete: Restrict)
+  rangeEndUnit   Unit          @relation("TestRangeEndUnit", fields: [rangeEndUnitId], references: [id], onDelete: Restrict)
+  testProblems   TestProblem[]
+
+  @@index([userId, testDate(sort: Desc)])
+  @@index([classId, testDate(sort: Desc)])
+  @@index([studentId])
+  @@map("test")
+}
+
+// ─────────────────────────────────────────────
+// FEAT-1: 시험지-문제 연결 — 04 §2.5
+// ─────────────────────────────────────────────
+
+model TestProblem {
+  id         String  @id @default(uuid()) @db.Uuid
+  testId     String  @map("test_id") @db.Uuid
+  problemId  String  @map("problem_id") @db.Uuid
+  /// 문항 번호
+  orderIndex Int     @map("order_index")
+  /// 검수 중 교체된 문항 여부
+  replaced   Boolean @default(false)
+
+  test    Test    @relation(fields: [testId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@index([testId, orderIndex])
+  @@index([problemId])
+  @@map("test_problem")
+}
+
+// ─────────────────────────────────────────────
+// Auth.js (NextAuth v5) — @auth/prisma-adapter 표준 스키마
+// 참조: https://authjs.dev/getting-started/adapters/prisma
+// 주의: Account의 OAuth 토큰 필드는 어댑터가 Prisma Client 필드명을
+// 그대로(snake_case) 읽으므로 @map으로 camelCase 매핑하지 않는다.
+// ─────────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(uuid()) @db.Uuid
+  userId            String  @map("user_id") @db.Uuid
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("account")
+}
+
+model Session {
+  id           String   @id @default(uuid()) @db.Uuid
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id") @db.Uuid
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_token")
+}
