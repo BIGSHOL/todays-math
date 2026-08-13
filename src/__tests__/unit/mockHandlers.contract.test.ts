@@ -46,6 +46,7 @@ import {
   MOCK_PROBLEMS,
   MOCK_STUDENT_1,
   NOT_FOUND_ID,
+  PROBLEM_OTHER_ID,
   TEST_DRAFT_ID,
   TEST_NOT_FOUND_ID,
 } from "@/mocks/data";
@@ -235,6 +236,13 @@ describe("[T0.5.2] MSW ↔ 계약 — problem/AI 생성·변형", () => {
     expect(res.status).toBe(404);
     const body = await errorBody(res);
     expect(body.error.code).toBe("NOT_FOUND");
+  });
+
+  it("GET /api/problems/{id} 타 사용자 소유 문제는 FORBIDDEN(403)을 반환한다", async () => {
+    const res = await fetch(`/api/problems/${PROBLEM_OTHER_ID}`);
+    expect(res.status).toBe(403);
+    const body = await errorBody(res);
+    expect(body.error.code).toBe("FORBIDDEN");
   });
 
   it("PATCH /api/problems/{id}/review-status 성공 응답은 problemResponseSchema를 통과한다", async () => {

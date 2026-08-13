@@ -22,6 +22,7 @@ import type { ProblemEntity } from "@/contracts/problem.contract";
 import {
   MOCK_CLASS_OTHER_USER,
   MOCK_CLASSES,
+  MOCK_PROBLEM_OTHER_USER,
   MOCK_PROBLEMS,
   MOCK_STUDENTS,
 } from "@/mocks/data";
@@ -94,7 +95,7 @@ let problemRows: ProblemRow[] = [];
 export function resetPrismaTestDouble() {
   classRows = [...MOCK_CLASSES, MOCK_CLASS_OTHER_USER].map(toClassRow);
   studentRows = MOCK_STUDENTS.map(toStudentRow);
-  problemRows = MOCK_PROBLEMS.map(toProblemRow);
+  problemRows = [...MOCK_PROBLEMS, MOCK_PROBLEM_OTHER_USER].map(toProblemRow);
 }
 resetPrismaTestDouble();
 

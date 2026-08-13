@@ -35,11 +35,19 @@ import {
   problemListResponseSchema,
   problemResponseSchema,
 } from "@/contracts/problem.contract";
-import { errorResponseSchema } from "@/contracts/common.contract";
+import {
+  deleteResponseSchema,
+  errorResponseSchema,
+} from "@/contracts/common.contract";
+import { findEligibleProblems } from "@/lib/findEligibleProblems";
+import { getSessionUser } from "@/lib/session";
 import {
   MOCK_PENDING_PROBLEM,
+  MOCK_PROBLEM_OTHER_USER,
   MOCK_PROBLEM_WITH_FRACTION,
   NOT_FOUND_ID,
+  PROBLEM_OTHER_ID,
+  USER_TEACHER_ID,
 } from "@/mocks/data";
 
 function jsonRequest(url: string, method: string, body?: unknown) {
@@ -97,6 +105,40 @@ describe("[T3.1] POST /api/problems — LaTeX 본문 무손실 저장", () => {
     const body = errorResponseSchema.parse(await res.json());
     expect(body.error.code).toBe("VALIDATION_ERROR");
   });
+
+  it("source=past_exam 기출 등록은 201을 반환한다", async () => {
+    const res = await createProblem(
+      jsonRequest("http://localhost/api/problems", "POST", {
+        unitId: MOCK_PROBLEM_WITH_FRACTION.unitId,
+        source: "past_exam",
+        difficulty: "mid",
+        problemType: "개념",
+        content: "기출 본문 $1+1$",
+        answer: "2",
+      }),
+    );
+    expect(res.status).toBe(201);
+    const body = problemResponseSchema.parse(await res.json());
+    expect(body.data.source).toBe("past_exam");
+    expect(body.data.reviewStatus).toBe("pending");
+  });
+
+  it("세션이 없으면 UNAUTHORIZED(401)를 반환한다", async () => {
+    vi.mocked(getSessionUser).mockResolvedValueOnce(null);
+    const res = await createProblem(
+      jsonRequest("http://localhost/api/problems", "POST", {
+        unitId: MOCK_PROBLEM_WITH_FRACTION.unitId,
+        source: "manual",
+        difficulty: "easy",
+        problemType: "계산",
+        content: "$1+1$",
+        answer: "2",
+      }),
+    );
+    expect(res.status).toBe(401);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.code).toBe("UNAUTHORIZED");
+  });
 });
 
 describe("[T3.1] GET /api/problems — 단원/난이도/유형/출처/검수상태 필터 조회", () => {
@@ -116,6 +158,26 @@ describe("[T3.1] GET /api/problems — 단원/난이도/유형/출처/검수상�
           p.difficulty === "easy",
       ),
     ).toBe(true);
+  });
+
+  it("본인 소유 문제만 반환한다(타 사용자 문제 제외)", async () => {
+    const res = await listProblems(
+      jsonRequest("http://localhost/api/problems", "GET"),
+    );
+    expect(res.status).toBe(200);
+    const body = problemListResponseSchema.parse(await res.json());
+    expect(body.data.every((p) => p.id !== PROBLEM_OTHER_ID)).toBe(true);
+    expect(body.data.every((p) => p.userId === USER_TEACHER_ID)).toBe(true);
+  });
+
+  it("세션이 없으면 UNAUTHORIZED(401)를 반환한다", async () => {
+    vi.mocked(getSessionUser).mockResolvedValueOnce(null);
+    const res = await listProblems(
+      jsonRequest("http://localhost/api/problems", "GET"),
+    );
+    expect(res.status).toBe(401);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.code).toBe("UNAUTHORIZED");
   });
 });
 
@@ -142,6 +204,16 @@ describe("[T3.1] GET /api/problems/{id} — LaTeX 본문 무손실 조회", () =
     const body = errorResponseSchema.parse(await res.json());
     expect(body.error.code).toBe("NOT_FOUND");
   });
+
+  it("타 사용자 소유 문제에 접근하면 FORBIDDEN(403)을 반환한다", async () => {
+    const res = await getProblem(
+      jsonRequest(`http://localhost/api/problems/${PROBLEM_OTHER_ID}`, "GET"),
+      withId(PROBLEM_OTHER_ID),
+    );
+    expect(res.status).toBe(403);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.code).toBe("FORBIDDEN");
+  });
 });
 
 describe("[T3.1] PATCH /api/problems/{id}", () => {
@@ -158,6 +230,21 @@ describe("[T3.1] PATCH /api/problems/{id}", () => {
     const body = errorResponseSchema.parse(await res.json());
     expect(body.error.code).toBe("VALIDATION_ERROR");
   });
+
+  it("LaTeX 본문 수정이 원본 그대로 저장된다", async () => {
+    const content = "$\\sqrt{2}+\\frac{1}{2}$의 값을 구하여라.";
+    const res = await patchProblem(
+      jsonRequest(
+        `http://localhost/api/problems/${MOCK_PROBLEM_WITH_FRACTION.id}`,
+        "PATCH",
+        { content },
+      ),
+      withId(MOCK_PROBLEM_WITH_FRACTION.id),
+    );
+    expect(res.status).toBe(200);
+    const body = problemResponseSchema.parse(await res.json());
+    expect(body.data.content).toBe(content);
+  });
 });
 
 describe("[T3.1] DELETE /api/problems/{id}", () => {
@@ -169,6 +256,19 @@ describe("[T3.1] DELETE /api/problems/{id}", () => {
     expect(res.status).toBe(404);
     const body = errorResponseSchema.parse(await res.json());
     expect(body.error.code).toBe("NOT_FOUND");
+  });
+
+  it("성공 시 삭제된 문제의 id를 반환한다", async () => {
+    const res = await deleteProblem(
+      jsonRequest(
+        `http://localhost/api/problems/${MOCK_PROBLEM_WITH_FRACTION.id}`,
+        "DELETE",
+      ),
+      withId(MOCK_PROBLEM_WITH_FRACTION.id),
+    );
+    expect(res.status).toBe(200);
+    const body = deleteResponseSchema.parse(await res.json());
+    expect(body.data.id).toBe(MOCK_PROBLEM_WITH_FRACTION.id);
   });
 });
 
@@ -199,5 +299,35 @@ describe("[T3.1] PATCH /api/problems/{id}/review-status — 검수 승격(D-22)"
     expect(res.status).toBe(400);
     const body = errorResponseSchema.parse(await res.json());
     expect(body.error.code).toBe("VALIDATION_ERROR");
+  });
+});
+
+describe("[T3.1] findEligibleProblems — 출제 가능 풀 조회", () => {
+  it("unitIds가 비어 있으면 빈 배열을 반환한다", async () => {
+    const rows = await findEligibleProblems({
+      userId: USER_TEACHER_ID,
+      unitIds: [],
+    });
+    expect(rows).toEqual([]);
+  });
+
+  it("approved 문제만 반환하고 pending/rejected와 타 사용자 문항은 제외한다", async () => {
+    const rows = await findEligibleProblems({
+      userId: USER_TEACHER_ID,
+      unitIds: [MOCK_PROBLEM_WITH_FRACTION.unitId],
+    });
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.every((p) => p.reviewStatus === "approved")).toBe(true);
+    expect(rows.every((p) => p.userId === USER_TEACHER_ID)).toBe(true);
+    expect(rows.some((p) => p.id === MOCK_PROBLEM_OTHER_USER.id)).toBe(false);
+  });
+
+  it("difficulty를 주면 해당 난이도만 반환한다", async () => {
+    const rows = await findEligibleProblems({
+      userId: USER_TEACHER_ID,
+      unitIds: [MOCK_PROBLEM_WITH_FRACTION.unitId],
+      difficulty: "easy",
+    });
+    expect(rows.every((p) => p.difficulty === "easy")).toBe(true);
   });
 });

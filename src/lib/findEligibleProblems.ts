@@ -13,6 +13,9 @@ import { db } from "@/lib/db";
 import { serializeProblem } from "@/lib/serializers";
 
 export interface FindEligibleProblemsParams {
+  /** 출제자(강사) — 문제은행은 사용자 소유이므로 타 강사 문항을 풀에 넣지 않는다
+   *  (04-database-design.md §3: USER 1:N PROBLEM, 판매 확장 대비 격리). */
+  userId: string;
   /** 출제 대상 단원 id 목록(반의 진도 범위 등에서 산출) — 비어 있으면 빈 배열을 즉시 반환한다. */
   unitIds: string[];
   /** 특정 난이도만 좁혀 조회할 때 사용 — 생략 시 전 난이도(easy/mid/hard)를 대상으로 한다
@@ -28,6 +31,7 @@ export async function findEligibleProblems(
 
   const rows = await db.problem.findMany({
     where: {
+      userId: params.userId,
       unitId: { in: params.unitIds },
       reviewStatus: "approved",
       ...(params.difficulty ? { difficulty: params.difficulty } : {}),

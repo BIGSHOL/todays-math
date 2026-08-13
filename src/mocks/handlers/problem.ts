@@ -29,10 +29,13 @@ import {
 import {
   MOCK_AI_GENERATED_PROBLEMS,
   MOCK_AI_TRANSFORMED_PROBLEMS,
+  MOCK_PROBLEM_OTHER_USER,
   MOCK_PROBLEMS,
+  PROBLEM_OTHER_ID,
   USER_TEACHER_ID,
 } from "../data";
 import {
+  forbiddenError,
   jsonError,
   jsonOk,
   notFoundError,
@@ -46,6 +49,14 @@ const ALL_PROBLEMS = [
   ...MOCK_AI_GENERATED_PROBLEMS,
   ...MOCK_AI_TRANSFORMED_PROBLEMS,
 ];
+
+function findOwnedProblem(id: string) {
+  if (id === PROBLEM_OTHER_ID) {
+    return { entity: MOCK_PROBLEM_OTHER_USER, owned: false };
+  }
+  const entity = ALL_PROBLEMS.find((p) => p.id === id);
+  return entity ? { entity, owned: true } : { entity: undefined, owned: false };
+}
 
 /** AI_GENERATION_FAILED 실패 경로 재현 전용 sentinel — 실제 시드에 없는 임의의 유효 UUID. */
 export const AI_GENERATION_FAILURE_UNIT_ID =
@@ -110,35 +121,44 @@ export const problemHandlers: HttpHandler[] = [
 
   // GET /api/problems/:id — 단건 조회
   http.get("/api/problems/:id", ({ params }) => {
-    const entity = ALL_PROBLEMS.find((p) => p.id === params.id);
-    if (!entity) return notFoundError("문제");
-    return jsonOk(problemResponseSchema, { data: entity });
+    const found = findOwnedProblem(String(params.id));
+    if (!found.entity) return notFoundError("문제");
+    if (!found.owned) return forbiddenError();
+    return jsonOk(problemResponseSchema, { data: found.entity });
   }),
 
   // PATCH /api/problems/:id — 수정(본문/정답/풀이 등)
   http.patch("/api/problems/:id", async ({ params, request }) => {
-    const entity = ALL_PROBLEMS.find((p) => p.id === params.id);
-    if (!entity) return notFoundError("문제");
+    const found = findOwnedProblem(String(params.id));
+    if (!found.entity) return notFoundError("문제");
+    if (!found.owned) return forbiddenError();
 
     const parsed = problemUpdateRequestSchema.safeParse(await request.json());
     if (!parsed.success) return validationError(parsed.error);
 
     return jsonOk(problemResponseSchema, {
-      data: { ...entity, ...parsed.data, updatedAt: new Date().toISOString() },
+      data: {
+        ...found.entity,
+        ...parsed.data,
+        updatedAt: new Date().toISOString(),
+      },
     });
   }),
 
   // DELETE /api/problems/:id — 삭제
   http.delete("/api/problems/:id", ({ params }) => {
-    const entity = ALL_PROBLEMS.find((p) => p.id === params.id);
-    if (!entity) return notFoundError("문제");
-    return jsonOk(deleteResponseSchema, { data: { id: entity.id } });
+    const found = findOwnedProblem(String(params.id));
+    if (!found.entity) return notFoundError("문제");
+    if (!found.owned) return forbiddenError();
+    return jsonOk(deleteResponseSchema, { data: { id: found.entity.id } });
   }),
 
   // PATCH /api/problems/:id/review-status — 검수 승격(D-22)
   http.patch("/api/problems/:id/review-status", async ({ params, request }) => {
-    const entity = ALL_PROBLEMS.find((p) => p.id === params.id);
-    if (!entity) return notFoundError("문제");
+    const found = findOwnedProblem(String(params.id));
+    if (!found.entity) return notFoundError("문제");
+    if (!found.owned) return forbiddenError();
+    const entity = found.entity;
 
     const parsed = problemReviewStatusUpdateRequestSchema.safeParse(
       await request.json(),

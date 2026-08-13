@@ -23,7 +23,12 @@ import type {
 } from "@/contracts/common.contract";
 import type { ProblemEntity, ProblemType } from "@/contracts/problem.contract";
 
-import { problemId, USER_TEACHER_ID } from "./ids";
+import {
+  PROBLEM_OTHER_ID,
+  problemId,
+  USER_OTHER_ID,
+  USER_TEACHER_ID,
+} from "./ids";
 import { MOCK_UNITS } from "./units";
 
 interface ProblemSpec {
@@ -448,3 +453,20 @@ export const MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL = MOCK_PROBLEMS[29]!;
 export const MOCK_PENDING_PROBLEM = MOCK_PROBLEMS.find(
   (p) => p.reviewStatus === "pending",
 )!;
+
+/** USER_OTHER_ID 소유 — MOCK_TEACHER가 접근 시 403 FORBIDDEN을 검증하는 픽스처. */
+export const MOCK_PROBLEM_OTHER_USER: ProblemEntity = {
+  id: PROBLEM_OTHER_ID,
+  userId: USER_OTHER_ID,
+  unitId: MOCK_UNITS[0]!.id,
+  source: "manual",
+  originProblemId: null,
+  difficulty: "easy",
+  problemType: "계산",
+  content: "타 사용자 소유 문제 — 접근 차단 검증용.",
+  answer: "0",
+  solution: null,
+  reviewStatus: "approved",
+  createdAt: "2026-05-01T09:00:00Z",
+  updatedAt: "2026-05-01T09:00:00Z",
+};
