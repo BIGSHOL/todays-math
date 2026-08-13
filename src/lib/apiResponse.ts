@@ -6,6 +6,7 @@
  * 차이점은 반환 타입뿐이다(MSW `HttpResponse` ↔ Next.js `NextResponse`).
  *
  * 참조: docs/planning/02-trd.md §8.2 (응답 형식: {data, meta} / {error:{code,message,details}})
+ * 명명: T1.1/T2.1 병합 시 짧은 이름(jsonOk/validationError/...)으로 통일 (07 컨벤션).
  */
 import { NextResponse } from "next/server";
 import type { z, ZodError } from "zod";
