@@ -6,7 +6,11 @@
  *
  * MSW 목 핸들러 쪽 대응물: src/mocks/handlers/class.ts의 findClass().
  */
-import type { Class as ClassRow, Student as StudentRow } from "@prisma/client";
+import type {
+  Class as ClassRow,
+  Problem as ProblemRow,
+  Student as StudentRow,
+} from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { forbiddenError, notFoundError } from "@/lib/apiResponse";
@@ -42,4 +46,17 @@ export async function requireOwnedStudent(
   if (!owned.ok) return owned;
 
   return { ok: true, data: student };
+}
+
+/** 문제가 존재하고, 로그인 사용자(userId) 소유인지 확인한다(Problem.userId 직접 소유). */
+export async function requireOwnedProblem(
+  problemId: string,
+  userId: string,
+): Promise<OwnershipResult<ProblemRow>> {
+  const problem = await db.problem.findUnique({ where: { id: problemId } });
+  if (!problem) return { ok: false, response: notFoundError("문제") };
+  if (problem.userId !== userId) {
+    return { ok: false, response: forbiddenError() };
+  }
+  return { ok: true, data: problem };
 }

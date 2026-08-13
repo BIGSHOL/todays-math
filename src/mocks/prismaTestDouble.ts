@@ -12,12 +12,22 @@
  */
 import { randomUUID } from "node:crypto";
 
+import type {
+  Difficulty,
+  ProblemSource,
+  ReviewStatus,
+} from "@/contracts/common.contract";
 import type { ClassEntity, StudentEntity } from "@/contracts/class.contract";
+import type { ProblemEntity } from "@/contracts/problem.contract";
 import {
   MOCK_CLASS_OTHER_USER,
   MOCK_CLASSES,
+  MOCK_PROBLEM_OTHER_USER,
+  MOCK_PROBLEMS,
   MOCK_STUDENTS,
+  MOCK_UNITS,
 } from "@/mocks/data";
+import type { MockUnit } from "@/mocks/data/units";
 
 interface ClassRow {
   id: string;
@@ -39,6 +49,24 @@ interface StudentRow {
   updatedAt: Date;
 }
 
+type UnitRow = MockUnit;
+
+interface ProblemRow {
+  id: string;
+  userId: string;
+  unitId: string;
+  source: ProblemSource;
+  originProblemId: string | null;
+  difficulty: Difficulty;
+  problemType: string;
+  content: string;
+  answer: string;
+  solution: string | null;
+  reviewStatus: ReviewStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 function toClassRow(entity: ClassEntity): ClassRow {
   return {
     ...entity,
@@ -55,13 +83,25 @@ function toStudentRow(entity: StudentEntity): StudentRow {
   };
 }
 
+function toProblemRow(entity: ProblemEntity): ProblemRow {
+  return {
+    ...entity,
+    createdAt: new Date(entity.createdAt),
+    updatedAt: new Date(entity.updatedAt),
+  };
+}
+
 let classRows: ClassRow[] = [];
 let studentRows: StudentRow[] = [];
+let unitRows: UnitRow[] = [];
+let problemRows: ProblemRow[] = [];
 
 /** 매 테스트 시작 전 Mock 픽스처(src/mocks/data) 상태로 되돌린다 — 테스트 간 상태 오염 방지. */
 export function resetPrismaTestDouble() {
   classRows = [...MOCK_CLASSES, MOCK_CLASS_OTHER_USER].map(toClassRow);
   studentRows = MOCK_STUDENTS.map(toStudentRow);
+  unitRows = MOCK_UNITS.map((unit) => ({ ...unit }));
+  problemRows = [...MOCK_PROBLEMS, MOCK_PROBLEM_OTHER_USER].map(toProblemRow);
 }
 resetPrismaTestDouble();
 
@@ -183,6 +223,51 @@ export const prismaTestDouble = {
       if (index === -1) throw new Error(`student not found: ${where.id}`);
       const [removed] = studentRows.splice(index, 1);
       return removed!;
+    },
+  },
+  unit: {
+    async findUnique({ where }: { where: { id: string } }) {
+      return unitRows.find((row) => row.id === where.id) ?? null;
+    },
+  },
+  problem: {
+    async create({
+      data,
+    }: {
+      data: {
+        userId: string;
+        unitId: string;
+        source: ProblemSource;
+        originProblemId?: string | null;
+        difficulty: Difficulty;
+        problemType: string;
+        content: string;
+        answer: string;
+        solution?: string | null;
+        reviewStatus?: ReviewStatus;
+      };
+    }) {
+      const now = new Date();
+      const row: ProblemRow = {
+        id: randomUUID(),
+        userId: data.userId,
+        unitId: data.unitId,
+        source: data.source,
+        originProblemId: data.originProblemId ?? null,
+        difficulty: data.difficulty,
+        problemType: data.problemType,
+        content: data.content,
+        answer: data.answer,
+        solution: data.solution ?? null,
+        reviewStatus: data.reviewStatus ?? "pending",
+        createdAt: now,
+        updatedAt: now,
+      };
+      problemRows.push(row);
+      return row;
+    },
+    async findUnique({ where }: { where: { id: string } }) {
+      return problemRows.find((row) => row.id === where.id) ?? null;
     },
   },
 };
