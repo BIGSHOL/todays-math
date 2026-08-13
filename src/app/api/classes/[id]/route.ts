@@ -23,7 +23,7 @@ type RouteContext = { params: Promise<{ id: string }> };
 
 // GET /api/classes/{id} — 단건 조회
 export async function GET(request: NextRequest, { params }: RouteContext) {
-  const session = await getSessionUser(request);
+  const session = await getSessionUser();
   if (!session) return unauthorizedError();
 
   const { id } = await params;
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
 
 // PATCH /api/classes/{id} — 반 수정
 export async function PATCH(request: NextRequest, { params }: RouteContext) {
-  const session = await getSessionUser(request);
+  const session = await getSessionUser();
   if (!session) return unauthorizedError();
 
   const { id } = await params;
@@ -58,7 +58,7 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
 
 // DELETE /api/classes/{id} — 반 삭제 (cascade: 소속 학생/진도/시험지, schema.prisma 참조)
 export async function DELETE(request: NextRequest, { params }: RouteContext) {
-  const session = await getSessionUser(request);
+  const session = await getSessionUser();
   if (!session) return unauthorizedError();
 
   const { id } = await params;

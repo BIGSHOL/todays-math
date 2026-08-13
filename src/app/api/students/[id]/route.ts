@@ -23,7 +23,7 @@ type RouteContext = { params: Promise<{ id: string }> };
 
 // PATCH /api/students/{id} — 학생 수정
 export async function PATCH(request: NextRequest, { params }: RouteContext) {
-  const session = await getSessionUser(request);
+  const session = await getSessionUser();
   if (!session) return unauthorizedError();
 
   const { id } = await params;
@@ -43,7 +43,7 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
 
 // DELETE /api/students/{id} — 학생 삭제
 export async function DELETE(request: NextRequest, { params }: RouteContext) {
-  const session = await getSessionUser(request);
+  const session = await getSessionUser();
   if (!session) return unauthorizedError();
 
   const { id } = await params;

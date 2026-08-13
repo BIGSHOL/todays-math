@@ -17,7 +17,7 @@ import { getSessionUser } from "@/lib/session";
 
 // POST /api/classes — 반 생성
 export async function POST(request: NextRequest) {
-  const session = await getSessionUser(request);
+  const session = await getSessionUser();
   if (!session) return unauthorizedError();
 
   const body = await request.json().catch(() => undefined);
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
 // GET /api/classes — 본인 소유 반 목록(페이지네이션, 타 사용자 반 제외)
 export async function GET(request: NextRequest) {
-  const session = await getSessionUser(request);
+  const session = await getSessionUser();
   if (!session) return unauthorizedError();
 
   const url = new URL(request.url);

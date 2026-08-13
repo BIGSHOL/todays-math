@@ -18,7 +18,7 @@ import { getSessionUser } from "@/lib/session";
 
 // POST /api/students — 학생 등록(classId + 이름만)
 export async function POST(request: NextRequest) {
-  const session = await getSessionUser(request);
+  const session = await getSessionUser();
   if (!session) return unauthorizedError();
 
   const body = await request.json().catch(() => undefined);
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
 // GET /api/students?classId=... — 학생 목록 조회(classId 쿼리 필수)
 export async function GET(request: NextRequest) {
-  const session = await getSessionUser(request);
+  const session = await getSessionUser();
   if (!session) return unauthorizedError();
 
   const url = new URL(request.url);
