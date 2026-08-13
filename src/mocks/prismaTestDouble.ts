@@ -474,17 +474,17 @@ const prismaModels = {
     async create({
       data,
     }: {
-      data: Omit<
-        ProblemRow,
-        "id" | "originProblemId" | "reviewStatus" | "createdAt" | "updatedAt"
-      >;
+      data: Omit<ProblemRow, "id" | "createdAt" | "updatedAt"> & {
+        originProblemId?: string | null;
+        reviewStatus?: ReviewStatus;
+      };
     }) {
       const now = new Date();
       const row: ProblemRow = {
         id: randomUUID(),
         ...data,
-        originProblemId: null,
-        reviewStatus: "pending",
+        originProblemId: data.originProblemId ?? null,
+        reviewStatus: data.reviewStatus ?? "pending",
         createdAt: now,
         updatedAt: now,
       };
