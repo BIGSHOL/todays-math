@@ -70,10 +70,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof AiGenerationError) {
-      console.error(
-        "[POST /api/problems/generate] AI generation failed",
-        error,
-      );
+      console.error("[POST /api/problems/generate] AI generation failed");
       return jsonError(
         "AI_GENERATION_FAILED",
         "AI 문제 생성에 실패했습니다.",

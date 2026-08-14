@@ -82,10 +82,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof AiGenerationError) {
-      console.error(
-        "[POST /api/problems/transform] AI transform failed",
-        error,
-      );
+      console.error("[POST /api/problems/transform] AI transform failed");
       return jsonError(
         "AI_GENERATION_FAILED",
         "AI 문제 변형에 실패했습니다.",
