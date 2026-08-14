@@ -11,6 +11,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { LoginForm } from "@/components/auth/LoginForm";
 import { SignupForm } from "@/components/auth/SignupForm";
+import { normalizeCallbackUrl, requestedCallbackUrl } from "@/lib/callbackUrl";
 import { MOCK_EXISTING_SIGNUP_EMAIL } from "@/mocks/data";
 
 const signIn = vi.hoisted(() => vi.fn());
@@ -64,6 +65,22 @@ describe("[T1.2] LoginForm", () => {
         }),
       );
       expect(push).toHaveBeenCalledWith("/");
+    });
+  });
+
+  it("보호 경로의 쿼리까지 로그인 후 목적지로 복원한다", async () => {
+    const user = userEvent.setup();
+    const callbackUrl =
+      "/tests/new?classId=10000000-0000-4000-8000-000000000001";
+    signIn.mockResolvedValue({ ok: true });
+
+    render(<LoginForm callbackUrl={callbackUrl} />);
+    await user.type(screen.getByLabelText("이메일"), "teacher@example.com");
+    await user.type(screen.getByLabelText("비밀번호"), "password123");
+    await user.click(screen.getByRole("button", { name: "로그인" }));
+
+    await waitFor(() => {
+      expect(push).toHaveBeenCalledWith(callbackUrl);
     });
   });
 
@@ -137,6 +154,23 @@ describe("[T1.2] LoginForm", () => {
       await screen.findByText("이메일 또는 비밀번호가 올바르지 않습니다."),
     ).toBeInTheDocument();
     expect(push).not.toHaveBeenCalled();
+  });
+});
+
+describe("callback URL", () => {
+  it("Proxy 목적지에 원래 쿼리 문자열을 보존한다", () => {
+    expect(requestedCallbackUrl("/tests/new", "?classId=abc")).toBe(
+      "/tests/new?classId=abc",
+    );
+  });
+
+  it.each([
+    "https://evil.example/path",
+    "//evil.example/path",
+    "/\\evil.example/path",
+    "javascript:alert(1)",
+  ])("외부 또는 실행 가능한 목적지 %s 를 루트로 제한한다", (value) => {
+    expect(normalizeCallbackUrl(value)).toBe("/");
   });
 });
 

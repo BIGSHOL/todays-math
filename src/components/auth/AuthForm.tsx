@@ -16,15 +16,18 @@ import {
   authLoginRequestSchema,
   authSignupRequestSchema,
 } from "@/contracts/auth.contract";
+import { normalizeCallbackUrl } from "@/lib/callbackUrl";
 
 type AuthFormProps = {
   mode: "login" | "signup";
+  callbackUrl?: string;
 };
 
-export function AuthForm({ mode }: AuthFormProps) {
+export function AuthForm({ mode, callbackUrl }: AuthFormProps) {
   const router = useRouter();
   const isSignup = mode === "signup";
   const title = isSignup ? "가입" : "로그인";
+  const loginDestination = normalizeCallbackUrl(callbackUrl);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -84,7 +87,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         setErrors({ password: CREDENTIALS_ERROR });
         return;
       }
-      router.push("/");
+      router.push(loginDestination);
       router.refresh();
     } finally {
       setPending(false);
@@ -139,7 +142,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         disabled={pending}
         className="w-full"
         onClick={() => {
-          void signIn("google", { redirectTo: "/" });
+          void signIn("google", { redirectTo: loginDestination });
         }}
       >
         구글 계정으로 계속
