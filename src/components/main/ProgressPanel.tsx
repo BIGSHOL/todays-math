@@ -11,8 +11,11 @@ type Props = {
   printedDays: number;
   unmodifiedRate: number;
   error: string | null;
+  /** 화면에 보이는 차시(열람 위치)가 실제 기록된 진도와 달라 "진도 기록"이 의미 있는 상태인가. */
+  canRecord: boolean;
   onSelectClass: (classId: string) => void;
   onStep: (unitId: string) => void;
+  onRecord: () => void;
 };
 
 const ARROW =
@@ -26,8 +29,10 @@ export function ProgressPanel({
   printedDays,
   unmodifiedRate,
   error,
+  canRecord,
   onSelectClass,
   onStep,
+  onRecord,
 }: Props) {
   const lesson = unitSectionName(selectedUnitId, units);
   const { prevId, nextId } = adjacentUnitIds(selectedUnitId, units);
@@ -88,6 +93,17 @@ export function ProgressPanel({
             &gt;
           </button>
         </div>
+        {/* 차시이동 화살표는 "열람"만 한다(진도를 기록하지 않는다). 실제 진도 기록은 아래
+            버튼으로 명시적으로 커밋한다 — 예전엔 화살표 클릭마다 진도가 쌓이는 버그가 있었다
+            (원장 관찰, 2026-08-14). */}
+        <button
+          type="button"
+          disabled={!canRecord}
+          onClick={onRecord}
+          className="mt-2 inline-flex min-h-11 w-full items-center justify-center bg-ink text-[12px] font-black text-canvas cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          이 차시로 진도 기록
+        </button>
         {error ? <p className="mt-2 text-g-red-text">{error}</p> : null}
       </div>
       <h3 className="mt-5 mb-2 border-t-[3px] border-ink pt-1.5 text-[10.5px] font-black tracking-[2.5px]">

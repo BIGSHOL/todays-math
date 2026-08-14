@@ -30,12 +30,24 @@ export type ClassRow = {
   hasProgress: boolean;
 };
 
-export function pickActiveTest(tests: TestEntity[]): TestEntity | undefined {
+export function pickActiveTest(
+  tests: TestEntity[],
+  currentUnitId: string | null,
+): TestEntity | undefined {
   const classLevel = tests.filter((t) => t.studentId === null);
+  // 일일테스트는 "현재 진도 차시"의 것만 오늘의 테스트로 본다. 진도가 그 차시를 지나가면
+  // 지난 일일테스트이므로 대시보드에서 제외한다 — 안 그러면 옛 차시의 테스트가 모든 차시에
+  // 그대로 남아 "차시를 바꿔도 같은 문제"로 보인다(원장 관찰, 2026-08-14).
+  // 확인테스트(review)는 여러 차시를 아우르는 범위형이라 현재 차시와 무관하게 유지한다.
+  const relevant = classLevel.filter((t) =>
+    t.testType === "daily"
+      ? currentUnitId !== null && t.rangeEndUnitId === currentUnitId
+      : true,
+  );
   return (
-    classLevel.find((t) => t.status === "draft") ??
-    classLevel.find((t) => t.status === "confirmed") ??
-    classLevel.find((t) => t.status === "printed")
+    relevant.find((t) => t.status === "draft") ??
+    relevant.find((t) => t.status === "confirmed") ??
+    relevant.find((t) => t.status === "printed")
   );
 }
 
@@ -83,9 +95,9 @@ export function buildClassRows(
 ): ClassRow[] {
   const rows = classes.map((cls) => {
     const classTests = tests.filter((t) => t.classId === cls.id);
-    const test = pickActiveTest(classTests);
     const progress = progressByClass[cls.id] ?? null;
     const hasProgress = progress !== null;
+    const test = pickActiveTest(classTests, progress?.unitId ?? null);
     const stage = resolveStage(test, hasProgress);
     const unitLabel = unitSectionName(
       progress?.unitId ?? test?.rangeEndUnitId ?? null,

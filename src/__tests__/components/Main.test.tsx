@@ -21,6 +21,7 @@ import {
   MOCK_CLASS_B,
   MOCK_CLASS_STARVED,
   MOCK_CURRENT_PROGRESS_UNIT,
+  MOCK_EMPTY_PROBLEM_UNIT,
   MOCK_TEST_PRINTED,
   MOCK_UNITS,
   TEST_CONFIRMED_ID,
@@ -30,7 +31,13 @@ import { server } from "@/mocks/server";
 
 const CARD_GRID = "grid-cols-[44px_minmax(0,1fr)_232px_112px]";
 
-function printedClassTest(classId: string, seq: number) {
+// 일일테스트는 "현재 진도 차시"의 것만 오늘의 테스트로 잡히므로(pickActiveTest, 2026-08-14),
+// 각 반의 현재 진도 단원을 rangeEndUnitId로 넣어야 그 반이 done/review로 정상 판정된다.
+function printedClassTest(
+  classId: string,
+  seq: number,
+  rangeEndUnitId: string,
+) {
   return {
     ...MOCK_TEST_PRINTED,
     id: `90000000-0000-4000-8000-${String(200 + seq).padStart(12, "0")}`,
@@ -38,6 +45,7 @@ function printedClassTest(classId: string, seq: number) {
     studentId: null,
     status: "printed" as const,
     modified: false,
+    rangeEndUnitId,
     testDate: "2026-08-14",
     printedAt: "2026-08-14T10:00:00+09:00",
   };
@@ -201,7 +209,8 @@ describe("[T4.3 S-03] 메인 — 수동 전환·진도 1클릭", () => {
     expect(
       screen.getByRole("columnheader", { name: "현재 진도" }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("자동 준비 예약").length).toBeGreaterThan(0);
+    // 자동 준비 스케줄러는 없다 — 진도가 있으면 원장이 직접 출제하는 흐름이므로 "직접 출제".
+    expect(screen.getAllByText("직접 출제").length).toBeGreaterThan(0);
 
     await user.click(screen.getByRole("button", { name: /오늘 작업/ }));
 
@@ -241,6 +250,55 @@ describe("[T4.3 S-03] 메인 — 수동 전환·진도 1클릭", () => {
         "순환소수의 분수 표현",
       );
     });
+  });
+
+  it("차시이동은 진도를 기록하지 않고 '진도 기록' 버튼으로만 커밋한다", async () => {
+    let postCount = 0;
+    let postedUnitId: string | null = null;
+    server.use(
+      http.post("/api/progress", async ({ request }) => {
+        postCount += 1;
+        const bodyJson = (await request.json()) as {
+          classId: string;
+          unitId: string;
+        };
+        postedUnitId = bodyJson.unitId;
+        return HttpResponse.json(
+          {
+            data: {
+              id: "00000000-0000-4000-8000-000000009999",
+              classId: bodyJson.classId,
+              studentId: null,
+              unitId: bodyJson.unitId,
+              recordedAt: "2026-08-14",
+              createdAt: "2026-08-14T09:00:00Z",
+            },
+          },
+          { status: 201 },
+        );
+      }),
+    );
+
+    const { user } = await renderMain();
+
+    // 초기: 열람 위치 = 현재 진도 → 기록할 것이 없어 버튼 비활성
+    const recordBtn = screen.getByRole("button", {
+      name: "이 차시로 진도 기록",
+    });
+    expect(recordBtn).toBeDisabled();
+
+    // 차시이동(열람) — 진도는 절대 기록되지 않는다(예전 버그: 클릭마다 기록)
+    await user.click(screen.getByRole("button", { name: "다음 차시" }));
+    await waitFor(() => {
+      expect(screen.getByLabelText("현재 소단원")).toHaveTextContent("지수법칙");
+    });
+    expect(postCount).toBe(0);
+    expect(recordBtn).toBeEnabled();
+
+    // 명시적 기록 → POST 1회, 이동한 차시(417 지수법칙)로 커밋
+    await user.click(recordBtn);
+    await waitFor(() => expect(postCount).toBe(1));
+    expect(postedUnitId).toBe(MOCK_UNITS[4]!.id);
   });
 
   it("패널에서 반을 바꾸면 현재 소단원이 그 반 진도로 바뀐다", async () => {
@@ -297,9 +355,9 @@ describe("[T4.3 S-03] 메인 — 전부 완료면 대장부로 자동 전환", (
       http.get("/api/tests", () =>
         HttpResponse.json({
           data: [
-            printedClassTest(CLASS_A_ID, 1),
-            printedClassTest(CLASS_B_ID, 2),
-            printedClassTest(CLASS_STARVED_ID, 3),
+            printedClassTest(CLASS_A_ID, 1, MOCK_CURRENT_PROGRESS_UNIT.id),
+            printedClassTest(CLASS_B_ID, 2, MOCK_UNITS[1]!.id),
+            printedClassTest(CLASS_STARVED_ID, 3, MOCK_EMPTY_PROBLEM_UNIT.id),
           ],
           meta: { page: 1, pageSize: 20, total: 3 },
         }),
@@ -325,13 +383,15 @@ describe("[T4.3 S-03] 메인 — 전부 완료면 대장부로 자동 전환", (
       http.get("/api/tests", () =>
         HttpResponse.json({
           data: [
-            printedClassTest(CLASS_A_ID, 1),
+            printedClassTest(CLASS_A_ID, 1, MOCK_CURRENT_PROGRESS_UNIT.id),
             {
               ...MOCK_TEST_PRINTED,
               id: TEST_DRAFT_ID,
               classId: CLASS_B_ID,
               studentId: null,
               status: "draft",
+              // 반 B의 현재 진도(414 순환소수)에 맞춰야 그 반의 오늘 테스트로 잡힌다.
+              rangeEndUnitId: MOCK_UNITS[1]!.id,
               testDate: "2026-08-14",
               printedAt: null,
             },

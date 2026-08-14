@@ -187,7 +187,7 @@ erDiagram
 | answer | TEXT | NOT NULL | 정답 |
 | solution | TEXT | NULL | 풀이 |
 | review_status | VARCHAR(10) | NOT NULL, DEFAULT 'pending' | AI 생성물은 `pending`으로 시작, 검수 후 `approved` |
-| direct_use_allowed | BOOLEAN | NOT NULL, DEFAULT true | RPM 원본은 false (D-26). 출제 풀에서 제외 |
+| direct_use_allowed | BOOLEAN | NOT NULL, DEFAULT true | ~~RPM 원본은 false~~ **전량 true**(D-26 폐지, 2026-08-14) — 문항 잠그지 말 것 |
 | pool | VARCHAR(10) | NOT NULL, DEFAULT 'shared' | `shared`(공용) / `private`(소유자만). 기본 공용 (D-31) |
 | created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | 생성일 |
 | updated_at | TIMESTAMP | NOT NULL | 수정일 |
@@ -327,5 +327,5 @@ MVP에서는 만들지 않되, 모든 소유권이 `user_id`로 일관되게 걸
 | D-20 | 중복 방지 | TEST_PROBLEM 이력 기반 최근 14일 제외 | 답 암기 방지 |
 | D-21 | 진도 모델 | PROGRESS 이력 누적 + 반/개별 이중 구조 | 학생별 진도 차이 지원 (Q4) |
 | D-22 | AI 생성물 검수 | review_status로 pending→approved 승격 | 품질 리스크 #1 완화 |
-| D-26 | RPM 잠금 | direct_use_allowed=false | 원본 직접 출제 금지, 변형 원본만 |
+| D-26 | ~~RPM 잠금~~ 폐지 | direct_use_allowed=true 전량 | 2026-08-14 원장 지시 — 문항 잠금 없음, 전부 직접 출제 허용 |
 | D-31 | 공용 풀 | pool 기본 shared. 조회는 공용+본인 private | 원장님: 지시 없으면 전부 공용 |

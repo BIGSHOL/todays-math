@@ -38,7 +38,9 @@ export function LedgerTable({ rows, onProgress }: Props) {
                 <StageGauge stage={row.stage} compact />
               </td>
               <td className="border-b border-divider px-2.5 py-2.5">
-                {row.hasProgress ? "자동 준비 예약" : "다음 단원 시작"}
+                {/* 자동 준비 스케줄러는 없다(반자동, D-32 후속). 진도가 있으면 그 차시를
+                    원장이 직접 출제하는 흐름이므로 "직접 출제"로 정직하게 표기한다. */}
+                {row.hasProgress ? "직접 출제" : "다음 단원 시작"}
               </td>
               <td className="border-b border-divider px-2.5 py-2.5">
                 <ActionControl row={row} onProgress={onProgress} />

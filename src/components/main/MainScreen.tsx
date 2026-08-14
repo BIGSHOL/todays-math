@@ -35,6 +35,9 @@ export function MainScreen() {
     null,
   );
   const [advanceError, setAdvanceError] = useState<string | null>(null);
+  // 차시이동 화살표로 "열람 중인" 차시(진도 미기록). null이면 현재 기록된 진도를 본다.
+  // 반을 바꾸거나 진도를 기록하면 null로 되돌려 그 반의 실제 진도를 다시 본다.
+  const [viewedUnitId, setViewedUnitId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -78,33 +81,54 @@ export function MainScreen() {
   const done = rows.filter((r) => r.stage === "done");
   const metrics = state.status === "ready" ? state.metrics : null;
 
-  const selectedUnitId =
+  // 실제 기록된 현재 진도 차시.
+  const committedUnitId =
     state.status === "ready"
       ? (state.progressByClass[selectedClassId]?.unitId ?? null)
       : null;
+  // 화면에 보여줄 차시 = 열람 중이면 그 차시, 아니면 현재 진도. (열람은 DB에 안 남는다)
+  const displayedUnitId = viewedUnitId ?? committedUnitId;
+  const canRecord =
+    displayedUnitId !== null && displayedUnitId !== committedUnitId;
 
-  const handleStep = useCallback(
-    async (unitId: string) => {
-      if (!selectedClassId || state.status !== "ready") return;
-      setAdvanceError(null);
-      try {
-        const next = await recordProgress(selectedClassId, unitId);
-        setState((prev) => {
-          if (prev.status !== "ready") return prev;
-          return {
-            ...prev,
-            progressByClass: {
-              ...prev.progressByClass,
-              [selectedClassId]: next,
-            },
-          };
-        });
-      } catch {
-        setAdvanceError("진도를 저장하지 못했습니다");
-      }
-    },
-    [selectedClassId, state.status],
-  );
+  const handleSelectClass = useCallback((classId: string) => {
+    setSelectedClassId(classId);
+    setViewedUnitId(null); // 반을 바꾸면 그 반의 실제 진도를 보도록 열람 위치를 초기화한다.
+  }, []);
+
+  // 차시이동 화살표 — 진도를 기록하지 않고 열람 위치만 바꾼다(예전엔 클릭마다 진도가 쌓였다).
+  const handleStep = useCallback((unitId: string) => {
+    setViewedUnitId(unitId);
+  }, []);
+
+  // "이 차시로 진도 기록" — 열람 중인 차시를 실제 진도로 커밋한다(명시적 기록).
+  const handleRecord = useCallback(async () => {
+    if (
+      !selectedClassId ||
+      state.status !== "ready" ||
+      displayedUnitId === null ||
+      displayedUnitId === committedUnitId
+    ) {
+      return;
+    }
+    setAdvanceError(null);
+    try {
+      const next = await recordProgress(selectedClassId, displayedUnitId);
+      setState((prev) => {
+        if (prev.status !== "ready") return prev;
+        return {
+          ...prev,
+          progressByClass: {
+            ...prev.progressByClass,
+            [selectedClassId]: next,
+          },
+        };
+      });
+      setViewedUnitId(null); // 기록 후엔 방금 기록한 차시(=현재 진도)를 본다.
+    } catch {
+      setAdvanceError("진도를 저장하지 못했습니다");
+    }
+  }, [selectedClassId, state.status, displayedUnitId, committedUnitId]);
 
   if (state.status === "loading") {
     return (
@@ -145,7 +169,7 @@ export function MainScreen() {
                   row={row}
                   index={i + 1}
                   hot={i === 0}
-                  onProgress={setSelectedClassId}
+                  onProgress={handleSelectClass}
                 />
               ))}
               {done.map((row) => (
@@ -153,20 +177,22 @@ export function MainScreen() {
               ))}
             </>
           ) : (
-            <LedgerTable rows={rows} onProgress={setSelectedClassId} />
+            <LedgerTable rows={rows} onProgress={handleSelectClass} />
           )}
         </div>
         <ProgressPanel
           classes={state.classes}
           units={state.units}
           selectedClassId={selectedClassId}
-          selectedUnitId={selectedUnitId}
+          selectedUnitId={displayedUnitId}
           printedDays={metrics?.printedDays ?? 0}
           unmodifiedRate={Math.round((metrics?.unmodifiedRate ?? 0) * 100)}
           error={advanceError}
-          onSelectClass={setSelectedClassId}
-          onStep={(unitId) => {
-            void handleStep(unitId);
+          canRecord={canRecord}
+          onSelectClass={handleSelectClass}
+          onStep={handleStep}
+          onRecord={() => {
+            void handleRecord();
           }}
         />
       </div>
