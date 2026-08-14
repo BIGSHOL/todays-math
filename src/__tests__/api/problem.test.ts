@@ -11,6 +11,7 @@
  * 대응 계약: src/contracts/problem.contract.ts
  */
 import { NextRequest } from "next/server";
+import { Prisma } from "@prisma/client";
 import { describe, expect, it, vi } from "vitest";
 
 // T1.1(실제 Auth.js 세션) 병합 이후: 이 테스트는 인증 자체가 아니라 CRUD·소유권 검증이
@@ -39,6 +40,7 @@ import {
   deleteResponseSchema,
   errorResponseSchema,
 } from "@/contracts/common.contract";
+import { db } from "@/lib/db";
 import { findEligibleProblems } from "@/lib/findEligibleProblems";
 import { getSessionUser } from "@/lib/session";
 import {
@@ -288,7 +290,7 @@ describe("[T3.1] DELETE /api/problems/{id}", () => {
     expect(body.error.code).toBe("NOT_FOUND");
   });
 
-  it("성공 시 삭제된 문제의 id를 반환한다", async () => {
+  it("시험지에 포함된 문제는 이력 보존을 위해 삭제를 거부한다", async () => {
     const res = await deleteProblem(
       jsonRequest(
         `http://localhost/api/problems/${MOCK_PROBLEM_WITH_FRACTION.id}`,
@@ -296,9 +298,72 @@ describe("[T3.1] DELETE /api/problems/{id}", () => {
       ),
       withId(MOCK_PROBLEM_WITH_FRACTION.id),
     );
+    expect(res.status).toBe(409);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.code).toBe("CONFLICT");
+
+    const getRes = await getProblem(
+      jsonRequest(
+        `http://localhost/api/problems/${MOCK_PROBLEM_WITH_FRACTION.id}`,
+        "GET",
+      ),
+      withId(MOCK_PROBLEM_WITH_FRACTION.id),
+    );
+    expect(getRes.status).toBe(200);
+  });
+
+  it("어떤 시험지에도 쓰이지 않은 문제는 삭제하고 id를 반환한다", async () => {
+    const created = await createProblem(
+      jsonRequest("http://localhost/api/problems", "POST", {
+        unitId: MOCK_PROBLEM_WITH_FRACTION.unitId,
+        source: "manual",
+        difficulty: "easy",
+        problemType: "계산",
+        content: "아직 출제되지 않은 문제",
+        answer: "1",
+      }),
+    );
+    const createdBody = problemResponseSchema.parse(await created.json());
+
+    const res = await deleteProblem(
+      jsonRequest(
+        `http://localhost/api/problems/${createdBody.data.id}`,
+        "DELETE",
+      ),
+      withId(createdBody.data.id),
+    );
     expect(res.status).toBe(200);
     const body = deleteResponseSchema.parse(await res.json());
-    expect(body.data.id).toBe(MOCK_PROBLEM_WITH_FRACTION.id);
+    expect(body.data.id).toBe(createdBody.data.id);
+  });
+
+  it("사용 여부 확인 직후 시험지에 편입되는 경쟁 요청도 CONFLICT로 처리한다", async () => {
+    const countSpy = vi.spyOn(db.testProblem, "count").mockResolvedValueOnce(0);
+    const deleteSpy = vi.spyOn(db.problem, "delete").mockRejectedValueOnce(
+      new Prisma.PrismaClientKnownRequestError(
+        "foreign key constraint failed",
+        {
+          code: "P2003",
+          clientVersion: "6.19.3",
+        },
+      ),
+    );
+
+    try {
+      const res = await deleteProblem(
+        jsonRequest(
+          `http://localhost/api/problems/${MOCK_PROBLEM_WITH_FRACTION.id}`,
+          "DELETE",
+        ),
+        withId(MOCK_PROBLEM_WITH_FRACTION.id),
+      );
+      expect(res.status).toBe(409);
+      const body = errorResponseSchema.parse(await res.json());
+      expect(body.error.code).toBe("CONFLICT");
+    } finally {
+      countSpy.mockRestore();
+      deleteSpy.mockRestore();
+    }
   });
 });
 

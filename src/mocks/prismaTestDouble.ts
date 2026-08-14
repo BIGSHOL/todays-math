@@ -533,6 +533,11 @@ const prismaModels = {
     async delete({ where }: { where: { id: string } }) {
       const index = problemRows.findIndex((r) => r.id === where.id);
       if (index === -1) throw new Error(`problem not found: ${where.id}`);
+      if (testProblemRows.some((row) => row.problemId === where.id)) {
+        throw Object.assign(new Error("foreign key constraint failed"), {
+          code: "P2003",
+        });
+      }
       const [removed] = problemRows.splice(index, 1);
       return removed!;
     },
@@ -656,6 +661,9 @@ const prismaModels = {
         orderBy,
       );
       return hydrateTestProblems(rows, include);
+    },
+    async count({ where }: { where?: Record<string, unknown> } = {}) {
+      return testProblemRows.filter((row) => matchesWhere(row, where)).length;
     },
     async update({
       where,
