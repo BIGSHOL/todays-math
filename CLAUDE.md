@@ -161,4 +161,4 @@ docker compose up -d # 로컬 PostgreSQL
   KaTeX `\\dot` 은 12.5px 목록에서 거의 안 보여 은행/검수가 달라 보였다.
   선분 `\\overline{AB}` 는 유지.
 - **교훈**: 서양 LaTeX 기본(overline)을 교과 표기로 단정하지 말 것.
-   gre된 것처럼 보여도 실제 가독성을 화면에서 확인할 것.
+   렌더된 것처럼 보여도 실제 가독성을 화면에서 확인할 것.
