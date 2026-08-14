@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { computeWeeklyMetrics, resolveWeekWindow } from "@/lib/metrics";
+import {
+  computeWeeklyMetrics,
+  defaultWeekWindow,
+  resolveWeekWindow,
+} from "@/lib/metrics";
 
 describe("[T5.3] computeWeeklyMetrics", () => {
   it("주간 창 안의 인쇄만 세고 무수정 비율을 계산한다", () => {
@@ -50,5 +54,29 @@ describe("[T5.3] computeWeeklyMetrics", () => {
       weekStart: "2026-08-10",
       weekEnd: "2026-08-16",
     });
+  });
+
+  it("한국 자정 직후 인쇄를 UTC 전날이 아닌 한국 날짜로 집계한다", () => {
+    const result = computeWeeklyMetrics(
+      [
+        {
+          status: "printed",
+          modified: false,
+          createdAt: "2026-08-13T15:25:00.000Z",
+          printedAt: "2026-08-13T15:30:00.000Z",
+        },
+      ],
+      { weekStart: "2026-08-14", weekEnd: "2026-08-20" },
+    );
+
+    expect(result.printedDays).toBe(1);
+    expect(result.printedCount).toBe(1);
+  });
+
+  it("기본 7일 창도 한국 날짜를 기준으로 끝난다", () => {
+    expect(
+      // 2026-08-14 00:30 KST = 2026-08-13 15:30 UTC
+      defaultWeekWindow(new Date("2026-08-13T15:30:00.000Z")),
+    ).toEqual({ weekStart: "2026-08-08", weekEnd: "2026-08-14" });
   });
 });

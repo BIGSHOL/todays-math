@@ -11,8 +11,19 @@ export interface PrintedTestLike {
   printedAt: string | null;
 }
 
-function toIsoDate(value: string): string {
-  return value.slice(0, 10);
+const METRICS_TIME_ZONE = "Asia/Seoul";
+
+function toIsoDate(value: string | Date): string {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: METRICS_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(typeof value === "string" ? new Date(value) : value);
+  const byType = Object.fromEntries(
+    parts.map((part) => [part.type, part.value]),
+  );
+  return `${byType.year}-${byType.month}-${byType.day}`;
 }
 
 function addDays(isoDate: string, days: number): string {
@@ -24,7 +35,7 @@ export function defaultWeekWindow(today = new Date()): {
   weekStart: string;
   weekEnd: string;
 } {
-  const weekEnd = today.toISOString().slice(0, 10);
+  const weekEnd = toIsoDate(today);
   return { weekStart: addDays(weekEnd, -6), weekEnd };
 }
 
