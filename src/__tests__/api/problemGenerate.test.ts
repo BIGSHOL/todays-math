@@ -42,7 +42,9 @@ import {
   MOCK_PROBLEM_OTHER_USER,
   MOCK_PROBLEMS,
   NOT_FOUND_ID,
+  USER_TEACHER_ID,
 } from "@/mocks/data";
+import { prismaTestDouble } from "@/mocks/prismaTestDouble";
 
 function jsonRequest(url: string, body?: unknown) {
   return new NextRequest(url, {
@@ -131,6 +133,55 @@ describe("[T3.2] POST /api/problems/generate", () => {
     expect(JSON.stringify(body)).not.toContain("top-secret");
     log.mockRestore();
   });
+
+  it("두 번째 DB 저장이 실패하면 첫 번째 생성 문제도 롤백한다", async () => {
+    mockGenerateProblems.mockResolvedValueOnce(
+      ["첫 번째", "두 번째"].map((content) => ({
+        unitId: MOCK_EMPTY_PROBLEM_UNIT.id,
+        difficulty: "easy",
+        problemType: "계산",
+        content,
+        answer: "1",
+        solution: null,
+        source: "ai_generated",
+        originProblemId: null,
+        reviewStatus: "pending",
+      })),
+    );
+    const before = await prismaTestDouble.problem.count({
+      where: { userId: USER_TEACHER_ID },
+    });
+    const realCreate = prismaTestDouble.problem.create.bind(
+      prismaTestDouble.problem,
+    );
+    let createCalls = 0;
+    const createSpy = vi
+      .spyOn(prismaTestDouble.problem, "create")
+      .mockImplementation(async (args) => {
+        createCalls += 1;
+        if (createCalls === 2) throw new Error("두 번째 저장 실패");
+        return realCreate(args);
+      });
+
+    try {
+      await expect(
+        generateProblemsRoute(
+          jsonRequest("http://localhost/api/problems/generate", {
+            unitId: MOCK_EMPTY_PROBLEM_UNIT.id,
+            difficulty: "easy",
+            count: 2,
+          }),
+        ),
+      ).rejects.toThrow("두 번째 저장 실패");
+      expect(
+        await prismaTestDouble.problem.count({
+          where: { userId: USER_TEACHER_ID },
+        }),
+      ).toBe(before);
+    } finally {
+      createSpy.mockRestore();
+    }
+  });
 });
 
 describe("[T3.2] POST /api/problems/transform", () => {
@@ -202,5 +253,54 @@ describe("[T3.2] POST /api/problems/transform", () => {
     expect(body.error.message).toBe("AI 문제 변형에 실패했습니다.");
     expect(JSON.stringify(body)).not.toContain("secret-123");
     log.mockRestore();
+  });
+
+  it("변형 문제 묶음도 DB 오류 시 일부만 남기지 않는다", async () => {
+    const origin = MOCK_PROBLEMS[0]!;
+    mockTransformProblem.mockResolvedValueOnce(
+      ["첫 번째 변형", "두 번째 변형"].map((content) => ({
+        unitId: origin.unitId,
+        difficulty: origin.difficulty,
+        problemType: origin.problemType,
+        content,
+        answer: "2",
+        solution: null,
+        source: "transformed",
+        originProblemId: origin.id,
+        reviewStatus: "pending",
+      })),
+    );
+    const before = await prismaTestDouble.problem.count({
+      where: { userId: USER_TEACHER_ID },
+    });
+    const realCreate = prismaTestDouble.problem.create.bind(
+      prismaTestDouble.problem,
+    );
+    let createCalls = 0;
+    const createSpy = vi
+      .spyOn(prismaTestDouble.problem, "create")
+      .mockImplementation(async (args) => {
+        createCalls += 1;
+        if (createCalls === 2) throw new Error("두 번째 저장 실패");
+        return realCreate(args);
+      });
+
+    try {
+      await expect(
+        transformProblemsRoute(
+          jsonRequest("http://localhost/api/problems/transform", {
+            originProblemId: origin.id,
+            count: 2,
+          }),
+        ),
+      ).rejects.toThrow("두 번째 저장 실패");
+      expect(
+        await prismaTestDouble.problem.count({
+          where: { userId: USER_TEACHER_ID },
+        }),
+      ).toBe(before);
+    } finally {
+      createSpy.mockRestore();
+    }
   });
 });
