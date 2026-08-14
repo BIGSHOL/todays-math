@@ -131,15 +131,6 @@ export function primaryAction(row: ClassRow): PrimaryAction {
   return { label: "진도 입력" };
 }
 
-export function weekStats(tests: TestEntity[]) {
-  const printed = tests.filter((t) => t.status === "printed");
-  const unmodified = printed.filter((t) => !t.modified).length;
-  const printedDays = new Set(printed.map((t) => t.testDate)).size;
-  const unmodifiedRate =
-    printed.length === 0 ? 0 : Math.round((unmodified / printed.length) * 100);
-  return { printedDays, unmodifiedRate };
-}
-
 export function formatMastheadDate(date = new Date()): string {
   const days = ["일", "월", "화", "수", "목", "금", "토"];
   const y = date.getFullYear();

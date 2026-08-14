@@ -4,11 +4,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { AppChrome } from "@/components/chrome/AppChrome";
 import type { ClassEntity, ProgressEntity } from "@/contracts/class.contract";
+import type { WeeklyMetrics } from "@/contracts/metrics.contract";
 import type { TestEntity } from "@/contracts/test.contract";
 import type { UnitEntity } from "@/contracts/unit.contract";
 import { recordProgress } from "@/lib/class/classApi";
 import { loadMainDashboard } from "@/lib/main/loadMainDashboard";
-import { buildClassRows, remainingCount, weekStats } from "@/lib/main/pipeline";
+import { buildClassRows, remainingCount } from "@/lib/main/pipeline";
 
 import { ClassCard } from "./ClassCard";
 import { DoneSummaryRow } from "./DoneSummaryRow";
@@ -24,6 +25,7 @@ type LoadState =
       tests: TestEntity[];
       progressByClass: Record<string, ProgressEntity | null>;
       units: UnitEntity[];
+      metrics: WeeklyMetrics;
     };
 
 export function MainScreen() {
@@ -74,7 +76,7 @@ export function MainScreen() {
   const view = viewOverride ?? autoView;
   const pending = rows.filter((r) => r.stage !== "done");
   const done = rows.filter((r) => r.stage === "done");
-  const stats = state.status === "ready" ? weekStats(state.tests) : null;
+  const metrics = state.status === "ready" ? state.metrics : null;
 
   const selectedUnitId =
     state.status === "ready"
@@ -159,8 +161,8 @@ export function MainScreen() {
           units={state.units}
           selectedClassId={selectedClassId}
           selectedUnitId={selectedUnitId}
-          printedDays={stats?.printedDays ?? 0}
-          unmodifiedRate={stats?.unmodifiedRate ?? 0}
+          printedDays={metrics?.printedDays ?? 0}
+          unmodifiedRate={Math.round((metrics?.unmodifiedRate ?? 0) * 100)}
           error={advanceError}
           onSelectClass={setSelectedClassId}
           onStep={(unitId) => {

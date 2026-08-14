@@ -95,15 +95,21 @@ export function ProgressPanel({
       </h3>
       <div className="flex gap-[18px]">
         <div>
-          <div className="text-[26px] font-black leading-none tabular-nums text-g-blue">
+          <div
+            aria-label="이번 주 인쇄 일수"
+            className="text-[26px] font-black leading-none tabular-nums text-g-blue"
+          >
             {printedDays}
           </div>
           <div className="mt-1 text-[9.5px] font-extrabold tracking-[1.2px] text-faint">
-            출제 일수
+            인쇄 일수
           </div>
         </div>
         <div>
-          <div className="text-[26px] font-black leading-none tabular-nums text-g-blue">
+          <div
+            aria-label="이번 주 무수정 사용률"
+            className="text-[26px] font-black leading-none tabular-nums text-g-blue"
+          >
             {unmodifiedRate}
             <small className="text-[13px] font-extrabold text-faint">%</small>
           </div>
