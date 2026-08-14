@@ -27,16 +27,13 @@ export function ClassTable({
         {classes.map((cls) => {
           const selected = cls.id === selectedClassId;
           return (
-            <tr
-              key={cls.id}
-              className={selected ? "bg-white" : "hover:bg-white"}
-            >
+            <tr key={cls.id} className={selected ? "bg-white" : undefined}>
               <td className="border-b border-[#C2C2C0] px-2.5 py-2">
                 <button
                   type="button"
                   aria-pressed={selected}
                   onClick={() => onSelect(cls.id)}
-                  className="min-h-11 text-left text-[15px] font-black tracking-[-0.3px]"
+                  className="min-h-11 w-full text-left text-[15px] font-black tracking-[-0.3px]"
                 >
                   {cls.name}
                 </button>

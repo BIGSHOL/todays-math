@@ -57,6 +57,29 @@ body {
   font-family: Pretendard, "Malgun Gothic", system-ui, sans-serif;
 }
 
+/* 손가락은 실제 조작 가능한 컨트롤만. 카드·행 본체에는 쓰지 않는다. */
+a[href]:not([aria-disabled="true"]),
+button:not(:disabled):not([aria-disabled="true"]),
+[role="button"]:not(:disabled):not([aria-disabled="true"]),
+summary,
+select:not(:disabled),
+label:has(> select:not(:disabled)),
+label:has(input[type="checkbox"]:not(:disabled)),
+label:has(input[type="radio"]:not(:disabled)),
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled),
+input[type="file"]:not(:disabled),
+input[type="submit"]:not(:disabled),
+input[type="button"]:not(:disabled),
+input[type="reset"]:not(:disabled) {
+  cursor: pointer;
+}
+
+:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 /* Mathgen 3단 방어 폴백 — 붉은 katex-error 대신 중립 모노스페이스 */
 .math-raw {
   font-family: ui-monospace, "D2Coding", monospace;

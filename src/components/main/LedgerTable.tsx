@@ -27,7 +27,7 @@ export function LedgerTable({ rows, onProgress }: Props) {
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.classId} className="hover:bg-white">
+            <tr key={row.classId}>
               <td className="border-b border-divider px-2.5 py-2.5 text-[13px] font-black">
                 {row.name}
               </td>

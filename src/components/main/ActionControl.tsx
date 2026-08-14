@@ -3,7 +3,7 @@ import Link from "next/link";
 import { primaryAction, type ClassRow } from "@/lib/main/pipeline";
 
 const BTN =
-  "inline-block w-[112px] border-2 py-2 text-center text-[12.5px] font-black tracking-[1px]";
+  "inline-block w-[112px] cursor-pointer border-2 py-2 text-center text-[12.5px] font-black tracking-[1px]";
 
 type Props = {
   row: ClassRow;

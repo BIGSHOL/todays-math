@@ -103,7 +103,7 @@ function PickButton({
       type="button"
       aria-current={current ? "true" : undefined}
       onClick={onClick}
-      className={`min-h-11 w-full truncate px-2 text-left text-[12.5px] font-bold ${tone}`}
+      className={`min-h-11 w-full cursor-pointer truncate px-2 text-left text-[12.5px] font-bold ${tone}`}
     >
       {label}
     </button>

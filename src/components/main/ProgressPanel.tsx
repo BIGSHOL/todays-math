@@ -40,7 +40,7 @@ export function ProgressPanel({
             aria-label="반 선택"
             value={selectedClassId}
             onChange={(e) => onSelectClass(e.target.value)}
-            className="w-full bg-transparent font-bold text-ink"
+            className="w-full cursor-pointer bg-transparent font-bold text-ink"
           >
             {classes.map((cls) => (
               <option key={cls.id} value={cls.id}>
@@ -60,14 +60,14 @@ export function ProgressPanel({
         <button
           type="button"
           onClick={onAdvance}
-          className="mr-1 border-2 border-ink bg-ink px-3 py-1 text-[10.5px] font-black text-canvas"
+          className="mr-1 cursor-pointer border-2 border-ink bg-ink px-3 py-1 text-[10.5px] font-black text-canvas"
         >
           다음 차시로
         </button>
         <button
           type="button"
           disabled
-          className="border-2 border-ink px-3 py-1 text-[10.5px] font-black opacity-40"
+          className="cursor-not-allowed border-2 border-ink px-3 py-1 text-[10.5px] font-black opacity-40"
         >
           직접 선택
         </button>

@@ -21,7 +21,7 @@ const STEP_INDEX =
 const STEP_TITLE = "mt-1 text-[15px] font-black tracking-[-0.3px]";
 const ERROR_TEXT = "text-[11.5px] text-[#C5221F]";
 const SELECT_CLASS =
-  "h-11 w-full border border-[#C2C2C0] bg-white px-3 text-[12.5px] text-[#161616] focus:border-[#1A73E8] focus:outline focus:outline-2 focus:outline-offset-0 focus:outline-[#1A73E8] disabled:bg-[#E0E0DE]";
+  "h-11 w-full cursor-pointer border border-[#C2C2C0] bg-white px-3 text-[12.5px] text-[#161616] focus:border-[#1A73E8] focus:outline focus:outline-2 focus:outline-offset-0 focus:outline-[#1A73E8] disabled:cursor-not-allowed disabled:bg-[#E0E0DE]";
 
 function unitLabel(unit: OnboardingUnitOption) {
   return `${unit.grade} · ${unit.section}`;

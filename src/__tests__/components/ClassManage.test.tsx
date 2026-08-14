@@ -77,6 +77,14 @@ describe("[T2.3 S-07] 반/학생 관리 — 크롬·표·학생", () => {
     expect(within(students).queryByText(/true|false/i)).not.toBeInTheDocument();
   });
 
+  it("반 선택은 이름 버튼만이고 행 전체 hover가 없다", async () => {
+    await readyManage();
+
+    const name = screen.getByRole("button", { name: "중2 기초반" });
+    expect(name.closest("tr")?.className ?? "").not.toMatch(/hover:bg-white/);
+    expect(name.closest("tr")?.className ?? "").not.toMatch(/cursor-pointer/);
+  });
+
   it("다른 반을 고르면 그 반 학생만 보여 준다", async () => {
     const { user } = await readyManage();
 
@@ -141,6 +149,8 @@ describe("[T2.3 S-07] 진도 — 다음 소단원 1클릭 · 트리 보조", () 
     const { user } = await readyManage();
     const advance = screen.getByRole("button", { name: "다음 소단원" });
     expect(advance).toHaveClass("bg-[#1A73E8]");
+    expect(advance.className).toMatch(/cursor-pointer/);
+    expect(advance.className).toMatch(/disabled:cursor-not-allowed/);
 
     await user.click(advance);
 

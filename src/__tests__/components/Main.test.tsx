@@ -188,6 +188,39 @@ describe("[T4.3 S-03] 메인 — 수동 전환·진도 1클릭", () => {
   });
 });
 
+describe("[T4.3 S-03] 메인 — 마우스 어포던스", () => {
+  it("반 카드 본체는 클릭 대상이 아니다", async () => {
+    await renderMain();
+
+    const card = screen.getByRole("article", { name: "중2 심화반" });
+    expect(card.tagName).toBe("ARTICLE");
+    expect(card.className).not.toMatch(/cursor-pointer/);
+    expect(card).not.toHaveAttribute("onclick");
+  });
+
+  it("직접 선택은 비활성이고 금지 커서다", async () => {
+    await renderMain();
+
+    const pick = screen.getByRole("button", { name: "직접 선택" });
+    expect(pick).toBeDisabled();
+    expect(pick.className).toMatch(/cursor-not-allowed/);
+  });
+
+  it("대장부 행은 hover로 클릭처럼 보이지 않는다", async () => {
+    const { user } = await renderMain();
+
+    await user.click(screen.getByRole("button", { name: /전체 표/ }));
+
+    const table = screen.getByRole("table");
+    const rows = within(table).getAllByRole("row");
+    for (const row of rows.slice(1)) {
+      expect(row.className).not.toMatch(/hover:bg-white/);
+      expect(row.className).not.toMatch(/cursor-pointer/);
+    }
+    expect(screen.getByRole("link", { name: "검수" })).toBeInTheDocument();
+  });
+});
+
 describe("[T4.3 S-03] 메인 — 전부 완료면 대장부로 자동 전환", () => {
   it("모든 반이 인쇄 완료면 표를 열고 오늘 완료를 보여 준다", async () => {
     server.use(
