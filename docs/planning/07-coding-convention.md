@@ -362,3 +362,4 @@ feat(generator): 난이도 배분 알고리즘 구현
 | D-34 | AI 생성 문제 | AI 생성/변형 문항은 **카테고리 메타데이터 완비**(단원·개념·난이도·유형·source=ai_generated 등)로 따로 콜렉션·재사용 가능해야 함. 그리고 기존 문항과 **이질감 없이 융합**(튀지 않게). 향후 자동 출제 구현 시 필수 |
 | D-35 | 학생 접점 | **학생 포털 없음** — 인쇄 배포 방식 유지. 학생은 로그인해 문제를 보지 않는다. (학생 개인 시험 결과 종합 판단 패널은 향후 별도 계획) |
 | D-36 | 문제 렌더링 | 수식·본문 렌더는 **mathgen 하네스를 그대로 이식**해 쓴다(`react-markdown` + `remark-math` + `rehype-katex`, 정본: `mathgen-ai/components/MarkdownRenderer.tsx`). 문제은행·검수·인쇄가 `ProblemContent`/`MathText` 한 경로만 사용 — 자체 렌더러 재작성 금지. OCR 이관 데이터는 렌더 전 `parseProblemContent`로 정규화(이중 개행 합치기, 보기 분해, 중복 꼬리 제거) |
+| D-37 | 기출 추출은 **완료본 한정** | N드라이브 기출 추출 대상은 워드본을 PDF로 변환한 **`(완료)` 표기 파일뿐**. 우선순위 `HWP 2 PDF`의 `(완료).PDF` > 기타 `(완료).PDF` > `(완료).hwp`(PDF 변환본이 없을 때만). 비완료·스캔본은 **해당 시험지의 완료본이 아예 없을 때만** 예외로 허용하고 그 사유를 기록한다. 근거: 완료본은 텍스트 레이어가 살아 있어 OCR 훼손 0.3% vs 1.6%, 정답 결손 9.4% vs 20.0%(2026-08-14 전수 실측). 대기열 산출은 `scripts/qa/select-final-sources.py`, 상세는 `docs/planning/08-import-ledger.md` §5 |

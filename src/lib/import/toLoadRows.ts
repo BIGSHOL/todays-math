@@ -1,3 +1,4 @@
+import { allowNonFinalSource, isFinalSource } from "./finalSource";
 import type { ImportDraft } from "./types";
 
 /** Prisma Problem.createMany에 넣을 최소 행. DB 클라이언트를 여기서 import하지 않는다. */
@@ -58,6 +59,19 @@ export function toLoadRows(
       skipped.push({
         externalId: draft.externalId,
         reason: `정답이 ${IMPORT_TEXT_MAX}자를 초과합니다.`,
+      });
+      continue;
+    }
+    // D-37 — 기출은 완료본에서만 추출한다. 스캔본은 OCR 훼손률이 5배다.
+    if (
+      draft.source === "past_exam" &&
+      !isFinalSource(draft.sourceFile) &&
+      !allowNonFinalSource()
+    ) {
+      skipped.push({
+        externalId: draft.externalId,
+        reason:
+          "완료본이 아닌 원본입니다(D-37). 완료본이 없는 시험지라면 ALLOW_NON_FINAL_SOURCE=1로 허용하세요.",
       });
       continue;
     }
