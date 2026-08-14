@@ -46,6 +46,18 @@ AI가 생성한 코드는 반드시 검증해야 합니다:
 - `[협의 필요]` 상태의 화면은 시안/선택지를 먼저 제시하고 원장님 확정을 받은 후 구현
 - AI 공장식 스타일 금지 목록(05 문서 섹션 0)을 모든 UI 작업에서 준수
 
+### 1.4 마우스 어포던스 (D-30, 강제)
+
+손가락 커서와 hover 배경은 **실제로 누르는 컨트롤에만** 둔다. 카드·표 행·학생 이름처럼 클릭되지 않는 표면에 쓰면 원장이 속는다.
+
+| 허용 | 금지 |
+|------|------|
+| `<button>`, `<a href>`, `<select>`, 라디오/체크, 활성 `Button`/`Link` | `article`/`tr`/`div`에 `cursor-pointer` |
+| 비활성은 `cursor-not-allowed` (호버 색 변화 없음) | 클릭 없는 `<tr className="hover:bg-white">` |
+| 행 선택은 이름 `<button>` | `<div onClick>` (button/role="button" 없음) |
+
+검사: `src/lint/scanAffordance.mjs` — ESLint `affordance/no-false-affordance`, `npm run lint:affordance`, 커밋 시 lint-staged. 우회(`eslint-disable`, 검사 파일 삭제) 금지.
+
 ---
 
 ## 2. 프로젝트 구조
@@ -234,6 +246,7 @@ npx playwright test    # E2E
 | Claude API 연동 | MSW 모킹 테스트 + 수동 스모크 테스트 (실제 호출은 비용 발생) |
 | 인쇄 레이아웃 | E2E 미리보기 스크린샷 + **실물 프린터 출력 검수** |
 | 수식 렌더링 | 대표 수식 케이스(분수·루트·지수·도형 기호) 렌더링 테스트 |
+| 마우스 어포던스 (D-30) | `npm run lint:affordance` + ESLint. 카드/행에 손가락·거짓 hover가 있으면 실패 |
 
 ### 6.3 오류 로그 공유 규칙
 
@@ -298,14 +311,15 @@ feat(generator): 난이도 배분 알고리즘 구현
 // package.json
 {
   "lint-staged": {
-    "*.{ts,tsx}": ["eslint --fix", "prettier --write"]
+    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+    "src/**/*.{tsx,jsx,css}": "node src/lint/check-affordance.mjs"
   }
 }
 ```
 
 ---
 
-## Decision Log 전체 (D-01 ~ D-24)
+## Decision Log 전체 (D-01 ~ D-30)
 
 | ID | 항목 | 선택 |
 |----|------|------|
@@ -338,3 +352,4 @@ feat(generator): 난이도 배분 알고리즘 구현
 | D-27 | Unit.orderIndex | 전역 연속값 (학년 경계 넘는 범위 계산 대비) |
 | D-28 | 시험지 지면 | 자습(Jaseup) H1 금색 명조. 학원명+이름/반. 배점 없음(맞은 개수/전체). 장당 2문항 |
 | D-29 | 잔여 UI 문법 | 원장님 overnight 위임. H5×G2를 S-01/S-02/S-04/S-05/S-07/S-08에 확장. 아이콘 없음. 화면 폰트 Pretendard+Malgun. 상세는 05 §8.6 |
+| D-30 | 마우스 어포던스 | 손가락/호버는 실제 조작 가능한 컨트롤만. 카드·행 본체에 cursor-pointer·행 hover 금지. ESLint+테스트+lint-staged로 강제 |

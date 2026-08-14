@@ -51,6 +51,11 @@ git worktree list | grep "phase/1-auth-ui" || git worktree add ../testautocreato
    - ❌ 목적 없는 이모지·아이콘 남발
    - ❌ 화면마다 반복되는 동일 카드 그리드
 4. UI 문구는 간결·사무적 (D-08): "출제 완료", "인쇄하기" — 느낌표·이모지 없음
+5. **마우스 어포던스 (D-30, 강제)**: 손가락/호버는 버튼·링크·셀렉트·라디오만.
+   ❌ 카드/`<tr>`/`<article>`에 `cursor-pointer`
+   ❌ 클릭 없는 행 `hover:bg-white`
+   ❌ `<div onClick>` (role="button" 없음)
+   커밋 전 `npm run lint:affordance`. 우회 금지.
 
 ## 📢 작업 시작 시 출력 메시지 (필수!)
 

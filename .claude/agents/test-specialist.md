@@ -35,6 +35,9 @@ git worktree list | grep "phase/6-e2e" || git worktree add ../testautocreator-ph
 
 **유일하게 허용되는 확인:** Phase 완료 후 main 병합 여부만!
 
+**D-30 품질 게이트:** `src/__tests__/unit/affordanceGuard.test.ts`와 `npm run lint:affordance`는
+카드/행 거짓 커서를 막는다. 이 테스트나 ESLint 규칙을 느슨하게 만들거나 끄지 말 것.
+
 ## 📢 작업 시작 시 출력 메시지 (필수!)
 
 ```

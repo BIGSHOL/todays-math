@@ -13,7 +13,7 @@
 | `docs/planning/04-database-design.md` | ERD 9개 엔티티 |
 | `docs/planning/05-design-system.md` | 디자인 — **`[협의 필요]` 항목은 미확정!** |
 | `docs/planning/06-tasks.md` | 태스크 목록 (M0~M6, 21개) — `/orchestrate`가 사용 |
-| `docs/planning/07-coding-convention.md` | 컨벤션, 도메인 용어 SSOT, Decision Log D-01~24 |
+| `docs/planning/07-coding-convention.md` | 컨벤션, 도메인 용어 SSOT, Decision Log D-01~30 |
 
 ## 기술 스택
 
@@ -35,13 +35,17 @@ Next.js 15+ 풀스택 단독 (App Router, TypeScript) · Tailwind CSS v4 (기성
 5. **UI 문구는 간결·사무적** (D-08): "출제 완료", "인쇄하기" — 느낌표·이모지 없음.
 6. **인쇄 관련 변경은 실물 프린터 출력 검수까지가 완료 조건.**
 7. Claude API 키는 서버 환경변수로만. 테스트에서 실호출 금지.
+8. **마우스 어포던스 (D-30, 강제)**: 손가락 커서와 hover 배경은 실제로 누르는 컨트롤에만.
+   카드·표 행·장식 표면에 `cursor-pointer` / 행 `hover:bg-*` / `<div onClick>` 금지.
+   `npm run lint:affordance`와 ESLint가 막는다. 검사 우회 금지.
 
 ## 명령어
 
 ```bash
 npm run dev          # 개발 서버
 npm run test         # Vitest
-npm run lint         # ESLint
+npm run lint         # ESLint (D-30 어포던스 포함)
+npm run lint:affordance  # 마우스 어포던스 전수 검사 (D-30)
 npm run type-check   # tsc --noEmit
 npx playwright test  # E2E
 docker compose up -d # 로컬 PostgreSQL
@@ -136,3 +140,13 @@ docker compose up -d # 로컬 PostgreSQL
   한 번만 로드.
 - **교훈**: 업스트림 "3단 방어"를 이식할 때도 현재 KaTeX 메이저의 실제 실패 DOM을
   픽스처로 한 번 찍어서 가드를 맞춰라. 클래스 이름만 믿으면 침묵 회귀가 난다.
+
+### [2026-08-14] 반 카드 손가락 커서 거짓말 (cursor, 어포던스, D-30)
+- **상황**: 메인 반 카드 전체에 `cursor-pointer`와 행 `hover:bg-white`가 걸려 원장이
+  카드를 눌러도 아무 일도 없었다. 실제 동작은 「출제」링크와 패널 「반 선택」뿐이었다.
+- **문제**: 문서/리뷰만으로는 같은 패턴이 표·문제 카드·비활성 버튼에 다시 들어온다.
+- **해결**: 전역 CSS로 활성 컨트롤만 pointer, 비활성은 not-allowed. AST 스캐너
+  (`src/lint/scanAffordance.mjs`)가 article/tr cursor-pointer, 행 hover, div onClick을
+  ESLint·vitest·lint-staged에서 error로 막는다 (D-30).
+- **교훈**: "클릭처럼 보이는 것"은 제품 버그다. 컨벤션 문장만 쓰지 말고 커밋이
+  실패하게 만들 것. eslint-disable로 이 규칙을 끄지 말 것.

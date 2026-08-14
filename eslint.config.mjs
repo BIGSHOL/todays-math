@@ -3,10 +3,19 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import prettierConfig from "eslint-config-prettier/flat";
 
+import affordance from "./src/lint/affordance-plugin.mjs";
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   prettierConfig,
+  {
+    files: ["src/**/*.{tsx,jsx}"],
+    plugins: { affordance },
+    rules: {
+      "affordance/no-false-affordance": "error",
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

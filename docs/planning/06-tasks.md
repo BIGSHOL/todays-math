@@ -33,8 +33,9 @@
 | 수식/인쇄 | KaTeX + 브라우저 인쇄 CSS |
 | 테스트 | Vitest + RTL + MSW + Playwright |
 
-**⚠️ UI 태스크 공통 게이트 (D-23)**: 화면 구현 전 `05-design-system.md`에서 해당 화면이
+**⚠️ UI 태스크 공통 게이트 (D-23, D-30)**: 화면 구현 전 `05-design-system.md`에서 해당 화면이
 `[확정]`인지 확인. `[협의 필요]`면 시안 제시 → 원장님 확정 후 구현 착수.
+클릭되지 않는 카드/행에 `cursor-pointer`·행 hover를 두면 D-30 검사가 커밋을 막는다.
 
 ---
 
