@@ -32,6 +32,10 @@ const CASES: { title: string; text: string }[] = [
     text: "호 $\\overparen{AB}$ 의 길이",
   },
   {
+    title: "순환소수",
+    text: "순환소수 $0.\\overline{3}$, $0.4\\overline{5}$, $1.2\\overline{34}$",
+  },
+  {
     title: "\\( \\) 구분자",
     text: "값 \\( \\dfrac{a}{b} \\) 이다",
   },

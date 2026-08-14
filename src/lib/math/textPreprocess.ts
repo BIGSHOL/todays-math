@@ -363,6 +363,7 @@ export const applyMathInnerNormalization = (inner: string): string => {
   // `\$` (의도된 리터럴 달러 기호) 는 보존.
   s = s.replace(/(?<!\\)\$/g, "");
   for (const [re, repl] of UNICODE_MATH_MAP) s = s.replace(re, repl);
+  s = repeatingDigitsToDots(s);
   // improperToMixed 가 `\frac` 와 `\dfrac` 둘 다 매치, 반환은 `\frac` 표준화.
   // 그 뒤 단계 6 에서 모두 `\dfrac` 로 업그레이드.
   s = improperToMixed(s);
@@ -469,6 +470,29 @@ const VEC_MULTI_REGEX = /\\vec\{\s*([A-Z][A-Z']+)\s*\}/g;
 const VEC_SINGLE_UPPER_REGEX = /\\vec\{\s*([A-Z]'*)\s*\}/g;
 
 const PURE_LABEL_REGEX = /^\s*([A-Z][A-Z']*)\s*$/;
+
+/**
+ * 한국 중학 순환소수 — 순환마디 첫·끝 숫자 위에 점.
+ * 은행/OCR/AI 는 `\overline{3}` 막대를 자주 쓰지만, 중2 교과서는 점이다.
+ * 선분 `\overline{AB}` 는 글자라서 그대로 둔다.
+ */
+const dotsOverRepeatingDigits = (digits: string): string => {
+  if (digits.length === 1) return `\\dot{${digits}}`;
+  if (digits.length === 2) {
+    return `\\dot{${digits[0]}}\\dot{${digits[1]}}`;
+  }
+  const first = digits[0]!;
+  const last = digits[digits.length - 1]!;
+  return `\\dot{${first}}${digits.slice(1, -1)}\\dot{${last}}`;
+};
+
+const repeatingDigitsToDots = (math: string): string =>
+  math
+    .replace(/\\(?:overline|bar)\s*\{(\d+)\}/g, (_m, digits: string) =>
+      dotsOverRepeatingDigits(digits),
+    )
+    .replace(/(\d)\u0305/g, (_m, digit: string) => `\\dot{${digit}}`)
+    .replace(/(\d)\u0304/g, (_m, digit: string) => `\\dot{${digit}}`);
 
 const uprightGeometryLabels = (inner: string): string => {
   let out = inner;
@@ -835,7 +859,7 @@ export const wrapBareConditionBoxes = (content: string): string => {
 export const LATEX_WRAP_TRIGGER_SOURCE =
   "\\\\(?:displaystyle|textstyle|scriptstyle|d?frac|tfrac|cfrac|sqrt|left|right|" +
   "bigg?[lrm]?|Bigg?[lrm]?|d?binom|tbinom|sum|prod|coprod|int|iint|iiint|oint|" +
-  "lim|limsup|liminf|cdot|times|div|pm|mp|cdots|ldots|dots|vdots|ddots|vec|" +
+  "lim|limsup|liminf|cdot|times|div|pm|mp|cdots|ldots|dots|vdots|ddots|dot|vec|" +
   "widehat|widetilde|hat|tilde|bar|overline|underline|overrightarrow|" +
   "overleftarrow|overset|underset|" +
   "stackrel|begin|end|over|atop|max|min|log|ln|exp|sin|cos|tan|sec|csc|cot|" +

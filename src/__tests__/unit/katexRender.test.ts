@@ -103,6 +103,33 @@ describe("[KaTeX] 전처리 — preprocessMathText", () => {
     expect(inner).toMatch(/overgroup|geom-arc-wrap/);
   });
 
+  it("숫자 \\overline 은 한국 중학 순환점(\\dot)으로 바꾼다", () => {
+    expect(applyMathInnerNormalization("0.\\overline{3}")).toContain(
+      "\\dot{3}",
+    );
+    expect(applyMathInnerNormalization("0.\\overline{3}")).not.toContain(
+      "\\overline{3}",
+    );
+    expect(applyMathInnerNormalization("0.4\\overline{5}")).toContain(
+      "\\dot{5}",
+    );
+    expect(applyMathInnerNormalization("0.\\overline{45}")).toBe(
+      applyMathInnerNormalization("0.\\dot{4}\\dot{5}"),
+    );
+    expect(applyMathInnerNormalization("1.2\\overline{34}")).toContain(
+      "\\dot{3}\\dot{4}",
+    );
+    expect(applyMathInnerNormalization("0.\\overline{234}")).toContain(
+      "\\dot{2}3\\dot{4}",
+    );
+  });
+
+  it("선분 \\overline{AB} 는 순환점으로 바꾸지 않는다", () => {
+    const inner = applyMathInnerNormalization("\\overline{AB}");
+    expect(inner).toContain("\\overline");
+    expect(inner).not.toMatch(/\\dot\{A\}/);
+  });
+
   it("\\left\\left 와 빈 분수를 정리한다", () => {
     expect(cleanMalformedLatex("\\left\\left(x\\right\\right)")).not.toContain(
       "\\left\\left",
@@ -138,5 +165,15 @@ describe("[KaTeX] 혼합 본문 — renderMathHtml", () => {
     expectSafeHtml(html);
     expect(html).toContain("katex");
     expect(html).toContain("의 값은?");
+  });
+
+  it("순환소수 본문은 막대가 아니라 점 accent 로 그린다", () => {
+    const html = renderMathHtml(
+      "순환소수 $0.\\overline{3}$을 분수로 나타내어라.",
+    );
+    expectSafeHtml(html);
+    expect(html).toContain("katex");
+    expect(html).toContain("accent");
+    expect(html).not.toMatch(/overline|Overline/);
   });
 });
