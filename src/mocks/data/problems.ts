@@ -476,6 +476,29 @@ export const MOCK_PROBLEM_OTHER_USER: ProblemEntity = {
   updatedAt: "2026-05-01T09:00:00Z",
 };
 
+/**
+ * 정답이 이관 센티널 "(정답 없음)"인 공용 문항.
+ * OCR 이관분 5,781건(62.9%)이 이 상태였고, 출제되면 정답지가 비어 채점이 불가능하다.
+ * 자동 출제 풀에서 제외돼야 한다.
+ */
+export const MOCK_PROBLEM_MISSING_ANSWER: ProblemEntity = {
+  id: "33333333-3333-4333-8333-333333333333",
+  userId: USER_TEACHER_ID,
+  unitId: MOCK_UNITS[0]!.id,
+  source: "transformed",
+  originProblemId: null,
+  difficulty: "easy",
+  problemType: "계산",
+  content: "정답이 이관되지 않은 문항.",
+  answer: "(정답 없음)",
+  solution: null,
+  reviewStatus: "approved",
+  directUseAllowed: true,
+  pool: "shared",
+  createdAt: "2026-05-01T09:00:00Z",
+  updatedAt: "2026-05-01T09:00:00Z",
+};
+
 /** USER_OTHER_ID 소유 shared — 공용 풀은 다른 강사도 조회·출제한다 (D-31). */
 export const MOCK_PROBLEM_OTHER_SHARED: ProblemEntity = {
   id: PROBLEM_OTHER_SHARED_ID,

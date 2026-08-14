@@ -51,6 +51,7 @@ import {
   NOT_FOUND_ID,
   PROBLEM_OTHER_ID,
   USER_TEACHER_ID,
+  MOCK_PROBLEM_MISSING_ANSWER,
 } from "@/mocks/data";
 
 function jsonRequest(url: string, method: string, body?: unknown) {
@@ -463,6 +464,18 @@ describe("[T3.1] findEligibleProblems — 출제 가능 풀 조회", () => {
     expect(rows.every((p) => p.reviewStatus === "approved")).toBe(true);
     expect(rows.some((p) => p.id === MOCK_PROBLEM_OTHER_USER.id)).toBe(false);
     expect(rows.some((p) => p.id === MOCK_PROBLEM_OTHER_SHARED.id)).toBe(true);
+  });
+
+  it("정답이 없는 문항((정답 없음) 센티널)은 출제 풀에서 제외한다", async () => {
+    // OCR 이관분 5,781건(62.9%)이 이 상태였고, 출제되면 정답지가 비어 채점 불가.
+    const rows = await findEligibleProblems({
+      userId: USER_TEACHER_ID,
+      unitIds: [MOCK_PROBLEM_MISSING_ANSWER.unitId],
+    });
+    expect(rows.some((p) => p.id === MOCK_PROBLEM_MISSING_ANSWER.id)).toBe(
+      false,
+    );
+    expect(rows.every((p) => p.answer !== "(정답 없음)")).toBe(true);
   });
 
   it("difficulty를 주면 해당 난이도만 반환한다", async () => {

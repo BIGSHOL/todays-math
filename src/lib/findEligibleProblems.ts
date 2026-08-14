@@ -3,12 +3,13 @@
  * T3.1 REFACTOR 산출물 — GET /api/problems의 범용 필터 조회에서 자동 출제 전용 조회를
  * 분리해 Phase 4, T4.2(자동 출제 API)가 그대로 재사용할 수 있게 한다(06-tasks.md T3.1 REFACTOR).
  *
- * 자동 출제 규칙: review_status='approved' 이고 directUseAllowed=true 이며
+ * 자동 출제 규칙: review_status='approved' 이고 directUseAllowed=true 이고 정답이 있으며
  * 공용 풀이거나 본인 private인 문제만 대상으로 한다(D-22, D-26, D-31).
  */
 import type { Difficulty } from "@/contracts/common.contract";
 import type { ProblemEntity } from "@/contracts/problem.contract";
 import { db } from "@/lib/db";
+import { MISSING_ANSWER } from "@/lib/missingAnswer";
 import { problemVisibleWhere } from "@/lib/problemPool";
 import { serializeProblem } from "@/lib/serializers";
 
@@ -36,6 +37,8 @@ export async function findEligibleProblems(
           unitId: { in: params.unitIds },
           reviewStatus: "approved",
           directUseAllowed: true,
+          // 정답이 없으면 정답지가 비어 채점이 불가능하다 → 출제 대상에서 제외.
+          answer: { not: MISSING_ANSWER },
           ...(params.difficulty ? { difficulty: params.difficulty } : {}),
         },
       ],

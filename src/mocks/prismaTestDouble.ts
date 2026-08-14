@@ -28,6 +28,7 @@ import {
   MOCK_CLASSES,
   MOCK_CURRENT_PROGRESS_UNIT,
   MOCK_PROBLEM_OTHER_SHARED,
+  MOCK_PROBLEM_MISSING_ANSWER,
   MOCK_PROBLEM_OTHER_USER,
   MOCK_PROBLEMS,
   MOCK_PROGRESS,
@@ -228,6 +229,7 @@ export function resetPrismaTestDouble() {
     ...MOCK_PROBLEMS,
     MOCK_PROBLEM_OTHER_USER,
     MOCK_PROBLEM_OTHER_SHARED,
+    MOCK_PROBLEM_MISSING_ANSWER,
     ...extraEligibleProblems(),
   ].map(toProblemRow);
   testRows = MOCK_TESTS.map(toTestRow);
@@ -291,8 +293,9 @@ function matchesWhere<T extends object>(
       !Array.isArray(cond) &&
       !(cond instanceof Date)
     ) {
-      const obj = cond as { in?: unknown[] };
+      const obj = cond as { in?: unknown[]; not?: unknown };
       if (Array.isArray(obj.in)) return obj.in.includes(value);
+      if ("not" in obj) return value !== obj.not;
     }
     return value === cond;
   });
