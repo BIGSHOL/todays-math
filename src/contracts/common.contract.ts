@@ -96,6 +96,7 @@ export const errorCodeSchema = z.enum([
   "INSUFFICIENT_PROBLEMS",
   "AI_GENERATION_FAILED",
   "CONFLICT",
+  "INTERNAL_ERROR",
 ]);
 export type ErrorCode = z.infer<typeof errorCodeSchema>;
 

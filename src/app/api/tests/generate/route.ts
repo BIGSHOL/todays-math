@@ -5,7 +5,11 @@
 import type { NextRequest } from "next/server";
 
 import { testGenerateRequestSchema } from "@/contracts/test.contract";
-import { unauthorizedError, validationError } from "@/lib/apiResponse";
+import {
+  jsonError,
+  unauthorizedError,
+  validationError,
+} from "@/lib/apiResponse";
 import { getSessionUser } from "@/lib/session";
 import { generateDraftTest } from "@/lib/tests/generateDraftTest";
 
@@ -17,5 +21,11 @@ export async function POST(request: NextRequest) {
   const parsed = testGenerateRequestSchema.safeParse(body);
   if (!parsed.success) return validationError(parsed.error);
 
-  return generateDraftTest(session, parsed.data);
+  try {
+    return await generateDraftTest(session, parsed.data);
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "출제 중 오류가 발생했습니다.";
+    return jsonError("INTERNAL_ERROR", message, 500);
+  }
 }
