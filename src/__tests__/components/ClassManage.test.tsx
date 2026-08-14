@@ -8,7 +8,7 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { AppChrome } from "@/components/chrome/AppChrome";
 import { ClassManage } from "@/components/class/ClassManage";
@@ -18,6 +18,13 @@ import {
   MOCK_UNITS,
 } from "@/mocks/data";
 import { server } from "@/mocks/server";
+import { prismaTestDouble } from "@/mocks/prismaTestDouble";
+
+const { connection } = vi.hoisted(() => ({
+  connection: vi.fn(async () => undefined),
+}));
+
+vi.mock("next/server", () => ({ connection }));
 
 function renderManage() {
   const user = userEvent.setup();
@@ -105,18 +112,28 @@ describe("[T2.3 S-07] 반/학생 관리 — 크롬·표·학생", () => {
   });
 
   it("페이지는 AppChrome으로 감싼다", async () => {
-    const { default: ClassesPage } = await import("@/app/(main)/classes/page");
-    const ui = await ClassesPage();
-    render(ui);
+    const findMany = vi.spyOn(prismaTestDouble.unit, "findMany");
+    try {
+      const { default: ClassesPage } =
+        await import("@/app/(main)/classes/page");
+      const ui = await ClassesPage();
+      render(ui);
 
-    expect(screen.getByRole("link", { name: "반" })).toHaveAttribute(
-      "href",
-      "/classes",
-    );
-    expect(screen.getByRole("link", { name: "메인" })).toHaveAttribute(
-      "href",
-      "/",
-    );
+      expect(connection).toHaveBeenCalledOnce();
+      expect(connection.mock.invocationCallOrder[0]).toBeLessThan(
+        findMany.mock.invocationCallOrder[0]!,
+      );
+      expect(screen.getByRole("link", { name: "반" })).toHaveAttribute(
+        "href",
+        "/classes",
+      );
+      expect(screen.getByRole("link", { name: "메인" })).toHaveAttribute(
+        "href",
+        "/",
+      );
+    } finally {
+      findMany.mockRestore();
+    }
   });
 });
 

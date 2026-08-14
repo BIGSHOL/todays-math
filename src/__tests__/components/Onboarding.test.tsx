@@ -26,12 +26,18 @@ import {
   validationError,
 } from "@/mocks/handlers/_helpers";
 import { server } from "@/mocks/server";
+import { prismaTestDouble } from "@/mocks/prismaTestDouble";
 
-const { push } = vi.hoisted(() => ({ push: vi.fn() }));
+const { connection, push } = vi.hoisted(() => ({
+  connection: vi.fn(async () => undefined),
+  push: vi.fn(),
+}));
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push }),
 }));
+
+vi.mock("next/server", () => ({ connection }));
 
 function allowCreatedClassWrites() {
   server.use(
@@ -99,6 +105,7 @@ async function addStudent(user: UserEvent, name = "이서준") {
 
 describe("[T1.3] S-02 온보딩", () => {
   beforeEach(() => {
+    connection.mockClear();
     push.mockReset();
     allowCreatedClassWrites();
   });
@@ -225,12 +232,21 @@ describe("[T1.3] S-02 온보딩", () => {
   });
 
   it("페이지가 단원 목록으로 3단 폼을 렌더한다", async () => {
-    const page = await OnboardingPage();
-    render(page);
+    const findMany = vi.spyOn(prismaTestDouble.unit, "findMany");
+    try {
+      const page = await OnboardingPage();
+      render(page);
 
-    expect(
-      screen.getByRole("heading", { name: "반 만들기" }),
-    ).toBeInTheDocument();
-    expect(screen.getByLabelText("소단원")).toBeInTheDocument();
+      expect(connection).toHaveBeenCalledOnce();
+      expect(connection.mock.invocationCallOrder[0]).toBeLessThan(
+        findMany.mock.invocationCallOrder[0]!,
+      );
+      expect(
+        screen.getByRole("heading", { name: "반 만들기" }),
+      ).toBeInTheDocument();
+      expect(screen.getByLabelText("소단원")).toBeInTheDocument();
+    } finally {
+      findMany.mockRestore();
+    }
   });
 });

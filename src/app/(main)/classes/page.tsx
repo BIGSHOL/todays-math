@@ -1,8 +1,12 @@
+import { connection } from "next/server";
+
 import { AppChrome } from "@/components/chrome/AppChrome";
 import { ClassManage } from "@/components/class/ClassManage";
 import type { UnitNode } from "@/lib/units/groupUnits";
 
 export default async function ClassesPage() {
+  await connection();
+
   let units: UnitNode[] = [];
   try {
     const { db } = await import("@/lib/db");
