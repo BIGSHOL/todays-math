@@ -16,9 +16,15 @@ import {
   deleteResponseSchema,
   idParamSchema,
 } from "@/contracts/common.contract";
-import { jsonOk, unauthorizedError, validationError } from "@/lib/apiResponse";
+import {
+  jsonOk,
+  notFoundError,
+  unauthorizedError,
+  validationError,
+} from "@/lib/apiResponse";
 import { db } from "@/lib/db";
 import { requireOwnedProblem } from "@/lib/ownership";
+import { isPrismaErrorCode } from "@/lib/prismaErrors";
 import { serializeProblem } from "@/lib/serializers";
 import { getSessionUser } from "@/lib/session";
 
@@ -55,10 +61,28 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
   const parsed = problemUpdateRequestSchema.safeParse(body);
   if (!parsed.success) return validationError(parsed.error);
 
-  const updated = await db.problem.update({
-    where: { id },
-    data: parsed.data,
-  });
+  if (parsed.data.unitId) {
+    const unit = await db.unit.findUnique({
+      where: { id: parsed.data.unitId },
+    });
+    if (!unit) return notFoundError("소단원");
+  }
+
+  let updated;
+  try {
+    updated = await db.problem.update({
+      where: { id },
+      data: parsed.data,
+    });
+  } catch (error) {
+    if (parsed.data.unitId && isPrismaErrorCode(error, "P2003")) {
+      const currentUnit = await db.unit.findUnique({
+        where: { id: parsed.data.unitId },
+      });
+      if (!currentUnit) return notFoundError("소단원");
+    }
+    throw error;
+  }
   return jsonOk(problemResponseSchema, { data: serializeProblem(updated) });
 }
 

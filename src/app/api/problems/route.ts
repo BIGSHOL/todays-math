@@ -15,8 +15,14 @@ import {
   problemListResponseSchema,
   problemResponseSchema,
 } from "@/contracts/problem.contract";
-import { jsonOk, unauthorizedError, validationError } from "@/lib/apiResponse";
+import {
+  jsonOk,
+  notFoundError,
+  unauthorizedError,
+  validationError,
+} from "@/lib/apiResponse";
 import { db } from "@/lib/db";
+import { isPrismaErrorCode } from "@/lib/prismaErrors";
 import { serializeProblem } from "@/lib/serializers";
 import { getSessionUser } from "@/lib/session";
 
@@ -29,18 +35,32 @@ export async function POST(request: NextRequest) {
   const parsed = problemCreateRequestSchema.safeParse(body);
   if (!parsed.success) return validationError(parsed.error);
 
-  const created = await db.problem.create({
-    data: {
-      userId: session.id,
-      unitId: parsed.data.unitId,
-      source: parsed.data.source,
-      difficulty: parsed.data.difficulty,
-      problemType: parsed.data.problemType,
-      content: parsed.data.content,
-      answer: parsed.data.answer,
-      solution: parsed.data.solution ?? null,
-    },
-  });
+  const unit = await db.unit.findUnique({ where: { id: parsed.data.unitId } });
+  if (!unit) return notFoundError("소단원");
+
+  let created;
+  try {
+    created = await db.problem.create({
+      data: {
+        userId: session.id,
+        unitId: parsed.data.unitId,
+        source: parsed.data.source,
+        difficulty: parsed.data.difficulty,
+        problemType: parsed.data.problemType,
+        content: parsed.data.content,
+        answer: parsed.data.answer,
+        solution: parsed.data.solution ?? null,
+      },
+    });
+  } catch (error) {
+    if (isPrismaErrorCode(error, "P2003")) {
+      const currentUnit = await db.unit.findUnique({
+        where: { id: parsed.data.unitId },
+      });
+      if (!currentUnit) return notFoundError("소단원");
+    }
+    throw error;
+  }
 
   return jsonOk(
     problemResponseSchema,

@@ -106,6 +106,22 @@ describe("[T3.1] POST /api/problems — LaTeX 본문 무손실 저장", () => {
     expect(body.error.code).toBe("VALIDATION_ERROR");
   });
 
+  it("존재하지 않는 unitId는 NOT_FOUND(404)를 반환한다", async () => {
+    const res = await createProblem(
+      jsonRequest("http://localhost/api/problems", "POST", {
+        unitId: NOT_FOUND_ID,
+        source: "manual",
+        difficulty: "easy",
+        problemType: "계산",
+        content: "$1+1=?$",
+        answer: "2",
+      }),
+    );
+    expect(res.status).toBe(404);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.code).toBe("NOT_FOUND");
+  });
+
   it("source=past_exam 기출 등록은 201을 반환한다", async () => {
     const res = await createProblem(
       jsonRequest("http://localhost/api/problems", "POST", {
@@ -229,6 +245,20 @@ describe("[T3.1] PATCH /api/problems/{id}", () => {
     expect(res.status).toBe(400);
     const body = errorResponseSchema.parse(await res.json());
     expect(body.error.code).toBe("VALIDATION_ERROR");
+  });
+
+  it("존재하지 않는 unitId로 변경하면 NOT_FOUND(404)를 반환한다", async () => {
+    const res = await patchProblem(
+      jsonRequest(
+        `http://localhost/api/problems/${MOCK_PROBLEM_WITH_FRACTION.id}`,
+        "PATCH",
+        { unitId: NOT_FOUND_ID },
+      ),
+      withId(MOCK_PROBLEM_WITH_FRACTION.id),
+    );
+    expect(res.status).toBe(404);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.code).toBe("NOT_FOUND");
   });
 
   it("LaTeX 본문 수정이 원본 그대로 저장된다", async () => {
