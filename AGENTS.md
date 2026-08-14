@@ -7,3 +7,11 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+# Orca session cleanup
+
+When an Orca-managed task is fully complete, its changes have been merged into
+`main`, its worktree is clean, and it has no running work, remove the Orca
+worktree so the finished session no longer appears in the workspace list.
+Preserve its Git branch by default. Never remove an unmerged, dirty, or active
+worktree.
