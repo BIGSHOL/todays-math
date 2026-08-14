@@ -36,3 +36,19 @@ export function unitSectionName(
   }
   return BY_ID.get(unitIdValue) ?? "—";
 }
+
+export function adjacentUnitIds(
+  selectedUnitId: string | null,
+  units: readonly { id: string; orderIndex: number }[],
+): { prevId: string | null; nextId: string | null } {
+  if (!selectedUnitId || units.length === 0) {
+    return { prevId: null, nextId: null };
+  }
+  const sorted = [...units].sort((a, b) => a.orderIndex - b.orderIndex);
+  const index = sorted.findIndex((unit) => unit.id === selectedUnitId);
+  if (index < 0) return { prevId: null, nextId: null };
+  return {
+    prevId: sorted[index - 1]?.id ?? null,
+    nextId: sorted[index + 1]?.id ?? null,
+  };
+}

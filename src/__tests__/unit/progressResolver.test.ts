@@ -11,6 +11,7 @@ import {
   findLatestProgress,
   getCurrentProgress,
   nextOrderIndex,
+  prevOrderIndex,
   type ProgressRecordLike,
 } from "@/lib/progressResolver";
 import {
@@ -99,5 +100,9 @@ describe("[T2.2] getCurrentProgress — 반/개별 이중 구조", () => {
 describe("[T2.2] nextOrderIndex — 1클릭 진행(D-19)", () => {
   it("전역 연속 orderIndex의 다음 값을 반환한다", () => {
     expect(nextOrderIndex(416)).toBe(417);
+  });
+
+  it("이전 orderIndex를 반환한다", () => {
+    expect(prevOrderIndex(416)).toBe(415);
   });
 });

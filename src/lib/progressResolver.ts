@@ -66,3 +66,7 @@ export function getCurrentProgress<T extends ProgressRecordLike>({
 export function nextOrderIndex(currentOrderIndex: number): number {
   return currentOrderIndex + 1;
 }
+
+export function prevOrderIndex(currentOrderIndex: number): number {
+  return currentOrderIndex - 1;
+}

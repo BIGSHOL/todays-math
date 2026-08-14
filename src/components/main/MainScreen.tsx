@@ -6,7 +6,7 @@ import { AppChrome } from "@/components/chrome/AppChrome";
 import type { ClassEntity, ProgressEntity } from "@/contracts/class.contract";
 import type { TestEntity } from "@/contracts/test.contract";
 import type { UnitEntity } from "@/contracts/unit.contract";
-import { advanceProgress } from "@/lib/main/advanceProgress";
+import { recordProgress } from "@/lib/class/classApi";
 import { loadMainDashboard } from "@/lib/main/loadMainDashboard";
 import { buildClassRows, remainingCount, weekStats } from "@/lib/main/pipeline";
 
@@ -81,22 +81,28 @@ export function MainScreen() {
       ? (state.progressByClass[selectedClassId]?.unitId ?? null)
       : null;
 
-  const handleAdvance = useCallback(async () => {
-    if (!selectedClassId || state.status !== "ready") return;
-    setAdvanceError(null);
-    try {
-      const next = await advanceProgress(selectedClassId);
-      setState((prev) => {
-        if (prev.status !== "ready") return prev;
-        return {
-          ...prev,
-          progressByClass: { ...prev.progressByClass, [selectedClassId]: next },
-        };
-      });
-    } catch {
-      setAdvanceError("다음 소단원이 없습니다");
-    }
-  }, [selectedClassId, state.status]);
+  const handleStep = useCallback(
+    async (unitId: string) => {
+      if (!selectedClassId || state.status !== "ready") return;
+      setAdvanceError(null);
+      try {
+        const next = await recordProgress(selectedClassId, unitId);
+        setState((prev) => {
+          if (prev.status !== "ready") return prev;
+          return {
+            ...prev,
+            progressByClass: {
+              ...prev.progressByClass,
+              [selectedClassId]: next,
+            },
+          };
+        });
+      } catch {
+        setAdvanceError("진도를 저장하지 못했습니다");
+      }
+    },
+    [selectedClassId, state.status],
+  );
 
   if (state.status === "loading") {
     return (
@@ -157,8 +163,8 @@ export function MainScreen() {
           unmodifiedRate={stats?.unmodifiedRate ?? 0}
           error={advanceError}
           onSelectClass={setSelectedClassId}
-          onAdvance={() => {
-            void handleAdvance();
+          onStep={(unitId) => {
+            void handleStep(unitId);
           }}
         />
       </div>

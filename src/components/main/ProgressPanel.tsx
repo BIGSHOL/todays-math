@@ -1,19 +1,22 @@
 import type { ClassEntity } from "@/contracts/class.contract";
 import type { UnitEntity } from "@/contracts/unit.contract";
 
-import { unitSectionName } from "@/lib/main/unitLookup";
+import { adjacentUnitIds, unitSectionName } from "@/lib/main/unitLookup";
 
 type Props = {
   classes: ClassEntity[];
-  units: readonly Pick<UnitEntity, "id" | "section">[];
+  units: readonly Pick<UnitEntity, "id" | "section" | "orderIndex">[];
   selectedClassId: string;
   selectedUnitId: string | null;
   printedDays: number;
   unmodifiedRate: number;
   error: string | null;
   onSelectClass: (classId: string) => void;
-  onAdvance: () => void;
+  onStep: (unitId: string) => void;
 };
+
+const ARROW =
+  "inline-flex min-h-11 min-w-[44px] items-center justify-center border-2 border-ink text-[14px] font-black";
 
 export function ProgressPanel({
   classes,
@@ -24,9 +27,10 @@ export function ProgressPanel({
   unmodifiedRate,
   error,
   onSelectClass,
-  onAdvance,
+  onStep,
 }: Props) {
   const lesson = unitSectionName(selectedUnitId, units);
+  const { prevId, nextId } = adjacentUnitIds(selectedUnitId, units);
 
   return (
     <aside className="w-[250px] shrink-0 border-l-[3px] border-ink bg-side px-5 py-4">
@@ -57,20 +61,33 @@ export function ProgressPanel({
         >
           {lesson}
         </span>
-        <button
-          type="button"
-          onClick={onAdvance}
-          className="mr-1 cursor-pointer border-2 border-ink bg-ink px-3 py-1 text-[10.5px] font-black text-canvas"
-        >
-          다음 차시로
-        </button>
-        <button
-          type="button"
-          disabled
-          className="cursor-not-allowed border-2 border-ink px-3 py-1 text-[10.5px] font-black opacity-40"
-        >
-          직접 선택
-        </button>
+        <div className="mt-1 flex items-center gap-1">
+          <button
+            type="button"
+            aria-label="이전 차시"
+            disabled={!prevId}
+            onClick={() => {
+              if (prevId) onStep(prevId);
+            }}
+            className={`${ARROW} cursor-pointer disabled:cursor-not-allowed disabled:opacity-40`}
+          >
+            &lt;
+          </button>
+          <span className="min-w-0 flex-1 text-center text-[10.5px] font-black tracking-[1.2px]">
+            차시이동
+          </span>
+          <button
+            type="button"
+            aria-label="다음 차시"
+            disabled={!nextId}
+            onClick={() => {
+              if (nextId) onStep(nextId);
+            }}
+            className={`${ARROW} cursor-pointer disabled:cursor-not-allowed disabled:opacity-40`}
+          >
+            &gt;
+          </button>
+        </div>
         {error ? <p className="mt-2 text-g-red-text">{error}</p> : null}
       </div>
       <h3 className="mt-5 mb-2 border-t-[3px] border-ink pt-1.5 text-[10.5px] font-black tracking-[2.5px]">

@@ -78,8 +78,15 @@ describe("[T4.3 S-03] 메인 — MSW 기본 데이터 (스택)", () => {
       screen.getByRole("heading", { name: "진도 입력" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "다음 차시로" }),
+      screen.getByRole("button", { name: "이전 차시" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "다음 차시" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("차시이동")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "직접 선택" }),
+    ).not.toBeInTheDocument();
     expect(screen.getByText("이번 주")).toBeInTheDocument();
   });
 
@@ -160,18 +167,34 @@ describe("[T4.3 S-03] 메인 — 수동 전환·진도 1클릭", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("다음 차시로를 누르면 패널 현재 소단원이 다음 차시로 바뀐다", async () => {
+  it("다음 차시를 누르면 패널 현재 소단원이 다음 차시로 바뀐다", async () => {
     const { user } = await renderMain();
 
     expect(screen.getByLabelText("현재 소단원")).toHaveTextContent(
       "순환소수를 포함한 식의 계산",
     );
 
-    await user.click(screen.getByRole("button", { name: "다음 차시로" }));
+    await user.click(screen.getByRole("button", { name: "다음 차시" }));
 
     await waitFor(() => {
       expect(screen.getByLabelText("현재 소단원")).toHaveTextContent(
         "지수법칙",
+      );
+    });
+  });
+
+  it("이전 차시를 누르면 패널 현재 소단원이 이전 차시로 바뀐다", async () => {
+    const { user } = await renderMain();
+
+    expect(screen.getByLabelText("현재 소단원")).toHaveTextContent(
+      "순환소수를 포함한 식의 계산",
+    );
+
+    await user.click(screen.getByRole("button", { name: "이전 차시" }));
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("현재 소단원")).toHaveTextContent(
+        "순환소수의 분수 표현",
       );
     });
   });
@@ -198,12 +221,15 @@ describe("[T4.3 S-03] 메인 — 마우스 어포던스", () => {
     expect(card).not.toHaveAttribute("onclick");
   });
 
-  it("직접 선택은 비활성이고 금지 커서다", async () => {
+  it("차시 화살표는 활성일 때만 손가락이다", async () => {
     await renderMain();
 
-    const pick = screen.getByRole("button", { name: "직접 선택" });
-    expect(pick).toBeDisabled();
-    expect(pick.className).toMatch(/cursor-not-allowed/);
+    const next = screen.getByRole("button", { name: "다음 차시" });
+    const prev = screen.getByRole("button", { name: "이전 차시" });
+    expect(next).toBeEnabled();
+    expect(prev).toBeEnabled();
+    expect(next.className).toMatch(/cursor-pointer/);
+    expect(prev.className).toMatch(/cursor-pointer/);
   });
 
   it("대장부 행은 hover로 클릭처럼 보이지 않는다", async () => {
