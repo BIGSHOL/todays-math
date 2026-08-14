@@ -255,6 +255,17 @@ describe("[T0.5.1] test.contract", () => {
     expect(result.success).toBe(true);
   });
 
+  it("testGenerateRequestSchema — 문항 수와 난이도 배분 합이 다르면 reject한다", () => {
+    const result = testGenerateRequestSchema.safeParse({
+      classId: UUID_1,
+      testType: "daily",
+      testDate: "2026-08-13",
+      problemCount: 9,
+      difficultyRatio: { easy: 3, mid: 4, hard: 1 },
+    });
+    expect(result.success).toBe(false);
+  });
+
   it("testGenerateRequestSchema — 확인테스트는 범위 단원 없이 reject한다", () => {
     const result = testGenerateRequestSchema.safeParse({
       classId: UUID_1,

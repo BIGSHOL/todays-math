@@ -188,6 +188,27 @@ describe("[T4.3 S-04] 출제 설정 — 출제 요청", () => {
       "/tests/90000000-0000-4000-8000-000000000042",
     );
   });
+
+  it("문항 수와 난이도 배분 합이 다르면 잘못된 출제 요청을 보내지 않는다", async () => {
+    let called = false;
+    server.use(
+      http.post("/api/tests/generate", () => {
+        called = true;
+        return new HttpResponse(null, { status: 500 });
+      }),
+    );
+    const { user } = await renderSetup();
+
+    await user.clear(screen.getByLabelText("문항 수"));
+    await user.type(screen.getByLabelText("문항 수"), "9");
+    await user.click(screen.getByRole("button", { name: "출제" }));
+
+    expect(
+      await screen.findByText("난이도 배분의 합이 문항 수와 같아야 합니다"),
+    ).toBeInTheDocument();
+    expect(called).toBe(false);
+    expect(nav.push).not.toHaveBeenCalled();
+  });
 });
 
 describe("[T4.3 S-04] 출제 설정 — 문제 부족", () => {

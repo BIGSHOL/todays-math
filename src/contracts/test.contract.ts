@@ -63,6 +63,19 @@ export const testGenerateRequestSchema = z
       error: "확인테스트는 범위 시작/끝 단원을 모두 지정해야 합니다.",
       path: ["rangeEndUnitId"],
     },
+  )
+  .refine(
+    (value) =>
+      value.problemCount === undefined ||
+      value.difficultyRatio === undefined ||
+      value.difficultyRatio.easy +
+        value.difficultyRatio.mid +
+        value.difficultyRatio.hard ===
+        value.problemCount,
+    {
+      error: "난이도 배분의 합이 문항 수와 같아야 합니다.",
+      path: ["difficultyRatio"],
+    },
   );
 export type TestGenerateRequest = z.infer<typeof testGenerateRequestSchema>;
 
