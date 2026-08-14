@@ -9,6 +9,7 @@
  */
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { http, HttpResponse } from "msw";
 import { describe, expect, it } from "vitest";
 
 import ProblemsPage from "@/app/(main)/problems/page";
@@ -19,6 +20,7 @@ import {
   MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL,
   MOCK_UNITS,
 } from "@/mocks/data";
+import { server } from "@/mocks/server";
 
 async function renderBank() {
   const user = userEvent.setup();
@@ -65,6 +67,34 @@ describe("[T3.3 S-08] 문제은행 — 크롬·필터·액션", () => {
 });
 
 describe("[T3.3 S-08] 문제은행 — 필터 (MSW)", () => {
+  it("API가 돌려준 실제 단원 ID를 필터와 등록 폼에 사용한다", async () => {
+    const liveUnit = {
+      id: "12345678-1234-4123-8123-123456789abc",
+      grade: "중3",
+      chapter: "실제 대단원",
+      section: "실제 소단원",
+      orderIndex: 999,
+    };
+    server.use(
+      http.get("/api/units", () => HttpResponse.json({ data: [liveUnit] })),
+    );
+
+    const { user } = await renderBank();
+    const liveOption = await screen.findByRole("option", {
+      name: liveUnit.section,
+    });
+    expect(liveOption).toHaveValue(liveUnit.id);
+    expect(
+      screen.queryByRole("option", { name: MOCK_UNITS[0]!.section }),
+    ).not.toBeInTheDocument();
+
+    await user.selectOptions(screen.getByLabelText("단원"), liveUnit.id);
+    await user.click(screen.getByRole("button", { name: "등록" }));
+
+    const form = screen.getByRole("form", { name: "등록" });
+    expect(within(form).getByLabelText("단원")).toHaveValue(liveUnit.id);
+  });
+
   it("난이도 쉬움만 보면 도형(어려움) 문항이 빠진다", async () => {
     const { user } = await renderBank();
 
