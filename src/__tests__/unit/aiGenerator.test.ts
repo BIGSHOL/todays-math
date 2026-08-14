@@ -63,6 +63,7 @@ const ORIGIN = MOCK_PROBLEMS[0]!; // "$\frac{7}{25}$를 유한소수로 나타�
 beforeEach(() => {
   mockCreate.mockReset();
   vi.unstubAllEnvs();
+  vi.stubEnv("ANTHROPIC_API_KEY", "test-api-key");
 });
 
 describe("[T3.2] generateProblems — AI 문제 생성", () => {
