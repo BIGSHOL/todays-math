@@ -135,6 +135,20 @@ describe("[T2.3 S-07] 반/학생 관리 — 크롬·표·학생", () => {
       findMany.mockRestore();
     }
   });
+
+  it("단원 조회 실패를 빈 목록으로 위장하지 않는다", async () => {
+    const findMany = vi
+      .spyOn(prismaTestDouble.unit, "findMany")
+      .mockRejectedValueOnce(new Error("database unavailable"));
+    try {
+      const { default: ClassesPage } =
+        await import("@/app/(main)/classes/page");
+
+      await expect(ClassesPage()).rejects.toThrow("database unavailable");
+    } finally {
+      findMany.mockRestore();
+    }
+  });
 });
 
 describe("[T2.3 S-07] 진도 — 다음 소단원 1클릭 · 트리 보조", () => {
