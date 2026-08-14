@@ -106,7 +106,7 @@ describe("[T4.3 S-05] 검수 — 문제 카드", () => {
 });
 
 describe("[T4.3 S-05] 검수 — 하단 확정·인쇄", () => {
-  it("하단에 교체 수·확정(ink)·인쇄 링크가 있다", async () => {
+  it("초안은 인쇄를 비활성화해 실패 경로로 이동시키지 않는다", async () => {
     await renderReview(TEST_DRAFT_ID);
     await screen.findByRole("article", { name: "문 1" });
 
@@ -115,11 +115,13 @@ describe("[T4.3 S-05] 검수 — 하단 확정·인쇄", () => {
     const confirm = screen.getByRole("button", { name: "확정" });
     expect(confirm.className).toContain("bg-[#161616]");
 
-    const print = screen.getByRole("link", { name: "인쇄" });
-    expect(print).toHaveAttribute("href", `/tests/${TEST_DRAFT_ID}/print`);
+    expect(screen.getByRole("button", { name: "인쇄" })).toBeDisabled();
+    expect(
+      screen.queryByRole("link", { name: "인쇄" }),
+    ).not.toBeInTheDocument();
   });
 
-  it("확정을 누르면 draft가 확정되고 인쇄 링크는 유지된다", async () => {
+  it("확정을 누른 뒤에만 인쇄 링크를 연다", async () => {
     const { user } = await renderReview(TEST_DRAFT_ID);
     await screen.findByRole("article", { name: "문 1" });
 
@@ -127,11 +129,14 @@ describe("[T4.3 S-05] 검수 — 하단 확정·인쇄", () => {
 
     await waitFor(() => {
       expect(screen.getByRole("button", { name: "확정" })).toBeDisabled();
+      expect(screen.getByRole("link", { name: "인쇄" })).toHaveAttribute(
+        "href",
+        `/tests/${TEST_DRAFT_ID}/print`,
+      );
     });
-    expect(screen.getByRole("link", { name: "인쇄" })).toHaveAttribute(
-      "href",
-      `/tests/${TEST_DRAFT_ID}/print`,
-    );
+    expect(
+      screen.queryByRole("button", { name: "인쇄" }),
+    ).not.toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
@@ -146,6 +151,10 @@ describe("[T4.3 S-05] 검수 — 하단 확정·인쇄", () => {
       screen.getByText(new RegExp(`교체 ${replacedCount}`)),
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "확정" })).toBeDisabled();
+    expect(screen.getByRole("link", { name: "인쇄" })).toHaveAttribute(
+      "href",
+      `/tests/${TEST_CONFIRMED_ID}/print`,
+    );
   });
 
   it("없는 테스트면 찾을 수 없다는 안내를 보여 준다", async () => {

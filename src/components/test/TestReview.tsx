@@ -76,12 +76,18 @@ export function TestReview({ testId }: Props) {
           >
             확정
           </Button>
-          <Link
-            href={`/tests/${testId}/print`}
-            className="inline-flex min-h-11 min-w-[44px] items-center justify-center px-3 text-[12.5px] font-bold text-[#161616] underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A73E8]"
-          >
-            인쇄
-          </Link>
+          {draft ? (
+            <Button variant="ghost" disabled>
+              인쇄
+            </Button>
+          ) : (
+            <Link
+              href={`/tests/${testId}/print`}
+              className="inline-flex min-h-11 min-w-[44px] items-center justify-center px-3 text-[12.5px] font-bold text-[#161616] underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A73E8]"
+            >
+              인쇄
+            </Link>
+          )}
         </div>
       </footer>
     </div>
