@@ -1,0 +1,29 @@
+{
+  "contractVersion": 1,
+  "sourceRepository": "BIGSHOL/testchange",
+  "sourceCommit": "d95a6bee593832c6907d7e9b458e06ea65b5c7d9",
+  "releaseVersion": "0.1.26",
+  "sourceLicense": "not-declared",
+  "transport": "json-stdin-stdout",
+  "figurePolicy": {
+    "generatorModules": ["core.figure_svg", "core.figure_solid"],
+    "requiredSanitizer": "core.figure_quality.sanitize_svg",
+    "katexLayerSeparated": true
+  },
+  "requiredFiles": {
+    "core/ocr_engine.py": "b5deba1d483126aeb5d5ff89cf70e6b7cf4668774b5a3864259c4bf0ecf3800b",
+    "core/figure_svg.py": "e07fb57c5839fe9329c212ecb0a606482604af8d847adbb8f813b04cf7d12348",
+    "core/figure_solid.py": "2e6c3c44f496e38453250c7f1aa3c6d886fa5cbba3a54dc2398ca42184357293",
+    "core/figure_quality.py": "51cb5138b7123f98ec9224bd20c25594d59b6d17bee2b7fc1af6436683c18002"
+  },
+  "ocrRuntime": {
+    "python": "3.13.13",
+    "dependencies": {
+      "Pillow": "12.2.0",
+      "anthropic": "0.105.2",
+      "httpx": "0.28.1",
+      "google-genai": "2.7.0",
+      "PyMuPDF": "1.27.2.3"
+    }
+  }
+}

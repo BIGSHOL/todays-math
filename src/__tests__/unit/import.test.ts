@@ -41,6 +41,17 @@ describe("[T3.0] blocksToLatex", () => {
     expect(result.hasFigure).toBe(true);
     expect(result.content).toContain("[그림] 좌표평면 위 삼각형");
   });
+
+  it("OCR text 블록의 명백한 ASCII 대수식을 인라인 수식으로 감싼다", () => {
+    const result = blocksToLatex([
+      {
+        type: "text",
+        value: "포물선 y=x^2+2px+q일 때 p+q의 값은?",
+      },
+    ]);
+    expect(result.content).toContain("$y=x^2+2px+q$");
+    expect(result.content).toContain("$p+q$");
+  });
 });
 
 describe("[T3.0] 난이도 매핑", () => {
