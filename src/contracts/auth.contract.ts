@@ -29,14 +29,19 @@ const emailSchema = z
     error: "이메일은 255자를 초과할 수 없습니다.",
   });
 
-// bcrypt 해싱 대상 원문 비밀번호 — 최소 8자, bcrypt 72바이트 제한 고려해 상한 72자.
-const passwordSchema = z
+// 로그인은 기존 계정과의 호환성을 위해 종전의 72자 상한을 유지한다.
+// 신규 가입만 bcrypt의 72바이트 잘림으로 인한 서로 다른 비밀번호 충돌을 방지한다.
+const loginPasswordSchema = z
   .string()
   .min(8, { error: "비밀번호는 8자 이상이어야 합니다." })
-  .max(72, { error: "비밀번호는 72자를 초과할 수 없습니다." })
-  .refine((password) => new TextEncoder().encode(password).byteLength <= 72, {
+  .max(72, { error: "비밀번호는 72자를 초과할 수 없습니다." });
+
+const signupPasswordSchema = loginPasswordSchema.refine(
+  (password) => new TextEncoder().encode(password).byteLength <= 72,
+  {
     error: "비밀번호는 UTF-8 기준 72바이트를 초과할 수 없습니다.",
-  });
+  },
+);
 
 // User.name VarChar(50)
 const displayNameSchema = z
@@ -47,7 +52,7 @@ const displayNameSchema = z
 // ── 회원가입 ────────────────────────────────────────────────
 export const authSignupRequestSchema = z.strictObject({
   email: emailSchema,
-  password: passwordSchema,
+  password: signupPasswordSchema,
   name: displayNameSchema,
 });
 export type AuthSignupRequest = z.infer<typeof authSignupRequestSchema>;
@@ -66,6 +71,6 @@ export type AuthSignupResponse = z.infer<typeof authSignupResponseSchema>;
 // ── 로그인 (Auth.js 내부 처리 — 페이로드 형태 정의용) ─────────────
 export const authLoginRequestSchema = z.strictObject({
   email: emailSchema,
-  password: passwordSchema,
+  password: loginPasswordSchema,
 });
 export type AuthLoginRequest = z.infer<typeof authLoginRequestSchema>;
