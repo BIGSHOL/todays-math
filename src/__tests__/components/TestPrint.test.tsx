@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
@@ -76,5 +79,38 @@ describe("TestPrint", () => {
     expect(
       document.querySelector('[data-page-kind="questions"]'),
     ).not.toBeInTheDocument();
+  });
+
+  it("대분수 정답은 분자 클립 방지 여백이 있는 헤딩에 그린다", async () => {
+    const user = userEvent.setup();
+    const mixed: TestPrintDocument = {
+      ...PRINT_DOCUMENT,
+      problems: [
+        {
+          id: "20000000-0000-4000-8000-000000000099",
+          orderIndex: 1,
+          content: "$\\frac{28}{15}$를 대분수로 나타내어라.",
+          answer: "$\\frac{28}{15}$",
+          solution: null,
+        },
+      ],
+    };
+    const { container } = render(<TestPrint data={mixed} />);
+    await user.click(screen.getByRole("button", { name: "정답지" }));
+
+    const heading = container.querySelector('[data-testid="answer-heading-1"]');
+    expect(heading).not.toBeNull();
+    expect(heading?.querySelector(".katex")).not.toBeNull();
+    expect(heading?.className ?? "").toMatch(/solutionHeading/);
+  });
+
+  it("정답지 CSS는 단 상단 대분수 분자가 잘리지 않게 여백을 둔다", () => {
+    const css = readFileSync(
+      path.resolve(process.cwd(), "src/components/print/TestPrint.module.css"),
+      "utf8",
+    );
+    expect(css).toMatch(/\.answerSolutions[\s\S]*?padding-top:\s*0\.6em/);
+    expect(css).toMatch(/\.solutionHeading[\s\S]*?line-height:\s*2\.2/);
+    expect(css).toMatch(/\.quickAnswerCell[\s\S]*?overflow:\s*visible/);
   });
 });

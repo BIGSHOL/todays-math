@@ -62,7 +62,10 @@ export function PrintAnswerKeyPage({
           const problemNumber = startingNumber + index;
           return (
             <article className={styles.solutionItem} key={problem.id}>
-              <div className={styles.solutionHeading}>
+              <div
+                className={styles.solutionHeading}
+                data-testid={`answer-heading-${problemNumber}`}
+              >
                 문 {problemNumber} ·{" "}
                 <MathText as="span" text={problem.answer} />
               </div>

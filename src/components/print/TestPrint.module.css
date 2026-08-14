@@ -420,11 +420,13 @@
 .quickAnswerCell {
   min-width: 0;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 6px;
   background: var(--paper-warm);
-  padding: 4px 8px;
+  padding: 8px 8px 6px;
+  overflow: visible;
   font-size: 11px;
+  line-height: 2.1;
 }
 
 .quickAnswerCell strong {
@@ -438,6 +440,8 @@
   column-gap: 2rem;
   column-rule: 1px solid #e8e8eb;
   overflow: hidden;
+  /* 단 맨 위 displaystyle 대분수 분자(13/15의 13)가 overflow에 잘리지 않게 */
+  padding-top: 0.6em;
   font-size: 12px;
   line-height: 1.55;
 }
@@ -445,11 +449,20 @@
 .solutionItem {
   break-inside: avoid;
   margin-bottom: 14px;
+  overflow: visible;
 }
 
 .solutionHeading {
   font-weight: 800;
   margin-bottom: 4px;
+  padding-top: 0.35em;
+  line-height: 2.2;
+  overflow: visible;
+}
+
+.solutionHeading :global(.katex),
+.quickAnswerCell :global(.katex) {
+  overflow: visible;
 }
 
 .solutionBody {
