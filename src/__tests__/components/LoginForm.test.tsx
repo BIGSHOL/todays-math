@@ -93,19 +93,15 @@ describe("[T1.2] LoginForm", () => {
     );
   });
 
-  it('구글 버튼은 signIn("google")을 호출한다', async () => {
-    const user = userEvent.setup();
+  // 구글(OAuth) 로그인은 제거됐다(원장님 지시 2026-08-14) — 로그인 수단은 이메일/비밀번호뿐이다.
+  // 버튼이 다시 살아나면 이 테스트가 깨진다.
+  it("소셜 로그인 버튼을 노출하지 않는다", () => {
     render(<LoginForm />);
 
-    await user.click(
-      screen.getByRole("button", { name: "구글 계정으로 계속" }),
-    );
-
-    expect(signIn).toHaveBeenCalledWith(
-      "google",
-      expect.objectContaining({ redirectTo: "/" }),
-    );
-    expect(push).not.toHaveBeenCalled();
+    expect(
+      screen.queryByRole("button", { name: /구글/ }),
+    ).not.toBeInTheDocument();
+    expect(screen.getAllByRole("button")).toHaveLength(1);
   });
 
   it("잘못된 이메일은 검증 에러를 보여 주고 제출하지 않는다", async () => {

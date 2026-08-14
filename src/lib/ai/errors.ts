@@ -1,5 +1,5 @@
 /**
- * Claude API 래퍼(src/lib/ai/**) 공용 에러 타입.
+ * AI(DeepSeek) API 래퍼(src/lib/ai/**) 공용 에러 타입.
  *
  * 호출자(T3.1의 `src/app/api/problems/generate|transform/route.ts`)는
  * `AiGenerationError` 하나만 잡으면 된다 — 파싱 실패/네트워크 실패/검증 실패를 모두 이

@@ -36,7 +36,7 @@
 │  │  (RSC + Client)│─▶│  /app/api/*        │  │     └──────────────┘
 │  └────────────────┘  └─────────┬──────────┘  │
 │                                │             │     ┌──────────────┐
-│   KaTeX 수식 렌더링 / 인쇄 CSS   └────────────┼────▶│  Claude API  │
+│   KaTeX 수식 렌더링 / 인쇄 CSS   └────────────┼────▶│ DeepSeek API │
 └──────────────────────────────────────────────┘     │ (문제 생성/변형)│
                                                      └──────────────┘
 ```
@@ -47,7 +47,7 @@
 |----------|------|-------------|
 | Next.js (App Router) | 화면 + API 서버 통합 | 프로젝트 1개·언어 1개·배포 1번 — 1인 개발 관리 포인트 최소화 (D-12) |
 | PostgreSQL (Supabase/Neon) | 문제·진도·출제이력 저장 | 관계가 많은 데이터에 표준적, 무료 시작, 판매 확장 대응 (D-14) |
-| Claude API | 문제 생성·변형 | 수학 문제 생성/숫자 변형에 LLM 활용 (D-04) |
+| DeepSeek API (`deepseek-v4-pro`) | 문제 생성·변형 | 수학 문제 생성/숫자 변형에 LLM 활용 (D-04, provider는 D-32) |
 | KaTeX | 수식 렌더링 | 서버 렌더링 가능, 빠르고 가벼움, 인쇄 품질 안정적 |
 | 브라우저 인쇄 (@media print CSS) | 시험지 출력 | MVP는 브라우저 인쇄로 시작 — 별도 PDF 엔진 없이 가장 단순. 품질 미달 시 교체 (리스크 #2) |
 
@@ -73,8 +73,8 @@
 | API | Route Handlers (`app/api/*`) | Next.js 내장 — 별도 서버 불필요 | 낮음 |
 | ORM | Prisma | 초보자 친화적 스키마 정의, 마이그레이션 자동화, TypeScript 타입 자동 생성 | 낮음 |
 | 검증 | Zod | 요청/응답 스키마 검증 + TypeScript 타입 공유 (계약의 SSOT) | 낮음 |
-| 인증 | Auth.js (NextAuth v5) | 이메일/구글 로그인 (D-13), Next.js 표준 | 낮음 |
-| AI 연동 | Anthropic SDK (`@anthropic-ai/sdk`) | 문제 생성·변형 프롬프트 호출 | 중간 (프롬프트는 추상화 계층 뒤에 격리) |
+| 인증 | Auth.js (NextAuth v5) | 이메일/비밀번호 로그인 **단독** (D-13 개정), Next.js 표준 | 낮음 |
+| AI 연동 | DeepSeek (OpenAI 호환 — `openai` SDK + `baseURL`) | 문제 생성·변형 프롬프트 호출 | 낮음 (OpenAI 호환 인터페이스라 provider 교체가 baseURL/모델명 변경 수준) |
 
 ### 2.3 데이터베이스
 
@@ -117,10 +117,10 @@
 | 항목 | 요구사항 |
 |------|----------|
 | 인증 | Auth.js 세션 (JWT 전략) |
-| 비밀번호 | 이메일 가입 시 bcrypt 해싱 (구글 로그인은 비밀번호 없음) |
+| 비밀번호 | 이메일 가입 시 bcrypt 해싱 (로그인 수단은 이메일/비밀번호뿐) |
 | HTTPS | 필수 (Vercel 기본 제공) |
 | 입력 검증 | 모든 Route Handler에서 Zod 서버 측 검증 |
-| API 키 | Claude API 키는 서버 환경변수로만 — 클라이언트 노출 금지 |
+| API 키 | `DEEPSEEK_API_KEY`는 서버 환경변수로만 — 클라이언트 노출 금지 |
 | 학생 개인정보 | 이름만 수집 (최소 수집 원칙 — 연락처·학교 등 수집 안 함) |
 
 ### 3.4 확장성
@@ -137,15 +137,15 @@
 
 ### 4.1 인증
 
-| 서비스 | 용도 | 필수/선택 | 연동 방식 |
-|--------|------|----------|----------|
-| Google OAuth | 소셜 로그인 | 선택 (이메일 가입과 병행) | Auth.js Google Provider |
+외부 인증 연동 없음. 로그인 수단은 **이메일/비밀번호(Auth.js Credentials)뿐**이며, 소셜(구글 OAuth)
+로그인은 원장님 지시로 완전히 제거했다(2026-08-14, D-13 개정). OAuth 계정 연동이 사라져
+`@auth/prisma-adapter`도 함께 제거했다.
 
 ### 4.2 기타 서비스
 
 | 서비스 | 용도 | 필수/선택 | 비고 |
 |--------|------|----------|------|
-| Claude API (Anthropic) | 문제 생성·숫자/조건 변형·난이도 태깅 보조 | 필수 | 프롬프트는 `lib/ai/prompts/`에 버전 관리, 생성물은 반드시 검수 대상 |
+| DeepSeek API (`deepseek-v4-pro`) | 문제 생성·숫자/조건 변형·난이도 태깅 보조 | 필수 | OpenAI 호환 엔드포인트(`https://api.deepseek.com`)를 `openai` SDK로 호출. 프롬프트는 `lib/ai/prompts/`에 버전 관리, 생성물은 반드시 검수 대상 |
 
 ---
 
@@ -240,12 +240,12 @@
 |------|------|
 | Vitest | 테스트 실행 (단위/API/컴포넌트) |
 | React Testing Library | 컴포넌트 테스트 |
-| MSW (Mock Service Worker) | API 모킹 — Claude API 모킹 포함 (AI 호출 없이 테스트) |
+| MSW (Mock Service Worker) | API 모킹 — AI API 모킹 포함 (AI 호출 없이 테스트) |
 | Playwright | E2E 테스트 |
 | Prisma test 환경 | 테스트 전용 DB 스키마 |
 
 **AI 관련 테스트 원칙:**
-- Claude API 호출은 테스트에서 항상 모킹 (비용·비결정성 차단)
+- AI(DeepSeek) API 호출은 테스트에서 항상 모킹 (비용·비결정성 차단) — 단위 테스트는 `vi.mock("openai")`
 - 출제 균형 알고리즘(난이도 배분·중복 제외)은 AI와 무관한 순수 함수로 분리하여 단위 테스트
 
 ### 7.4 계약 파일 구조
@@ -265,7 +265,7 @@ todays-math/                      # 프로젝트 루트 (Next.js 단독)
 │   ├── lib/
 │   │   ├── db.ts                 # Prisma 클라이언트
 │   │   ├── generator/            # ★ 출제 엔진 (순수 로직)
-│   │   └── ai/                   # Claude API 래퍼 + 프롬프트
+│   │   └── ai/                   # DeepSeek API 래퍼 + 프롬프트
 │   ├── components/               # 직접 제작 컴포넌트
 │   ├── mocks/                    # MSW 핸들러
 │   └── __tests__/
@@ -391,9 +391,10 @@ git worktree remove ../testautocreator-generator
 | ID | 항목 | 선택 | 근거 |
 |----|------|------|------|
 | D-12 | 프레임워크 | Next.js 풀스택 단독 | 프로젝트 1개·언어 1개·배포 1번 — 1인 개발 최적 |
-| D-13 | 인증 | Auth.js — 이메일/구글 | 간단한 로그인만 (Q12) |
+| D-13 | 인증 | Auth.js — 이메일/비밀번호 **단독** | 간단한 로그인만 (Q12). 구글/OAuth는 2026-08-14 원장님 지시로 완전 제거 |
 | D-14 | DB | PostgreSQL (Supabase/Neon) | 관계 많은 데이터 + 클라우드 + 무료 시작 |
 | D-15 | 스타일링 | Tailwind CSS, 컴포넌트 직접 제작 | AI 공장식 스타일 배제 (D-07 연계) |
 | D-16 | 수식/인쇄 | KaTeX + 브라우저 인쇄 CSS | MVP 최단 경로, 품질 미달 시 PDF 엔진 교체 |
 | D-17 | ORM/검증 | Prisma + Zod | 타입 자동 생성 + 계약 SSOT |
-| D-18 | AI | Claude API | 문제 생성·변형·태깅 보조 |
+| D-18 | AI | LLM API 활용 | 문제 생성·변형·태깅 보조 |
+| D-32 | AI provider | DeepSeek `deepseek-v4-pro` (OpenAI 호환) | 2026-08-14 원장님 지시로 Claude API에서 전환. eywa에서 검증된 키/모델을 재사용하며, OpenAI 호환 인터페이스라 provider 교체 비용이 낮다 |

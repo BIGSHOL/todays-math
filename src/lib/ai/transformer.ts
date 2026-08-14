@@ -10,7 +10,7 @@ import type { Difficulty } from "@/contracts/common.contract";
 import type { ProblemType } from "@/contracts/problem.contract";
 import { z } from "zod";
 
-import { callClaude } from "./client";
+import { callAi } from "./client";
 import { AiGenerationError } from "./errors";
 import { normalizeLatex, parseAiJsonArray } from "./jsonRepair";
 import {
@@ -105,7 +105,7 @@ export async function transformProblem(
   const { origin, count } = input;
 
   const attempt = () =>
-    callClaude({
+    callAi({
       system: buildTransformSystemPrompt(),
       prompt: buildTransformUserPrompt({
         originContent: origin.content,

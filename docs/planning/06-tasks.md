@@ -28,8 +28,8 @@
 | 스타일링 | Tailwind CSS v4 — 기성 컴포넌트 킷 금지 (D-15) |
 | DB/ORM | PostgreSQL (Supabase/Neon) + Prisma |
 | 검증/계약 | Zod (`src/contracts/` = SSOT) |
-| 인증 | Auth.js (NextAuth v5) — 이메일/구글 |
-| AI | Claude API (`@anthropic-ai/sdk`) — 테스트에서는 항상 MSW 모킹 |
+| 인증 | Auth.js (NextAuth v5) — 이메일/비밀번호 단독 (소셜 로그인 없음) |
+| AI | DeepSeek `deepseek-v4-pro` (OpenAI 호환 — `openai` SDK) — 테스트에서는 항상 모킹 |
 | 수식/인쇄 | KaTeX + 브라우저 인쇄 CSS |
 | 테스트 | Vitest + RTL + MSW + Playwright |
 
@@ -89,7 +89,7 @@
 - `git init` (현재 저장소 아님 — 최초 1회)
 - Next.js 15+ 프로젝트 생성 (TypeScript, App Router, Tailwind CSS, ESLint)
 - Prettier + husky + lint-staged 설정
-- `.env.example` 작성 (DATABASE_URL, AUTH_SECRET, GOOGLE_CLIENT_ID/SECRET, ANTHROPIC_API_KEY)
+- `.env.example` 작성 (DATABASE_URL, AUTH_SECRET, DEEPSEEK_API_KEY) — GOOGLE_* 는 2026-08-14 제거
 - 디렉토리 골격 생성: `src/contracts/`, `src/lib/generator/`, `src/lib/ai/prompts/`, `src/components/`, `src/mocks/`, `src/__tests__/`, `e2e/`
 
 **산출물**:
@@ -184,7 +184,7 @@
 
 **작업 내용**:
 - 계약 기반 MSW 핸들러: `src/mocks/handlers/{auth,class,problem,test}.ts`
-- **Claude API Mock**: 문제 생성/변형 응답 고정 픽스처 (`src/mocks/data/aiProblems.ts`)
+- **AI API Mock**: 문제 생성/변형 응답 고정 픽스처 (`src/mocks/data/aiProblems.ts`)
 - Mock 데이터: 반 2개, 학생 5명, 문제 30개(난이도/유형 분포), 진도 기록
 
 **산출물**:
@@ -236,7 +236,7 @@ cd ../testautocreator-phase1-auth
    ```bash
    npm run test -- src/__tests__/api/auth.test.ts   # Expected: FAILED
    ```
-2. **GREEN**: Auth.js 설정 + 이메일 가입(bcrypt) + 구글 Provider
+2. **GREEN**: Auth.js 설정 + 이메일 가입(bcrypt) — 구글 Provider는 2026-08-14에 제거됨
    - 구현: `src/app/api/auth/[...nextauth]/route.ts`, `src/lib/auth.ts`
    ```bash
    npm run test -- src/__tests__/api/auth.test.ts   # Expected: PASSED
@@ -475,10 +475,12 @@ cd ../testautocreator-phase3-problem
 **완료 시**:
 - [ ] 사용자 승인 후 main 병합, worktree 정리
 
-### [x] Phase 3, T3.2: Claude API 래퍼 — 문제 생성/변형 RED→GREEN
+### [x] Phase 3, T3.2: AI API 래퍼 — 문제 생성/변형 RED→GREEN
 
 **담당**: backend-specialist
-**의존성**: 없음 (Claude API는 **MSW/vi.mock으로 모킹** — 실호출 없이 테스트)
+**의존성**: 없음 (AI API는 **MSW/vi.mock으로 모킹** — 실호출 없이 테스트)
+**⚠️ 2026-08-14 provider 전환(D-32)**: 아래 기록의 Claude/Anthropic SDK 부분은 DeepSeek
+(`deepseek-v4-pro`, OpenAI 호환)으로 교체됐다. 현재 모킹 대상은 `vi.mock("openai")`다.
 **이관 참조**: 변형은 sumaek `packages\core\src\variants\`의 역할 분리 설계를 따를 것 —
 parse(원문→파라미터) / solve(**정답의 유일한 권한** — AI가 정답 사슬에 끼지 않음) / render / vary(결정론적) / check(교육적 적절성).
 검증은 **원본 재현 검사**(원본 숫자 대입 시 원래 정답 재현). AI 생성 함정 목록은 mathlab-lab-p1 `problem-gen.ts`(JSON 잘림/LaTeX 백슬래시 salvage 등) 참조.
@@ -491,8 +493,8 @@ cd ../testautocreator-phase3-ai
 
 **Mock 설정**:
 ```typescript
-// 테스트에서 Anthropic SDK 모킹 — 고정 픽스처 응답 (src/mocks/data/aiProblems.ts)
-vi.mock('@anthropic-ai/sdk');
+// 테스트에서 AI SDK 모킹 — 고정 픽스처 응답 (src/mocks/data/aiProblems.ts)
+vi.mock('openai');
 ```
 
 **TDD 사이클**:
@@ -790,7 +792,7 @@ cd ../testautocreator-phase6-deploy
 ```
 
 **작업 내용**:
-- Vercel 배포 (환경변수 설정: DB, Auth, Claude API)
+- Vercel 배포 (환경변수 설정: DB, Auth, `DEEPSEEK_API_KEY`)
 - 프로덕션 DB (Supabase/Neon) 마이그레이션 + UNIT 시드
 - 원장님 계정 + 동료 강사 계정 생성
 - 실물 인쇄 최종 검수 (프로덕션 환경)

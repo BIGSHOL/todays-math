@@ -12,7 +12,7 @@ import {
 } from "@/contracts/problem.contract";
 import { z } from "zod";
 
-import { callClaude } from "./client";
+import { callAi } from "./client";
 import { AiParseError } from "./errors";
 import { normalizeLatex, parseAiJsonArray } from "./jsonRepair";
 import {
@@ -83,7 +83,7 @@ export async function generateProblems(
   }
 
   const attempt = async () => {
-    const raw = await callClaude({
+    const raw = await callAi({
       system: buildGenerateSystemPrompt(),
       prompt: buildGenerateUserPrompt({ unitLabel, difficulty, count }),
     });

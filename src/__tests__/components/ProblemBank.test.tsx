@@ -2,7 +2,7 @@
  * 🔴 RED → 🟢 GREEN — Phase 3, T3.3 S-08 문제은행
  *
  * 구현: src/app/(main)/problems/page.tsx, src/components/problem/**
- * 데이터: 기존 MSW problem 핸들러 (실제 DB/Claude 호출 없음)
+ * 데이터: 기존 MSW problem 핸들러 (실제 DB/AI 호출 없음)
  *
  * 확정: docs/planning/05-design-system.md §8.6 S-08
  * 액션: 등록 / 생성 / 변형. 검수 [교체]는 S-05 소유.

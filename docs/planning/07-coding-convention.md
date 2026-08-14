@@ -79,11 +79,11 @@ todays-math/
 │   ├── lib/
 │   │   ├── db.ts                 # Prisma 클라이언트 싱글턴
 │   │   ├── generator/            # 출제 엔진 (순수 함수 — 테스트 최우선 대상)
-│   │   ├── ai/                   # Claude API 래퍼
+│   │   ├── ai/                   # DeepSeek API 래퍼
 │   │   │   └── prompts/          # 문제 생성/변형 프롬프트 (버전 관리)
 │   │   └── utils/                # 유틸리티
 │   ├── components/               # 직접 제작 컴포넌트 (기성 킷 금지)
-│   ├── mocks/                    # MSW 핸들러 (Claude API 모킹 포함)
+│   ├── mocks/                    # MSW 핸들러 (AI API 모킹 포함)
 │   └── __tests__/                # 단위/API/컴포넌트 테스트
 ├── e2e/                          # Playwright
 ├── prisma/
@@ -196,11 +196,11 @@ todays-math/
 
 ### 5.1 절대 금지
 
-- [ ] 비밀정보 하드코딩 금지 (Claude API 키, DB 접속 정보, Auth 시크릿)
+- [ ] 비밀정보 하드코딩 금지 (AI API 키, DB 접속 정보, Auth 시크릿)
 - [ ] .env 파일 커밋 금지
 - [ ] SQL 직접 문자열 조합 금지 (Prisma 사용으로 원천 차단)
 - [ ] 사용자 입력 그대로 출력 금지 (XSS — 특히 문제 본문 렌더링 시 주의)
-- [ ] **Claude API 키를 클라이언트 코드에 노출 금지** — AI 호출은 반드시 서버(Route Handler)에서
+- [ ] **AI API 키(`DEEPSEEK_API_KEY`)를 클라이언트 코드에 노출 금지** — AI 호출은 반드시 서버(Route Handler)에서
 
 ### 5.2 필수 적용
 
@@ -216,9 +216,8 @@ todays-math/
 # .env.example (커밋 O)
 DATABASE_URL=postgresql://user:password@localhost:5432/todaysmath
 AUTH_SECRET=your-secret-here
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-ANTHROPIC_API_KEY=your-api-key-here
+# 소셜 로그인 없음 — GOOGLE_* 환경변수는 2026-08-14에 제거됐다(다시 넣지 말 것).
+DEEPSEEK_API_KEY=your-api-key-here
 
 # .env (커밋 X)
 ```
@@ -244,7 +243,7 @@ npx playwright test    # E2E
 | 대상 | 검증 방법 |
 |------|----------|
 | 출제 엔진 | 단위 테스트 (난이도 배분·중복 제외·범위 계산) — 커버리지 80% 필수 |
-| Claude API 연동 | MSW 모킹 테스트 + 수동 스모크 테스트 (실제 호출은 비용 발생) |
+| AI(DeepSeek) API 연동 | MSW·`vi.mock("openai")` 모킹 테스트 + 수동 스모크 테스트 (실제 호출은 비용 발생) |
 | 인쇄 레이아웃 | E2E 미리보기 스크린샷 + **실물 프린터 출력 검수** |
 | 수식 렌더링 | 대표 수식 케이스(분수·루트·지수·도형 기호) 렌더링 테스트 |
 | 마우스 어포던스 (D-30) | `npm run lint:affordance` + ESLint. 카드/행에 손가락·거짓 hover가 있으면 실패 |
@@ -339,12 +338,12 @@ feat(generator): 난이도 배분 알고리즘 구현
 | D-10 | 수익화 | 일단 우리 학원용, 판매는 열어둠 |
 | D-11 | 검증 | 본인 + 동료 강사 1~2명 실사용 |
 | D-12 | 프레임워크 | Next.js 풀스택 단독 |
-| D-13 | 인증 | Auth.js — 이메일/구글 |
+| D-13 | 인증 | Auth.js — 이메일/비밀번호 **단독** (구글/OAuth 완전 제거, 2026-08-14) |
 | D-14 | DB | PostgreSQL (Supabase/Neon) |
 | D-15 | 스타일링 | Tailwind CSS, 컴포넌트 직접 제작 |
 | D-16 | 수식/인쇄 | KaTeX + 브라우저 인쇄 CSS (품질 미달 시 교체) |
 | D-17 | ORM/검증 | Prisma + Zod |
-| D-18 | AI | Claude API |
+| D-18 | AI | LLM API 활용 (provider는 D-32) |
 | D-19 | 진도 입력 UX | 수업 직후 10초 내 완료 |
 | D-20 | 중복 방지 | 최근 14일 출제 문제 자동 제외 |
 | D-21 | 진도 모델 | 이력 누적 + 반/개별 이중 구조 |
@@ -358,3 +357,4 @@ feat(generator): 난이도 배분 알고리즘 구현
 | D-29 | 잔여 UI 문법 | 원장님 overnight 위임. H5×G2를 S-01/S-02/S-04/S-05/S-07/S-08에 확장. 아이콘 없음. 화면 폰트 Pretendard+Malgun. 상세는 05 §8.6 |
 | D-30 | 마우스 어포던스 | 손가락/호버는 실제 조작 가능한 컨트롤만. 카드·행 본체에 cursor-pointer·행 hover 금지. ESLint+테스트+lint-staged로 강제 |
 | D-31 | 공용 문제 풀 | 특별 지시가 없으면 전부 `pool=shared`. 은행·출제는 공용+본인 private. 타 사용자 private만 격리. 이관 분류분은 approved+shared |
+| D-32 | AI provider | DeepSeek `deepseek-v4-pro` (OpenAI 호환, `openai` SDK + `baseURL=https://api.deepseek.com`). 2026-08-14 원장님 지시로 Claude API에서 전환. 키는 `DEEPSEEK_API_KEY` |

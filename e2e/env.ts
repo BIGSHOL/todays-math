@@ -16,9 +16,7 @@ export const E2E_ENV: Record<string, string> = {
   AUTH_TRUST_HOST: "true",
   AUTH_URL: "http://localhost:3001",
   E2E_MOCK_AI: "1",
-  ANTHROPIC_API_KEY: "",
-  GOOGLE_CLIENT_ID: "e2e-google-client-id",
-  GOOGLE_CLIENT_SECRET: "e2e-google-client-secret",
+  DEEPSEEK_API_KEY: "",
 };
 
 export const E2E_ACCOUNTS = {

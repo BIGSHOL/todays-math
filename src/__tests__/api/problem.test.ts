@@ -5,7 +5,7 @@
  * (RED 단계의 `@ts-expect-error` 임시 주석은 구현 완료로 제거됨 — 이유는
  * src/__tests__/api/auth.test.ts 상단 주석 참조.)
  *
- * ⚠️ AI 생성(/generate)·변형(/transform) 엔드포인트는 T3.2(Claude API 래퍼) 범위이므로
+ * ⚠️ AI 생성(/generate)·변형(/transform) 엔드포인트는 T3.2(AI API 래퍼) 범위이므로
  *    이 파일이 아니라 src/__tests__/unit/aiGenerator.test.ts(T3.2에서 신설)에서 다룬다.
  *
  * 대응 계약: src/contracts/problem.contract.ts

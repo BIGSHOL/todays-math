@@ -1,5 +1,5 @@
 /**
- * Claude 응답 텍스트 → JSON 파싱 보조 유틸.
+ * AI 응답 텍스트 → JSON 파싱 보조 유틸.
  *
  * 알려진 함정 목록(참조: F:\mathlab-lab-p1\src\lib\lab\problem-gen.ts — 읽기 전용 참조,
  * 코드는 이 프로젝트 컨벤션에 맞춰 새로 작성했으며 그대로 옮긴 것이 아니다):
@@ -155,7 +155,7 @@ function stripTrailingCommas(text: string): string {
 }
 
 /**
- * Claude 응답 텍스트에서 흔한 손상을 복구해 `JSON.parse`가 통과할 형태로 만든다.
+ * AI 응답 텍스트에서 흔한 손상을 복구해 `JSON.parse`가 통과할 형태로 만든다.
  * 완벽한 파서가 아니라 salvage(구조는 보존, 내용만 복구)에 집중한 실용적 복구다.
  */
 export function repairJsonString(raw: string): string {
@@ -174,7 +174,7 @@ function tryParseJson(text: string): unknown {
 }
 
 /**
- * Claude 응답 텍스트를 JSON 배열로 파싱하고 각 원소를 `itemSchema`로 검증한다.
+ * AI 응답 텍스트를 JSON 배열로 파싱하고 각 원소를 `itemSchema`로 검증한다.
  * 먼저 `repairJsonString`을 적용한다. `\frac`처럼 JSON.parse 자체는 성공하지만 의미가
  * 손상되는 LaTeX/JSON 이스케이프 충돌도 있기 때문이다. 보정본 파싱이 실패하면 원문을
  * 한 번 더 시도한다. 둘 다 실패하거나 배열이 아니거나 스키마를 통과하지 못하면

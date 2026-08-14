@@ -1,9 +1,9 @@
 /**
- * 🟢 GREEN — Phase 3, T3.2 (Claude API 래퍼 라우트).
+ * 🟢 GREEN — Phase 3, T3.2 (AI(DeepSeek) API 래퍼 라우트).
  *
  * 단위 테스트(src/__tests__/unit/aiGenerator.test.ts)가 생성/변형 순수 래퍼를 검증하고,
  * 이 파일은 HTTP 계층(세션·계약·영속·에러 매핑)만 검증한다.
- * Claude SDK는 호출하지 않는다 — generateProblems/transformProblem을 모킹한다.
+ * AI SDK는 호출하지 않는다 — generateProblems/transformProblem을 모킹한다.
  */
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -116,7 +116,7 @@ describe("[T3.2] POST /api/problems/generate", () => {
   it("생성 실패는 AI_GENERATION_FAILED(502)로 매핑한다", async () => {
     const log = vi.spyOn(console, "error").mockImplementation(() => undefined);
     mockGenerateProblems.mockRejectedValueOnce(
-      new AiGenerationError("ANTHROPIC_API_KEY=top-secret"),
+      new AiGenerationError("DEEPSEEK_API_KEY=top-secret"),
     );
 
     const res = await generateProblemsRoute(

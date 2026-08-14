@@ -1,5 +1,5 @@
 /**
- * MSW 핸들러 — 문제은행 + Claude AI 생성/변형 (T0.5.2).
+ * MSW 핸들러 — 문제은행 + AI 생성/변형 (T0.5.2).
  * 대응 계약: src/contracts/problem.contract.ts
  * 대응 API 경로:
  *   POST/GET /api/problems, GET/PATCH/DELETE /api/problems/{id}
@@ -7,7 +7,7 @@
  *   POST /api/problems/generate, POST /api/problems/transform
  *
  * ⚠️ 생성/변형 응답은 src/mocks/data/aiProblems.ts의 고정 픽스처를 그대로 반환한다 — 테스트에서
- *    실제 Claude API를 호출하지 않는다(07-coding-convention §5, CLAUDE.md 절대 규칙 7).
+ *    실제 AI API를 호출하지 않는다(07-coding-convention §5, CLAUDE.md 절대 규칙 7).
  * ⚠️ 이 핸들러도 class.ts와 마찬가지로 stateless — POST/PATCH/DELETE는 고정 배열을 변형하지 않는다.
  */
 import { http, type HttpHandler } from "msw";

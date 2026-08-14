@@ -136,17 +136,6 @@ export function AuthForm({ mode, callbackUrl }: AuthFormProps) {
       <Button type="submit" variant="ink" disabled={pending} className="w-full">
         {title}
       </Button>
-      <Button
-        type="button"
-        variant="secondary"
-        disabled={pending}
-        className="w-full"
-        onClick={() => {
-          void signIn("google", { redirectTo: loginDestination });
-        }}
-      >
-        구글 계정으로 계속
-      </Button>
       <Link
         href={isSignup ? "/login" : "/signup"}
         className="inline-flex min-h-11 items-center justify-center text-[12.5px] font-bold underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A73E8]"

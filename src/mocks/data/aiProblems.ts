@@ -1,12 +1,12 @@
 /**
- * Claude AI 응답 Mock 픽스처 (T0.5.2) — 생성 5개 + 변형 3개.
+ * AI 응답 Mock 픽스처 (T0.5.2) — 생성 5개 + 변형 3개.
  *
  * 대응 API 경로: POST /api/problems/generate, POST /api/problems/transform
  * (src/contracts/problem.contract.ts)
  *
  * 이 파일은 두 가지 용도로 쓰인다:
  *   1) src/mocks/handlers/problem.ts — MSW가 두 엔드포인트 성공 응답으로 그대로 반환한다.
- *   2) T3.2(Claude API 래퍼) — `vi.mock("@anthropic-ai/sdk")`가 SDK 응답 형태(텍스트/JSON)로
+ *   2) T3.2(AI API 래퍼) — `vi.mock("openai")`가 SDK 응답 형태(텍스트/JSON)로
  *      감싸 쓸 수 있도록, 여기서는 계약을 통과하는 "정제된 결과"만 내보낸다
  *      (SDK 원시 응답 포맷팅은 T3.2 구현 책임 — 이 픽스처는 파싱 이후의 최종 결과다).
  *

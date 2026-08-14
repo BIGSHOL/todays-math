@@ -31,7 +31,7 @@ erDiagram
     USER {
         uuid id PK "고유 식별자"
         string email UK "로그인 이메일"
-        string password_hash "이메일 가입 시만, 구글은 NULL"
+        string password_hash "이메일 가입 시 필수. NULL 허용은 과거 구글 가입자 잔존분 대비"
         string name "표시 이름"
         datetime created_at
         datetime updated_at
@@ -146,7 +146,7 @@ erDiagram
 |------|------|----------|------|
 | id | UUID | PK | 고유 식별자 |
 | email | VARCHAR(255) | UNIQUE, NOT NULL | 로그인 이메일 |
-| password_hash | VARCHAR(255) | NULL 허용 | 구글 로그인 시 NULL |
+| password_hash | VARCHAR(255) | NULL 허용 | 소셜 로그인 제거(2026-08-14) 후 신규 가입은 항상 값이 있다. NULL 허용은 과거 구글 가입자 잔존분 대비 — 이런 레코드는 로그인 불가 |
 | name | VARCHAR(50) | NOT NULL | 표시 이름 |
 | created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | 가입일 |
 | updated_at | TIMESTAMP | NOT NULL | 최종 수정일 |

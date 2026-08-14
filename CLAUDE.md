@@ -19,7 +19,8 @@
 
 Next.js 15+ 풀스택 단독 (App Router, TypeScript) · Tailwind CSS v4 (기성 컴포넌트 킷 금지)
 · Prisma + PostgreSQL (Supabase/Neon, 로컬은 docker-compose) · Zod (src/contracts/ = 계약 SSOT)
-· Auth.js (이메일/구글) · Claude API (문제 생성/변형 — 테스트에서 항상 모킹) · KaTeX · Vitest/RTL/MSW/Playwright
+· Auth.js (이메일/비밀번호 **단일** — 소셜 로그인 없음) · DeepSeek API `deepseek-v4-pro`
+(문제 생성/변형 — OpenAI 호환 SDK, 테스트에서 항상 모킹) · KaTeX · Vitest/RTL/MSW/Playwright
 
 ## 절대 규칙
 
@@ -34,7 +35,9 @@ Next.js 15+ 풀스택 단독 (App Router, TypeScript) · Tailwind CSS v4 (기성
 4. **병합**: 오르카 다중 세션으로 끝난 작업은 검수 후 **main 병합이 기본**(아래 9번). 강제 푸시·공유 이력 파괴만 확인.
 5. **UI 문구는 간결·사무적** (D-08): "출제 완료", "인쇄하기" — 느낌표·이모지 없음.
 6. **인쇄 관련 변경은 실물 프린터 출력 검수까지가 완료 조건.**
-7. Claude API 키는 서버 환경변수로만. 테스트에서 실호출 금지.
+7. AI API 키(`DEEPSEEK_API_KEY`)는 서버 환경변수로만. 테스트에서 실호출 금지.
+   **로그인 수단은 이메일/비밀번호 하나뿐이다 — 구글/OAuth는 원장님 지시로 완전 제거(2026-08-14).
+   다시 넣지 말 것.**
 8. **마우스 어포던스 (D-30, 강제)**: 손가락 커서와 hover 배경은 실제로 누르는 컨트롤에만.
    카드·표 행·장식 표면에 `cursor-pointer` / 행 `hover:bg-*` / `<div onClick>` 금지.
    `npm run lint:affordance`와 ESLint가 막는다. 검사 우회 금지.

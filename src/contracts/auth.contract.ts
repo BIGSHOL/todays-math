@@ -4,14 +4,13 @@
  * 대응 API 경로:
  *   POST /api/auth/signup   — 이메일 회원가입 (email/password/name, bcrypt 해싱은 구현 레이어 책임)
  *
- * ⚠️ 구글 로그인은 Auth.js(NextAuth v5) Google Provider가 내부적으로 처리하므로
- *    (`/api/auth/[...nextauth]` 표준 라우트) 별도 계약이 필요 없다.
- * ⚠️ 이메일 로그인도 Auth.js Credentials Provider가 `/api/auth/callback/credentials`를
+ * ⚠️ 소셜(구글) 로그인은 제거됐다(원장님 지시 2026-08-14) — 로그인 수단은 이메일/비밀번호뿐이다.
+ * ⚠️ 이메일 로그인은 Auth.js Credentials Provider가 `/api/auth/callback/credentials`를
  *    내부 처리한다 — 별도 Route Handler를 만들지 않는다. 아래 authLoginRequestSchema는
  *    로그인 화면(S-01)의 클라이언트 측 폼 검증 + `signIn("credentials", ...)` 호출 페이로드
  *    형태를 정의하기 위한 계약이며, 자체 Route Handler를 갖지 않는다.
  *
- * 참조: docs/planning/02-trd.md §3.3(비밀번호 bcrypt), §4.1(Google OAuth)
+ * 참조: docs/planning/02-trd.md §3.3(비밀번호 bcrypt)
  *       docs/planning/04-database-design.md §2.1 (USER — email UNIQUE, name VarChar(50))
  */
 import { z } from "zod";
