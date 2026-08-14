@@ -4,13 +4,13 @@ import { useState, type FormEvent } from "react";
 
 import { Button } from "@/components/ui/Button";
 import type { Difficulty } from "@/contracts/common.contract";
+import type { UnitEntity } from "@/contracts/unit.contract";
 import { generateProblems } from "@/lib/problem/problemApi";
-import type { MockUnit } from "@/mocks/data/units";
 
 import { FieldSelect } from "./FieldSelect";
 
 type Props = {
-  units: MockUnit[];
+  units: UnitEntity[];
   defaultUnitId: string;
   onCreated: (
     count: number,

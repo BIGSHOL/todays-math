@@ -1,24 +1,22 @@
+import { connection } from "next/server";
+
 import { AppChrome } from "@/components/chrome/AppChrome";
 import { ClassManage } from "@/components/class/ClassManage";
-import type { UnitNode } from "@/lib/units/groupUnits";
+import { db } from "@/lib/db";
 
 export default async function ClassesPage() {
-  let units: UnitNode[] = [];
-  try {
-    const { db } = await import("@/lib/db");
-    units = await db.unit.findMany({
-      orderBy: { orderIndex: "asc" },
-      select: {
-        id: true,
-        grade: true,
-        chapter: true,
-        section: true,
-        orderIndex: true,
-      },
-    });
-  } catch {
-    units = [];
-  }
+  await connection();
+
+  const units = await db.unit.findMany({
+    orderBy: { orderIndex: "asc" },
+    select: {
+      id: true,
+      grade: true,
+      chapter: true,
+      section: true,
+      orderIndex: true,
+    },
+  });
 
   return (
     <AppChrome>

@@ -9,6 +9,7 @@
  */
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { http, HttpResponse } from "msw";
 import { describe, expect, it } from "vitest";
 
 import ProblemsPage from "@/app/(main)/problems/page";
@@ -19,6 +20,7 @@ import {
   MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL,
   MOCK_UNITS,
 } from "@/mocks/data";
+import { server } from "@/mocks/server";
 
 async function renderBank() {
   const user = userEvent.setup();
@@ -65,6 +67,52 @@ describe("[T3.3 S-08] 문제은행 — 크롬·필터·액션", () => {
 });
 
 describe("[T3.3 S-08] 문제은행 — 필터 (MSW)", () => {
+  it("필터 요청 실패 뒤 이전 필터의 문제를 계속 보여 주지 않는다", async () => {
+    const { user } = await renderBank();
+    expect(screen.getByText(/밑변의 길이가/)).toBeInTheDocument();
+
+    server.use(
+      http.get(
+        "/api/problems",
+        () => new HttpResponse("broken", { status: 500 }),
+      ),
+    );
+    await user.selectOptions(screen.getByLabelText("난이도"), "hard");
+
+    expect(
+      await screen.findByText("목록을 불러오지 못했습니다"),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/밑변의 길이가/)).not.toBeInTheDocument();
+  });
+
+  it("API가 돌려준 실제 단원 ID를 필터와 등록 폼에 사용한다", async () => {
+    const liveUnit = {
+      id: "12345678-1234-4123-8123-123456789abc",
+      grade: "중3",
+      chapter: "실제 대단원",
+      section: "실제 소단원",
+      orderIndex: 999,
+    };
+    server.use(
+      http.get("/api/units", () => HttpResponse.json({ data: [liveUnit] })),
+    );
+
+    const { user } = await renderBank();
+    const liveOption = await screen.findByRole("option", {
+      name: liveUnit.section,
+    });
+    expect(liveOption).toHaveValue(liveUnit.id);
+    expect(
+      screen.queryByRole("option", { name: MOCK_UNITS[0]!.section }),
+    ).not.toBeInTheDocument();
+
+    await user.selectOptions(screen.getByLabelText("단원"), liveUnit.id);
+    await user.click(screen.getByRole("button", { name: "등록" }));
+
+    const form = screen.getByRole("form", { name: "등록" });
+    expect(within(form).getByLabelText("단원")).toHaveValue(liveUnit.id);
+  });
+
   it("난이도 쉬움만 보면 도형(어려움) 문항이 빠진다", async () => {
     const { user } = await renderBank();
 
@@ -106,6 +154,28 @@ describe("[T3.3 S-08] 문제은행 — 필터 (MSW)", () => {
 });
 
 describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
+  it("활성 필터와 다른 새 문제를 결과 목록에 끼워 넣지 않는다", async () => {
+    const { user } = await renderBank();
+    await user.selectOptions(screen.getByLabelText("난이도"), "hard");
+    await screen.findByText(/밑변의 길이가/);
+    await user.click(screen.getByRole("button", { name: "등록" }));
+
+    const form = screen.getByRole("form", { name: "등록" });
+    await user.selectOptions(within(form).getByLabelText("출처"), "manual");
+    await user.selectOptions(within(form).getByLabelText("난이도"), "easy");
+    await user.selectOptions(within(form).getByLabelText("유형"), "계산");
+    await user.type(
+      within(form).getByLabelText("본문"),
+      "필터에서 제외할 문제 $1+1$",
+    );
+    await user.type(within(form).getByLabelText("정답"), "2");
+    await user.click(within(form).getByRole("button", { name: "등록하기" }));
+
+    await screen.findByText("1건 등록");
+    expect(screen.queryByText(/필터에서 제외할 문제/)).not.toBeInTheDocument();
+    expect(screen.getByText(/밑변의 길이가/)).toBeInTheDocument();
+  });
+
   it("등록하면 작성한 본문이 목록 앞에 나타난다", async () => {
     const { user } = await renderBank();
     await user.click(screen.getByRole("button", { name: "등록" }));

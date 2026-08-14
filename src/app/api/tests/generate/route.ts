@@ -23,9 +23,8 @@ export async function POST(request: NextRequest) {
 
   try {
     return await generateDraftTest(session, parsed.data);
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "출제 중 오류가 발생했습니다.";
-    return jsonError("INTERNAL_ERROR", message, 500);
+  } catch {
+    console.error("[POST /api/tests/generate] test generation failed");
+    return jsonError("INTERNAL_ERROR", "출제 중 오류가 발생했습니다.", 500);
   }
 }

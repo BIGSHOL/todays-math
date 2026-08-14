@@ -63,6 +63,7 @@ const ORIGIN = MOCK_PROBLEMS[0]!; // "$\frac{7}{25}$를 유한소수로 나타�
 beforeEach(() => {
   mockCreate.mockReset();
   vi.unstubAllEnvs();
+  vi.stubEnv("ANTHROPIC_API_KEY", "test-api-key");
 });
 
 describe("[T3.2] generateProblems — AI 문제 생성", () => {
@@ -194,6 +195,25 @@ describe("[T3.2] generateProblems — AI 문제 생성", () => {
         unitLabel: "일차부등식의 활용(농도)",
         difficulty: "easy",
         count: 1,
+      }),
+    ).rejects.toBeInstanceOf(AiGenerationError);
+    expect(mockCreate).toHaveBeenCalledTimes(2);
+  });
+
+  it("요청 개수보다 적은 배열도 불완전 응답으로 보고 1회 재시도한다", async () => {
+    const shortResponse = claudeTextResponse(
+      JSON.stringify(GENERATE_FIXTURES.slice(0, 1)),
+    );
+    mockCreate
+      .mockResolvedValueOnce(shortResponse)
+      .mockResolvedValueOnce(shortResponse);
+
+    await expect(
+      generateProblems({
+        unitId: GENERATE_UNIT_ID,
+        unitLabel: "일차부등식의 활용(농도)",
+        difficulty: "easy",
+        count: 2,
       }),
     ).rejects.toBeInstanceOf(AiGenerationError);
     expect(mockCreate).toHaveBeenCalledTimes(2);

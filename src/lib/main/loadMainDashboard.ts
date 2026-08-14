@@ -5,6 +5,10 @@ import {
   type ProgressEntity,
 } from "@/contracts/class.contract";
 import {
+  metricsResponseSchema,
+  type WeeklyMetrics,
+} from "@/contracts/metrics.contract";
+import {
   testListResponseSchema,
   type TestEntity,
 } from "@/contracts/test.contract";
@@ -18,6 +22,7 @@ export type MainDashboardData = {
   tests: TestEntity[];
   progressByClass: Record<string, ProgressEntity | null>;
   units: UnitEntity[];
+  metrics: WeeklyMetrics;
 };
 
 async function parseOk<T>(
@@ -31,10 +36,11 @@ async function parseOk<T>(
 }
 
 export async function loadMainDashboard(): Promise<MainDashboardData> {
-  const [classesRes, testsRes, unitsRes] = await Promise.all([
+  const [classesRes, testsRes, unitsRes, metricsRes] = await Promise.all([
     fetch("/api/classes?page=1&pageSize=100"),
     fetch("/api/tests?page=1&pageSize=100"),
     fetch("/api/units"),
+    fetch("/api/metrics"),
   ]);
 
   const classesBody = await parseOk(classesRes, (json) =>
@@ -46,11 +52,15 @@ export async function loadMainDashboard(): Promise<MainDashboardData> {
   const unitsBody = await parseOk(unitsRes, (json) =>
     unitListResponseSchema.parse(json),
   );
+  const metricsBody = await parseOk(metricsRes, (json) =>
+    metricsResponseSchema.parse(json),
+  );
 
   const progressEntries = await Promise.all(
     classesBody.data.map(async (cls) => {
       const res = await fetch(`/api/progress?classId=${cls.id}`);
-      if (!res.ok) return [cls.id, null] as const;
+      if (res.status === 404) return [cls.id, null] as const;
+      if (!res.ok) throw new Error("진도를 불러오지 못했습니다");
       const body = progressResponseSchema.parse(await res.json());
       return [cls.id, body.data] as const;
     }),
@@ -61,5 +71,6 @@ export async function loadMainDashboard(): Promise<MainDashboardData> {
     tests: testsBody.data,
     progressByClass: Object.fromEntries(progressEntries),
     units: unitsBody.data,
+    metrics: metricsBody.data,
   };
 }

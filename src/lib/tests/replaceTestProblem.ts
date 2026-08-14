@@ -6,7 +6,7 @@ import {
   insufficientProblemsErrorResponseSchema,
   testProblemReplaceResponseSchema,
 } from "@/contracts/test.contract";
-import { jsonOk, notFoundError } from "@/lib/apiResponse";
+import { jsonError, jsonOk, notFoundError } from "@/lib/apiResponse";
 import { db } from "@/lib/db";
 import { findEligibleProblems } from "@/lib/findEligibleProblems";
 import { selectProblems } from "@/lib/generator/selectProblems";
@@ -37,6 +37,13 @@ export async function replaceTestProblemAtSeq(
 ) {
   const owned = await requireOwnedTest(testId, session.id);
   if (!owned.ok) return owned.response;
+  if (owned.data.status !== "draft") {
+    return jsonError(
+      "CONFLICT",
+      "초안 테스트의 문항만 교체할 수 있습니다.",
+      409,
+    );
+  }
 
   const items = await db.testProblem.findMany({
     where: { testId },
@@ -99,17 +106,29 @@ export async function replaceTestProblemAtSeq(
     );
   }
 
-  const [updatedItem, updatedTest] = await db.$transaction(async (tx) => {
+  const updated = await db.$transaction(async (tx) => {
+    const claimed = await tx.test.updateMany({
+      where: { id: testId, userId: session.id, status: "draft" },
+      data: { modified: true },
+    });
+    if (claimed.count === 0) return null;
+
     const item = await tx.testProblem.update({
       where: { id: target.id },
       data: { problemId: replacementId, replaced: true },
     });
-    const test = await tx.test.update({
-      where: { id: testId },
-      data: { modified: true },
-    });
+    const test = await tx.test.findUnique({ where: { id: testId } });
+    if (!test) return null;
     return [item, test] as const;
   });
+  if (!updated) {
+    return jsonError(
+      "CONFLICT",
+      "초안 테스트의 문항만 교체할 수 있습니다.",
+      409,
+    );
+  }
+  const [updatedItem, updatedTest] = updated;
 
   const problem = await db.problem.findUnique({
     where: { id: updatedItem.problemId },

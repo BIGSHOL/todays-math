@@ -6,7 +6,13 @@ import type { NextRequest } from "next/server";
 
 import { idParamSchema } from "@/contracts/common.contract";
 import { testConfirmResponseSchema } from "@/contracts/test.contract";
-import { jsonOk, unauthorizedError, validationError } from "@/lib/apiResponse";
+import {
+  jsonError,
+  jsonOk,
+  notFoundError,
+  unauthorizedError,
+  validationError,
+} from "@/lib/apiResponse";
 import { db } from "@/lib/db";
 import { requireOwnedTest } from "@/lib/ownership";
 import { serializeTest } from "@/lib/serializers";
@@ -25,9 +31,20 @@ export async function POST(_request: NextRequest, { params }: RouteContext) {
   const owned = await requireOwnedTest(id, session.id);
   if (!owned.ok) return owned.response;
 
-  const updated = await db.test.update({
-    where: { id },
+  if (owned.data.status !== "draft") {
+    return jsonError("CONFLICT", "초안 테스트만 확정할 수 있습니다.", 409);
+  }
+
+  const result = await db.test.updateMany({
+    where: { id, userId: session.id, status: "draft" },
     data: { status: "confirmed" },
   });
+  if (result.count === 0) {
+    return jsonError("CONFLICT", "초안 테스트만 확정할 수 있습니다.", 409);
+  }
+
+  const updated = await db.test.findUnique({ where: { id } });
+  if (!updated) return notFoundError("테스트");
+
   return jsonOk(testConfirmResponseSchema, { data: serializeTest(updated) });
 }

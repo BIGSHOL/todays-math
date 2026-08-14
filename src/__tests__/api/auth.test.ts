@@ -11,12 +11,18 @@
  * 없으므로 create() 호출 간 상태를 공유하지 않아도 무방).
  */
 import { NextRequest } from "next/server";
+import { Prisma } from "@prisma/client";
 import { describe, expect, it, vi } from "vitest";
 
 import { POST as signup } from "@/app/api/auth/signup/route";
 
-import { authSignupResponseSchema } from "@/contracts/auth.contract";
+import {
+  authLoginRequestSchema,
+  authSignupRequestSchema,
+  authSignupResponseSchema,
+} from "@/contracts/auth.contract";
 import { errorResponseSchema } from "@/contracts/common.contract";
+import { db } from "@/lib/db";
 import { MOCK_EXISTING_SIGNUP_EMAIL } from "@/mocks/data";
 
 type MockDbUser = {
@@ -112,6 +118,37 @@ describe("[T1.1] POST /api/auth/signup", () => {
     expect(body.error.code).toBe("VALIDATION_ERROR");
   });
 
+  it("UTF-8 기준 72바이트를 넘는 비밀번호는 잘림 전에 거부한다", async () => {
+    const res = await signup(
+      signupRequest({
+        email: "a@example.com",
+        password: "가".repeat(25),
+        name: "김원장",
+      }),
+    );
+    expect(res.status).toBe(400);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.code).toBe("VALIDATION_ERROR");
+  });
+
+  it("기존 계정 로그인은 72자를 넘지 않는 다중 바이트 비밀번호를 계속 허용한다", () => {
+    const legacyPassword = "가".repeat(25);
+
+    expect(
+      authSignupRequestSchema.safeParse({
+        email: "legacy@example.com",
+        password: legacyPassword,
+        name: "김원장",
+      }).success,
+    ).toBe(false);
+    expect(
+      authLoginRequestSchema.safeParse({
+        email: "legacy@example.com",
+        password: legacyPassword,
+      }).success,
+    ).toBe(true);
+  });
+
   it("빈 본문은 VALIDATION_ERROR(400)를 반환한다", async () => {
     const res = await signup(signupRequest({}));
     expect(res.status).toBe(400);
@@ -123,6 +160,26 @@ describe("[T1.1] POST /api/auth/signup", () => {
     const res = await signup(
       signupRequest({
         email: MOCK_EXISTING_SIGNUP_EMAIL,
+        password: "password123",
+        name: "김원장",
+      }),
+    );
+    expect(res.status).toBe(409);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.code).toBe("CONFLICT");
+  });
+
+  it("동시 가입의 P2002 충돌도 CONFLICT(409)로 수렴한다", async () => {
+    vi.mocked(db.user.create).mockRejectedValueOnce(
+      new Prisma.PrismaClientKnownRequestError("unique constraint", {
+        code: "P2002",
+        clientVersion: "6.19.3",
+      }),
+    );
+
+    const res = await signup(
+      signupRequest({
+        email: "racing@example.com",
         password: "password123",
         name: "김원장",
       }),

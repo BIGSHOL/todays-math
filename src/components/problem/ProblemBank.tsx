@@ -5,11 +5,12 @@ import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import type { Difficulty, ReviewStatus } from "@/contracts/common.contract";
 import type { ProblemEntity, ProblemType } from "@/contracts/problem.contract";
+import type { UnitEntity } from "@/contracts/unit.contract";
 import {
   loadProblems,
   type ProblemListFilters,
 } from "@/lib/problem/problemApi";
-import { MOCK_UNITS } from "@/mocks/data";
+import { loadUnits } from "@/lib/units/unitApi";
 
 import { FieldSelect } from "./FieldSelect";
 import { PROBLEM_TYPES } from "./labels";
@@ -20,14 +21,29 @@ import { ProblemTransformForm } from "./ProblemTransformForm";
 
 type Panel = "register" | "generate" | "transform" | null;
 
+function matchesFilters(
+  problem: ProblemEntity,
+  filters: ProblemListFilters,
+): boolean {
+  return (
+    (!filters.unitId || problem.unitId === filters.unitId) &&
+    (!filters.difficulty || problem.difficulty === filters.difficulty) &&
+    (!filters.problemType || problem.problemType === filters.problemType) &&
+    (!filters.reviewStatus || problem.reviewStatus === filters.reviewStatus)
+  );
+}
+
 export function ProblemBank() {
   const [unitId, setUnitId] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [problemType, setProblemType] = useState("");
   const [reviewStatus, setReviewStatus] = useState("");
   const [problems, setProblems] = useState<ProblemEntity[]>([]);
+  const [units, setUnits] = useState<UnitEntity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [unitsLoading, setUnitsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [unitsError, setUnitsError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [panel, setPanel] = useState<Panel>(null);
 
@@ -60,14 +76,42 @@ export function ProblemBank() {
     };
   }, [filters]);
 
-  const defaultUnitId = unitId || MOCK_UNITS[0]!.id;
+  useEffect(() => {
+    let cancelled = false;
+    loadUnits()
+      .then((body) => {
+        if (cancelled) return;
+        setUnits(body.data);
+        setUnitsError(null);
+        setUnitsLoading(false);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setUnitsError("단원 목록을 불러오지 못했습니다");
+        setUnitsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const defaultUnitId = unitId || units[0]?.id || "";
+  const unitActionsDisabled = unitsLoading || units.length === 0;
+
+  function startProblemReload() {
+    setLoading(true);
+    setError(null);
+  }
 
   function toggle(next: Exclude<Panel, null>) {
     setPanel((current) => (current === next ? null : next));
   }
 
   function prepend(count: number, created: ProblemEntity[], label: string) {
-    setProblems((current) => [...created, ...current]);
+    setProblems((current) => [
+      ...created.filter((problem) => matchesFilters(problem, filters)),
+      ...current,
+    ]);
     setNotice(`${count}건 ${label}`);
     setPanel(null);
     setError(null);
@@ -78,10 +122,19 @@ export function ProblemBank() {
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h1 className="text-[15px] font-black">문제은행</h1>
         <div className="flex flex-wrap gap-2">
-          <Button variant="ink" onClick={() => toggle("register")}>
+          <Button
+            variant="ink"
+            disabled={unitActionsDisabled}
+            onClick={() => toggle("register")}
+          >
             등록
           </Button>
-          <Button onClick={() => toggle("generate")}>생성</Button>
+          <Button
+            disabled={unitActionsDisabled}
+            onClick={() => toggle("generate")}
+          >
+            생성
+          </Button>
           <Button variant="secondary" onClick={() => toggle("transform")}>
             변형
           </Button>
@@ -92,10 +145,14 @@ export function ProblemBank() {
         <FieldSelect
           label="단원"
           value={unitId}
-          onChange={(event) => setUnitId(event.target.value)}
+          disabled={unitsLoading || units.length === 0}
+          onChange={(event) => {
+            startProblemReload();
+            setUnitId(event.target.value);
+          }}
         >
           <option value="">전체</option>
-          {MOCK_UNITS.map((unit) => (
+          {units.map((unit) => (
             <option key={unit.id} value={unit.id}>
               {unit.section}
             </option>
@@ -104,7 +161,10 @@ export function ProblemBank() {
         <FieldSelect
           label="난이도"
           value={difficulty}
-          onChange={(event) => setDifficulty(event.target.value)}
+          onChange={(event) => {
+            startProblemReload();
+            setDifficulty(event.target.value);
+          }}
         >
           <option value="">전체</option>
           <option value="easy">쉬움</option>
@@ -114,7 +174,10 @@ export function ProblemBank() {
         <FieldSelect
           label="유형"
           value={problemType}
-          onChange={(event) => setProblemType(event.target.value)}
+          onChange={(event) => {
+            startProblemReload();
+            setProblemType(event.target.value);
+          }}
         >
           <option value="">전체</option>
           {PROBLEM_TYPES.map((type) => (
@@ -126,7 +189,10 @@ export function ProblemBank() {
         <FieldSelect
           label="상태"
           value={reviewStatus}
-          onChange={(event) => setReviewStatus(event.target.value)}
+          onChange={(event) => {
+            startProblemReload();
+            setReviewStatus(event.target.value);
+          }}
         >
           <option value="">전체</option>
           <option value="pending">대기</option>
@@ -137,7 +203,7 @@ export function ProblemBank() {
 
       {panel === "register" ? (
         <ProblemRegisterForm
-          units={MOCK_UNITS}
+          units={units}
           defaultUnitId={defaultUnitId}
           onCreated={(count, created) => prepend(count, created, "등록")}
           onError={setError}
@@ -145,7 +211,7 @@ export function ProblemBank() {
       ) : null}
       {panel === "generate" ? (
         <ProblemGenerateForm
-          units={MOCK_UNITS}
+          units={units}
           defaultUnitId={defaultUnitId}
           onCreated={(count, created) => prepend(count, created, "생성")}
           onError={setError}
@@ -165,6 +231,11 @@ export function ProblemBank() {
       {error ? (
         <p className="mt-4 text-[12.5px] font-bold text-[#C5221F]">{error}</p>
       ) : null}
+      {unitsError ? (
+        <p className="mt-4 text-[12.5px] font-bold text-[#C5221F]">
+          {unitsError}
+        </p>
+      ) : null}
       {loading ? (
         <p className="mt-4 text-[12.5px] text-[#6A6A68]">불러오는 중</p>
       ) : null}
@@ -172,11 +243,11 @@ export function ProblemBank() {
       <section className="mt-4">
         {!loading && !error && problems.length === 0 ? (
           <p className="text-[12.5px] text-[#6A6A68]">등록된 문제가 없습니다</p>
-        ) : (
+        ) : !loading && !error ? (
           problems.map((problem) => (
             <ProblemCard key={problem.id} problem={problem} />
           ))
-        )}
+        ) : null}
       </section>
     </main>
   );

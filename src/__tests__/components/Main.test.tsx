@@ -51,6 +51,50 @@ async function renderMain() {
 }
 
 describe("[T4.3 S-03] 메인 — MSW 기본 데이터 (스택)", () => {
+  it("진도 API 장애를 진도 없음으로 위장하지 않는다", async () => {
+    server.use(
+      http.get(
+        "/api/progress",
+        () => new HttpResponse("broken", { status: 500 }),
+      ),
+    );
+
+    render(<MainPage />);
+
+    expect(
+      await screen.findByText("목록을 불러오지 못했습니다"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("article", { name: "중2 심화반" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("이번 주 지표는 테스트 목록이 아니라 metrics API 응답을 표시한다", async () => {
+    server.use(
+      http.get("/api/metrics", () =>
+        HttpResponse.json({
+          data: {
+            weekStart: "2026-08-10",
+            weekEnd: "2026-08-16",
+            printedDays: 6,
+            printedCount: 8,
+            unmodifiedCount: 3,
+            unmodifiedRate: 0.375,
+            avgGenerateToPrintSeconds: 420,
+          },
+        }),
+      ),
+    );
+
+    await renderMain();
+
+    expect(screen.getByLabelText("이번 주 인쇄 일수")).toHaveTextContent("6");
+    expect(screen.getByLabelText("이번 주 무수정 사용률")).toHaveTextContent(
+      "38%",
+    );
+    expect(screen.getByText("인쇄 일수")).toBeInTheDocument();
+  });
+
   it("반 목록과 4단계 게이지, 우측 진도 패널을 보여 준다", async () => {
     await renderMain();
 

@@ -6,9 +6,9 @@
 import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import type { PrismaClient } from "@prisma/client";
 
 import { allowSharedImport } from "../../src/lib/import/classifyDatabaseUrl";
-import { problemFingerprint } from "../../src/lib/import/problemFingerprint";
 import {
   toLoadRows,
   type ImportLoadRow,
@@ -25,6 +25,7 @@ const IMPORT_USER_EMAIL = "import@todays-math.local";
 export interface LoadResult {
   loaded: boolean;
   inserted: number;
+  alreadyPresent: number;
   skippedOversized: number;
   skippedDuplicates: number;
   reason: string;
@@ -33,6 +34,66 @@ export interface LoadResult {
 }
 
 type ClassifiedDraft = ImportDraft & { unitId: string };
+
+interface ExistingImportRow {
+  unitId: string;
+  source: string;
+  difficulty: string;
+  problemType: string;
+  content: string;
+  answer: string;
+  solution: string | null;
+  reviewStatus: string;
+  directUseAllowed: boolean;
+  pool: string;
+}
+
+const LOAD_LOCK_KEY = "todays-math/load-classified/v1";
+const LOAD_BATCH_SIZE = 200;
+
+function loadRowKey(row: ExistingImportRow): string {
+  return JSON.stringify([
+    row.unitId,
+    row.source,
+    row.difficulty,
+    row.problemType,
+    row.content,
+    row.answer,
+    row.solution,
+    row.reviewStatus,
+    row.directUseAllowed,
+    row.pool,
+  ]);
+}
+
+/**
+ * 기존 적재분을 다중집합으로 대조해 누락된 발생분만 반환한다.
+ *
+ * 동일한 문제가 원본 자료에 여러 번 있더라도 개수를 보존하고, 예전 로더가 일부 배치만
+ * 커밋한 DB에서는 이미 들어간 행을 건드리지 않은 채 나머지만 이어서 적재한다.
+ */
+export function selectMissingLoadRows(
+  desired: ImportLoadRow[],
+  existing: ExistingImportRow[],
+): ImportLoadRow[] {
+  const existingCounts = new Map<string, number>();
+  for (const row of existing) {
+    const key = loadRowKey(row);
+    existingCounts.set(key, (existingCounts.get(key) ?? 0) + 1);
+  }
+
+  const missing: ImportLoadRow[] = [];
+  for (const row of desired) {
+    const key = loadRowKey(row);
+    const count = existingCounts.get(key) ?? 0;
+    if (count > 0) {
+      existingCounts.set(key, count - 1);
+    } else {
+      missing.push(row);
+    }
+  }
+  return missing;
+}
 
 async function readClassified(filePath: string): Promise<ClassifiedDraft[]> {
   try {
@@ -48,6 +109,83 @@ async function readClassified(filePath: string): Promise<ClassifiedDraft[]> {
 function applyWorktreeEnv(file: Record<string, string>): void {
   process.env.DATABASE_URL = file.DATABASE_URL;
   process.env.DIRECT_URL = file.DIRECT_URL ?? file.DATABASE_URL;
+}
+
+export async function loadClassifiedAtomically(
+  prisma: PrismaClient,
+  classified: ClassifiedDraft[],
+): Promise<{
+  inserted: number;
+  alreadyPresent: number;
+  skippedOversized: number;
+}> {
+  return prisma.$transaction(
+    async (tx) => {
+      // 별도 프로세스에서 동시에 실행해도 둘 다 "기존 0건"을 보고 중복 삽입하지 않게 한다.
+      await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtext(${LOAD_LOCK_KEY}))`;
+
+      const user = await tx.user.upsert({
+        where: { email: IMPORT_USER_EMAIL },
+        update: {},
+        create: {
+          email: IMPORT_USER_EMAIL,
+          name: "이관 계정",
+        },
+      });
+
+      const dbUnits = await tx.unit.findMany({
+        select: { id: true, grade: true, chapter: true, section: true },
+      });
+      const byKey = new Map<string, string>(
+        dbUnits.map((unit) => [
+          `${unit.grade}\0${unit.chapter}\0${unit.section}`,
+          unit.id,
+        ]),
+      );
+
+      const remapped: ClassifiedDraft[] = [];
+      for (const draft of classified) {
+        const seed = seedUnitByPlaceholder(draft.unitId);
+        const unitId = seed
+          ? byKey.get(`${seed.grade}\0${seed.chapter}\0${seed.section}`)
+          : draft.unitId;
+        if (!unitId) continue;
+        remapped.push({ ...draft, unitId });
+      }
+
+      const { rows, skipped } = toLoadRows(remapped, user.id);
+      const existing = await tx.problem.findMany({
+        where: { userId: user.id },
+        select: {
+          unitId: true,
+          source: true,
+          difficulty: true,
+          problemType: true,
+          content: true,
+          answer: true,
+          solution: true,
+          reviewStatus: true,
+          directUseAllowed: true,
+          pool: true,
+        },
+      });
+      const missing = selectMissingLoadRows(rows, existing);
+
+      let inserted = 0;
+      for (let i = 0; i < missing.length; i += LOAD_BATCH_SIZE) {
+        const chunk = missing.slice(i, i + LOAD_BATCH_SIZE);
+        const result = await tx.problem.createMany({ data: chunk });
+        inserted += result.count;
+      }
+
+      return {
+        inserted,
+        alreadyPresent: rows.length - missing.length,
+        skippedOversized: skipped.length,
+      };
+    },
+    { maxWait: 10_000, timeout: 120_000 },
+  );
 }
 
 export async function runLoadIfLocal(outDir: string): Promise<LoadResult> {
@@ -68,6 +206,7 @@ export async function runLoadIfLocal(outDir: string): Promise<LoadResult> {
     const result: LoadResult = {
       loaded: false,
       inserted: 0,
+      alreadyPresent: 0,
       skippedOversized: 0,
       skippedDuplicates: 0,
       reason: reasons.filter(Boolean).join(" / "),
@@ -117,44 +256,6 @@ export async function runLoadIfLocal(outDir: string): Promise<LoadResult> {
   const { PrismaClient } = await import("@prisma/client");
   const prisma = new PrismaClient();
   try {
-    const user = await prisma.user.upsert({
-      where: { email: IMPORT_USER_EMAIL },
-      update: {},
-      create: {
-        email: IMPORT_USER_EMAIL,
-        name: "이관 계정",
-      },
-    });
-    const existingRows = await prisma.problem.findMany({
-      select: {
-        source: true,
-        difficulty: true,
-        problemType: true,
-        content: true,
-        answer: true,
-        solution: true,
-        directUseAllowed: true,
-      },
-    });
-    const existingFingerprints = new Set(
-      existingRows.map((row) => problemFingerprint(row)),
-    );
-
-    const dbUnits = (await prisma.unit.findMany({
-      select: { id: true, grade: true, chapter: true, section: true },
-    })) as Array<{
-      id: string;
-      grade: string;
-      chapter: string;
-      section: string;
-    }>;
-    const byKey = new Map<string, string>(
-      dbUnits.map((unit) => [
-        `${unit.grade}\0${unit.chapter}\0${unit.section}`,
-        unit.id,
-      ]),
-    );
-
     const classified = (
       await Promise.all([
         readClassified(path.join(outDir, "manual-classified.json")),
@@ -162,43 +263,21 @@ export async function runLoadIfLocal(outDir: string): Promise<LoadResult> {
         readClassified(path.join(outDir, "rpm-classified.json")),
       ])
     ).flat();
-
-    const remapped: ClassifiedDraft[] = [];
-    for (const draft of classified) {
-      const seed = seedUnitByPlaceholder(draft.unitId);
-      const unitId = seed
-        ? byKey.get(`${seed.grade}\0${seed.chapter}\0${seed.section}`)
-        : draft.unitId;
-      if (!unitId) continue;
-      remapped.push({ ...draft, unitId });
-    }
-
-    const { rows, skipped } = toLoadRows(remapped, user.id);
-    const fresh = rows.filter(
-      (row) => !existingFingerprints.has(problemFingerprint(row)),
-    );
-    const skippedDuplicates = rows.length - fresh.length;
-    const batchSize = 200;
-    let inserted = 0;
-    for (let i = 0; i < fresh.length; i += batchSize) {
-      const chunk: ImportLoadRow[] = fresh.slice(i, i + batchSize);
-      const result = await prisma.problem.createMany({ data: chunk });
-      inserted += result.count;
-    }
+    const load = await loadClassifiedAtomically(prisma, classified);
 
     const result: LoadResult = {
-      loaded: true,
-      inserted,
-      skippedOversized: skipped.length,
-      skippedDuplicates,
-      reason: sharedAllowed
-        ? "공유 공용 풀에 classified 문항을 적재했습니다."
-        : "로컬 DB에 classified 문항을 적재했습니다.",
+      loaded: load.inserted > 0,
+      ...load,
+      skippedDuplicates: load.alreadyPresent,
+      reason:
+        load.inserted > 0
+          ? `${sharedAllowed ? "공유 공용 풀" : "로컬 DB"}의 기존 ${load.alreadyPresent}건을 유지하고 누락 ${load.inserted}건을 원자적으로 적재했습니다.`
+          : `classified 문항 ${load.alreadyPresent}건이 모두 이미 적재되어 있습니다.`,
       ...base,
     };
     await writeJson(path.join(outDir, "load-result.json"), result);
     console.log(
-      `[load] inserted=${inserted} skipped=${skipped.length} dupes=${skippedDuplicates}`,
+      `[load] inserted=${load.inserted} existing=${load.alreadyPresent} skipped=${load.skippedOversized}`,
     );
     return result;
   } finally {

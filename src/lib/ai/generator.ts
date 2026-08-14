@@ -13,6 +13,7 @@ import {
 import { z } from "zod";
 
 import { callClaude } from "./client";
+import { AiParseError } from "./errors";
 import { normalizeLatex, parseAiJsonArray } from "./jsonRepair";
 import {
   buildGenerateSystemPrompt,
@@ -81,11 +82,19 @@ export async function generateProblems(
     }));
   }
 
-  const attempt = () =>
-    callClaude({
+  const attempt = async () => {
+    const raw = await callClaude({
       system: buildGenerateSystemPrompt(),
       prompt: buildGenerateUserPrompt({ unitLabel, difficulty, count }),
-    }).then((raw) => parseAiJsonArray(raw, generatedItemSchema));
+    });
+    const parsed = parseAiJsonArray(raw, generatedItemSchema);
+    if (parsed.length < count) {
+      throw new AiParseError(
+        `AI가 요청한 ${count}개보다 적은 ${parsed.length}개를 반환했습니다.`,
+      );
+    }
+    return parsed;
+  };
 
   const items = await withOneRetryOnParseFailure(attempt);
 

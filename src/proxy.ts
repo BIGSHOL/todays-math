@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
+import { requestedCallbackUrl } from "@/lib/callbackUrl";
 
 export const proxy = auth((req) => {
   const { pathname } = req.nextUrl;
@@ -13,7 +14,10 @@ export const proxy = auth((req) => {
 
   if (!req.auth && !isPublic) {
     const login = new URL("/login", req.nextUrl);
-    login.searchParams.set("callbackUrl", pathname);
+    login.searchParams.set(
+      "callbackUrl",
+      requestedCallbackUrl(pathname, req.nextUrl.search),
+    );
     return NextResponse.redirect(login);
   }
 

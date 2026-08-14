@@ -5,14 +5,14 @@ import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import type { ProblemCreateRequest } from "@/contracts/problem.contract";
+import type { UnitEntity } from "@/contracts/unit.contract";
 import { createProblem } from "@/lib/problem/problemApi";
-import type { MockUnit } from "@/mocks/data/units";
 
 import { FieldSelect } from "./FieldSelect";
 import { PROBLEM_TYPES } from "./labels";
 
 type Props = {
-  units: MockUnit[];
+  units: UnitEntity[];
   defaultUnitId: string;
   onCreated: (
     count: number,

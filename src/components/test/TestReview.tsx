@@ -12,8 +12,15 @@ type Props = {
 };
 
 export function TestReview({ testId }: Props) {
-  const { state, replace, confirm, replacingSeq, confirming, replacedCount } =
-    useTestReview(testId);
+  const {
+    state,
+    replace,
+    confirm,
+    replacingSeq,
+    confirming,
+    replacedCount,
+    actionError,
+  } = useTestReview(testId);
 
   if (state.status === "loading") {
     return (
@@ -56,7 +63,7 @@ export function TestReview({ testId }: Props) {
               key={item.id}
               orderIndex={item.orderIndex}
               problem={item.problem}
-              replacing={replacingSeq === item.orderIndex}
+              replacing={replacingSeq !== null}
               onReplace={
                 draft ? () => void replace(item.orderIndex) : undefined
               }
@@ -68,6 +75,11 @@ export function TestReview({ testId }: Props) {
         <span className="text-[11.5px] text-[#6A6A68] tabular-nums">
           교체 {replacedCount}
         </span>
+        {actionError ? (
+          <p role="alert" className="text-[11.5px] font-bold text-[#C5221F]">
+            {actionError}
+          </p>
+        ) : null}
         <div className="ml-auto flex items-center gap-2">
           <Button
             variant="ink"
@@ -76,12 +88,18 @@ export function TestReview({ testId }: Props) {
           >
             확정
           </Button>
-          <Link
-            href={`/tests/${testId}/print`}
-            className="inline-flex min-h-11 min-w-[44px] items-center justify-center px-3 text-[12.5px] font-bold text-[#161616] underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A73E8]"
-          >
-            인쇄
-          </Link>
+          {draft ? (
+            <Button variant="ghost" disabled>
+              인쇄
+            </Button>
+          ) : (
+            <Link
+              href={`/tests/${testId}/print`}
+              className="inline-flex min-h-11 min-w-[44px] items-center justify-center px-3 text-[12.5px] font-bold text-[#161616] underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A73E8]"
+            >
+              인쇄
+            </Link>
+          )}
         </div>
       </footer>
     </div>

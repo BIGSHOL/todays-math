@@ -22,6 +22,7 @@ import type {} from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 
+import { authLoginRequestSchema } from "@/contracts/auth.contract";
 import { db } from "@/lib/db";
 
 const googleReady =
@@ -52,15 +53,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "비밀번호", type: "password" },
       },
       async authorize(credentials) {
-        const email = credentials?.email;
-        const password = credentials?.password;
-        if (typeof email !== "string" || typeof password !== "string") {
-          return null;
-        }
+        const parsed = authLoginRequestSchema.safeParse({
+          email: credentials?.email,
+          password: credentials?.password,
+        });
+        if (!parsed.success) return null;
+
+        const { email, password } = parsed.data;
 
         const user = await db.user.findUnique({ where: { email } });
         // 구글 가입 사용자(passwordHash NULL)는 Credentials 로그인을 허용하지 않는다.
-        if (!user?.passwordHash) {
+        if (!user?.passwordHash || user.deletedAt) {
           return null;
         }
 

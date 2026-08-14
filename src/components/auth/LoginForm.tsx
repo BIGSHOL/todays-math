@@ -2,6 +2,6 @@
 
 import { AuthForm } from "@/components/auth/AuthForm";
 
-export function LoginForm() {
-  return <AuthForm mode="login" />;
+export function LoginForm({ callbackUrl = "/" }: { callbackUrl?: string }) {
+  return <AuthForm mode="login" callbackUrl={callbackUrl} />;
 }

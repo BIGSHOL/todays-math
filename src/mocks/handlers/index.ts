@@ -2,6 +2,7 @@ import type { HttpHandler } from "msw";
 
 import { authHandlers } from "./auth";
 import { classHandlers } from "./class";
+import { metricsHandlers } from "./metrics";
 import { problemHandlers } from "./problem";
 import { testHandlers } from "./test";
 import { unitHandlers } from "./unit";
@@ -22,6 +23,7 @@ import { unitHandlers } from "./unit";
 export const handlers: HttpHandler[] = [
   ...authHandlers,
   ...classHandlers,
+  ...metricsHandlers,
   ...problemHandlers,
   ...testHandlers,
   ...unitHandlers,

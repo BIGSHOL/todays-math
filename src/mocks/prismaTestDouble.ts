@@ -556,6 +556,11 @@ const prismaModels = {
     async delete({ where }: { where: { id: string } }) {
       const index = problemRows.findIndex((r) => r.id === where.id);
       if (index === -1) throw new Error(`problem not found: ${where.id}`);
+      if (testProblemRows.some((row) => row.problemId === where.id)) {
+        throw Object.assign(new Error("foreign key constraint failed"), {
+          code: "P2003",
+        });
+      }
       const [removed] = problemRows.splice(index, 1);
       return removed!;
     },
@@ -632,6 +637,17 @@ const prismaModels = {
       Object.assign(row, data);
       return row;
     },
+    async updateMany({
+      where,
+      data,
+    }: {
+      where?: Record<string, unknown>;
+      data: Partial<Omit<TestRow, "id" | "userId" | "createdAt">>;
+    }) {
+      const rows = testRows.filter((row) => matchesWhere(row, where));
+      rows.forEach((row) => Object.assign(row, data));
+      return { count: rows.length };
+    },
   },
   testProblem: {
     async create({
@@ -669,6 +685,9 @@ const prismaModels = {
       );
       return hydrateTestProblems(rows, include);
     },
+    async count({ where }: { where?: Record<string, unknown> } = {}) {
+      return testProblemRows.filter((row) => matchesWhere(row, where)).length;
+    },
     async update({
       where,
       data,
@@ -689,7 +708,29 @@ export const prismaTestDouble = {
   async $transaction<T>(
     arg: ((tx: typeof prismaModels) => Promise<T>) | Promise<unknown>[],
   ): Promise<T | unknown[]> {
-    if (typeof arg === "function") return arg(prismaModels);
+    if (typeof arg === "function") {
+      const snapshot = structuredClone({
+        classRows,
+        studentRows,
+        unitRows,
+        progressRows,
+        problemRows,
+        testRows,
+        testProblemRows,
+      });
+      try {
+        return await arg(prismaModels);
+      } catch (error) {
+        classRows = snapshot.classRows;
+        studentRows = snapshot.studentRows;
+        unitRows = snapshot.unitRows;
+        progressRows = snapshot.progressRows;
+        problemRows = snapshot.problemRows;
+        testRows = snapshot.testRows;
+        testProblemRows = snapshot.testProblemRows;
+        throw error;
+      }
+    }
     return Promise.all(arg);
   },
 };

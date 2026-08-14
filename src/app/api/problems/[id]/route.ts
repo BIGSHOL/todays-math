@@ -16,13 +16,28 @@ import {
   deleteResponseSchema,
   idParamSchema,
 } from "@/contracts/common.contract";
-import { jsonOk, unauthorizedError, validationError } from "@/lib/apiResponse";
+import {
+  jsonError,
+  jsonOk,
+  notFoundError,
+  unauthorizedError,
+  validationError,
+} from "@/lib/apiResponse";
 import { db } from "@/lib/db";
 import { requireAccessibleProblem } from "@/lib/ownership";
+import { isPrismaErrorCode } from "@/lib/prismaErrors";
 import { serializeProblem } from "@/lib/serializers";
 import { getSessionUser } from "@/lib/session";
 
 type RouteContext = { params: Promise<{ id: string }> };
+
+function problemInUseError() {
+  return jsonError(
+    "CONFLICT",
+    "시험지에 포함된 문제는 삭제할 수 없습니다.",
+    409,
+  );
+}
 
 // GET /api/problems/{id} — 단건 조회(LaTeX 본문 무손실 반환)
 export async function GET(request: NextRequest, { params }: RouteContext) {
@@ -57,10 +72,28 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
   const parsed = problemUpdateRequestSchema.safeParse(body);
   if (!parsed.success) return validationError(parsed.error);
 
-  const updated = await db.problem.update({
-    where: { id },
-    data: parsed.data,
-  });
+  if (parsed.data.unitId) {
+    const unit = await db.unit.findUnique({
+      where: { id: parsed.data.unitId },
+    });
+    if (!unit) return notFoundError("소단원");
+  }
+
+  let updated;
+  try {
+    updated = await db.problem.update({
+      where: { id },
+      data: parsed.data,
+    });
+  } catch (error) {
+    if (parsed.data.unitId && isPrismaErrorCode(error, "P2003")) {
+      const currentUnit = await db.unit.findUnique({
+        where: { id: parsed.data.unitId },
+      });
+      if (!currentUnit) return notFoundError("소단원");
+    }
+    throw error;
+  }
   return jsonOk(problemResponseSchema, { data: serializeProblem(updated) });
 }
 
@@ -76,6 +109,15 @@ export async function DELETE(request: NextRequest, { params }: RouteContext) {
   const accessible = await requireAccessibleProblem(id, session.id);
   if (!accessible.ok) return accessible.response;
 
-  await db.problem.delete({ where: { id } });
+  const usageCount = await db.testProblem.count({ where: { problemId: id } });
+  if (usageCount > 0) return problemInUseError();
+
+  try {
+    await db.problem.delete({ where: { id } });
+  } catch (error) {
+    // count 이후 시험지에 편입된 경쟁 요청도 DB의 RESTRICT 제약으로 보존한다.
+    if (isPrismaErrorCode(error, "P2003")) return problemInUseError();
+    throw error;
+  }
   return jsonOk(deleteResponseSchema, { data: { id } });
 }
