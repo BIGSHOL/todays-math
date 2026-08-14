@@ -15,7 +15,7 @@ import {
 import { idParamSchema } from "@/contracts/common.contract";
 import { jsonOk, unauthorizedError, validationError } from "@/lib/apiResponse";
 import { db } from "@/lib/db";
-import { requireOwnedProblem } from "@/lib/ownership";
+import { requireAccessibleProblem } from "@/lib/ownership";
 import { serializeProblem } from "@/lib/serializers";
 import { getSessionUser } from "@/lib/session";
 
@@ -30,8 +30,8 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
   const idResult = idParamSchema.safeParse({ id });
   if (!idResult.success) return validationError(idResult.error);
 
-  const owned = await requireOwnedProblem(id, session.id);
-  if (!owned.ok) return owned.response;
+  const accessible = await requireAccessibleProblem(id, session.id);
+  if (!accessible.ok) return accessible.response;
 
   const body = await request.json().catch(() => undefined);
   const parsed = problemReviewStatusUpdateRequestSchema.safeParse(body);

@@ -2,7 +2,7 @@
 
 작성: 2026-08-14  
 저장소: [BIGSHOL/todays-math](https://github.com/BIGSHOL/todays-math)  
-기준 커밋: `01dcef3` (`main` = `origin/main`)
+기준 커밋: `main` (D-31 공용 풀 적재 이후)
 
 이 문서만 읽고 새 머신에서 개발 서버까지 올릴 수 있게 쓴다. 기획 SSOT는 아래에 링크만 둔다.
 
@@ -31,10 +31,10 @@
 **아직 사람이 해야 하는 일**
 
 1. **T5.2** 실물 프린터로 문제지/정답지 출력 검수 (코드는 있음)
-2. **T3.0** 기출·자작·RPM 대량 적재 (컨버터/감사는 있음, **공유 Supabase에 대량 INSERT 안 함**)
-3. **T6.2** Vercel 배포 + 프로덕션 env
-4. Google OAuth 키 (없으면 「구글 계정으로 계속」은 눌러도 실패)
-5. Claude API 키 (없으면 AI 생성/변형만 실패. 출제는 승인된 은행 문항으로 가능)
+2. **T6.2** Vercel 배포 + 프로덕션 env
+3. Google OAuth 키 (없으면 「구글 계정으로 계속」은 눌러도 실패)
+4. Claude API 키 (없으면 AI 생성/변형만 실패. 출제는 승인된 은행 문항으로 가능)
+5. 미분류 기출 4618·그림 986·기하 단원 공란 — 자동 적재에서 빠짐. 손분류/작도는 별도
 
 ---
 
@@ -104,7 +104,7 @@ npm run dev
 
 브라우저: http://localhost:3000
 
-마이그레이션이 빠져 있으면 출제 500 (`problem.direct_use_allowed` 없음)이 난다. `migrate deploy`가 답이다.
+마이그레이션이 빠져 있으면 출제 500이 난다. `direct_use_allowed`와 `pool` 컬럼이 모두 있어야 한다. `migrate deploy`가 답이다.
 
 ### 테스트 계정 (이미 Supabase에 있음)
 
@@ -116,7 +116,17 @@ npm run dev
 선생으로 로그인하면 반 **테스트반**(중2), 학생 **김학생**, 진도 중2 수와 식 쪽.  
 `test_s`로 로그인해도 학생 UI는 없다. 빈 선생 화면이 나온다.
 
-은행에는 테스트용 승인 문항 몇 건(유리수와 소수)이 있다. 대량 기출은 아직 없다.
+은행은 **공용 풀(D-31)** 이다. 특별 지시가 없으면 신규·이관 문항은 전부 `pool=shared`.
+
+| 구분 | 건수 |
+|------|------|
+| 전체 (전부 shared, approved) | 9197 |
+| 출제 가능 (`directUseAllowed=true`) | 4335 (기출 3569 + 자작/기존 766) |
+| RPM 잠금 (D-26, 변형 원본만) | 4862 |
+| 단원 735 중 문항 있는 단원 | 307 (공란 428, 기하는 0) |
+
+재집계: `npx tsx scripts/count-problems.mts`  
+재적재(중복 지문 스킵): `$env:ALLOW_SHARED_IMPORT="1"; npx tsx scripts/import/load-classified.ts`
 
 ---
 
@@ -181,6 +191,7 @@ Next.js 16 App Router 풀스택. Prisma 6.19.3 + PostgreSQL. Zod는 `src/contrac
 - D-22: AI 생성은 **pending만**. 출제 풀은 승인 후
 - D-26: RPM 원본 `directUseAllowed=false`
 - D-28: 인쇄는 자습 H1
+- D-31: 특별 지시 없으면 전부 공용 풀 (`pool=shared`)
 
 ---
 
@@ -189,12 +200,10 @@ Next.js 16 App Router 풀스택. Prisma 6.19.3 + PostgreSQL. Zod는 `src/contrac
 `docs/transfer/AUDIT-2026-08-14.md` 결론:
 
 - OCR 원본 9,173문항. 적재 가능 3,569 / 미분류 4,618 / 그림 보류 986
-- **공유 Supabase `problem`은 당시 8건 전부 `manual`.** 기출 대량 이관은 아직 안 함
-- 엔진 포팅·시각 QA 코드는 main에 있음. **DB INSERT는 승인 후에만**
-- 미분류·그림 보류는 자동 적재 대상 아님
-- 소스 경로 예: `F:\시험지변환기\db\ocr_pilot` — 새 PC에 그 디스크가 없으면 감사만 가능
-
-적재 전에: 백업, provenance/중복 정책, `directUseAllowed` 규칙 재확인.
+- **2026-08-14 D-31 이후**: 공유 Supabase `problem` 9,197건 전부 `pool=shared`·`approved`. 출제 가능 4,335. RPM 4,862는 잠금
+- 미분류·그림 보류·기하 단원은 자동 적재 대상 아님
+- 소스 경로 예: `F:\시험지변환기\db\ocr_pilot` — 새 PC에 그 디스크가 없으면 재분류 불가
+- 재적재는 `ALLOW_SHARED_IMPORT=1`. PowerShell `Out-File`로 JSON 덤프하지 말 것 (BOM으로 parse 실패)
 
 ---
 
@@ -205,7 +214,7 @@ Next.js 16 App Router 풀스택. Prisma 6.19.3 + PostgreSQL. Zod는 `src/contrac
 | ID | 일 | 담당 | 비고 |
 |----|----|------|------|
 | T5.2 | 실물 인쇄 | 원장님 | 코드 완료. 출력물 보면 됨 |
-| T3.0 | 은행 채우기 | 에이전트+승인 | 감사 끝난 3,569만, 승인 후 |
+| T3.0 잔여 | 미분류 4618·그림 986·기하 | 원장님+에이전트 | 분류 완료분은 이미 공용 풀 |
 | T6.2 | Vercel | 원장님+에이전트 | env: DB, AUTH_SECRET, AUTH_URL, Claude |
 | — | Google OAuth | 원장님 | 콘솔 키만 |
 | — | 해설 채우기 | 데이터 | 지금 시드 문항 다수 `해설 없음` |

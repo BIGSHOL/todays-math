@@ -69,6 +69,14 @@ enum TestStatus {
   @@map("test_status")
 }
 
+/// 문제 풀 — D-31. 기본 shared. private는 소유자만 조회.
+enum ProblemPool {
+  shared
+  private
+
+  @@map("problem_pool")
+}
+
 // ─────────────────────────────────────────────
 // FEAT-0: 사용자 (강사) — 04 §2.1
 // ─────────────────────────────────────────────
@@ -211,6 +219,8 @@ model Problem {
   reviewStatus ReviewStatus @default(pending) @map("review_status")
   /// RPM 원본 잠금 (D-26) — false면 출제 풀에서 제외하고 변형 원본으로만 쓴다.
   directUseAllowed Boolean @default(true) @map("direct_use_allowed")
+  /// 공용 풀이 기본 (D-31). private는 소유자만 조회.
+  pool             ProblemPool  @default(shared)
   createdAt        DateTime     @default(now()) @map("created_at")
   updatedAt        DateTime     @updatedAt @map("updated_at")
 
@@ -224,6 +234,7 @@ model Problem {
   @@index([unitId, difficulty, reviewStatus, directUseAllowed])
   @@index([userId, unitId])
   @@index([originProblemId])
+  @@index([pool, unitId, reviewStatus, directUseAllowed])
   @@map("problem")
 }
 

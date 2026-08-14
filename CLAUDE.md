@@ -13,7 +13,7 @@
 | `docs/planning/04-database-design.md` | ERD 9개 엔티티 |
 | `docs/planning/05-design-system.md` | 디자인 — **`[협의 필요]` 항목은 미확정!** |
 | `docs/planning/06-tasks.md` | 태스크 목록 (M0~M6, 21개) — `/orchestrate`가 사용 |
-| `docs/planning/07-coding-convention.md` | 컨벤션, 도메인 용어 SSOT, Decision Log D-01~30 |
+| `docs/planning/07-coding-convention.md` | 컨벤션, 도메인 용어 SSOT, Decision Log D-01~31 |
 
 ## 기술 스택
 
@@ -117,6 +117,12 @@ docker compose up -d # 로컬 PostgreSQL
 - **문제**: D-22는 생성물 pending → 사람이 승격한 뒤에만 출제 풀 진입. 자동 승격은 검수 화면을 우회한다.
 - **해결**: 생성은 pending만 남기고 문제은행 승격 안내. E2E는 helper로 승격 후 재출제.
 - **교훈**: E2E GREEN을 위해 제품 정책을 풀지 말 것. 테스트가 승격 스텝을 밟게 할 것.
+
+### [2026-08-14] 공용 풀(D-31) 적재 — classified 미작성 + PowerShell JSON 깨짐
+- **상황**: 원장님이 "특별 지시 없으면 전부 공용 풀"로 확정. 기출/자작/RPM을 공유 Supabase에 넣어야 함.
+- **문제**: (1) 로더가 `rpm-classified.json`을 읽는데 `extract-rpm.ts`는 리포트만 쓰고 classified를 안 씀 → 1차 적재가 기출+자작 4327만 들어감. (2) PowerShell `Out-File -Encoding utf8`로 자작 덤프를 저장하면 BOM/이스케이프로 JSON.parse가 실패.
+- **해결**: extract가 classified를 ocr/manual과 같은 형태로 쓰게 고침. 덤프는 Python stdout을 UTF-8 파일로 직접 기록. 공유 DB INSERT는 기본 차단을 유지하고 `ALLOW_SHARED_IMPORT=1`일 때만 연다. 적재는 fingerprint로 멱등.
+- **교훈**: 로더가 기대하는 산출물 파일명을 추출 스크립트가 실제로 쓰는지 교차 확인할 것. Windows에서 JSON은 PowerShell 리다이렉트 대신 원본 프로세스가 파일을 쓰게 할 것.
 
 ### [2026-08-14] T6.1 E2E는 실제 API+로컬 DB, 단원명/AI 승격은 통합에서만 드러난다 (e2e, playwright)
 - **상황**: 여정 A/B/C를 Playwright로 돌리려면 가입·온보딩·출제·검수·인쇄가 실제 Route Handler와

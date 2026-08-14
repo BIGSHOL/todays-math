@@ -14,6 +14,7 @@ import type {
 
 import { db } from "@/lib/db";
 import { forbiddenError, notFoundError } from "@/lib/apiResponse";
+import { isProblemAccessible } from "@/lib/problemPool";
 
 export type OwnershipResult<T> =
   { ok: true; data: T } | { ok: false; response: Response };
@@ -74,6 +75,22 @@ export async function requireOwnedProblem(
   const problem = await db.problem.findUnique({ where: { id: problemId } });
   if (!problem) return { ok: false, response: notFoundError("문제") };
   if (problem.userId !== userId) {
+    return { ok: false, response: forbiddenError() };
+  }
+  return { ok: true, data: problem };
+}
+
+/**
+ * 문제가 존재하고, 공용 풀이거나 로그인 사용자 소유인지 확인한다 (D-31).
+ * 은행 단건 조회·수정·삭제·검수·변형 원본에 쓴다. private는 소유자만.
+ */
+export async function requireAccessibleProblem(
+  problemId: string,
+  userId: string,
+): Promise<OwnershipResult<ProblemRow>> {
+  const problem = await db.problem.findUnique({ where: { id: problemId } });
+  if (!problem) return { ok: false, response: notFoundError("문제") };
+  if (!isProblemAccessible(problem, userId)) {
     return { ok: false, response: forbiddenError() };
   }
   return { ok: true, data: problem };

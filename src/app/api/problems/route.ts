@@ -1,6 +1,6 @@
 /**
- * POST/GET /api/problems — 문제 등록(수동 자작/기출 직접 입력) · 본인 소유 문제 목록 조회
- * (필터: unitId/difficulty/problemType/source/reviewStatus, 페이지네이션).
+ * POST/GET /api/problems — 문제 등록(수동 자작/기출 직접 입력) · 공용 풀+본인 문제 목록
+ * (필터: unitId/difficulty/problemType/source/reviewStatus/pool, 페이지네이션).
  * 대응 계약: src/contracts/problem.contract.ts
  *
  * ⚠️ reviewStatus는 등록 요청에 포함되지 않는다(계약이 strictObject로 거부) — 신규 문제는
@@ -17,6 +17,7 @@ import {
 } from "@/contracts/problem.contract";
 import { jsonOk, unauthorizedError, validationError } from "@/lib/apiResponse";
 import { db } from "@/lib/db";
+import { DEFAULT_PROBLEM_POOL, problemVisibleWhere } from "@/lib/problemPool";
 import { serializeProblem } from "@/lib/serializers";
 import { getSessionUser } from "@/lib/session";
 
@@ -39,6 +40,7 @@ export async function POST(request: NextRequest) {
       content: parsed.data.content,
       answer: parsed.data.answer,
       solution: parsed.data.solution ?? null,
+      pool: parsed.data.pool ?? DEFAULT_PROBLEM_POOL,
     },
   });
 
@@ -49,7 +51,7 @@ export async function POST(request: NextRequest) {
   );
 }
 
-// GET /api/problems — 본인 소유 문제 목록(필터 + 페이지네이션, 타 사용자 문제 제외)
+// GET /api/problems — 공용 풀 + 본인 private (필터 + 페이지네이션, D-31)
 export async function GET(request: NextRequest) {
   const session = await getSessionUser();
   if (!session) return unauthorizedError();
@@ -61,7 +63,9 @@ export async function GET(request: NextRequest) {
   if (!parsed.success) return validationError(parsed.error);
 
   const { page, pageSize, ...filters } = parsed.data;
-  const where = { userId: session.id, ...filters };
+  const where = {
+    AND: [problemVisibleWhere(session.id), filters],
+  };
 
   const [rows, total] = await Promise.all([
     db.problem.findMany({

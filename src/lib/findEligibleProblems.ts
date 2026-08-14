@@ -3,17 +3,17 @@
  * T3.1 REFACTOR 산출물 — GET /api/problems의 범용 필터 조회에서 자동 출제 전용 조회를
  * 분리해 Phase 4, T4.2(자동 출제 API)가 그대로 재사용할 수 있게 한다(06-tasks.md T3.1 REFACTOR).
  *
- * 자동 출제 규칙: review_status='approved' 이고 directUseAllowed=true 인 문제만
- * 대상으로 한다(D-22, D-26).
+ * 자동 출제 규칙: review_status='approved' 이고 directUseAllowed=true 이며
+ * 공용 풀이거나 본인 private인 문제만 대상으로 한다(D-22, D-26, D-31).
  */
 import type { Difficulty } from "@/contracts/common.contract";
 import type { ProblemEntity } from "@/contracts/problem.contract";
 import { db } from "@/lib/db";
+import { problemVisibleWhere } from "@/lib/problemPool";
 import { serializeProblem } from "@/lib/serializers";
 
 export interface FindEligibleProblemsParams {
-  /** 출제자(강사) — 문제은행은 사용자 소유이므로 타 강사 문항을 풀에 넣지 않는다
-   *  (04-database-design.md §3: USER 1:N PROBLEM, 판매 확장 대비 격리). */
+  /** 출제자(강사) — 공용 풀 + 본인 private만 본다 (D-31). */
   userId: string;
   /** 출제 대상 단원 id 목록(반의 진도 범위 등에서 산출) — 비어 있으면 빈 배열을 즉시 반환한다. */
   unitIds: string[];
@@ -30,11 +30,15 @@ export async function findEligibleProblems(
 
   const rows = await db.problem.findMany({
     where: {
-      userId: params.userId,
-      unitId: { in: params.unitIds },
-      reviewStatus: "approved",
-      directUseAllowed: true,
-      ...(params.difficulty ? { difficulty: params.difficulty } : {}),
+      AND: [
+        problemVisibleWhere(params.userId),
+        {
+          unitId: { in: params.unitIds },
+          reviewStatus: "approved",
+          directUseAllowed: true,
+          ...(params.difficulty ? { difficulty: params.difficulty } : {}),
+        },
+      ],
     },
   });
 

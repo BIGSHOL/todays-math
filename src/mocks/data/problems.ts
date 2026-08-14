@@ -25,6 +25,7 @@ import type { ProblemEntity, ProblemType } from "@/contracts/problem.contract";
 
 import {
   PROBLEM_OTHER_ID,
+  PROBLEM_OTHER_SHARED_ID,
   problemId,
   USER_OTHER_ID,
   USER_TEACHER_ID,
@@ -429,6 +430,7 @@ export const MOCK_PROBLEMS: ProblemEntity[] = PROBLEM_SPECS.map(
     solution: spec.solution,
     reviewStatus: spec.reviewStatus,
     directUseAllowed: true,
+    pool: "shared",
     createdAt: spec.createdAt,
     updatedAt: spec.updatedAt ?? spec.createdAt,
   }),
@@ -455,7 +457,7 @@ export const MOCK_PENDING_PROBLEM = MOCK_PROBLEMS.find(
   (p) => p.reviewStatus === "pending",
 )!;
 
-/** USER_OTHER_ID 소유 — MOCK_TEACHER가 접근 시 403 FORBIDDEN을 검증하는 픽스처. */
+/** USER_OTHER_ID 소유 private — MOCK_TEACHER가 접근 시 403 FORBIDDEN을 검증하는 픽스처. */
 export const MOCK_PROBLEM_OTHER_USER: ProblemEntity = {
   id: PROBLEM_OTHER_ID,
   userId: USER_OTHER_ID,
@@ -469,6 +471,26 @@ export const MOCK_PROBLEM_OTHER_USER: ProblemEntity = {
   solution: null,
   reviewStatus: "approved",
   directUseAllowed: true,
+  pool: "private",
+  createdAt: "2026-05-01T09:00:00Z",
+  updatedAt: "2026-05-01T09:00:00Z",
+};
+
+/** USER_OTHER_ID 소유 shared — 공용 풀은 다른 강사도 조회·출제한다 (D-31). */
+export const MOCK_PROBLEM_OTHER_SHARED: ProblemEntity = {
+  id: PROBLEM_OTHER_SHARED_ID,
+  userId: USER_OTHER_ID,
+  unitId: MOCK_UNITS[0]!.id,
+  source: "past_exam",
+  originProblemId: null,
+  difficulty: "easy",
+  problemType: "계산",
+  content: "타 사용자 등록 공용 문항.",
+  answer: "1",
+  solution: null,
+  reviewStatus: "approved",
+  directUseAllowed: true,
+  pool: "shared",
   createdAt: "2026-05-01T09:00:00Z",
   updatedAt: "2026-05-01T09:00:00Z",
 };

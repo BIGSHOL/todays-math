@@ -228,8 +228,26 @@ export async function runRpmExtract(outDir: string): Promise<RpmExtractResult> {
         : [],
     }),
   );
-  const { report } = classifyDrafts("transformed", drafts, seedUnitsAsLike());
+  const { classified, report } = classifyDrafts(
+    "transformed",
+    drafts,
+    seedUnitsAsLike(),
+  );
   const lockedAll = drafts.every((draft) => draft.directUseAllowed === false);
+  await writeJson(
+    path.join(outDir, "rpm-classified.json"),
+    classified.map((draft) => ({
+      externalId: draft.externalId,
+      unitId: draft.unitId,
+      source: draft.source,
+      directUseAllowed: draft.directUseAllowed,
+      difficulty: draft.difficulty,
+      problemType: draft.problemType,
+      content: draft.content,
+      answer: draft.answer,
+      solution: draft.solution,
+    })),
+  );
   await writeJson(path.join(outDir, "rpm-report.json"), report);
   await writeJson(
     path.join(outDir, "rpm-unclassified.json"),

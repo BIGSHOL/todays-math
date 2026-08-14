@@ -48,8 +48,10 @@ export function unitId(seq: number): string {
 export function problemId(seq: number): string {
   return makeId("5000", seq);
 }
-/** USER_OTHER_ID 소유 — 소유권 403 테스트 전용. */
+/** USER_OTHER_ID 소유 private — 소유권 403 테스트 전용. */
 export const PROBLEM_OTHER_ID = makeId("5000", 99);
+/** USER_OTHER_ID 소유 shared — 공용 풀 조회 테스트 전용 (D-31). */
+export const PROBLEM_OTHER_SHARED_ID = makeId("5000", 98);
 
 // ── AI 생성/변형 문제 (aiProblems.ts) ─────────────────────────
 export function aiGeneratedProblemId(seq: number): string {

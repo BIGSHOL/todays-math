@@ -88,3 +88,14 @@ export function classifyDatabaseUrl(
     reason: `원격 호스트(${hostname}) — 적재 안 함`,
   };
 }
+
+/**
+ * 공유 Supabase 적재는 기본 차단. D-31 공용 풀 적재만
+ * ALLOW_SHARED_IMPORT=1 로 명시할 때 연다.
+ */
+export function allowSharedImport(
+  target: DatabaseTarget,
+  env: Record<string, string | undefined> = process.env,
+): boolean {
+  return env.ALLOW_SHARED_IMPORT === "1" && target.kind === "supabase";
+}

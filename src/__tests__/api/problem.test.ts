@@ -43,6 +43,7 @@ import { findEligibleProblems } from "@/lib/findEligibleProblems";
 import { getSessionUser } from "@/lib/session";
 import {
   MOCK_PENDING_PROBLEM,
+  MOCK_PROBLEM_OTHER_SHARED,
   MOCK_PROBLEM_OTHER_USER,
   MOCK_PROBLEM_WITH_FRACTION,
   NOT_FOUND_ID,
@@ -121,6 +122,23 @@ describe("[T3.1] POST /api/problems — LaTeX 본문 무손실 저장", () => {
     const body = problemResponseSchema.parse(await res.json());
     expect(body.data.source).toBe("past_exam");
     expect(body.data.reviewStatus).toBe("pending");
+    expect(body.data.pool).toBe("shared");
+  });
+
+  it("등록 시 pool을 생략하면 공용 풀이다(D-31)", async () => {
+    const res = await createProblem(
+      jsonRequest("http://localhost/api/problems", "POST", {
+        unitId: MOCK_PROBLEM_WITH_FRACTION.unitId,
+        source: "manual",
+        difficulty: "easy",
+        problemType: "계산",
+        content: "공용 기본 등록",
+        answer: "1",
+      }),
+    );
+    expect(res.status).toBe(201);
+    const body = problemResponseSchema.parse(await res.json());
+    expect(body.data.pool).toBe("shared");
   });
 
   it("세션이 없으면 UNAUTHORIZED(401)를 반환한다", async () => {
@@ -160,14 +178,16 @@ describe("[T3.1] GET /api/problems — 단원/난이도/유형/출처/검수상�
     ).toBe(true);
   });
 
-  it("본인 소유 문제만 반환한다(타 사용자 문제 제외)", async () => {
+  it("공용 풀과 본인 문항을 반환하고 타 사용자 private는 제외한다(D-31)", async () => {
     const res = await listProblems(
-      jsonRequest("http://localhost/api/problems", "GET"),
+      jsonRequest("http://localhost/api/problems?pageSize=100", "GET"),
     );
     expect(res.status).toBe(200);
     const body = problemListResponseSchema.parse(await res.json());
+    expect(body.data.some((p) => p.id === MOCK_PROBLEM_OTHER_SHARED.id)).toBe(
+      true,
+    );
     expect(body.data.every((p) => p.id !== PROBLEM_OTHER_ID)).toBe(true);
-    expect(body.data.every((p) => p.userId === USER_TEACHER_ID)).toBe(true);
   });
 
   it("세션이 없으면 UNAUTHORIZED(401)를 반환한다", async () => {
@@ -205,7 +225,7 @@ describe("[T3.1] GET /api/problems/{id} — LaTeX 본문 무손실 조회", () =
     expect(body.error.code).toBe("NOT_FOUND");
   });
 
-  it("타 사용자 소유 문제에 접근하면 FORBIDDEN(403)을 반환한다", async () => {
+  it("타 사용자 private 문제에 접근하면 FORBIDDEN(403)을 반환한다", async () => {
     const res = await getProblem(
       jsonRequest(`http://localhost/api/problems/${PROBLEM_OTHER_ID}`, "GET"),
       withId(PROBLEM_OTHER_ID),
@@ -213,6 +233,20 @@ describe("[T3.1] GET /api/problems/{id} — LaTeX 본문 무손실 조회", () =
     expect(res.status).toBe(403);
     const body = errorResponseSchema.parse(await res.json());
     expect(body.error.code).toBe("FORBIDDEN");
+  });
+
+  it("타 사용자 공용 문항은 조회한다(D-31)", async () => {
+    const res = await getProblem(
+      jsonRequest(
+        `http://localhost/api/problems/${MOCK_PROBLEM_OTHER_SHARED.id}`,
+        "GET",
+      ),
+      withId(MOCK_PROBLEM_OTHER_SHARED.id),
+    );
+    expect(res.status).toBe(200);
+    const body = problemResponseSchema.parse(await res.json());
+    expect(body.data.pool).toBe("shared");
+    expect(body.data.id).toBe(MOCK_PROBLEM_OTHER_SHARED.id);
   });
 });
 
@@ -244,6 +278,20 @@ describe("[T3.1] PATCH /api/problems/{id}", () => {
     expect(res.status).toBe(200);
     const body = problemResponseSchema.parse(await res.json());
     expect(body.data.content).toBe(content);
+  });
+
+  it("타 사용자 공용 문항은 수정할 수 있다(D-31)", async () => {
+    const res = await patchProblem(
+      jsonRequest(
+        `http://localhost/api/problems/${MOCK_PROBLEM_OTHER_SHARED.id}`,
+        "PATCH",
+        { content: "공용 문항 수정" },
+      ),
+      withId(MOCK_PROBLEM_OTHER_SHARED.id),
+    );
+    expect(res.status).toBe(200);
+    const body = problemResponseSchema.parse(await res.json());
+    expect(body.data.content).toBe("공용 문항 수정");
   });
 });
 
@@ -311,15 +359,15 @@ describe("[T3.1] findEligibleProblems — 출제 가능 풀 조회", () => {
     expect(rows).toEqual([]);
   });
 
-  it("approved 문제만 반환하고 pending/rejected와 타 사용자 문항은 제외한다", async () => {
+  it("approved 문제만 반환하고 타 사용자 private는 제외하며 공용 풀은 포함한다", async () => {
     const rows = await findEligibleProblems({
       userId: USER_TEACHER_ID,
       unitIds: [MOCK_PROBLEM_WITH_FRACTION.unitId],
     });
     expect(rows.length).toBeGreaterThan(0);
     expect(rows.every((p) => p.reviewStatus === "approved")).toBe(true);
-    expect(rows.every((p) => p.userId === USER_TEACHER_ID)).toBe(true);
     expect(rows.some((p) => p.id === MOCK_PROBLEM_OTHER_USER.id)).toBe(false);
+    expect(rows.some((p) => p.id === MOCK_PROBLEM_OTHER_SHARED.id)).toBe(true);
   });
 
   it("difficulty를 주면 해당 난이도만 반환한다", async () => {

@@ -16,12 +16,14 @@ import {
   difficultyRatioSchema,
   errorResponseSchema,
   idParamSchema,
+  problemPoolSchema,
 } from "@/contracts/common.contract";
 import {
   problemCreateRequestSchema,
   problemFilterQuerySchema,
   problemGenerateRequestSchema,
   problemReviewStatusUpdateRequestSchema,
+  problemSchema,
   problemTransformRequestSchema,
 } from "@/contracts/problem.contract";
 import {
@@ -134,6 +136,44 @@ describe("[T0.5.1] class.contract", () => {
 });
 
 describe("[T0.5.1] problem.contract", () => {
+  it("problemPoolSchema — shared/private만 허용한다", () => {
+    expect(problemPoolSchema.parse("shared")).toBe("shared");
+    expect(problemPoolSchema.parse("private")).toBe("private");
+    expect(problemPoolSchema.safeParse("public").success).toBe(false);
+  });
+
+  it("problemCreateRequestSchema — pool을 생략하면 shared다(D-31)", () => {
+    const result = problemCreateRequestSchema.parse({
+      unitId: UUID_1,
+      source: "manual",
+      difficulty: "mid",
+      problemType: "계산",
+      content: "$1+1=?$",
+      answer: "2",
+    });
+    expect(result.pool).toBe("shared");
+  });
+
+  it("problemSchema — pool 필드가 없으면 shared로 채운다", () => {
+    const result = problemSchema.parse({
+      id: UUID_1,
+      userId: UUID_1,
+      unitId: UUID_2,
+      source: "manual",
+      originProblemId: null,
+      difficulty: "easy",
+      problemType: "계산",
+      content: "본문",
+      answer: "1",
+      solution: null,
+      reviewStatus: "approved",
+      createdAt: "2026-08-13T09:00:00Z",
+      updatedAt: "2026-08-13T09:00:00Z",
+    });
+    expect(result.pool).toBe("shared");
+    expect(result.directUseAllowed).toBe(true);
+  });
+
   it("problemCreateRequestSchema — 유효한 등록 요청을 parse한다", () => {
     const result = problemCreateRequestSchema.safeParse({
       unitId: UUID_1,

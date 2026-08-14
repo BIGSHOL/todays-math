@@ -46,6 +46,7 @@ export function ProblemRegisterForm({
         "계산",
       content: String(form.get("content") ?? ""),
       answer: String(form.get("answer") ?? ""),
+      pool: "shared",
     };
     setPending(true);
     try {

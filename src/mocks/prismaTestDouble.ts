@@ -27,6 +27,7 @@ import {
   MOCK_CLASS_OTHER_USER,
   MOCK_CLASSES,
   MOCK_CURRENT_PROGRESS_UNIT,
+  MOCK_PROBLEM_OTHER_SHARED,
   MOCK_PROBLEM_OTHER_USER,
   MOCK_PROBLEMS,
   MOCK_PROGRESS,
@@ -83,6 +84,7 @@ interface ProblemRow {
   solution: string | null;
   reviewStatus: ReviewStatus;
   directUseAllowed: boolean;
+  pool: "shared" | "private";
   createdAt: Date;
   updatedAt: Date;
 }
@@ -130,6 +132,7 @@ function extraEligibleProblems(): ProblemEntity[] {
       solution: null,
       reviewStatus: "approved",
       directUseAllowed: true,
+      pool: "shared",
       createdAt: "2026-08-01T00:00:00.000Z",
       updatedAt: "2026-08-01T00:00:00.000Z",
     });
@@ -224,6 +227,7 @@ export function resetPrismaTestDouble() {
   problemRows = [
     ...MOCK_PROBLEMS,
     MOCK_PROBLEM_OTHER_USER,
+    MOCK_PROBLEM_OTHER_SHARED,
     ...extraEligibleProblems(),
   ].map(toProblemRow);
   testRows = MOCK_TESTS.map(toTestRow);
@@ -261,7 +265,24 @@ function matchesWhere<T extends object>(
 ): boolean {
   if (!where) return true;
   const record = row as Record<string, unknown>;
-  return Object.entries(where).every(([key, cond]) => {
+
+  if (Array.isArray(where.AND)) {
+    return where.AND.every((clause) =>
+      matchesWhere(row, clause as Record<string, unknown>),
+    );
+  }
+
+  const orClauses = where.OR;
+  const rest = { ...where };
+  delete rest.OR;
+  if (Array.isArray(orClauses)) {
+    const orOk = orClauses.some((clause) =>
+      matchesWhere(row, clause as Record<string, unknown>),
+    );
+    if (!orOk) return false;
+  }
+
+  return Object.entries(rest).every(([key, cond]) => {
     if (cond === undefined) return true;
     const value = record[key];
     if (
@@ -476,9 +497,10 @@ const prismaModels = {
     async create({
       data,
     }: {
-      data: Omit<ProblemRow, "id" | "createdAt" | "updatedAt"> & {
+      data: Omit<ProblemRow, "id" | "createdAt" | "updatedAt" | "pool"> & {
         originProblemId?: string | null;
         reviewStatus?: ReviewStatus;
+        pool?: "shared" | "private";
       };
     }) {
       const now = new Date();
@@ -488,6 +510,7 @@ const prismaModels = {
         originProblemId: data.originProblemId ?? null,
         reviewStatus: data.reviewStatus ?? "pending",
         directUseAllowed: data.directUseAllowed ?? true,
+        pool: data.pool ?? "shared",
         createdAt: now,
         updatedAt: now,
       };

@@ -115,6 +115,7 @@ todays-math/
 | 진도 | `progress` | 진도 | 커리큘럼 |
 | 소단원 | `unit` (section 레벨) | 소단원 | 챕터 |
 | 문제은행 | `problem` | 문제은행 | 문항DB |
+| 공용 풀 | `pool=shared` | 공용 | 개인은행 (지시 없으면 전부 공용, D-31) |
 | 출제 | `generate` | 출제 | 생성(문제 생성과 구분) |
 
 ---
@@ -322,7 +323,7 @@ feat(generator): 난이도 배분 알고리즘 구현
 
 ---
 
-## Decision Log 전체 (D-01 ~ D-30)
+## Decision Log 전체 (D-01 ~ D-31)
 
 | ID | 항목 | 선택 |
 |----|------|------|
@@ -356,3 +357,4 @@ feat(generator): 난이도 배분 알고리즘 구현
 | D-28 | 시험지 지면 | 자습(Jaseup) H1 금색 명조. 학원명+이름/반. 배점 없음(맞은 개수/전체). 장당 2문항 |
 | D-29 | 잔여 UI 문법 | 원장님 overnight 위임. H5×G2를 S-01/S-02/S-04/S-05/S-07/S-08에 확장. 아이콘 없음. 화면 폰트 Pretendard+Malgun. 상세는 05 §8.6 |
 | D-30 | 마우스 어포던스 | 손가락/호버는 실제 조작 가능한 컨트롤만. 카드·행 본체에 cursor-pointer·행 hover 금지. ESLint+테스트+lint-staged로 강제 |
+| D-31 | 공용 문제 풀 | 특별 지시가 없으면 전부 `pool=shared`. 은행·출제는 공용+본인 private. 타 사용자 private만 격리. 이관 분류분은 approved+shared |

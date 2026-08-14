@@ -10,8 +10,9 @@ export interface ImportLoadRow {
   content: string;
   answer: string;
   solution: string | null;
-  reviewStatus: "pending";
+  reviewStatus: "approved";
   directUseAllowed: boolean;
+  pool: "shared";
 }
 
 export interface LoadRowSkip {
@@ -60,8 +61,9 @@ export function toLoadRows(
       content: draft.content,
       answer: draft.answer,
       solution: draft.solution,
-      reviewStatus: "pending",
+      reviewStatus: "approved",
       directUseAllowed: draft.directUseAllowed,
+      pool: "shared",
     });
   }
 

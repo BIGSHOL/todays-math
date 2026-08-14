@@ -29,9 +29,11 @@ import {
 import {
   MOCK_AI_GENERATED_PROBLEMS,
   MOCK_AI_TRANSFORMED_PROBLEMS,
+  MOCK_PROBLEM_OTHER_SHARED,
   MOCK_PROBLEM_OTHER_USER,
   MOCK_PROBLEMS,
   PROBLEM_OTHER_ID,
+  PROBLEM_OTHER_SHARED_ID,
   USER_TEACHER_ID,
 } from "../data";
 import {
@@ -46,16 +48,22 @@ import {
 /** 등록형(30개) + AI 생성/변형(8개) 전체 — GET 목록/단건 조회가 참조하는 전체 풀. */
 const ALL_PROBLEMS = [
   ...MOCK_PROBLEMS,
+  MOCK_PROBLEM_OTHER_SHARED,
   ...MOCK_AI_GENERATED_PROBLEMS,
   ...MOCK_AI_TRANSFORMED_PROBLEMS,
 ];
 
-function findOwnedProblem(id: string) {
+function findAccessibleProblem(id: string) {
   if (id === PROBLEM_OTHER_ID) {
-    return { entity: MOCK_PROBLEM_OTHER_USER, owned: false };
+    return { entity: MOCK_PROBLEM_OTHER_USER, accessible: false };
+  }
+  if (id === PROBLEM_OTHER_SHARED_ID) {
+    return { entity: MOCK_PROBLEM_OTHER_SHARED, accessible: true };
   }
   const entity = ALL_PROBLEMS.find((p) => p.id === id);
-  return entity ? { entity, owned: true } : { entity: undefined, owned: false };
+  return entity
+    ? { entity, accessible: true }
+    : { entity: undefined, accessible: false };
 }
 
 /** AI_GENERATION_FAILED 실패 경로 재현 전용 sentinel — 실제 시드에 없는 임의의 유효 UUID. */
@@ -86,6 +94,7 @@ export const problemHandlers: HttpHandler[] = [
           solution: parsed.data.solution ?? null,
           reviewStatus: "pending",
           directUseAllowed: true,
+          pool: parsed.data.pool,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
@@ -104,6 +113,7 @@ export const problemHandlers: HttpHandler[] = [
     const { page, pageSize, ...filters } = parsed.data;
 
     const filtered = ALL_PROBLEMS.filter((p) => {
+      if (p.pool === "private" && p.userId !== USER_TEACHER_ID) return false;
       if (filters.unitId && p.unitId !== filters.unitId) return false;
       if (filters.difficulty && p.difficulty !== filters.difficulty)
         return false;
@@ -112,6 +122,7 @@ export const problemHandlers: HttpHandler[] = [
       if (filters.source && p.source !== filters.source) return false;
       if (filters.reviewStatus && p.reviewStatus !== filters.reviewStatus)
         return false;
+      if (filters.pool && p.pool !== filters.pool) return false;
       return true;
     });
     return jsonOk(
@@ -122,17 +133,17 @@ export const problemHandlers: HttpHandler[] = [
 
   // GET /api/problems/:id — 단건 조회
   http.get("/api/problems/:id", ({ params }) => {
-    const found = findOwnedProblem(String(params.id));
+    const found = findAccessibleProblem(String(params.id));
     if (!found.entity) return notFoundError("문제");
-    if (!found.owned) return forbiddenError();
+    if (!found.accessible) return forbiddenError();
     return jsonOk(problemResponseSchema, { data: found.entity });
   }),
 
   // PATCH /api/problems/:id — 수정(본문/정답/풀이 등)
   http.patch("/api/problems/:id", async ({ params, request }) => {
-    const found = findOwnedProblem(String(params.id));
+    const found = findAccessibleProblem(String(params.id));
     if (!found.entity) return notFoundError("문제");
-    if (!found.owned) return forbiddenError();
+    if (!found.accessible) return forbiddenError();
 
     const parsed = problemUpdateRequestSchema.safeParse(await request.json());
     if (!parsed.success) return validationError(parsed.error);
@@ -148,17 +159,17 @@ export const problemHandlers: HttpHandler[] = [
 
   // DELETE /api/problems/:id — 삭제
   http.delete("/api/problems/:id", ({ params }) => {
-    const found = findOwnedProblem(String(params.id));
+    const found = findAccessibleProblem(String(params.id));
     if (!found.entity) return notFoundError("문제");
-    if (!found.owned) return forbiddenError();
+    if (!found.accessible) return forbiddenError();
     return jsonOk(deleteResponseSchema, { data: { id: found.entity.id } });
   }),
 
   // PATCH /api/problems/:id/review-status — 검수 승격(D-22)
   http.patch("/api/problems/:id/review-status", async ({ params, request }) => {
-    const found = findOwnedProblem(String(params.id));
+    const found = findAccessibleProblem(String(params.id));
     if (!found.entity) return notFoundError("문제");
-    if (!found.owned) return forbiddenError();
+    if (!found.accessible) return forbiddenError();
     const entity = found.entity;
 
     const parsed = problemReviewStatusUpdateRequestSchema.safeParse(

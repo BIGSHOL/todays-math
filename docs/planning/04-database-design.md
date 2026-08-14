@@ -187,15 +187,18 @@ erDiagram
 | answer | TEXT | NOT NULL | 정답 |
 | solution | TEXT | NULL | 풀이 |
 | review_status | VARCHAR(10) | NOT NULL, DEFAULT 'pending' | AI 생성물은 `pending`으로 시작, 검수 후 `approved` |
+| direct_use_allowed | BOOLEAN | NOT NULL, DEFAULT true | RPM 원본은 false (D-26). 출제 풀에서 제외 |
+| pool | VARCHAR(10) | NOT NULL, DEFAULT 'shared' | `shared`(공용) / `private`(소유자만). 기본 공용 (D-31) |
 | created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | 생성일 |
 | updated_at | TIMESTAMP | NOT NULL | 수정일 |
 
-**출제 규칙**: 자동 출제는 `review_status = 'approved'` 문제를 우선 사용.
+**출제 규칙**: 자동 출제는 `review_status = 'approved'` 이고 `direct_use_allowed = true` 이며 `pool = shared` 또는 본인 `private`인 문제만 사용.
 `pending`(미검수 AI 생성물)은 시험지 검수 화면에서 함께 검수되면 `approved`로 승격.
 
 **인덱스:**
 - `idx_problem_user_unit` ON (user_id, unit_id)
-- `idx_problem_selection` ON (unit_id, difficulty, review_status) — 자동 출제 조회 최적화
+- `idx_problem_selection` ON (unit_id, difficulty, review_status, direct_use_allowed) — 자동 출제 조회 최적화
+- `idx_problem_pool_selection` ON (pool, unit_id, review_status, direct_use_allowed) — 공용 풀 조회 (D-31)
 
 ### 2.4 TEST (시험지) - FEAT-1
 
@@ -261,7 +264,7 @@ erDiagram
 | CLASS/STUDENT | PROGRESS | 1:N | 진도는 이력으로 누적 (최신이 현재) |
 | UNIT | PROBLEM | 1:N | 문제는 소단원에 분류됨 |
 | PROBLEM | PROBLEM | 1:N (self) | 변형 문제 → 원본 추적 (`origin_problem_id`) |
-| USER | PROBLEM | 1:N | 문제은행은 사용자 소유 (판매 확장 대비 격리) |
+| USER | PROBLEM | 1:N | 등록자 기록. 조회는 공용 풀 + 본인 private (D-31) |
 | TEST | TEST_PROBLEM | 1:N | 시험지는 문항 순서를 가진 문제 목록 |
 | PROBLEM | TEST_PROBLEM | 1:N | 한 문제는 여러 시험지에 사용 가능 (중복 방지 규칙 하에) |
 
@@ -324,3 +327,5 @@ MVP에서는 만들지 않되, 모든 소유권이 `user_id`로 일관되게 걸
 | D-20 | 중복 방지 | TEST_PROBLEM 이력 기반 최근 14일 제외 | 답 암기 방지 |
 | D-21 | 진도 모델 | PROGRESS 이력 누적 + 반/개별 이중 구조 | 학생별 진도 차이 지원 (Q4) |
 | D-22 | AI 생성물 검수 | review_status로 pending→approved 승격 | 품질 리스크 #1 완화 |
+| D-26 | RPM 잠금 | direct_use_allowed=false | 원본 직접 출제 금지, 변형 원본만 |
+| D-31 | 공용 풀 | pool 기본 shared. 조회는 공용+본인 private | 원장님: 지시 없으면 전부 공용 |

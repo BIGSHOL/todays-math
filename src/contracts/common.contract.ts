@@ -23,7 +23,7 @@ z.config(ko());
 // DB Enum 재정의
 // ⚠️ Prisma Client에서 직접 import하지 않는다 — 계약(src/contracts)은 Zod가 SSOT이며,
 //    Prisma 스키마(enum) 변경 시 아래 값도 반드시 함께 수동 갱신해야 한다(불일치 방지).
-//    아래 5종은 prisma/schema.prisma의 ProblemSource/Difficulty/ReviewStatus/TestType/TestStatus와
+//    아래 6종은 prisma/schema.prisma의 ProblemSource/Difficulty/ReviewStatus/TestType/TestStatus/ProblemPool과
 //    문자열이 정확히 일치해야 한다.
 // ─────────────────────────────────────────────
 
@@ -42,6 +42,12 @@ export const reviewStatusSchema = z.enum(["pending", "approved", "rejected"], {
   error: "검수 상태 값이 올바르지 않습니다.",
 });
 export type ReviewStatus = z.infer<typeof reviewStatusSchema>;
+
+/** 문제 풀 — D-31. 지시가 없으면 shared. private는 소유자만 조회. */
+export const problemPoolSchema = z.enum(["shared", "private"], {
+  error: "문제 풀 값이 올바르지 않습니다.",
+});
+export type ProblemPool = z.infer<typeof problemPoolSchema>;
 
 export const testTypeSchema = z.enum(["daily", "review"], {
   error: "테스트 유형은 일일테스트 또는 확인테스트여야 합니다.",

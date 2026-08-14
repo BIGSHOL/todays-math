@@ -12,6 +12,7 @@
  *   POST   /api/problems/transform           — 기존 문제 변형 (originProblemId, count)
  *
  * Problem.directUseAllowed — T3.0/D-26. RPM 원본은 false, 그 외 기본 true.
+ * Problem.pool — D-31. 기본 shared. 특별 지시가 없으면 전부 공용 풀.
  *
  * ⚠️ reviewStatus는 등록/수정 요청에 포함하지 않는다 — 검수 승격은 반드시 전용 엔드포인트
  *    (PATCH /api/problems/{id}/review-status)를 통하도록 강제해 클라이언트가 등록과 동시에
@@ -28,6 +29,7 @@ import {
   isoDateTimeSchema,
   listResponseSchema,
   paginationParamsSchema,
+  problemPoolSchema,
   problemSourceSchema,
   reviewStatusSchema,
   uuidSchema,
@@ -59,6 +61,8 @@ export const problemCreateRequestSchema = z.strictObject({
   content: problemTextSchema("문제 본문"),
   answer: problemTextSchema("정답"),
   solution: problemTextSchema("풀이").optional(),
+  /** 생략 시 공용 풀 (D-31). private는 명시할 때만. */
+  pool: problemPoolSchema.optional().default("shared"),
 });
 export type ProblemCreateRequest = z.infer<typeof problemCreateRequestSchema>;
 
@@ -88,6 +92,8 @@ export const problemSchema = z.strictObject({
   reviewStatus: reviewStatusSchema,
   /** RPM 원본은 false — 출제 풀에서 제외 (D-26). 응답에 없으면 true로 본다. */
   directUseAllowed: z.boolean().default(true),
+  /** 공용 풀이 기본 (D-31). 응답에 없으면 shared로 본다. */
+  pool: problemPoolSchema.default("shared"),
   createdAt: isoDateTimeSchema,
   updatedAt: isoDateTimeSchema,
 });
@@ -103,6 +109,7 @@ export const problemFilterQuerySchema = z.strictObject({
   problemType: problemTypeSchema.optional(),
   source: problemSourceSchema.optional(),
   reviewStatus: reviewStatusSchema.optional(),
+  pool: problemPoolSchema.optional(),
   page: paginationParamsSchema.shape.page,
   pageSize: paginationParamsSchema.shape.pageSize,
 });

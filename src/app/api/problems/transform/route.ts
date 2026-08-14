@@ -17,7 +17,7 @@ import {
   validationError,
 } from "@/lib/apiResponse";
 import { db } from "@/lib/db";
-import { requireOwnedProblem } from "@/lib/ownership";
+import { requireAccessibleProblem } from "@/lib/ownership";
 import { serializeProblem } from "@/lib/serializers";
 import { getSessionUser } from "@/lib/session";
 import type { ProblemType } from "@/contracts/problem.contract";
@@ -30,13 +30,13 @@ export async function POST(request: NextRequest) {
   const parsed = problemTransformRequestSchema.safeParse(body);
   if (!parsed.success) return validationError(parsed.error);
 
-  const owned = await requireOwnedProblem(
+  const accessible = await requireAccessibleProblem(
     parsed.data.originProblemId,
     session.id,
   );
-  if (!owned.ok) return owned.response;
+  if (!accessible.ok) return accessible.response;
 
-  const origin = owned.data;
+  const origin = accessible.data;
 
   try {
     const drafts = await transformProblem({

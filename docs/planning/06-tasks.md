@@ -407,7 +407,7 @@ cd ../testautocreator-phase2-class-ui
 
 ## M3: FEAT-5 문제은행 (Phase 3 — Worktree 필수)
 
-### [] Phase 3, T3.0: 기존 문제 데이터 이관 (신설 — 자산 이관) — 컨버터/dry-run GREEN, DB 적재는 로컬 전용 대기
+### [] Phase 3, T3.0: 기존 문제 데이터 이관 (신설 — 자산 이관) — 컨버터/dry-run GREEN, 공용 풀 적재는 ALLOW_SHARED_IMPORT=1
 
 **담당**: database-specialist
 

@@ -200,6 +200,22 @@ describe("[T3.0] DATABASE_URL 안전 분류", () => {
     });
     expect(classifyDatabaseUrl(undefined).kind).toBe("missing");
   });
+
+  it("ALLOW_SHARED_IMPORT=1 이면 Supabase만 공용 풀 적재를 연다", async () => {
+    const { classifyDatabaseUrl, allowSharedImport } =
+      await import("@/lib/import/classifyDatabaseUrl");
+    const supabase = classifyDatabaseUrl(
+      "postgresql://postgres.abc:secret@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres",
+    );
+    const local = classifyDatabaseUrl(
+      "postgresql://postgres:postgres@localhost:5432/app",
+    );
+    expect(allowSharedImport(supabase, { ALLOW_SHARED_IMPORT: "1" })).toBe(
+      true,
+    );
+    expect(allowSharedImport(supabase, {})).toBe(false);
+    expect(allowSharedImport(local, { ALLOW_SHARED_IMPORT: "1" })).toBe(false);
+  });
 });
 
 describe("[T3.0] 기출 header 정규화 + RPM 구조화", () => {
@@ -295,8 +311,9 @@ describe("[T3.0] 기출 header 정규화 + RPM 구조화", () => {
       "user-1",
     );
     expect(rows).toHaveLength(1);
-    expect(rows[0]?.reviewStatus).toBe("pending");
+    expect(rows[0]?.reviewStatus).toBe("approved");
     expect(rows[0]?.directUseAllowed).toBe(true);
+    expect(rows[0]?.pool).toBe("shared");
     expect(skipped).toHaveLength(1);
   });
 });
