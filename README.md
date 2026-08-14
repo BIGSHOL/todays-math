@@ -26,4 +26,5 @@ npm run dev            # http://localhost:3000
 | `npm run lint`       | ESLint        |
 | `npm run type-check` | tsc --noEmit  |
 
-기획 문서는 `docs/planning/` 참조.
+기획 문서는 `docs/planning/` 참조.  
+다른 컴퓨터에서 이어서 할 때: **`docs/HANDOFF.md`**.
