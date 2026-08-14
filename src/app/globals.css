@@ -98,6 +98,27 @@ summary::-webkit-details-marker {
 }
 
 /* Mathgen: \widehat{AB} → 늘어나는 호(⌒). KaTeX 내장 accent 로는 못 그림. */
+/* 중학 순환점 — KaTeX \\dot 은 12.5px에서 거의 안 보임. 숫자 위 점 강제. */
+.repeat-dot {
+  position: relative;
+  display: inline-block;
+  padding-top: 0.38em;
+  line-height: 1;
+  vertical-align: baseline;
+}
+.repeat-dot::before {
+  content: "";
+  position: absolute;
+  top: 0.02em;
+  left: 50%;
+  width: 0.28em;
+  height: 0.28em;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: currentColor;
+  pointer-events: none;
+}
+
 .geom-arc-wrap {
   position: relative;
   display: inline-block;

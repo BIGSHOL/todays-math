@@ -476,14 +476,17 @@ const PURE_LABEL_REGEX = /^\s*([A-Z][A-Z']*)\s*$/;
  * 은행/OCR/AI 는 `\overline{3}` 막대를 자주 쓰지만, 중2 교과서는 점이다.
  * 선분 `\overline{AB}` 는 글자라서 그대로 둔다.
  */
+const repeatDotTex = (digit: string): string =>
+  `\\htmlClass{repeat-dot}{${digit}}`;
+
 const dotsOverRepeatingDigits = (digits: string): string => {
-  if (digits.length === 1) return `\\dot{${digits}}`;
+  if (digits.length === 1) return repeatDotTex(digits);
   if (digits.length === 2) {
-    return `\\dot{${digits[0]}}\\dot{${digits[1]}}`;
+    return `${repeatDotTex(digits[0]!)}${repeatDotTex(digits[1]!)}`;
   }
   const first = digits[0]!;
   const last = digits[digits.length - 1]!;
-  return `\\dot{${first}}${digits.slice(1, -1)}\\dot{${last}}`;
+  return `${repeatDotTex(first)}${digits.slice(1, -1)}${repeatDotTex(last)}`;
 };
 
 const repeatingDigitsToDots = (math: string): string =>
@@ -491,8 +494,9 @@ const repeatingDigitsToDots = (math: string): string =>
     .replace(/\\(?:overline|bar)\s*\{(\d+)\}/g, (_m, digits: string) =>
       dotsOverRepeatingDigits(digits),
     )
-    .replace(/(\d)\u0305/g, (_m, digit: string) => `\\dot{${digit}}`)
-    .replace(/(\d)\u0304/g, (_m, digit: string) => `\\dot{${digit}}`);
+    .replace(/\\dot\s*\{(\d)\}/g, (_m, digit: string) => repeatDotTex(digit))
+    .replace(/(\d)\u0305/g, (_m, digit: string) => repeatDotTex(digit))
+    .replace(/(\d)\u0304/g, (_m, digit: string) => repeatDotTex(digit));
 
 const uprightGeometryLabels = (inner: string): string => {
   let out = inner;

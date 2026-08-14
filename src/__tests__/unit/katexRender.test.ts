@@ -103,24 +103,24 @@ describe("[KaTeX] 전처리 — preprocessMathText", () => {
     expect(inner).toMatch(/overgroup|geom-arc-wrap/);
   });
 
-  it("숫자 \\overline 은 한국 중학 순환점(\\dot)으로 바꾼다", () => {
+  it("숫자 \\overline 은 한국 중학 순환점(repeat-dot)으로 바꾼다", () => {
     expect(applyMathInnerNormalization("0.\\overline{3}")).toContain(
-      "\\dot{3}",
+      "repeat-dot",
     );
     expect(applyMathInnerNormalization("0.\\overline{3}")).not.toContain(
       "\\overline{3}",
     );
     expect(applyMathInnerNormalization("0.4\\overline{5}")).toContain(
-      "\\dot{5}",
+      "repeat-dot}{5}",
     );
     expect(applyMathInnerNormalization("0.\\overline{45}")).toBe(
       applyMathInnerNormalization("0.\\dot{4}\\dot{5}"),
     );
-    expect(applyMathInnerNormalization("1.2\\overline{34}")).toContain(
-      "\\dot{3}\\dot{4}",
+    expect(applyMathInnerNormalization("1.2\\overline{34}")).toMatch(
+      /repeat-dot\} \{3\}.*repeat-dot\} \{4\}|repeat-dot}\{3}.*repeat-dot}\{4}/,
     );
-    expect(applyMathInnerNormalization("0.\\overline{234}")).toContain(
-      "\\dot{2}3\\dot{4}",
+    expect(applyMathInnerNormalization("0.\\overline{234}")).toMatch(
+      /repeat-dot}\{2}.*3.*repeat-dot}\{4}/,
     );
   });
 
@@ -167,13 +167,13 @@ describe("[KaTeX] 혼합 본문 — renderMathHtml", () => {
     expect(html).toContain("의 값은?");
   });
 
-  it("순환소수 본문은 막대가 아니라 점 accent 로 그린다", () => {
+  it("순환소수 본문은 막대가 아니라 repeat-dot 으로 그린다", () => {
     const html = renderMathHtml(
       "순환소수 $0.\\overline{3}$을 분수로 나타내어라.",
     );
     expectSafeHtml(html);
     expect(html).toContain("katex");
-    expect(html).toContain("accent");
+    expect(html).toContain("repeat-dot");
     expect(html).not.toMatch(/overline|Overline/);
   });
 });

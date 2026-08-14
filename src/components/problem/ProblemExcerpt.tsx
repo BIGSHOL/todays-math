@@ -13,7 +13,7 @@ export function ProblemExcerpt({
   return (
     <MathText
       as="div"
-      className={`min-w-0 text-[12.5px] font-normal text-[#161616] ${className}`}
+      className={`min-w-0 overflow-visible text-[12.5px] leading-relaxed font-normal text-[#161616] ${className}`}
       text={problem.content}
     />
   );
