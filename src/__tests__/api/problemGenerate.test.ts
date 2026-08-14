@@ -112,8 +112,9 @@ describe("[T3.2] POST /api/problems/generate", () => {
   });
 
   it("생성 실패는 AI_GENERATION_FAILED(502)로 매핑한다", async () => {
+    const log = vi.spyOn(console, "error").mockImplementation(() => undefined);
     mockGenerateProblems.mockRejectedValueOnce(
-      new AiGenerationError("AI 문제 생성에 실패했습니다."),
+      new AiGenerationError("ANTHROPIC_API_KEY=top-secret"),
     );
 
     const res = await generateProblemsRoute(
@@ -126,6 +127,9 @@ describe("[T3.2] POST /api/problems/generate", () => {
     expect(res.status).toBe(502);
     const body = errorResponseSchema.parse(await res.json());
     expect(body.error.code).toBe("AI_GENERATION_FAILED");
+    expect(body.error.message).toBe("AI 문제 생성에 실패했습니다.");
+    expect(JSON.stringify(body)).not.toContain("top-secret");
+    log.mockRestore();
   });
 });
 
@@ -179,5 +183,24 @@ describe("[T3.2] POST /api/problems/transform", () => {
     expect(res.status).toBe(403);
     const body = errorResponseSchema.parse(await res.json());
     expect(body.error.code).toBe("FORBIDDEN");
+  });
+
+  it("변형 실패 응답에 내부 오류 메시지를 노출하지 않는다", async () => {
+    const log = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    mockTransformProblem.mockRejectedValueOnce(
+      new AiGenerationError("upstream request id secret-123"),
+    );
+
+    const res = await transformProblemsRoute(
+      jsonRequest("http://localhost/api/problems/transform", {
+        originProblemId: MOCK_PROBLEMS[0]!.id,
+        count: 1,
+      }),
+    );
+    expect(res.status).toBe(502);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.message).toBe("AI 문제 변형에 실패했습니다.");
+    expect(JSON.stringify(body)).not.toContain("secret-123");
+    log.mockRestore();
   });
 });

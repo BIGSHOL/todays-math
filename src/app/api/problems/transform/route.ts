@@ -52,25 +52,28 @@ export async function POST(request: NextRequest) {
       count: parsed.data.count,
     });
 
-    const created = [];
-    for (const draft of drafts) {
-      created.push(
-        await db.problem.create({
-          data: {
-            userId: session.id,
-            unitId: draft.unitId,
-            source: draft.source,
-            originProblemId: draft.originProblemId,
-            difficulty: draft.difficulty,
-            problemType: draft.problemType,
-            content: draft.content,
-            answer: draft.answer,
-            solution: draft.solution,
-            reviewStatus: draft.reviewStatus,
-          },
-        }),
-      );
-    }
+    const created = await db.$transaction(async (tx) => {
+      const rows = [];
+      for (const draft of drafts) {
+        rows.push(
+          await tx.problem.create({
+            data: {
+              userId: session.id,
+              unitId: draft.unitId,
+              source: draft.source,
+              originProblemId: draft.originProblemId,
+              difficulty: draft.difficulty,
+              problemType: draft.problemType,
+              content: draft.content,
+              answer: draft.answer,
+              solution: draft.solution,
+              reviewStatus: draft.reviewStatus,
+            },
+          }),
+        );
+      }
+      return rows;
+    });
 
     return jsonOk(
       problemTransformResponseSchema,
@@ -79,7 +82,15 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     if (error instanceof AiGenerationError) {
-      return jsonError("AI_GENERATION_FAILED", error.message, 502);
+      console.error(
+        "[POST /api/problems/transform] AI transform failed",
+        error,
+      );
+      return jsonError(
+        "AI_GENERATION_FAILED",
+        "AI 문제 변형에 실패했습니다.",
+        502,
+      );
     }
     throw error;
   }
