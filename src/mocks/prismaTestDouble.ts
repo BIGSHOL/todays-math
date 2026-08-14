@@ -609,6 +609,17 @@ const prismaModels = {
       Object.assign(row, data);
       return row;
     },
+    async updateMany({
+      where,
+      data,
+    }: {
+      where?: Record<string, unknown>;
+      data: Partial<Omit<TestRow, "id" | "userId" | "createdAt">>;
+    }) {
+      const rows = testRows.filter((row) => matchesWhere(row, where));
+      rows.forEach((row) => Object.assign(row, data));
+      return { count: rows.length };
+    },
   },
   testProblem: {
     async create({

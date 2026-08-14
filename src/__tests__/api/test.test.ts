@@ -40,9 +40,12 @@ import {
   CLASS_A_ID,
   CLASS_OTHER_ID,
   CLASS_STARVED_ID,
+  TEST_CONFIRMED_ID,
   TEST_DRAFT_ID,
   TEST_NOT_FOUND_ID,
+  TEST_PRINTED_ID,
 } from "@/mocks/data";
+import { db } from "@/lib/db";
 
 function jsonRequest(url: string, method: string, body?: unknown) {
   return new NextRequest(url, {
@@ -119,6 +122,26 @@ describe("[T4.2] POST /api/tests/generate — draft TEST + TEST_PROBLEM 생성",
     expect(body.error.code).toBe("FORBIDDEN");
   });
 
+  it("내부 예외 메시지를 INTERNAL_ERROR 응답에 노출하지 않는다", async () => {
+    const log = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    vi.spyOn(db.progress, "findMany").mockRejectedValueOnce(
+      new Error("DATABASE_URL=postgresql://user:secret@internal/db"),
+    );
+
+    const res = await generateTest(
+      jsonRequest("http://localhost/api/tests/generate", "POST", {
+        classId: CLASS_A_ID,
+        testType: "daily",
+        testDate: "2026-08-13",
+      }),
+    );
+    expect(res.status).toBe(500);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.message).toBe("출제 중 오류가 발생했습니다.");
+    expect(JSON.stringify(body)).not.toContain("postgresql://");
+    log.mockRestore();
+  });
+
   it("문제은행 기반 출제 응답은 3초 이내에 완료된다(성능 인수 조건)", async () => {
     const start = performance.now();
     await generateTest(
@@ -191,6 +214,18 @@ describe("[T4.2] PUT /api/tests/{id}/problems/{seq} — 1클릭 교체(중복 �
       "50000000-0000-4000-8000-000000000111",
     );
   });
+
+  it("confirmed/printed 테스트의 문항은 교체할 수 없다", async () => {
+    for (const testId of [TEST_CONFIRMED_ID, TEST_PRINTED_ID]) {
+      const res = await replaceTestProblem(
+        jsonRequest(`http://localhost/api/tests/${testId}/problems/1`, "PUT"),
+        withIdAndSeq(testId, 1),
+      );
+      expect(res.status).toBe(409);
+      const body = errorResponseSchema.parse(await res.json());
+      expect(body.error.code).toBe("CONFLICT");
+    }
+  });
 });
 
 describe("[T4.2] POST /api/tests/{id}/confirm — 확정(draft → confirmed)", () => {
@@ -218,5 +253,32 @@ describe("[T4.2] POST /api/tests/{id}/confirm — 확정(draft → confirmed)", 
     expect(res.status).toBe(404);
     const body = errorResponseSchema.parse(await res.json());
     expect(body.error.code).toBe("NOT_FOUND");
+  });
+
+  it("confirmed/printed 테스트를 다시 confirmed로 되돌릴 수 없다", async () => {
+    for (const testId of [TEST_CONFIRMED_ID, TEST_PRINTED_ID]) {
+      const res = await confirmTest(
+        jsonRequest(`http://localhost/api/tests/${testId}/confirm`, "POST"),
+        withId(testId),
+      );
+      expect(res.status).toBe(409);
+      const body = errorResponseSchema.parse(await res.json());
+      expect(body.error.code).toBe("CONFLICT");
+    }
+  });
+
+  it("상태 확인 뒤 동시 변경으로 조건부 확정에 실패하면 덮어쓰지 않는다", async () => {
+    vi.spyOn(db.test, "updateMany").mockResolvedValueOnce({ count: 0 });
+
+    const res = await confirmTest(
+      jsonRequest(
+        `http://localhost/api/tests/${TEST_DRAFT_ID}/confirm`,
+        "POST",
+      ),
+      withId(TEST_DRAFT_ID),
+    );
+    expect(res.status).toBe(409);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.code).toBe("CONFLICT");
   });
 });
