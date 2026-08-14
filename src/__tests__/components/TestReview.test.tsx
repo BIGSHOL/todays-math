@@ -12,6 +12,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import TestReviewPage from "@/app/(main)/tests/[id]/page";
+import { ReviewProblemCard } from "@/components/test/ReviewProblemCard";
 import {
   MOCK_PROBLEMS,
   MOCK_TEST_CONFIRMED_PROBLEMS,
@@ -47,6 +48,35 @@ describe("[T4.3 S-05] 검수 — 문제 카드", () => {
     expect(container.textContent ?? "").not.toMatch(/[!！]/);
     expect(container.textContent ?? "").not.toMatch(/[😀🎉✨🔥]/);
     expect(first.className).not.toMatch(/#A57F00|gold/i);
+    expect(within(first).getByRole("separator")).toBeInTheDocument();
+  });
+
+  it("본문을 누르면 답과 해설을 보여 준다", async () => {
+    const { user } = await renderReview(TEST_DRAFT_ID);
+    const first = await screen.findByRole("article", { name: "문 1" });
+
+    expect(within(first).getByText("답")).not.toBeVisible();
+
+    await user.click(within(first).getByText("를 유한소수로 나타내어라."));
+
+    expect(within(first).getByText("답")).toBeVisible();
+    expect(within(first).getAllByText("0.28").length).toBeGreaterThan(0);
+    expect(within(first).getByText("해설")).toBeVisible();
+    expect(within(first).queryByText("해설 없음")).not.toBeInTheDocument();
+  });
+
+  it("해설이 없으면 해설 없음이다", async () => {
+    const user = userEvent.setup();
+    const problem = MOCK_PROBLEMS.find((item) => item.solution === null);
+    expect(problem).toBeDefined();
+
+    render(<ReviewProblemCard orderIndex={3} problem={problem!} />);
+    const card = screen.getByRole("article", { name: "문 3" });
+
+    await user.click(card.querySelector("summary")!);
+
+    expect(within(card).getByText("답")).toBeVisible();
+    expect(within(card).getByText("해설 없음")).toBeVisible();
   });
 
   it("교체는 모달 없이 1클릭으로 본문을 바꾼다", async () => {

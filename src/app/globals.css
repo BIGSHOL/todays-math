@@ -80,6 +80,13 @@ input[type="reset"]:not(:disabled) {
   cursor: not-allowed;
 }
 
+summary {
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+
 /* Mathgen 3단 방어 폴백 — 붉은 katex-error 대신 중립 모노스페이스 */
 .math-raw {
   font-family: ui-monospace, "D2Coding", monospace;
