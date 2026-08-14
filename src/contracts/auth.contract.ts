@@ -33,7 +33,10 @@ const emailSchema = z
 const passwordSchema = z
   .string()
   .min(8, { error: "비밀번호는 8자 이상이어야 합니다." })
-  .max(72, { error: "비밀번호는 72자를 초과할 수 없습니다." });
+  .max(72, { error: "비밀번호는 72자를 초과할 수 없습니다." })
+  .refine((password) => new TextEncoder().encode(password).byteLength <= 72, {
+    error: "비밀번호는 UTF-8 기준 72바이트를 초과할 수 없습니다.",
+  });
 
 // User.name VarChar(50)
 const displayNameSchema = z

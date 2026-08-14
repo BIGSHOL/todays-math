@@ -17,6 +17,7 @@ import {
 } from "@/contracts/auth.contract";
 import { jsonError, jsonOk, validationError } from "@/lib/apiResponse";
 import { db } from "@/lib/db";
+import { isPrismaErrorCode } from "@/lib/prismaErrors";
 
 /** bcrypt salt rounds — 보안/성능 균형의 관행값. */
 const BCRYPT_SALT_ROUNDS = 10;
@@ -36,9 +37,18 @@ export async function POST(request: NextRequest) {
   }
 
   const passwordHash = await hash(password, BCRYPT_SALT_ROUNDS);
-  const user = await db.user.create({
-    data: { email, name, passwordHash },
-  });
+  let user;
+  try {
+    user = await db.user.create({
+      data: { email, name, passwordHash },
+    });
+  } catch (error) {
+    // findUnique와 create 사이의 동시 가입도 기존 가입과 같은 응답으로 수렴시킨다.
+    if (isPrismaErrorCode(error, "P2002")) {
+      return jsonError("CONFLICT", "이미 가입된 이메일입니다.", 409);
+    }
+    throw error;
+  }
 
   return jsonOk(
     authSignupResponseSchema,
