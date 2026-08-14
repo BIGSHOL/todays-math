@@ -16,8 +16,7 @@ export function ClassCard({ row, index, hot, onProgress }: Props) {
   return (
     <article
       aria-label={row.name}
-      onClick={() => onProgress(row.classId)}
-      className={`${MAIN_ROW_GRID} cursor-pointer border-b border-divider py-3 ${
+      className={`${MAIN_ROW_GRID} border-b border-divider py-3 ${
         hot ? "bg-white shadow-[inset_5px_0_0_#1A73E8]" : ""
       } ${waiting ? "opacity-[0.78]" : ""}`}
     >

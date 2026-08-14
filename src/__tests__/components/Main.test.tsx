@@ -176,12 +176,11 @@ describe("[T4.3 S-03] 메인 — 수동 전환·진도 1클릭", () => {
     });
   });
 
-  it("카드의 문제부족반을 누르면 패널 반 선택이 그 반으로 바뀐다", async () => {
+  it("패널에서 반을 바꾸면 현재 소단원이 그 반 진도로 바뀐다", async () => {
     const { user } = await renderMain();
 
-    await user.click(screen.getByRole("article", { name: /중2 문제부족반/ }));
-
     const select = screen.getByLabelText("반 선택");
+    await user.selectOptions(select, CLASS_STARVED_ID);
     expect(select).toHaveValue(CLASS_STARVED_ID);
     expect(screen.getByLabelText("현재 소단원")).toHaveTextContent(
       MOCK_UNITS[14]!.section,
