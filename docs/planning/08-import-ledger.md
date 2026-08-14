@@ -29,12 +29,17 @@
 
 재생성: `node scripts/qa/build-import-ledger.mjs`
 
-### 2.2 ⚠️ 기존 `problemFingerprint`를 중복 판별에 쓰지 말 것
+### 2.2 externalId — 재이관 멱등 키 (2026-08-14 신설, 최우선)
+`selectMissingLoadRows`는 `externalId`가 있으면 **내용 대조보다 먼저** 그것으로 중복을 거른다.
+내용 대조 키(`loadRowKey`)는 `answer`를 포함하는데 정답 백필로 기존 행의 answer가
+바뀌었기 때문에, 내용만 보면 같은 문항을 '새 것'으로 오인해 중복 삽입한다.
+
+### 2.3 ⚠️ 기존 `problemFingerprint`를 중복 판별에 쓰지 말 것
 `src/lib/import/problemFingerprint.ts`의 지문은 `answer`/`solution`을 포함한다.
 **2026-08-14 정답 백필로 2,400여 건의 지문이 바뀌었다.** 같은 원본을 재이관하면
 지문이 안 맞아 **중복 삽입된다**. 중복 판별은 §2.1 본문 해시로 한다.
 
-### 2.3 OCR 품질 감사 원장
+### 2.4 OCR 품질 감사 원장
 `scripts/qa/ocr-audit-clean.txt` — 결함 검사를 통과한 문항 해시.
 `node scripts/qa/ocr-audit.mjs` 는 이 원장에 있는 문항을 **재검사하지 않는다**.
 검사 세트를 바꾸면 스크립트의 `CHECKSET_VERSION`을 올린다(원장 자동 무효화).
@@ -67,9 +72,18 @@
 전체 파일 목록: `scripts/qa/nfile-inventory.txt.gz` (21,009행, 재스캔 방지용).
 압축을 풀어 보려면 `gzip -dc scripts/qa/nfile-inventory.txt.gz | less`
 
-**주의**: 어떤 파일이 이미 이관됐는지에 대한 파일 단위 기록은 **남아 있지 않다**
-(이관 당시 중간 산출물 JSON이 삭제됨). 따라서 재이관은 §2.1 본문 해시 대조로만 중복을 막는다.
-앞으로 새로 이관할 때는 **처리한 원본 파일 경로를 반드시 원장에 남긴다**(§5).
+**주의**: 2026-08-14 이전 이관분에는 파일 단위 기록이 **남아 있지 않다**
+(추출기는 school/grade/subject/exam_id/문항번호/배점을 이미 받고 `externalId`까지
+만들었으나, `Problem` 테이블에 저장할 컬럼이 없어 **적재 순간 전부 버려졌다**.
+본문 3,569건 전수 확인 결과 학교명·문항번호 잔존 0건). 그래서 그림 참조 2,155건과
+OCR 훼손 1,136건을 원본 시험지로 되짚을 수 없다.
+
+**2026-08-14 조치 (완료)**: `Problem`에 역추적 컬럼을 추가하고 파이프라인이 실제로
+적재하도록 고쳤다 — `externalId`(UNIQUE) · `sourceFile` · `school` · `subject` ·
+`examId` · `questionNumber` · `score`.
+마이그레이션 `20260814120000_add_problem_source_metadata`.
+**이제부터 이관되는 문항은 원본으로 되짚을 수 있다.** 기존 9,197건은 값이 NULL이므로
+재추출로만 채울 수 있다.
 
 ---
 

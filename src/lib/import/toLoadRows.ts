@@ -13,6 +13,16 @@ export interface ImportLoadRow {
   reviewStatus: "approved";
   directUseAllowed: boolean;
   pool: "shared";
+
+  // 원본 역추적 메타데이터 — 없으면 null 로 넣는다 (08-import-ledger.md).
+  // 이 필드들이 빠지면 훼손 문항을 원본 시험지로 되짚을 수 없다.
+  externalId: string | null;
+  sourceFile: string | null;
+  school: string | null;
+  subject: string | null;
+  examId: string | null;
+  questionNumber: number | null;
+  score: number | null;
 }
 
 export interface LoadRowSkip {
@@ -64,6 +74,13 @@ export function toLoadRows(
       reviewStatus: "approved",
       directUseAllowed: draft.directUseAllowed,
       pool: "shared",
+      externalId: draft.externalId || null,
+      sourceFile: draft.sourceFile ?? null,
+      school: draft.school ?? null,
+      subject: draft.subject ?? null,
+      examId: draft.examId ?? null,
+      questionNumber: draft.questionNumber ?? null,
+      score: draft.score ?? null,
     });
   }
 

@@ -32,6 +32,8 @@ export function convertRpmRow(row: RpmRow): ImportDraft {
     solution: row.solution ?? null,
     unitHint: row.topic ?? row.concept ?? "",
     hasFigure: false,
+    // RPM 원본에는 학교/시험 메타가 없다. 파일 경로만 있으면 싣는다.
+    sourceFile: (row as { _sourceFile?: string })._sourceFile ?? null,
   };
 }
 

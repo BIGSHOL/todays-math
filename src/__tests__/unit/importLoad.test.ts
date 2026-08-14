@@ -24,6 +24,13 @@ function loadRow(content: string): ImportLoadRow {
     reviewStatus: "approved",
     directUseAllowed: true,
     pool: "shared",
+    externalId: null,
+    sourceFile: null,
+    school: null,
+    subject: null,
+    examId: null,
+    questionNumber: null,
+    score: null,
   };
 }
 
@@ -38,6 +45,13 @@ function existingRow(row: ImportLoadRow): Omit<ImportLoadRow, "userId"> {
     solution: row.solution,
     reviewStatus: row.reviewStatus,
     directUseAllowed: row.directUseAllowed,
+    externalId: row.externalId,
+    sourceFile: row.sourceFile,
+    school: row.school,
+    subject: row.subject,
+    examId: row.examId,
+    questionNumber: row.questionNumber,
+    score: row.score,
     pool: row.pool,
   };
 }

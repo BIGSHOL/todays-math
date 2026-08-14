@@ -31,6 +31,8 @@ export interface PastExamPaper {
     unit?: string;
   };
   header?: { title?: string; school?: string; subject?: string };
+  /** N드라이브 원본 파일 경로 (추출기가 채운다) */
+  _sourceFile?: string;
   questions?: PastExamQuestion[];
   _source?: { exam_id?: number | string };
 }
@@ -74,6 +76,14 @@ export function convertPastExamQuestion(
     unitHint,
     hasFigure: stem.hasFigure || choiceLatex.some((choice) => choice.hasFigure),
     gradeHint,
+    // 원본 역추적 — 적재까지 그대로 흘려보낸다 (08-import-ledger.md)
+    sourceFile: paper._sourceFile ?? null,
+    school: paper.meta?.school?.trim() || null,
+    subject: paper.meta?.subject?.trim() || null,
+    examId: paper.meta?.exam_id != null ? String(paper.meta.exam_id) : null,
+    questionNumber:
+      typeof question.number === "number" ? question.number : null,
+    score: typeof question.score === "number" ? question.score : null,
   };
 }
 

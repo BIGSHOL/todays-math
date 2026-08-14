@@ -46,6 +46,8 @@ interface ExistingImportRow {
   reviewStatus: string;
   directUseAllowed: boolean;
   pool: string;
+  /** 원본 고유 키 — 있으면 내용 대조보다 우선해 중복을 막는다 */
+  externalId?: string | null;
 }
 
 const LOAD_LOCK_KEY = "todays-math/load-classified/v1";
@@ -77,13 +79,19 @@ export function selectMissingLoadRows(
   existing: ExistingImportRow[],
 ): ImportLoadRow[] {
   const existingCounts = new Map<string, number>();
+  // externalId 는 원본 고유 키다. 내용 대조(loadRowKey)는 answer 를 포함하는데,
+  // 2026-08-14 정답 백필로 기존 행의 answer 가 바뀌었다 — 내용만 보면 같은 문항을
+  // '새 것'으로 오인해 중복 삽입한다. externalId 가 있으면 그것을 우선한다.
+  const existingExternalIds = new Set<string>();
   for (const row of existing) {
+    if (row.externalId) existingExternalIds.add(row.externalId);
     const key = loadRowKey(row);
     existingCounts.set(key, (existingCounts.get(key) ?? 0) + 1);
   }
 
   const missing: ImportLoadRow[] = [];
   for (const row of desired) {
+    if (row.externalId && existingExternalIds.has(row.externalId)) continue;
     const key = loadRowKey(row);
     const count = existingCounts.get(key) ?? 0;
     if (count > 0) {
@@ -167,6 +175,7 @@ export async function loadClassifiedAtomically(
           reviewStatus: true,
           directUseAllowed: true,
           pool: true,
+          externalId: true,
         },
       });
       const missing = selectMissingLoadRows(rows, existing);

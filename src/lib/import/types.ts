@@ -19,6 +19,20 @@ export interface ImportDraft {
   hasFigure: boolean;
   /** 문항별 학년/과목 힌트. classifyDrafts가 단원 매핑 범위를 좁힐 때 쓴다. */
   gradeHint?: string | number;
+
+  // ── 원본 역추적 메타데이터 (전부 선택) ────────────────────────────
+  // 추출 단계에는 있었는데 적재가 버리던 값들. 훼손 문항을 원본 시험지로
+  // 되짚기 위해 DB까지 그대로 옮긴다. 참조: docs/planning/08-import-ledger.md
+  /** N드라이브 원본 파일 경로 */
+  sourceFile?: string | null;
+  school?: string | null;
+  subject?: string | null;
+  /** 시험 식별자 — 예: `2023-donmun-2-1` */
+  examId?: string | null;
+  /** 원본 시험지에서의 문항 번호 */
+  questionNumber?: number | null;
+  /** 배점 */
+  score?: number | null;
 }
 
 export interface UnitLike {
