@@ -22,13 +22,7 @@
   "prisma": {
     "seed": "node prisma/seed.ts"
   },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "src/**/*.{tsx,jsx,css}": "node src/lint/check-affordance.mjs"
-  },
+
   "dependencies": {
     "@anthropic-ai/sdk": "^0.116.0",
     "@auth/prisma-adapter": "^2.11.3",

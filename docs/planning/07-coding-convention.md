@@ -310,10 +310,10 @@ feat(generator): 난이도 배분 알고리즘 구현
 ```json
 // package.json
 {
-  "lint-staged": {
-    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
-    "src/**/*.{tsx,jsx,css}": "node src/lint/check-affordance.mjs"
-  }
+  // lint-staged.config.mjs
+  "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+  "src/**/*.{tsx,jsx,css}": "node src/lint/check-affordance.mjs",
+  "src/lint/**": "vitest affordanceGuard"
 }
 ```
 
