@@ -21,6 +21,18 @@ import { ProblemTransformForm } from "./ProblemTransformForm";
 
 type Panel = "register" | "generate" | "transform" | null;
 
+function matchesFilters(
+  problem: ProblemEntity,
+  filters: ProblemListFilters,
+): boolean {
+  return (
+    (!filters.unitId || problem.unitId === filters.unitId) &&
+    (!filters.difficulty || problem.difficulty === filters.difficulty) &&
+    (!filters.problemType || problem.problemType === filters.problemType) &&
+    (!filters.reviewStatus || problem.reviewStatus === filters.reviewStatus)
+  );
+}
+
 export function ProblemBank() {
   const [unitId, setUnitId] = useState("");
   const [difficulty, setDifficulty] = useState("");
@@ -86,12 +98,20 @@ export function ProblemBank() {
   const defaultUnitId = unitId || units[0]?.id || "";
   const unitActionsDisabled = unitsLoading || units.length === 0;
 
+  function startProblemReload() {
+    setLoading(true);
+    setError(null);
+  }
+
   function toggle(next: Exclude<Panel, null>) {
     setPanel((current) => (current === next ? null : next));
   }
 
   function prepend(count: number, created: ProblemEntity[], label: string) {
-    setProblems((current) => [...created, ...current]);
+    setProblems((current) => [
+      ...created.filter((problem) => matchesFilters(problem, filters)),
+      ...current,
+    ]);
     setNotice(`${count}건 ${label}`);
     setPanel(null);
     setError(null);
@@ -126,7 +146,10 @@ export function ProblemBank() {
           label="단원"
           value={unitId}
           disabled={unitsLoading || units.length === 0}
-          onChange={(event) => setUnitId(event.target.value)}
+          onChange={(event) => {
+            startProblemReload();
+            setUnitId(event.target.value);
+          }}
         >
           <option value="">전체</option>
           {units.map((unit) => (
@@ -138,7 +161,10 @@ export function ProblemBank() {
         <FieldSelect
           label="난이도"
           value={difficulty}
-          onChange={(event) => setDifficulty(event.target.value)}
+          onChange={(event) => {
+            startProblemReload();
+            setDifficulty(event.target.value);
+          }}
         >
           <option value="">전체</option>
           <option value="easy">쉬움</option>
@@ -148,7 +174,10 @@ export function ProblemBank() {
         <FieldSelect
           label="유형"
           value={problemType}
-          onChange={(event) => setProblemType(event.target.value)}
+          onChange={(event) => {
+            startProblemReload();
+            setProblemType(event.target.value);
+          }}
         >
           <option value="">전체</option>
           {PROBLEM_TYPES.map((type) => (
@@ -160,7 +189,10 @@ export function ProblemBank() {
         <FieldSelect
           label="상태"
           value={reviewStatus}
-          onChange={(event) => setReviewStatus(event.target.value)}
+          onChange={(event) => {
+            startProblemReload();
+            setReviewStatus(event.target.value);
+          }}
         >
           <option value="">전체</option>
           <option value="pending">대기</option>
@@ -211,11 +243,11 @@ export function ProblemBank() {
       <section className="mt-4">
         {!loading && !error && problems.length === 0 ? (
           <p className="text-[12.5px] text-[#6A6A68]">등록된 문제가 없습니다</p>
-        ) : (
+        ) : !loading && !error ? (
           problems.map((problem) => (
             <ProblemCard key={problem.id} problem={problem} />
           ))
-        )}
+        ) : null}
       </section>
     </main>
   );

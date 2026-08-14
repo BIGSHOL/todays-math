@@ -59,7 +59,8 @@ export async function loadMainDashboard(): Promise<MainDashboardData> {
   const progressEntries = await Promise.all(
     classesBody.data.map(async (cls) => {
       const res = await fetch(`/api/progress?classId=${cls.id}`);
-      if (!res.ok) return [cls.id, null] as const;
+      if (res.status === 404) return [cls.id, null] as const;
+      if (!res.ok) throw new Error("진도를 불러오지 못했습니다");
       const body = progressResponseSchema.parse(await res.json());
       return [cls.id, body.data] as const;
     }),

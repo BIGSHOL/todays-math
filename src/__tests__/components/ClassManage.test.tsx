@@ -7,7 +7,7 @@
  */
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 import { describe, expect, it, vi } from "vitest";
 
 import { AppChrome } from "@/components/chrome/AppChrome";
@@ -15,6 +15,7 @@ import { ClassManage } from "@/components/class/ClassManage";
 import {
   CLASS_A_ID,
   MOCK_CURRENT_PROGRESS_UNIT,
+  MOCK_STUDENTS,
   MOCK_UNITS,
 } from "@/mocks/data";
 import { server } from "@/mocks/server";
@@ -109,6 +110,29 @@ describe("[T2.3 S-07] 반/학생 관리 — 크롬·표·학생", () => {
     });
     expect(within(students).getByText("정도윤")).toBeInTheDocument();
     expect(within(students).queryByText("이서준")).not.toBeInTheDocument();
+  });
+
+  it("반을 바꾸는 동안 이전 반 학생을 남겨 두지 않는다", async () => {
+    server.use(
+      http.get("/api/students", async ({ request }) => {
+        const classId = new URL(request.url).searchParams.get("classId");
+        if (classId !== CLASS_A_ID) await delay(100);
+        const students = MOCK_STUDENTS.filter(
+          (student) => student.classId === classId,
+        );
+        return HttpResponse.json({
+          data: students,
+          meta: { page: 1, pageSize: 100, total: students.length },
+        });
+      }),
+    );
+    const { user } = await readyManage();
+    expect(screen.getByText("이서준")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "중2 기초반" }));
+
+    expect(screen.queryByText("이서준")).not.toBeInTheDocument();
+    expect(await screen.findByText("최수아")).toBeInTheDocument();
   });
 
   it("페이지는 AppChrome으로 감싼다", async () => {

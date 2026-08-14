@@ -92,7 +92,14 @@ export function useClassManage() {
     if (!name.trim() || !grade.trim()) return;
     const created = await createClass(name.trim(), grade.trim());
     setClasses((prev) => [...prev, created]);
-    setSelectedClassId(created.id);
+    selectClass(created.id);
+  }
+
+  function selectClass(classId: string) {
+    setStudents([]);
+    setCurrentUnitId(null);
+    setError(null);
+    setSelectedClassId(classId);
   }
 
   return {
@@ -102,7 +109,7 @@ export function useClassManage() {
     currentUnitId,
     status,
     error,
-    selectClass: setSelectedClassId,
+    selectClass,
     advance,
     selectUnit,
     addStudent,
