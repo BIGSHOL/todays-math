@@ -15,6 +15,10 @@ export default defineConfig(({ mode }) => ({
     // 로드해 process.env로 주입한다 (테스트 전용 DATABASE_URL 오버라이드 등).
     env: loadEnv(mode, process.cwd(), ""),
     globals: false,
+    // mathgen 렌더 스택(react-markdown + remark-math + rehype-katex) 이식 후 문제 목록
+    // 렌더가 무거워져 기본 5초로는 전체 실행에서만 타임아웃이 났다(격리 실행은 통과).
+    // 렌더 자체는 정상이므로 상한만 현실화한다.
+    testTimeout: 20000,
     setupFiles: ["./vitest.setup.ts"],
     include: ["src/__tests__/**/*.{test,spec}.{ts,tsx}"],
     css: false,

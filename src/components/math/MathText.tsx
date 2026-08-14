@@ -1,8 +1,11 @@
 /**
- * 문제 본문·정답·해설 공통 수식 렌더러.
- * 검수(S-05)·문제은행(S-08)·인쇄(S-06)가 이 컴포넌트만 쓴다 — 경로 분기 금지.
+ * 정답·해설 등 단문 수식 렌더러 — mathgen MarkdownRenderer 경로를 그대로 탄다.
+ * 검수(S-05)·문제은행(S-08)·인쇄(S-06)가 이 경로만 쓴다 — 렌더 경로 분기 금지.
+ *
+ * 문제 본문(지문 + 보기)은 `ProblemContent`를 쓴다 (mathgen ProblemDisplay 구조).
  */
-import { renderMathHtml } from "@/lib/math/renderMathHtml";
+import { MarkdownRenderer } from "@/components/math/MarkdownRenderer";
+import { normalizeOcrText } from "@/lib/problem/parseProblemContent";
 
 export interface MathTextProps {
   text: string;
@@ -10,11 +13,12 @@ export interface MathTextProps {
   as?: "span" | "div" | "p";
 }
 
-export function MathText({ text, className, as: Tag = "span" }: MathTextProps) {
+export function MathText({ text, className, as = "span" }: MathTextProps) {
   return (
-    <Tag
+    <MarkdownRenderer
+      content={normalizeOcrText(text)}
       className={className}
-      dangerouslySetInnerHTML={{ __html: renderMathHtml(text) }}
+      inline={as === "span"}
     />
   );
 }

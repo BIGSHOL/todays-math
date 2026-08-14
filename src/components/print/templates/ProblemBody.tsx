@@ -1,4 +1,4 @@
-import { MathText } from "@/components/math/MathText";
+import { ProblemContent } from "@/components/math/ProblemContent";
 import type { TestPrintProblem } from "@/components/print/types";
 
 import styles from "../TestPrint.module.css";
@@ -7,9 +7,9 @@ interface ProblemBodyProps {
   problem: TestPrintProblem;
 }
 
-/** 검수 화면과 같은 MathText 경로로 문제의 KaTeX를 렌더한다. */
+/** 검수·문제은행과 같은 mathgen 렌더 경로(ProblemContent)로 문제 본문을 렌더한다. */
 export function ProblemBody({ problem }: ProblemBodyProps) {
   return (
-    <MathText as="div" className={styles.problemText} text={problem.content} />
+    <ProblemContent content={problem.content} className={styles.problemText} />
   );
 }
