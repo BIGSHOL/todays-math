@@ -11,10 +11,9 @@ describe("[AppChrome]", () => {
       </AppChrome>,
     );
 
-    expect(screen.getByRole("link", { name: "오늘의수학" })).toHaveAttribute(
-      "href",
-      "/",
-    );
+    const logo = screen.getByRole("link", { name: "오늘의수학" });
+    expect(logo).toHaveAttribute("href", "/");
+    expect(logo.className).toMatch(/text-\[28\.5px\]/);
     expect(screen.getByRole("link", { name: "메인" })).toHaveAttribute(
       "href",
       "/",

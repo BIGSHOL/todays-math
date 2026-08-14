@@ -125,7 +125,7 @@
 
 | 이름 | 크기 | 굵기 | 용도 |
 |------|------|------|------|
-| Logo | 19px | 900 | 마스트헤드 로고 (자간 -0.5px) |
+| Logo | 28.5px | 900 | 마스트헤드 로고 (자간 -0.5px, 헤더 150%) |
 | Class Name | 15px | 900 | 반 이름 |
 | Big Number | 24~26px | 900 | 카드 순번, 통계 숫자 (tabular-nums) |
 | Body | 12.5px | 700~900 | 버튼, 본문 강조 |
@@ -310,7 +310,7 @@ Wire 5안(A~E) 중 A(오늘 스택)+E(대장부 표) 결합안으로 확정:
 
 원장님이 이미 고른 H5×G2 + 자습 H1을 나머지 화면에 확장한다. 새 시안 왕복 없이 구현한다.
 
-**공통 크롬**: `src/components/chrome/AppChrome.tsx` — 마스트 3px Ink 룰, 로고 19/900, 날짜 11px, 내비 `메인 / 반 / 문제은행`. 인쇄 미리보기(S-06)는 크롬을 쓰지 않는다.
+**공통 크롬**: `src/components/chrome/AppChrome.tsx` — 마스트 3px Ink 룰, 로고 28.5/900, 날짜 16.5px, 내비 17.25px `메인 / 반 / 문제은행`. 인쇄 미리보기(S-06)는 크롬을 쓰지 않는다.
 
 **버튼**: `src/components/ui/Button.tsx` — primary=Blue 채움(지금 할 일), ink=Ink 채움(확정/완료), secondary=1px Divider 테두리, ghost=텍스트. 최소 44×44.
 

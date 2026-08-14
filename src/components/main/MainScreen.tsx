@@ -127,7 +127,7 @@ export function MainScreen() {
         <button
           type="button"
           onClick={() => setViewOverride(view === "stack" ? "ledger" : "stack")}
-          className="cursor-pointer bg-[#161616] px-2.5 py-0.5 text-[10.5px] font-extrabold text-[#ECECEA]"
+          className="cursor-pointer bg-[#161616] px-2.5 py-0.5 text-[15.75px] font-extrabold text-[#ECECEA]"
         >
           {view === "stack" ? "전체 표 ⇄" : "오늘 작업 ⇄"}
         </button>
