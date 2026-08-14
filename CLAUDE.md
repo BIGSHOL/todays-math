@@ -13,7 +13,8 @@
 | `docs/planning/04-database-design.md` | ERD 9개 엔티티 |
 | `docs/planning/05-design-system.md` | 디자인 — **`[협의 필요]` 항목은 미확정!** |
 | `docs/planning/06-tasks.md` | 태스크 목록 (M0~M6, 21개) — `/orchestrate`가 사용 |
-| `docs/planning/07-coding-convention.md` | 컨벤션, 도메인 용어 SSOT, Decision Log D-01~31 |
+| `docs/planning/07-coding-convention.md` | 컨벤션, 도메인 용어 SSOT, Decision Log D-01~36 |
+| `docs/planning/08-import-ledger.md` | **문항 이관 원장 — N드라이브 기출 위치·중복 방지·토큰 절약 원칙.**<br>이관/검수 작업 전 필독. 같은 조사를 반복하지 말 것 |
 
 ## 기술 스택
 
