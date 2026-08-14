@@ -139,4 +139,33 @@ describe("[KaTeX] 혼합 본문 — renderMathHtml", () => {
     expect(html).toContain("katex");
     expect(html).toContain("의 값은?");
   });
+
+  it.each([
+    "에 대하여 A^{\\bigstar}=\\{x+y \\mid x \\in A\\}로 정의한다.",
+    "교점이 있을 때, \\underbrace{(f \\circ \\cdots \\circ f)}_{2024\\text{개}}(5)의 값은?",
+  ])("OCR 코퍼스의 느슨한 명령을 원문 노출 없이 렌더한다: %s", (text) => {
+    const html = renderMathHtml(text);
+    expectSafeHtml(html);
+    expect(html).toContain("katex");
+    expect(html).not.toContain("math-raw");
+  });
+
+  it("한 줄에 반복되는 느슨한 수식 구간을 모두 렌더한다", () => {
+    const input = "A \\subset B이면 참이고, x \\notin A이면 y \\geq 0이다.";
+    const preprocessed = preprocessMathText(input);
+    const html = renderMathHtml(input);
+    expectSafeHtml(html);
+    expect(preprocessed.match(/\$/gu)).toHaveLength(6);
+    expect(html.match(/class="katex"/gu)).toHaveLength(3);
+  });
+
+  it.each(["포물선 y=x^2+2px+q의 초점", "f^{-1}의 그래프"])(
+    "OCR의 ASCII caret 수식을 자동 렌더한다: %s",
+    (input) => {
+      const html = renderMathHtml(input);
+      expectSafeHtml(html);
+      expect(html).not.toMatch(/[A-Za-z0-9]\^[A-Za-z0-9{]/u);
+      expect(html).toContain("katex");
+    },
+  );
 });

@@ -38,6 +38,9 @@ export async function runOcrDryRun(dir: string, outDir: string) {
   );
 
   const reports = [];
+  const classifiedDrafts: Array<
+    ReturnType<typeof classifyDrafts>["classified"][number]
+  > = [];
   let paperCount = 0;
   let parseErrors = 0;
   for (const file of files) {
@@ -64,14 +67,14 @@ export async function runOcrDryRun(dir: string, outDir: string) {
       answers = [];
     }
     const drafts = convertPastExamPaper(paper, answers);
-    reports.push(
-      classifyDrafts(
-        "past_exam",
-        drafts,
-        units,
-        paper.meta?.subject ?? paper.meta?.grade,
-      ).report,
+    const classified = classifyDrafts(
+      "past_exam",
+      drafts,
+      units,
+      paper.meta?.subject ?? paper.meta?.grade,
     );
+    reports.push(classified.report);
+    classifiedDrafts.push(...classified.classified);
   }
 
   const report = mergeImportReports("past_exam", reports);
@@ -83,6 +86,20 @@ export async function runOcrDryRun(dir: string, outDir: string) {
   await writeJson(
     path.join(outDir, "ocr-figures.json"),
     filterReportItems(report, "skipped_figure"),
+  );
+  await writeJson(
+    path.join(outDir, "ocr-classified.json"),
+    classifiedDrafts.map((draft) => ({
+      externalId: draft.externalId,
+      unitId: draft.unitId,
+      source: draft.source,
+      directUseAllowed: draft.directUseAllowed,
+      difficulty: draft.difficulty,
+      problemType: draft.problemType,
+      content: draft.content,
+      answer: draft.answer,
+      solution: draft.solution,
+    })),
   );
 
   const summary = {

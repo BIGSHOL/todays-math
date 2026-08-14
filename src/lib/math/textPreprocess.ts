@@ -836,14 +836,16 @@ export const LATEX_WRAP_TRIGGER_SOURCE =
   "\\\\(?:displaystyle|textstyle|scriptstyle|d?frac|tfrac|cfrac|sqrt|left|right|" +
   "bigg?[lrm]?|Bigg?[lrm]?|d?binom|tbinom|sum|prod|coprod|int|iint|iiint|oint|" +
   "lim|limsup|liminf|cdot|times|div|pm|mp|cdots|ldots|dots|vdots|ddots|vec|" +
+  "ast|star|bigstar|backsim|because|therefore|big|hline|mid|middle|not|" +
+  "parallel|perp|rightarrow|Rightarrow|leftrightarrow|Leftrightarrow|to|" +
   "widehat|widetilde|hat|tilde|bar|overline|underline|overrightarrow|" +
-  "overleftarrow|overset|underset|" +
+  "overleftarrow|overset|underset|overbrace|underbrace|" +
   "stackrel|begin|end|over|atop|max|min|log|ln|exp|sin|cos|tan|sec|csc|cot|" +
   "partial|nabla|alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|" +
   "lambda|mu|nu|xi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Gamma|Delta|Theta|" +
   "Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|infty|cup|cap|subset|supset|subseteq|" +
-  "supseteq|notin|in|neq|leq|geq|approx|equiv|cong|sim|angle|triangle|circ|" +
-  "prime|mathrm|mathbf|mathbb|mathcal|mathfrak|text|boxed|phantom|operatorname)\\b";
+  "supseteq|notin|in|neq|leq|geq|approx|equiv|cong|sim|angle|triangle|square|circ|" +
+  "prime|varnothing|mathrm|mathbf|mathbb|mathcal|mathfrak|text|boxed|phantom|operatorname)\\b";
 
 /**
  * 수식 정규화 — KaTeX 입력 전 안전 변환.
@@ -924,6 +926,21 @@ export const preprocessMathText = (content: string): string => {
     "",
   );
 
+  // (8-1) `$` 밖 OCR ASCII 수식 보호. `y=x^2+2px+q`, `p+q`, `f^{-1}`처럼
+  // backslash 명령이 전혀 없는 식은 Step 9의 LaTeX 명령 감지로 잡히지 않는다.
+  // 기존 수식은 위에서 sentinel로 마스킹됐으므로 여기서는 평문 구간만 처리된다.
+  const ASCII_ATOM = "[A-Za-z0-9]+(?:\\^\\{?-?[A-Za-z0-9]+\\}?)?";
+  const looseAsciiExpression = new RegExp(
+    `(?<![A-Za-z0-9\\\\])(${ASCII_ATOM}(?:\\s*[=+\\-*/]\\s*${ASCII_ATOM})+|[A-Za-z][A-Za-z0-9]*\\^\\{?-?[A-Za-z0-9]+\\}?)(?![A-Za-z0-9])`,
+    "gu",
+  );
+  masked = masked.replace(looseAsciiExpression, (match) => {
+    // 숫자만의 날짜/범위 같은 문자열은 수식으로 승격하지 않는다.
+    if (!/[A-Za-z]/u.test(match)) return match;
+    inlines.push(applyMathInnerNormalization(match));
+    return `${SENTINEL_INLINE}${inlines.length - 1}${SENTINEL_INLINE}`;
+  });
+
   // (9) `$` 밖에 떠도는 raw LaTeX 자동 wrap — math + 한글 혼합 처리.
   //
   //     LLM 이 가끔 본문/보기/풀이 한 줄을 통째로 `$` 없이 emit:
@@ -942,22 +959,77 @@ export const preprocessMathText = (content: string): string => {
   // sanitize.ts 의 preWrapLatexHeavyLines 와 *동일* 소스 공유 (단일 source of
   // truth — LATEX_WRAP_TRIGGER_SOURCE). `\tfrac` / `\Bigl` / `\cfrac` 등 빠진
   // 명령어로 인해 wrap 이 트리거 안 되던 함정 차단 (사용자 보고 2026-06-03).
-  const LATEX_CMD = new RegExp(LATEX_WRAP_TRIGGER_SOURCE, "g");
   // 한글 (Hangul Syllables + Jamo) — math 모드에선 안 그려지므로 boundary 로 사용.
   const HANGUL_RE = /[가-힣ㄱ-ㅎㅏ-ㅣ]/;
+  const findTopLevelHangul = (value: string): number => {
+    let braceDepth = 0;
+    for (let index = 0; index < value.length; index += 1) {
+      const character = value[index];
+      if (character === "{" && value[index - 1] !== "\\") braceDepth += 1;
+      if (character === "}" && value[index - 1] !== "\\") {
+        braceDepth = Math.max(0, braceDepth - 1);
+      }
+      if (braceDepth === 0 && HANGUL_RE.test(character)) return index;
+    }
+    return -1;
+  };
+  const firstLooseLatexCommand = (value: string): number => {
+    const wordCommand = value.search(new RegExp(LATEX_WRAP_TRIGGER_SOURCE));
+    const symbolCommand = value.search(/\\[{},.;:!%#$&_ |\\]/u);
+    if (wordCommand < 0) return symbolCommand;
+    if (symbolCommand < 0) return wordCommand;
+    return Math.min(wordCommand, symbolCommand);
+  };
+  const wrapLooseSegments = (value: string): string => {
+    let remaining = value;
+    let wrapped = "";
+    // 한 줄에 `수식 ... 한글 ... 수식`이 반복되는 보기/풀이도 전 구간 처리한다.
+    // 100회 guard는 비정상 입력에서도 전처리가 무한 루프에 빠지지 않게 한다.
+    for (let pass = 0; pass < 100 && remaining; pass += 1) {
+      const firstCmdIdx = firstLooseLatexCommand(remaining);
+      if (firstCmdIdx < 0) {
+        wrapped += remaining;
+        remaining = "";
+        break;
+      }
+
+      // 명령 바로 앞의 `A^{` 같은 ASCII 수학 prefix도 span에 포함한다.
+      const prefixMatch = remaining
+        .slice(0, firstCmdIdx)
+        .match(/[\\A-Za-z0-9_^[\]{}()+\-=|][\\A-Za-z0-9_^[\]{}()+\-=|.,\s]*$/u);
+      const mathStart = firstCmdIdx - (prefixMatch?.[0].length ?? 0);
+      const leading = remaining.slice(0, mathStart);
+      const mathTail = remaining.slice(mathStart);
+
+      // brace 안 `\\text{개}`는 수식 일부이고, top-level 한글만 경계다.
+      const hangulInTail = findTopLevelHangul(mathTail);
+      const mathSpan = (
+        hangulInTail >= 0 ? mathTail.slice(0, hangulInTail) : mathTail
+      ).trimEnd();
+      const trailingText =
+        hangulInTail >= 0 ? mathTail.slice(hangulInTail) : "";
+      if (!mathSpan) {
+        // 최소 한 글자를 소비해 다음 반복에서 같은 명령을 다시 찾지 않는다.
+        wrapped += remaining.slice(0, firstCmdIdx + 1);
+        remaining = remaining.slice(firstCmdIdx + 1);
+        continue;
+      }
+
+      const hasDisplay = /\\displaystyle\b/.test(mathSpan);
+      const innerRaw = hasDisplay ? mathSpan : `\\displaystyle ${mathSpan}`;
+      const innerNormalized = applyMathInnerNormalization(innerRaw);
+      wrapped += `${leading}$${innerNormalized}$`;
+      remaining = trailingText;
+    }
+    return wrapped + remaining;
+  };
   masked = masked
     .split("\n")
     .map((line) => {
-      // sentinel (이미 $...$ 마스크) 가 있으면 건드리지 말 것
-      if (line.includes(SENTINEL_BLOCK) || line.includes(SENTINEL_INLINE))
-        return line;
-      // `$` 가 있으면 부분적으로라도 인용된 줄. 자동 wrap 하면 충돌 위험.
-      if (line.includes("$")) return line;
       // 알려진 LaTeX 명령어가 1개 이상 — wrap 후보. (sanitize 의 preWrap 과 동일
       // 하게 `< 1` 로 완화 — `\tfrac{1}{2}=\tfrac{2}{4}` 같이 한 종류 명령어만
       // 쓰는 짧은 줄도 raw 로 새지 않게.)
-      const cmds = line.match(LATEX_CMD);
-      if (!cmds || cmds.length < 1) return line;
+      if (firstLooseLatexCommand(line) < 0) return line;
       // enum marker 또는 blockquote prefix 보존.
       const m = line.match(
         /^(\s*(?:>\s?)?(?:[ㄱ-ㅎ]\.|[①②③④⑤⑥⑦⑧⑨⑩]|\d+\.|\d+\)|-|\*)?\s*)([\s\S]+?)$/,
@@ -965,32 +1037,7 @@ export const preprocessMathText = (content: string): string => {
       const prefix = m ? m[1] : "";
       const rest = m ? m[2] : line;
 
-      // math 부분의 시작점 — 첫 `\backslashcmd`.
-      const firstCmdIdx = rest.search(/\\[a-zA-Z]/);
-      if (firstCmdIdx < 0) return line;
-      const leading = rest.slice(0, firstCmdIdx); // 보통 빈 문자열이거나 짧은 prose.
-      const mathTail = rest.slice(firstCmdIdx);
-
-      // 한글이 math span 중간에 등장하면 거기서 끊는다.
-      const hangulInTail = mathTail.search(HANGUL_RE);
-      let mathSpan: string;
-      let trailingText: string;
-      if (hangulInTail >= 0) {
-        mathSpan = mathTail.slice(0, hangulInTail).trimEnd();
-        trailingText = mathTail.slice(hangulInTail);
-      } else {
-        mathSpan = mathTail.trim();
-        trailingText = "";
-      }
-      if (!mathSpan) return line;
-
-      // `\displaystyle` 이 이미 들어 있으면 그대로, 없으면 명시적으로 prepend.
-      // **반드시 applyMathInnerNormalization 통과** — 안 그러면 `\left\left`
-      // 같은 모델 typo 가 KaTeX 까지 그대로 도달해 빨간 글씨 fallback.
-      const hasDisplay = /\\displaystyle\b/.test(mathSpan);
-      const innerRaw = hasDisplay ? mathSpan : `\\displaystyle ${mathSpan}`;
-      const innerNormalized = applyMathInnerNormalization(innerRaw);
-      return `${prefix}${leading}$${innerNormalized}$${trailingText}`;
+      return `${prefix}${wrapLooseSegments(rest)}`;
     })
     .join("\n");
 

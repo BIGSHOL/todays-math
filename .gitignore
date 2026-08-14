@@ -43,3 +43,4 @@ worktree/
 # T3.0 이관 덤프 — 집계 마크다운만 커밋
 scripts/import/reports/*.json
 .tmp-orca/
+.qa-artifacts/
