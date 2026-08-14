@@ -31,13 +31,15 @@ Next.js 15+ 풀스택 단독 (App Router, TypeScript) · Tailwind CSS v4 (기성
    **제시 방식: Wire 4~5안 → 선택 → Hi-fi 4~5안 → 선택 (05 §0-3). 세부 디테일은 항상 질문.**
 2. **TDD**: Phase 1+ 태스크는 RED→GREEN→REFACTOR. 테스트 없이 구현 금지.
 3. **Worktree**: Phase 1+는 `git worktree add ../testautocreator-phase{N}-{feature} -b phase/{N}-{feature}`.
-4. **병합은 사용자 승인 후에만.**
+4. **병합**: 오르카 다중 세션으로 끝난 작업은 검수 후 **main 병합이 기본**(아래 9번). 강제 푸시·공유 이력 파괴만 확인.
 5. **UI 문구는 간결·사무적** (D-08): "출제 완료", "인쇄하기" — 느낌표·이모지 없음.
 6. **인쇄 관련 변경은 실물 프린터 출력 검수까지가 완료 조건.**
 7. Claude API 키는 서버 환경변수로만. 테스트에서 실호출 금지.
 8. **마우스 어포던스 (D-30, 강제)**: 손가락 커서와 hover 배경은 실제로 누르는 컨트롤에만.
    카드·표 행·장식 표면에 `cursor-pointer` / 행 `hover:bg-*` / `<div onClick>` 금지.
    `npm run lint:affordance`와 ESLint가 막는다. 검사 우회 금지.
+9. **오르카 다중 세션이 기본**: 독립적으로 나눌 수 있는 작업은 오르카 다중 세션(워크트리)으로
+   병행하고, 완료되면 main에 병합한다. 혼자 순서대로 하는 것은 의존이 있어 나눌 수 없을 때만.
 
 ## 명령어
 
@@ -53,6 +55,7 @@ docker compose up -d # 로컬 PostgreSQL
 
 ## 워크플로우
 
+- **기본**: 병렬 가능한 일은 오르카 다중 세션 → 완료 검수 → main 병합
 - `/orchestrate {태스크 ID 또는 요청}` — 06-tasks.md 기반으로 전문가 에이전트 호출
 - `/integration-validator` — 병렬 작업 후 계약/타입 일관성 검증
 - 에이전트 팀: backend / frontend / database / test specialist (.claude/agents/)

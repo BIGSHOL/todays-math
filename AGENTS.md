@@ -8,6 +8,12 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
+# Orca — default parallel workflow
+
+If work can be split into independent sessions, do that with Orca by default
+(worktrees), then merge completed sessions into `main`. Sequential solo work
+is only for tasks that cannot be split.
+
 # Orca session cleanup
 
 When an Orca-managed task is fully complete, its changes have been merged into
