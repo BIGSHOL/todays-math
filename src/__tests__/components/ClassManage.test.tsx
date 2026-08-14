@@ -61,6 +61,12 @@ describe("[T2.3 S-07] 반/학생 관리 — 크롬·표·학생", () => {
     expect(
       screen.getByRole("button", { name: "중2 기초반" }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "반 추가" }).className).toMatch(
+      /whitespace-nowrap/,
+    );
+    expect(screen.getByRole("button", { name: "등록" }).className).toMatch(
+      /whitespace-nowrap/,
+    );
 
     const students = screen.getByRole("list", { name: "학생" });
     expect(within(students).getByText("이서준")).toBeInTheDocument();

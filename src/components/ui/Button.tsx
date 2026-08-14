@@ -21,7 +21,7 @@ export function Button({
   return (
     <button
       type={type}
-      className={`inline-flex min-h-11 min-w-[44px] cursor-pointer items-center justify-center px-3 text-[12.5px] font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A73E8] disabled:cursor-not-allowed ${VARIANT_CLASS[variant]} ${className}`}
+      className={`inline-flex min-h-11 min-w-[44px] shrink-0 cursor-pointer items-center justify-center whitespace-nowrap px-3 text-[12.5px] font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A73E8] disabled:cursor-not-allowed ${VARIANT_CLASS[variant]} ${className}`}
       {...props}
     />
   );

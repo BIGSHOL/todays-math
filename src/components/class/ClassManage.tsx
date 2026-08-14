@@ -32,7 +32,7 @@ export function ClassManage({ units }: ClassManageProps) {
 
   return (
     <main className="px-[26px] py-5">
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_220px]">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(260px,320px)]">
         <section>
           <ClassTable
             classes={manage.classes}
@@ -99,6 +99,7 @@ function AddClassForm({
         value={name}
         onChange={(event) => setName(event.target.value)}
         placeholder="반 이름"
+        className="min-w-0 flex-1"
       />
       <Input
         aria-label="학년"
@@ -133,6 +134,7 @@ function AddStudentForm({ onAdd }: { onAdd: (name: string) => Promise<void> }) {
         value={name}
         onChange={(event) => setName(event.target.value)}
         placeholder="이름"
+        className="min-w-0 flex-1"
       />
       <Button type="submit" variant="secondary">
         등록
