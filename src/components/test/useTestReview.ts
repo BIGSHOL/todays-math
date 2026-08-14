@@ -25,6 +25,7 @@ export function useTestReview(testId: string) {
   const [state, setState] = useState<ReviewState>({ status: "loading" });
   const [replacingSeq, setReplacingSeq] = useState<number | null>(null);
   const [confirming, setConfirming] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -61,11 +62,15 @@ export function useTestReview(testId: string) {
     async (seq: number) => {
       if (state.status !== "ready" || state.test.status !== "draft") return;
       setReplacingSeq(seq);
+      setActionError(null);
       try {
         const res = await fetch(`/api/tests/${testId}/problems/${seq}`, {
           method: "PUT",
         });
-        if (!res.ok) return;
+        if (!res.ok) {
+          setActionError("문제를 교체하지 못했습니다");
+          return;
+        }
         const body = testProblemReplaceResponseSchema.parse(await res.json());
         setState((prev) => {
           if (prev.status !== "ready") return prev;
@@ -77,6 +82,8 @@ export function useTestReview(testId: string) {
             ),
           };
         });
+      } catch {
+        setActionError("문제를 교체하지 못했습니다");
       } finally {
         setReplacingSeq(null);
       }
@@ -87,15 +94,21 @@ export function useTestReview(testId: string) {
   const confirm = useCallback(async () => {
     if (state.status !== "ready" || state.test.status !== "draft") return;
     setConfirming(true);
+    setActionError(null);
     try {
       const res = await fetch(`/api/tests/${testId}/confirm`, {
         method: "POST",
       });
-      if (!res.ok) return;
+      if (!res.ok) {
+        setActionError("테스트를 확정하지 못했습니다");
+        return;
+      }
       const body = testConfirmResponseSchema.parse(await res.json());
       setState((prev) =>
         prev.status === "ready" ? { ...prev, test: body.data } : prev,
       );
+    } catch {
+      setActionError("테스트를 확정하지 못했습니다");
     } finally {
       setConfirming(false);
     }
@@ -106,5 +119,13 @@ export function useTestReview(testId: string) {
       ? state.problems.filter((item) => item.replaced).length
       : 0;
 
-  return { state, replace, confirm, replacingSeq, confirming, replacedCount };
+  return {
+    state,
+    replace,
+    confirm,
+    replacingSeq,
+    confirming,
+    replacedCount,
+    actionError,
+  };
 }

@@ -12,8 +12,15 @@ type Props = {
 };
 
 export function TestReview({ testId }: Props) {
-  const { state, replace, confirm, replacingSeq, confirming, replacedCount } =
-    useTestReview(testId);
+  const {
+    state,
+    replace,
+    confirm,
+    replacingSeq,
+    confirming,
+    replacedCount,
+    actionError,
+  } = useTestReview(testId);
 
   if (state.status === "loading") {
     return (
@@ -56,7 +63,7 @@ export function TestReview({ testId }: Props) {
               key={item.id}
               orderIndex={item.orderIndex}
               problem={item.problem}
-              replacing={replacingSeq === item.orderIndex}
+              replacing={replacingSeq !== null}
               onReplace={
                 draft ? () => void replace(item.orderIndex) : undefined
               }
@@ -68,6 +75,11 @@ export function TestReview({ testId }: Props) {
         <span className="text-[11.5px] text-[#6A6A68] tabular-nums">
           교체 {replacedCount}
         </span>
+        {actionError ? (
+          <p role="alert" className="text-[11.5px] font-bold text-[#C5221F]">
+            {actionError}
+          </p>
+        ) : null}
         <div className="ml-auto flex items-center gap-2">
           <Button
             variant="ink"

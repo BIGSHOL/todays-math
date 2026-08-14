@@ -10,6 +10,7 @@
 import { describe, expect, it } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { http, HttpResponse } from "msw";
 
 import TestReviewPage from "@/app/(main)/tests/[id]/page";
 import { ReviewProblemCard } from "@/components/test/ReviewProblemCard";
@@ -21,6 +22,7 @@ import {
   TEST_DRAFT_ID,
   TEST_NOT_FOUND_ID,
 } from "@/mocks/data";
+import { server } from "@/mocks/server";
 
 async function renderReview(id: string) {
   const user = userEvent.setup();
@@ -103,6 +105,23 @@ describe("[T4.3 S-05] 검수 — 문제 카드", () => {
     expect(replacement!.content).not.toBe(before);
     expect(screen.getByText(/교체 1/)).toBeInTheDocument();
   });
+
+  it("교체 요청 실패를 사용자에게 알리고 기존 문제를 유지한다", async () => {
+    server.use(
+      http.put(
+        "/api/tests/:id/problems/:seq",
+        () => new HttpResponse("broken", { status: 500 }),
+      ),
+    );
+    const { user } = await renderReview(TEST_DRAFT_ID);
+    const first = await screen.findByRole("article", { name: "문 1" });
+    await user.click(within(first).getByRole("button", { name: "교체" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "문제를 교체하지 못했습니다",
+    );
+    expect(first).toHaveTextContent("를 유한소수로 나타내어라");
+  });
 });
 
 describe("[T4.3 S-05] 검수 — 하단 확정·인쇄", () => {
@@ -138,6 +157,27 @@ describe("[T4.3 S-05] 검수 — 하단 확정·인쇄", () => {
       screen.queryByRole("button", { name: "인쇄" }),
     ).not.toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  it("확정 요청 실패를 알리고 인쇄를 계속 막는다", async () => {
+    server.use(
+      http.post(
+        "/api/tests/:id/confirm",
+        () => new HttpResponse("broken", { status: 500 }),
+      ),
+    );
+    const { user } = await renderReview(TEST_DRAFT_ID);
+    await screen.findByRole("article", { name: "문 1" });
+
+    await user.click(screen.getByRole("button", { name: "확정" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "테스트를 확정하지 못했습니다",
+    );
+    expect(screen.getByRole("button", { name: "인쇄" })).toBeDisabled();
+    expect(
+      screen.queryByRole("link", { name: "인쇄" }),
+    ).not.toBeInTheDocument();
   });
 
   it("이미 교체된 확정본은 교체 수를 반영한다", async () => {
