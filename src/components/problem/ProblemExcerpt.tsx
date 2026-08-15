@@ -14,6 +14,7 @@ export function ProblemExcerpt({
   return (
     <ProblemContent
       content={problem.content}
+      figureUrls={problem.figureUrls}
       className={`min-w-0 text-[12.5px] leading-relaxed text-[#161616] ${className}`}
     />
   );

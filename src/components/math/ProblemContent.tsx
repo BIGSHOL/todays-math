@@ -13,18 +13,43 @@ const CHOICE_MARKS = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "�
 
 export interface ProblemContentProps {
   content: string;
+  /**
+   * 원본 시험지에서 오려 온 그림 경로들 (`/figures/<examId>/qNN.jpg`).
+   * 여러 장인 이유: 선택지마다 그림인 문항이 있다(실측 한 문항 최대 6장).
+   * 순서는 지면에 나온 순서다. 참조: docs/planning/09-figure-engine-guide.md
+   */
+  figureUrls?: string[];
   className?: string;
 }
 
 export function ProblemContent({
   content,
+  figureUrls,
   className = "",
 }: ProblemContentProps) {
   const { question, choices } = parseProblemContent(content);
+  const figures = figureUrls ?? [];
 
   return (
     <div className={className}>
       <MarkdownRenderer content={question} />
+      {figures.length > 0 ? (
+        // 발문 뒤·보기 앞 — 원본 지면 순서 그대로.
+        // 장식 없음(05 §0: 유리·그림자·그라데이션 금지). 그림 자체가 내용이다.
+        <div className="mt-3 flex flex-wrap items-start gap-4 print:break-inside-avoid">
+          {figures.map((url, index) => (
+            // 원본 비율·자연 크기를 그대로 써야 인쇄물이 원본 시험지와 같아진다.
+            // next/image 는 리사이즈·포맷 변환을 하므로 여기선 쓰지 않는다.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={url}
+              src={url}
+              alt={figures.length > 1 ? `문항 그림 ${index + 1}` : "문항 그림"}
+              className="h-auto max-w-full"
+            />
+          ))}
+        </div>
+      ) : null}
       {choices.length > 0 ? (
         <div className="mt-4 grid grid-cols-1 gap-x-8 gap-y-2 md:grid-cols-2 print:grid-cols-2">
           {choices.map((choice, index) => (

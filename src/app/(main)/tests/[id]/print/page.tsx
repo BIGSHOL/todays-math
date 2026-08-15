@@ -48,6 +48,8 @@ export default async function TestPrintPage({ params }: TestPrintPageProps) {
           content: item.problem.content,
           answer: item.problem.answer,
           solution: item.problem.solution,
+          // 원본에서 오려 온 그림 — 인쇄물에도 같이 나가야 문제가 성립한다.
+          figureUrls: item.problem.figureUrls,
         })),
       }}
     />

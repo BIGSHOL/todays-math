@@ -94,6 +94,12 @@ export const problemSchema = z.strictObject({
   directUseAllowed: z.boolean().default(true),
   /** 공용 풀이 기본 (D-31). 응답에 없으면 shared로 본다. */
   pool: problemPoolSchema.default("shared"),
+  /**
+   * 원본 시험지에서 오려 온 그림 경로들 (`/figures/<examId>/qNN.jpg`).
+   * 선택지마다 그림인 문항이 있어 배열이다. 없으면 빈 배열(널 금지).
+   * 참조: docs/planning/09-figure-engine-guide.md §5
+   */
+  figureUrls: z.array(z.string()).default([]),
   createdAt: isoDateTimeSchema,
   updatedAt: isoDateTimeSchema,
 });
