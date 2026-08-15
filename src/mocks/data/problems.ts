@@ -431,6 +431,7 @@ export const MOCK_PROBLEMS: ProblemEntity[] = PROBLEM_SPECS.map(
     reviewStatus: spec.reviewStatus,
     directUseAllowed: true,
     pool: "shared",
+    figureUrls: [],
     createdAt: spec.createdAt,
     updatedAt: spec.updatedAt ?? spec.createdAt,
   }),
@@ -472,6 +473,7 @@ export const MOCK_PROBLEM_OTHER_USER: ProblemEntity = {
   reviewStatus: "approved",
   directUseAllowed: true,
   pool: "private",
+  figureUrls: [],
   createdAt: "2026-05-01T09:00:00Z",
   updatedAt: "2026-05-01T09:00:00Z",
 };
@@ -495,6 +497,7 @@ export const MOCK_PROBLEM_MISSING_ANSWER: ProblemEntity = {
   reviewStatus: "approved",
   directUseAllowed: true,
   pool: "shared",
+  figureUrls: [],
   createdAt: "2026-05-01T09:00:00Z",
   updatedAt: "2026-05-01T09:00:00Z",
 };
@@ -514,6 +517,7 @@ export const MOCK_PROBLEM_OTHER_SHARED: ProblemEntity = {
   reviewStatus: "approved",
   directUseAllowed: true,
   pool: "shared",
+  figureUrls: [],
   createdAt: "2026-05-01T09:00:00Z",
   updatedAt: "2026-05-01T09:00:00Z",
 };

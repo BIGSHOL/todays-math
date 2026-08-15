@@ -15,8 +15,11 @@ import sys
 
 import fitz
 
-IDX = r"D:\시험지 한글화\db\exam_index.db"
-PAGES = pathlib.Path(r"D:\시험지 한글화\db\pages")
+sys.path.append(str(pathlib.Path(__file__).resolve().parents[1] / "qa"))
+from tc_paths import exam_index_db, testchanger_dir  # noqa: E402
+
+IDX = exam_index_db()
+PAGES = testchanger_dir() / "db" / "pages"
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 30
 
 if hasattr(sys.stdout, "reconfigure"):

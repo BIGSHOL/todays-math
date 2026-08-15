@@ -95,6 +95,7 @@ export const problemHandlers: HttpHandler[] = [
           reviewStatus: "pending",
           directUseAllowed: true,
           pool: parsed.data.pool,
+          figureUrls: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },

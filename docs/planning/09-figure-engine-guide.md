@@ -126,3 +126,49 @@ HTML 템플릿에 CSS(`max-width:100%`)가 있는데 `"..." % (a, b)` 로 포맷
 - FigureSpec v2에 곡선·입체·통계가 없다 → 계층 B로 처리(실증 완료)
 - 사진·실물 이미지가 필요한 문항은 SVG로 만들 수 없다
   → **codex/grok 등 이미지 생성·보정 도구로 원본을 정리해 사용**(Claude는 이미지 생성 불가)
+
+---
+
+## 5. 완료본 그림은 **재작도가 아니라 원본 오려오기** (2026-08-15 확정)
+
+조사 결과 계획이 크게 단순해졌다. **엔진으로 다시 그릴 필요가 없다.**
+
+| 확인한 것 | 결과 |
+|---|---|
+| 완료본 PDF 의 그림 형태 | **임베드 래스터 이미지** (표본 30편 전부) |
+| 품질 | 약 118dpi 선화. 포물선·반원·전개도·히스토그램 모두 선명, 라벨(A,B,8cm,30°)까지 정확 |
+| 추출 규모 | 359편 → **305편 939문항 1,149파일 21MB**, 93초, 토큰 0 |
+| 문항 매칭 재현율 | **99.0%** (완료본 40편, 그림 언급 문항 98 중 97) |
+
+- 추출: `python scripts/figure/extract-all-figures.py` → `public/figures/<examId>/qNN.<ext>`
+- 적재: `node scripts/figure/load-figures.mjs --apply` → `Problem.figureUrls`
+- 원본 이미지가 안 잡히면(폼 XObject·벡터) 그 영역을 200dpi 로 렌더해 메꾼다.
+  이 폴백 전에는 18%가 비었다.
+
+**testchanger `page_figures()` 는 `get_images()` 만 본다** — 그래서 벡터로 그린 그림은
+놓친다. 우리 추출기는 클립 렌더로 그 경우를 덮는다.
+
+### 5.1 ⚠️ 적재가 그림 문항을 기본 제외한다 — 재적재 필요
+
+`classifyDrafts` 는 `hasFigure` 인 문항을 `skipped_figure` 로 **버린다**(그림이 없던
+시절의 안전장치). 그래서 대장의 939문항 중 DB 에 들어와 있는 건 162건뿐이다.
+
+**이제 그림이 있으므로 `--figures` 로 재적재해야 한다:**
+
+```bash
+FINAL_BATCH_DIR=scripts/qa/reports/index-batch \
+  npx tsx scripts/import/final-batch.ts --figures            # 드라이런
+ALLOW_SHARED_IMPORT=1 FINAL_BATCH_DIR=scripts/qa/reports/index-batch \
+  npx tsx scripts/import/final-batch.ts --figures --apply
+node scripts/figure/load-figures.mjs --apply                 # 그림 연결
+```
+
+`externalId` 중복 차단이 있으므로 이미 들어간 문항은 다시 안 들어간다.
+
+### 5.2 알려진 한계
+
+- **공통 지문 그림** — 한 그림이 뒤따르는 여러 문항의 지문일 때 앞 문항에 붙는다
+  (실측 5333: 최대공약수 관계도가 2·3번의 '수 A/수 B' 를 정의하는데 1번에 붙음).
+  뒤 문항이 '그림' 이라는 낱말을 안 쓰면 규칙으로 못 잡는다 → 검수 화면에서 사람이 옮길 것.
+- **선택지가 그림인 문항** — 한 문항에 그림이 최대 6장 붙는다. `figureUrls` 는 배열이고
+  순서는 지면 순서다. 화면에서 선택지별로 배치하려면 별도 처리가 필요하다.

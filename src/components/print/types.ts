@@ -6,6 +6,8 @@ export interface TestPrintProblem {
   content: string;
   answer: string;
   solution: string | null;
+  /** 원본 시험지에서 오려 온 그림 경로들. 없으면 빈 배열. */
+  figureUrls?: string[];
 }
 
 export interface TestPrintDocument {

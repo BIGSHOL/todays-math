@@ -44,6 +44,7 @@ export function ProblemCard({ problem }: ProblemCardProps) {
       <div className="p-6 print:px-0">
         <ProblemContent
           content={problem.content}
+          figureUrls={problem.figureUrls}
           className="text-lg text-slate-800 print:text-black"
         />
 

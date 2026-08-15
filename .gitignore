@@ -46,7 +46,7 @@ scripts/import/reports/*.json
 .qa-artifacts/
 
 # QA 감사 상세 리포트(대용량, 재생성 가능) — 통과 원장(ocr-audit-clean.txt)만 커밋한다
-scripts/qa/reports/*.json
-
-# 파이썬 캐시
+# 재생성 가능한 산출물 — 하위 디렉터리(index-batch/, final-batch/)까지 전부.
+# `*.json` 한 겹만 무시하면 배치 산출물 수백 개가 추적되지 않은 채 남아 리베이스를 막는다.
+scripts/qa/reports/
 __pycache__/
