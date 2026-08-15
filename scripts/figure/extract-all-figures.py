@@ -43,22 +43,51 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int)
     ap.add_argument("--out", default="public/figures")
+    ap.add_argument(
+        "--from-pairs",
+        nargs="?",
+        const="scripts/qa/reports/final-pairs.json",
+        help="exam_index 의 db/pages 캐시 대신 페어 목록의 원본 PDF 를 읽는다. "
+        "B단계(N드라이브 신규 추출)분은 exam_index 에 문항이 없어 기본 경로로는 안 잡힌다.",
+    )
+    ap.add_argument(
+        "--match-dir",
+        help="이 디렉토리에 `<examId>.json` 이 있는 편만 — 실제로 이관한 편만 뽑을 때",
+    )
     a = ap.parse_args()
 
     outroot = pathlib.Path(a.out)
-    con = sqlite3.connect(IDX)
-    cached = {p.name for p in PAGES.iterdir() if (p / "src.pdf").exists()}
 
-    # D-37 — 완료본이고, 문항이 추출돼 있고, 원본 PDF 가 로컬에 있는 시험지
-    exams = [
-        eid
-        for eid, src, n in con.execute(
-            "select e.id, e.src_path,"
-            " (select count(*) from questions q where q.exam_id=e.id)"
-            " from exams e where e.src_path is not null order by e.id"
-        )
-        if n > 0 and str(eid) in cached and "완료" in (src or "")
-    ]
+    # (examId, PDF 경로) 목록. 두 출처가 있다.
+    #  - 기본: exam_index + `db/pages/<eid>/src.pdf` 로컬 캐시 (A단계분)
+    #  - --from-pairs: 페어 목록의 N드라이브 원본 PDF (B단계분)
+    if a.from_pairs:
+        pairs = json.loads(
+            pathlib.Path(a.from_pairs).read_text(encoding="utf-8")
+        )["pairs"]
+        exams = [
+            (str(p["examId"]), pathlib.Path(p["pdf"]))
+            for p in pairs
+            if p.get("pdf")
+        ]
+    else:
+        con = sqlite3.connect(IDX)
+        cached = {p.name for p in PAGES.iterdir() if (p / "src.pdf").exists()}
+        # D-37 — 완료본이고, 문항이 추출돼 있고, 원본 PDF 가 로컬에 있는 시험지
+        exams = [
+            (str(eid), PAGES / str(eid) / "src.pdf")
+            for eid, src, n in con.execute(
+                "select e.id, e.src_path,"
+                " (select count(*) from questions q where q.exam_id=e.id)"
+                " from exams e where e.src_path is not null order by e.id"
+            )
+            if n > 0 and str(eid) in cached and "완료" in (src or "")
+        ]
+    if a.match_dir:
+        have = {f.stem for f in pathlib.Path(a.match_dir).glob("*.json")}
+        before = len(exams)
+        exams = [e for e in exams if e[0] in have]
+        print(f"이관분 필터: {before} → {len(exams)}편")
     if a.limit:
         exams = exams[: a.limit]
 
@@ -70,21 +99,20 @@ def main() -> None:
     bytes_total = 0
     t0 = time.time()
 
-    for eid in exams:
-        key = str(eid)
+    for key, pdf_path in exams:
         try:
-            mapped = mapfig.map_exam(PAGES / key / "src.pdf")
+            mapped = mapfig.map_exam(pdf_path)
         except Exception as exc:  # noqa: BLE001
             stat["실패:편"] += 1
             if stat["실패:편"] <= 3:
-                print("  ! %s %s" % (eid, type(exc).__name__))
+                print("  ! %s %s" % (key, type(exc).__name__))
             continue
 
         if not mapped:
             stat["그림없음:편"] += 1
             continue
 
-        doc = fitz.open(PAGES / key / "src.pdf")
+        doc = fitz.open(pdf_path)
         entry = {}
         for num, figs in sorted(mapped.items()):
             paths = []
