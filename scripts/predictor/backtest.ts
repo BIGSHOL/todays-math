@@ -1,0 +1,239 @@
+/**
+ * backtest 하네스 — "t 시점까지만 보고 t+1 을 맞혀봐라".
+ *
+ * 원장님 요구("25-1 중간·기말로 25-2 중간을 예측해 맞춰본다")를 과거 데이터 전체에
+ * 대해 자동으로 수백 번 돌린다. 학생 데이터가 없어도 지금 당장 가능하다.
+ *
+ * 시간 분리는 `predictBlueprint` 가 코드로 강제한다 — 대상 시점 이후 자료가 하나라도
+ * 섞이면 던진다. 여기서는 그 함수에 넘기기 전에도 한 번 더 걸러 이중으로 막는다.
+ *
+ * 비교 기준선 2개를 함께 돌린다. **엔진이 이걸 못 이기면 엔진을 쓸 이유가 없다.**
+ *   - cohort-only  : 학교 과거를 아예 안 보고 코호트(전국) 평균만 쓴다
+ *   - carry-forward: 직전 회차 시험지를 그대로 다음 회차 예측으로 쓴다
+ *
+ * 실행:
+ *   npx tsx scripts/predictor/backtest.ts [--out <경로>] [--min-history 1]
+ */
+import { mkdirSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+
+import type { Blueprint, ExamPaper } from "../../src/contracts/predictor.contract";
+import { comparePeriod } from "../../src/contracts/predictor.contract";
+import { observeBlueprint } from "../../src/lib/predictor/blueprint";
+import { blueprintDistances, type BlueprintDistances } from "../../src/lib/predictor/distance";
+import { predictBlueprint } from "../../src/lib/predictor/predictBlueprint";
+import { isSameRound, rangeSeriesKey, styleSeriesKey } from "../../src/lib/predictor/series";
+import { loadCorpus } from "./loadCorpus";
+
+const ENGINE_VERSION = "0.2.0";
+
+const args = process.argv.slice(2);
+function argOf(name: string, fallback: string): string {
+  const i = args.indexOf(name);
+  return i >= 0 && args[i + 1] ? args[i + 1] : fallback;
+}
+const OUT = resolve(
+  process.cwd(),
+  argOf("--out", "scripts/qa/reports/backtest-report.json"),
+);
+const MIN_HISTORY = Number(argOf("--min-history", "1"));
+
+interface Entry {
+  paper: ExamPaper;
+  observed: Blueprint;
+  styleKey: string;
+  rangeKey: string;
+  cohortKey: string;
+}
+
+type Model = "engine" | "engine-sameRound" | "cohort-only" | "carry-forward";
+
+interface Sample extends BlueprintDistances {
+  model: Model;
+  examId: string;
+  styleKey: string;
+  historyCount: number;
+  /** 실측 시험지에 소단원 표기가 하나라도 있는가 — 단원 지표를 채점할 수 있는가. */
+  hasObservedUnits: boolean;
+  /** 난이도 라벨이 하나라도 있는가. */
+  hasObservedDifficulty: boolean;
+}
+
+function mean(values: number[]): number {
+  return values.length ? values.reduce((s, v) => s + v, 0) / values.length : NaN;
+}
+
+function summarize(samples: Sample[]) {
+  const keys: Array<keyof BlueprintDistances> = [
+    "questionCountAbsError",
+    "totalScoreAbsError",
+    "typeMixDistance",
+    "scoreGridDistance",
+  ];
+  const out: Record<string, number> = { n: samples.length };
+  for (const k of keys) out[k] = mean(samples.map((s) => s[k]));
+  // ⚠️ 소단원 표기가 아예 없는 시험지는 단원 지표에서 뺀다.
+  //    실측 대상이 빈 분포면 거리가 자동으로 1이 되어, "단원을 못 맞혔다"가 아니라
+  //    "채점할 수 없다"는 사실이 지표를 오염시킨다.
+  //    (2026-08-15 신규 추출 279편이 소단원 0% 였다 — 이걸 안 빼면 지표가 통째로 망가진다.)
+  const scorable = samples.filter((s) => s.hasObservedUnits);
+  out.unitMixDistance = mean(scorable.map((s) => s.unitMixDistance));
+  out.unitScorable = scorable.length;
+  const dScorable = samples.filter((s) => s.hasObservedDifficulty);
+  out.difficultyMixDistance = mean(dScorable.map((s) => s.difficultyMixDistance));
+  out.difficultyScorable = dScorable.length;
+  return out;
+}
+
+function main() {
+  const { papers, stats } = loadCorpus();
+  console.log(
+    `코퍼스 ${stats.papers}편 · 문항 ${stats.questions}` +
+      ` (파일 ${stats.files} · 시점없음 ${stats.droppedNoPeriod}` +
+      ` · 메타부족 ${stats.droppedNoMeta} · 문항부족 ${stats.droppedTooFew}` +
+      ` · 배점보정 ${stats.scoreFilled})`,
+  );
+
+  const entries: Entry[] = papers.map((paper) => ({
+    paper,
+    observed: observeBlueprint(paper),
+    styleKey: styleSeriesKey(paper.series),
+    rangeKey: rangeSeriesKey(paper.series),
+    cohortKey: `${paper.series.level}${paper.series.grade}|${paper.series.subject}`,
+  }));
+
+  const byStyle = new Map<string, Entry[]>();
+  const byRange = new Map<string, Entry[]>();
+  const byCohort = new Map<string, Entry[]>();
+  for (const e of entries) {
+    (byStyle.get(e.styleKey) ?? byStyle.set(e.styleKey, []).get(e.styleKey)!).push(e);
+    (byRange.get(e.rangeKey) ?? byRange.set(e.rangeKey, []).get(e.rangeKey)!).push(e);
+    (byCohort.get(e.cohortKey) ?? byCohort.set(e.cohortKey, []).get(e.cohortKey)!).push(e);
+  }
+
+  const lengths = [...byStyle.values()].map((v) => v.length);
+  console.log(
+    `출제 스타일 시리즈 ${byStyle.size}개 (2편+ ${lengths.filter((n) => n >= 2).length}` +
+      ` · 3편+ ${lengths.filter((n) => n >= 3).length}` +
+      ` · 4편+ ${lengths.filter((n) => n >= 4).length})`,
+  );
+
+  const samples: Sample[] = [];
+  let skipped = 0;
+
+  for (const target of entries) {
+    const before = <T extends Entry>(list: T[]) =>
+      list.filter((e) => comparePeriod(e.paper.period, target.paper.period) < 0);
+
+    const history = before(byStyle.get(target.styleKey) ?? []);
+    if (history.length < MIN_HISTORY) {
+      skipped += 1;
+      continue;
+    }
+    const rangeHistory = before(byRange.get(target.rangeKey) ?? []);
+    const cohort = before(byCohort.get(target.cohortKey) ?? []).filter(
+      (e) => e.paper.series.school !== target.paper.series.school,
+    );
+
+    const common = {
+      series: target.paper.series,
+      target: target.paper.period,
+      cohort: cohort.map((e) => e.observed),
+      rangeCohort: cohort.map((e) => e.observed),
+    };
+
+    const engine = predictBlueprint({
+      ...common,
+      history: history.map((e) => e.observed),
+      rangeHistory: rangeHistory.map((e) => e.observed),
+    });
+    // 단원 배분만 **작년 같은 회차**로 좁힌 변형 — 시험 범위가 같을 확률이 높다.
+    const sameRoundRange = rangeHistory.filter((e) =>
+      isSameRound(target.paper.period, e.paper.period),
+    );
+    const engineSameRound = predictBlueprint({
+      ...common,
+      history: history.map((e) => e.observed),
+      rangeHistory: (sameRoundRange.length ? sameRoundRange : rangeHistory).map((e) => e.observed),
+      rangeCohort: sameRoundRange.length
+        ? cohort.filter((e) => isSameRound(target.paper.period, e.paper.period)).map((e) => e.observed)
+        : common.rangeCohort,
+    });
+    const cohortOnly = predictBlueprint({ ...common, history: [], rangeHistory: [] });
+    // 직전 회차를 그대로 — 가장 순진한 기준선.
+    const last = history[history.length - 1].observed;
+    const carry: Blueprint = { ...last, kind: "predicted", period: target.paper.period };
+
+    const base = {
+      examId: target.paper.externalExamId,
+      styleKey: target.styleKey,
+      historyCount: history.length,
+      hasObservedUnits: target.observed.unitMix.length > 0,
+      hasObservedDifficulty:
+        target.observed.difficultyMix["하"].count +
+          target.observed.difficultyMix["중"].count +
+          target.observed.difficultyMix["상"].count >
+        0,
+    };
+    samples.push({ model: "engine", ...base, ...blueprintDistances(engine, target.observed) });
+    samples.push({ model: "engine-sameRound", ...base, ...blueprintDistances(engineSameRound, target.observed) });
+    samples.push({ model: "cohort-only", ...base, ...blueprintDistances(cohortOnly, target.observed) });
+    samples.push({ model: "carry-forward", ...base, ...blueprintDistances(carry, target.observed) });
+  }
+
+  const models: Model[] = ["engine", "engine-sameRound", "cohort-only", "carry-forward"];
+  const summary = Object.fromEntries(
+    models.map((m) => [m, summarize(samples.filter((s) => s.model === m))]),
+  );
+
+  console.log(`\nbacktest 대상 ${samples.length / models.length}편 (과거 없음으로 제외 ${skipped}편)`);
+  console.log(
+    `\n${"모델".padEnd(15)}${"문항수MAE".padStart(11)}${"총점MAE".padStart(10)}` +
+      `${"유형거리".padStart(10)}${"배점눈금".padStart(10)}${"단원거리".padStart(10)}${"난이도거리".padStart(11)}`,
+  );
+  console.log("-".repeat(77));
+  for (const m of models) {
+    const s = summary[m];
+    console.log(
+      m.padEnd(15) +
+        s.questionCountAbsError.toFixed(3).padStart(11) +
+        s.totalScoreAbsError.toFixed(3).padStart(10) +
+        s.typeMixDistance.toFixed(4).padStart(10) +
+        s.scoreGridDistance.toFixed(4).padStart(10) +
+        s.unitMixDistance.toFixed(4).padStart(10) +
+        s.difficultyMixDistance.toFixed(4).padStart(11),
+    );
+  }
+
+  // 과거 회차가 쌓일수록 나아지는가 — "몇 학기 돌리면 정확해진다"의 직접 검증.
+  console.log("\n과거 회차 수별 (engine, 문항수MAE · 유형거리 · 단원거리):");
+  for (const bucket of [1, 2, 3, 4]) {
+    const sel = samples.filter(
+      (s) =>
+        s.model === "engine" &&
+        (bucket < 4 ? s.historyCount === bucket : s.historyCount >= 4),
+    );
+    if (!sel.length) continue;
+    const s = summarize(sel);
+    console.log(
+      `  ${bucket < 4 ? `${bucket}편` : "4편+"}  n=${String(sel.length).padStart(4)}  ` +
+        `${s.questionCountAbsError.toFixed(3).padStart(7)}  ` +
+        `${s.typeMixDistance.toFixed(4).padStart(7)}  ` +
+        `${s.unitMixDistance.toFixed(4).padStart(7)}`,
+    );
+  }
+
+  mkdirSync(dirname(OUT), { recursive: true });
+  writeFileSync(
+    OUT,
+    JSON.stringify(
+      { engineVersion: ENGINE_VERSION, corpus: stats, summary, samples },
+      null,
+      1,
+    ),
+    "utf-8",
+  );
+  console.log(`\n상세: ${OUT}`);
+}
+
+main();
