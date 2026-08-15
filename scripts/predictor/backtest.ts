@@ -17,12 +17,25 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
-import type { Blueprint, ExamPaper } from "../../src/contracts/predictor.contract";
+import type {
+  Blueprint,
+  ExamPaper,
+} from "../../src/contracts/predictor.contract";
 import { comparePeriod } from "../../src/contracts/predictor.contract";
 import { observeBlueprint } from "../../src/lib/predictor/blueprint";
-import { blueprintDistances, type BlueprintDistances } from "../../src/lib/predictor/distance";
-import { predictBlueprint } from "../../src/lib/predictor/predictBlueprint";
-import { isSameRound, rangeSeriesKey, styleSeriesKey } from "../../src/lib/predictor/series";
+import {
+  blueprintDistances,
+  type BlueprintDistances,
+} from "../../src/lib/predictor/distance";
+import {
+  predictBlueprint,
+  PredictorUnavailableError,
+} from "../../src/lib/predictor/predictBlueprint";
+import {
+  isSameRound,
+  rangeSeriesKey,
+  styleSeriesKey,
+} from "../../src/lib/predictor/series";
 import { loadCorpus } from "./loadCorpus";
 
 const ENGINE_VERSION = "0.2.0";
@@ -60,7 +73,9 @@ interface Sample extends BlueprintDistances {
 }
 
 function mean(values: number[]): number {
-  return values.length ? values.reduce((s, v) => s + v, 0) / values.length : NaN;
+  return values.length
+    ? values.reduce((s, v) => s + v, 0) / values.length
+    : NaN;
 }
 
 function summarize(samples: Sample[]) {
@@ -80,7 +95,9 @@ function summarize(samples: Sample[]) {
   out.unitMixDistance = mean(scorable.map((s) => s.unitMixDistance));
   out.unitScorable = scorable.length;
   const dScorable = samples.filter((s) => s.hasObservedDifficulty);
-  out.difficultyMixDistance = mean(dScorable.map((s) => s.difficultyMixDistance));
+  out.difficultyMixDistance = mean(
+    dScorable.map((s) => s.difficultyMixDistance),
+  );
   out.difficultyScorable = dScorable.length;
   return out;
 }
@@ -106,9 +123,16 @@ function main() {
   const byRange = new Map<string, Entry[]>();
   const byCohort = new Map<string, Entry[]>();
   for (const e of entries) {
-    (byStyle.get(e.styleKey) ?? byStyle.set(e.styleKey, []).get(e.styleKey)!).push(e);
-    (byRange.get(e.rangeKey) ?? byRange.set(e.rangeKey, []).get(e.rangeKey)!).push(e);
-    (byCohort.get(e.cohortKey) ?? byCohort.set(e.cohortKey, []).get(e.cohortKey)!).push(e);
+    (
+      byStyle.get(e.styleKey) ?? byStyle.set(e.styleKey, []).get(e.styleKey)!
+    ).push(e);
+    (
+      byRange.get(e.rangeKey) ?? byRange.set(e.rangeKey, []).get(e.rangeKey)!
+    ).push(e);
+    (
+      byCohort.get(e.cohortKey) ??
+      byCohort.set(e.cohortKey, []).get(e.cohortKey)!
+    ).push(e);
   }
 
   const lengths = [...byStyle.values()].map((v) => v.length);
@@ -120,10 +144,13 @@ function main() {
 
   const samples: Sample[] = [];
   let skipped = 0;
+  let unavailable = 0;
 
   for (const target of entries) {
     const before = <T extends Entry>(list: T[]) =>
-      list.filter((e) => comparePeriod(e.paper.period, target.paper.period) < 0);
+      list.filter(
+        (e) => comparePeriod(e.paper.period, target.paper.period) < 0,
+      );
 
     const history = before(byStyle.get(target.styleKey) ?? []);
     if (history.length < MIN_HISTORY) {
@@ -142,6 +169,17 @@ function main() {
       rangeCohort: cohort.map((e) => e.observed),
     };
 
+    // 근거가 없어 예측 자체가 불가능한 경우가 있다(그 코호트의 첫 시험지 등).
+    // 예전에는 0문항 청사진을 내서 지표에 섞였다 — 이제는 세고 뺀다.
+    const tryPredict = (fn: () => Blueprint): Blueprint | null => {
+      try {
+        return fn();
+      } catch (error) {
+        if (error instanceof PredictorUnavailableError) return null;
+        throw error;
+      }
+    };
+
     const engine = predictBlueprint({
       ...common,
       history: history.map((e) => e.observed),
@@ -154,15 +192,25 @@ function main() {
     const engineSameRound = predictBlueprint({
       ...common,
       history: history.map((e) => e.observed),
-      rangeHistory: (sameRoundRange.length ? sameRoundRange : rangeHistory).map((e) => e.observed),
+      rangeHistory: (sameRoundRange.length ? sameRoundRange : rangeHistory).map(
+        (e) => e.observed,
+      ),
       rangeCohort: sameRoundRange.length
-        ? cohort.filter((e) => isSameRound(target.paper.period, e.paper.period)).map((e) => e.observed)
+        ? cohort
+            .filter((e) => isSameRound(target.paper.period, e.paper.period))
+            .map((e) => e.observed)
         : common.rangeCohort,
     });
-    const cohortOnly = predictBlueprint({ ...common, history: [], rangeHistory: [] });
+    const cohortOnly = tryPredict(() =>
+      predictBlueprint({ ...common, history: [], rangeHistory: [] }),
+    );
     // 직전 회차를 그대로 — 가장 순진한 기준선.
     const last = history[history.length - 1].observed;
-    const carry: Blueprint = { ...last, kind: "predicted", period: target.paper.period };
+    const carry: Blueprint = {
+      ...last,
+      kind: "predicted",
+      period: target.paper.period,
+    };
 
     const base = {
       examId: target.paper.externalExamId,
@@ -175,18 +223,45 @@ function main() {
           target.observed.difficultyMix["상"].count >
         0,
     };
-    samples.push({ model: "engine", ...base, ...blueprintDistances(engine, target.observed) });
-    samples.push({ model: "engine-sameRound", ...base, ...blueprintDistances(engineSameRound, target.observed) });
-    samples.push({ model: "cohort-only", ...base, ...blueprintDistances(cohortOnly, target.observed) });
-    samples.push({ model: "carry-forward", ...base, ...blueprintDistances(carry, target.observed) });
+    samples.push({
+      model: "engine",
+      ...base,
+      ...blueprintDistances(engine, target.observed),
+    });
+    samples.push({
+      model: "engine-sameRound",
+      ...base,
+      ...blueprintDistances(engineSameRound, target.observed),
+    });
+    if (cohortOnly) {
+      samples.push({
+        model: "cohort-only",
+        ...base,
+        ...blueprintDistances(cohortOnly, target.observed),
+      });
+    } else {
+      unavailable += 1;
+    }
+    samples.push({
+      model: "carry-forward",
+      ...base,
+      ...blueprintDistances(carry, target.observed),
+    });
   }
 
-  const models: Model[] = ["engine", "engine-sameRound", "cohort-only", "carry-forward"];
+  const models: Model[] = [
+    "engine",
+    "engine-sameRound",
+    "cohort-only",
+    "carry-forward",
+  ];
   const summary = Object.fromEntries(
     models.map((m) => [m, summarize(samples.filter((s) => s.model === m))]),
   );
 
-  console.log(`\nbacktest 대상 ${samples.length / models.length}편 (과거 없음으로 제외 ${skipped}편)`);
+  console.log(
+    `\nbacktest 대상 ${samples.length / models.length}편 (과거 없음으로 제외 ${skipped}편)`,
+  );
   console.log(
     `\n${"모델".padEnd(15)}${"문항수MAE".padStart(11)}${"총점MAE".padStart(10)}` +
       `${"유형거리".padStart(10)}${"배점눈금".padStart(10)}${"단원거리".padStart(10)}${"난이도거리".padStart(11)}`,
