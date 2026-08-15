@@ -59,7 +59,9 @@ export function convertPastExamQuestion(
     answer?.topic?.trim() ||
     paper.meta?.unit?.trim() ||
     "";
-  const gradeHint = paper.meta?.subject ?? paper.meta?.grade;
+  // exam_index 는 `meta.grade` 에 이미 우리 트리 라벨을 담아 준다("중3","공통수학1").
+  // `meta.subject` 는 시험지 원본 표기("수학","수상")라 트리 라벨이 아니므로 폴백이다.
+  const gradeHint = paper.meta?.grade ?? paper.meta?.subject;
 
   return {
     externalId: `${paper.meta?.exam_id ?? "exam"}-${question.number}`,

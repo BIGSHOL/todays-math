@@ -6,7 +6,7 @@ import { convertManualSeedQuestion } from "@/lib/import/convertManualSeed";
 import { convertPastExamPaper } from "@/lib/import/convertPastExam";
 import { convertRpmRow } from "@/lib/import/convertRpm";
 import { mapNumericDifficulty } from "@/lib/import/mapDifficulty";
-import { mapUnitHint } from "@/lib/import/mapUnit";
+import { mapUnitHint, normalizeGrade } from "@/lib/import/mapUnit";
 import { toLoadRows } from "@/lib/import/toLoadRows";
 
 const UNITS = [
@@ -73,7 +73,7 @@ const OVERLAP_UNITS = [
     id: "unit-elem-graph",
     grade: "초2",
     chapter: "2-5 표와 그래프",
-    section: "2-5-1 자료를 분류하여 표로 나타내기",
+    section: "2-5-1 표와 그래프 읽기",
   },
 ];
 
@@ -448,6 +448,23 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
     expect(result.status).toBe("unclassified");
   });
 
+  // 학년이 해석되지 않으면 pool 이 초1~고3 전체가 된다. 그 상태로 유사도를
+  // 재면 학년이 통째로 어긋난 곳에 붙는다 — 표기가 닮은 단원은 학년을 넘나든다.
+  it("학년이 해석 안 되면 다른 학년의 닮은 소단원에 붙지 않는다", () => {
+    const result = mapUnitHint("좌표와 그래프 읽기", OVERLAP_UNITS);
+    expect(result.status).toBe("unclassified");
+  });
+
+  it("학년 힌트가 null 이어도 죽지 않는다", () => {
+    expect(normalizeGrade(null as unknown as undefined)).toBeNull();
+    const result = mapUnitHint(
+      "나머지정리와 인수정리",
+      OVERLAP_UNITS,
+      null as unknown as undefined,
+    );
+    expect(result.status).toBe("unclassified");
+  });
+
   // 장 이름은 소단원 여러 개를 묶은 이름이라 유사도로 붙이면 그중 아무 소단원에
   // 실린다. 장은 부분문자열이 정확히 맞을 때만 쓴다.
   it("장 이름에는 유사도 매칭을 하지 않는다", () => {
@@ -499,6 +516,47 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
     );
     expect(rows[0]?.figureUrls).toEqual([]);
     expect(rows[0]?.figureSource).toBeNull();
+  });
+
+  // exam_index 는 meta.grade 에 이미 우리 트리 라벨을 담아 준다("중3","공통수학1").
+  // meta.subject 는 시험지 원본 표기("수학","수상")라 트리 라벨이 아니다 —
+  // subject 를 먼저 보면 중등 시험지 3,599문항의 학년이 통째로 해석 실패한다(실측).
+  it("학년 힌트는 트리 라벨인 meta.grade 를 먼저 쓴다", async () => {
+    const { convertPastExamPaper } =
+      await import("@/lib/import/convertPastExam");
+    const drafts = convertPastExamPaper(
+      {
+        meta: { exam_id: 9001, grade: "중3", subject: "수학" },
+        questions: [
+          {
+            number: 1,
+            contents: [{ type: "text", value: "1+1은?" }],
+            topic: "다항식의 곱셈",
+          },
+        ],
+      },
+      [],
+    );
+    expect(drafts[0]?.gradeHint).toBe("중3");
+  });
+
+  it("meta.grade 가 없으면 subject 로 떨어진다", async () => {
+    const { convertPastExamPaper } =
+      await import("@/lib/import/convertPastExam");
+    const drafts = convertPastExamPaper(
+      {
+        meta: { exam_id: 9002, subject: "공수2" },
+        questions: [
+          {
+            number: 1,
+            contents: [{ type: "text", value: "1+1은?" }],
+            topic: "평면좌표",
+          },
+        ],
+      },
+      [],
+    );
+    expect(drafts[0]?.gradeHint).toBe("공수2");
   });
 
   it("매핑 실패분은 unclassified로 남기고 버리지 않는다", () => {

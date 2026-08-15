@@ -17,9 +17,10 @@ const GRADE_ALIASES: Record<string, string> = {
 };
 
 export function normalizeGrade(
-  raw: string | number | undefined,
+  raw: string | number | null | undefined,
 ): string | null {
-  if (raw === undefined || raw === "") return null;
+  // 시험지 메타의 학년/과목은 JSON `null` 로 오는 일이 흔하다 — 던지면 이관이 통째로 죽는다.
+  if (raw === undefined || raw === null || raw === "") return null;
   if (typeof raw === "number") {
     if (raw === 1) return "공통수학1";
     if (raw === 2) return "공통수학2";
@@ -82,11 +83,13 @@ export function mapUnitHint(
   // 시험지는 "나머지정리와 인수정리", 우리 트리는 "나머지와 인수정리(1)" 처럼
   // 같은 단원인데 글자가 조금씩 다르다(실측 1,360건 중 다수).
   //
-  // ⚠️ 학년이 좁혀졌을 때만 한다. 전 학년(초1~고3) 풀에서 유사도를 재면
+  // ⚠️ 학년이 **해석된** 경우에만 한다. 학년을 모르면 pool 이 초1~고3 전체라
   // 중등 "좌표와 그래프" 가 초2 "표와 그래프" 에 붙는다(실측 25건).
+  // `scoped.length > 0` 만으로는 못 막는다 — 학년이 null 이면 scoped 가
+  // 곧 units 전체라 언제나 참이다.
   // 장(chapter) 이름에도 하지 않는다 — 소단원 여러 개를 묶은 이름이라
   // 붙여 봐야 그중 아무 소단원에 실린다.
-  if (scoped.length > 0) {
+  if (grade && scoped.length > 0) {
     for (const hint of hints) {
       const fuzzySection = bestSimilar(scoped, hint, "section");
       if (fuzzySection) return { status: "mapped", unitId: fuzzySection.id };
