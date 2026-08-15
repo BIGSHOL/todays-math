@@ -432,3 +432,55 @@ C-1 적용분 그대로다. 해설 기반 214행은 들어가지 않았고, 미�
 (오배정 1,364 + 미적재 1,280). 고치면 401행이 바로 들어오고 1,364행이 제 학년으로 간다.
 `fix-unit-assignments.ts` 는 `externalId` 로 행을 찾으므로 C-1 이 끝난 지금 쓸 수 있다.
 `unitId` 는 내 컬럼이 아니라 손대지 않았다 — 배정만 해 주면 된다.
+
+---
+
+# C-1 2차 적용 — 해설 확정 214행 (2026-08-16, 원장님 승인)
+
+승인 경로: 원장님 → 코디네이터 → 이 트랙. `[코디네이터]` 지시로 확인했다.
+
+## 1. 적용 전 보고 (조건 1)
+
+> **`Problem.external_id` 컬럼에, `source='transformed'` 이면서 지금 NULL 인 214행을,
+> sumaek `questions.id` UUID 값으로 채운다. 다른 컬럼·다른 source 는 건드리지 않는다.**
+
+- 대상 선정 근거: 본문으로는 후보가 둘 이상이라 1차에서 미상으로 남긴 233행 중,
+  **해설(`explanation`)이 원본 한 행에만 정확히 대응하고 그 대응이 단사(injective)인** 214행.
+- 명령: `ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/backfill-rpm-external-id.ts --resolve-by-solution --apply`
+- 적용 후 남는 미상: **19행 / 7그룹** (원본 해설이 비었거나 겹치는 그룹들 — §미상 233건 참조)
+
+## 2. 되돌리는 법 (조건 2) — **이 214행에만 한정**
+
+1차 4,629행과 섞이면 못 되돌리므로, 적용 대상 목록을 저장소에 **커밋해 두었다**:
+
+```
+scripts/qa/rpm-external-id-solution-basis.json     ← 214쌍 {problemId, externalId}
+```
+
+되돌릴 때는 그 파일의 `problemId` 에만 건다. 전체 `source='transformed'` 에 걸면
+1차 4,629행까지 날아간다 — **절대 그렇게 하지 말 것.**
+
+```sql
+-- 되돌리기: 이 214행만 NULL 로. problem_id 목록은 위 JSON 의 pairs[].problemId.
+UPDATE problem
+   SET external_id = NULL
+ WHERE source = 'transformed'
+   AND id IN ( … pairs[].problemId 214개 … );
+```
+
+같은 일을 스크립트로 하려면 (Node, 드라이런 기본):
+
+```bash
+node -e '
+const fs=require("fs");const {PrismaClient}=require("@prisma/client");
+const {pairs}=JSON.parse(fs.readFileSync("scripts/qa/rpm-external-id-solution-basis.json","utf8"));
+(async()=>{const p=new PrismaClient();
+ const n=await p.problem.count({where:{source:"transformed",id:{in:pairs.map(x=>x.problemId)},NOT:{externalId:null}}});
+ console.log("되돌릴 행",n);
+ if(process.env.ALLOW_SHARED_IMPORT==="1"&&process.argv.includes("--apply")){
+   const r=await p.problem.updateMany({where:{source:"transformed",id:{in:pairs.map(x=>x.problemId)}},data:{externalId:null}});
+   console.log("되돌림",r.count);}
+ await p.$disconnect();})();'
+```
+
+되돌린 뒤 `externalId` 합계는 **4,843 → 4,629** 로 돌아와야 한다.
