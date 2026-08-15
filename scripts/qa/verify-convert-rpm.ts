@@ -111,6 +111,14 @@ export interface Check {
   /** `exact` 는 전수 통과라야 한다. `baseline` 은 기준선 이상이면 된다. */
   mode: "exact" | "baseline";
   samples: string[];
+  /** 정책상 분모에서 뺀 행 수 (결함이 아니라 규칙으로 보류한 것). */
+  policyHeld?: number;
+  /**
+   * 미달분의 임자. 이 검사가 빨강일 때 **누가 무엇을 해야 초록이 되는지**를 같이 찍는다.
+   * 빨강이 오래 남을 수 있는 검사는 이유를 스스로 말해야 한다 — 설명 없는 상시 빨강은
+   * 사람이 곧 무시하게 되고, 그러면 조용한 통과와 다를 바 없어진다.
+   */
+  owedTo?: string;
 }
 
 export interface Baseline {
@@ -286,7 +294,13 @@ export async function dbChecks(
 ): Promise<Check[]> {
   const problems = await prisma.problem.findMany({
     where: { source: "transformed" },
-    select: { id: true, externalId: true, figureUrls: true, answer: true },
+    select: {
+      id: true,
+      externalId: true,
+      figureUrls: true,
+      answer: true,
+      content: true,
+    },
   });
   const externalIdFilled: Check = {
     id: "db-external-id",
@@ -303,6 +317,7 @@ export async function dbChecks(
     total: 0,
     mode: "exact",
     samples: [],
+    owedTo: "트랙 A(그림) — 원본에 그림이 있으니 회수하면 채워진다",
   };
 
   /**
@@ -310,18 +325,21 @@ export async function dbChecks(
    * 변환기 계약 검사(`answer-filled`)는 변환 직후만 본다. 그 뒤 적재·복구·수정
    * 단계에서 잃는 것은 여기서만 잡힌다 — 지난 4,862건 유실이 정확히 그 자리였다.
    *
-   * ⚠️ 100% 가 아닌 것이 정상이다. `recover-rpm-answers` 는 **보기가 실제로 렌더되지
-   * 않는 문항에 번호 정답을 넣지 않는다**(시험지에 ①~⑤ 가 없는데 답만 "③" 이면
-   * 학생이 대조할 대상이 없다). 그렇게 일부러 보류한 행이 지금 18건이다.
-   * 그래서 `exact` 가 아니라 `baseline` 이다 — **정책이지 결함이 아니다. 고치지 말 것.**
+   * ⚠️ **정책상 보류분은 분모에서 뺀다.** `recover-rpm-answers` 는 보기가 실제로
+   * 렌더되지 않는 문항에 번호 정답을 넣지 않는다(시험지에 ①~⑤ 가 없는데 답만 "③"
+   * 이면 학생이 대조할 대상이 없다). 그건 결함이 아니라 정책이므로 세지 않는다.
+   * 그렇게 해야 이 검사가 **100% 에 닿을 수 있는 검사**가 되고, 미달분은 곧
+   * "아직 안 한 일" 을 뜻하게 된다.
    */
   const answerLinked: Check = {
     id: "db-answer-linked",
     label: "원본에 정답이 있는 문항은 적재된 행에도 정답이 있다",
     passed: 0,
     total: 0,
-    mode: "baseline",
+    mode: "exact",
     samples: [],
+    policyHeld: 0,
+    owedTo: "트랙 B(정답) — `recover-rpm-answers.ts --apply` 로 원본에서 회수 가능",
   };
   /**
    * 원본 행 중 우리 DB 에 **키로 닿아 있는** 비율.
@@ -339,6 +357,18 @@ export async function dbChecks(
   const withDiagram = new Set(
     rows
       .filter((row) => Number(row.diagram_count ?? 0) > 0)
+      .map((row) => String(row.id)),
+  );
+  /** 원본이 객관식인 문항 — 번호 정답 보류 규칙이 걸리는 대상. */
+  const choiceAnswer = new Set(
+    rows
+      .filter((row) => {
+        const answer =
+          row.answer && typeof row.answer === "object"
+            ? (row.answer as Record<string, unknown>)
+            : null;
+        return answer?.kind === "multiple_choice";
+      })
       .map((row) => String(row.id)),
   );
   const sourceHasAnswer = new Set(
@@ -367,13 +397,25 @@ export async function dbChecks(
     if (!externalId) continue;
 
     if (sourceHasAnswer.has(externalId)) {
-      answerLinked.total += 1;
       const answer = fault.answerBlind ? SENTINEL : problem.answer;
-      if (answer.trim() && !answer.includes("정답 없음")) answerLinked.passed += 1;
-      else if (answerLinked.samples.length < 5) {
-        answerLinked.samples.push(
-          `${problem.id.slice(0, 8)} ← 원본 ${externalId.slice(0, 8)} (원본엔 정답 있음)`,
-        );
+      const filled = answer.trim() && !answer.includes("정답 없음");
+      // 정책상 보류 — 객관식인데 본문에 보기가 안 찍히면 번호 정답을 넣지 않는다.
+      const held =
+        !filled &&
+        choiceAnswer.has(externalId) &&
+        parseProblemContent(problem.content).choices.length < 2;
+      if (held) {
+        // 분모에서만 뺀다. `continue` 로 건너뛰면 아래 그림 검사까지 빠져
+        // 그림 미달이 과소 집계된다(실제로 156 vs 157 로 어긋났다).
+        answerLinked.policyHeld = (answerLinked.policyHeld ?? 0) + 1;
+      } else {
+        answerLinked.total += 1;
+        if (filled) answerLinked.passed += 1;
+        else if (answerLinked.samples.length < 5) {
+          answerLinked.samples.push(
+            `${problem.id.slice(0, 8)} ← 원본 ${externalId.slice(0, 8)} (원본엔 정답 있음)`,
+          );
+        }
       }
     }
 
@@ -477,9 +519,13 @@ function printChecks(checks: Check[], baseline: Baseline | null, detail: boolean
       check.mode === "baseline" && previous
         ? ` (기준선 ${previous.passed}/${previous.total})`
         : "";
+    const held = check.policyHeld ? ` · 정책상 보류 ${check.policyHeld} 제외` : "";
     console.log(
-      `  ${state === "pass" ? "✔" : "✘"} ${check.label} — ${check.passed}/${check.total} ${ratio}${base}`,
+      `  ${state === "pass" ? "✔" : "✘"} ${check.label} — ${check.passed}/${check.total} ${ratio}${base}${held}`,
     );
+    if (state === "fail" && check.owedTo) {
+      console.log(`      → 미달 ${check.total - check.passed}건은 ${check.owedTo}`);
+    }
     if (detail || state === "fail") {
       for (const sample of check.samples) console.log(`      ${sample}`);
     }

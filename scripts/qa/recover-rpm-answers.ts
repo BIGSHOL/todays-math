@@ -8,12 +8,19 @@
  * 해설(`explanation`)만 살아남은 것이 그 증거다. 그래서 이건 AI 로 풀 일이 아니라
  * 원본에서 **되가져올** 일이다.
  *
- * 짝짓기: 적재 때 `externalId` 를 버려서 키 조인이 안 된다. 대신 원본 body+choices 를
- * 적재 때와 **같은 함수로** 펴면 우리 `Problem.content` 와 문자열이 같아진다(실측 100%).
- * 다만 `restore-choice-markers.ts` 로 보기 마커를 복원한 문항은 본문이 바뀌어 이 일치가
- * 깨진다. 그래서 원본 한 행마다 **적재 당시 형태와 마커 복원 형태를 모두** 키로 걸고,
- * 각 형태의 원문/정규화(마커·중복 보기·공백 제거) 키를 함께 본다 — 복원 전 문항과 복원 후
- * 문항이 같은 코드로 다 잡힌다. 어느 키로든 원본 후보가 둘 이상이면 건드리지 않는다.
+ * 짝짓기는 두 단계다.
+ *
+ * 1. **`externalId` 가 있으면 그것이 먼저다** (2026-08-16, 트랙 C-1 이후).
+ *    원본 행 id 를 그대로 가리키므로 정확하고, 본문이 나중에 바뀌어도 흔들리지 않는다.
+ * 2. 키가 없는 행만 본문으로 되짚는다. 원본 body+choices 를 적재 때와 **같은 함수로**
+ *    펴면 우리 `Problem.content` 와 문자열이 같아진다(실측 100%). 다만
+ *    `restore-choice-markers.ts` 로 보기 마커를 복원한 문항은 본문이 바뀌어 이 일치가
+ *    깨진다. 그래서 원본 한 행마다 **적재 당시 형태와 마커 복원 형태를 모두** 키로 걸고,
+ *    각 형태의 원문/정규화(마커·중복 보기·공백 제거) 키를 함께 본다.
+ *    어느 키로든 원본 후보가 둘 이상이면 건드리지 않는다.
+ *
+ * 1번이 생기기 전에는 본문이 겹치는 233행을 통째로 건너뛸 수밖에 없었고, 그래서 그
+ * 행들은 정답도 그림도 한 건 못 받았다. 키가 붙은 지금 214행이 그 상태에서 풀렸다.
  *
  * 접속 정보는 저장소에 넣지 않는다 — `SUMAEK_DATABASE_URL` 환경변수를 먼저 보고,
  * 없으면 `SUMAEK_ENV_PATH`(기본 `C:\Creative\sumaek\.env`)를 파싱한다.
@@ -306,6 +313,17 @@ async function main(): Promise<void> {
     }
   }
 
+  /**
+   * `externalId` → 원본 행. **본문 대조보다 강한 키다.**
+   *
+   * 트랙 C 가 `externalId` 를 채우기 전에는 본문으로 되짚는 수밖에 없었고, 본문이
+   * 겹치는 233행은 그래서 통째로 건너뛰었다(정답도 그림도 한 건 못 받았다).
+   * 키가 붙은 지금은 그 행들도 원본을 정확히 가리킨다 — 본문이 나중에 바뀌어도
+   * (트랙 D 의 재추출 같은) 흔들리지 않는다.
+   */
+  const byExternalId = new Map<string, SourceRow>();
+  for (const row of sourceRows) byExternalId.set(row.id, row);
+
   /** 어떤 키로든 걸린 원본 후보. 둘 이상이면 어느 쪽인지 모르므로 쓰지 않는다. */
   function candidatesFor(content: string): SourceRow[] {
     const found = new Set<SourceRow>();
@@ -319,13 +337,14 @@ async function main(): Promise<void> {
   try {
     const problems = await prisma.problem.findMany({
       where: { source: "transformed" },
-      select: { id: true, answer: true, content: true },
+      select: { id: true, answer: true, content: true, externalId: true },
     });
 
     const fills: Update[] = [];
     const corrections: Update[] = [];
     const conflicts: Array<{ id: string; ours: string; source: string }> = [];
     let matchedUnique = 0;
+    let matchedById = 0;
     let duplicateContent = 0;
     let unmatched = 0;
     let sourceEmpty = 0;
@@ -335,18 +354,28 @@ async function main(): Promise<void> {
     let alreadyAgrees = 0;
 
     for (const problem of problems) {
-      const candidates = candidatesFor(problem.content);
-      if (candidates.length === 0) {
-        unmatched += 1;
-        continue;
+      // 키가 있으면 키가 먼저다 — 본문 대조는 키가 없을 때의 차선책이다.
+      const keyed = problem.externalId
+        ? byExternalId.get(problem.externalId)
+        : undefined;
+      let source: SourceRow;
+      if (keyed) {
+        matchedById += 1;
+        source = keyed;
+      } else {
+        const candidates = candidatesFor(problem.content);
+        if (candidates.length === 0) {
+          unmatched += 1;
+          continue;
+        }
+        if (candidates.length > 1) {
+          // 본문이 겹치는데 원본 답이 갈리면 어느 쪽인지 모른다 — 건드리지 않는다.
+          duplicateContent += 1;
+          continue;
+        }
+        matchedUnique += 1;
+        source = candidates[0];
       }
-      if (candidates.length > 1) {
-        // 본문이 겹치는데 원본 답이 갈리면 어느 쪽인지 모른다 — 건드리지 않는다.
-        duplicateContent += 1;
-        continue;
-      }
-      matchedUnique += 1;
-      const source = candidates[0];
       if (!source.answer) {
         sourceEmpty += 1;
         continue;
@@ -389,8 +418,8 @@ async function main(): Promise<void> {
         ` · 우리 transformed ${problems.length}`,
     );
     console.log(
-      `본문 매칭 — 유일 ${matchedUnique} · 본문중복 제외 ${duplicateContent}` +
-        ` · 매칭실패 ${unmatched}`,
+      `짝짓기 — externalId 로 ${matchedById} · 본문으로 유일 ${matchedUnique}` +
+        ` · 본문중복 제외 ${duplicateContent} · 매칭실패 ${unmatched}`,
     );
     console.log(
       `무정답 채우기 대상 ${fills.length}` +

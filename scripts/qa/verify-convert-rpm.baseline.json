@@ -27,19 +27,19 @@
       "total": 6151
     },
     "db-external-id": {
-      "passed": 4629,
+      "passed": 4843,
       "total": 4862
     },
     "db-answer-linked": {
       "passed": 4534,
-      "total": 4552
+      "total": 4743
     },
     "db-figure-linked": {
       "passed": 931,
-      "total": 931
+      "total": 1088
     },
     "db-source-coverage": {
-      "passed": 4629,
+      "passed": 4843,
       "total": 6151
     }
   }
