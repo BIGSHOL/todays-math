@@ -13,7 +13,10 @@ import sys
 
 import fitz
 
-PAGES = pathlib.Path(r"D:\시험지 한글화\db\pages")
+sys.path.append(str(pathlib.Path(__file__).resolve().parents[1] / "qa"))
+from tc_paths import testchanger_dir  # noqa: E402
+
+PAGES = testchanger_dir() / "db" / "pages"
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")

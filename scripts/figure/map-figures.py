@@ -25,13 +25,16 @@ import sys
 
 import fitz
 
-TC = pathlib.Path(r"D:\시험지 한글화")
+sys.path.append(str(pathlib.Path(__file__).resolve().parents[1] / "qa"))
+from tc_paths import exam_index_db, testchanger_dir  # noqa: E402
+
+TC = testchanger_dir()
 sys.path.append(str(TC))
 sys.path.append(str(TC / "db"))
 import textlayer  # noqa: E402  (경로 주입 후에만 import 가능)
 
-IDX = r"D:\시험지 한글화\db\exam_index.db"
-PAGES = pathlib.Path(r"D:\시험지 한글화\db\pages")
+IDX = exam_index_db()
+PAGES = TC / "db" / "pages"
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
