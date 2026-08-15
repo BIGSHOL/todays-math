@@ -1,0 +1,146 @@
+[
+ {
+  "group": "2024 기출모음/2024년 1학기 기말 고사 모음",
+  "exams": 293,
+  "sampled": 3,
+  "questions": 61,
+  "topicPct": 100.0,
+  "answerPct": 77.0,
+  "failed": 0
+ },
+ {
+  "group": "2024 기출모음/2024년 2학기 중간 고사 모음",
+  "exams": 252,
+  "sampled": 3,
+  "questions": 67,
+  "topicPct": 100.0,
+  "answerPct": 86.6,
+  "failed": 0
+ },
+ {
+  "group": "2025 기출모음/2025년 1학기 중간고사 모음",
+  "exams": 239,
+  "sampled": 3,
+  "questions": 63,
+  "topicPct": 100.0,
+  "answerPct": 76.2,
+  "failed": 0
+ },
+ {
+  "group": "2024 기출모음/2024년 2학기 기말 고사 모음",
+  "exams": 169,
+  "sampled": 3,
+  "questions": 63,
+  "topicPct": 100.0,
+  "answerPct": 77.8,
+  "failed": 0
+ },
+ {
+  "group": "2025 기출모음/2025년 1학기 기말고사 모음",
+  "exams": 117,
+  "sampled": 3,
+  "questions": 68,
+  "topicPct": 100.0,
+  "answerPct": 77.9,
+  "failed": 0
+ },
+ {
+  "group": "기출작업/197차",
+  "exams": 1,
+  "sampled": 1,
+  "questions": 18,
+  "topicPct": 100.0,
+  "answerPct": 66.7,
+  "failed": 0
+ },
+ {
+  "group": "2024 기출모음/2024년 1학기 중간 고사 모음",
+  "exams": 326,
+  "sampled": 3,
+  "questions": 65,
+  "topicPct": 63.1,
+  "answerPct": 78.5,
+  "failed": 0
+ },
+ {
+  "group": "기출작업/이전차수",
+  "exams": 7,
+  "sampled": 3,
+  "questions": 50,
+  "topicPct": 40.0,
+  "answerPct": 66.0,
+  "failed": 0
+ },
+ {
+  "group": "2023 기출모음/2023년 1학기 기말 고사 모음",
+  "exams": 324,
+  "sampled": 3,
+  "questions": 67,
+  "topicPct": 0.0,
+  "answerPct": 76.1,
+  "failed": 0
+ },
+ {
+  "group": "2023 기출모음/2023년 2학기 기말 고사 모음",
+  "exams": 253,
+  "sampled": 3,
+  "questions": 67,
+  "topicPct": 0.0,
+  "answerPct": 80.6,
+  "failed": 0
+ },
+ {
+  "group": "2023 기출모음/2023년 2학기 중간 고사 모음",
+  "exams": 130,
+  "sampled": 3,
+  "questions": 64,
+  "topicPct": 0.0,
+  "answerPct": 84.4,
+  "failed": 0
+ },
+ {
+  "group": "2023 기출모음/2023년 1학기 중간 고사 모음",
+  "exams": 116,
+  "sampled": 3,
+  "questions": 61,
+  "topicPct": 0.0,
+  "answerPct": 80.3,
+  "failed": 0
+ },
+ {
+  "group": "대구학강모22년기출지모음-수학/중3 중간",
+  "exams": 15,
+  "sampled": 3,
+  "questions": 65,
+  "topicPct": 0.0,
+  "answerPct": 81.5,
+  "failed": 0
+ },
+ {
+  "group": "대구학강모22년기출지모음-수학/중2 중간",
+  "exams": 12,
+  "sampled": 3,
+  "questions": 64,
+  "topicPct": 0.0,
+  "answerPct": 81.2,
+  "failed": 0
+ },
+ {
+  "group": "대구학강모22년기출지모음-수학/중2 기말",
+  "exams": 2,
+  "sampled": 2,
+  "questions": 34,
+  "topicPct": 0.0,
+  "answerPct": 70.6,
+  "failed": 0
+ },
+ {
+  "group": "기출작업/작업중",
+  "exams": 1,
+  "sampled": 1,
+  "questions": 17,
+  "topicPct": 0.0,
+  "answerPct": 64.7,
+  "failed": 0
+ }
+]

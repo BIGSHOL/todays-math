@@ -49,4 +49,6 @@ scripts/import/reports/*.json
 # 재생성 가능한 산출물 — 하위 디렉터리(index-batch/, final-batch/)까지 전부.
 # `*.json` 한 겹만 무시하면 배치 산출물 수백 개가 추적되지 않은 채 남아 리베이스를 막는다.
 scripts/qa/reports/
+# 조사 산출물은 예외 — 다시 뽑으려면 수 분이 걸리고 다른 컴퓨터가 바로 읽어야 한다.
+!scripts/qa/reports/topic-coverage.json
 __pycache__/

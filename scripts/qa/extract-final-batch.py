@@ -62,9 +62,15 @@ def hwp_answers(hwp: str, work: pathlib.Path) -> list[dict]:
     out = work / "a.json"
     if out.exists():
         out.unlink()
+    # testchanger 원본을 먼저 쓰고, 그 사본이 없는 컴퓨터에서는 저장소 벤더링본으로
+    # 떨어진다(2026-08-15: F:\시험지변환기 에 hwp_extract.py 가 없었다).
+    script, cwd = TC / "scripts" / "hwp_extract.py", TC
+    if not script.exists():
+        script = pathlib.Path("scripts/vendor/testchanger/hwp_extract.py").resolve()
+        cwd = script.parent
     r = subprocess.run(
-        [sys.executable, "scripts/hwp_extract.py", hwp, "-o", str(out)],
-        cwd=str(TC),
+        [sys.executable, str(script), hwp, "-o", str(out)],
+        cwd=str(cwd),
         capture_output=True,
         timeout=600,
     )
