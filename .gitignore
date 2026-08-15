@@ -58,3 +58,6 @@ scripts/qa/reports/transformed-content-backup.json
 
 # 에이전트 임시 스크립트 (_ 로 시작)
 scripts/qa/_*
+
+# 폐기 후보 기계용 목록(문서는 커밋)
+scripts/qa/reports/discard-candidates.json
