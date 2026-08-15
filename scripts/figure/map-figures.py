@@ -25,6 +25,11 @@ import sys
 
 import fitz
 
+TC = pathlib.Path(r"D:\시험지 한글화")
+sys.path.append(str(TC))
+sys.path.append(str(TC / "db"))
+import textlayer  # noqa: E402  (경로 주입 후에만 import 가능)
+
 IDX = r"D:\시험지 한글화\db\exam_index.db"
 PAGES = pathlib.Path(r"D:\시험지 한글화\db\pages")
 
@@ -59,49 +64,97 @@ def first_line_text(blk: dict) -> str:
     )
 
 
+def _page_layout(page):
+    """(문항번호 앵커, 그림 후보) — 둘 다 (단, y) 로 정렬 가능한 형태."""
+    W, mid = page.rect.width, page.rect.width / 2
+    raw = page.get_text("rawdict")
+    anchors, images = [], []
+    for blk in raw.get("blocks", []):
+        bbox = blk.get("bbox", (0, 0, 0, 0))
+        if blk.get("type") == 0:
+            m = QNUM.match(first_line_text(blk))
+            if m:
+                anchors.append((0 if bbox[0] < mid else 1, bbox[1], int(m.group(1))))
+            continue
+        x0, y0, x1, y1 = bbox
+        if x1 - x0 < 24 or y1 - y0 < 24:
+            continue
+        if y0 < 110 and x1 - x0 > W * 0.6:
+            continue  # 머리 배너(로고)
+        images.append((0 if (x0 + x1) / 2 < mid else 1, y0, bbox))
+    # 우단에 번호가 없으면 1단 조판 — 단 구분을 무시한다.
+    if not any(c == 1 for c, _, _ in anchors):
+        anchors = [(0, y, n) for _, y, n in anchors]
+        images = [(0, y, b) for _, y, b in images]
+    anchors.sort(key=lambda a: (a[0], a[1]))
+    return anchors, images
+
+
 def map_exam(pdf: pathlib.Path) -> dict[int, list[dict]]:
-    """{문항번호: [{page, xref, rect}]}"""
+    """{문항번호: [{page, xref, rect}]}
+
+    배치는 **좌표**로 한다 — 같은 단에서 그림보다 위에 있는 마지막 문항 번호.
+    블록 '순서'만 믿으면 떠 있는 그림이 자기 번호보다 앞에 나와 앞 문항에 붙는다.
+
+    ⚠️ textlayer.extract() 의 문항 분할을 그대로 쓰면 재현율이 77%까지 떨어진다 —
+    그쪽은 '번호가 1씩 이어질 때만' 문항으로 인정해(본문 속 "3." 오인 방지) 중간에
+    한 번 끊기면 뒤가 통째로 안 잡힌다. 배치는 좌표로 하고, textlayer 는 **본문
+    텍스트**를 얻는 용도로만 쓴다.
+
+    ⚠️ 공통 지문 그림 — 한 그림이 뒤따르는 문항의 지문일 때가 있다(실측 5333:
+    최대공약수 관계도가 2·3번의 '수 A/수 B' 를 정의하는데 물리적으로는 1번 아래).
+    앞 문항이 그림을 언급하지 않고 뒤 문항이 언급하면 넘긴다.
+
+    ⚠️ **알려진 한계** — 뒤 문항이 그림을 '그림' 이라 부르지 않으면(5333 의 2번은
+    "수 A 를 소인수분해 했을 때…") 이 규칙이 안 걸려 앞 문항에 남는다. 키워드로는
+    풀 수 없는 경우라 그대로 둔다. 검수 화면에서 사람이 옮길 수 있게 할 것.
+    """
     doc = fitz.open(pdf)
     result: dict[int, list[dict]] = collections.defaultdict(list)
-    current = None
+    last_number = None
 
     for pno in range(doc.page_count):
         page = doc[pno]
-        W = page.rect.width
-        raw = page.get_text("rawdict")
-        # 이미지 블록에는 xref 가 없다 — bbox 로 되찾는다.
+        anchors, images = _page_layout(page)
         xref_by_rect = {}
         for im in page.get_images(full=True):
             for r in page.get_image_rects(im[0]):
                 xref_by_rect[(round(r.x0), round(r.y0), round(r.x1), round(r.y1))] = im[0]
 
-        for blk in raw.get("blocks", []):
-            if blk.get("type") == 0:
-                m = QNUM.match(first_line_text(blk))
-                if m:
-                    n = int(m.group(1))
-                    # 번호는 1부터 올라간다. 되돌아가면 정답면이거나 오검출이다.
-                    if current is None or n == current + 1 or n > current:
-                        current = n
+        for col, y, bbox in images:
+            above = [n for c, ay, n in anchors if (c, ay) <= (col, y)]
+            number = above[-1] if above else last_number
+            if number is None:
                 continue
-
-            # 이미지 블록
-            x0, y0, x1, y1 = blk.get("bbox", (0, 0, 0, 0))
-            w, h = x1 - x0, y1 - y0
-            if pno == 0 and y0 < 110 and w > W * 0.6:
-                continue  # 머리 배너(로고)
-            if w < 24 or h < 24:
-                continue
-            if current is None:
-                continue
-            result[current].append(
-                {
-                    "page": pno,
-                    "xref": xref_by_rect.get((round(x0), round(y0), round(x1), round(y1))),
-                    "rect": [round(x0, 1), round(y0, 1), round(x1, 1), round(y1, 1)],
-                }
-            )
+            x0, y0, x1, y1 = bbox
+            result[number].append({
+                "page": pno,
+                "xref": xref_by_rect.get((round(x0), round(y0), round(x1), round(y1))),
+                "rect": [round(x0, 1), round(y0, 1), round(x1, 1), round(y1, 1)],
+            })
+        if anchors:
+            last_number = anchors[-1][2]
     doc.close()
+
+    # 본문 텍스트는 textlayer 에서 — 공통 지문 넘기기 판단에만 쓴다.
+    try:
+        meta = textlayer.extract(pdf)
+        text_of = {
+            q["number"]: " ".join(str(b.get("value") or "") for b in (q.get("contents") or []))
+            for q in (meta.get("questions") or []) if q.get("number") is not None
+        }
+    except Exception:
+        text_of = {}
+
+    for num in sorted(result):
+        nxt = num + 1
+        if num not in text_of or nxt not in text_of:
+            continue
+        if FIGURE_WORD.search(text_of[num]):
+            continue
+        if FIGURE_WORD.search(text_of[nxt]):
+            result.setdefault(nxt, []).extend(result.pop(num))
+
     return dict(result)
 
 
