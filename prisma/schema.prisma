@@ -219,8 +219,14 @@ model Problem {
   /// 원본 시험지의 그림을 대체한다 — 이미지 파일이 아니라 SVG 문자열로 보관해
   /// 인쇄·화면이 같은 벡터를 쓰고 해상도 손실이 없다. 참조: docs/planning/09-figure-engine-guide.md
   figureSvg    String?      @db.Text @map("figure_svg")
-  /// 도형 출처: engine(엔진 작도) / image(외부 이미지 보정본) — 검수·재생성 대상 선별용
+  /// 도형 출처: engine(엔진 작도) / image(외부 이미지 보정본) / source(원본 시험지 오려옴)
   figureSource String?      @db.VarChar(20) @map("figure_source")
+  /// 원본 시험지에서 오려 온 그림 파일 경로들 (`/figures/<examId>/qNN.jpg`).
+  /// 완료본 PDF 에 그림이 **이미지로 심겨 있어** 다시 그릴 필요가 없다 —
+  /// 원본을 그대로 오려 `public/figures/` 에 두고 여기에 경로만 적는다.
+  /// 배열인 이유: 선택지마다 그림인 문항이 있다(실측 한 문항 최대 6장).
+  /// 순서는 지면에 나온 순서다. 참조: docs/planning/09-figure-engine-guide.md
+  figureUrls   String[]     @map("figure_urls")
 
   // ── 원본 역추적 메타데이터 (docs/planning/08-import-ledger.md) ──────────────
   // 추출기는 이 값들을 이미 갖고 있었는데 적재 단계가 버려서, 훼손·그림 문항을
