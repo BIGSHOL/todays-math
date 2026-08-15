@@ -125,6 +125,29 @@ async function loadHwpPaths(): Promise<Map<number, string>> {
   return out;
 }
 
+/** sumaek 원본 행에서 "어느 교재 몇 번" 을 만든다. id 매칭과 본문 매칭이 함께 쓴다. */
+function rpmOrigin(list: SourceRow[]): Candidate["origin"] {
+  const ref = list[0].sourceRef ?? {};
+  const book =
+    (typeof ref.book === "string" && ref.book) ||
+    (typeof ref.unit === "string" && ref.unit) ||
+    "RPM";
+  const numbers = list
+    .map((h) => h.printedNumber)
+    .filter(Boolean)
+    .join(", ");
+  return {
+    kind: "rpm",
+    label:
+      list.length === 1
+        ? `RPM ${book} ${numbers || "번호미상"}번`
+        : `RPM ${book} — 후보 ${list.length}곳 (${numbers})`,
+    sumaekId: list[0].id,
+    printedNumber: list[0].printedNumber,
+    match: list.length === 1 ? "unique" : "ambiguous",
+  };
+}
+
 function categorize(why: string): string {
   for (const c of CATEGORIES) if (c.test.test(why)) return c.name;
   return "기타";
@@ -375,7 +398,10 @@ async function main(): Promise<void> {
       idxDb.close();
     }
 
-    // ── RPM: 본문 매칭으로 sumaek 역추적 ──────────────────────────
+    // ── RPM: sumaek 역추적 ────────────────────────────────────────
+    // `byId` 는 트랙 C 가 채운 externalId 로 바로 찾는 길(확실하다),
+    // `byKey` 는 아직 externalId 가 없는 행을 본문으로 더듬는 길이다.
+    const byId = new Map<string, SourceRow>();
     const byKey = new Map<string, SourceRow[]>();
     const sourceUrl = await resolveSourceUrl();
     if (sourceUrl) {
@@ -383,6 +409,7 @@ async function main(): Promise<void> {
       for (const r of raw) {
         const row = toSourceRow(r);
         if (!row) continue;
+        byId.set(row.id, row);
         const keys = [
           ...new Set([...keysOf(row.content), ...keysOf(row.restoredContent)]),
         ];
@@ -404,7 +431,11 @@ async function main(): Promise<void> {
       let origin: Candidate["origin"] = { kind: "unknown", label: "원본 미상" };
       let hwp: string | null = null;
 
-      if (row.externalId) {
+      // ⚠️ **출처로 먼저 가른다.** 예전엔 `externalId` 가 있으면 기출로 봤는데,
+      // 트랙 C 가 RPM 4,629행에 sumaek UUID 를 채우자 그 31건이 통째로
+      // "원본 미상" 으로 떨어졌다(RPM 264 → 233). `externalId` 유무는
+      // 출처를 뜻하지 않는다 — 기출은 `<examId>-<번호>`, RPM 은 UUID 다.
+      if (row.source === "past_exam" && row.externalId) {
         const cut = row.externalId.lastIndexOf("-");
         const examId = Number(row.externalId.slice(0, cut));
         hwp = hwpPaths.get(examId) ?? null;
@@ -419,33 +450,17 @@ async function main(): Promise<void> {
             questionNumber: number,
           };
         }
+      } else if (row.source === "transformed" && row.externalId) {
+        // 트랙 C 가 채운 sumaek id 로 **직접** 찾는다. 본문 대조보다 확실하다.
+        const hit = byId.get(row.externalId);
+        if (hit) origin = rpmOrigin([hit]);
       } else if (row.source === "transformed") {
         const hits = new Map<string, SourceRow>();
         for (const key of keysOf(row.content)) {
           for (const hit of byKey.get(key) ?? []) hits.set(hit.id, hit);
         }
         const list = [...hits.values()];
-        if (list.length > 0) {
-          const ref = list[0].sourceRef ?? {};
-          const book =
-            (typeof ref.book === "string" && ref.book) ||
-            (typeof ref.unit === "string" && ref.unit) ||
-            "RPM";
-          const numbers = list
-            .map((h) => h.printedNumber)
-            .filter(Boolean)
-            .join(", ");
-          origin = {
-            kind: "rpm",
-            label:
-              list.length === 1
-                ? `RPM ${book} ${numbers || "번호미상"}번`
-                : `RPM ${book} — 후보 ${list.length}곳 (${numbers})`,
-            sumaekId: list[0].id,
-            printedNumber: list[0].printedNumber,
-            match: list.length === 1 ? "unique" : "ambiguous",
-          };
-        }
+        if (list.length > 0) origin = rpmOrigin(list);
       }
 
       candidates.push({
