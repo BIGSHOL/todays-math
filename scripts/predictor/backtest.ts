@@ -112,13 +112,16 @@ function main() {
       ` · 배점보정 ${stats.scoreFilled})`,
   );
 
-  // 추출 결손(서술형 면 유실)이 있는 편은 학습·채점 양쪽에서 뺀다.
-  // 넣어 두면 그 학교가 "서술형을 거의 안 낸다"고 배운다 — 결손이 아니라 편향이 된다.
+  // 만점이 100 이 아닌 편은 원본이 잘린 것이다 — 학습·채점·출제 전부에서 뺀다.
+  // 넣어 두면 그 학교가 "문항을 13개만 낸다"고 배운다 — 결손이 아니라 편향이 된다.
   const { trusted, excluded } = partitionTrusted(papers);
   const byReason = new Map<string, number>();
   for (const e of excluded) {
-    if (!e.trust.trusted)
-      byReason.set(e.trust.reason, (byReason.get(e.trust.reason) ?? 0) + 1);
+    if (e.trust.trusted) continue;
+    const key = e.trust.shortfall
+      ? `${e.trust.reason}/${e.trust.shortfall}`
+      : e.trust.reason;
+    byReason.set(key, (byReason.get(key) ?? 0) + 1);
   }
   console.log(
     `신뢰 가드: ${trusted.length}편 사용 · ${excluded.length}편 제외 (` +
@@ -275,7 +278,10 @@ function main() {
   );
 
   console.log(
-    `\nbacktest 대상 ${samples.length / models.length}편 (과거 없음으로 제외 ${skipped}편)`,
+    `
+backtest 대상 ${samples.length / models.length}편 (과거 없음으로 제외 ${skipped}편` +
+      // 코호트 기준선조차 못 세운 편 — 세어만 두면 기준선 비교가 조용히 왜곡된다.
+      `${unavailable ? ` · 코호트 표본 없음 ${unavailable}편` : ""})`,
   );
   console.log(
     `\n${"모델".padEnd(15)}${"문항수MAE".padStart(11)}${"총점MAE".padStart(10)}` +
@@ -317,7 +323,26 @@ function main() {
   writeFileSync(
     OUT,
     JSON.stringify(
-      { engineVersion: ENGINE_VERSION, corpus: stats, summary, samples },
+      {
+        engineVersion: ENGINE_VERSION,
+        corpus: stats,
+        // 신뢰 가드에서 뺀 편 — 버린 게 아니라 **추출 재작업 대상 목록**이다.
+        // 추출을 고쳐 다시 뽑으면 externalExamId 멱등이라 그대로 되돌아온다.
+        excludedPapers: excluded.map(({ paper, trust }) => ({
+          externalExamId: paper.externalExamId,
+          school: paper.series.school,
+          grade: `${paper.series.level}${paper.series.grade}`,
+          subject: paper.series.subject,
+          period: `${paper.period.year}-${paper.period.semester}${paper.period.round}`,
+          totalScore: paper.totalScore,
+          questionCount: paper.questions.length,
+          reason: trust.trusted ? null : trust.reason,
+          shortfall: trust.trusted ? null : trust.shortfall,
+          sourceFile: paper.sourceFile,
+        })),
+        summary,
+        samples,
+      },
       null,
       1,
     ),
