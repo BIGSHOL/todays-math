@@ -431,8 +431,14 @@ async function build(): Promise<{
       group.index = index + 1;
     });
 
+    const groupRowIds = new Set(groups.flatMap((group) => group.problemIds));
+    const groupRowsKeyed = problems.filter(
+      (problem) => groupRowIds.has(problem.id) && problem.externalId,
+    ).length;
+
     const totals = {
       groups: groups.length,
+      groupRowsKeyed,
       dbRows: groups.reduce((sum, g) => sum + g.problemIds.length, 0),
       sourceRows: groups.reduce((sum, g) => sum + g.sourceIds.length, 0),
       answersDiffer: groups.filter((g) => g.sourceAnswersDiffer).length,
@@ -582,20 +588,26 @@ function render(
   );
   lines.push("");
 
-  lines.push("## 3. 이 233건 = `externalId` 미상 233건 (우연이 아니라 같은 집합)");
+  lines.push("## 3. 이 그룹들과 `externalId` 미상의 관계");
   lines.push("");
   lines.push(
-    `C-1 은 \`source='transformed'\` ${totals.transformedRows}행 중 ` +
-      `${totals.transformedRows - totals.unresolvedRows}행에 \`externalId\` 를 채우고 ` +
-      `**${totals.unresolvedRows}행**을 미상으로 남겼다. 그 수가 이 문서의 ${totals.dbRows}건과 같은 것은 ` +
-      "우연이 아니다 — **판정 규칙이 하나**라서 같은 집합이다. " +
-      "채우는 조건이 「원본 후보가 정확히 하나」이므로, 후보가 둘 이상인 행이 곧 미상이고 그것이 이 문서의 대상이다.",
+    `이 문서의 ${totals.dbRows}행은 **본문만으로는 원본을 하나로 좁힐 수 없는** 행들이다. ` +
+      "C-1 이 `externalId` 를 채우는 조건이 「원본 후보가 정확히 하나」이므로, " +
+      "**1차에서는 이 " + String(totals.dbRows) + "행이 그대로 미상으로 남았다** — " +
+      "수가 같았던 것은 우연이 아니라 판정 규칙이 하나라서다.",
   );
   lines.push("");
   lines.push(
-    "`recover-rpm-answers.ts` 가 정답을 되찾을 때 건너뛴 「본문중복 제외」 도 같은 규칙이다 " +
-      "(`keysOf` 를 그대로 공유한다). 그래서 이 행들은 **정답도 그림도 한 건도 못 받았다** — " +
-      "`DB정답 0/233 · DB그림 0/233` 이 그 결과다. 원인 하나가 셋을 동시에 막고 있었다.",
+    `**2차(원장님 승인)에서 해설 대조로 ${totals.groupRowsKeyed}행이 확정됐다.** ` +
+      `지금 이 ${totals.dbRows}행 중 \`externalId\` 가 붙은 것은 ${totals.groupRowsKeyed}행, ` +
+      `남은 미상은 ${totals.dbRows - totals.groupRowsKeyed}행이다 ` +
+      `(전체로는 \`transformed\` ${totals.transformedRows}행 중 채움 ${totals.transformedRows - totals.unresolvedRows} · 미상 ${totals.unresolvedRows}).`,
+  );
+  lines.push("");
+  lines.push(
+    "`recover-rpm-answers.ts` 도 같은 규칙으로 이 행들을 건너뛰고 있었다 — 그래서 " +
+      "**정답도 그림도 한 건도 못 받았다**(아래 표 `DB정답`·`DB그림` 열이 전부 0인 이유). " +
+      "원인 하나가 셋을 동시에 막고 있었다는 뜻이고, 키가 붙은 지금 그 셋이 같이 풀린다.",
   );
   lines.push("");
   lines.push(
@@ -603,7 +615,7 @@ function render(
       `${totals.identicalRows}행 / ${totals.identicalGroups}그룹으로 ${totals.dbRows - totals.identicalRows}건 적다. ` +
       `차이 ${totals.dbRows - totals.identicalRows}건은 **우리 DB 안에서는 유일한데 원본에 쌍둥이가 있는** 행이다 ` +
       "(원본 두 행 중 하나만 적재됐다). 우리 쪽만 보면 안 보이고 원본을 봐야 드러난다. " +
-      `반대로 글자까지 같은 ${totals.identicalRows}행 중 \`externalId\` 가 채워진 것은 ${totals.identicalYetFilled}건이다.`,
+      `(글자까지 같은 ${totals.identicalRows}행 중 지금 \`externalId\` 가 붙은 것은 ${totals.identicalYetFilled}건.)`,
   );
   lines.push("");
 
