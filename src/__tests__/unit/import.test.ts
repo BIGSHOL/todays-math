@@ -655,6 +655,57 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
     );
   });
 
+  // 실측 사고(2026-08-15): RPM 이관분 4,862행의 정답이 **전량** 비어 있었다.
+  // flattenStructured 가 runs/content/choices/items/rows 만 훑고
+  // `correctChoiceIds`(객관식)·`accepted`(주관식) 를 안 봐서 통째로 날아갔다.
+  // 같은 경로를 타는 explanation 은 4,430건이 멀쩡해 정답만 유실된 게 드러났다.
+  it("RPM 객관식 정답을 보기 번호로 되살린다", async () => {
+    const { convertRpmExtractedRow } = await import("@/lib/import/convertRpm");
+    const draft = convertRpmExtractedRow({
+      id: "rpm-mc",
+      kind: "multiple_choice",
+      source_ref: { book: "중2-1", unit: "유리수와 소수" },
+      body: [{ type: "text", text: "다음 중 옳은 것은?" }],
+      choices: [
+        { id: "c1", marker: "①", content: [{ type: "text", text: "가" }] },
+        { id: "c2", marker: "②", content: [{ type: "text", text: "나" }] },
+        { id: "c3", marker: "③", content: [{ type: "text", text: "다" }] },
+      ],
+      answer: { correctChoiceIds: ["c3"] },
+    });
+    expect(draft.answer).toBe("③");
+  });
+
+  it("RPM 주관식 정답을 accepted 값에서 되살린다", async () => {
+    const { convertRpmExtractedRow } = await import("@/lib/import/convertRpm");
+    const draft = convertRpmExtractedRow({
+      id: "rpm-sa",
+      kind: "short_answer",
+      source_ref: { book: "중2-1", unit: "유리수와 소수" },
+      body: [{ type: "text", text: "값을 구하시오." }],
+      answer: { accepted: [{ value: "36" }] },
+    });
+    expect(draft.answer).toBe("36");
+  });
+
+  // 마커가 없으면 시험지에 보기 번호가 안 찍혀 학생이 정답과 대조할 수 없다.
+  it("RPM 보기에 마커를 붙여 본문에 싣는다", async () => {
+    const { convertRpmExtractedRow } = await import("@/lib/import/convertRpm");
+    const draft = convertRpmExtractedRow({
+      id: "rpm-marker",
+      kind: "multiple_choice",
+      source_ref: { book: "중2-1", unit: "유리수와 소수" },
+      body: [{ type: "text", text: "다음 중 옳은 것은?" }],
+      choices: [
+        { id: "c1", marker: "①", content: [{ type: "text", text: "가" }] },
+        { id: "c2", marker: "②", content: [{ type: "text", text: "나" }] },
+      ],
+      answer: { correctChoiceIds: ["c1"] },
+    });
+    expect(draft.content).toContain("① 가");
+    expect(draft.content).toContain("② 나");
+  });
+
   it("매핑 실패분은 unclassified로 남기고 버리지 않는다", () => {
     const { classified, report } = classifyDrafts(
       "past_exam",

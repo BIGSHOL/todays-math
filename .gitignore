@@ -52,3 +52,6 @@ scripts/qa/reports/
 # 조사 산출물은 예외 — 다시 뽑으려면 수 분이 걸리고 다른 컴퓨터가 바로 읽어야 한다.
 !scripts/qa/reports/topic-coverage.json
 __pycache__/
+
+# 본문 백업(대용량, 되돌리기용)
+scripts/qa/reports/transformed-content-backup.json

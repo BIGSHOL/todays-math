@@ -10,7 +10,10 @@
  *
  * 짝짓기: 적재 때 `externalId` 를 버려서 키 조인이 안 된다. 대신 원본 body+choices 를
  * 적재 때와 **같은 함수로** 펴면 우리 `Problem.content` 와 문자열이 같아진다(실측 100%).
- * 공백만 지운 정규화 완전일치로 짝짓고, 본문이 겹쳐 원본 답이 갈리는 문항은 손대지 않는다.
+ * 다만 `restore-choice-markers.ts` 로 보기 마커를 복원한 문항은 본문이 바뀌어 이 일치가
+ * 깨진다. 그래서 원본 한 행마다 **적재 당시 형태와 마커 복원 형태를 모두** 키로 걸고,
+ * 각 형태의 원문/정규화(마커·중복 보기·공백 제거) 키를 함께 본다 — 복원 전 문항과 복원 후
+ * 문항이 같은 코드로 다 잡힌다. 어느 키로든 원본 후보가 둘 이상이면 건드리지 않는다.
  *
  * 접속 정보는 저장소에 넣지 않는다 — `SUMAEK_DATABASE_URL` 환경변수를 먼저 보고,
  * 없으면 `SUMAEK_ENV_PATH`(기본 `C:\Creative\sumaek\.env`)를 파싱한다.
@@ -59,7 +62,10 @@ type PostgresFactory = (
 
 interface SourceRow {
   id: string;
+  /** 적재 당시 형태 — `body + choices` 를 편 문자열. */
   content: string;
+  /** `restore-choice-markers.ts` 가 만들어 넣는 형태 — `지문 + 마커 보기`. */
+  restoredContent: string;
   answer: string;
   isChoice: boolean;
   /** 원본이 들고 있는 보기 마커 개수 — 본문에서 마커가 벗겨진 문항의 복구 여지. */
@@ -103,6 +109,53 @@ function acceptedValues(accepted: unknown): string {
     .join(", ");
 }
 
+interface ChoiceItem {
+  order: number;
+  marker: string;
+  text: string;
+}
+
+/** 원본 보기 배열 → `{order, marker, text}`. `restore-choice-markers.ts` 와 같은 규칙. */
+function toChoiceItems(raw: unknown): ChoiceItem[] {
+  if (!Array.isArray(raw)) return [];
+  const items: ChoiceItem[] = [];
+  raw.forEach((entry, index) => {
+    const record = asRecord(entry);
+    if (!record) return;
+    const marker =
+      typeof record.marker === "string" ? record.marker.trim() : "";
+    const order = typeof record.order === "number" ? record.order : index + 1;
+    const text = flattenStructured(record.content).content.trim();
+    if (!marker || !text) return;
+    items.push({ order, marker, text });
+  });
+  return items.sort((a, b) => a.order - b.order);
+}
+
+/** 지문 뒤에 마커 없이 겹쳐 붙은 보기 값 — 완전일치일 때만 잘라 낸다. */
+function stripDuplicatedChoiceTail(body: string, items: ChoiceItem[]): string {
+  if (items.length === 0) return body;
+  const tail = items
+    .map((item) => item.text)
+    .join("")
+    .replace(/\s+/g, "");
+  if (!tail) return body;
+  const segments = body.split("\n\n");
+  for (let take = segments.length; take > 0; take -= 1) {
+    const candidate = segments
+      .slice(segments.length - take)
+      .join("")
+      .replace(/\s+/g, "");
+    if (candidate === tail) {
+      return segments
+        .slice(0, segments.length - take)
+        .join("\n\n")
+        .trimEnd();
+    }
+  }
+  return body;
+}
+
 function toSourceRow(row: Record<string, unknown>): SourceRow | null {
   const id = typeof row.id === "string" ? row.id : "";
   if (!id) return null;
@@ -123,16 +176,21 @@ function toSourceRow(row: Record<string, unknown>): SourceRow | null {
     ? markersFor(row.choices, correctIds)
     : acceptedValues(answer?.accepted);
 
-  const markerCount = Array.isArray(row.choices)
-    ? row.choices.filter((raw) => {
-        const choice = asRecord(raw);
-        return (
-          typeof choice?.marker === "string" && choice.marker.trim() !== ""
-        );
-      }).length
-    : 0;
+  const choiceItems = toChoiceItems(row.choices);
+  const stem = stripDuplicatedChoiceTail(body.content, choiceItems);
+  const block = choiceItems
+    .map((choice) => `${choice.marker} ${choice.text}`)
+    .join("\n\n");
 
-  return { id, content, answer: text.trim(), isChoice, markerCount };
+  return {
+    id,
+    content,
+    // 마커 복원본과 **글자 단위로 같은** 문자열이라야 복원 후에도 짝이 맞는다.
+    restoredContent: [stem, block].filter(Boolean).join("\n\n"),
+    answer: text.trim(),
+    isChoice,
+    markerCount: choiceItems.length,
+  };
 }
 
 async function resolveSourceUrl(): Promise<string | null> {
@@ -170,6 +228,28 @@ const normalizeContent = (value: string): string => value.replace(/\s+/g, "");
 const normalizeAnswer = (value: string): string =>
   value.replace(/\s+/g, "").replace(/[$]/g, "");
 
+/**
+ * 보기 마커 복원 전/후 **양쪽에 걸리는** 짝짓기 키.
+ *
+ * `restore-choice-markers.ts` 가 본문을 `지문 + 마커 보기` 로 바꾸면 원본 문자열과의
+ * 완전일치가 깨진다(실측 1,487건 전부 매칭실패). 그래서 양쪽 다 `parseProblemContent`
+ * 로 한 번 걸러 **마커·중복 보기 블록·공백을 제거한 알맹이**를 키로 쓴다.
+ *   - 복원 전: 마커가 없어 보기가 안 갈리지만 `dropDuplicatedTail` 이 중복 꼬리를 지운다.
+ *   - 복원 후: 지문과 보기로 갈리고 마커는 파서가 떼어 낸다.
+ * 두 경우 모두 `지문 + 보기들` 이 같은 문자열로 모인다.
+ */
+function canonicalKey(content: string): string {
+  const parsed = parseProblemContent(content);
+  return normalizeContent(parsed.question + parsed.choices.join(""));
+}
+
+/** 원문 그대로의 키와 정규화 키를 함께 쓴다 — 한쪽만 맞아도 후보로 잡는다. */
+function keysOf(content: string): string[] {
+  return [
+    ...new Set([normalizeContent(content), canonicalKey(content)]),
+  ].filter(Boolean);
+}
+
 /** 번호 정답은 시험지에 보기가 찍혀야 학생이 대조할 수 있다(load-answer-backfill 과 같은 규칙). */
 function rendersChoices(content: string): boolean {
   const parsed = parseProblemContent(content);
@@ -199,11 +279,24 @@ async function main(): Promise<void> {
     .filter((row): row is SourceRow => row !== null);
   const withAnswer = sourceRows.filter((row) => row.answer).length;
 
-  const byContent = new Map<string, SourceRow[]>();
+  const byKey = new Map<string, Set<SourceRow>>();
   for (const row of sourceRows) {
-    const key = normalizeContent(row.content);
-    if (!key) continue;
-    byContent.set(key, [...(byContent.get(key) ?? []), row]);
+    for (const key of [
+      ...new Set([...keysOf(row.content), ...keysOf(row.restoredContent)]),
+    ]) {
+      const bucket = byKey.get(key) ?? new Set<SourceRow>();
+      bucket.add(row);
+      byKey.set(key, bucket);
+    }
+  }
+
+  /** 어떤 키로든 걸린 원본 후보. 둘 이상이면 어느 쪽인지 모르므로 쓰지 않는다. */
+  function candidatesFor(content: string): SourceRow[] {
+    const found = new Set<SourceRow>();
+    for (const key of keysOf(content)) {
+      for (const row of byKey.get(key) ?? []) found.add(row);
+    }
+    return [...found];
   }
 
   const prisma = new PrismaClient();
@@ -226,8 +319,8 @@ async function main(): Promise<void> {
     let alreadyAgrees = 0;
 
     for (const problem of problems) {
-      const candidates = byContent.get(normalizeContent(problem.content));
-      if (!candidates) {
+      const candidates = candidatesFor(problem.content);
+      if (candidates.length === 0) {
         unmatched += 1;
         continue;
       }

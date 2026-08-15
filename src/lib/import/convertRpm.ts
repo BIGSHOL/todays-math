@@ -69,11 +69,83 @@ function rpmDifficultyLabel(value: unknown): string | undefined {
   return undefined;
 }
 
+const CIRCLED = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮";
+
+/** 보기 배열을 `{id, marker, 본문}` 으로 편다. marker 가 없으면 순번으로 만든다. */
+function flattenChoices(
+  value: unknown,
+): Array<{ id: string; marker: string; text: string }> {
+  if (!Array.isArray(value)) return [];
+  return value.map((raw, index) => {
+    const record = (raw ?? {}) as Record<string, unknown>;
+    const marker =
+      typeof record.marker === "string" && record.marker.trim()
+        ? record.marker.trim()
+        : (CIRCLED[index] ?? `${index + 1}.`);
+    return {
+      id: typeof record.id === "string" ? record.id : String(index),
+      marker,
+      text: flattenStructured(
+        record.content ?? record.runs ?? record.value ?? record.text ?? raw,
+      ).content,
+    };
+  });
+}
+
+/**
+ * 정답을 되살린다.
+ *
+ * ⚠️ `flattenStructured` 만으로는 **절대** 안 된다. 그 함수는
+ * runs/content/choices/items/rows 만 훑어서 `correctChoiceIds`(객관식)와
+ * `accepted`(주관식)를 못 본다. 그래서 RPM 4,862행의 정답이 통째로
+ * 빈 문자열이 됐다(2026-08-15 실측, 원본에서 복구).
+ *
+ * 객관식은 원장님 확정대로 **보기 번호**로 돌려준다 — 시험지에 ①~⑤ 가
+ * 찍히므로 학생이 대조할 수 있다.
+ */
+function rpmAnswer(
+  value: unknown,
+  choices: Array<{ id: string; marker: string }>,
+): string {
+  const record =
+    value && typeof value === "object"
+      ? (value as Record<string, unknown>)
+      : null;
+
+  if (record && Array.isArray(record.correctChoiceIds)) {
+    const markers = record.correctChoiceIds
+      .map((id) => choices.find((choice) => choice.id === id)?.marker)
+      .filter((marker): marker is string => Boolean(marker));
+    if (markers.length > 0) return markers.join(", ");
+  }
+
+  if (record && Array.isArray(record.accepted)) {
+    const values = record.accepted
+      .map((item) => {
+        const entry = (item ?? {}) as Record<string, unknown>;
+        return typeof entry.value === "string" ? entry.value.trim() : "";
+      })
+      .filter(Boolean);
+    if (values.length > 0) return values.join(", ");
+  }
+
+  return flattenStructured(value).content;
+}
+
 /** sumaek questions + current version SELECT 행 → 잠긴 ImportDraft. */
 export function convertRpmExtractedRow(row: RpmExtractedRow): ImportDraft {
   const body = flattenStructured(row.body);
-  const choices = flattenStructured(row.choices);
-  const answer = flattenStructured(row.answer);
+  const choiceList = flattenChoices(row.choices);
+  const choices = choiceList.length
+    ? {
+        // 마커를 붙여 싣는다. 없으면 시험지에 보기 번호가 안 찍혀
+        // 번호로 된 정답과 대조할 수 없다(실측 1,319건이 그랬다).
+        content: choiceList
+          .map((choice) => `${choice.marker} ${choice.text}`.trim())
+          .join("\n"),
+        hasFigure: flattenStructured(row.choices).hasFigure,
+      }
+    : flattenStructured(row.choices);
   const explanation = flattenStructured(row.explanation);
   const ref = row.source_ref ?? {};
   const conceptNames = (row.concepts ?? [])
@@ -99,7 +171,7 @@ export function convertRpmExtractedRow(row: RpmExtractedRow): ImportDraft {
     difficulty: mapDifficultyLabel(rpmDifficultyLabel(row.difficulty)),
     problemType: mapProblemType([row.kind, ...tags].filter(Boolean).join(" ")),
     content: [body.content, choices.content].filter(Boolean).join("\n\n"),
-    answer: answer.content || "(정답 없음)",
+    answer: rpmAnswer(row.answer, choiceList) || "(정답 없음)",
     solution: explanation.content || null,
     unitHint,
     hasFigure: body.hasFigure || choices.hasFigure,
