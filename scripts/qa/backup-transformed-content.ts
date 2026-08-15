@@ -11,13 +11,18 @@ import { mkdir, writeFile } from "node:fs/promises";
 
 import { PrismaClient } from "@prisma/client";
 
-const OUT = "scripts/qa/reports/transformed-content-backup.json";
+const OUT =
+  process.env.CONTENT_BACKUP_OUT ??
+  "scripts/qa/reports/transformed-content-backup.json";
 
 async function main(): Promise<void> {
   const prisma = new PrismaClient();
   try {
+    // 기본은 transformed 만. `BACKUP_SOURCE=all` 이면 전량.
+    const source = process.env.BACKUP_SOURCE;
     const rows = await prisma.problem.findMany({
-      where: { source: "transformed" },
+      where:
+        source && source !== "all" ? { source: source as "transformed" } : {},
       select: { id: true, content: true, answer: true },
     });
     await mkdir("scripts/qa/reports", { recursive: true });
