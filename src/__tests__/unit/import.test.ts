@@ -429,11 +429,14 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
     if (result.status === "mapped") expect(result.unitId).toBe("unit-polymul");
   });
 
-  // 중단원급 힌트는 소단원 여러 개에 걸친다. 하나를 골라 붙이면 그 단원으로
-  // 출제할 때 엉뚱한 문제가 섞인다 — 틀린 매핑보다 미분류가 낫다.
-  it("여러 소단원에 걸치는 모호한 힌트는 붙이지 않는다 — '제곱근과 실수'", () => {
+  // 원래는 중단원급 힌트를 미분류로 남겼다(틀린 매핑보다 미분류가 낫다).
+  // 2026-08-15 원장님이 "합리적인 방향에서" 붙이라고 확정 — B단계에서 이
+  // 부류가 2,500건을 넘었다. 대신 **중단원은 확정**하고 소단원만 그 안에서
+  // 최근접을 고른다. 오차가 중단원 밖으로 나가지 않는 게 '합리적'의 기준이다.
+  it("중단원급 힌트는 그 중단원 안으로 들어간다 — '제곱근과 실수'", () => {
     const result = mapUnitHint("제곱근과 실수", OVERLAP_UNITS, "중3");
-    expect(result.status).toBe("unclassified");
+    expect(result.status).toBe("mapped");
+    if (result.status === "mapped") expect(result.unitId).toBe("unit-sqrt");
   });
 
   it("트리에 없는 개념은 억지로 붙이지 않는다 — '조립제법'", () => {
@@ -603,6 +606,53 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
       UNITS,
     );
     expect(report.unresolvedGrade).toBe(2);
+  });
+
+  // 시험지가 중단원 이름으로만 태그한 경우(“일차함수와 그래프”, “제곱근과 실수”).
+  // 소단원 여러 개에 걸치므로 1:1 별칭을 쓸 수 없다. 대신 **중단원은 확실히
+  // 맞추고** 그 안에서 가장 가까운 소단원을 고른다 — 틀려도 같은 중단원 안이다.
+  it("중단원급 힌트는 그 중단원 안의 최근접 소단원으로 간다", () => {
+    const units = [
+      {
+        id: "u-sqrt",
+        grade: "중3",
+        chapter: "1. 실수와 그 계산",
+        section: "제곱근의 뜻과 성질",
+      },
+      {
+        id: "u-irr",
+        grade: "중3",
+        chapter: "1. 실수와 그 계산",
+        section: "무리수와 실수",
+      },
+      { id: "u-far", grade: "중3", chapter: "6. 원의 성질", section: "원주각" },
+    ];
+    const result = mapUnitHint("제곱근과 실수", units, "중3");
+    expect(result.status).toBe("mapped");
+    if (result.status === "mapped") expect(result.unitId).toBe("u-sqrt");
+  });
+
+  it("중단원 별칭도 학년이 다르면 쓰지 않는다", () => {
+    const units = [
+      {
+        id: "u-sqrt",
+        grade: "중2",
+        chapter: "1. 실수와 그 계산",
+        section: "제곱근의 뜻과 성질",
+      },
+    ];
+    expect(mapUnitHint("제곱근과 실수", units, "중2").status).toBe(
+      "unclassified",
+    );
+  });
+
+  it("중단원이 트리에 없으면 붙이지 않는다", () => {
+    const units = [
+      { id: "u-x", grade: "중3", chapter: "9. 통계", section: "대푯값" },
+    ];
+    expect(mapUnitHint("제곱근과 실수", units, "중3").status).toBe(
+      "unclassified",
+    );
   });
 
   it("매핑 실패분은 unclassified로 남기고 버리지 않는다", () => {

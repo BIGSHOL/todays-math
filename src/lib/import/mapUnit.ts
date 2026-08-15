@@ -70,7 +70,78 @@ const SECTION_ALIASES: Record<string, Record<string, string>> = {
   공통수학2: {
     명제의참거짓: "명제와 조건",
   },
+  중3: {
+    // 원과 직선의 위치관계 = 접선 단원.
+    원과직선: "원의 접선",
+  },
+  대수: {
+    삼각함수가포함된방정식과부등식: "삼각방정식",
+  },
+  미적분1: {
+    // 미분가능성 ↔ 연속성은 미분계수의 정의에서 다룬다.
+    미분가능성과연속성: "미분계수",
+    // 다항함수의 최대·최소는 극대·극소에서 다룬다.
+    함수의최댓값과최솟값: "함수의 극대와 극소",
+  },
+  미적분2: {
+    급수의수렴과발산: "급수의 뜻과 계산",
+    매개변수로나타낸함수의미분법: "여러 가지 미분법",
+  },
 };
+
+/**
+ * 시험지가 **중단원 이름으로만** 태그한 경우. 소단원 여러 개에 걸쳐 1:1 로
+ * 못 붙이므로 중단원만 확정하고, 소단원은 그 안에서 최근접을 고른다.
+ * 틀려도 **같은 중단원 안**이라 그 단원 출제에 결이 아주 다른 문제는 안 섞인다.
+ *
+ * 2026-08-15 B단계 실측 상위 미분류에서 뽑았다. 트리에 중단원 자체가 없으면
+ * 붙이지 않는다(예: 확률과 통계 '원순열' 은 중단원 `1. 경우의 수` 로 간다).
+ */
+const CHAPTER_ALIASES: Record<string, Record<string, string>> = {
+  중1: {
+    정비례와반비례: "4. 그래프와 비례",
+    좌표와그래프: "4. 그래프와 비례",
+  },
+  중2: {
+    일차함수와그래프: "4. 함수",
+    일차함수와그그래프: "4. 함수",
+  },
+  중3: {
+    제곱근과실수: "1. 실수와 그 계산",
+    이차함수의활용: "4. 이차함수",
+  },
+  미적분1: {
+    방정식과부등식에의활용: "2. 미분",
+  },
+  미적분2: {
+    여러가지함수의정적분: "3. 적분법",
+  },
+  "확률과 통계": {
+    원순열: "1. 경우의 수",
+  },
+};
+
+/** 중단원 별칭이 걸리면 그 중단원 안에서 이름이 가장 닮은 소단원. */
+function chapterAliasHit(
+  pool: UnitLike[],
+  hint: string,
+  grade: string,
+): UnitLike | undefined {
+  const chapter = CHAPTER_ALIASES[grade]?.[aliasKey(hint)];
+  if (!chapter) return undefined;
+  const inChapter = pool.filter((unit) => unit.chapter === chapter);
+  if (inChapter.length === 0) return undefined;
+  let best = inChapter[0];
+  let bestScore = -1;
+  for (const unit of inChapter) {
+    const score = similarity(hint, unit.section);
+    if (score > bestScore) {
+      bestScore = score;
+      best = unit;
+    }
+  }
+  return best;
+}
 
 function aliasKey(value: string): string {
   return value.replace(/[\s.,·]/g, "");
@@ -128,6 +199,14 @@ export function mapUnitHint(
   for (const hint of hints) {
     const chapterHit = longestHit(pool, hint, "chapter");
     if (chapterHit) return { status: "mapped", unitId: chapterHit.id };
+  }
+
+  // 중단원 이름으로만 태그된 문항 — 중단원은 확정하고 소단원은 최근접.
+  if (grade) {
+    for (const candidate of [cleaned, ...hints]) {
+      const alias = chapterAliasHit(pool, candidate, grade);
+      if (alias) return { status: "mapped", unitId: alias.id };
+    }
   }
 
   // 부분문자열로 안 붙는 표기 차이를 여기서 건진다.
