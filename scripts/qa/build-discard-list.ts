@@ -36,6 +36,7 @@ const SOLVED_DIRS = [
   "scripts/qa/reports/answer-solved-fig",
   "scripts/qa/reports/answer-solved-r3",
 ];
+const PAIRS = "scripts/qa/reports/final-pairs.json";
 const JSON_OUT = "scripts/qa/reports/discard-candidates.json";
 const DOC_OUT = "docs/planning/12-discard-candidates.md";
 const SENTINEL = "정답 없음";
@@ -92,6 +93,13 @@ interface Candidate {
   category: string;
   why: string;
   unit: string | null;
+  /**
+   * 완료본 HWP 원본 경로. **있으면 폐기 대상이 아니라 재추출 대상이다.**
+   * 이관은 본문을 PDF 텍스트 레이어에서 뽑았는데(extract-final-batch.py 180행)
+   * HWP 에는 stem·보기·정답·소단원·배점·해설이 온전히 들어 있다 —
+   * 여기 실린 "OCR 훼손"·"본문 결손"·"해설만 들어 있음" 의 상당수가 그 탓이다.
+   */
+  hwp: string | null;
   origin: {
     kind: "past_exam" | "rpm" | "unknown";
     label: string;
@@ -101,6 +109,20 @@ interface Candidate {
     printedNumber?: string | null;
     match?: "unique" | "ambiguous";
   };
+}
+
+/** examId → 완료본 HWP 경로. 짝 2,950편 중 2,944편에 HWP 가 있다. */
+async function loadHwpPaths(): Promise<Map<number, string>> {
+  const out = new Map<number, string>();
+  try {
+    const doc = JSON.parse(await readFile(PAIRS, "utf-8")) as {
+      pairs: Array<{ examId: number; hwp: string | null }>;
+    };
+    for (const p of doc.pairs) if (p.hwp) out.set(p.examId, p.hwp);
+  } catch {
+    // 짝 파일이 없으면 전부 재추출 불가로 본다 — 없는 근거를 지어내지 않는다.
+  }
+  return out;
 }
 
 function categorize(why: string): string {
@@ -206,14 +228,35 @@ function renderDoc(items: Candidate[], alreadySolved: number): string {
   const count = (list: Candidate[], kind: string) =>
     list.filter((c) => c.origin.kind === kind).length;
 
+  const recoverable = items.filter((c) => c.hwp);
   const lines: string[] = [];
   lines.push("# 폐기 후보 문항 목록");
   lines.push("");
   lines.push(
-    "정답 백필에서 담당자가 **정답을 낼 수 없다**고 판정한 문항이다. 원장님이 보시고 문제은행에서 뺄 것을 정하시면 된다. 문항 본문은 싣지 않았다 — **어느 시험지 몇 번인지**와 **왜 못 쓰는지**만 있다.",
+    "정답 백필에서 담당자가 **정답을 낼 수 없다**고 판정한 문항이다. 문항 본문은 싣지 않았다 — **어느 시험지 몇 번인지**와 **왜 못 쓰는지**만 있다.",
   );
   lines.push("");
-  lines.push(`- 총 **${items.length}건**.`);
+  if (recoverable.length > 0) {
+    lines.push(
+      `> ## ⚠️ 지금 판단하지 마십시오 — ${recoverable.length}건은 되살아날 수 있습니다`,
+    );
+    lines.push("> ");
+    lines.push(
+      "> 이 목록의 사유 상당수가 **원본 결손이 아니라 우리 이관 실수**로 밝혀졌다. 이관은 본문을 완료본 **PDF 텍스트 레이어**에서 뽑았는데(`extract-final-batch.py` 180행), 완료본 **HWP** 에는 문제 본문·보기·정답·소단원·배점·해설이 온전히 들어 있다. 본문을 PDF 에서 뽑을 이유가 처음부터 없었다.",
+    );
+    lines.push("> ");
+    lines.push(
+      '> 실측 사례 — 국제고 2697 은 원본이 8문항인데 DB 2건이 둘 다 **해설 지면 텍스트**였고, 강북고 2928 은 1~12번 본문이 통째로 `정답` 두 글자였다. 현풍고 2900-18 은 "OCR 훼손" 으로 적혀 있으나 HWP 원문 그대로였다 — **그 판정은 틀렸다.**',
+    );
+    lines.push("> ");
+    lines.push(
+      `> **${recoverable.length}건에 완료본 HWP 원본이 있다.** 트랙 D 가 재추출 중이다(\`docs/planning/tracks/track-d-hwp.md\`). 끝난 뒤 이 문서를 다시 만들어 보시는 게 맞다.`,
+    );
+    lines.push("");
+  }
+  lines.push(
+    `- 총 **${items.length}건** — 그중 **재추출 대기 ${recoverable.length}건**, 원본이 없어 판단이 필요한 것 ${items.length - recoverable.length}건.`,
+  );
   lines.push(
     `- 판정 실패 후 **정답이 채워진 ${alreadySolved}건은 뺐다** — 그림이 새로 붙어 다시 풀린 것이 많다.`,
   );
@@ -222,20 +265,27 @@ function renderDoc(items: Candidate[], alreadySolved: number): string {
   );
   lines.push("");
   lines.push(
-    "> 이 문서는 `npx tsx scripts/qa/build-discard-list.ts` 로 다시 만든다. 정답이 채워지거나 그림이 붙으면 후보가 줄어드니, **판단하시기 직전에 한 번 더 돌리는 게 좋다.**",
+    "> 이 문서는 `npx tsx scripts/qa/build-discard-list.ts` 로 다시 만든다. 정답이 채워지거나 그림이 붙거나 HWP 재추출이 끝나면 후보가 줄어드니, **판단하시기 직전에 한 번 더 돌리는 게 좋다.**",
   );
   lines.push("");
   lines.push("## 사유별 건수");
   lines.push("");
-  lines.push("| 사유 | 건수 | 기출 | RPM | 미상 | 어떤 문제인가 |");
-  lines.push("|---|---:|---:|---:|---:|---|");
+  lines.push("| 사유 | 건수 | HWP 있음 | 기출 | RPM | 미상 | 어떤 문제인가 |");
+  lines.push("|---|---:|---:|---:|---:|---:|---|");
   for (const name of order) {
     const list = byCat.get(name) ?? [];
+    const rec = list.filter((c) => c.hwp).length;
     lines.push(
-      `| ${name} | ${list.length} | ${count(list, "past_exam")} | ${count(list, "rpm")} | ${count(list, "unknown")} | ${note(name)} |`,
+      `| ${name} | ${list.length} | ${rec} | ${count(list, "past_exam")} | ${count(list, "rpm")} | ${count(list, "unknown")} | ${note(name)} |`,
     );
   }
-  lines.push(`| **합계** | **${items.length}** | | | | |`);
+  lines.push(
+    `| **합계** | **${items.length}** | **${recoverable.length}** | | | | |`,
+  );
+  lines.push("");
+  lines.push(
+    "「HWP 있음」은 **완료본 HWP 원본이 남아 있어 재추출로 되살아날 수 있는 것**이다. 폐기를 판단하실 대상이 아니다.",
+  );
   lines.push("");
 
   for (const name of order) {
@@ -244,11 +294,18 @@ function renderDoc(items: Candidate[], alreadySolved: number): string {
     lines.push("");
     lines.push(note(name));
     lines.push("");
-    for (const c of list.slice(0, PER_SECTION)) {
+    // 원본이 없어 **정말로 판단이 필요한 것**을 앞에 놓는다.
+    const sorted = [...list].sort(
+      (a, b) => Number(Boolean(a.hwp)) - Number(Boolean(b.hwp)),
+    );
+    for (const c of sorted.slice(0, PER_SECTION)) {
+      const tag = c.hwp ? " — **재추출 대기(HWP 있음)**" : "";
       lines.push(
-        `- **${c.origin.label}**${c.unit ? ` · ${c.unit}` : ""} · ${c.why}`,
+        `- **${c.origin.label}**${c.unit ? ` · ${c.unit}` : ""} · ${c.why}${tag}`,
       );
-      if (c.origin.srcPath) lines.push(`  - \`${c.origin.srcPath}\``);
+      // 되살릴 수 있는 것은 **HWP 경로**를 보여 준다 — 그게 정본이다.
+      if (c.hwp) lines.push(`  - HWP \`${c.hwp}\``);
+      else if (c.origin.srcPath) lines.push(`  - \`${c.origin.srcPath}\``);
     }
     if (list.length > PER_SECTION) {
       lines.push(
@@ -262,6 +319,10 @@ function renderDoc(items: Candidate[], alreadySolved: number): string {
   lines.push("");
   lines.push(
     "뺄 문항을 정하시면 처리 도구를 만들겠다. **삭제보다 출제 풀 제외를 권한다** — 삭제는 되돌릴 수 없지만 `reviewStatus` 를 내리면 출제에서만 빠지고 나중에 복구할 수 있다. 원본 시험지 자체가 잘못된 것(원본 모순)만 삭제 대상으로 보는 게 안전하다.",
+  );
+  lines.push("");
+  lines.push(
+    '그리고 **「재추출 대기」로 표시된 것은 아직 보지 마십시오.** 그건 문항이 나쁜 게 아니라 우리가 잘못 옮긴 것이고, 트랙 D 가 끝나면 상당수가 이 목록에서 사라진다. "원본 모순" 으로 적힌 것도 그 판정 자체를 다시 봐야 한다 — 현풍고 2900-18 이 그렇게 잘못 적혔다.',
   );
   lines.push("");
   return lines.join("\n");
@@ -333,6 +394,7 @@ async function main(): Promise<void> {
       }
     }
 
+    const hwpPaths = await loadHwpPaths();
     const candidates: Candidate[] = [];
     for (const row of live) {
       const why = failures.get(row.id)?.why ?? "사유 없음";
@@ -340,10 +402,12 @@ async function main(): Promise<void> {
         ? `${row.unit.grade} / ${row.unit.chapter} / ${row.unit.section}`
         : null;
       let origin: Candidate["origin"] = { kind: "unknown", label: "원본 미상" };
+      let hwp: string | null = null;
 
       if (row.externalId) {
         const cut = row.externalId.lastIndexOf("-");
         const examId = Number(row.externalId.slice(0, cut));
+        hwp = hwpPaths.get(examId) ?? null;
         const number = Number(row.externalId.slice(cut + 1));
         const meta = examMeta.get(examId);
         if (meta) {
@@ -391,6 +455,7 @@ async function main(): Promise<void> {
         category: categorize(why),
         why,
         unit,
+        hwp,
         origin,
       });
     }
