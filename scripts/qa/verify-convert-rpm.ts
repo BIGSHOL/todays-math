@@ -278,11 +278,15 @@ export function sourceChecks(
 export async function dbChecks(
   rows: Array<Record<string, unknown>>,
   prisma: PrismaClient,
-  fault: { externalIdBlind?: boolean; figureBlind?: boolean } = {},
+  fault: {
+    externalIdBlind?: boolean;
+    figureBlind?: boolean;
+    answerBlind?: boolean;
+  } = {},
 ): Promise<Check[]> {
   const problems = await prisma.problem.findMany({
     where: { source: "transformed" },
-    select: { id: true, externalId: true, figureUrls: true },
+    select: { id: true, externalId: true, figureUrls: true, answer: true },
   });
   const externalIdFilled: Check = {
     id: "db-external-id",
@@ -301,15 +305,79 @@ export async function dbChecks(
     samples: [],
   };
 
+  /**
+   * 끝에서 끝까지 — 원본에 정답이 있는데 적재된 행에 없으면 어딘가에서 흘린 것이다.
+   * 변환기 계약 검사(`answer-filled`)는 변환 직후만 본다. 그 뒤 적재·복구·수정
+   * 단계에서 잃는 것은 여기서만 잡힌다 — 지난 4,862건 유실이 정확히 그 자리였다.
+   *
+   * ⚠️ 100% 가 아닌 것이 정상이다. `recover-rpm-answers` 는 **보기가 실제로 렌더되지
+   * 않는 문항에 번호 정답을 넣지 않는다**(시험지에 ①~⑤ 가 없는데 답만 "③" 이면
+   * 학생이 대조할 대상이 없다). 그렇게 일부러 보류한 행이 지금 18건이다.
+   * 그래서 `exact` 가 아니라 `baseline` 이다 — **정책이지 결함이 아니다. 고치지 말 것.**
+   */
+  const answerLinked: Check = {
+    id: "db-answer-linked",
+    label: "원본에 정답이 있는 문항은 적재된 행에도 정답이 있다",
+    passed: 0,
+    total: 0,
+    mode: "baseline",
+    samples: [],
+  };
+  /**
+   * 원본 행 중 우리 DB 에 **키로 닿아 있는** 비율.
+   * 재이관이 조용히 행을 잃으면(단원 미분류 등) 이 비율이 떨어진다.
+   */
+  const sourceCoverage: Check = {
+    id: "db-source-coverage",
+    label: "원본 행이 `externalId` 로 우리 DB 에 닿아 있다",
+    passed: 0,
+    total: rows.length,
+    mode: "baseline",
+    samples: [],
+  };
+
   const withDiagram = new Set(
     rows
       .filter((row) => Number(row.diagram_count ?? 0) > 0)
       .map((row) => String(row.id)),
   );
+  const sourceHasAnswer = new Set(
+    rows
+      .filter((row) => {
+        const answer =
+          row.answer && typeof row.answer === "object"
+            ? (row.answer as Record<string, unknown>)
+            : null;
+        return (
+          (Array.isArray(answer?.correctChoiceIds) &&
+            answer.correctChoiceIds.length > 0) ||
+          (Array.isArray(answer?.accepted) && answer.accepted.length > 0)
+        );
+      })
+      .map((row) => String(row.id)),
+  );
+
+  const linked = new Set<string>();
   for (const problem of problems) {
     const externalId = fault.externalIdBlind ? null : problem.externalId;
-    if (externalId) externalIdFilled.passed += 1;
-    if (!externalId || !withDiagram.has(externalId)) continue;
+    if (externalId) {
+      externalIdFilled.passed += 1;
+      linked.add(externalId);
+    }
+    if (!externalId) continue;
+
+    if (sourceHasAnswer.has(externalId)) {
+      answerLinked.total += 1;
+      const answer = fault.answerBlind ? SENTINEL : problem.answer;
+      if (answer.trim() && !answer.includes("정답 없음")) answerLinked.passed += 1;
+      else if (answerLinked.samples.length < 5) {
+        answerLinked.samples.push(
+          `${problem.id.slice(0, 8)} ← 원본 ${externalId.slice(0, 8)} (원본엔 정답 있음)`,
+        );
+      }
+    }
+
+    if (!withDiagram.has(externalId)) continue;
     figureLinked.total += 1;
     const figureUrls = fault.figureBlind ? [] : problem.figureUrls;
     if (figureUrls.length > 0) figureLinked.passed += 1;
@@ -317,7 +385,9 @@ export async function dbChecks(
       figureLinked.samples.push(`${problem.id.slice(0, 8)} ← 원본 ${externalId.slice(0, 8)}`);
     }
   }
-  return [externalIdFilled, figureLinked];
+  for (const row of rows) if (linked.has(String(row.id))) sourceCoverage.passed += 1;
+
+  return [externalIdFilled, answerLinked, figureLinked, sourceCoverage];
 }
 
 /** 지난 결함을 되돌리는 치환 — 운영 코드가 아니라 임시 사본에 건다. */
@@ -346,11 +416,19 @@ export const FAULTS: Record<string, { why: string; from: string; to: string; exp
 };
 
 /** DB 쪽 결함은 소스를 고치는 게 아니라 **그 시절의 DB 상태**를 재현해 본다. */
-export const DB_FAULTS: Record<string, { why: string; flag: "externalIdBlind" | "figureBlind"; expect: string }> = {
+export const DB_FAULTS: Record<
+  string,
+  { why: string; flag: "externalIdBlind" | "figureBlind" | "answerBlind"; expect: string }
+> = {
   "figure-blind": {
     why: "`diagram_assets` 를 안 봐서 그림이 한 장도 안 붙던 상태 (1,014건)",
     flag: "figureBlind",
     expect: "db-figure-linked",
+  },
+  "answer-blind": {
+    why: "변환은 정답을 만들었는데 적재가 흘려 `(정답 없음)` 으로 남던 상태 (4,862건)",
+    flag: "answerBlind",
+    expect: "db-answer-linked",
   },
   "external-id-blind": {
     why: "적재가 `externalId` 를 버리던 상태 (RPM 4,862건 역추적 불가)",

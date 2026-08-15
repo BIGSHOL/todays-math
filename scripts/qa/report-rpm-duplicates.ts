@@ -19,7 +19,10 @@ import path from "node:path";
 
 import { PrismaClient } from "@prisma/client";
 
+import { classifyDrafts } from "../../src/lib/import/buildReport";
+import { convertRpmExtractedRow } from "../../src/lib/import/convertRpm";
 import { flattenStructured } from "../../src/lib/import/flattenStructured";
+import type { UnitLike } from "../../src/lib/import/types";
 import { isDirectScript } from "../import/isDirectScript";
 import {
   keysOf,
@@ -43,7 +46,18 @@ SELECT
   (
     SELECT count(*)::int FROM diagram_assets d
     WHERE d.question_version_id = q.current_version_id
-  ) AS diagram_count
+  ) AS diagram_count,
+  -- extract-rpm.ts 의 RPM_SELECT 와 같은 재료라야 한다. concepts 를 빼고
+  -- 재현하면 단원 힌트가 비어 '왜 안 들어왔나' 의 답이 통째로 뒤집힌다(실제로 겪음).
+  -- (템플릿 리터럴 안이라 SQL 주석에 백틱을 쓰면 문자열이 끊긴다.)
+  (
+    SELECT COALESCE(json_agg(json_build_object(
+      'name', c.name, 'grade_band', c.grade_band
+    )), '[]'::json)
+    FROM question_alignments qa
+    JOIN canonical_concepts c ON c.id = qa.concept_id
+    WHERE qa.question_id = q.id
+  ) AS concepts
 FROM questions q
 JOIN question_versions qv ON qv.id = q.current_version_id
 WHERE q.source_ref IS NOT NULL
@@ -113,6 +127,8 @@ export interface GroupRow {
   unitLabels: string[];
   /** 원본 교재 학년과 배정 단원 학년이 어긋나는 DB 행 수 (트랙 C 소관 아님 — 보고만 한다). */
   gradeMismatch: number;
+  /** 해설로 못 가르는 그룹이면 그 사유. 가르면 빈 문자열. */
+  blockReason: string;
 }
 
 /** `RPM 중학 수학 2-2 (2022 개정)` → `중2`. 못 읽으면 빈 문자열. */
@@ -121,24 +137,42 @@ export function bookGrade(book: string): string {
   return match ? `중${match[1]}` : "";
 }
 
-/** 그룹 안에서 DB행 ↔ 원본행이 해설로 1:1 로 갈리는지. `backfill-rpm-external-id` 와 같은 규칙. */
+/**
+ * 그룹 안에서 DB행 ↔ 원본행이 해설로 1:1 로 갈리는지. `backfill-rpm-external-id` 와 같은 규칙.
+ * 못 가르면 **왜 못 가르는지**를 같이 돌려준다 — 사람이 손으로 볼 때 그게 필요하다.
+ */
 function solutionPairing(
   members: Array<{ id: string; solution: string }>,
   sourceIds: string[],
   explanationById: Map<string, string>,
-): Map<string, string> | null {
-  const distinct = new Set(sourceIds.map((id) => explanationById.get(id) ?? ""));
-  if (distinct.size !== sourceIds.length) return null;
+): { pairing: Map<string, string> | null; reason: string } {
+  const explanations = sourceIds.map((id) => explanationById.get(id) ?? "");
+  const blank = explanations.filter((value) => !value).length;
+  const distinct = new Set(explanations);
+  if (distinct.size !== sourceIds.length) {
+    return {
+      pairing: null,
+      reason:
+        blank > 0
+          ? `원본 해설이 비어 있다 (${blank}/${sourceIds.length}행)`
+          : `원본 해설이 서로 겹친다 (${distinct.size}종 / ${sourceIds.length}행)`,
+    };
+  }
+  const missing = members.filter((member) => !member.solution).length;
+  if (missing > 0) {
+    return { pairing: null, reason: `우리 쪽 해설이 빈 행 ${missing}` };
+  }
   const pairing = new Map<string, string>(); // sourceId → problemId
   for (const member of members) {
-    if (!member.solution) return null;
     const hits = sourceIds.filter(
       (id) => explanationById.get(id) === member.solution,
     );
-    if (hits.length !== 1 || pairing.has(hits[0])) return null;
+    if (hits.length !== 1 || pairing.has(hits[0])) {
+      return { pairing: null, reason: "우리 해설이 원본 해설과 1:1 로 안 맞는다" };
+    }
     pairing.set(hits[0], member.id);
   }
-  return pairing;
+  return { pairing, reason: "" };
 }
 
 /** 정답에서 숫자 토큰만 뽑는다 — 짝짓기를 독립 신호로 확인하는 데 쓴다. */
@@ -225,6 +259,54 @@ async function build(): Promise<{
       },
     });
 
+    // ── 곁다리 감사 2 — 원본에는 있는데 우리 DB 에 아예 없는 행 ────────────────
+    // `externalId` 가 붙기 전에는 물을 수 없던 질문이다. 미상 233행이 걸친
+    // 원본 후보는 "DB 행이 있으나 키가 안 붙은" 것이므로 없는 것에서 뺀다.
+    const linked = new Set(
+      problems
+        .map((problem) => problem.externalId)
+        .filter((value): value is string => Boolean(value)),
+    );
+    const inAmbiguous = new Set<string>();
+    for (const problem of problems) {
+      if (problem.externalId) continue;
+      for (const row of candidatesFor(problem.content)) inAmbiguous.add(row.id);
+    }
+    const missingRows = rawRows.filter((row) => {
+      const id = String(row.id);
+      return !linked.has(id) && !inAmbiguous.has(id);
+    });
+    const units: UnitLike[] = await prisma.unit.findMany({
+      select: { id: true, grade: true, chapter: true, section: true },
+    });
+    const missingDrafts = missingRows.map((row) =>
+      convertRpmExtractedRow({
+        id: String(row.id),
+        kind: typeof row.kind === "string" ? row.kind : null,
+        printed_number:
+          typeof row.printed_number === "string" ? row.printed_number : null,
+        source_ref: (row.source_ref ?? null) as Record<string, unknown> | null,
+        body: row.body,
+        choices: row.choices,
+        answer: row.answer,
+        explanation: row.explanation,
+        concepts: Array.isArray(row.concepts)
+          ? (row.concepts as Array<{ name?: string; grade_band?: string }>)
+          : [],
+      }),
+    );
+    const missingReport = classifyDrafts("rpm", missingDrafts, units).report;
+    // 학년 힌트만 교재명에서 뽑아 다시 태우면 몇 건이 붙나 — 원인을 못박는 실험.
+    const repaired = classifyDrafts(
+      "rpm",
+      missingDrafts.map((draft) => ({
+        ...draft,
+        gradeHint:
+          bookGrade(metaById.get(draft.externalId)?.book ?? "") || draft.gradeHint,
+      })),
+      units,
+    ).report;
+
     // 곁다리 감사 — `externalId` 가 붙은 RPM 전량에서 "교재 학년 ≠ 배정 단원 학년".
     // 233건만 보면 표본이 편향된다(전부 도형 단원이라). 전량으로 센다.
     let gradeAudited = 0;
@@ -284,7 +366,7 @@ async function build(): Promise<{
       const units = members.map(
         (m) => `${m.unit.grade} ${m.unit.chapter} > ${m.unit.section}`,
       );
-      const pairing = solutionPairing(
+      const { pairing, reason: blockReason } = solutionPairing(
         members.map((m) => ({ id: m.id, solution: squeeze(m.solution ?? "") })),
         sourceIds,
         explanationById,
@@ -325,6 +407,7 @@ async function build(): Promise<{
         ).length,
         dbWithFigure: members.filter((m) => m.figureUrls.length > 0).length,
         pairableBySolution: pairing !== null,
+        blockReason,
         book: metas[0]?.book ?? "",
         pages: [...new Set(metas.map((m) => m.page).filter(Boolean))],
         printedNumbers: metas.map((m) => m.printedNumber),
@@ -371,6 +454,14 @@ async function build(): Promise<{
       gradeMismatchRows: groups.reduce((sum, g) => sum + g.gradeMismatch, 0),
       gradeAuditedAll: gradeAudited,
       gradeWrongAll: gradeWrong,
+      sourceRowsAll: rawRows.length,
+      missingAll: missingRows.length,
+      missingUnclassified: missingReport.unclassified,
+      missingSkippedFigure: missingReport.skippedFigure,
+      missingOk: missingReport.ok,
+      missingUnresolvedGrade: missingReport.unresolvedGrade ?? 0,
+      repairedOk: repaired.ok,
+      repairedUnclassified: repaired.unclassified,
       transformedRows: problems.length,
       unresolvedRows: unresolvedRows.length,
       identicalRows: identicalRows.length,
@@ -560,24 +651,35 @@ function render(
       "(원본 일부가 적재되지 않았거나, 우리 쪽 행이 다른 경로로 들어왔다).",
   );
   lines.push("");
-  lines.push("| # | DB행/원본 | 교재 | 쪽 | 인쇄번호 | 사유 |");
-  lines.push("|---|---|---|---|---|---|");
+  lines.push(
+    "`원본그림` 이 있으면 원본 지면을 펴서 사람이 눈으로 가를 수 있다 — 그림이 곧 그 문항을 가르는 표시다.",
+  );
+  lines.push("");
+  lines.push("| # | DB행/원본 | 교재 | 쪽 | 인쇄번호 | 원본그림 | 사유 |");
+  lines.push("|---|---|---|---|---|---|---|");
   for (const group of exceptions) {
     const why: string[] = [];
-    if (!group.pairableBySolution) why.push("해설로 안 갈림");
+    if (!group.pairableBySolution) why.push(group.blockReason || "해설로 안 갈림");
     if (!group.sourceAnswersDiffer) why.push("**원본 정답까지 같음**");
     if (group.problemIds.length !== group.sourceIds.length) {
-      why.push("행 수 불일치");
+      why.push(
+        `행 수 불일치 (원본 ${group.sourceIds.length - group.problemIds.length}행이 적재 안 됨)`,
+      );
     }
     lines.push(
       `| ${group.index} | ${group.problemIds.length}/${group.sourceIds.length} | ` +
         `${group.book.replace("RPM 중학 수학 ", "RPM 중")} | ${group.pages.join(",")} | ` +
-        `${group.printedNumbers.join(",")} | ${why.join(" · ")} |`,
+        `${group.printedNumbers.join(",")} | ${group.sourceWithDiagram}/${group.sourceIds.length} | ` +
+        `${why.join(" · ")} |`,
     );
   }
   lines.push("");
 
-  lines.push("## 6. 곁다리로 드러난 것 — RPM 단원 학년 오배정 (트랙 C 소관 아님)");
+  lines.push(
+    "## 6. 곁다리로 드러난 것 — 결함 하나, 증상 둘 (트랙 C 소관 아님)",
+  );
+  lines.push("");
+  lines.push("### 증상 1 — 단원 학년 오배정");
   lines.push("");
   lines.push(
     `\`externalId\` 를 채우고 나니 **원본 교재 학년과 배정 단원 학년을 처음으로 대조할 수 있게 됐다.** ` +
@@ -619,9 +721,51 @@ function render(
       "그래서 지금까지 RPM 은 고칠 수 없었고, C-1 이 끝난 지금 비로소 가능해졌다.**",
   );
   lines.push("");
+  lines.push("");
+  lines.push("### 증상 2 — 원본 " + String(totals.missingAll) + "행이 아예 안 들어왔다");
+  lines.push("");
   lines.push(
-    "이 트랙은 `externalId` 외의 컬럼을 쓰지 않으므로 `unitId` 는 한 행도 건드리지 않았다. " +
-      "코디네이터가 배정할 일이다.",
+    `sumaek 원본 ${totals.sourceRowsAll}행 중 우리 DB 에 **${totals.missingAll}행이 없다** ` +
+      `(키로 붙은 ${totals.dbRows > 0 ? totals.sourceRowsAll - totals.missingAll - totals.sourceRows : 0}행 + ` +
+      `이 문서의 미상 ${totals.dbRows}행이 걸친 후보 ${totals.sourceRows}행을 뺀 나머지). ` +
+      "이것도 `externalId` 가 붙기 전에는 셀 수 없던 숫자다.",
+  );
+  lines.push("");
+  lines.push(
+    `그 ${totals.missingAll}행을 적재 파이프라인에 **다시 태워** 이유를 물었다:`,
+  );
+  lines.push("");
+  lines.push("| 결과 | 행 |");
+  lines.push("|---|---|");
+  lines.push(`| 단원 미분류로 제외 | **${totals.missingUnclassified}** |`);
+  lines.push(`| 그림으로 제외 | ${totals.missingSkippedFigure} |`);
+  lines.push(`| 통과(ok)인데 DB 에 없음 | ${totals.missingOk} |`);
+  lines.push(`| 학년 미해석 | ${totals.missingUnresolvedGrade} |`);
+  lines.push("");
+  lines.push(
+    "**전량이 단원 미분류다.** 본문이 비거나 길어서 잘린 것도, 그림 때문에 빠진 것도 없다. " +
+      "그리고 전량이 학년 미해석이다 — 증상 1과 같은 뿌리다.",
+  );
+  lines.push("");
+  lines.push(
+    "**원인을 못박는 실험**: 다른 건 그대로 두고 **학년 힌트만 교재명에서 뽑아** 다시 태웠다.",
+  );
+  lines.push("");
+  lines.push("| | 통과(ok) | 단원 미분류 |");
+  lines.push("|---|---|---|");
+  lines.push(`| 지금 | ${totals.missingOk} | ${totals.missingUnclassified} |`);
+  lines.push(`| 학년 힌트만 고치면 | **${totals.repairedOk}** | ${totals.repairedUnclassified} |`);
+  lines.push("");
+  lines.push(
+    `**${totals.repairedOk}행이 그 자리에서 붙는다.** 남는 ${totals.repairedUnclassified}행은 ` +
+      "힌트 이름 자체가 우리 트리에 없는 것들이라(「기본 도형과 위치 관계」·「원의 현과 접선」·" +
+      "「분산과 표준편차」·「가감법」) 별칭 판단이 따로 필요하다 — " +
+      "「틀린 매핑보다 미분류가 낫다」는 원칙대로 원장님 확인 없이 붙이면 안 된다.",
+  );
+  lines.push("");
+  lines.push(
+    "이 트랙은 `externalId` 외의 컬럼을 쓰지 않으므로 `unitId` 는 한 행도 건드리지 않았고, " +
+      "적재도 하지 않았다. 코디네이터가 배정할 일이다.",
   );
   lines.push("");
 
