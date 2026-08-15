@@ -55,3 +55,6 @@ __pycache__/
 
 # 본문 백업(대용량, 되돌리기용)
 scripts/qa/reports/transformed-content-backup.json
+
+# 에이전트 임시 스크립트 (_ 로 시작)
+scripts/qa/_*
