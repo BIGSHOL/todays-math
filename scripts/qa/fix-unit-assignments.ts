@@ -11,6 +11,7 @@
  *
  *   npx tsx scripts/qa/fix-unit-assignments.ts                    드라이런
  *   ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/fix-unit-assignments.ts --apply
+ *   npx tsx scripts/qa/fix-unit-assignments.ts <리포트 경로>       B단계 등 다른 배치
  *
  * 단원을 잃은 문항(올바른 학년 안에 붙을 소단원이 없는 것)은 지우지 않고
  * `reviewStatus=pending` 으로 내려 출제 풀에서만 뺀다 — D-22 대로 pending 은
@@ -23,7 +24,17 @@ import { PrismaClient } from "@prisma/client";
 import { allowSharedImport } from "../../src/lib/import/classifyDatabaseUrl";
 import { inspectDatabaseTargets } from "../import/resolveDbTarget";
 
-const REPORT = "scripts/qa/reports/final-batch-report.json";
+const DEFAULT_REPORT = "scripts/qa/reports/final-batch-report.json";
+
+/**
+ * 어느 배치의 리포트를 볼지. B단계(N드라이브 신규 추출)는 자기 리포트를
+ * 따로 쓰므로 경로를 받는다. 리포트에 있는 `externalId` 만 건드리므로
+ * 부분 리포트로 돌려도 다른 배치를 망가뜨리지 않는다.
+ */
+function reportPath(): string {
+  const arg = process.argv.slice(2).find((a) => !a.startsWith("--"));
+  return arg ?? process.env.FINAL_BATCH_REPORT ?? DEFAULT_REPORT;
+}
 const CHUNK = 500;
 
 interface ReportItem {
@@ -34,8 +45,10 @@ interface ReportItem {
 
 async function main(): Promise<void> {
   const apply = process.argv.includes("--apply");
-  const items: ReportItem[] = JSON.parse(await readFile(REPORT, "utf-8")).report
+  const report = reportPath();
+  const items: ReportItem[] = JSON.parse(await readFile(report, "utf-8")).report
     .items;
+  console.log(`리포트: ${report}`);
 
   const wanted = new Map<string, string>();
   const dropped = new Set<string>();
