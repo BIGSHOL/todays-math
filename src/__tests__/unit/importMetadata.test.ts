@@ -118,6 +118,8 @@ describe("[이관] externalId 기반 중복 차단", () => {
       examId: null,
       questionNumber: null,
       score: null,
+      figureUrls: [],
+      figureSource: null,
     };
 
     const missing = selectMissingLoadRows(
@@ -149,6 +151,8 @@ describe("[이관] externalId 기반 중복 차단", () => {
       examId: null,
       questionNumber: null,
       score: null,
+      figureUrls: [],
+      figureSource: null,
     };
     expect(selectMissingLoadRows([{ ...base, userId: "u" }], [])).toHaveLength(
       1,

@@ -24,6 +24,10 @@ export interface ImportLoadRow {
   examId: string | null;
   questionNumber: number | null;
   score: number | null;
+
+  /** 원본에서 오려 온 그림 경로. 그림 없는 문항은 빈 배열. */
+  figureUrls: string[];
+  figureSource: string | null;
 }
 
 export interface LoadRowSkip {
@@ -95,6 +99,8 @@ export function toLoadRows(
       examId: draft.examId ?? null,
       questionNumber: draft.questionNumber ?? null,
       score: draft.score ?? null,
+      figureUrls: draft.figureUrls ?? [],
+      figureSource: draft.figureSource ?? null,
     });
   }
 

@@ -33,6 +33,12 @@ export interface ImportDraft {
   questionNumber?: number | null;
   /** 배점 */
   score?: number | null;
+
+  // ── 원본에서 오려 온 그림 (phase/figures) ──────────────────────────
+  /** `/figures/<examId>/qNN.jpg` 목록. 지면에 나온 순서. */
+  figureUrls?: string[];
+  /** engine(엔진 작도) / image(외부 보정본) / source(원본 오려옴) */
+  figureSource?: "engine" | "image" | "source" | null;
 }
 
 export interface UnitLike {

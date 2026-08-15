@@ -23,6 +23,21 @@ import {
 import type { ImportDraft, UnitLike } from "../../src/lib/import/types";
 import { isDirectScript } from "./isDirectScript";
 
+const FIGURE_MANIFEST = "scripts/figure/figure-manifest.json";
+
+type FigureManifest = Record<string, Record<string, string[]>>;
+
+/** 없으면 빈 지도 — 그림 산출물이 아직 없는 컴퓨터에서도 이관은 돌아야 한다. */
+async function loadFigureManifest(): Promise<FigureManifest> {
+  try {
+    return JSON.parse(
+      await readFile(FIGURE_MANIFEST, "utf-8"),
+    ) as FigureManifest;
+  } catch {
+    return {};
+  }
+}
+
 const IN_DIR = process.env.FINAL_BATCH_DIR ?? "scripts/qa/reports/final-batch";
 const REPORT = "scripts/qa/reports/final-batch-report.json";
 const CLASSIFIED = "scripts/qa/reports/final-batch-classified.json";
@@ -60,12 +75,24 @@ export async function runFinalBatch(options: {
       });
     }
 
+    // 완료본 PDF 에는 그림이 이미지로 심겨 있다. phase/figures 가 오려 둔
+    // 것을 붙일 수 있는 문항만 그림 문항으로 이관한다(못 붙이면 종전대로 제외).
+    const figures = await loadFigureManifest();
     const { classified, report } = classifyDrafts(
       "past_exam(완료본)",
       drafts,
       units,
       undefined,
-      { includeFigures: options.includeFigures },
+      {
+        includeFigures: options.includeFigures,
+        resolveFigures: (externalId) => {
+          const cut = externalId.lastIndexOf("-");
+          if (cut < 0) return undefined;
+          const exam = externalId.slice(0, cut);
+          const number = String(Number(externalId.slice(cut + 1)));
+          return figures[exam]?.[number];
+        },
+      },
     );
 
     const withAnswer = classified.filter(

@@ -31,6 +31,8 @@ function loadRow(content: string): ImportLoadRow {
     examId: null,
     questionNumber: null,
     score: null,
+    figureUrls: [],
+    figureSource: null,
   };
 }
 
@@ -53,6 +55,8 @@ function existingRow(row: ImportLoadRow): Omit<ImportLoadRow, "userId"> {
     questionNumber: row.questionNumber,
     score: row.score,
     pool: row.pool,
+    figureUrls: row.figureUrls,
+    figureSource: row.figureSource,
   };
 }
 

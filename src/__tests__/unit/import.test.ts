@@ -7,6 +7,7 @@ import { convertPastExamPaper } from "@/lib/import/convertPastExam";
 import { convertRpmRow } from "@/lib/import/convertRpm";
 import { mapNumericDifficulty } from "@/lib/import/mapDifficulty";
 import { mapUnitHint } from "@/lib/import/mapUnit";
+import { toLoadRows } from "@/lib/import/toLoadRows";
 
 const UNITS = [
   {
@@ -371,6 +372,22 @@ describe("[T3.0] 기출 header 정규화 + RPM 구조화", () => {
   });
 });
 
+function figureDraft(externalId: string) {
+  return {
+    externalId,
+    source: "past_exam" as const,
+    directUseAllowed: true,
+    difficulty: "mid" as const,
+    problemType: "개념" as const,
+    content: "[그림] 좌표평면\n\n다음 중 옳은 것은?",
+    answer: "1",
+    solution: null,
+    unitHint: "유리수와 소수",
+    hasFigure: true,
+    sourceFile: "N:/기출/[중동중][2][25-1-중간](완료).PDF",
+  };
+}
+
 describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
   it("섹션 이름이 힌트에 있으면 매핑한다", () => {
     const result = mapUnitHint("유한소수와 유리수와 소수", UNITS, "중2");
@@ -436,6 +453,52 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
   it("장 이름에는 유사도 매칭을 하지 않는다", () => {
     const result = mapUnitHint("실수와 그 계신", OVERLAP_UNITS, "중3");
     expect(result.status).toBe("unclassified");
+  });
+
+  // 완료본 PDF 에는 그림이 이미지로 심겨 있다. 저쪽 컴퓨터가 오려 둔 것을
+  // 붙일 수 있으면 이관하고, 못 붙이면 종전대로 제외한다 — 그림 없는
+  // "[그림] ..." 만 남은 문항은 학생이 풀 수 없다.
+  it("그림 파일을 찾으면 그림 문항도 이관하고 경로를 붙인다", () => {
+    const { classified, report } = classifyDrafts(
+      "past_exam",
+      [figureDraft("4212-4"), figureDraft("4212-99")],
+      UNITS,
+      "중2",
+      {
+        resolveFigures: (id) =>
+          id === "4212-4" ? ["/figures/4212/q04.jpeg"] : undefined,
+      },
+    );
+    expect(report.ok).toBe(1);
+    expect(report.skippedFigure).toBe(1);
+    expect(classified[0]?.externalId).toBe("4212-4");
+    expect(classified[0]?.figureUrls).toEqual(["/figures/4212/q04.jpeg"]);
+    expect(classified[0]?.figureSource).toBe("source");
+  });
+
+  it("그림 경로는 적재 행까지 그대로 간다", () => {
+    const { rows } = toLoadRows(
+      [
+        {
+          ...figureDraft("4212-4"),
+          unitId: "unit-finite",
+          figureUrls: ["/figures/4212/q04.jpeg"],
+          figureSource: "source" as const,
+        },
+      ],
+      "user-1",
+    );
+    expect(rows[0]?.figureUrls).toEqual(["/figures/4212/q04.jpeg"]);
+    expect(rows[0]?.figureSource).toBe("source");
+  });
+
+  it("그림이 없는 문항은 빈 배열로 남긴다", () => {
+    const { rows } = toLoadRows(
+      [{ ...figureDraft("4212-5"), hasFigure: false, unitId: "unit-finite" }],
+      "user-1",
+    );
+    expect(rows[0]?.figureUrls).toEqual([]);
+    expect(rows[0]?.figureSource).toBeNull();
   });
 
   it("매핑 실패분은 unclassified로 남기고 버리지 않는다", () => {
