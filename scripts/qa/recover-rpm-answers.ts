@@ -212,8 +212,14 @@ export async function resolveSourceUrl(): Promise<string | null> {
   return envFile?.DATABASE_URL?.trim() || null;
 }
 
+/**
+ * 원본에서 문항을 읽는다. `select` 를 주면 컬럼을 더 넣은 질의를 쓸 수 있다
+ * (`backfill-rpm-external-id.ts` 가 `explanation` 을 같이 받는다).
+ * 어느 경우든 **SELECT 만** 한다 — 세션 자체를 읽기 전용으로 잠근다.
+ */
 export async function readSource(
   url: string,
+  select: string = SOURCE_SELECT,
 ): Promise<Array<Record<string, unknown>>> {
   const driverPath = process.env.SUMAEK_POSTGRES_JS ?? DEFAULT_POSTGRES_JS;
   const loaded = (await import(pathToFileURL(driverPath).href)) as {
@@ -228,7 +234,7 @@ export async function readSource(
     // 원본 저장소는 읽기만 한다 — 세션 자체를 읽기 전용으로 잠근다.
     await sql.unsafe("SET default_transaction_read_only = on");
     await sql.unsafe("SET SESSION CHARACTERISTICS AS TRANSACTION READ ONLY");
-    return await sql.unsafe(SOURCE_SELECT);
+    return await sql.unsafe(select);
   } finally {
     await sql.end();
   }
