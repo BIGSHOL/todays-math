@@ -83,7 +83,14 @@ function flattenChoices(
         ? record.marker.trim()
         : (CIRCLED[index] ?? `${index + 1}.`);
     return {
-      id: typeof record.id === "string" ? record.id : String(index),
+      // ⚠️ 원본 키는 `choiceId` 다. `id` 로만 읽으면 correctChoiceIds 대조가
+      // 전부 실패해 객관식 정답이 통째로 빈다(실측: 원본 보기 9,518개 중
+      // `id` 키를 가진 것은 0개). 픽스처를 `id` 로 만들면 테스트는 통과하므로
+      // 합성 데이터만으로 검증하지 말 것.
+      id:
+        (typeof record.choiceId === "string" && record.choiceId) ||
+        (typeof record.id === "string" && record.id) ||
+        String(index),
       marker,
       text: flattenStructured(
         record.content ?? record.runs ?? record.value ?? record.text ?? raw,
@@ -132,10 +139,48 @@ function rpmAnswer(
   return flattenStructured(value).content;
 }
 
+/** 공백을 턴 비교용 문자열. */
+function squeeze(value: string): string {
+  return value.replace(/\s+/g, "");
+}
+
+/**
+ * 본문 꼬리에 마커 없이 겹쳐 있는 보기 블록을 걷어 낸다.
+ * **보기 전체와 완전일치할 때만** 자른다. 하나라도 어긋나면 원문을 그대로 둔다.
+ */
+function stripTrailingChoices(
+  content: string,
+  choices: Array<{ text: string }>,
+): string {
+  if (choices.length === 0) return content;
+  const tail = squeeze(choices.map((choice) => choice.text).join(""));
+  if (!tail) return content;
+  const squeezed = squeeze(content);
+  if (!squeezed.endsWith(tail)) return content;
+
+  // 원문에서 잘라 낼 위치를 찾는다 — 뒤에서부터 공백 아닌 글자를 tail 길이만큼 센다.
+  let remaining = tail.length;
+  let cut = content.length;
+  while (cut > 0 && remaining > 0) {
+    cut -= 1;
+    if (!/\s/.test(content[cut])) remaining -= 1;
+  }
+  const head = content.slice(0, cut).trimEnd();
+  return head || content;
+}
+
 /** sumaek questions + current version SELECT 행 → 잠긴 ImportDraft. */
 export function convertRpmExtractedRow(row: RpmExtractedRow): ImportDraft {
-  const body = flattenStructured(row.body);
+  const rawBody = flattenStructured(row.body);
   const choiceList = flattenChoices(row.choices);
+  // 원본 body 꼬리에는 마커 없는 보기 값이 **이미 한 벌** 들어 있다
+  // (실측 1,884행 전부). 그대로 두고 마커 보기를 또 붙이면 같은 보기가
+  // 지면에 두 번 인쇄된다. 꼬리가 보기 전체와 완전일치할 때만 걷어 낸다 —
+  // 어림짐작으로 자르면 지문을 잘라 먹는다.
+  const body = {
+    ...rawBody,
+    content: stripTrailingChoices(rawBody.content, choiceList),
+  };
   const choices = choiceList.length
     ? {
         // 마커를 붙여 싣는다. 없으면 시험지에 보기 번호가 안 찍혀

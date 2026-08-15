@@ -667,9 +667,24 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
       source_ref: { book: "중2-1", unit: "유리수와 소수" },
       body: [{ type: "text", text: "다음 중 옳은 것은?" }],
       choices: [
-        { id: "c1", marker: "①", content: [{ type: "text", text: "가" }] },
-        { id: "c2", marker: "②", content: [{ type: "text", text: "나" }] },
-        { id: "c3", marker: "③", content: [{ type: "text", text: "다" }] },
+        {
+          choiceId: "c1",
+          marker: "①",
+          order: 1,
+          content: [{ type: "text", text: "가" }],
+        },
+        {
+          choiceId: "c2",
+          marker: "②",
+          order: 2,
+          content: [{ type: "text", text: "나" }],
+        },
+        {
+          choiceId: "c3",
+          marker: "③",
+          order: 3,
+          content: [{ type: "text", text: "다" }],
+        },
       ],
       answer: { correctChoiceIds: ["c3"] },
     });
@@ -689,6 +704,39 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
   });
 
   // 마커가 없으면 시험지에 보기 번호가 안 찍혀 학생이 정답과 대조할 수 없다.
+  // 원본 body 꼬리에는 마커 없는 보기 값이 이미 한 벌 들어 있다(실측 1,884행 전부).
+  // 그대로 두고 마커 보기를 또 붙이면 지면에 같은 보기가 두 번 인쇄된다.
+  it("본문 꼬리에 겹쳐 있던 보기는 걷어 낸다", async () => {
+    const { convertRpmExtractedRow } = await import("@/lib/import/convertRpm");
+    const draft = convertRpmExtractedRow({
+      id: "rpm-dup",
+      kind: "multiple_choice",
+      source_ref: { book: "중2-1", unit: "유리수와 소수" },
+      body: [
+        { type: "text", text: "다음 중 옳은 것은?" },
+        { type: "text", text: "가" },
+        { type: "text", text: "나" },
+      ],
+      choices: [
+        {
+          choiceId: "c1",
+          marker: "①",
+          order: 1,
+          content: [{ type: "text", text: "가" }],
+        },
+        {
+          choiceId: "c2",
+          marker: "②",
+          order: 2,
+          content: [{ type: "text", text: "나" }],
+        },
+      ],
+      answer: { correctChoiceIds: ["c2"] },
+    });
+    expect(draft.content).toBe("다음 중 옳은 것은?\n\n① 가\n② 나");
+    expect(draft.answer).toBe("②");
+  });
+
   it("RPM 보기에 마커를 붙여 본문에 싣는다", async () => {
     const { convertRpmExtractedRow } = await import("@/lib/import/convertRpm");
     const draft = convertRpmExtractedRow({
@@ -697,8 +745,18 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
       source_ref: { book: "중2-1", unit: "유리수와 소수" },
       body: [{ type: "text", text: "다음 중 옳은 것은?" }],
       choices: [
-        { id: "c1", marker: "①", content: [{ type: "text", text: "가" }] },
-        { id: "c2", marker: "②", content: [{ type: "text", text: "나" }] },
+        {
+          choiceId: "c1",
+          marker: "①",
+          order: 1,
+          content: [{ type: "text", text: "가" }],
+        },
+        {
+          choiceId: "c2",
+          marker: "②",
+          order: 2,
+          content: [{ type: "text", text: "나" }],
+        },
       ],
       answer: { correctChoiceIds: ["c1"] },
     });
