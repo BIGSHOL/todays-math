@@ -764,6 +764,60 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
     expect(draft.content).toContain("② 나");
   });
 
+  // 실측 사고(2026-08-15): `물음에 답하시오.` 로 끝나고 ⑴⑵ 가 통째로 없는
+  // 문항이 149건 나왔다. 원본에는 `sub_questions` 에 멀쩡히 들어 있는데
+  // convertPastExam 이 그 키를 **타입에만 선언하고 읽지 않았다.**
+  // 소문항이 없으면 문제가 성립하지 않아 풀 수도 출제할 수도 없다.
+  it("소문항(sub_questions)을 본문에 싣는다", async () => {
+    const { convertPastExamPaper } =
+      await import("@/lib/import/convertPastExam");
+    const drafts = convertPastExamPaper(
+      {
+        meta: { exam_id: 9100, grade: "중3", subject: "수학" },
+        questions: [
+          {
+            number: 1,
+            contents: [{ type: "text", value: "물음에 답하시오." }],
+            topic: "다항식의 곱셈",
+            sub_questions: [
+              {
+                number: 1,
+                contents: [{ type: "text", value: "x를 구하시오." }],
+              },
+              {
+                number: 2,
+                contents: [{ type: "text", value: "y를 구하시오." }],
+              },
+            ],
+          },
+        ],
+      },
+      [],
+    );
+    expect(drafts[0]?.content).toContain("물음에 답하시오.");
+    expect(drafts[0]?.content).toContain("⑴ x를 구하시오.");
+    expect(drafts[0]?.content).toContain("⑵ y를 구하시오.");
+  });
+
+  it("소문항이 없으면 본문이 달라지지 않는다", async () => {
+    const { convertPastExamPaper } =
+      await import("@/lib/import/convertPastExam");
+    const drafts = convertPastExamPaper(
+      {
+        meta: { exam_id: 9101, grade: "중3", subject: "수학" },
+        questions: [
+          {
+            number: 1,
+            contents: [{ type: "text", value: "다음을 계산하시오." }],
+            topic: "다항식의 곱셈",
+          },
+        ],
+      },
+      [],
+    );
+    expect(drafts[0]?.content).toBe("다음을 계산하시오.");
+  });
+
   it("매핑 실패분은 unclassified로 남기고 버리지 않는다", () => {
     const { classified, report } = classifyDrafts(
       "past_exam",

@@ -17,7 +17,8 @@ import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 
 import { PrismaClient } from "@prisma/client";
 
-const OUTDIR = "scripts/qa/reports/answer-batches";
+const OUTDIR =
+  process.env.ANSWER_BATCH_DIR ?? "scripts/qa/reports/answer-batches";
 const SENTINEL = "정답 없음";
 
 /**
@@ -121,6 +122,8 @@ async function main(): Promise<void> {
       const chunk = rows.slice(i, i + size).map((r) => ({
         id: r.id,
         externalId: r.externalId,
+        // 그림 문항을 태울 때 쓴다. 푸는 쪽이 `public<경로>` 를 읽으면 된다.
+        figures: r.figureUrls.map((url) => `public${url}`),
         unit: r.unit
           ? `${r.unit.grade} / ${r.unit.chapter} / ${r.unit.section}`
           : null,
