@@ -1,7 +1,7 @@
 // T7.3 — 추출 JSON → Exam/ExamQuestion DB 적재기.
 //
 // 설계 근거: docs/planning/11-score-predictor.md §2.4·§5, 트랙 문서
-// docs/planning/tracks/track-d-todays-exam.md.
+// docs/planning/tracks/track-e-todays-exam.md.
 //
 // DB 대역은 src/mocks/prismaTestDouble.ts(전역 vi.mock("@/lib/db"), vitest.setup.ts)를
 // 그대로 쓴다 — 실제 공유 DB에는 붙지 않는다.

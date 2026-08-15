@@ -141,7 +141,7 @@ model Student {
   name                  String  @db.VarChar(50)
   useIndividualProgress Boolean @default(false) @map("use_individual_progress")
 
-  /// 재학 학교 — '오늘의 시험' 예측 대상을 정한다(트랙 D).
+  /// 재학 학교 — '오늘의 시험' 예측 대상을 정한다(트랙 E).
   /// 표기는 eywa `school-name.ts` 규칙으로 정규화해 넣는다("경명여자중학교" → "경명여중").
   schoolName  String? @map("school_name") @db.VarChar(50)
   /// "중" | "고". 초등은 내신이 없어 대상이 아니다.
@@ -283,7 +283,7 @@ model Problem {
 }
 
 // ─────────────────────────────────────────────
-// EXAM — 기출 시험지 1편 (트랙 D · 11-score-predictor.md §3 L0)
+// EXAM — 기출 시험지 1편 (트랙 E · 11-score-predictor.md §3 L0)
 //
 // ⚠️ Problem 과 목적이 다르다. Problem 은 **출제용**이라 문항 단위로 정규화·필터링돼
 //    시험지 통계가 이미 깨져 있다(적재에서 탈락한 문항이 있다). 예측기는 시험지 통계를
