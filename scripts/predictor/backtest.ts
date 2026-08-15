@@ -36,6 +36,7 @@ import {
   rangeSeriesKey,
   styleSeriesKey,
 } from "../../src/lib/predictor/series";
+import { partitionTrusted } from "../../src/lib/predictor/paperTrust";
 import { loadCorpus } from "./loadCorpus";
 
 const ENGINE_VERSION = "0.2.0";
@@ -111,7 +112,21 @@ function main() {
       ` · 배점보정 ${stats.scoreFilled})`,
   );
 
-  const entries: Entry[] = papers.map((paper) => ({
+  // 추출 결손(서술형 면 유실)이 있는 편은 학습·채점 양쪽에서 뺀다.
+  // 넣어 두면 그 학교가 "서술형을 거의 안 낸다"고 배운다 — 결손이 아니라 편향이 된다.
+  const { trusted, excluded } = partitionTrusted(papers);
+  const byReason = new Map<string, number>();
+  for (const e of excluded) {
+    if (!e.trust.trusted)
+      byReason.set(e.trust.reason, (byReason.get(e.trust.reason) ?? 0) + 1);
+  }
+  console.log(
+    `신뢰 가드: ${trusted.length}편 사용 · ${excluded.length}편 제외 (` +
+      [...byReason].map(([r, n]) => `${r} ${n}`).join(" · ") +
+      ")",
+  );
+
+  const entries: Entry[] = trusted.map((paper) => ({
     paper,
     observed: observeBlueprint(paper),
     styleKey: styleSeriesKey(paper.series),
