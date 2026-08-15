@@ -86,9 +86,9 @@ python scripts/qa/pair-final-sources.py       # → final-pairs.json    (N: 불�
 |---|---|
 | 전체 문항 | **36,597** |
 | └ transformed / past_exam / manual | 4,862 / 30,969 / 766 |
-| 정답 보유 (출제 가능) | **30,698** (재분류 보류 232 제외) |
+| 정답 보유 (출제 가능) | **35,833** (재분류 보류 232 제외) |
 | 원본 역추적 가능(`externalId`) | **29,682** |
-| 원본 그림 보유(`figureUrls`) | **5,303** — 완료본에서 오려 온 것 |
+| 원본 그림 보유(`figureUrls`) | **6,317** — 완료본 5,303 + RPM 원본 1,014 |
 
 ### 2.2 커밋 이력 (이번 작업 구간)
 
@@ -118,7 +118,12 @@ python scripts/qa/pair-final-sources.py       # → final-pairs.json    (N: 불�
 2. 완료본 PDF 는 **100% born-digital** — OCR API 불필요, 토큰 0.
 3. 수식은 HWP 수식폰트의 **PUA(U+E0xx)** 로 박혀 있다. `textlayer.py` + `pua_table.json`
    이 이미 해결해 뒀다. **직접 만들지 말 것.**
-4. **정답은 완료 PDF 에 없다.** 완료 **HWP** 에 있다(§3 B단계에서 짝지어 추출).
+4. ~~**정답은 완료 PDF 에 없다.** 완료 **HWP** 에 있다~~
+   → **틀렸다. 2026-08-15 정정.** 완료본 PDF **뒤쪽에 학교가 인쇄한 정답면**이
+   들어 있다. 2,263편 중 **2,242편(99%)** 에 있고 41,976문항에서 96%가 텍스트로
+   바로 읽힌다. 이 전제를 믿고 정답 없는 문항을 AI 로 6,000건 넘게 풀었는데,
+   **공식 정답이 있으면 그게 정본이다.**
+   추출: `scripts/qa/extract-official-answers.py` · 대조: `audit-answers-vs-official.ts`
 5. N드라이브 미추출 완료본 페어 **2,257편**(약 4.3만 문항 예상), 1편당 3.9초 → 약 2.4시간.
 
 ---
