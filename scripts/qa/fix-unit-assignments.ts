@@ -77,10 +77,18 @@ async function main(): Promise<void> {
       const row = current.get(externalId);
       if (row && row.reviewStatus === "approved") demote.push(row.id);
     }
+    // 분류가 좋아져 다시 붙은 문항의 보류를 푼다. 안 풀면 출제에
+    // 영원히 안 잡힌다 — 보류는 되돌릴 수 있어야 의미가 있다.
+    const restore: string[] = [];
+    for (const externalId of wanted.keys()) {
+      const row = current.get(externalId);
+      if (row && row.reviewStatus === "pending") restore.push(row.id);
+    }
 
     console.log("── 단원 배정 정정 ──");
     console.log(
-      `대조 ${current.size}행 · 단원 이동 ${moves.length} · 출제 보류 ${demote.length}`,
+      `대조 ${current.size}행 · 단원 이동 ${moves.length}` +
+        ` · 출제 보류 ${demote.length} · 보류 해제 ${restore.length}`,
     );
 
     if (!apply) {
@@ -115,7 +123,18 @@ async function main(): Promise<void> {
       });
       held += result.count;
     }
-    console.log(`\n정정 완료 — 단원 이동 ${moved} · 출제 보류 ${held}`);
+    let freed = 0;
+    for (let i = 0; i < restore.length; i += CHUNK) {
+      const result = await prisma.problem.updateMany({
+        where: { id: { in: restore.slice(i, i + CHUNK) } },
+        data: { reviewStatus: "approved" },
+      });
+      freed += result.count;
+    }
+    console.log(
+      `
+정정 완료 — 단원 이동 ${moved} · 출제 보류 ${held}` + ` · 보류 해제 ${freed}`,
+    );
   } finally {
     await prisma.$disconnect();
   }

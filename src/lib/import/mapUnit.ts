@@ -46,6 +46,46 @@ export function normalizeGrade(
   return trimmed;
 }
 
+/**
+ * 시험지 표기 → 우리 소단원 이름. **뜻이 1:1 로 같은데 글자가 아예 다른 것만** 넣는다.
+ * 유사도(0.13~0.46)로는 안 붙어서 사람이 판단한 목록이다(2026-08-15 실측).
+ *
+ * ⚠️ 중단원급 힌트("일차함수와 그래프", "정비례와 반비례", "도형의 이동")는
+ * **넣지 않는다**. 소단원 여러 개에 걸쳐 있어 하나를 고르면 임의 배정이 되고,
+ * 그 소단원으로 출제할 때 결이 다른 문제가 섞인다. 미분류로 두면 나중에
+ * 재실행으로 회수된다. 넣으려면 원장님 확인을 받을 것.
+ */
+const SECTION_ALIASES: Record<string, Record<string, string>> = {
+  중2: {
+    // 중2 '식의 계산'에서 다항식은 덧셈·뺄셈, 단항식은 곱셈·나눗셈을 다룬다.
+    다항식의계산: "다항식의 덧셈과 뺄셈",
+    단항식의계산: "단항식의 곱셈과 나눗셈",
+  },
+  공통수학1: {
+    // 판별식으로 교점 개수를 따지는 그 단원이다.
+    이차함수와직선의위치관계: "이차방정식과 이차함수의 관계",
+    // 미정계수법 = 항등식의 계수를 결정하는 방법.
+    미정계수법: "항등식",
+  },
+  공통수학2: {
+    명제의참거짓: "명제와 조건",
+  },
+};
+
+function aliasKey(value: string): string {
+  return value.replace(/[\s.,·]/g, "");
+}
+
+function aliasHit(
+  pool: UnitLike[],
+  hint: string,
+  grade: string,
+): UnitLike | undefined {
+  const section = SECTION_ALIASES[grade]?.[aliasKey(hint)];
+  if (!section) return undefined;
+  return pool.find((unit) => unit.section === section);
+}
+
 function includesLoose(haystack: string, needle: string): boolean {
   return haystack.replace(/\s+/g, "").includes(needle.replace(/\s+/g, ""));
 }
@@ -69,6 +109,17 @@ export function mapUnitHint(
     .map((token) => token.trim())
     .filter(Boolean);
   const hints = tokens.length > 0 ? tokens : [cleaned];
+
+  // 사람이 확정한 별칭이 먼저다 — 글자가 달라도 뜻이 같은 것들이라
+  // 부분문자열·유사도보다 신뢰도가 높다.
+  // 쪼개기 전 원문을 먼저 본다 — "명제의 참, 거짓" 은 쉼표로 쪼개면
+  // ["명제의 참", "거짓"] 이 되어 별칭에 걸리지 않는다.
+  if (grade) {
+    for (const candidate of [cleaned, ...hints]) {
+      const alias = aliasHit(pool, candidate, grade);
+      if (alias) return { status: "mapped", unitId: alias.id };
+    }
+  }
 
   for (const hint of hints) {
     const sectionHit = longestHit(pool, hint, "section");

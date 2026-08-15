@@ -559,6 +559,36 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
     expect(drafts[0]?.gradeHint).toBe("공수2");
   });
 
+  // 시험지 표기와 우리 소단원 이름이 아예 다른데 뜻은 1:1 로 같은 것들.
+  // 유사도로는 안 붙고(0.13~0.46) 사람이 판단해야 한다. 학년까지 맞아야 쓴다.
+  it("학년별 소단원 별칭으로 붙인다 — 미정계수법 = 항등식", () => {
+    const units = [
+      {
+        id: "u-ident",
+        grade: "공통수학1",
+        chapter: "1. 다항식",
+        section: "항등식",
+      },
+      {
+        id: "u-mul",
+        grade: "공통수학1",
+        chapter: "1. 다항식",
+        section: "다항식의 곱셈",
+      },
+    ];
+    const result = mapUnitHint("미정계수법", units, "공통수학1");
+    expect(result.status).toBe("mapped");
+    if (result.status === "mapped") expect(result.unitId).toBe("u-ident");
+  });
+
+  it("별칭은 학년이 다르면 쓰지 않는다", () => {
+    const units = [
+      { id: "u-ident", grade: "중3", chapter: "1. 다항식", section: "항등식" },
+    ];
+    const result = mapUnitHint("미정계수법", units, "중3");
+    expect(result.status).toBe("unclassified");
+  });
+
   it("매핑 실패분은 unclassified로 남기고 버리지 않는다", () => {
     const { classified, report } = classifyDrafts(
       "past_exam",
