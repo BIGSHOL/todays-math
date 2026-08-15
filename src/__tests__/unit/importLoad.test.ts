@@ -92,7 +92,12 @@ describe("[T3.0] classified 적재 복구", () => {
       async $transaction(callback: (tx: unknown) => Promise<unknown>) {
         const staged = [...committed];
         const tx = {
-          $queryRaw: vi.fn(async () => []),
+          $executeRaw: vi.fn(async () => 1),
+          // $queryRaw 로 자문 잠금을 걸면 Prisma 가 void 열을 역직렬화하다 죽는다.
+          // 그 회귀를 잡으려고 일부러 던지게 둔다(2026-08-15 실제 적재 실패).
+          $queryRaw: vi.fn(async () => {
+            throw new Error("자문 잠금은 $executeRaw 로 걸어야 한다");
+          }),
           user: {
             upsert: vi.fn(async () => ({ id: USER_ID })),
           },

@@ -130,7 +130,10 @@ export async function loadClassifiedAtomically(
   return prisma.$transaction(
     async (tx) => {
       // 별도 프로세스에서 동시에 실행해도 둘 다 "기존 0건"을 보고 중복 삽입하지 않게 한다.
-      await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtext(${LOAD_LOCK_KEY}))`;
+      // ⚠️ `$queryRaw` 로 부르면 안 된다 — `pg_advisory_xact_lock` 의 반환형이 void 라
+      //    Prisma 가 결과 열을 역직렬화하다 죽는다("Failed to deserialize column of
+      //    type 'void'", 2026-08-15 실제 적재에서 발생). 행을 안 읽는 $executeRaw 를 쓴다.
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${LOAD_LOCK_KEY}))`;
 
       const user = await tx.user.upsert({
         where: { email: IMPORT_USER_EMAIL },
