@@ -1,7 +1,9 @@
 -- 트랙 D '오늘의 시험' — 예측기 L0(시험지 단위) + 예측 대상 결정에 필요한 컬럼.
 -- 설계: docs/planning/11-score-predictor.md §3 L0, §5
 --
--- ⚠️ 수기 작성. DB 연결 환경에서 `prisma migrate dev` 로 1회 검증할 것.
+-- ⚠️ 수기 작성. 로컬 빈 DB에 9건 전부 적용해 검증했다(2026-08-16).
+-- id 에 DB 기본값을 두지 않는다 — Prisma `@default(uuid())` 는 앱에서 만든다.
+-- 인덱스명은 Prisma 규칙을 따른다. 어기면 migrate diff 가 매번 drift 로 잡는다.
 
 -- 1) 재학 학교 — '오늘의 시험'의 예측 대상을 정한다.
 --    표기는 eywa school-name.ts 규칙으로 정규화해 넣는다.
@@ -18,7 +20,7 @@ ALTER TABLE "problem"
 
 -- 3) 기출 시험지 1편.
 CREATE TABLE "exam" (
-  "id"               UUID         NOT NULL DEFAULT gen_random_uuid(),
+  "id"               UUID         NOT NULL,
   "external_exam_id" VARCHAR(120) NOT NULL,
   "school"           VARCHAR(50)  NOT NULL,
   "level"            VARCHAR(2)   NOT NULL,
@@ -37,12 +39,12 @@ CREATE TABLE "exam" (
 );
 
 CREATE UNIQUE INDEX "exam_external_exam_id_key" ON "exam"("external_exam_id");
-CREATE INDEX "exam_series_idx" ON "exam"("school","level","grade","subject","year","semester","round");
-CREATE INDEX "exam_cohort_idx" ON "exam"("level","grade","subject","year","semester","round");
+CREATE INDEX "exam_school_level_grade_subject_year_semester_round_idx" ON "exam"("school","level","grade","subject","year","semester","round");
+CREATE INDEX "exam_level_grade_subject_year_semester_round_idx" ON "exam"("level","grade","subject","year","semester","round");
 
 -- 4) 시험지 안의 문항.
 CREATE TABLE "exam_question" (
-  "id"               UUID         NOT NULL DEFAULT gen_random_uuid(),
+  "id"               UUID         NOT NULL,
   "exam_id"          UUID         NOT NULL,
   "number"           INTEGER      NOT NULL,
   "score"            DOUBLE PRECISION NOT NULL,

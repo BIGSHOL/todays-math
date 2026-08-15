@@ -241,7 +241,7 @@ model Problem {
   /// 원본을 그대로 오려 `public/figures/` 에 두고 여기에 경로만 적는다.
   /// 배열인 이유: 선택지마다 그림인 문항이 있다(실측 한 문항 최대 6장).
   /// 순서는 지면에 나온 순서다. 참조: docs/planning/09-figure-engine-guide.md
-  figureUrls   String[]   @map("figure_urls")
+  figureUrls   String[]   @default([]) @map("figure_urls")
 
   // ── 원본 역추적 메타데이터 (docs/planning/08-import-ledger.md) ──────────────
   // 추출기는 이 값들을 이미 갖고 있었는데 적재 단계가 버려서, 훼손·그림 문항을
