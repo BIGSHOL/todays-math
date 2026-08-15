@@ -144,25 +144,14 @@ async function main(): Promise<void> {
       const exam = c.externalId.slice(0, c.externalId.lastIndexOf("-"));
       perExam.set(exam, (perExam.get(exam) ?? 0) + 1);
     }
-    const suspectExams = new Set(
-      [...perExam].filter(([, n]) => n >= 3).map(([exam]) => exam),
-    );
-    const safeNumber = conflictNumber.filter(
-      (c) =>
-        !suspectExams.has(c.externalId.slice(0, c.externalId.lastIndexOf("-"))),
-    );
-    const suspectNumber = conflictNumber.filter((c) =>
-      suspectExams.has(c.externalId.slice(0, c.externalId.lastIndexOf("-"))),
-    );
+    const concentrated = [...perExam]
+      .filter(([, n]) => n >= 3)
+      .sort((a, b) => b[1] - a[1]);
 
     await mkdir("scripts/qa/reports", { recursive: true });
     await writeFile(
       OUT,
-      JSON.stringify(
-        { safeNumber, suspectNumber, conflictValue, fillable },
-        null,
-        1,
-      ),
+      JSON.stringify({ conflictNumber, conflictValue, fillable }, null, 1),
       "utf-8",
     );
 
@@ -172,12 +161,15 @@ async function main(): Promise<void> {
     );
     console.log(`  일치 ${agree.length}`);
     console.log(
-      `  ⚠️ 번호끼리 어긋남 ${safeNumber.length}  ← 우리가 틀렸다(교정 대상)`,
+      `  ⚠️ 번호끼리 어긋남 ${conflictNumber.length}  ← 우리가 틀렸다(교정 대상)`,
     );
-    console.log(
-      `  ✋ 정렬 의심 ${suspectNumber.length} (시험지 ${suspectExams.size}편)` +
-        " — 한 편에 3건 이상 몰려 추출을 못 믿는다. 건드리지 않는다.",
-    );
+    if (concentrated.length > 0) {
+      console.log(
+        `     └ 한 편에 몰린 것: ${concentrated
+          .map(([exam, n]) => `${exam} ${n}건`)
+          .join(" · ")}`,
+      );
+    }
     console.log(
       `  값 형태 불일치 ${conflictValue.length}  ← 표기 차이 다수, 사람이 본다`,
     );
@@ -199,15 +191,20 @@ async function main(): Promise<void> {
       return;
     }
     let fixed = 0;
-    for (const item of safeNumber) {
+    for (const item of conflictNumber) {
       await prisma.problem.update({
         where: { id: item.id },
         data: { answer: item.official },
       });
       fixed += 1;
     }
+    // 빈 정답 채우기는 **기본으로 하지 않는다.** 공식 정답의 값 형태는 텍스트
+    // 레이어에서 수식이 평문으로 뭉개져 나온다 — `√⁄5`(분수 가로선 잔존),
+    // `80또는-104`(공백 유실), `a2+b2`(위첨자 소실). 지면에 그대로 인쇄하면
+    // 틀린 값이 나간다. 번호 정답(`①`~`⑤`)은 한 글자라 그럴 여지가 없어 안전하다.
     let filled = 0;
-    for (const item of fillable) {
+    const doFill = process.argv.includes("--fill");
+    for (const item of doFill ? fillable : []) {
       await prisma.problem.update({
         where: { id: item.id },
         data: { answer: item.official },

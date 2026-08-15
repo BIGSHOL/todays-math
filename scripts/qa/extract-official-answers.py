@@ -55,8 +55,17 @@ if hasattr(sys.stdout, "reconfigure"):
 
 # 정답면을 알아보는 표지. 본문 지면에도 "해설" 이 스칠 수 있어 둘 이상을 본다.
 ANSWER_PAGE = re.compile(r"정\s*답|해\s*설|채점\s*기준|모범\s*답안")
-# 정답 줄머리: `18.` `18)` `[18]` `18 ` 뒤에 답이 온다.
-NUMBER_HEAD = re.compile(r"^\s*\[?(\d{1,2})\]?\s*[.)]?\s+(.*)$")
+# ⚠️ **문제 지면**을 알아보는 표지. 안내문 "모든 문항의 정답은 1개다" 가
+# ANSWER_PAGE 에 걸려 문제 지면이 정답면으로 오인되는 사고가 있었다(실측 3766).
+# 그 지면의 분수 글리프가 줄바꿈으로 쪼개져 `1\n② ⁄9` 가 되고, 그게 "1번 답 ②" 로
+# 읽혀 진짜 정답(⑤)을 덮었다. 문제 지면 표지가 보이면 정답면으로 보지 않는다.
+PROBLEM_PAGE = re.compile(r"\[중단원\]|\[난이도\]|\[\s*\d+\s*점\s*\]|배점")
+# 정답 줄머리: `18.` `18)` `[18]` 뒤에 답이 온다.
+#
+# ⚠️ 구분자(`.` `)` `]`)를 **필수**로 둔다. 선택적으로 뒀더니 해설 문장
+# `1 을 ②에 대입하면` 이 "1번 답 ②" 로 읽혀 진짜 정답 ①을 덮었다(실측 3307).
+# 정답 목록은 예외 없이 `1. ⑤` 형식이라 이걸 강제해도 놓치는 게 거의 없다.
+NUMBER_HEAD = re.compile(r"^\s*(?:\[(\d{1,2})\]|(\d{1,2})\s*[.)])\s*(.*)$")
 # 텍스트만으로 확정 가능한 답 — 원문자 번호이거나 짧은 값.
 CIRCLED = re.compile(r"^[①②③④⑤⑥⑦⑧⑨⑩]$")
 
@@ -70,6 +79,9 @@ def answer_pages(doc: fitz.Document) -> list[int]:
             continue
         # 표지어가 있고 **문항 줄머리가 촘촘한** 지면만 정답면으로 본다.
         if not ANSWER_PAGE.search(text[:400]):
+            continue
+        # 문제 지면 표지가 있으면 정답면이 아니다.
+        if PROBLEM_PAGE.search(text):
             continue
         heads = sum(1 for ln in text.splitlines() if NUMBER_HEAD.match(ln))
         if heads >= 5:
@@ -117,28 +129,47 @@ def extract(pdf: pathlib.Path, save_png: bool, outdir: pathlib.Path) -> dict:
     try:
         pages = answer_pages(doc)
         items: dict[str, dict] = {}
+        # ⚠️ 정답 목록은 지면 **위쪽**에 `1. ④` 처럼 정연하게 있고, 아래는 해설이다.
+        # 해설 안에도 `1 ⋯③` 같은 조각이 나와 같은 번호로 잡힌다. 처음엔 "뒤에 나온
+        # 것을 남긴다"고 했는데 그게 거꾸로였다 — 해설 조각이 진짜 정답을 덮었다
+        # (실측: 3175-1 은 지면에 `1. ④` 인데 `③` 으로 뽑혔다).
+        # 그래서 **한 지면 안에서는 위쪽(y 오름차순)을 우선**한다.
+        #
+        # 지면 사이에서는 반대로 **뒤쪽 지면을 우선**한다. 정답면이 여럿 잡힌
+        # 시험지가 2,242편 중 55편인데, 앞쪽에 걸린 것은 대개 오검출(문제 지면)이고
+        # 진짜 정답면은 맨 뒤다. 앞쪽을 우선하면 가짜가 진짜를 덮는다(실측 3766).
+        blocks = []
         for pno in pages:
-            page = doc[pno]
-            for block in page.get_text("blocks"):
-                x0, y0, x1, y1, text = block[0], block[1], block[2], block[3], unpua(block[4])
-                m = NUMBER_HEAD.match(text.strip())
-                if not m:
-                    continue
-                number, rest = m.group(1), m.group(2)
-                parsed = parse_answer(rest)
-                # 같은 번호가 여러 번 나오면 **뒤쪽(정답면)** 을 남긴다.
-                items[number] = {
-                    "page": pno,
-                    "text": text.strip()[:400],
-                    "parsed": parsed,
-                }
-                if save_png and not parsed:
-                    dest = outdir / str(number)
-                    dest.parent.mkdir(parents=True, exist_ok=True)
-                    pix = page.get_pixmap(
-                        clip=fitz.Rect(x0, y0, x1, y1), dpi=200
-                    )
-                    pix.save(f"{dest}.png")
+            for block in doc[pno].get_text("blocks"):
+                blocks.append((pno, block))
+        blocks.sort(key=lambda pb: (-pb[0], pb[1][1]))
+
+        for pno, block in blocks:
+            x0, y0, x1, y1, text = (
+                block[0],
+                block[1],
+                block[2],
+                block[3],
+                unpua(block[4]),
+            )
+            m = NUMBER_HEAD.match(text.strip())
+            if not m:
+                continue
+            number = m.group(1) or m.group(2)
+            rest = m.group(3)
+            if number in items:
+                continue
+            parsed = parse_answer(rest)
+            items[number] = {
+                "page": pno,
+                "text": text.strip()[:400],
+                "parsed": parsed,
+            }
+            if save_png and not parsed:
+                dest = outdir / str(number)
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                pix = doc[pno].get_pixmap(clip=fitz.Rect(x0, y0, x1, y1), dpi=200)
+                pix.save(f"{dest}.png")
         return {"pages": pages, "items": items}
     finally:
         doc.close()
