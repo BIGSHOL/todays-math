@@ -15,6 +15,7 @@
 | `docs/planning/06-tasks.md` | 태스크 목록 (M0~M6, 21개) — `/orchestrate`가 사용 |
 | `docs/planning/07-coding-convention.md` | 컨벤션, 도메인 용어 SSOT, Decision Log D-01~36 |
 | `docs/planning/09-figure-engine-guide.md` | **도형 SVG 엔진 사용 지침** — testchanger 엔진 호출법,<br>2계층 구조, 실제로 낸 오류 재발 금지 목록. 도형 작업 전 필독 |
+| `docs/planning/10-handoff.md` | **인수인계 — 다른 컴퓨터에서 이어할 때 여기부터.**<br>환경 준비·저장소 밖 의존물·다음 할 일·확인 대기 항목 (2026-08-15) |
 | `docs/planning/08-import-ledger.md` | **문항 이관 원장 — N드라이브 기출 위치·중복 방지·토큰 절약 원칙.**<br>이관/검수 작업 전 필독. 같은 조사를 반복하지 말 것.<br>**§5.1 추출은 `(완료)` 표기 원본에서만 (D-37)** |
 
 ## 기술 스택
