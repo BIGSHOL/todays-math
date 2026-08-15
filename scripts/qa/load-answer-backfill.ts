@@ -22,9 +22,21 @@ import { parseProblemContent } from "../../src/lib/problem/parseProblemContent";
 import { allowSharedImport } from "../../src/lib/import/classifyDatabaseUrl";
 import { inspectDatabaseTargets } from "../import/resolveDbTarget";
 
-const DIR = "scripts/qa/reports/answer-solved";
+const DIR = process.env.ANSWER_SOLVED_DIR ?? "scripts/qa/reports/answer-solved";
 const SENTINEL = "정답 없음";
-const MAX_ANSWER = 300;
+/**
+ * 정답란에 들어갈 수 있는 최대 길이.
+ *
+ * 300자는 "DB 가 감당하는 길이" 였지 **지면에 들어가는 길이**가 아니다.
+ * 증명·설명형 문항을 푼 담당자들이 "최종 값이 없어 핵심 결론을 한 줄로
+ * 적었다" 고 보고했는데, 그런 서술이 정답란에 인쇄되면 지면이 깨진다.
+ * 실측(2026-08-15): 그림 배치 2,272건 중 60자 초과 180건, 120자 초과 46건,
+ * 최대 326자. 중앙값은 10자라 정상 답에는 영향이 없다.
+ *
+ * 걸러진 문항은 `(정답 없음)` 으로 남아 출제에서 자동 제외된다. 서술형 채점은
+ * 원장님이 직접 하시는 영역이라 손실이 아니다.
+ */
+const MAX_ANSWER = 60;
 
 /** `①`~`⑩` 한 글자짜리 객관식 번호 정답. */
 const CIRCLED_ONLY = /^[①②③④⑤⑥⑦⑧⑨⑩]$/;
@@ -97,7 +109,7 @@ async function main(): Promise<void> {
     console.log("── 정답 백필 적재 ──");
     console.log(
       `답안 파일 ${files.length} · 풀린 문항 ${solved.size}` +
-        ` · 풀이불가 ${skipped} · 정답과다길이 ${tooLong}`,
+        ` · 풀이불가 ${skipped} · 정답이 길어 제외 ${tooLong}`,
     );
     console.log(`실제 갱신 대상 ${targets.length} (이미 정답 있는 행은 제외)`);
     if (unrenderable > 0) {
