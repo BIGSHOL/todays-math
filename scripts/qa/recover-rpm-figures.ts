@@ -18,8 +18,9 @@
  * 매여 있지만 그림은 그 버전의 것이 아니라 **그 문항이 실려 있던 지면**의 것이라,
  * 본문을 고쳐 새 버전이 생기면 그림만 옛 버전에 매인 채 조용히 사라진다
  * (sumaek 실측 2026-08-10, 129건). 그래서 현재 버전에 매인 것이 있으면 그것을 쓰고,
- * 없으면 같은 문항의 가장 최근 버전 것을 쓴다. 버전으로만 찾으면 1,482장,
- * 문항으로 넓히면 1,611장이다.
+ * 없으면 같은 문항의 가장 최근 버전 것을 쓴다. 현재 버전만 보면 1,482장,
+ * 문항으로 넓히면 1,605장이다(그림을 여러 버전에 걸쳐 가진 문항은 5개뿐이고
+ * 그 5개도 고른 버전이 항상 최대 집합이라, 버전 합계 1,611 중 6장은 중복이다).
  *
  * 짝짓기: 적재 때 `externalId` 를 버려서 키 조인이 안 된다(실측 0건). 그래서
  * `recover-rpm-answers.ts` 와 **같은 본문 매칭**을 쓴다 — 원본 body+choices 를 적재
@@ -62,6 +63,8 @@ const RETRIES = 2;
 const PNG_MAGIC = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 const FIGURE_ROOT = path.join("public", "figures", "rpm");
 const PUBLIC_PREFIX = "/figures/rpm";
+/** 드라이런 용량 추정용 — 표본 8장 실측 평균(15.1 KB). 받은 것이 생기면 그 실측이 이긴다. */
+const SAMPLED_SHEET_BYTES = 15.1 * 1024;
 
 /**
  * 그림은 문항 단위로 넓혀 찾는다(머리말 참조). 현재 버전에 매인 것이 있으면 그것,
@@ -532,12 +535,13 @@ async function main(): Promise<void> {
     if (!apply) {
       // 드라이런은 내려받지 않는다. 용량은 이미 받아 둔 것의 실측 평균으로 잡는다.
       const existingBytes = await directorySize(FIGURE_ROOT);
-      const perSheet = alreadyOnDisk > 0 ? existingBytes / alreadyOnDisk : 0;
+      const perSheet =
+        alreadyOnDisk > 0 ? existingBytes / alreadyOnDisk : SAMPLED_SHEET_BYTES;
+      const remaining = sheets - alreadyOnDisk;
       console.log(
         `\n드라이런 — 변경 없음. public/figures/rpm 현재 ${mb(existingBytes)}` +
-          (perSheet > 0
-            ? ` · 남은 ${sheets - alreadyOnDisk}장 예상 ${mb(perSheet * (sheets - alreadyOnDisk))}`
-            : " · 예상 용량은 --apply 후에 실측됩니다(장당 12~42 KB 표본)"),
+          ` · 남은 ${remaining}장 예상 ${mb(perSheet * remaining)}` +
+          (alreadyOnDisk > 0 ? "" : " (표본 8장 실측 평균 기준)"),
       );
       console.log(
         `적용하려면 --apply (대상 ${plans.length}문항 / ${sheets}장)`,
