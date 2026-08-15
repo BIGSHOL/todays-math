@@ -27,6 +27,9 @@ const eslintConfig = defineConfig([
     "coverage/**",
     "playwright-report/**",
     "test-results/**",
+    // 오르카가 만드는 중첩 워크트리 — 저장소 안에 있지만 git 추적 대상이 아니다
+    // (.git/info/exclude). 이걸 안 빼면 `npm run lint`가 남의 사본 오류로 항상 빨갛다.
+    ".claude/worktrees/**",
   ]),
 ]);
 
