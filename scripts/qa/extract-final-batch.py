@@ -92,11 +92,30 @@ def hwp_answers(hwp: str, work: pathlib.Path) -> list[dict]:
     ]
 
 
+# 표본 실측에서 소단원 50% 이상이 나온 폴더 묶음 (10-handoff §8.2).
+# 경로 부분일치로 쓴다.
+TOPIC_RICH_GROUPS = [
+    "2024 기출모음",
+    "2025 기출모음",
+]
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=30)
     ap.add_argument("--offset", type=int, default=0)
     ap.add_argument("--out", default=DEFAULT_OUT)
+    ap.add_argument(
+        "--group",
+        action="append",
+        help="원본 폴더 묶음 부분일치(여러 번 지정 가능). "
+        "소단원이 있는 구간만 돌릴 때 쓴다 — 10-handoff §8.2",
+    )
+    ap.add_argument(
+        "--topic-rich",
+        action="store_true",
+        help="소단원 보유 구간(2024·2025 기출모음)만 — --group 프리셋",
+    )
     a = ap.parse_args()
 
     outdir = pathlib.Path(a.out)
@@ -107,7 +126,19 @@ def main() -> None:
         p
         for p in json.load(open(PAIRS, encoding="utf-8"))["pairs"]
         if p["pdf"] and p["hwp"]
-    ][a.offset : a.offset + a.limit]
+    ]
+
+    # 소단원이 없으면 단원 분류가 안 돼 적재되지 않는다(10-handoff §8.2 실측).
+    # 2024·2025 기출모음에는 있고 2023 이전에는 없다 — 헛일을 줄이려고 고른다.
+    wanted = list(a.group or [])
+    if a.topic_rich:
+        wanted += TOPIC_RICH_GROUPS
+    if wanted:
+        before = len(pairs)
+        pairs = [p for p in pairs if any(w in (p["hwp"] or "") for w in wanted)]
+        print(f"구간 필터: {before} → {len(pairs)}편  ({', '.join(wanted)})")
+
+    pairs = pairs[a.offset : a.offset + a.limit]
 
     stat = collections.Counter()
     fails: list[str] = []

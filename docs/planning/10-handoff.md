@@ -167,7 +167,42 @@ node scripts/qa/build-import-ledger.mjs
 ⚠️ 이 1,360건은 버려진 게 아니라 **DB에 안 들어갔을 뿐**이다. §4.1 이 확정되면
 같은 명령을 다시 돌리는 것만으로 재시도된다(`externalId` 로 중복은 자동 차단).
 
-### ▶ B단계 — N드라이브 신규 추출 (A단계 끝난 뒤)
+### ▶ B단계 — N드라이브 신규 추출 🚧 **2026-08-15 착수**
+
+**전제 4건 전부 해소** (§8.3). 한컴 11.0 COM 확인, `hwp_extract` 벤더링,
+소단원 보유 구간 조사 완료.
+
+이 컴퓨터에서 추가로 설치한 것 — 없으면 스크립트가 import 에서 죽는다:
+
+```bash
+python -m pip install pywin32 PyMuPDF fontTools
+```
+
+**소단원 보유 구간만 돌린다**(§8.2). 소단원이 없으면 단원 분류가 안 돼
+적재되지 않는다 — 2023 이전 860편을 돌리면 그대로 헛일이다.
+
+```bash
+python scripts/qa/pair-final-sources.py                      # 페어 2,257편
+python scripts/qa/extract-final-batch.py --topic-rich --limit 1396
+```
+
+`--topic-rich` 는 `2024 기출모음`·`2025 기출모음` 프리셋이다(1,396편).
+임의 구간은 `--group "<경로 일부>"` 로 지정한다(여러 번 가능).
+
+**병렬로 돌려도 된다 — 실측 확인.** HWP COM 이 단일 인스턴스라 걱정했는데
+2개 동시 실행에서 충돌이 없었다. offset 을 갈라 4프로세스로 돌리면
+1,396편이 약 20~25분이다(단일 프로세스 3.7초/편 → 약 1.7시간).
+
+```bash
+for i in 0 1 2 3; do
+  python scripts/qa/extract-final-batch.py --topic-rich     --offset $((i*349)) --limit 349 &
+done; wait
+```
+
+이미 만든 산출물은 건너뛰므로 **같은 명령 재실행이 곧 이어달리기**다
+(N드라이브는 도중에 끊긴다 — §5).
+
+### ▶ B단계 원래 절차 (참고)
 
 > 🚨 **B단계 착수 전에 반드시 `main` 을 pull 할 것.**
 > A단계에서 이관 파이프라인 버그 두 개를 고쳤다(`ffeb701`, `a877595`).
@@ -463,7 +498,7 @@ FigureSpec 엔진도, grok/codex 도 쓰지 않았다. **토큰 0 · API 0.**
 |---|---|---|
 | 1 | `hwp_extract.py` (완료 HWP → 정답) | ✅ **저장소에 벤더링** `scripts/vendor/testchanger/` |
 | 2 | 소단원 조사 결과 원본 | ✅ `scripts/qa/reports/topic-coverage.json` 커밋 |
-| 3 | 한컴오피스(HWP COM) | ⚠️ **그 컴퓨터에서 확인 필요** |
+| 3 | 한컴오피스(HWP COM) | ✅ **확인 완료** — 한컴 11.0.0.2129, COM 동작 (2026-08-15) |
 | 4 | phase/figures ↔ main 병합 | ✅ 완료 |
 
 **1번** — 컴퓨터마다 testchanger 사본이 달라 `scripts/hwp_extract.py` 가 없는 곳이 있었다
@@ -481,6 +516,16 @@ w.Dispatch("HWPFrame.HwpObject")   # 예외 없으면 설치돼 있다
 
 없으면 B단계 **정답 추출 불가**. 본문(PDF 텍스트 레이어)만 가능하다.
 한컴을 깔거나, 본문만 먼저 넣고 정답은 나중에 붙인다(정답 없는 문항은 출제 제외).
+
+**이관 담당 컴퓨터 확인 결과(2026-08-15)**: 한컴오피스 **11.0.0.2129** 설치돼
+있고 `HWPFrame.HwpObject` COM 이 뜬다. 단 **`pywin32` 가 없어서** 위 확인
+코드가 `ModuleNotFoundError` 로 떨어졌다 — 한컴이 없는 걸로 오해하기 쉽다.
+
+```bash
+python -m pip install pywin32     # 한컴이 아니라 이게 없었던 것
+```
+
+→ **B단계 전제 4건 전부 해소.**
 
 ## 8.4 그림 파이프라인 (B단계 산출물에도 그대로 적용)
 
