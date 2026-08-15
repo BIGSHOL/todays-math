@@ -30,6 +30,7 @@ import { PrismaClient } from "@prisma/client";
 import { allowSharedImport } from "../../src/lib/import/classifyDatabaseUrl";
 import { flattenStructured } from "../../src/lib/import/flattenStructured";
 import { parseProblemContent } from "../../src/lib/problem/parseProblemContent";
+import { isDirectScript } from "../import/isDirectScript";
 import { readEnvFile } from "../import/readEnvFile";
 import { inspectDatabaseTargets } from "../import/resolveDbTarget";
 
@@ -40,9 +41,11 @@ const SENTINEL = "정답 없음";
 /** `①`~`⑩`, 복수 정답은 `②, ⑤` 처럼 쉼표로 잇는다. */
 const MARKER_ONLY = /^[①②③④⑤⑥⑦⑧⑨⑩](\s*,\s*[①②③④⑤⑥⑦⑧⑨⑩])*$/;
 
-const SOURCE_SELECT = `
+export const SOURCE_SELECT = `
 SELECT
   q.id::text AS id,
+  q.printed_number,
+  q.source_ref,
   qv.body,
   qv.choices,
   qv.answer
@@ -60,8 +63,12 @@ type PostgresFactory = (
   options?: Record<string, unknown>,
 ) => SqlClient;
 
-interface SourceRow {
+export interface SourceRow {
   id: string;
+  /** 원본 교재의 인쇄 문항 번호. 쌍둥이 문항을 가르는 유일한 키다. */
+  printedNumber: string | null;
+  /** 원본 교재·단원 정보. 폐기 목록에서 "어느 교재 몇 번"을 적을 때 쓴다. */
+  sourceRef: Record<string, unknown> | null;
   /** 적재 당시 형태 — `body + choices` 를 편 문자열. */
   content: string;
   /** `restore-choice-markers.ts` 가 만들어 넣는 형태 — `지문 + 마커 보기`. */
@@ -156,7 +163,7 @@ function stripDuplicatedChoiceTail(body: string, items: ChoiceItem[]): string {
   return body;
 }
 
-function toSourceRow(row: Record<string, unknown>): SourceRow | null {
+export function toSourceRow(row: Record<string, unknown>): SourceRow | null {
   const id = typeof row.id === "string" ? row.id : "";
   if (!id) return null;
   const body = flattenStructured(row.body);
@@ -184,6 +191,9 @@ function toSourceRow(row: Record<string, unknown>): SourceRow | null {
 
   return {
     id,
+    printedNumber:
+      typeof row.printed_number === "string" ? row.printed_number : null,
+    sourceRef: asRecord(row.source_ref),
     content,
     // 마커 복원본과 **글자 단위로 같은** 문자열이라야 복원 후에도 짝이 맞는다.
     restoredContent: [stem, block].filter(Boolean).join("\n\n"),
@@ -193,7 +203,7 @@ function toSourceRow(row: Record<string, unknown>): SourceRow | null {
   };
 }
 
-async function resolveSourceUrl(): Promise<string | null> {
+export async function resolveSourceUrl(): Promise<string | null> {
   const direct = process.env.SUMAEK_DATABASE_URL?.trim();
   if (direct) return direct;
   const envFile = await readEnvFile(
@@ -202,7 +212,7 @@ async function resolveSourceUrl(): Promise<string | null> {
   return envFile?.DATABASE_URL?.trim() || null;
 }
 
-async function readSource(
+export async function readSource(
   url: string,
 ): Promise<Array<Record<string, unknown>>> {
   const driverPath = process.env.SUMAEK_POSTGRES_JS ?? DEFAULT_POSTGRES_JS;
@@ -238,13 +248,13 @@ const normalizeAnswer = (value: string): string =>
  *   - 복원 후: 지문과 보기로 갈리고 마커는 파서가 떼어 낸다.
  * 두 경우 모두 `지문 + 보기들` 이 같은 문자열로 모인다.
  */
-function canonicalKey(content: string): string {
+export function canonicalKey(content: string): string {
   const parsed = parseProblemContent(content);
   return normalizeContent(parsed.question + parsed.choices.join(""));
 }
 
 /** 원문 그대로의 키와 정규화 키를 함께 쓴다 — 한쪽만 맞아도 후보로 잡는다. */
-function keysOf(content: string): string[] {
+export function keysOf(content: string): string[] {
   return [
     ...new Set([normalizeContent(content), canonicalKey(content)]),
   ].filter(Boolean);
@@ -429,4 +439,6 @@ async function main(): Promise<void> {
   }
 }
 
-void main();
+if (isDirectScript(import.meta.url)) {
+  void main();
+}
