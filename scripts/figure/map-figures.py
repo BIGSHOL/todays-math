@@ -67,6 +67,40 @@ def first_line_text(blk: dict) -> str:
     )
 
 
+def _cluster(rects, gap: float = 14.0):
+    """가까운 벡터 조각을 잇는다 — 그림 하나는 선 수십 개로 쪼개져 있다.
+
+    반환은 (x0, y0, x1, y1, 획수). 획수는 박스 하나와 그림을 가르는 기준이다.
+    """
+    boxes = [[x0, y0, x1, y1, n] for x0, y0, x1, y1, n in rects]
+    merged = True
+    while merged:
+        merged = False
+        out: list[list[float]] = []
+        for b in boxes:
+            hit = None
+            for o in out:
+                if (
+                    b[0] <= o[2] + gap
+                    and o[0] <= b[2] + gap
+                    and b[1] <= o[3] + gap
+                    and o[1] <= b[3] + gap
+                ):
+                    hit = o
+                    break
+            if hit:
+                hit[0] = min(hit[0], b[0])
+                hit[1] = min(hit[1], b[1])
+                hit[2] = max(hit[2], b[2])
+                hit[3] = max(hit[3], b[3])
+                hit[4] += b[4]
+                merged = True
+            else:
+                out.append(b[:])
+        boxes = out
+    return [tuple(b) for b in boxes]
+
+
 def _page_layout(page):
     """(문항번호 앵커, 그림 후보) — 둘 다 (단, y) 로 정렬 가능한 형태."""
     W, mid = page.rect.width, page.rect.width / 2
@@ -85,6 +119,36 @@ def _page_layout(page):
         if y0 < 110 and x1 - x0 > W * 0.6:
             continue  # 머리 배너(로고)
         images.append((0 if (x0 + x1) / 2 < mid else 1, y0, bbox))
+    # ── 벡터로 그린 그림 ────────────────────────────────────────────────
+    # 완료본 대부분은 그림을 이미지로 심지만, 일부는 **벡터 경로**로 그린다
+    # (실측 4213 문항 3). 이미지 블록만 보면 통째로 놓친다.
+    # 보기/조건 박스(사각형 하나 + 안쪽 글자)와 구분하려고 **획이 여럿인 군집**만 남긴다.
+    vec = []
+    for d in page.get_drawings():
+        r = d["rect"]
+        if r.is_empty or r.is_infinite:
+            continue
+        if r.width > W * 0.8 or r.height > page.rect.height * 0.8:
+            continue  # 쪽 테두리·단 구분선
+        if r.height < 2 and r.width > 120:
+            continue  # 긴 밑줄
+        vec.append((r.x0, r.y0, r.x1, r.y1, len(d.get("items") or [])))
+
+    for cx0, cy0, cx1, cy1, strokes in _cluster(vec):
+        w, h = cx1 - cx0, cy1 - cy0
+        if w < 40 or h < 30:
+            continue
+        # 획이 적으면 박스 하나일 뿐이다 — 그림이 아니다.
+        if strokes < 4:
+            continue
+        # 이미 이미지로 잡힌 영역과 겹치면 중복이다.
+        if any(
+            not (cx1 < bx0 or bx1 < cx0 or cy1 < by0 or by1 < cy0)
+            for _, _, (bx0, by0, bx1, by1) in images
+        ):
+            continue
+        images.append((0 if (cx0 + cx1) / 2 < mid else 1, cy0, (cx0, cy0, cx1, cy1)))
+
     # 우단에 번호가 없으면 1단 조판 — 단 구분을 무시한다.
     if not any(c == 1 for c, _, _ in anchors):
         anchors = [(0, y, n) for _, y, n in anchors]
