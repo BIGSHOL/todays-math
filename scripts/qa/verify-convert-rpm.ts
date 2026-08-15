@@ -60,6 +60,15 @@ const SENTINEL = "(정답 없음)";
 const MARKER_ONLY = /^[①②③④⑤⑥⑦⑧⑨⑩](\s*,\s*[①②③④⑤⑥⑦⑧⑨⑩])*$/;
 const squeeze = (value: string): string => value.replace(/\s+/g, "");
 
+/**
+ * 줄바꿈을 LF 로 맞춘다.
+ *
+ * 저장소가 CRLF 로 체크아웃되는 환경이 있어서(Windows + `core.autocrlf`),
+ * 그대로 비교하면 **여러 줄 치환이 조용히 빗나간다.** 변환기 소스와 치환 문자열
+ * 양쪽에 건다 — 이 스크립트 자신이 CRLF 로 받아진 경우에도 맞아야 하기 때문이다.
+ */
+export const lf = (value: string): string => value.replace(/\r\n/g, "\n");
+
 /** `diagram_assets` 는 `question_version_id` 로 붙는다 — 그림 유무의 유일한 근거다. */
 const SOURCE_SELECT = `
 SELECT
@@ -353,16 +362,15 @@ export const DB_FAULTS: Record<string, { why: string; flag: "externalIdBlind" | 
 /** 변환기 소스를 임시 사본에 망가뜨려 불러온다. 운영 파일은 건드리지 않는다. */
 async function loadFaultyConverter(name: string): Promise<ConvertFn> {
   const fault = FAULTS[name];
-  // 저장소 파일이 CRLF 라 그대로 비교하면 여러 줄 치환이 조용히 빗나간다.
-  const original = (await readFile(CONVERTER_PATH, "utf8")).replace(/\r\n/g, "\n");
-  if (!original.includes(fault.from)) {
+  const original = lf(await readFile(CONVERTER_PATH, "utf8"));
+  if (!original.includes(lf(fault.from))) {
     throw new Error(
       `결함 주입 실패 — '${name}' 의 치환 대상 문자열이 ${CONVERTER_PATH} 에 없습니다.` +
         " 변환기가 바뀌었으면 FAULTS 도 같이 고쳐야 합니다(조용히 통과하면 안 됩니다).",
     );
   }
   const target = faultPath(name);
-  await writeFile(target, original.replace(fault.from, fault.to), "utf8");
+  await writeFile(target, original.replace(lf(fault.from), lf(fault.to)), "utf8");
   const url = pathToFileURL(path.resolve(target)).href;
   const faulty = (await import(url)) as {
     convertRpmExtractedRow: ConvertFn;

@@ -16,11 +16,12 @@ import {
   CONVERTER_PATH,
   DB_FAULTS,
   FAULTS,
+  lf,
 } from "../../../scripts/qa/verify-convert-rpm";
 
-/** 저장소 파일이 CRLF 라 그대로 비교하면 여러 줄 치환이 빗나간다. */
+/** 검사 본체와 **같은 정규화**를 쓴다 — 여기서만 맞추면 증명이 헛것이 된다. */
 async function converterSource(): Promise<string> {
-  return (await readFile(CONVERTER_PATH, "utf8")).replace(/\r\n/g, "\n");
+  return lf(await readFile(CONVERTER_PATH, "utf8"));
 }
 
 describe("verify-convert-rpm 결함 주입 레시피", () => {
@@ -28,7 +29,7 @@ describe("verify-convert-rpm 결함 주입 레시피", () => {
     const source = await converterSource();
     for (const [name, fault] of Object.entries(FAULTS)) {
       expect(
-        source.includes(fault.from),
+        source.includes(lf(fault.from)),
         `결함 '${name}' 의 치환 대상이 ${CONVERTER_PATH} 에 없다 — 변환기를 고쳤으면 FAULTS 도 같이 고쳐야 한다.`,
       ).toBe(true);
     }
@@ -37,8 +38,8 @@ describe("verify-convert-rpm 결함 주입 레시피", () => {
   it("치환이 실제로 소스를 바꾼다 (from ≠ to)", async () => {
     const source = await converterSource();
     for (const [name, fault] of Object.entries(FAULTS)) {
-      expect(fault.from, `결함 '${name}' 의 from/to 가 같다`).not.toBe(fault.to);
-      expect(source.replace(fault.from, fault.to)).not.toBe(source);
+      expect(lf(fault.from), `결함 '${name}' 의 from/to 가 같다`).not.toBe(lf(fault.to));
+      expect(source.replace(lf(fault.from), lf(fault.to))).not.toBe(source);
     }
   });
 
