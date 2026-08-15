@@ -11,3 +11,4 @@ export * from "./progress";
 export * from "./problems";
 export * from "./aiProblems";
 export * from "./tests";
+export * from "./testResults";

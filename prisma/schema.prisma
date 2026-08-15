@@ -143,9 +143,10 @@ model Student {
   createdAt             DateTime @default(now()) @map("created_at")
   updatedAt             DateTime @updatedAt @map("updated_at")
 
-  class      Class      @relation(fields: [classId], references: [id], onDelete: Cascade)
-  progresses Progress[]
-  tests      Test[]
+  class       Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
+  progresses  Progress[]
+  tests       Test[]
+  testResults TestResult[]
 
   @@index([classId])
   @@map("student")
@@ -252,11 +253,12 @@ model Problem {
   createdAt        DateTime     @default(now()) @map("created_at")
   updatedAt        DateTime     @updatedAt @map("updated_at")
 
-  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  unit                Unit          @relation(fields: [unitId], references: [id], onDelete: Restrict)
-  originProblem       Problem?      @relation("ProblemOrigin", fields: [originProblemId], references: [id], onDelete: SetNull)
-  transformedProblems Problem[]     @relation("ProblemOrigin")
+  user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  unit                Unit            @relation(fields: [unitId], references: [id], onDelete: Restrict)
+  originProblem       Problem?        @relation("ProblemOrigin", fields: [originProblemId], references: [id], onDelete: SetNull)
+  transformedProblems Problem[]       @relation("ProblemOrigin")
   testProblems        TestProblem[]
+  problemAnswers      ProblemAnswer[]
 
   // 자동 출제 조회 핵심 인덱스
   @@index([unitId, difficulty, reviewStatus, directUseAllowed])
@@ -299,6 +301,7 @@ model Test {
   rangeStartUnit Unit?         @relation("TestRangeStartUnit", fields: [rangeStartUnitId], references: [id], onDelete: Restrict)
   rangeEndUnit   Unit          @relation("TestRangeEndUnit", fields: [rangeEndUnitId], references: [id], onDelete: Restrict)
   testProblems   TestProblem[]
+  testResults    TestResult[]
 
   @@index([userId, testDate(sort: Desc)])
   @@index([classId, testDate(sort: Desc)])
@@ -325,6 +328,85 @@ model TestProblem {
   @@index([testId, orderIndex])
   @@index([problemId])
   @@map("test_problem")
+}
+
+// ─────────────────────────────────────────────
+// v2 "오늘의 시험"(기출 예상 점수 판독기) T7.1 — 학생 응시 결과
+// 참조: docs/planning/11-score-predictor.md §1 (산출물 A/B/C)
+//
+// ⚠️ 이 3개 모델은 06-database-design.md(v1 ERD)에는 없다 — v2 신규 기능이라
+//    이 스키마 파일 안에서 SSOT를 새로 정의한다(T7.1 지시서 기준).
+// 참조: docs/planning/07-coding-convention.md §2.2 (네이밍 규칙)
+// ─────────────────────────────────────────────
+
+/// 시험 응시 결과 — 한 학생이 한 시험지(Test)를 푼 1회 채점 기록.
+/// 같은 (testId, studentId) 재응시/재채점을 막지 않는다(재시험·정정 입력 허용) — 최신값은
+/// takenAt 내림차순 조회로 가른다.
+model TestResult {
+  id        String   @id @default(uuid()) @db.Uuid
+  testId    String   @map("test_id") @db.Uuid
+  studentId String   @map("student_id") @db.Uuid
+  /// 응시(채점 입력) 일시 — 별도 입력이 없으면 서버 처리 시각
+  takenAt   DateTime @default(now()) @map("taken_at")
+  /// 자동 채점 총점
+  score     Float
+  /// 판독기 계산값 — src/lib/predictor/predictStudentScore.ts (v0, 잠정) 산출물.
+  /// ⚠️ 진짜 능력 추정 엔진(11-score-predictor.md §1-B)이 아직 없어 잠정 추정치다.
+  predictedScore Float    @map("predicted_score")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  test           Test            @relation(fields: [testId], references: [id], onDelete: Cascade)
+  student        Student         @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  answers        ProblemAnswer[]
+  /// 1:1 — 실제 FK는 AnalysisReport.testResultId(unique)가 소유한다(순환 FK 회피).
+  analysisReport AnalysisReport?
+
+  @@index([testId, studentId, takenAt])
+  @@map("test_result")
+}
+
+/// 문항별 학생 응답 + 자동 채점 결과.
+model ProblemAnswer {
+  id           String @id @default(uuid()) @db.Uuid
+  testResultId String @map("test_result_id") @db.Uuid
+  problemId    String @map("problem_id") @db.Uuid
+
+  /// 객관식 선택 번호(1~5) — 서술형이거나 미답이면 NULL
+  selectedChoice Int?    @map("selected_choice")
+  /// 서술형 채점 점수(0~100, 배점 대비 비율) — 객관식이거나 미답이면 NULL
+  essayScore     Float?  @map("essay_score")
+  /// 자동 채점 결과 — 객관식은 정답 일치, 서술형은 essayScore 기준선 판정(잠정 60점)
+  isCorrect      Boolean @map("is_correct")
+  /// 시험지 내 문항 순서(TestProblem.orderIndex 대응)
+  sequence       Int
+
+  testResult TestResult @relation(fields: [testResultId], references: [id], onDelete: Cascade)
+  problem    Problem    @relation(fields: [problemId], references: [id], onDelete: Restrict)
+
+  @@index([testResultId, sequence])
+  @@map("problem_answer")
+}
+
+/// 응시 1건에 대한 분석 리포트 — 단원별 성적·난이도 분포·복습 추천 단원.
+model AnalysisReport {
+  id           String @id @default(uuid()) @db.Uuid
+  /// 1:1 FK(unique) — 이 모델이 관계를 소유한다.
+  testResultId String @unique @map("test_result_id") @db.Uuid
+
+  totalScore     Float @map("total_score")
+  predictedScore Float @map("predicted_score")
+  /// {unitId: 정답률(0~100)} — 04-database-design.md 스타일과 달리 v2 신규라 jsonb로 유지
+  unitScores Json @map("unit_scores") @db.JsonB
+  /// {difficulty(easy|mid|hard): {correct, total}}
+  difficultyDistribution Json @map("difficulty_distribution") @db.JsonB
+  /// 복습 추천 단원 id 배열 — 정답률 낮은 순 최대 3개(잠정 기준선 60%)
+  recommendedUnits String[] @map("recommended_units")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  testResult TestResult @relation(fields: [testResultId], references: [id], onDelete: Cascade)
+
+  @@map("analysis_report")
 }
 
 // ─────────────────────────────────────────────

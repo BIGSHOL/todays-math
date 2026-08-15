@@ -34,9 +34,13 @@ import {
   MOCK_PROGRESS,
   MOCK_STUDENTS,
   MOCK_TEST_PROBLEMS_BY_TEST_ID,
+  MOCK_TEST_RESULT_FIXTURE_TEST,
+  MOCK_TEST_RESULT_FIXTURE_TEST_PROBLEMS,
+  MOCK_TEST_RESULT_PROBLEMS,
   MOCK_TESTS,
   MOCK_UNITS,
   problemId,
+  testProblemId,
   USER_TEACHER_ID,
 } from "@/mocks/data";
 import type { MockUnit } from "@/mocks/data/units";
@@ -86,8 +90,41 @@ interface ProblemRow {
   reviewStatus: ReviewStatus;
   directUseAllowed: boolean;
   pool: "shared" | "private";
+  /** 원본 배점(08-import-ledger.md 이관 메타데이터) — 계약(ProblemEntity)엔 없어 픽스처만 채운다. */
+  score: number | null;
   createdAt: Date;
   updatedAt: Date;
+}
+
+interface TestResultRow {
+  id: string;
+  testId: string;
+  studentId: string;
+  takenAt: Date;
+  score: number;
+  predictedScore: number;
+  createdAt: Date;
+}
+
+interface ProblemAnswerRow {
+  id: string;
+  testResultId: string;
+  problemId: string;
+  selectedChoice: number | null;
+  essayScore: number | null;
+  isCorrect: boolean;
+  sequence: number;
+}
+
+interface AnalysisReportRow {
+  id: string;
+  testResultId: string;
+  totalScore: number;
+  predictedScore: number;
+  unitScores: Record<string, number>;
+  difficultyDistribution: Record<Difficulty, { correct: number; total: number }>;
+  recommendedUnits: string[];
+  createdAt: Date;
 }
 
 interface TestRow {
@@ -185,8 +222,22 @@ function toProgressRow(entity: ProgressEntity): ProgressRow {
 function toProblemRow(entity: ProblemEntity): ProblemRow {
   return {
     ...entity,
+    // ProblemEntity(계약)엔 score가 없다 — 균등 배분 채점 경로(gradeAnswers.ts) 테스트는
+    // MOCK_TEST_RESULT_PROBLEMS(score 직접 지정)로 별도 커버한다.
+    score: null,
     createdAt: new Date(entity.createdAt),
     updatedAt: new Date(entity.updatedAt),
+  };
+}
+
+/** T7.1 채점 테스트 전용 — score(배점)를 직접 지정한 픽스처는 ISO 문자열만 Date로 바꾼다. */
+function toFixtureProblemRow(
+  fixture: (typeof MOCK_TEST_RESULT_PROBLEMS)[number],
+): ProblemRow {
+  return {
+    ...fixture,
+    createdAt: new Date(fixture.createdAt),
+    updatedAt: new Date(fixture.updatedAt),
   };
 }
 
@@ -212,6 +263,25 @@ function toTestProblemRow(
   };
 }
 
+/** T7.1 채점 테스트 전용 Test 픽스처 — printedAt이 항상 값이 있어 별도 변환 함수를 둔다. */
+function toFixtureTestRow(): TestRow {
+  const fixture = MOCK_TEST_RESULT_FIXTURE_TEST;
+  return {
+    id: fixture.id,
+    userId: fixture.userId,
+    classId: fixture.classId,
+    studentId: fixture.studentId,
+    testType: fixture.testType,
+    rangeStartUnitId: fixture.rangeStartUnitId,
+    rangeEndUnitId: fixture.rangeEndUnitId,
+    status: fixture.status,
+    modified: fixture.modified,
+    testDate: new Date(`${fixture.testDate}T00:00:00.000Z`),
+    printedAt: new Date(fixture.printedAt),
+    createdAt: new Date(fixture.createdAt),
+  };
+}
+
 let classRows: ClassRow[] = [];
 let studentRows: StudentRow[] = [];
 let unitRows: UnitRow[] = [];
@@ -219,6 +289,9 @@ let progressRows: ProgressRow[] = [];
 let problemRows: ProblemRow[] = [];
 let testRows: TestRow[] = [];
 let testProblemRows: TestProblemRow[] = [];
+let testResultRows: TestResultRow[] = [];
+let problemAnswerRows: ProblemAnswerRow[] = [];
+let analysisReportRows: AnalysisReportRow[] = [];
 
 /** 매 테스트 시작 전 Mock 픽스처 상태로 되돌린다 — 테스트 간 상태 오염 방지. */
 export function resetPrismaTestDouble() {
@@ -233,6 +306,7 @@ export function resetPrismaTestDouble() {
     MOCK_PROBLEM_MISSING_ANSWER,
     ...extraEligibleProblems(),
   ].map(toProblemRow);
+  problemRows.push(...MOCK_TEST_RESULT_PROBLEMS.map(toFixtureProblemRow));
   testRows = MOCK_TESTS.map(toTestRow);
   testProblemRows = Object.entries(MOCK_TEST_PROBLEMS_BY_TEST_ID).flatMap(
     ([testId, items]) => items.map((item) => toTestProblemRow(testId, item)),
@@ -259,6 +333,21 @@ export function resetPrismaTestDouble() {
     orderIndex: 1,
     replaced: false,
   });
+
+  // ── T7.1 채점 테스트 전용(TestResult/ProblemAnswer/AnalysisReport) ──
+  testRows.push(toFixtureTestRow());
+  testProblemRows.push(
+    ...MOCK_TEST_RESULT_FIXTURE_TEST_PROBLEMS.map((item, i) => ({
+      id: testProblemId(900 + i),
+      testId: MOCK_TEST_RESULT_FIXTURE_TEST.id,
+      problemId: item.problemId,
+      orderIndex: item.orderIndex,
+      replaced: false,
+    })),
+  );
+  testResultRows = [];
+  problemAnswerRows = [];
+  analysisReportRows = [];
 }
 resetPrismaTestDouble();
 
@@ -334,6 +423,30 @@ function hydrateTestProblems(
     ...row,
     problem:
       problemRows.find((problem) => problem.id === row.problemId) ?? null,
+  }));
+}
+
+function hydrateTestResults(
+  rows: TestResultRow[],
+  include?: { answers?: boolean; analysisReport?: boolean },
+) {
+  if (!include) return rows;
+  return rows.map((row) => ({
+    ...row,
+    ...(include.answers
+      ? {
+          answers: problemAnswerRows.filter(
+            (a) => a.testResultId === row.id,
+          ),
+        }
+      : {}),
+    ...(include.analysisReport
+      ? {
+          analysisReport:
+            analysisReportRows.find((r) => r.testResultId === row.id) ??
+            null,
+        }
+      : {}),
   }));
 }
 
@@ -705,6 +818,131 @@ const prismaModels = {
       return row;
     },
   },
+  testResult: {
+    async create({
+      data,
+    }: {
+      data: {
+        testId: string;
+        studentId: string;
+        score: number;
+        predictedScore: number;
+        takenAt?: Date;
+      };
+    }) {
+      const row: TestResultRow = {
+        id: randomUUID(),
+        testId: data.testId,
+        studentId: data.studentId,
+        takenAt: data.takenAt ?? new Date(),
+        score: data.score,
+        predictedScore: data.predictedScore,
+        createdAt: new Date(),
+      };
+      testResultRows.push(row);
+      return row;
+    },
+    async findMany({
+      where,
+      include,
+      orderBy,
+    }: {
+      where?: Record<string, unknown>;
+      include?: { answers?: boolean; analysisReport?: boolean };
+      orderBy?: unknown;
+    } = {}) {
+      const rows = applyOrder(
+        testResultRows.filter((row) => matchesWhere(row, where)),
+        orderBy,
+      );
+      return hydrateTestResults(rows, include);
+    },
+    async findFirst({
+      where,
+      include,
+      orderBy,
+    }: {
+      where?: Record<string, unknown>;
+      include?: { answers?: boolean; analysisReport?: boolean };
+      orderBy?: unknown;
+    } = {}) {
+      const rows = applyOrder(
+        testResultRows.filter((row) => matchesWhere(row, where)),
+        orderBy,
+      );
+      const [first] = hydrateTestResults(rows.slice(0, 1), include);
+      return first ?? null;
+    },
+    async findUnique({ where }: { where: { id: string } }) {
+      return testResultRows.find((row) => row.id === where.id) ?? null;
+    },
+  },
+  problemAnswer: {
+    async create({
+      data,
+    }: {
+      data: {
+        testResultId: string;
+        problemId: string;
+        selectedChoice: number | null;
+        essayScore: number | null;
+        isCorrect: boolean;
+        sequence: number;
+      };
+    }) {
+      const row: ProblemAnswerRow = {
+        id: randomUUID(),
+        testResultId: data.testResultId,
+        problemId: data.problemId,
+        selectedChoice: data.selectedChoice,
+        essayScore: data.essayScore,
+        isCorrect: data.isCorrect,
+        sequence: data.sequence,
+      };
+      problemAnswerRows.push(row);
+      return row;
+    },
+    async findMany({ where }: { where?: Record<string, unknown> } = {}) {
+      return problemAnswerRows.filter((row) => matchesWhere(row, where));
+    },
+  },
+  analysisReport: {
+    async create({
+      data,
+    }: {
+      data: {
+        testResultId: string;
+        totalScore: number;
+        predictedScore: number;
+        unitScores: Record<string, number>;
+        difficultyDistribution: Record<
+          Difficulty,
+          { correct: number; total: number }
+        >;
+        recommendedUnits: string[];
+      };
+    }) {
+      const row: AnalysisReportRow = {
+        id: randomUUID(),
+        testResultId: data.testResultId,
+        totalScore: data.totalScore,
+        predictedScore: data.predictedScore,
+        unitScores: data.unitScores,
+        difficultyDistribution: data.difficultyDistribution,
+        recommendedUnits: data.recommendedUnits,
+        createdAt: new Date(),
+      };
+      analysisReportRows.push(row);
+      return row;
+    },
+    async findUnique({ where }: { where: { testResultId: string } }) {
+      return (
+        analysisReportRows.find(
+          (row) => row.testResultId === where.testResultId,
+        ) ?? null
+      );
+    },
+  },
 };
 
 export const prismaTestDouble = {
@@ -721,6 +959,9 @@ export const prismaTestDouble = {
         problemRows,
         testRows,
         testProblemRows,
+        testResultRows,
+        problemAnswerRows,
+        analysisReportRows,
       });
       try {
         return await arg(prismaModels);
@@ -732,6 +973,9 @@ export const prismaTestDouble = {
         problemRows = snapshot.problemRows;
         testRows = snapshot.testRows;
         testProblemRows = snapshot.testProblemRows;
+        testResultRows = snapshot.testResultRows;
+        problemAnswerRows = snapshot.problemAnswerRows;
+        analysisReportRows = snapshot.analysisReportRows;
         throw error;
       }
     }

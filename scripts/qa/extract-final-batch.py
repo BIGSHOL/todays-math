@@ -116,6 +116,13 @@ def main() -> None:
         action="store_true",
         help="소단원 보유 구간(2024·2025 기출모음)만 — --group 프리셋",
     )
+    ap.add_argument(
+        "--ids-file",
+        help="examId 목록 파일(한 줄에 하나)로 대상을 정확히 지정한다. "
+        "파일에 적힌 순서를 그대로 따르므로 우선순위 큐를 그대로 먹일 수 있다. "
+        "점수 예측기의 '연속 회차를 완성시키는 660편'이 이 경로로 들어간다"
+        "(docs/planning/11-score-predictor.md §2.1).",
+    )
     a = ap.parse_args()
 
     outdir = pathlib.Path(a.out)
@@ -130,6 +137,22 @@ def main() -> None:
 
     # 소단원이 없으면 단원 분류가 안 돼 적재되지 않는다(10-handoff §8.2 실측).
     # 2024·2025 기출모음에는 있고 2023 이전에는 없다 — 헛일을 줄이려고 고른다.
+    if a.ids_file:
+        ids = [
+            line.strip()
+            for line in pathlib.Path(a.ids_file).read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        order = {v: i for i, v in enumerate(ids)}
+        before = len(pairs)
+        pairs = [p for p in pairs if str(p["examId"]) in order]
+        pairs.sort(key=lambda p: order[str(p["examId"])])   # 목록 순서 = 우선순위
+        missing = len(ids) - len(pairs)
+        print(
+            f"목록 필터: {before} → {len(pairs)}편  ({a.ids_file})"
+            + (f"  ⚠️ 페어에 없는 id {missing}개" if missing else "")
+        )
+
     wanted = list(a.group or [])
     if a.topic_rich:
         wanted += TOPIC_RICH_GROUPS

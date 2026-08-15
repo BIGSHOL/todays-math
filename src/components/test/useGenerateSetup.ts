@@ -54,6 +54,35 @@ function applyClass(
   setHard(cls.difficultyRatio.hard);
 }
 
+function fitDifficultyRatio(
+  ratio: { easy: number; mid: number; hard: number },
+  count: number,
+) {
+  const keys = ["easy", "mid", "hard"] as const;
+  const total = keys.reduce((sum, key) => sum + ratio[key], 0);
+  if (total <= 0) return { easy: 0, mid: count, hard: 0 };
+
+  const scaled = keys.map((key) => ({
+    key,
+    exact: (ratio[key] * count) / total,
+  }));
+  const result = {
+    easy: Math.floor(scaled[0]!.exact),
+    mid: Math.floor(scaled[1]!.exact),
+    hard: Math.floor(scaled[2]!.exact),
+  };
+  let remaining = count - result.easy - result.mid - result.hard;
+  scaled
+    .sort((a, b) => (b.exact % 1) - (a.exact % 1))
+    .forEach(({ key }) => {
+      if (remaining > 0) {
+        result[key] += 1;
+        remaining -= 1;
+      }
+    });
+  return result;
+}
+
 export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
   const router = useRouter();
   const [classes, setClasses] = useState<ClassEntity[]>([]);
@@ -160,7 +189,24 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
     async (countOverride?: number) => {
       if (!classId) return;
       const count = countOverride ?? problemCount;
-      if (countOverride !== undefined) setProblemCount(countOverride);
+      const difficultyRatio =
+        countOverride === undefined
+          ? { easy, mid, hard }
+          : fitDifficultyRatio({ easy, mid, hard }, count);
+      if (countOverride !== undefined) {
+        setProblemCount(countOverride);
+        setEasy(difficultyRatio.easy);
+        setMid(difficultyRatio.mid);
+        setHard(difficultyRatio.hard);
+      }
+      if (
+        difficultyRatio.easy + difficultyRatio.mid + difficultyRatio.hard !==
+        count
+      ) {
+        setInsufficient(null);
+        setSubmitError("난이도 배분의 합이 문항 수와 같아야 합니다");
+        return;
+      }
       setBusy(true);
       setSubmitError(null);
       try {
@@ -173,7 +219,7 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
             testType,
             testDate,
             problemCount: count,
-            difficultyRatio: { easy, mid, hard },
+            difficultyRatio,
             ...(testType === "review"
               ? { rangeStartUnitId, rangeEndUnitId }
               : {}),
