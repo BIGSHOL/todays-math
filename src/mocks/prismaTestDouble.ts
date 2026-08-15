@@ -122,7 +122,10 @@ interface AnalysisReportRow {
   totalScore: number;
   predictedScore: number;
   unitScores: Record<string, number>;
-  difficultyDistribution: Record<Difficulty, { correct: number; total: number }>;
+  difficultyDistribution: Record<
+    Difficulty,
+    { correct: number; total: number }
+  >;
   recommendedUnits: string[];
   createdAt: Date;
 }
@@ -148,6 +151,39 @@ interface TestProblemRow {
   problemId: string;
   orderIndex: number;
   replaced: boolean;
+}
+
+/** T7.3 — 예측기 코퍼스 적재기(scripts/predictor/load-exams.ts) 전용. */
+interface ExamRow {
+  id: string;
+  externalExamId: string;
+  school: string;
+  level: string;
+  grade: number;
+  subject: string;
+  subjectRaw: string | null;
+  year: number;
+  semester: number;
+  round: string;
+  totalScore: number;
+  questionCount: number;
+  sourceFile: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface ExamQuestionRow {
+  id: string;
+  examId: string;
+  number: number;
+  score: number;
+  qtype: string;
+  difficultyLabel: string | null;
+  topicRaw: string | null;
+  unitId: string | null;
+  answer: string | null;
+  hasFigure: boolean;
+  problemId: string | null;
 }
 
 const PROBLEM_TYPES: ProblemType[] = ["계산", "개념", "활용", "서술형"];
@@ -292,6 +328,8 @@ let testProblemRows: TestProblemRow[] = [];
 let testResultRows: TestResultRow[] = [];
 let problemAnswerRows: ProblemAnswerRow[] = [];
 let analysisReportRows: AnalysisReportRow[] = [];
+let examRows: ExamRow[] = [];
+let examQuestionRows: ExamQuestionRow[] = [];
 
 /** 매 테스트 시작 전 Mock 픽스처 상태로 되돌린다 — 테스트 간 상태 오염 방지. */
 export function resetPrismaTestDouble() {
@@ -348,6 +386,8 @@ export function resetPrismaTestDouble() {
   testResultRows = [];
   problemAnswerRows = [];
   analysisReportRows = [];
+  examRows = [];
+  examQuestionRows = [];
 }
 resetPrismaTestDouble();
 
@@ -435,16 +475,13 @@ function hydrateTestResults(
     ...row,
     ...(include.answers
       ? {
-          answers: problemAnswerRows.filter(
-            (a) => a.testResultId === row.id,
-          ),
+          answers: problemAnswerRows.filter((a) => a.testResultId === row.id),
         }
       : {}),
     ...(include.analysisReport
       ? {
           analysisReport:
-            analysisReportRows.find((r) => r.testResultId === row.id) ??
-            null,
+            analysisReportRows.find((r) => r.testResultId === row.id) ?? null,
         }
       : {}),
   }));
@@ -943,6 +980,67 @@ const prismaModels = {
       );
     },
   },
+  exam: {
+    async findUnique({ where }: { where: { externalExamId: string } }) {
+      return (
+        examRows.find((row) => row.externalExamId === where.externalExamId) ??
+        null
+      );
+    },
+    async findMany({ where }: { where?: Record<string, unknown> } = {}) {
+      return examRows.filter((row) => matchesWhere(row, where));
+    },
+    async count({ where }: { where?: Record<string, unknown> } = {}) {
+      return examRows.filter((row) => matchesWhere(row, where)).length;
+    },
+    async upsert({
+      where,
+      update,
+      create,
+    }: {
+      where: { externalExamId: string };
+      update: Partial<
+        Omit<ExamRow, "id" | "externalExamId" | "createdAt" | "updatedAt">
+      >;
+      create: Omit<ExamRow, "id" | "createdAt" | "updatedAt">;
+    }) {
+      const now = new Date();
+      const row = examRows.find(
+        (r) => r.externalExamId === where.externalExamId,
+      );
+      if (row) {
+        Object.assign(row, update, { updatedAt: now });
+        return row;
+      }
+      const created: ExamRow = {
+        id: randomUUID(),
+        ...create,
+        createdAt: now,
+        updatedAt: now,
+      };
+      examRows.push(created);
+      return created;
+    },
+  },
+  examQuestion: {
+    async findMany({ where }: { where?: Record<string, unknown> } = {}) {
+      return examQuestionRows.filter((row) => matchesWhere(row, where));
+    },
+    async count({ where }: { where?: Record<string, unknown> } = {}) {
+      return examQuestionRows.filter((row) => matchesWhere(row, where)).length;
+    },
+    async deleteMany({ where }: { where?: Record<string, unknown> } = {}) {
+      const keep = examQuestionRows.filter((row) => !matchesWhere(row, where));
+      const removed = examQuestionRows.length - keep.length;
+      examQuestionRows = keep;
+      return { count: removed };
+    },
+    async createMany({ data }: { data: Array<Omit<ExamQuestionRow, "id">> }) {
+      const rows = data.map((d) => ({ id: randomUUID(), ...d }));
+      examQuestionRows.push(...rows);
+      return { count: rows.length };
+    },
+  },
 };
 
 export const prismaTestDouble = {
@@ -962,6 +1060,8 @@ export const prismaTestDouble = {
         testResultRows,
         problemAnswerRows,
         analysisReportRows,
+        examRows,
+        examQuestionRows,
       });
       try {
         return await arg(prismaModels);
@@ -976,6 +1076,8 @@ export const prismaTestDouble = {
         testResultRows = snapshot.testResultRows;
         problemAnswerRows = snapshot.problemAnswerRows;
         analysisReportRows = snapshot.analysisReportRows;
+        examRows = snapshot.examRows;
+        examQuestionRows = snapshot.examQuestionRows;
         throw error;
       }
     }
