@@ -47,3 +47,6 @@ scripts/import/reports/*.json
 
 # QA 감사 상세 리포트(대용량, 재생성 가능) — 통과 원장(ocr-audit-clean.txt)만 커밋한다
 scripts/qa/reports/*.json
+
+# 파이썬 캐시
+__pycache__/
