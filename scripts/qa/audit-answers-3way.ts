@@ -1,22 +1,25 @@
 /**
- * DB 정답을 **바깥 두 출처와 함께** 대조한다 — PDF 정답면 + HWP 원본 (트랙 B-1).
+ * DB 정답을 **PDF 정답면 · HWP 원본**과 함께 본다 (트랙 B-1).
  *
- * 왜 3자인가: 2자 대조(DB↔PDF)는 어긋났을 때 **누가 틀렸는지 못 가른다.**
- * 실제로 표본 26건을 지면과 맞춰 보니 절반 가까이가 우리 오답이 아니라
- * 「같은 답을 다르게 적은 것」이었다. 바깥 출처가 둘이면 판정이 서게 된다:
+ * ⚠️ **HWP 는 독립 출처가 아니다 — DB 정답의 출처다.**
+ * 처음에는 3자 대조로 판정을 세울 생각이었는데, 실측에서 DB 와 HWP 가
+ * **54건 전부 글자까지 같았다.** `extract-final-batch.py` 가 완료본 HWP 의
+ * `answer` 필드를 그대로 실었기 때문이다. 그래서 HWP 는 「우리가 옳은가」를
+ * 가르는 데 못 쓴다. 독립 출처는 **완료본 PDF 뒤쪽 정답면 하나뿐**이다.
  *
- * | HWP | PDF 정답면 | 판정 |
+ * 그래도 셋을 같이 보면 **어긋남의 성격**을 가를 수 있다:
+ *
+ * | 갈래 | 뜻 | 할 일 |
  * |---|---|---|
- * | DB 와 같음 | DB 와 다름 | **PDF 추출 결함** — DB 를 그대로 둔다 |
- * | DB 와 다름 | DB 와 다름, 둘이 서로 같음 | **DB 오답 확정** — 교정 대상 |
- * | DB 와 다름 | DB 와 다름, 둘도 서로 다름 | 셋 다 다름 — 사람이 본다 |
- * | 없음 | — | 보류(HWP 추출 대기) |
+ * | `이관누락` | DB≠HWP 인데 PDF≡HWP — 원본 두 형태가 같다 | **이관이 틀렸다. 교정 확정** |
+ * | `원본두필드가갈림` | DB≡HWP 인데 PDF 만 다름 | 학교 문서 안에서 갈린 것. 인쇄된 정답면이 정본 |
+ * | `PDF표기만다름` | DB≡HWP≡PDF (값은 같고 표기만) | 표기 통일 문제 |
+ * | `셋다다름` | 셋이 서로 다름 | 사람이 본다 |
  *
- * HWP 산출물은 트랙 D 가 만든다(`scripts/qa/reports/hwp/<examId>.json`).
- * 다른 워크트리에 있으면 `HWP_DIR` 로 가리킨다. **트랙 D 의 파일은 읽기만 한다.**
+ * HWP 산출물은 트랙 D 가 만든다(`reports/hwp/<examId>.json`). 내 몫만 급히 뽑은
+ * `reports/hwp-b/` 도 같이 읽는다. **트랙 D 의 파일은 읽기만 한다.**
  *
- *   npx tsx scripts/qa/audit-answers-3way.ts
- *   HWP_DIR=../잔여-D-HWP/scripts/qa/reports/hwp npx tsx scripts/qa/audit-answers-3way.ts
+ *   HWP_DIR=reports/hwp-b,../잔여-D-HWP/scripts/qa/reports/hwp npx tsx scripts/qa/audit-answers-3way.ts
  *
  * **DB 를 건드리지 않는다.**
  */
@@ -25,7 +28,7 @@ import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { canon, canonLoose, stripUnits } from "./answer-notation";
 
 const OFFICIAL_DIR = "scripts/qa/reports/official-answers";
-const HWP_DIR = process.env.HWP_DIR ?? "scripts/qa/reports/hwp";
+const HWP_DIRS = (process.env.HWP_DIR ?? "scripts/qa/reports/hwp-b").split(",");
 const CLASSIFIED = "scripts/qa/reports/answer-mismatch-classified.json";
 const OUT = "scripts/qa/reports/answer-3way.json";
 
@@ -64,18 +67,22 @@ function sameAnswer(a: string, b: string): boolean {
 /** `<examId>-<번호>` → HWP 정답 */
 async function loadHwp(): Promise<Map<string, string>> {
   const out = new Map<string, string>();
-  let files: string[] = [];
-  try {
-    files = (await readdir(HWP_DIR)).filter((f) => f.endsWith(".json"));
-  } catch {
-    return out;
+  const files: Array<[string, string]> = [];
+  for (const dir of HWP_DIRS) {
+    try {
+      for (const f of await readdir(dir)) {
+        if (f.endsWith(".json")) files.push([dir, f]);
+      }
+    } catch {
+      // 그 디렉터리가 아직 없을 수 있다(트랙 D 가 도는 중).
+    }
   }
-  for (const file of files) {
+  for (const [dir, file] of files) {
     const examId = Number(file.replace(/\.json$/, ""));
     if (!Number.isFinite(examId)) continue;
     let doc: { questions?: Array<{ number: number; answer: string | null }> };
     try {
-      doc = JSON.parse(await readFile(`${HWP_DIR}/${file}`, "utf-8"));
+      doc = JSON.parse(await readFile(`${dir}/${file}`, "utf-8"));
     } catch {
       continue;
     }
@@ -101,7 +108,7 @@ async function main(): Promise<void> {
   ).length;
 
   console.log("── 3자 대조 (DB ↔ PDF 정답면 ↔ HWP 원본) ──");
-  console.log(`HWP 산출물 ${HWP_DIR}`);
+  console.log(`HWP 산출물 ${HWP_DIRS.join(" ")}`);
   console.log(
     `  시험지 ${examsWithHwp.size}편 · 정답 ${hwp.size}문항 / PDF 정답면 ${officialFiles}편`,
   );
@@ -126,19 +133,34 @@ async function main(): Promise<void> {
       }
       const hwpMatchesDb = sameAnswer(third, row.ours);
       const hwpMatchesPdf = sameAnswer(third, row.official);
-      if (hwpMatchesDb && !hwpMatchesPdf) {
-        push("PDF추출결함", { ...row, hwp: third } as Row);
+      const exact = third === row.ours;
+      const entry = { ...row, hwp: third, dbEqualsHwpExactly: exact } as Row;
+      if (hwpMatchesDb && hwpMatchesPdf) {
+        push("PDF표기만다름", entry);
+      } else if (hwpMatchesDb && !hwpMatchesPdf) {
+        push("원본두필드가갈림", entry);
       } else if (!hwpMatchesDb && hwpMatchesPdf) {
-        push("DB오답확정", { ...row, hwp: third } as Row);
-      } else if (hwpMatchesDb && hwpMatchesPdf) {
-        push("셋다같음", { ...row, hwp: third } as Row);
+        push("이관누락", entry);
       } else {
-        push("셋다다름", { ...row, hwp: third } as Row);
+        push("셋다다름", entry);
       }
     }
   }
 
+  const exactRows = [...verdicts.values()]
+    .flat()
+    .filter((r) => (r as Row & { hwp?: string }).hwp !== undefined);
+  const exact = exactRows.filter(
+    (r) => (r as Row & { dbEqualsHwpExactly?: boolean }).dbEqualsHwpExactly,
+  ).length;
   const total = target.reduce((n, g) => n + g.count, 0);
+  if (exactRows.length > 0) {
+    console.log(
+      `
+DB 정답이 HWP 원본과 **글자까지 같음** ${exact} / ${exactRows.length}` +
+        ` — 이관이 원본을 그대로 실었다는 뜻이다(HWP 는 독립 출처가 아니다).`,
+    );
+  }
   console.log(`\n판정 대상 ${total}건 (표기차이로 걷힌 것은 제외)`);
   for (const [key, rows] of [...verdicts].sort((a, b) => b[1].length - a[1].length)) {
     console.log(`  ${key.padEnd(10)} ${String(rows.length).padStart(4)}`);
@@ -155,7 +177,7 @@ async function main(): Promise<void> {
     OUT,
     JSON.stringify(
       {
-        hwpDir: HWP_DIR,
+        hwpDirs: HWP_DIRS,
         hwpExams: examsWithHwp.size,
         hwpAnswers: hwp.size,
         total,

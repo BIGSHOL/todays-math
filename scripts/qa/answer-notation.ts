@@ -351,9 +351,14 @@ export function parts(value: string): Map<string, string> {
   return out;
 }
 
-/** 그 소문항의 답이 지면에 안 실렸다는 뜻인지 — `풀이 참조` `해설참조`. */
+/**
+ * 그 소문항의 답이 지면에 안 실렸다는 뜻인지 — `풀이 참조` `해설참조` `정답 아래 참조`.
+ *
+ * `extract-official-answers.py` 의 `SEE_SOLUTION` 과 같은 뜻으로 맞춰 둔다.
+ * 한쪽만 고치면 같은 블록이 파이썬에선 「답 없음」, 여기선 「읽기 실패」로 갈린다.
+ */
 export function isSeeSolution(value: string): boolean {
-  return /(?:풀이|해설)\s*참[조고]|^\s*참조|생략/.test(value);
+  return /(?:풀이|해설)\s*참[조고]|참[조고]\s*$|생략/.test(value.trim());
 }
 
 /**
