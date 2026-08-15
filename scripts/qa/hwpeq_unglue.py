@@ -57,8 +57,11 @@ _RIGHT = re.compile(r"(?<![\\A-Za-z])(" + _KW + r")(?=[A-Za-z0-9])")
 _OF = re.compile(r"(?<=[0-9}])of(?=[0-9{])")
 _HAS_OF = re.compile(r"(?<![A-Za-z])of(?![A-Za-z])")
 _ROOT = re.compile(r"(?<![\\A-Za-z])(root|ROOT)(?![A-Za-z])")
+# ⚠️ 접두는 **대소문자를 가리지 않는다.** testchanger 는 `v.upper().startswith("RM")` 로
+# 보므로 원본에 `rmbarAD` 처럼 소문자로 적혀 있어도 `\mathrm{barAD}` 를 내놓는다 —
+# 그러면 `bar` 가 오버라인이 아니라 글자로 지면에 나간다(실측 문항의 2.68%).
 _RMIT = re.compile(
-    r"(?<![\\A-Za-z])(RM|IT)(TRIANGLE|ANGLE|BAR|triangle|angle|bar)(?![a-z])"
+    r"(?<![\\A-Za-z])([Rr][Mm]|[Ii][Tt])(TRIANGLE|ANGLE|BAR|triangle|angle|bar)(?![a-z])"
 )
 
 # `hwpeq_to_latex` 의 역매핑에 없어 그대로 새어 나오는 HWP 키워드.

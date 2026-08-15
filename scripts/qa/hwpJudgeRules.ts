@@ -31,6 +31,10 @@ const WATERMARK_LINES = [
   /^\s*대구광역시\s*내신\s*수학\s*연구회\s*$/,
   /^\s*(?:워드|오검|완료|검수|교정|작업)\s*[:：]\s*\S{0,20}\s*$/,
 ];
+// ⚠️ 지면 머리말(`2024년 1학기 중간고사` / `학원로고` / `강민구` …)은 **여기 넣지 않는다.**
+// 한 번 넣어 봤는데 `학원로고` 줄만 지워지고 `달서고 2학년 수학1`·사람 이름 줄은 남아,
+// **차단 근거만 없애고 오염은 그대로 들여보내는** 결과가 됐다. 다섯 줄 덩어리의 경계를
+// 확실히 못 자르므로 지우지 말고 `H12_HWP지면머리말` 로 **막는다**(0.26%).
 /** 작업자 서명 바로 앞에 오는 홀로 선 `정답` 줄. 서명이 있을 때만 지운다 —
  *  `정답` 이 진짜 본문일 수도 있어 단독으로는 근거가 못 된다. */
 const ANSWER_TAG_LINE = /^\s*정답\s*$/;
@@ -278,6 +282,19 @@ export function judgeSignals(input: JudgeInput): Signals {
   if (row.content.includes("[표]") && !hwpContent.includes("[표]")) H.push("H4_표구조손실");
 
   if (input.hwpMathFail > input.dbMathFail) H.push("H5_렌더열위");
+
+  // HWP 쪽에도 PUA 가 남은 편이 있다(실측 문항의 0.18%). DB 에 없는 PUA 를 새로
+  // 집어넣는 건 개악이다 — S3 로 잡은 훼손을 다른 훼손으로 바꾸는 꼴이 된다.
+  if (PUA.test(hwpContent) && !PUA.test(row.content)) H.push("H11_HWP에PUA");
+
+  // **HWP 에도 지면 머리말이 딸려 들어온 편이 있다**(실측 문항의 0.26%).
+  //   `2024년 1학기 중간고사 / 지수 ~ 삼각함수 / 강동고 2학년 수학1 / 학원로고 / 강민구`
+  // 다섯 줄 덩어리인데, 위 두 줄(고사명·학원로고)만 줄 단위로 확실히 지울 수 있고
+  // 학교·과목·사람 이름 줄은 경계를 못 믿는다. 그래서 **지운 뒤에도 흔적이 남으면**
+  // 교체하지 않고 사람에게 넘긴다 — 학생 시험지에 남의 학원 이름이 찍히면 안 된다.
+  if (PAGE_FURNITURE.test(hwpContent) && !PAGE_FURNITURE.test(row.content)) {
+    H.push("H12_HWP지면머리말");
+  }
   if (dbChoices.length >= 4 && (hwp.choices?.length ?? 0) < 4) H.push("H6_보기손실");
 
   // 그림 파일이 안 붙은 문항의 `[그림] 말풀이` 는 **유일한 단서**다(10-handoff §8.5).

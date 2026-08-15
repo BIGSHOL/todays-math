@@ -196,6 +196,34 @@ describe("교체하면 안 되는 것 (개악 방지)", () => {
     expect(verdictOf(sig)).toBe("보류");
   });
 
+  it("HWP 에만 PUA 가 있으면 보류한다 — 훼손을 다른 훼손으로 바꾸는 꼴이다", () => {
+    const row = dbRow({ content: "$l ⫽ m$ 일 때 $x$ 의 값은? ⁄ • 값" });
+    const hwp = hwpQ({
+      stem: "$l m$ 일 때 $x$ 의 값은?",
+      choices: ["$3$", "$4$", "$5$", "$6$", "$7$"],
+    });
+    const sig = judge(row, hwp, row.content, ["3", "4", "5", "6", "7"]);
+    expect(sig.H).toContain("H11_HWP에PUA");
+    expect(verdictOf(sig)).toBe("보류");
+  });
+
+  it("HWP 에도 지면 머리말이 들어 있으면 보류한다 (실측 문항의 0.26%)", () => {
+    // ⚠️ 한때 `학원로고` 줄을 stripWatermark 로 지웠다. 그랬더니 **차단 근거만 사라지고**
+    // `달서고 2학년 수학1` · 강사 이름 줄은 그대로 남아 더 나빠졌다. 지우지 말고 막는다.
+    const row = dbRow({ content: "$6^{0}×8\\frac{2}{3}$ 의 값은?" });
+    const hwp = hwpQ({
+      stem: "$6^{0}×8^{\\frac{2}{3}}$ 의 값은?",
+      choices: [
+        "$0$", "$2$", "$4$", "$6$",
+        "$8$\n2024년 1학기 중간고사\n지수 ~ 삼각함수의 그래프\n달서고 2학년 수학1\n학원로고\n강민구",
+      ],
+    });
+    const sig = judge(row, hwp, row.content, ["0", "2", "4", "6", "8"]);
+    expect(buildHwpContent(hwp)).toContain("달서고 2학년 수학1");
+    expect(sig.H).toContain("H12_HWP지면머리말");
+    expect(verdictOf(sig)).toBe("보류");
+  });
+
   it("HWP 쪽 렌더가 더 나쁘면 보류한다", () => {
     const row = dbRow({ content: "$(x+2)(x-6)-9$ 를 인수분해한 것은? ⁄" });
     const hwp = hwpQ({ stem: "$\\left( x+2\\right) \\left( x-6)-9$ 를 인수분해한 것은?" });
