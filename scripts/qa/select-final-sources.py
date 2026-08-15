@@ -28,7 +28,13 @@ import os
 import sqlite3
 import sys
 
-IDX = r"D:\시험지 한글화\db\exam_index.db"
+import pathlib
+import sys
+
+sys.path.append(str(pathlib.Path(__file__).parent))
+from tc_paths import exam_index_db  # noqa: E402
+
+IDX = exam_index_db()
 INVENTORY = "scripts/qa/nfile-inventory.txt.gz"
 IMPORTED = "scripts/qa/imported-files.txt"
 OUT = "scripts/qa/reports/extract-queue.json"

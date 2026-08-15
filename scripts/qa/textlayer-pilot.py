@@ -15,7 +15,10 @@ import json
 import pathlib
 import sys
 
-TC = pathlib.Path(r"D:\시험지 한글화")
+sys.path.append(str(pathlib.Path(__file__).parent))
+from tc_paths import testchanger_dir  # noqa: E402
+
+TC = testchanger_dir()
 sys.path.append(str(TC))
 sys.path.append(str(TC / "db"))
 

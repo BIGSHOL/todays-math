@@ -13,7 +13,13 @@ LLM 토큰 0 — 전부 로컬 문자열 대조다.
 """
 import json, re, sqlite3, sys, unicodedata
 
-IDX = r"D:\시험지 한글화\db\exam_index.db"
+import pathlib
+import sys
+
+sys.path.append(str(pathlib.Path(__file__).parent))
+from tc_paths import exam_index_db  # noqa: E402
+
+IDX = exam_index_db()
 IN = "scripts/qa/reports/pastexam-dump.json"
 
 def sig(s: str) -> str:

@@ -9,7 +9,13 @@ Problem 백필용 레코드로 만든다. LLM 토큰 0 (SQLite 조회뿐).
 """
 import json, sqlite3, collections
 
-IDX = r"D:\시험지 한글화\db\exam_index.db"
+import pathlib
+import sys
+
+sys.path.append(str(pathlib.Path(__file__).parent))
+from tc_paths import exam_index_db  # noqa: E402
+
+IDX = exam_index_db()
 MAP = "scripts/qa/reports/source-map.json"
 OUT = "scripts/qa/reports/source-meta.json"
 
