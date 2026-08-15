@@ -80,3 +80,10 @@ export function testProblemId(seq: number): string {
 
 /** 목록/단건 조회에서 "존재하지 않는 id"를 표현할 때 공통으로 쓰는 임의의 유효 UUID. */
 export const NOT_FOUND_ID = makeId("0000", 1);
+
+// ── 응시 결과(TestResult/ProblemAnswer/AnalysisReport) — T7.1 ─────────────────
+/** 채점/분석 리포트 테스트 전용 Test — CLASS_A_ID 소속, 문항 3개(객관식 정답/오답 + 서술형). */
+export const TEST_RESULT_FIXTURE_TEST_ID = makeId("9000", 50);
+export function testResultFixtureProblemId(seq: number): string {
+  return makeId("5000", 300 + seq);
+}

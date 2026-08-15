@@ -3,15 +3,18 @@
  * 직렬화 헬퍼. 반/학생/진도/문제/시험지 API가 공용으로 사용한다.
  */
 import type {
+  AnalysisReport as AnalysisReportRow,
   Class as ClassRow,
   Problem as ProblemRow,
+  ProblemAnswer as ProblemAnswerRow,
   Progress as ProgressRow,
   Student as StudentRow,
   Test as TestRow,
   TestProblem as TestProblemRow,
+  TestResult as TestResultRow,
 } from "@prisma/client";
 
-import type { DifficultyRatio } from "@/contracts/common.contract";
+import type { Difficulty, DifficultyRatio } from "@/contracts/common.contract";
 import type {
   ClassEntity,
   ProgressEntity,
@@ -19,6 +22,11 @@ import type {
 } from "@/contracts/class.contract";
 import type { ProblemEntity, ProblemType } from "@/contracts/problem.contract";
 import type { TestEntity, TestProblemItem } from "@/contracts/test.contract";
+import type {
+  AnalysisReportEntity,
+  ProblemAnswerEntity,
+  TestResultEntity,
+} from "@/contracts/testresult.contract";
 
 export function serializeClass(row: ClassRow): ClassEntity {
   return {
@@ -107,5 +115,50 @@ export function serializeTestProblemItem(
     orderIndex: row.orderIndex,
     replaced: row.replaced,
     problem: serializeProblem(row.problem),
+  };
+}
+
+export function serializeTestResult(row: TestResultRow): TestResultEntity {
+  return {
+    id: row.id,
+    testId: row.testId,
+    studentId: row.studentId,
+    takenAt: row.takenAt.toISOString(),
+    score: row.score,
+    predictedScore: row.predictedScore,
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+export function serializeProblemAnswer(
+  row: ProblemAnswerRow,
+): ProblemAnswerEntity {
+  return {
+    id: row.id,
+    problemId: row.problemId,
+    selectedChoice: row.selectedChoice,
+    essayScore: row.essayScore,
+    isCorrect: row.isCorrect,
+    sequence: row.sequence,
+  };
+}
+
+export function serializeAnalysisReport(
+  row: AnalysisReportRow,
+): AnalysisReportEntity {
+  return {
+    id: row.id,
+    testResultId: row.testResultId,
+    totalScore: row.totalScore,
+    predictedScore: row.predictedScore,
+    // AnalysisReport.unitScores/difficultyDistribution은 jsonb — 계약 형태로 저장됨을 전제한다
+    // (Test/Class.difficultyRatio와 같은 패턴, serializeClass 참조).
+    unitScores: row.unitScores as Record<string, number>,
+    difficultyDistribution: row.difficultyDistribution as Record<
+      Difficulty,
+      { correct: number; total: number }
+    >,
+    recommendedUnits: row.recommendedUnits,
+    createdAt: row.createdAt.toISOString(),
   };
 }
