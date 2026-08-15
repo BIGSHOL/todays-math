@@ -70,6 +70,12 @@ NUMBER_HEAD = re.compile(r"^\s*(?:\[(\d{1,2})\]|(\d{1,2})\s*[.)])\s*(.*)$")
 CIRCLED = re.compile(r"^[①②③④⑤⑥⑦⑧⑨⑩]$")
 
 
+# 정답 목록의 지문 — `1. ④` 처럼 **번호와 원문자만** 있는 줄.
+# 문제 지면에는 이런 줄이 거의 없다(실측: 오검출로 유명한 3766 p3 은 0줄,
+# 진짜 정답면은 14~17줄). 문제지면 표지를 뒤집을 근거로 이것만 쓴다.
+ANSWER_LINE = re.compile(r"^\s*\d{1,2}\s*[.)]\s*[①-⑩]\s*$")
+
+
 def answer_pages(doc: fitz.Document) -> list[int]:
     """정답·해설 지면 번호. 뒤쪽부터 훑되 본문 지면은 제외한다."""
     hits = []
@@ -80,10 +86,17 @@ def answer_pages(doc: fitz.Document) -> list[int]:
         # 표지어가 있고 **문항 줄머리가 촘촘한** 지면만 정답면으로 본다.
         if not ANSWER_PAGE.search(text[:400]):
             continue
+        lines = text.splitlines()
+        answer_lines = sum(1 for ln in lines if ANSWER_LINE.match(ln))
         # 문제 지면 표지가 있으면 정답면이 아니다.
-        if PROBLEM_PAGE.search(text):
+        #
+        # ⚠️ 다만 **정답 목록이 뚜렷하면 표지를 뒤집는다.** 해설에 배점표가 붙은
+        # 정답면이 `[1점]` 때문에 통째로 버려져 시험지 3편(3681·5404·5687)의
+        # 정답면을 잃고 있었다(실측, 지면 렌더로 확인). 문제 지면은 이 줄이 0이라
+        # 원래 막으려던 오검출(3766 p3)은 그대로 막힌다.
+        if PROBLEM_PAGE.search(text) and answer_lines < 5:
             continue
-        heads = sum(1 for ln in text.splitlines() if NUMBER_HEAD.match(ln))
+        heads = sum(1 for ln in lines if NUMBER_HEAD.match(ln))
         if heads >= 5:
             hits.append(i)
     return hits
@@ -95,6 +108,12 @@ PREFIX = re.compile(r"^\s*(\[[^\]]{0,20}\]|정답\s*[:：]?|답\s*[:：])\s*")
 SUFFIX = re.compile(r"\s*\[[^\]]{0,40}\]\s*$")
 # 해설 본문 조각. 정답면 안에도 풀이가 섞여 있어 이런 건 답으로 보면 안 된다.
 NOT_ANSWER = re.compile(r"^(=|->|→|∴|따라서|즉)")
+
+
+# 소문항 번호. 여럿이면 답이 길어져도 풀이문이 아니라 **답 목록**이다.
+PART_HEAD = re.compile(r"[⑴-⑽]|\(\s*\d\s*\)")
+# 답이 지면에 안 실렸다는 뜻의 문구. **그것만** 있을 때 정답 없음으로 본다.
+SEE_SOLUTION = re.compile(r"(?:풀이|해설)\s*(?:참조|참고)|참조\s*$|생략")
 
 
 def parse_answer(rest: str) -> str | None:
@@ -110,16 +129,29 @@ def parse_answer(rest: str) -> str | None:
 
     if not head or NOT_ANSWER.match(head):
         return None
+
+    parts = PART_HEAD.findall(head)
     # `풀이 참조` 류는 정답이 아니다 — 답이 지면에 인쇄돼 있지 않다는 뜻이다.
-    if re.search(r"풀이|참조|생략|해설", head):
-        return None
+    #
+    # ⚠️ 예전에는 `풀이|참조|생략|해설` 이 **어디든** 있으면 통째로 버렸다. 그래서
+    # `⑴ 해설참조 ⑵ <,<,>` `(1) 풀이참고 (2) 참 ⑶ 거짓` 처럼 **일부 소문항만**
+    # 풀이참조인 답이 전부 날아갔다(실측 108건 중 다수). 소문항이 둘 이상이면
+    # 남은 소문항에 진짜 답이 있으므로 버리지 않는다.
+    if SEE_SOLUTION.search(head):
+        if len(parts) < 2:
+            return None
+        # 소문항이 전부 풀이참조면 역시 정답이 없는 것이다.
+        if not re.search(r"[0-9①-⑩=<>√π]", SEE_SOLUTION.sub("", head)):
+            return None
 
     # `③` 또는 `③, ⑤`
     circled = re.findall(r"[①②③④⑤⑥⑦⑧⑨⑩]", head)
     if circled and len(head) <= 12:
         return ", ".join(circled)
-    # 짧은 수식·값 (풀이문이 이어지면 길어지므로 길이로 가른다)
-    if len(head) <= 20 and not re.search(r"[가-힣]{4,}", head):
+    # 짧은 수식·값 (풀이문이 이어지면 길어지므로 길이로 가른다).
+    # 소문항이 여럿이면 그만큼 길어지는 게 정상이라 한도를 소문항 수에 맞춰 늘린다.
+    limit = 20 if len(parts) < 2 else 20 * len(parts)
+    if len(head) <= limit and not re.search(r"[가-힣]{4,}", head):
         return head
     return None
 
@@ -175,10 +207,58 @@ def extract(pdf: pathlib.Path, save_png: bool, outdir: pathlib.Path) -> dict:
         doc.close()
 
 
+def reparse() -> None:
+    """이미 뽑아 둔 산출물의 `text` 로 `parsed` 만 다시 계산한다.
+
+    `parse_answer` 를 고쳤을 때 2,240편을 다시 열 필요가 없다(토큰 0·수십 분 절약).
+    블록을 고르는 규칙(지면 판정·줄머리·지면 내 순서)은 **건드리지 않는다** —
+    그 다섯 실패는 이미 한 번씩 겪었고 다시 열면 진짜 정답이 가짜에 덮인다.
+    """
+    stat = collections.Counter()
+    for path in sorted(OUTDIR.glob("*.json")):
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        changed = False
+        for number, item in doc.get("items", {}).items():
+            before = item.get("parsed")
+            head = item.get("text", "")
+            m = NUMBER_HEAD.match(head.strip())
+            after = parse_answer(m.group(3)) if m else None
+            stat["문항"] += 1
+            if before == after:
+                continue
+            changed = True
+            if before is None and after is not None:
+                stat["새로 읽힘"] += 1
+            elif before is not None and after is None:
+                stat["읽던 것을 잃음"] += 1
+            else:
+                stat["값이 바뀜"] += 1
+            item["parsed"] = after
+        if changed:
+            path.write_text(
+                json.dumps(doc, ensure_ascii=False), encoding="utf-8"
+            )
+            stat["고친 편"] += 1
+    print("\n── 다시 읽기 (PDF 재열람 없음) ──")
+    for key, n in stat.most_common():
+        print(f"  {key} {n}")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--out", default=None, help="산출 디렉터리 (기본은 official-answers)")
+    ap.add_argument(
+        "--ids",
+        default=None,
+        help="쉼표로 나눈 examId 만 다시 뽑는다(이미 있는 산출물은 덮어쓴다)",
+    )
     ap.add_argument("--offset", type=int, default=0)
+    ap.add_argument(
+        "--reparse",
+        action="store_true",
+        help="PDF 를 다시 열지 않고 이미 뽑아 둔 블록 원문(text)으로 parsed 만 다시 계산한다",
+    )
     ap.add_argument(
         "--png",
         action="store_true",
@@ -186,11 +266,22 @@ def main() -> None:
     )
     a = ap.parse_args()
 
+    global OUTDIR
+    if a.out:
+        OUTDIR = pathlib.Path(a.out)
+
+    if a.reparse:
+        reparse()
+        return
+
     pairs = [
         p
         for p in json.load(open(PAIRS, encoding="utf-8"))["pairs"]
         if p.get("pdf")
     ]
+    if a.ids:
+        want = {int(x) for x in a.ids.split(",") if x.strip()}
+        pairs = [p for p in pairs if p["examId"] in want]
     if a.limit:
         pairs = pairs[a.offset : a.offset + a.limit]
 
