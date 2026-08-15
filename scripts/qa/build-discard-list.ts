@@ -11,7 +11,7 @@
  *
  *   npx tsx scripts/qa/build-discard-list.ts
  *   → scripts/qa/reports/discard-candidates.json   (기계용 전량)
- *   → docs/planning/11-discard-candidates.md       (원장님용 문서)
+ *   → docs/planning/12-discard-candidates.md       (원장님용 문서)
  *
  * 원본 위치는 두 갈래로 찾는다.
  *  - 기출: `externalId` 가 `<examId>-<번호>` 다. exam_index.db 에서 N드라이브
@@ -37,7 +37,7 @@ const SOLVED_DIRS = [
   "scripts/qa/reports/answer-solved-r3",
 ];
 const JSON_OUT = "scripts/qa/reports/discard-candidates.json";
-const DOC_OUT = "docs/planning/11-discard-candidates.md";
+const DOC_OUT = "docs/planning/12-discard-candidates.md";
 const SENTINEL = "정답 없음";
 const PER_SECTION = 50;
 
