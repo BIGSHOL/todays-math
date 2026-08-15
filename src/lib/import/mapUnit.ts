@@ -78,6 +78,21 @@ export function mapUnitHint(
     if (chapterHit) return { status: "mapped", unitId: chapterHit.id };
   }
 
+  // 부분문자열로 안 붙는 표기 차이를 여기서 건진다.
+  // 시험지는 "나머지정리와 인수정리", 우리 트리는 "나머지와 인수정리(1)" 처럼
+  // 같은 단원인데 글자가 조금씩 다르다(실측 1,360건 중 다수).
+  //
+  // ⚠️ 학년이 좁혀졌을 때만 한다. 전 학년(초1~고3) 풀에서 유사도를 재면
+  // 중등 "좌표와 그래프" 가 초2 "표와 그래프" 에 붙는다(실측 25건).
+  // 장(chapter) 이름에도 하지 않는다 — 소단원 여러 개를 묶은 이름이라
+  // 붙여 봐야 그중 아무 소단원에 실린다.
+  if (scoped.length > 0) {
+    for (const hint of hints) {
+      const fuzzySection = bestSimilar(scoped, hint, "section");
+      if (fuzzySection) return { status: "mapped", unitId: fuzzySection.id };
+    }
+  }
+
   return {
     status: "unclassified",
     reason: `단원 힌트 '${cleaned}'를 교육과정 트리에 연결하지 못했습니다.`,
@@ -96,4 +111,60 @@ function longestHit(
   if (hits.length === 0) return undefined;
   hits.sort((a, b) => b[field].length - a[field].length);
   return hits[0];
+}
+
+/**
+ * 유사도 하한. 이 아래는 붙이지 않고 미분류로 남긴다.
+ *
+ * 틀린 단원에 붙은 문항은 그 단원으로 출제할 때 엉뚱한 문제로 섞여 나간다.
+ * 미분류는 나중에 다시 시도하면 그만이므로 **의심스러우면 안 붙이는 쪽**이다.
+ * 실측(2026-08-15): 같은 단원의 표기 차이는 0.80 이상,
+ * 중단원급 모호 힌트("제곱근과 실수" ↔ "제곱근의 뜻과 성질")는 0.33 으로
+ * 사이가 넓게 벌어진다.
+ */
+const SIMILARITY_FLOOR = 0.6;
+
+/** 비교용 정규화 — 공백·장 번호·괄호 차시 표기·구두점을 턴다. */
+function normalizeForCompare(value: string): string {
+  return value
+    .replace(/^\s*\d+\s*[.)]\s*/, "")
+    .replace(/\([^)]*\)/g, "")
+    .replace(/[\s.,·'"''""\[\]{}]/g, "");
+}
+
+function bigrams(value: string): Set<string> {
+  const out = new Set<string>();
+  for (let i = 0; i + 1 < value.length; i += 1) out.add(value.slice(i, i + 2));
+  return out;
+}
+
+/** 문자 바이그램 Dice 계수(0~1). 띄어쓰기·어미 차이에 강하다. */
+function similarity(a: string, b: string): number {
+  const left = bigrams(normalizeForCompare(a));
+  const right = bigrams(normalizeForCompare(b));
+  if (left.size === 0 || right.size === 0) return 0;
+  let shared = 0;
+  for (const gram of left) if (right.has(gram)) shared += 1;
+  return (2 * shared) / (left.size + right.size);
+}
+
+/**
+ * 하한을 넘는 후보 중 가장 닮은 단원. 동점이면 교육과정 순서상 앞선 쪽
+ * (예: "나머지와 인수정리(1)" 과 "(2)" 는 동점이므로 (1)).
+ */
+function bestSimilar(
+  pool: UnitLike[],
+  hint: string,
+  field: "section" | "chapter",
+): UnitLike | undefined {
+  let best: UnitLike | undefined;
+  let bestScore = 0;
+  for (const unit of pool) {
+    const score = similarity(hint, unit[field]);
+    if (score > bestScore) {
+      bestScore = score;
+      best = unit;
+    }
+  }
+  return bestScore >= SIMILARITY_FLOOR ? best : undefined;
 }

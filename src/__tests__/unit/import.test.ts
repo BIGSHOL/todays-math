@@ -23,6 +23,59 @@ const UNITS = [
   },
 ];
 
+// 실제 완료본 시험지의 소단원 표기가 우리 트리와 어긋난 사례들(2026-08-15 실측).
+// 부분문자열로는 하나도 안 붙던 것들이다.
+const OVERLAP_UNITS = [
+  {
+    id: "unit-remainder",
+    grade: "공통수학1",
+    chapter: "1. 다항식",
+    section: "나머지와 인수정리(1)",
+  },
+  {
+    id: "unit-remainder-2",
+    grade: "공통수학1",
+    chapter: "1. 다항식",
+    section: "나머지와 인수정리(2)",
+  },
+  {
+    id: "unit-letter",
+    grade: "중1",
+    chapter: "3. 문자와 식",
+    section: "문자의 사용과 식의 값",
+  },
+  {
+    id: "unit-polymul",
+    grade: "중3",
+    chapter: "2. 다항식의 곱셈과 인수분해",
+    section: "다항식의 곱셈",
+  },
+  {
+    id: "unit-sqrt",
+    grade: "중3",
+    chapter: "1. 실수와 그 계산",
+    section: "제곱근의 뜻과 성질",
+  },
+  {
+    id: "unit-irrational",
+    grade: "중3",
+    chapter: "1. 실수와 그 계산",
+    section: "무리수와 실수",
+  },
+  {
+    id: "unit-sqrt-calc",
+    grade: "중3",
+    chapter: "1. 실수와 그 계산",
+    section: "근호를 포함한 식의 계산",
+  },
+  {
+    id: "unit-elem-graph",
+    grade: "초2",
+    chapter: "2-5 표와 그래프",
+    section: "2-5-1 자료를 분류하여 표로 나타내기",
+  },
+];
+
 describe("[T3.0] blocksToLatex", () => {
   it("text/equation을 마크다운+LaTeX로 이어 붙인다", () => {
     const result = blocksToLatex([
@@ -323,6 +376,66 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
     const result = mapUnitHint("유한소수와 유리수와 소수", UNITS, "중2");
     expect(result.status).toBe("mapped");
     if (result.status === "mapped") expect(result.unitId).toBe("unit-finite");
+  });
+
+  it("표기가 다르면 단어 겹침으로 붙인다 — '나머지정리와 인수정리'", () => {
+    const result = mapUnitHint(
+      "나머지정리와 인수정리",
+      OVERLAP_UNITS,
+      "공통수학1",
+    );
+    expect(result.status).toBe("mapped");
+    if (result.status === "mapped")
+      expect(result.unitId).toBe("unit-remainder");
+  });
+
+  it("띄어쓰기가 달라도 같은 곳으로 간다 — '나머지 정리와 인수정리'", () => {
+    const result = mapUnitHint(
+      "나머지 정리와 인수정리",
+      OVERLAP_UNITS,
+      "공통수학1",
+    );
+    expect(result.status).toBe("mapped");
+    if (result.status === "mapped")
+      expect(result.unitId).toBe("unit-remainder");
+  });
+
+  it("꼬리만 다른 표기를 붙인다 — '문자의 사용과 식의 계산'", () => {
+    const result = mapUnitHint("문자의 사용과 식의 계산", OVERLAP_UNITS, "중1");
+    expect(result.status).toBe("mapped");
+    if (result.status === "mapped") expect(result.unitId).toBe("unit-letter");
+  });
+
+  it("원본 오타를 붙인다 — '다항식의 곱셉'", () => {
+    const result = mapUnitHint("다항식의 곱셉", OVERLAP_UNITS, "중3");
+    expect(result.status).toBe("mapped");
+    if (result.status === "mapped") expect(result.unitId).toBe("unit-polymul");
+  });
+
+  // 중단원급 힌트는 소단원 여러 개에 걸친다. 하나를 골라 붙이면 그 단원으로
+  // 출제할 때 엉뚱한 문제가 섞인다 — 틀린 매핑보다 미분류가 낫다.
+  it("여러 소단원에 걸치는 모호한 힌트는 붙이지 않는다 — '제곱근과 실수'", () => {
+    const result = mapUnitHint("제곱근과 실수", OVERLAP_UNITS, "중3");
+    expect(result.status).toBe("unclassified");
+  });
+
+  it("트리에 없는 개념은 억지로 붙이지 않는다 — '조립제법'", () => {
+    const result = mapUnitHint("조립제법", OVERLAP_UNITS, "공통수학1");
+    expect(result.status).toBe("unclassified");
+  });
+
+  // 실측 사고: 학년 힌트가 없으면 풀이 초1~고3 전체가 된다. 이때 "좌표와 그래프"가
+  // 초2 "2-5 표와 그래프" 에 0.67 로 붙어 중등 문항이 초등 단원에 실렸다.
+  it("학년을 모르면 유사도 매칭을 하지 않는다", () => {
+    const result = mapUnitHint("좌표와 그래프", OVERLAP_UNITS);
+    expect(result.status).toBe("unclassified");
+  });
+
+  // 장 이름은 소단원 여러 개를 묶은 이름이라 유사도로 붙이면 그중 아무 소단원에
+  // 실린다. 장은 부분문자열이 정확히 맞을 때만 쓴다.
+  it("장 이름에는 유사도 매칭을 하지 않는다", () => {
+    const result = mapUnitHint("실수와 그 계신", OVERLAP_UNITS, "중3");
+    expect(result.status).toBe("unclassified");
   });
 
   it("매핑 실패분은 unclassified로 남기고 버리지 않는다", () => {
