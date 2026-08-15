@@ -73,7 +73,9 @@ const UNICODE_MATH_MAP: Array<[RegExp, string]> = [
   [/≠/g, "\\ne "],
   [/±/g, "\\pm "],
   [/∞/g, "\\infty "],
-  [/√/g, "\\sqrt "],
+  // √ 는 여기서 다루지 않는다 — `radicalToSqrt` 가 피연산자 범위를 보고 옮긴다.
+  // (예전 `[/√/g, "\\sqrt "]` 는 `√10` 을 `\sqrt 10` = `\sqrt{1}0` 으로 만들어
+  //  1 에만 근호가 씌워졌다. 2자리 이상 근호 300여 건이 이렇게 잘못 그려졌다.)
   [/∈/g, "\\in "],
   [/∉/g, "\\notin "],
   [/⊂/g, "\\subset "],
@@ -96,7 +98,125 @@ const UNICODE_MATH_MAP: Array<[RegExp, string]> = [
   [/⁷/g, "^{7}"],
   [/⁸/g, "^{8}"],
   [/⁹/g, "^{9}"],
+  // 2026-08-15 전 문항 스캔에서 KaTeX 가 못 그리던 나머지 기호
+  [/□/g, "\\square "],
+  [/∅/g, "\\varnothing "],
+  [/¼/g, "\\frac{1}{4}"],
 ];
+
+/**
+ * 근호 날문자 `√` → `\sqrt{...}`.
+ *
+ * 완료본 텍스트레이어 추출물은 근호를 `√5` 처럼 날문자로 싣는다. **근호가 어디까지
+ * 덮는지(막대의 길이)는 텍스트에 남아 있지 않다** — `√x^{2}-6x` 가 원본에서
+ * `\sqrt{x^2-6x}` 였는지 `\sqrt{x}^2-6x` 였는지 알 수 없다.
+ *
+ * 그래서 **피연산자가 명백할 때만** 감싸고, 애매하면 `\surd`(근호 기호만, 막대 없음)로
+ * 둔다. 뜻을 바꾸느니 안 바꾸는 쪽이 낫다.
+ *
+ * 명백한 경우: `√{…}` · `√(…)` · `√12`(숫자 전체) · `√-3` · `√a`(단일 문자)
+ * 애매한 경우: 뒤에 `^` `_` 나 다른 글자·소수점이 붙는 것 → `\surd`
+ */
+const closingIndex = (s: string, open: string, close: string): number => {
+  let depth = 0;
+  for (let i = 0; i < s.length; i += 1) {
+    if (s[i] === "\\") {
+      i += 1;
+      continue;
+    }
+    if (s[i] === open) depth += 1;
+    else if (s[i] === close) {
+      depth -= 1;
+      if (depth === 0) return i;
+    }
+  }
+  return -1;
+};
+
+/** 근호 뒤에서 피연산자를 읽는다. 애매하면 null. */
+const readRadicand = (
+  rest: string,
+): { inner: string; consumed: number } | null => {
+  if (rest.startsWith("{") || rest.startsWith("(")) {
+    const close = rest.startsWith("{")
+      ? closingIndex(rest, "{", "}")
+      : closingIndex(rest, "(", ")");
+    if (close < 0) return null;
+    return { inner: rest.slice(1, close), consumed: close + 1 };
+  }
+
+  const numeric = /^(-?\d+)/.exec(rest);
+  if (numeric) {
+    const next = rest[numeric[0].length] ?? "";
+    // 소수점·지수·첨자가 이어지면 근호 범위를 단정할 수 없다.
+    if (next === "." || next === "^" || next === "_") return null;
+    return { inner: numeric[1]!, consumed: numeric[0].length };
+  }
+
+  const letter = /^(-?[a-zA-Z])/.exec(rest);
+  if (letter) {
+    const next = rest[letter[0].length] ?? "";
+    if (/[a-zA-Z0-9^_]/.test(next)) return null;
+    return { inner: letter[1]!, consumed: letter[0].length };
+  }
+
+  return null;
+};
+
+/**
+ * `\left` / `\right` 가 **같은 중괄호 그룹 안에서** 짝을 이루는지 본다.
+ *
+ * KaTeX 는 `\left` 를 연 그룹 안에서 `\right` 로 닫기를 요구한다. 원본이 훼손돼
+ * (예: OCR 이 만든 `\frac{x-a)^{2}}`) 짝이 그룹 경계를 넘어가면 수식 전체가
+ * 빨간 오류가 된다 — 실데이터 1건에서 확인(2026-08-15).
+ */
+const leftRightBalanced = (s: string): boolean => {
+  const stack: number[] = [0]; // 그룹별 열려 있는 \left 수
+  for (let i = 0; i < s.length; i += 1) {
+    if (s.startsWith("\\left", i)) {
+      stack[stack.length - 1]! += 1;
+      i += 4;
+    } else if (s.startsWith("\\right", i)) {
+      if (stack[stack.length - 1]! === 0) return false;
+      stack[stack.length - 1]! -= 1;
+      i += 5;
+    } else if (s[i] === "\\") {
+      i += 1; // 이스케이프된 문자는 건너뛴다
+    } else if (s[i] === "{") {
+      stack.push(0);
+    } else if (s[i] === "}") {
+      if (stack.pop() !== 0) return false; // 그룹 안에서 안 닫힌 \left
+      if (stack.length === 0) return false;
+    }
+  }
+  return stack.length === 1 && stack[0] === 0;
+};
+
+/** 짝이 어긋나면 크기조절을 포기하고 평범한 괄호로 떨어뜨린다(읽히는 게 우선). */
+const dropUnbalancedLeftRight = (s: string): string =>
+  leftRightBalanced(s)
+    ? s
+    : s.replace(/\\left(?![a-zA-Z])|\\right(?![a-zA-Z])/g, "");
+
+export const radicalToSqrt = (text: string): string => {
+  if (!text.includes("√")) return text;
+  let out = "";
+  for (let i = 0; i < text.length; i += 1) {
+    if (text[i] !== "√") {
+      out += text[i];
+      continue;
+    }
+    const operand = readRadicand(text.slice(i + 1));
+    if (!operand) {
+      out += "\\surd ";
+      continue;
+    }
+    // 피연산자 안에 또 근호가 있을 수 있다(`√(2-√5)`) — 재귀로 처리한다.
+    out += `\\sqrt{${radicalToSqrt(operand.inner)}}`;
+    i += operand.consumed;
+  }
+  return out;
+};
 
 const MULTILINE_ENV =
   /\\begin\{(cases|align|aligned|array|matrix|pmatrix|bmatrix|vmatrix|split|gather|gathered)\}/;
@@ -362,6 +482,8 @@ export const applyMathInnerNormalization = (inner: string): string => {
   // 빨간 에러로 raw 노출(사용자가 "raw LaTeX 노출"로 오인). 제거한다.
   // `\$` (의도된 리터럴 달러 기호) 는 보존.
   s = s.replace(/(?<!\\)\$/g, "");
+  // 근호는 표 치환 **이전에** — 피연산자를 그대로 읽어야 범위를 판단할 수 있다.
+  s = radicalToSqrt(s);
   for (const [re, repl] of UNICODE_MATH_MAP) s = s.replace(re, repl);
   s = repeatingDigitsToDots(s);
   // improperToMixed 가 `\frac` 와 `\dfrac` 둘 다 매치, 반환은 `\frac` 표준화.
@@ -384,6 +506,9 @@ export const applyMathInnerNormalization = (inner: string): string => {
   //    guard 가 없는 path(KaTeXInline 등)에서 빨간 글씨로 leak. 함수 끝에서 한
   //    번 더 cleanMalformedLatex → 어떤 caller 든 자기완결적으로 깨끗.
   s = cleanMalformedLatex(s);
+  // 8) `\left`/`\right` 짝 검사 — cleanMalformedLatex 는 이중 wrap 만 정리하고
+  //    그룹 경계를 넘어 어긋난 짝은 놓친다. 여기서 최종적으로 떨어뜨린다.
+  s = dropUnbalancedLeftRight(s);
   return s;
 };
 
