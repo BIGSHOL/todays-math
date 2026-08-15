@@ -1,7 +1,7 @@
 # 트랙 E — '오늘의 시험' (기출 예상 점수 판독기 적용)
 
 착수 2026-08-16 · 설계 SSOT `docs/planning/11-score-predictor.md` ·
-화면 확정 `05-design-system.md §8.7` (D-38~D-43)
+화면 확정 `05-design-system.md §8.7` (D-39~D-44)
 
 A/B/C 트랙과 **파일·DB 컬럼이 겹치지 않는다.** 새 테이블과 새 컬럼만 쓴다.
 
