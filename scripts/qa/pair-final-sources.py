@@ -82,9 +82,14 @@ for exam_id, f in by_exam.items():
         pairs.append({"examId": exam_id, "pdf": None, "hwp": f["hwp"][0]})
 
 meta = {
-    e: dict(zip(("school", "grade", "subject", "year", "semester", "round"), r))
+    # ⚠️ `level` 을 빼면 안 된다. extract-final-batch 가 unit_grade(level, ...) 로
+    # 학년 라벨을 만드는데, level 이 없으면 중등 시험지가 전부 고등 분기로 빠져
+    # 학년 미해석이 된다(2026-08-15 실측 793편 16,459문항).
+    e: dict(
+        zip(("school", "level", "grade", "subject", "year", "semester", "round"), r)
+    )
     for e, *r in con.execute(
-        "select id, school, grade, subject, year, semester, round from exams"
+        "select id, school, level, grade, subject, year, semester, round from exams"
     )
 }
 for p in pairs:
