@@ -63,6 +63,12 @@ export interface ImportReportItem {
 
 export interface ImportReport {
   source: string;
+  /**
+   * 학년을 해석하지 못한 문항 수. 이 값이 크면 그 문항들은 초1~고3 전체
+   * 풀에서 단원을 고른다 — 중3 문항이 초4 단원에 실린다(2026-08-15 실측 513건).
+   * 조용히 지나가면 안 되므로 리포트에 숫자로 남긴다.
+   */
+  unresolvedGrade?: number;
   total: number;
   ok: number;
   unclassified: number;

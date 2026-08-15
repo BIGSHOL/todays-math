@@ -1,4 +1,4 @@
-import { mapUnitHint } from "./mapUnit";
+import { mapUnitHint, normalizeGrade } from "./mapUnit";
 import type {
   ImportDraft,
   ImportReport,
@@ -32,8 +32,13 @@ export function classifyDrafts(
 } {
   const items: ImportReportItem[] = [];
   const classified: Array<ImportDraft & { unitId: string }> = [];
+  const gradeLabels = new Set(units.map((unit) => unit.grade));
+  let unresolvedGrade = 0;
 
   for (const draft of drafts) {
+    const grade = normalizeGrade(draft.gradeHint ?? gradeHint);
+    if (grade === null || !gradeLabels.has(grade)) unresolvedGrade += 1;
+
     let figureUrls: string[] | undefined;
     if (draft.hasFigure) {
       figureUrls = options.resolveFigures?.(draft.externalId);
@@ -92,6 +97,7 @@ export function classifyDrafts(
         .length,
       skippedFigure: items.filter((item) => item.status === "skipped_figure")
         .length,
+      unresolvedGrade,
       items,
     },
   };

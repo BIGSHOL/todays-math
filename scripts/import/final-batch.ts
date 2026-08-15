@@ -126,6 +126,15 @@ export async function runFinalBatch(options: {
       `  미분류 ${report.unclassified} · 그림제외 ${report.skippedFigure}` +
         ` · 분류분 중 정답보유 ${withAnswer.length}`,
     );
+    // 학년을 모르면 초1~고3 전체 풀에서 단원을 고른다 — 중3 문항이 초4 단원에
+    // 실렸던 사고(513건)가 조용히 지나갔던 자리다. 크면 멈추고 원인을 볼 것.
+    if (report.unresolvedGrade) {
+      const share = (report.unresolvedGrade * 100) / Math.max(1, drafts.length);
+      console.log(
+        `  ⚠️ 학년 미해석 ${report.unresolvedGrade} (${share.toFixed(1)}%)` +
+          " — 이 문항들은 전 학년 풀에서 단원을 고릅니다. meta.grade 를 확인하세요.",
+      );
+    }
     if (topMiss.length > 0) {
       console.log("  미매핑 상위 힌트:");
       for (const [hint, n] of topMiss) {

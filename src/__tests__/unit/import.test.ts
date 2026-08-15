@@ -589,6 +589,22 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
     expect(result.status).toBe("unclassified");
   });
 
+  // 513건이 틀린 학년 단원에 실린 사고가 **조용히** 났다. 학년이 해석되지
+  // 않으면 초1~고3 전체 풀에서 단원을 고르는데, 리포트에 그 사실이 안 찍혔다.
+  // B단계로 4.3만 문항이 들어오므로 숫자로 보이게 만든다.
+  it("학년이 해석 안 된 문항 수를 리포트에 남긴다", () => {
+    const { report } = classifyDrafts(
+      "past_exam",
+      [
+        { ...figureDraft("e-1"), hasFigure: false, gradeHint: "중2" },
+        { ...figureDraft("e-2"), hasFigure: false, gradeHint: "수학" },
+        { ...figureDraft("e-3"), hasFigure: false, gradeHint: undefined },
+      ],
+      UNITS,
+    );
+    expect(report.unresolvedGrade).toBe(2);
+  });
+
   it("매핑 실패분은 unclassified로 남기고 버리지 않는다", () => {
     const { classified, report } = classifyDrafts(
       "past_exam",
