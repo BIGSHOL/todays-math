@@ -237,6 +237,24 @@ async function build(): Promise<{
       if (problem.unit.grade !== expected) gradeWrong += 1;
     }
 
+    // "본문 중복 233건" 과 "`externalId` 미상 233건" 이 같은 수인 것은 우연이 아니라
+    // **같은 집합**이다. 그걸 문서가 스스로 증명하게 숫자를 같이 뽑는다.
+    // 좁은 정의(DB 본문이 글자까지 같음)는 230/85 로 셋이 적다 — 차이 3건은
+    // "우리 DB 안에서는 유일한데 원본에 쌍둥이가 있는" 행이다.
+    const unresolvedRows = problems.filter((problem) => !problem.externalId);
+    const byContent = new Map<string, number>();
+    for (const problem of problems) {
+      const key = squeeze(problem.content);
+      byContent.set(key, (byContent.get(key) ?? 0) + 1);
+    }
+    const identicalRows = problems.filter(
+      (problem) => (byContent.get(squeeze(problem.content)) ?? 0) > 1,
+    );
+    const identicalGroups = [...byContent.values()].filter((n) => n > 1).length;
+    const identicalYetFilled = identicalRows.filter(
+      (problem) => problem.externalId,
+    ).length;
+
     const buckets = new Map<string, typeof problems>();
     for (const problem of problems) {
       const candidates = candidatesFor(problem.content);
@@ -353,6 +371,11 @@ async function build(): Promise<{
       gradeMismatchRows: groups.reduce((sum, g) => sum + g.gradeMismatch, 0),
       gradeAuditedAll: gradeAudited,
       gradeWrongAll: gradeWrong,
+      transformedRows: problems.length,
+      unresolvedRows: unresolvedRows.length,
+      identicalRows: identicalRows.length,
+      identicalGroups,
+      identicalYetFilled,
     };
     return { groups, totals, evidence };
   } finally {
@@ -458,7 +481,7 @@ function render(
   );
   lines.push(
     `4. 해설로도 안 갈리는 ${totals.dbRows - totals.pairableRows}행(${totals.groups - totals.pairable}그룹)만 사람이 본다. ` +
-      "§4 에 그 그룹과, 따로 눈여겨볼 그룹을 함께 뽑아 뒀다.",
+      "§5 에 그 그룹과, 따로 눈여겨볼 그룹을 함께 뽑아 뒀다.",
   );
   lines.push("");
   lines.push(
@@ -468,7 +491,32 @@ function render(
   );
   lines.push("");
 
-  lines.push("## 3. 숫자");
+  lines.push("## 3. 이 233건 = `externalId` 미상 233건 (우연이 아니라 같은 집합)");
+  lines.push("");
+  lines.push(
+    `C-1 은 \`source='transformed'\` ${totals.transformedRows}행 중 ` +
+      `${totals.transformedRows - totals.unresolvedRows}행에 \`externalId\` 를 채우고 ` +
+      `**${totals.unresolvedRows}행**을 미상으로 남겼다. 그 수가 이 문서의 ${totals.dbRows}건과 같은 것은 ` +
+      "우연이 아니다 — **판정 규칙이 하나**라서 같은 집합이다. " +
+      "채우는 조건이 「원본 후보가 정확히 하나」이므로, 후보가 둘 이상인 행이 곧 미상이고 그것이 이 문서의 대상이다.",
+  );
+  lines.push("");
+  lines.push(
+    "`recover-rpm-answers.ts` 가 정답을 되찾을 때 건너뛴 「본문중복 제외」 도 같은 규칙이다 " +
+      "(`keysOf` 를 그대로 공유한다). 그래서 이 행들은 **정답도 그림도 한 건도 못 받았다** — " +
+      "`DB정답 0/233 · DB그림 0/233` 이 그 결과다. 원인 하나가 셋을 동시에 막고 있었다.",
+  );
+  lines.push("");
+  lines.push(
+    `다만 「본문 중복」을 **DB 본문이 글자까지 같은 것**으로 좁게 세면 ` +
+      `${totals.identicalRows}행 / ${totals.identicalGroups}그룹으로 ${totals.dbRows - totals.identicalRows}건 적다. ` +
+      `차이 ${totals.dbRows - totals.identicalRows}건은 **우리 DB 안에서는 유일한데 원본에 쌍둥이가 있는** 행이다 ` +
+      "(원본 두 행 중 하나만 적재됐다). 우리 쪽만 보면 안 보이고 원본을 봐야 드러난다. " +
+      `반대로 글자까지 같은 ${totals.identicalRows}행 중 \`externalId\` 가 채워진 것은 ${totals.identicalYetFilled}건이다.`,
+  );
+  lines.push("");
+
+  lines.push("## 4. 숫자");
   lines.push("");
   lines.push("| 항목 | 값 |");
   lines.push("|---|---|");
@@ -494,11 +542,11 @@ function render(
     `| 그룹 안 DB 행이 모두 같은 단원 | ${totals.sameUnit} / ${totals.groups} |`,
   );
   lines.push(
-    `| 원본 교재 학년 ≠ 배정 단원 학년 | ${totals.gradeMismatchRows}행 (${totals.gradeMismatchGroups}그룹) — §5 |`,
+    `| 원본 교재 학년 ≠ 배정 단원 학년 | ${totals.gradeMismatchRows}행 (${totals.gradeMismatchGroups}그룹) — §6 |`,
   );
   lines.push("");
 
-  lines.push("## 4. 사람이 봐야 하는 그룹");
+  lines.push("## 5. 사람이 봐야 하는 그룹");
   lines.push("");
   const exceptions = groups.filter(
     (group) =>
@@ -529,7 +577,7 @@ function render(
   }
   lines.push("");
 
-  lines.push("## 5. 곁다리로 드러난 것 — RPM 단원 학년 오배정 (트랙 C 소관 아님)");
+  lines.push("## 6. 곁다리로 드러난 것 — RPM 단원 학년 오배정 (트랙 C 소관 아님)");
   lines.push("");
   lines.push(
     `\`externalId\` 를 채우고 나니 **원본 교재 학년과 배정 단원 학년을 처음으로 대조할 수 있게 됐다.** ` +
@@ -577,7 +625,7 @@ function render(
   );
   lines.push("");
 
-  lines.push("## 6. 그룹별 근거표");
+  lines.push("## 7. 그룹별 근거표");
   lines.push("");
   lines.push(
     "`정답`·`그림`·`figBox` 는 **원본 기준**(`n/m` = 원본 후보 m개 중 n개 보유). " +
@@ -604,7 +652,7 @@ function render(
   }
   lines.push("");
 
-  lines.push("## 7. 문항 id 대조표");
+  lines.push("## 8. 문항 id 대조표");
   lines.push("");
   lines.push(
     "우리 `Problem.id` 와 원본 `questions.id` 의 앞 8자. 순서는 짝을 뜻하지 않는다 — " +
