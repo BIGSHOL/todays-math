@@ -45,7 +45,9 @@ export function ProblemContent({
               key={url}
               src={url}
               alt={figures.length > 1 ? `문항 그림 ${index + 1}` : "문항 그림"}
-              className="h-auto max-w-full"
+              // 원본이 최대 1,423px 이라 자연 크기로 두면 본문을 압도한다(실측 표시폭 1,178px).
+              // 작은 그림은 그대로 두고 큰 것만 줄인다.
+              className="h-auto w-auto max-w-full sm:max-w-[360px] print:max-w-[70mm]"
             />
           ))}
         </div>

@@ -110,3 +110,35 @@ describe("[그림] 직렬화 — API 응답까지 전달", () => {
     ).toEqual([]);
   });
 });
+
+describe("[그림] 본문에 박힌 `[그림] …` 설명", () => {
+  // 비전 OCR 이 그림을 **말로 옮겨** 본문에 끼워 넣었다(681건). 진짜 그림을 붙인
+  // 뒤에는 중복이고, "학원 로고…" 같은 배너 설명이 학생 시험지에 인쇄된다(59건).
+  //
+  // ⚠️ 렌더 계층에서 `[그림]` 뒤를 잘라내는 방식은 **쓰면 안 된다.** 설명은 발문
+  // 끝에만 있는 게 아니라 문장 중간에도 들어간다 — 실제 화면에서 확인:
+  //   "…지나지 않는 사분 [그림] 면은?"   ← 자르면 "면은?" 이 사라진다
+  //   "⑤ −12 [그림] 이차함수 ~ …"        ← 선택지 안에도 들어간다
+  // 정확히 걷어내려면 원본 ocr_json 의 figure 블록을 빼고 본문을 다시 만들어야
+  // 한다(scripts/figure/strip-figure-text.mjs). 그래서 화면은 본문을 그대로 그린다.
+  it("렌더는 본문을 손대지 않는다 — 문장 중간 설명을 잘라먹지 않는다", () => {
+    const midSentence = "지나지 않는 사분 [그림] 면은?";
+    const { container } = render(
+      <ProblemContent
+        content={midSentence}
+        figureUrls={["/figures/1/q01.png"]}
+      />,
+    );
+    expect(container.textContent).toContain("면은?");
+  });
+});
+
+describe("[그림] 표시 크기", () => {
+  // 원본이 최대 1,423px 이라 자연 크기로 두면 본문을 압도한다(실측 표시폭 1,178px).
+  it("과도하게 커지지 않도록 상한을 둔다", () => {
+    render(
+      <ProblemContent content={STEM} figureUrls={["/figures/1/q01.png"]} />,
+    );
+    expect(screen.getByRole("img").className).toContain("max-w-");
+  });
+});
