@@ -1,0 +1,7097 @@
+{
+ "cause": {
+  "생성시각": "2026-08-15T22:36:47.544Z",
+  "대상": 3247,
+  "소단원없음": 37,
+  "학년미상": 0,
+  "단원매핑실패": 1139,
+  "단원매핑성공": 2071,
+  "실체있는중간_단원매핑성공": 1400,
+  "그중_그림있음": 323,
+  "그중_그림없음": 1077
+ },
+ "미매핑힌트상위": [
+  [
+   "평면좌표",
+   40
+  ],
+  [
+   "정적분의 기하적 의미",
+   31
+  ],
+  [
+   "방정식 허근의 주기성",
+   30
+  ],
+  [
+   "로그 함수의 활용(1) - 방정식",
+   30
+  ],
+  [
+   "문자와 식",
+   28
+  ],
+  [
+   "조립제법",
+   27
+  ],
+  [
+   "지수함수와 로그함수의 도함수",
+   27
+  ],
+  [
+   "도형의 이동",
+   25
+  ],
+  [
+   "여러 가지 방정식",
+   24
+  ],
+  [
+   "수열의 수렴과 발산",
+   23
+  ],
+  [
+   "집합의 뜻과 포함관계",
+   21
+  ],
+  [
+   "원리합계",
+   19
+  ],
+  [
+   "지수 함수의 활용(1) - 방정식",
+   14
+  ],
+  [
+   "무리수 e와 자연로그",
+   13
+  ],
+  [
+   "좌표평면과 그래프",
+   13
+  ],
+  [
+   "방정식 $x ^{3} =1$의 허근",
+   12
+  ],
+  [
+   "지수 함수의 활용(1) - 부등식",
+   12
+  ],
+  [
+   "로그함수의 활용(1) - 방정식",
+   12
+  ],
+  [
+   "하",
+   12
+  ],
+  [
+   "로그 함수의 활용(1) - 부등식",
+   12
+  ]
+ ],
+ "mappableRows": [
+  {
+   "examId": "2643",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "2658",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "2658",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "2658",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "2661",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "2661",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "2661",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "2661",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "2661",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "2661",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "2661",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "2664",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "2664",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "2667",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "2683",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "2683",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "2683",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "2683",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "2683",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "2692",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "2692",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "2708",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "2723",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "2786",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "2798",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "2798",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "2900",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "2915",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "2923",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "2932",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "2933",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "2936",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "2937",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "2956",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "2957",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "2959",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "2959",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "2967",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "2983",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "2990",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "2991",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "2991",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "3011",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3024",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3045",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3046",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "3050",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3058",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3062",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3068",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "3080",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "3082",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3094",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3106",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "3127",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3133",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3134",
+   "n": 5,
+   "hasFig": true
+  },
+  {
+   "examId": "3138",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "3139",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3140",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3153",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3154",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3167",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "3176",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3176",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "3188",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3189",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "3202",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "3211",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3214",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3233",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3239",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "3239",
+   "n": 23,
+   "hasFig": false
+  },
+  {
+   "examId": "3242",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3244",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3252",
+   "n": 19,
+   "hasFig": true
+  },
+  {
+   "examId": "3253",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3292",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3295",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "3298",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "3299",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3299",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "3312",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "3317",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3317",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "3337",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3340",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3347",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3355",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "3361",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3370",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3372",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "3375",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3396",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3428",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3494",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3499",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3503",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "3503",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "3505",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "3505",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "3507",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3510",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "3512",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "3517",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3519",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "3521",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3525",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "3537",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "3537",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "3543",
+   "n": 19,
+   "hasFig": true
+  },
+  {
+   "examId": "3555",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3564",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3572",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3581",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3587",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "3589",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3592",
+   "n": 19,
+   "hasFig": false
+  },
+  {
+   "examId": "3595",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3606",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3618",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3622",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3622",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "3623",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "3625",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "3625",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "3628",
+   "n": 4,
+   "hasFig": true
+  },
+  {
+   "examId": "3640",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3640",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "3640",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "3643",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3645",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "3646",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3649",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "3651",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "3659",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "3660",
+   "n": 22,
+   "hasFig": true
+  },
+  {
+   "examId": "3666",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3667",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "3670",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "3675",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3679",
+   "n": 4,
+   "hasFig": true
+  },
+  {
+   "examId": "3679",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "3679",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "3679",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "3680",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "3680",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "3680",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "3682",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "3682",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "3695",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3695",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "3700",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "3703",
+   "n": 5,
+   "hasFig": true
+  },
+  {
+   "examId": "3703",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "3704",
+   "n": 5,
+   "hasFig": true
+  },
+  {
+   "examId": "3704",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "3709",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "3710",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "3712",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "3714",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "3715",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "3718",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3719",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "3721",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3725",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "3728",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "3729",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3729",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "3729",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "3733",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "3736",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3740",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3744",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "3750",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "3752",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "3754",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "3754",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "3754",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "3758",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "3760",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "3760",
+   "n": 19,
+   "hasFig": true
+  },
+  {
+   "examId": "3760",
+   "n": 24,
+   "hasFig": true
+  },
+  {
+   "examId": "3763",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "3763",
+   "n": 21,
+   "hasFig": true
+  },
+  {
+   "examId": "3764",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "3766",
+   "n": 5,
+   "hasFig": true
+  },
+  {
+   "examId": "3766",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "3768",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "3771",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "3771",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "3771",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "3771",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "3771",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "3774",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "3774",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "3775",
+   "n": 4,
+   "hasFig": true
+  },
+  {
+   "examId": "3775",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "3782",
+   "n": 5,
+   "hasFig": true
+  },
+  {
+   "examId": "3787",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "3788",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "3788",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "3790",
+   "n": 22,
+   "hasFig": true
+  },
+  {
+   "examId": "3791",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3791",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "3791",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "3799",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "3802",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3803",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "3807",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "3812",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "3815",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3815",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "3815",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "3819",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "3819",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "3828",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "3828",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "3828",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "3830",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "3832",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "3837",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "3837",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "3837",
+   "n": 22,
+   "hasFig": true
+  },
+  {
+   "examId": "3841",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3841",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "3842",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "3844",
+   "n": 4,
+   "hasFig": true
+  },
+  {
+   "examId": "3844",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "3844",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "3845",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "3848",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3849",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "3852",
+   "n": 5,
+   "hasFig": true
+  },
+  {
+   "examId": "3852",
+   "n": 19,
+   "hasFig": true
+  },
+  {
+   "examId": "3853",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3857",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "3861",
+   "n": 22,
+   "hasFig": true
+  },
+  {
+   "examId": "3865",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "3866",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "3866",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "3869",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "3872",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "3875",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3875",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "3875",
+   "n": 21,
+   "hasFig": true
+  },
+  {
+   "examId": "3878",
+   "n": 5,
+   "hasFig": true
+  },
+  {
+   "examId": "3878",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "3879",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3888",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "3888",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "3889",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "3889",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "3890",
+   "n": 19,
+   "hasFig": true
+  },
+  {
+   "examId": "3893",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "3896",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "3897",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3897",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "3900",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3900",
+   "n": 5,
+   "hasFig": true
+  },
+  {
+   "examId": "3900",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "3900",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "3903",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "3906",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "3906",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "3906",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "3906",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "3907",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "3909",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "3909",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "3913",
+   "n": 4,
+   "hasFig": true
+  },
+  {
+   "examId": "3916",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "3916",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "3919",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "3921",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "3921",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "3922",
+   "n": 19,
+   "hasFig": true
+  },
+  {
+   "examId": "3924",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3924",
+   "n": 19,
+   "hasFig": true
+  },
+  {
+   "examId": "3930",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "3933",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "3934",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "3938",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3938",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "3943",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3944",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "3944",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "3953",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "3953",
+   "n": 22,
+   "hasFig": true
+  },
+  {
+   "examId": "3955",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3955",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "3955",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "3958",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3958",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "3959",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3960",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3961",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3964",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "3969",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "3969",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "3971",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "3971",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "3972",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "3975",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "3975",
+   "n": 21,
+   "hasFig": true
+  },
+  {
+   "examId": "3976",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "3976",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "3985",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "3988",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "3989",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3993",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "3993",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "3997",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "3997",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "3997",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "3999",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4000",
+   "n": 21,
+   "hasFig": true
+  },
+  {
+   "examId": "4003",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4010",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "4013",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "4017",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4017",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "4025",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "4029",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4032",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4037",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "4037",
+   "n": 19,
+   "hasFig": true
+  },
+  {
+   "examId": "4039",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "4045",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "4045",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "4045",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "4046",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4048",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "4056",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "4058",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4058",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "4061",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4062",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "4066",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "4071",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4071",
+   "n": 5,
+   "hasFig": true
+  },
+  {
+   "examId": "4071",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "4072",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "4073",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4074",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4074",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "4074",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "4086",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "4086",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "4089",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "4100",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "4103",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4104",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "4104",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "4104",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "4105",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "4105",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "4106",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "4110",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4110",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "4110",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "4110",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "4111",
+   "n": 24,
+   "hasFig": true
+  },
+  {
+   "examId": "4113",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4113",
+   "n": 21,
+   "hasFig": true
+  },
+  {
+   "examId": "4116",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4122",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4122",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "4123",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4124",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4128",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4128",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "4130",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "4138",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4138",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "4139",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4139",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "4142",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "4142",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "4145",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4149",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "4149",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "4149",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "4150",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "4150",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "4152",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "4156",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4156",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "4164",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "4167",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4167",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "4167",
+   "n": 24,
+   "hasFig": true
+  },
+  {
+   "examId": "4173",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "4173",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "4174",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "4175",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4176",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "4176",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "4176",
+   "n": 21,
+   "hasFig": true
+  },
+  {
+   "examId": "4177",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4178",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "4178",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "4182",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "4191",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4192",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4194",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "4196",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4294",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4383",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "4383",
+   "n": 3,
+   "hasFig": true
+  },
+  {
+   "examId": "4383",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4383",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "4384",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4384",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4384",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "4384",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "4384",
+   "n": 21,
+   "hasFig": false
+  },
+  {
+   "examId": "4388",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4388",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "4389",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "4389",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4389",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "4389",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "4390",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4390",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4390",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4390",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4390",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4390",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4390",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "4391",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4391",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4391",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4391",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "4395",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4395",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4395",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "4395",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "4406",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4410",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "4411",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "4411",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4411",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4411",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4411",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4411",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "4411",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "4411",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "4412",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "4412",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4412",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4412",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4412",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4412",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "4412",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "4412",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "4417",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "4417",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4417",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "4418",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4419",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4419",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4419",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "4419",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "4420",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4420",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4420",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4420",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "4423",
+   "n": 19,
+   "hasFig": false
+  },
+  {
+   "examId": "4424",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "4433",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4434",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4438",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "4438",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4438",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4438",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4438",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4438",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4438",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "4439",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "4439",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "4439",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "4441",
+   "n": 21,
+   "hasFig": false
+  },
+  {
+   "examId": "4447",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4447",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4449",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "4454",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4455",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4456",
+   "n": 3,
+   "hasFig": true
+  },
+  {
+   "examId": "4456",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4456",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "4460",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4460",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "4460",
+   "n": 22,
+   "hasFig": false
+  },
+  {
+   "examId": "4464",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4465",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4465",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "4465",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "4465",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "4465",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "4477",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4479",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4479",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4479",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "4479",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "4479",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "4486",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4486",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4486",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4486",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "4486",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "4486",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "4486",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "4486",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "4487",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4487",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4487",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4487",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4487",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "4488",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4488",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4492",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "4493",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "4493",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4493",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4499",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4503",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4503",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4503",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "4503",
+   "n": 19,
+   "hasFig": false
+  },
+  {
+   "examId": "4503",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "4504",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4504",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4504",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4504",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "4504",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "4505",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4505",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4505",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4505",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "4509",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4509",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4509",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "4509",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "4510",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4510",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4510",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4510",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "4512",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "4512",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "4520",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4520",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4520",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4522",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4522",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4522",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "4522",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "4523",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4528",
+   "n": 19,
+   "hasFig": false
+  },
+  {
+   "examId": "4530",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4530",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "4530",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "4530",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "4532",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "4532",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4532",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4532",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "4533",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4533",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4535",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "4535",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4535",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "4535",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "4537",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "4538",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4538",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4539",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4540",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "4540",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4540",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "4541",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4541",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4541",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4541",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "4541",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "4542",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4544",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "4544",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "4545",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4545",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4545",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4545",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "4545",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "4545",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "4558",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4578",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4585",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4594",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4599",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4612",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4620",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4629",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4637",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4648",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "4649",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4657",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4664",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "4673",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4679",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4684",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4690",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4707",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "4715",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "4718",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4719",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4737",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4747",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4748",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4752",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "4768",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4776",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "4783",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4819",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "4820",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4824",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "4851",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4855",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4857",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4875",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4882",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4896",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4904",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4912",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "4916",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4926",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4926",
+   "n": 19,
+   "hasFig": false
+  },
+  {
+   "examId": "4939",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "4948",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "4957",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "5005",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5015",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5025",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "5038",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5068",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5074",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5171",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "5171",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "5175",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "5175",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5175",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5175",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5175",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "5175",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5177",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "5177",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5177",
+   "n": 8,
+   "hasFig": true
+  },
+  {
+   "examId": "5177",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5177",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5177",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "5177",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5177",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "5177",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "5182",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5182",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5182",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5182",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5182",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5182",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5184",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5184",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5184",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5184",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5184",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5184",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5188",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5188",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5188",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5188",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5188",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5188",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5188",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5188",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5189",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5189",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "5190",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5192",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5193",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5194",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5194",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5194",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5194",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5194",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5194",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5194",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "5194",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "5194",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "5194",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5204",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5207",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "5207",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5207",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "5207",
+   "n": 19,
+   "hasFig": true
+  },
+  {
+   "examId": "5208",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5208",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5208",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5208",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5208",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "5208",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5208",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5208",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "5208",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "5214",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5214",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5214",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5214",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5214",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5214",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5214",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5216",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5216",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5216",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5216",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5216",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5216",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5216",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5216",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5216",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5216",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5220",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5221",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5221",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5221",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5221",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5223",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5226",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5226",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5226",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5226",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5227",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5227",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5227",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5228",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5228",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5228",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5228",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5228",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5228",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5230",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5230",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5230",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5231",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5232",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5232",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5232",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5232",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5232",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5232",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5232",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5232",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5232",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5232",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5232",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5235",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5235",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5235",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5237",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5237",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5237",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5237",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5237",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5237",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5239",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5239",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5239",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5239",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5239",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5239",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5243",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5244",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5244",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5244",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5244",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5244",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5244",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5244",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5244",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5244",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5244",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5244",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5244",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "5247",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5247",
+   "n": 21,
+   "hasFig": false
+  },
+  {
+   "examId": "5252",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5252",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "5252",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5252",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5252",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "5252",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "5252",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "5252",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "5252",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "5253",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5253",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5253",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5253",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5253",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5253",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5253",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5253",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5253",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5253",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5254",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5254",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5254",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5254",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5254",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5265",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5265",
+   "n": 5,
+   "hasFig": true
+  },
+  {
+   "examId": "5265",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5265",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5265",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "5265",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "5265",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5265",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "5267",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5272",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5272",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5272",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5272",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5272",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5275",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "5275",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "5276",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5276",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5276",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5276",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5278",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5279",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5279",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5279",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5279",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5281",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5281",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5281",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5281",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "5281",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "5281",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5281",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5282",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5283",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5283",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5283",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5283",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "5283",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5283",
+   "n": 11,
+   "hasFig": true
+  },
+  {
+   "examId": "5283",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "5283",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "5283",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5286",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5286",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5290",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5290",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5290",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5290",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5292",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "5293",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5293",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5293",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5295",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5295",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5295",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5295",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5295",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5295",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5295",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5295",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5295",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5295",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5295",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "5295",
+   "n": 19,
+   "hasFig": false
+  },
+  {
+   "examId": "5296",
+   "n": 2,
+   "hasFig": true
+  },
+  {
+   "examId": "5296",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5296",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5296",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5296",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5296",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5296",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "5296",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "5296",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "5296",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5296",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "5296",
+   "n": 21,
+   "hasFig": false
+  },
+  {
+   "examId": "5297",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5297",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5297",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5297",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5298",
+   "n": 19,
+   "hasFig": true
+  },
+  {
+   "examId": "5299",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5299",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5299",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5299",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5299",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5299",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5299",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5299",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5301",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5301",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5301",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5301",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5301",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5301",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5301",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5301",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5301",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5301",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5303",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5303",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5303",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5306",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5306",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5306",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5306",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5310",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5311",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "5312",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5312",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5312",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5312",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5313",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5313",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5313",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5313",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "5313",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "5313",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5313",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5313",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5313",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "5315",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5316",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "5318",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5318",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5318",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5318",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5318",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5318",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5318",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5318",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5318",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5318",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5319",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5319",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5319",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5319",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5319",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5319",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5319",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5319",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5319",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5324",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5324",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5324",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5324",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5324",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5325",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5325",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "5328",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5328",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5328",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5328",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5328",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5328",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5328",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5329",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "5333",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5333",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5333",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5333",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5333",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5334",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5334",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5334",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5336",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5336",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5336",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5336",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5336",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5336",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5336",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5340",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5340",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5340",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5340",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5340",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5340",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5350",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5350",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5350",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5350",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5350",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5350",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5350",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5350",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5350",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5352",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5358",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5358",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5374",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5374",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5374",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5374",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5374",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5374",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5374",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "5382",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5382",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5382",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5388",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5388",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5388",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5388",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5388",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5388",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5388",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5409",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "5415",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5423",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "5427",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "5429",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5429",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5429",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5429",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5430",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5430",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5430",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5430",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5436",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5436",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5436",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5451",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5451",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5455",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5455",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5455",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5455",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5455",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5455",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5462",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5462",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5465",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5465",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5465",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5466",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5466",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5475",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5475",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5475",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5475",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5475",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5480",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5480",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5480",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5480",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5480",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5480",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5480",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5491",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5491",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5491",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5491",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5492",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5492",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5492",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5492",
+   "n": 21,
+   "hasFig": false
+  },
+  {
+   "examId": "5493",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5493",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "5493",
+   "n": 23,
+   "hasFig": false
+  },
+  {
+   "examId": "5500",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5500",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5500",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5500",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5516",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5516",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5516",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5516",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5516",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5520",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5521",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5521",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5521",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5521",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5523",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5523",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5523",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5523",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5523",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5532",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5532",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5532",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5532",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5532",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5538",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5538",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5540",
+   "n": 4,
+   "hasFig": true
+  },
+  {
+   "examId": "5544",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5544",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5544",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5547",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5547",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5551",
+   "n": 14,
+   "hasFig": true
+  },
+  {
+   "examId": "5552",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5552",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5565",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5567",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5571",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "5572",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5572",
+   "n": 20,
+   "hasFig": true
+  },
+  {
+   "examId": "5577",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "5578",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5578",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "5594",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5594",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5594",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5594",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5601",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "5607",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5607",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5607",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5608",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5608",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5608",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5610",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5610",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5610",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5610",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5610",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5610",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "5616",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5622",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5622",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5622",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5622",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5622",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5624",
+   "n": 21,
+   "hasFig": true
+  },
+  {
+   "examId": "5630",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5645",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5645",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5645",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5645",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5650",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5650",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5650",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5650",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "5653",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5653",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5653",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5655",
+   "n": 21,
+   "hasFig": false
+  },
+  {
+   "examId": "5658",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5658",
+   "n": 5,
+   "hasFig": true
+  },
+  {
+   "examId": "5661",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5661",
+   "n": 23,
+   "hasFig": false
+  },
+  {
+   "examId": "5663",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5663",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5663",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5663",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5663",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5663",
+   "n": 21,
+   "hasFig": false
+  },
+  {
+   "examId": "5663",
+   "n": 22,
+   "hasFig": false
+  },
+  {
+   "examId": "5667",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5668",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "5668",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5668",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5668",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5672",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5672",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5672",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5674",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5674",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5674",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5674",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5674",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5674",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5675",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5675",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5678",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5678",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5678",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5678",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5678",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5678",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5678",
+   "n": 19,
+   "hasFig": true
+  },
+  {
+   "examId": "5678",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "5680",
+   "n": 12,
+   "hasFig": true
+  },
+  {
+   "examId": "5681",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "5682",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5682",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5682",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5682",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5682",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5682",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "5683",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "5685",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5693",
+   "n": 6,
+   "hasFig": true
+  },
+  {
+   "examId": "5694",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5694",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5694",
+   "n": 7,
+   "hasFig": true
+  },
+  {
+   "examId": "5694",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5694",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5697",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5697",
+   "n": 10,
+   "hasFig": true
+  },
+  {
+   "examId": "5701",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5714",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5718",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5721",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5737",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5739",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "5746",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5746",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5746",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5746",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5747",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5747",
+   "n": 19,
+   "hasFig": false
+  },
+  {
+   "examId": "5748",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "5752",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5752",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5752",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5752",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5752",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5752",
+   "n": 18,
+   "hasFig": true
+  },
+  {
+   "examId": "5756",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5756",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5756",
+   "n": 19,
+   "hasFig": false
+  },
+  {
+   "examId": "5756",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "5756",
+   "n": 21,
+   "hasFig": false
+  },
+  {
+   "examId": "5756",
+   "n": 22,
+   "hasFig": false
+  },
+  {
+   "examId": "5756",
+   "n": 23,
+   "hasFig": false
+  },
+  {
+   "examId": "5758",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5759",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5763",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5763",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5763",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5764",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5764",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5764",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5765",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5765",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "5768",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5769",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5769",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5770",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5773",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5777",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5777",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5777",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5777",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5777",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5777",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5777",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5780",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5780",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5780",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5780",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5783",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5783",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5792",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5792",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5792",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5792",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5796",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5798",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "5799",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5799",
+   "n": 20,
+   "hasFig": false
+  },
+  {
+   "examId": "5807",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5807",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5807",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5807",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5807",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5809",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5809",
+   "n": 15,
+   "hasFig": true
+  },
+  {
+   "examId": "5810",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5810",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5810",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5810",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5814",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "5815",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5818",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5820",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5821",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5821",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "5823",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5823",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5823",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5824",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5824",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5824",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5824",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5824",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5824",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5824",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5826",
+   "n": 16,
+   "hasFig": true
+  },
+  {
+   "examId": "5829",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5829",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5829",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5829",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "5829",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "5832",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5832",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5832",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5832",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5832",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5832",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5832",
+   "n": 21,
+   "hasFig": false
+  },
+  {
+   "examId": "5833",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5836",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5840",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5842",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5842",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5842",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5842",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "5850",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5850",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5851",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5851",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5851",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5851",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5851",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5851",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5856",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5859",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5859",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5859",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "5859",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5859",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5859",
+   "n": 19,
+   "hasFig": false
+  },
+  {
+   "examId": "5863",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5863",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5863",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5863",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5866",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5866",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5866",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5866",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5866",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5866",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5866",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "5867",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5867",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5869",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5869",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "5870",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "5870",
+   "n": 21,
+   "hasFig": false
+  },
+  {
+   "examId": "5870",
+   "n": 23,
+   "hasFig": false
+  },
+  {
+   "examId": "5873",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5873",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5873",
+   "n": 17,
+   "hasFig": true
+  },
+  {
+   "examId": "5873",
+   "n": 18,
+   "hasFig": false
+  },
+  {
+   "examId": "5874",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5874",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5874",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5874",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5874",
+   "n": 19,
+   "hasFig": false
+  },
+  {
+   "examId": "5874",
+   "n": 22,
+   "hasFig": false
+  },
+  {
+   "examId": "5875",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5875",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5875",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5875",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5884",
+   "n": 13,
+   "hasFig": true
+  },
+  {
+   "examId": "5887",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5887",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5887",
+   "n": 13,
+   "hasFig": false
+  },
+  {
+   "examId": "5891",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5891",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5891",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5891",
+   "n": 7,
+   "hasFig": false
+  },
+  {
+   "examId": "5899",
+   "n": 14,
+   "hasFig": false
+  },
+  {
+   "examId": "5899",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5900",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5908",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5908",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5908",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5909",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5909",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5915",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "5916",
+   "n": 5,
+   "hasFig": false
+  },
+  {
+   "examId": "5916",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5916",
+   "n": 15,
+   "hasFig": false
+  },
+  {
+   "examId": "5916",
+   "n": 16,
+   "hasFig": false
+  },
+  {
+   "examId": "5921",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5921",
+   "n": 17,
+   "hasFig": false
+  },
+  {
+   "examId": "5923",
+   "n": 2,
+   "hasFig": false
+  },
+  {
+   "examId": "5923",
+   "n": 3,
+   "hasFig": false
+  },
+  {
+   "examId": "5923",
+   "n": 4,
+   "hasFig": false
+  },
+  {
+   "examId": "5923",
+   "n": 6,
+   "hasFig": false
+  },
+  {
+   "examId": "5923",
+   "n": 8,
+   "hasFig": false
+  },
+  {
+   "examId": "5923",
+   "n": 9,
+   "hasFig": false
+  },
+  {
+   "examId": "5923",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5924",
+   "n": 9,
+   "hasFig": true
+  },
+  {
+   "examId": "5924",
+   "n": 10,
+   "hasFig": false
+  },
+  {
+   "examId": "5924",
+   "n": 11,
+   "hasFig": false
+  },
+  {
+   "examId": "5924",
+   "n": 12,
+   "hasFig": false
+  },
+  {
+   "examId": "5924",
+   "n": 17,
+   "hasFig": false
+  }
+ ]
+}
