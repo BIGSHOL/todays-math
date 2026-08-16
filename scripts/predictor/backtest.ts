@@ -34,13 +34,13 @@ import {
 } from "../../src/lib/predictor/distance";
 import {
   predictBlueprint,
+  PREDICTOR_ENGINE_VERSION,
   PredictorUnavailableError,
 } from "../../src/lib/predictor/predictBlueprint";
 import { rangeSeriesKey, styleSeriesKey } from "../../src/lib/predictor/series";
 import { partitionTrusted } from "../../src/lib/predictor/paperTrust";
 import { loadCorpus } from "./loadCorpus";
 
-const ENGINE_VERSION = "0.2.0";
 
 const args = process.argv.slice(2);
 function argOf(name: string, fallback: string): string {
@@ -300,7 +300,7 @@ function main() {
     OUT,
     JSON.stringify(
       {
-        engineVersion: ENGINE_VERSION,
+        engineVersion: PREDICTOR_ENGINE_VERSION,
         corpus: stats,
         // 신뢰 가드에서 뺀 편 — 버린 게 아니라 **추출 재작업 대상 목록**이다.
         // 추출을 고쳐 다시 뽑으면 externalExamId 멱등이라 그대로 되돌아온다.

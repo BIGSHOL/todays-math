@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 
+import { AppChrome } from "@/components/chrome/AppChrome";
+
 import type { ExamRoundSummary } from "./examScreen.contract";
-import { ExamChrome } from "./ExamChrome";
 import { loadExamRounds } from "./examApi";
 import { RoundRow } from "./RoundRow";
 import { sortRounds } from "./viewModel";
@@ -40,18 +41,18 @@ export function ExamDashboard() {
 
   if (state.status !== "ready") {
     return (
-      <ExamChrome>
+      <AppChrome tab="exam">
         <div className="px-7 py-8 text-[13px] text-muted">
           {state.status === "loading" ? "불러오는 중" : state.message}
         </div>
-      </ExamChrome>
+      </AppChrome>
     );
   }
 
   const rounds = sortRounds(state.rounds);
 
   return (
-    <ExamChrome>
+    <AppChrome tab="exam">
       <div className="px-5 pt-4 pb-6">
         {/* 시안의 우측 「+ 새 회차」는 회차 생성 API·폼이 없어 넣지 않았다.
             누르면 아무 일도 안 하는 컨트롤을 두는 것이 D-30 이 막는 바로 그 버그다. */}
@@ -59,13 +60,16 @@ export function ExamDashboard() {
           진행 중인 내신
         </h1>
         {rounds.length === 0 ? (
-          <p className="py-8 text-[13px] text-muted">등록된 회차가 없습니다</p>
+          // 실측이 아직 0건이라 당분간은 이 상태가 기본이다. 빈 화면 대신 이유를 적는다.
+          <p className="py-8 text-[13px] text-muted">
+            아직 회차가 없습니다. 예측을 실행하면 여기에 쌓입니다.
+          </p>
         ) : (
           rounds.map((round, i) => (
             <RoundRow key={round.id} round={round} index={i + 1} />
           ))
         )}
       </div>
-    </ExamChrome>
+    </AppChrome>
   );
 }

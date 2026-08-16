@@ -72,6 +72,29 @@ export interface PredictorParams {
   unitOwnWeight: number;
 }
 
+/**
+ * 계약 ↔ 엔진 파라미터 **양방향** 일치 단언.
+ *
+ * 한쪽에 필드가 늘거나 줄거나 타입이 달라지면 **여기서 컴파일이 깨진다.**
+ * 예전에는 계약 쪽에 같은 형태를 한 벌 더 두어서, v0.5 에서 `stylePriorWeight` 가
+ * 늘었을 때 표류가 런타임 500(18건)으로만 드러났다. 그 자리를 컴파일로 당겨왔다.
+ */
+type ExactSame<A, B> = A extends B ? (B extends A ? true : never) : never;
+export const PREDICTOR_PARAMS_MATCH_CONTRACT: ExactSame<
+  PredictorParams,
+  PredictorParamsSnapshot
+> = true;
+
+/**
+ * 엔진 버전 — **단일 정의**. `PredictionRun.engineVersion` 과 backtest 리포트가 같은 값을 쓴다.
+ * 예전에는 서비스와 `scripts/predictor/backtest.ts` 에 문자열이 따로 있어, 한쪽만 올리면
+ * 지표와 실행 기록이 조용히 다른 축이 됐다.
+ *
+ * ⚠️ **`DEFAULT_PARAMS` 를 바꾸면 이 값을 함께 올린다.** 파라미터가 다른 run 을
+ *    같은 버전으로 묶으면 보정 비교가 오염된다. 근거는 11 §12.
+ */
+export const PREDICTOR_ENGINE_VERSION = "0.5.0";
+
 export const DEFAULT_PARAMS: PredictorParams = {
   decay: 0.85,
   // 작년 같은 회차를 4배로 본다(기존 2배). 연도 홀드아웃 2회(2024·2025)에서
@@ -425,19 +448,3 @@ export function predictBlueprint(input: PredictInput): Blueprint {
   }
   return blueprint;
 }
-
-// ─────────────────────────────────────────────
-// 계약과 엔진이 어긋나면 **컴파일이 깨진다**
-//
-// 파라미터를 하나 더해 놓고 계약(`predictorParamsSchema`)에 안 넣으면 저장 API 가
-// 런타임에 500 을 낸다 — 실제로 그렇게 깨졌다(v0.5 의 `stylePriorWeight`).
-// 양방향 extends 로 **필드가 정확히 같을 때만** 통과하게 걸어, 그걸 타입이 먼저 잡게 한다.
-// 여기서 빨간 줄이 뜨면 predictor.contract.ts 의 스키마에 같은 필드를 더하면 된다.
-// ─────────────────────────────────────────────
-type ParamsMatchContract = PredictorParams extends PredictorParamsSnapshot
-  ? PredictorParamsSnapshot extends PredictorParams
-    ? true
-    : never
-  : never;
-const _paramsMatchContract: ParamsMatchContract = true;
-void _paramsMatchContract;

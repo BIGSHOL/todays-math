@@ -3,18 +3,14 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { AppChrome } from "@/components/chrome/AppChrome";
+
 import { basisLine, BlueprintPanel } from "./BlueprintPanel";
 import type { ExamRoundDetail } from "./examScreen.contract";
-import { ExamChrome } from "./ExamChrome";
 import { loadExamRound } from "./examApi";
 import { PipelineDots } from "./PipelineDots";
 import { StudentScoreTable } from "./StudentScoreTable";
-import {
-  ddayLabel,
-  roundJudgement,
-  roundTitle,
-  stageViews,
-} from "./viewModel";
+import { ddayLabel, roundJudgement, roundTitle, stageViews } from "./viewModel";
 
 /**
  * 회차 상세 — **예측 | 실측 좌우 대조** (D-40 확정).
@@ -54,11 +50,11 @@ export function RoundDetail({
 
   if (state.status !== "ready") {
     return (
-      <ExamChrome>
+      <AppChrome tab="exam">
         <div className="px-7 py-8 text-[13px] text-muted">
           {state.status === "loading" ? "불러오는 중" : state.message}
         </div>
-      </ExamChrome>
+      </AppChrome>
     );
   }
 
@@ -68,9 +64,10 @@ export function RoundDetail({
   const stages = stageViews(summary.stages, judgement.available);
   const dday = ddayLabel(summary.examDate, today);
   const title = roundTitle(summary);
+  const hasAnyActualScore = detail.students.some((s) => s.actualScore !== null);
 
   return (
-    <ExamChrome>
+    <AppChrome tab="exam">
       <div className="px-5 pt-4 pb-8">
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-divider pb-3">
           <Link href="/exam" className="text-[12.5px] font-bold text-muted">
@@ -98,7 +95,14 @@ export function RoundDetail({
           <BlueprintPanel
             label="실측"
             blueprint={detail.observedBlueprint}
-            emptyText="실측 없음 — 시험 전입니다"
+            /* 실점수가 하나라도 들어왔으면 "시험 전"이라고 하면 안 된다 — 실제로 그런 상태가
+               난다(실측 청사진 컬럼이 아직 없어서 실점수만 먼저 들어온다). 로컬 dev 로
+               띄워 보고 발견했다. 비어 있는 이유를 정확히 적는다. */
+            emptyText={
+              hasAnyActualScore
+                ? "실측 청사진 없음 — 실점수만 들어왔습니다"
+                : "실측 없음 — 시험 전입니다"
+            }
           />
         </div>
 
@@ -114,6 +118,6 @@ export function RoundDetail({
             : "엔진 미실행"}
         </p>
       </div>
-    </ExamChrome>
+    </AppChrome>
   );
 }

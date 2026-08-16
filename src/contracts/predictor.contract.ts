@@ -121,15 +121,24 @@ export type ExamPaper = z.infer<typeof examPaperSchema>;
 // ─────────────────────────────────────────────
 
 export const predictorParamsSchema = z.strictObject({
+  /** 회차당 가중 감쇠율. 1이면 감쇠 없음. */
   decay: z.number().min(0).max(1),
-  sameRoundBoost: z.number().min(0).max(10),
+  /** 같은 학기·같은 회차 가중 배수. */
+  sameRoundBoost: z.number().min(0).max(20),
+  /** 총점 전용 코호트 사전값 가상 표본 수. */
   priorWeight: z.number().min(0).max(100),
+  /** 문항 수·유형 배분 전용 축소 계수 — 학교 고유성이 확인된 항목이라 따로 뗐다. */
   stylePriorWeight: z.number().min(0).max(100),
+  /** 배점 눈금 전용 축소·감쇠. */
   gridPriorWeight: z.number().min(0).max(100),
   gridDecay: z.number().min(0).max(1),
+  /** 단원 배분에서 자기 학교 과거가 차지하는 비중(0~1). */
   unitOwnWeight: z.number().min(0).max(1),
 });
 export type PredictorParamsSnapshot = z.infer<typeof predictorParamsSchema>;
+
+// 각 파라미터를 왜 그 값으로 골랐는지는 엔진 쪽 `PredictorParams` 주석에 있다
+// (실측 근거가 붙어 있어 조정할 때 반드시 읽어야 한다).
 
 // ─────────────────────────────────────────────
 // L1. 시험 청사진 (Blueprint)

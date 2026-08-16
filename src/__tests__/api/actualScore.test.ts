@@ -19,6 +19,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const f = vi.hoisted(() => {
   const RUN_ID = "aaaaaaaa-0000-4000-8000-000000000001";
+  const RUN_OTHER_ID = "aaaaaaaa-0000-4000-8000-000000000002";
   const MISSING_RUN_ID = "aaaaaaaa-0000-4000-8000-0000000000ff";
   const TEACHER_ID = "10000000-0000-4000-8000-000000000001";
   const OTHER_TEACHER_ID = "10000000-0000-4000-8000-000000000002";
@@ -28,10 +29,12 @@ const f = vi.hoisted(() => {
   const STUDENT_B = "30000000-0000-4000-8000-000000000002";
   const STUDENT_OTHER = "30000000-0000-4000-8000-000000000003";
   const STUDENT_NOT_IN_RUN = "30000000-0000-4000-8000-000000000004";
+  const STUDENT_NO_INTERVAL = "30000000-0000-4000-8000-000000000005";
   const STUDENT_MISSING = "30000000-0000-4000-8000-0000000000ff";
 
   type RunRow = {
     id: string;
+    userId: string;
     engineVersion: string;
     predictedScores: unknown;
     actualSchoolMean: number | null;
@@ -46,6 +49,9 @@ const f = vi.hoisted(() => {
     predictedScore: number;
     residual: number;
     intervalHit: boolean;
+    predictedLower: number | null;
+    predictedUpper: number | null;
+    predictedCoverage: number | null;
     recordedAt: Date;
     updatedAt: Date;
   };
@@ -59,6 +65,7 @@ const f = vi.hoisted(() => {
 
   return {
     RUN_ID,
+    RUN_OTHER_ID,
     MISSING_RUN_ID,
     TEACHER_ID,
     OTHER_TEACHER_ID,
@@ -68,6 +75,7 @@ const f = vi.hoisted(() => {
     STUDENT_B,
     STUDENT_OTHER,
     STUDENT_NOT_IN_RUN,
+    STUDENT_NO_INTERVAL,
     STUDENT_MISSING,
     state,
   };
@@ -82,6 +90,10 @@ vi.mock("@/lib/db", () => {
     [f.STUDENT_A]: { id: f.STUDENT_A, classId: f.CLASS_MINE },
     [f.STUDENT_B]: { id: f.STUDENT_B, classId: f.CLASS_MINE },
     [f.STUDENT_NOT_IN_RUN]: { id: f.STUDENT_NOT_IN_RUN, classId: f.CLASS_MINE },
+    [f.STUDENT_NO_INTERVAL]: {
+      id: f.STUDENT_NO_INTERVAL,
+      classId: f.CLASS_MINE,
+    },
     [f.STUDENT_OTHER]: { id: f.STUDENT_OTHER, classId: f.CLASS_OTHER },
   };
   const classes: Record<string, { id: string; userId: string }> = {
@@ -162,16 +174,13 @@ import { GET, POST } from "@/app/api/predictions/[id]/actual/route";
 import { actualScoreResponseSchema } from "@/contracts/calibration.contract";
 import { errorResponseSchema } from "@/contracts/common.contract";
 
-function jsonRequest(method: string, body?: unknown) {
-  return new NextRequest(
-    `http://localhost/api/predictions/${f.RUN_ID}/actual`,
-    {
-      method,
-      headers:
-        body === undefined ? undefined : { "content-type": "application/json" },
-      body: body === undefined ? undefined : JSON.stringify(body),
-    },
-  );
+function jsonRequest(method: string, body?: unknown, runId: string = f.RUN_ID) {
+  return new NextRequest(`http://localhost/api/predictions/${runId}/actual`, {
+    method,
+    headers:
+      body === undefined ? undefined : { "content-type": "application/json" },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
 }
 
 function routeContext(id: string = f.RUN_ID) {
@@ -199,6 +208,16 @@ function buildPredictedScores() {
       riskFlags: [],
     },
     {
+      // 엔진이 구간을 못 낸 학생. 적중 여부를 지어내지 않는다.
+      studentId: f.STUDENT_NO_INTERVAL,
+      series: { school: "정화중", level: "중", grade: 3, subject: "중3" },
+      period: { year: 2026, semester: 2, round: "중간" },
+      expectedScore: 55,
+      interval: null,
+      byUnit: [],
+      riskFlags: [],
+    },
+    {
       // 학생 개인이 아니라 시험지 평균 예측 — 실측 대조 대상이 아니다.
       studentId: null,
       series: { school: "정화중", level: "중", grade: 3, subject: "중3" },
@@ -220,6 +239,17 @@ beforeEach(() => {
   f.state.runs = [
     {
       id: f.RUN_ID,
+      userId: f.TEACHER_ID,
+      engineVersion: "predictor-v0.3.0",
+      predictedScores: buildPredictedScores(),
+      actualSchoolMean: null,
+      actualSchoolStdev: null,
+      actualRecordedAt: null,
+    },
+    {
+      // 다른 원장이 만든 회차. 내 학생이더라도 여기엔 실측을 붙일 수 없다.
+      id: f.RUN_OTHER_ID,
+      userId: f.OTHER_TEACHER_ID,
       engineVersion: "predictor-v0.3.0",
       predictedScores: buildPredictedScores(),
       actualSchoolMean: null,
@@ -263,6 +293,7 @@ describe("[T7.10] POST /api/predictions/{id}/actual — 실측 저장", () => {
       count: 2,
       mae: 12,
       meanResidual: -6,
+      intervalCount: 2,
       intervalHitRate: 0.5,
     });
   });
@@ -312,6 +343,92 @@ describe("[T7.10] POST /api/predictions/{id}/actual — 실측 저장", () => {
     const body = actualScoreResponseSchema.parse(await res.json());
     expect(body.data.scores[0]!.predictedScore).toBe(72);
     expect(body.data.scores[0]!.residual).toBe(6);
+    // 구간도 같은 규칙이다 — run 의 Json 이 40~60 으로 바뀌어도 스냅샷은 65~79 다.
+    expect(body.data.scores[0]!.predictedLower).toBe(65);
+    expect(body.data.scores[0]!.predictedUpper).toBe(79);
+    expect(body.data.scores[0]!.predictedCoverage).toBe(0.8);
+    // 적중 판정도 **저장된** 구간으로 센다 — 78 은 65~79 안이라 여전히 적중이다.
+    // (run 의 새 구간 40~60 을 봤다면 빗나감으로 뒤집혔을 것이다.)
+    expect(body.data.scores[0]!.intervalHit).toBe(true);
+  });
+
+  it("저장할 때 예측 구간을 함께 스냅샷으로 복사한다", async () => {
+    const res = await POST(
+      jsonRequest("POST", {
+        scores: [{ studentId: f.STUDENT_B, actualScore: 70 }],
+      }),
+      routeContext(),
+    );
+    const body = actualScoreResponseSchema.parse(await res.json());
+    const b = body.data.scores[0]!;
+    expect(b.predictedLower).toBe(82);
+    expect(b.predictedUpper).toBe(94);
+    expect(b.predictedCoverage).toBe(0.8);
+    expect(b.intervalHit).toBe(false);
+  });
+
+  /**
+   * 점수 정정은 **실제값**이 움직인 것이다. 구간은 그대로이므로 적중 여부는
+   * 저장된 구간 스냅샷 기준으로 **다시** 세야 한다(얼려 두면 안 된다).
+   */
+  it("점수를 정정하면 적중 여부는 저장된 구간으로 다시 센다", async () => {
+    await POST(
+      jsonRequest("POST", {
+        scores: [{ studentId: f.STUDENT_A, actualScore: 78 }],
+      }),
+      routeContext(),
+    );
+    const res = await POST(
+      jsonRequest("POST", {
+        scores: [{ studentId: f.STUDENT_A, actualScore: 95 }],
+      }),
+      routeContext(),
+    );
+    const body = actualScoreResponseSchema.parse(await res.json());
+    expect(body.data.scores[0]!.intervalHit).toBe(false);
+    expect(body.data.scores[0]!.predictedLower).toBe(65);
+    expect(body.data.scores[0]!.residual).toBe(23);
+  });
+
+  it("예측 시점에 구간이 없었으면 null 로 두고 적중률 분모에서 뺀다", async () => {
+    const res = await POST(
+      jsonRequest("POST", {
+        scores: [
+          { studentId: f.STUDENT_A, actualScore: 78 },
+          { studentId: f.STUDENT_NO_INTERVAL, actualScore: 60 },
+        ],
+      }),
+      routeContext(),
+    );
+    expect(res.status).toBe(200);
+    const body = actualScoreResponseSchema.parse(await res.json());
+
+    const noInterval = body.data.scores.find(
+      (s) => s.studentId === f.STUDENT_NO_INTERVAL,
+    )!;
+    expect(noInterval.predictedScore).toBe(55);
+    expect(noInterval.residual).toBe(5);
+    expect(noInterval.predictedLower).toBeNull();
+    expect(noInterval.predictedUpper).toBeNull();
+    expect(noInterval.predictedCoverage).toBeNull();
+
+    // 표본은 2건이지만 적중을 판정할 수 있는 것은 1건뿐이다.
+    expect(body.data.summary.count).toBe(2);
+    expect(body.data.summary.intervalCount).toBe(1);
+    expect(body.data.summary.intervalHitRate).toBe(1);
+  });
+
+  it("남의 회차에는 실측을 붙일 수 없다 — 403", async () => {
+    const res = await POST(
+      jsonRequest(
+        "POST",
+        { scores: [{ studentId: f.STUDENT_A, actualScore: 78 }] },
+        f.RUN_OTHER_ID,
+      ),
+      routeContext(f.RUN_OTHER_ID),
+    );
+    expect(res.status).toBe(403);
+    expect(f.state.actualScores).toHaveLength(0);
   });
 
   it("run 에 없는 학생을 붙이면 422다", async () => {
@@ -448,6 +565,7 @@ describe("[T7.10] GET /api/predictions/{id}/actual — 잔차 조회", () => {
       count: 0,
       mae: null,
       meanResidual: null,
+      intervalCount: 0,
       intervalHitRate: null,
     });
   });
@@ -455,6 +573,14 @@ describe("[T7.10] GET /api/predictions/{id}/actual — 잔차 조회", () => {
   it("없는 회차면 404다", async () => {
     const res = await GET(jsonRequest("GET"), routeContext(f.MISSING_RUN_ID));
     expect(res.status).toBe(404);
+  });
+
+  it("남의 회차는 조회할 수 없다 — 403", async () => {
+    const res = await GET(
+      jsonRequest("GET", undefined, f.RUN_OTHER_ID),
+      routeContext(f.RUN_OTHER_ID),
+    );
+    expect(res.status).toBe(403);
   });
 
   it("로그인하지 않으면 401이다", async () => {

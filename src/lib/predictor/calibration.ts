@@ -84,24 +84,45 @@ export function isIntervalHit(
 }
 
 /**
+ * 잔차 요약의 입력 한 줄.
+ *
+ * `hasInterval` 은 "예측 구간 스냅샷이 저장돼 있어 적중을 **판정할 수 있다**"는 뜻이다.
+ * false 면 `intervalHit` 값은 의미가 없다 — DB 컬럼이 NOT NULL 이라 무언가는 들어가 있을
+ * 뿐이다. 그런 표본을 빗나감으로 세면 구간이 실제보다 부정직해 보이고, 적중으로 세면
+ * 반대로 부풀려진다. **분모에서 뺀다.**
+ */
+export type ResidualRow = {
+  residual: number;
+  intervalHit: boolean;
+  hasInterval: boolean;
+};
+
+/**
  * 잔차 요약. 표본이 0이면 숫자를 지어내지 않고 null 을 돌려준다.
  * 구간 적중률은 MAE 와 **별개 지표**다 — 점 예측이 좋아도 구간이 정직하지 않을 수 있다.
  */
-export function summarizeResiduals(
-  rows: Array<{ residual: number; intervalHit: boolean }>,
-): ResidualSummary {
+export function summarizeResiduals(rows: ResidualRow[]): ResidualSummary {
   if (rows.length === 0) {
-    return { count: 0, mae: null, meanResidual: null, intervalHitRate: null };
+    return {
+      count: 0,
+      mae: null,
+      meanResidual: null,
+      intervalCount: 0,
+      intervalHitRate: null,
+    };
   }
   const n = rows.length;
   const mae = rows.reduce((sum, r) => sum + Math.abs(r.residual), 0) / n;
   const meanResidual = rows.reduce((sum, r) => sum + r.residual, 0) / n;
-  const hits = rows.filter((r) => r.intervalHit).length;
+  const judgeable = rows.filter((r) => r.hasInterval);
+  const hits = judgeable.filter((r) => r.intervalHit).length;
   return {
     count: n,
     mae: round6(mae),
     meanResidual: round6(meanResidual),
-    intervalHitRate: round6(hits / n),
+    intervalCount: judgeable.length,
+    intervalHitRate:
+      judgeable.length === 0 ? null : round6(hits / judgeable.length),
   };
 }
 
@@ -525,11 +546,19 @@ export function estimateCalibration(
   };
 
   // ── 구간 적중률 (점 예측 MAE 와 별개 지표)
-  const hitRate = samples.filter((s) => s.intervalHit).length / n;
+  // 구간 스냅샷이 없어 판정할 수 없는 표본은 분모에서 뺀다 — 지어내지 않는다.
+  const judgeable = samples.filter((s) => s.hasInterval);
+  const intervalSampleCount = judgeable.length;
+  const hitRate =
+    intervalSampleCount === 0
+      ? null
+      : judgeable.filter((s) => s.intervalHit).length / intervalSampleCount;
   const nominalCoverage = options.nominalCoverage ?? null;
   let intervalHonest: boolean | null = null;
-  if (nominalCoverage !== null) {
-    const se = Math.sqrt((nominalCoverage * (1 - nominalCoverage)) / n);
+  if (nominalCoverage !== null && hitRate !== null) {
+    const se = Math.sqrt(
+      (nominalCoverage * (1 - nominalCoverage)) / intervalSampleCount,
+    );
     intervalHonest = Math.abs(hitRate - nominalCoverage) <= 2 * se;
   }
 
@@ -545,7 +574,8 @@ export function estimateCalibration(
     maeBefore: round6(maeBefore),
     maeAfter: round6(finalMae),
     improved: round6(finalMae) < round6(maeBefore),
-    intervalHitRate: round6(hitRate),
+    intervalSampleCount,
+    intervalHitRate: hitRate === null ? null : round6(hitRate),
     nominalCoverage,
     intervalHonest,
   };

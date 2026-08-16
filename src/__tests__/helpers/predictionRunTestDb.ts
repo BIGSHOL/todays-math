@@ -76,8 +76,11 @@ export interface FakeExamScopeRow {
 
 export interface FakePredictionRunRow {
   id: string;
+  userId: string;
   createdAt: Date;
   engineVersion: string;
+  riskFlags: string[];
+  examDate: Date | null;
   school: string;
   level: string;
   grade: number;
@@ -211,6 +214,8 @@ export const predictionTestDb = {
     async findMany(args?: {
       where?: unknown;
       orderBy?: { createdAt?: "asc" | "desc" };
+      skip?: number;
+      take?: number;
     }) {
       const rows = predictionRunRows
         .filter((row) =>
@@ -225,7 +230,15 @@ export const predictionTestDb = {
             : a.createdAt.getTime() - b.createdAt.getTime(),
         );
       }
-      return rows;
+      const skip = args?.skip ?? 0;
+      return args?.take === undefined
+        ? rows.slice(skip)
+        : rows.slice(skip, skip + args.take);
+    },
+    async count(args?: { where?: unknown }) {
+      return predictionRunRows.filter((row) =>
+        matchesWhere(row as unknown as Record<string, unknown>, args?.where),
+      ).length;
     },
   },
 };
