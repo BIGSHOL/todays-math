@@ -59,5 +59,10 @@ scripts/qa/reports/transformed-content-backup.json
 # 에이전트 임시 스크립트 (_ 로 시작)
 scripts/qa/_*
 
+# verify-convert-rpm --fault 가 만드는 변환기 임시 사본.
+# 정상 종료 시 스스로 지우지만, 중간에 죽으면 남는다. 절대 커밋되면 안 된다
+# — 일부러 망가뜨린 변환기다.
+src/lib/import/_convertRpm.fault.*.ts
+
 # 폐기 후보 기계용 목록(문서는 커밋)
 scripts/qa/reports/discard-candidates.json

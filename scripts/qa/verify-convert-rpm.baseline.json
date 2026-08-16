@@ -1,0 +1,46 @@
+{
+  "note": "실데이터 회귀 검사 기준선. `mode:baseline` 검사는 이 비율 아래로 떨어지면 실패한다. 값이 올라갔으면 --update-baseline 으로 갱신할 것.",
+  "measuredAt": "2026-08-15",
+  "checks": {
+    "choice-no-loss": {
+      "passed": 1884,
+      "total": 1884
+    },
+    "choice-count": {
+      "passed": 1866,
+      "total": 1884
+    },
+    "answer-filled": {
+      "passed": 6057,
+      "total": 6057
+    },
+    "answer-marker-form": {
+      "passed": 1864,
+      "total": 1864
+    },
+    "choice-marker-alive": {
+      "passed": 1884,
+      "total": 1884
+    },
+    "external-id": {
+      "passed": 6151,
+      "total": 6151
+    },
+    "db-external-id": {
+      "passed": 4843,
+      "total": 4862
+    },
+    "db-answer-linked": {
+      "passed": 4534,
+      "total": 4743
+    },
+    "db-figure-linked": {
+      "passed": 931,
+      "total": 1088
+    },
+    "db-source-coverage": {
+      "passed": 4843,
+      "total": 6151
+    }
+  }
+}
