@@ -20,12 +20,25 @@ import type { ImportDraft, UnitLike } from "../../src/lib/import/types";
 import type { Difficulty } from "../../src/contracts/common.contract";
 import type { ProblemType } from "../../src/contracts/problem.contract";
 import { isDirectScript } from "../import/isDirectScript";
-import { buildCandidates, MISSING_ANSWER, type Candidate } from "./load-candidates";
+import {
+  buildCandidates,
+  corpusFingerprint,
+  MISSING_ANSWER,
+  type Candidate,
+} from "./load-candidates";
 import { EXCLUSIONS } from "./load-dedupe-check";
 
 const OUT = "scripts/qa/reports/load-dry-run.json";
 const ROWS = "scripts/qa/reports/load-rows.json";
 const FIGURE_HANDOFF = "scripts/qa/reports/load-figure-handoff.json";
+/**
+ * 넣을 `externalId` 전량. **적재 전에 커밋한다** (2026-08-16 승인 조건 1).
+ *
+ * INSERT 는 백업이 아니라 **이 목록이 되돌리는 수단이다** — 목록이 없으면 무엇을
+ * 지워야 할지 모른다. F-4 는 이 파일과 재생성한 행 집합이 정확히 같은지 먼저 확인하고,
+ * 다르면 아무것도 넣지 않고 멈춘다.
+ */
+export const EXTERNAL_IDS = "scripts/qa/reports/load-external-ids.json";
 
 /** 적재 계정. `loadClassifiedAtomically` 와 같은 값이어야 멱등 대조가 맞는다. */
 const IMPORT_USER_EMAIL = "import@todays-math.local";
@@ -63,6 +76,7 @@ export async function runDryRun(): Promise<void> {
     });
     const inDb = new Set(examRows.map((r) => String(r.examId)));
 
+    const corpus = await corpusFingerprint();
     const built = await buildCandidates(units, inDb);
 
     // F-2 가 만든 편 단위 중복 목록. 없으면 멈춘다 — 대조 없이 적재 계획을 세우지 않는다.
@@ -79,6 +93,19 @@ export async function runDryRun(): Promise<void> {
     }
 
     const kept = built.candidates.filter((c) => !excluded.has(c.examId));
+
+    // 보기가 전부 그림이라 본문에 보기가 비어 있는 객관식 — 그림 없이는 못 푼다.
+    //
+    // 승인 조건 3(2026-08-16): **넣되 트랙 A 가 그림을 붙이기 전에는 출제되면 안 된다.**
+    // `findEligibleProblems` 가 `reviewStatus='approved'` 만 보므로 `pending` 으로 넣는다 —
+    // D-22 가 설계해 둔 경로 그대로다(사람이 검수해 승격). 나머지는 종전대로 approved.
+    //
+    // ⚠️ `reviewStatus` 는 등록부상 트랙 C 컬럼이지만, 여기는 **신규 행 INSERT** 라
+    //    기존 행을 건드리지 않는다. C 의 UPDATE 와 충돌하지 않는다.
+    const holdRows = kept.filter(
+      (c) => c.questionType === "객관식" && /\n\d+\.\s*(?=\n|$)/.test(c.content),
+    );
+    const holdIds = new Set(holdRows.map((c) => c.externalId));
 
     // ── 실제 적재 형태까지 만들어 본다. 여기서 걸러지는 게 있으면 지금 알아야 한다. ──
     const drafts: Array<ImportDraft & { unitId: string }> = kept.map((c) => ({
@@ -112,10 +139,14 @@ export async function runDryRun(): Promise<void> {
     const { rows, skipped } = toLoadRows(drafts, user?.id ?? "(적재계정없음)");
 
     // `questionType` 은 `toLoadRows` 가 아직 안 나르는 컬럼이라 따로 붙인다.
-    const withQuestionType = rows.map((row) => ({
+    // `reviewStatus` 도 여기서 정한다 — `toLoadRows` 는 전부 approved 로 박는다.
+    const byExternalId = new Map(kept.map((c) => [c.externalId, c]));
+    const finalRows = rows.map((row) => ({
       ...row,
-      questionType:
-        kept.find((c) => c.externalId === row.externalId)?.questionType ?? null,
+      questionType: byExternalId.get(row.externalId ?? "")?.questionType ?? null,
+      reviewStatus: holdIds.has(row.externalId ?? "")
+        ? ("pending" as const)
+        : ("approved" as const),
     }));
 
     // ── 분포 ────────────────────────────────────────────────────────────────
@@ -130,14 +161,11 @@ export async function runDryRun(): Promise<void> {
     const withAnswer = kept.filter((c) => c.answer !== MISSING_ANSWER).length;
     const figureRows = kept.filter((c) => c.figureCount > 0);
     const figureExams = [...new Set(figureRows.map((c) => c.examId))].sort();
-    // 보기가 전부 그림이라 본문에 보기가 비어 있는 객관식 — 그림 없이는 못 푼다.
-    const emptyChoice = kept.filter(
-      (c) => c.questionType === "객관식" && /\n\d+\.\s*(?=\n|$)/.test(c.content),
-    );
 
     const report = {
       생성시각: new Date().toISOString(),
       적재계정: user ? "있음" : "없음(적재 시 생성됨)",
+      입력corpus: corpus,
       후보: {
         완료본편: 2950,
         대상편: built.papers.length,
@@ -177,15 +205,38 @@ export async function runDryRun(): Promise<void> {
         그림있는행: figureRows.length,
         그림장수합: figureRows.reduce((a, c) => a + c.figureCount, 0),
         그림있는편: figureExams.length,
-        보기가전부그림: emptyChoice.length,
-        보기가전부그림_표본: emptyChoice.slice(0, 10).map((c) => c.externalId),
+        보기가전부그림_pending: holdRows.length,
+        보기가전부그림_목록: holdRows.map((c) => c.externalId),
       },
       D37_비완료본원본: rows.filter((r) => !/[(（]\s*완\s*료\s*[)）]/.test(r.sourceFile ?? "")).length,
-      멱등성: "externalId UNIQUE + selectMissingLoadRows. 두 번 돌려도 신규 0.",
+      멱등성: "externalId UNIQUE. 이미 있는 externalId 는 건너뛴다 — 두 번 돌려도 신규 0.",
     };
 
     await writeFile(OUT, JSON.stringify(report, null, 1), "utf8");
-    await writeFile(ROWS, JSON.stringify(withQuestionType), "utf8");
+    await writeFile(ROWS, JSON.stringify(finalRows), "utf8");
+    await writeFile(
+      EXTERNAL_IDS,
+      JSON.stringify(
+        {
+          생성시각: new Date().toISOString(),
+          총: finalRows.length,
+          // 이 목록이 어떤 입력에서 나왔는지 박아 둔다. 적재기가 대조해 다르면 멈춘다.
+          입력corpus: corpus,
+          되돌리기:
+            "이 목록이 유일한 되돌리기 수단이다(승인 조건 1). " +
+            "되돌리려면 problem 에서 external_id 가 이 목록에 있는 행을 지운다. " +
+            "source='past_exam' 이고 이 트랙이 넣은 행만 해당한다.",
+          출제보류_pending: holdRows.map((c) => c.externalId),
+          출제보류_사유:
+            "보기가 전부 그림이라 본문 보기가 비어 있다. 트랙 A 가 figureUrls 를 붙이고 " +
+            "사람이 approved 로 승격하기 전에는 자동 출제에 안 잡힌다(D-22).",
+          externalIds: finalRows.map((r) => r.externalId),
+        },
+        null,
+        1,
+      ),
+      "utf8",
+    );
     await writeFile(
       FIGURE_HANDOFF,
       JSON.stringify(
@@ -198,6 +249,20 @@ export async function runDryRun(): Promise<void> {
           편수: figureExams.length,
           행수: figureRows.length,
           장수: figureRows.reduce((a, c) => a + c.figureCount, 0),
+          /**
+           * 승인 조건 3 — 이 행들은 `reviewStatus='pending'` 으로 들어간다.
+           * 보기가 전부 그림이라 본문 보기가 비어 있어 **그림 없이는 못 푼다.**
+           * 트랙 A 가 그림을 붙인 뒤 사람이 approved 로 승격해야 출제된다.
+           * **여기부터 먼저 봐 달라.**
+           */
+          출제보류_우선: holdRows.map((c) => ({
+            externalId: c.externalId,
+            examId: c.examId,
+            questionNumber: c.questionNumber,
+            school: c.school,
+            그림장수: c.figureCount,
+            사유: "보기가 전부 그림 — 본문 보기가 비어 있다",
+          })),
           // 편 → { 문항번호: 그림 장수 }. 행마다 풀어 쓰면 300KB 라 원장 §4-4 를 어긴다.
           편별: Object.fromEntries(
             figureExams.map((examId) => [
@@ -223,6 +288,9 @@ export async function runDryRun(): Promise<void> {
     );
 
     console.log("── F-3 적재 드라이런 (쓰지 않음) ──");
+    console.log(
+      `입력 corpus ${corpus.fingerprint} (트랙 D ${corpus.files}편 ${Math.round(corpus.bytes / 1e6)}MB)`,
+    );
     console.log(
       `대상 ${built.papers.length}편 → 후보 ${built.candidates.length}행` +
         ` → 편중복 -${built.candidates.length - kept.length}` +
@@ -253,10 +321,10 @@ export async function runDryRun(): Promise<void> {
       `그림 있는 행 ${figureRows.length} / ${figureExams.length}편` +
         ` · 장수 합 ${figureRows.reduce((a, c) => a + c.figureCount, 0)} → ${FIGURE_HANDOFF} (트랙 A 인계)`,
     );
-    if (emptyChoice.length > 0) {
+    if (holdRows.length > 0) {
       console.log(
-        `  ⚠️ 보기가 전부 그림이라 본문 보기가 빈 객관식 ${emptyChoice.length}행` +
-          " — 트랙 A 가 그림을 붙이기 전에는 출제 불가. 판단 필요.",
+        `  ⚠️ 보기가 전부 그림이라 본문 보기가 빈 객관식 ${holdRows.length}행` +
+          " → reviewStatus=pending 으로 넣는다(승인 조건 3). 그림을 붙이고 승격해야 출제된다.",
       );
     }
     console.log(`D-37 위반(비완료본 원본) ${report.D37_비완료본원본}`);

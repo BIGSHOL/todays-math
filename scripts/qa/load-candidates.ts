@@ -11,6 +11,7 @@
  * **분류 로직을 손대지 않는다.** `mapUnitHint` 는 공용이고 원장님 확인 영역이다(브리프 §6-1).
  * **그림을 넣지 않는다.** `figureUrls` 는 트랙 A 소유라 비운 채로 둔다(브리프 §6-2).
  */
+import { createHash } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -192,6 +193,40 @@ export function contentDefect(text: string): string | null {
   for (const [name, re] of DEFECTS) if (re.test(text)) return name;
   if (hasDuplicateChoices(text)) return "보기중복";
   return null;
+}
+
+/**
+ * 입력 corpus 지문 — **트랙 D 산출물이 바뀌었는지 본다.**
+ *
+ * 2026-08-16 실제 사고: 코디네이터가 5,816행을 승인한 뒤 트랙 D 가 추출기를 고쳐
+ * `hwp-latex/` 3,302편을 통째로 다시 썼다(10:00:23). 같은 규칙으로 다시 세니 6,042행이
+ * 나왔다 — base64 오염 239행이 원본에서 고쳐져 후보로 돌아온 것이다. **승인은 숫자에
+ * 붙는데 입력이 남의 워크트리라 조용히 움직인다.** 그래서 지문을 산출물에 박아 두고,
+ * 적재기가 다르면 멈춘다.
+ *
+ * 파일 내용 기반이다 — 같은 내용으로 다시 써도 지문은 안 바뀐다.
+ */
+export async function corpusFingerprint(): Promise<{
+  fingerprint: string;
+  files: number;
+  bytes: number;
+}> {
+  const latexDir = path.join(TRACK_D, "hwp-latex");
+  const names = (await readdir(latexDir)).filter((f) => f.endsWith(".json")).sort();
+  const hash = createHash("sha1");
+  let bytes = 0;
+  for (const name of [...names, "../final-pairs.json", "../hwpx-figures.json"]) {
+    let buf: Buffer;
+    try {
+      buf = await readFile(path.join(latexDir, name));
+    } catch {
+      continue;
+    }
+    bytes += buf.length;
+    hash.update(name);
+    hash.update(createHash("sha1").update(buf).digest());
+  }
+  return { fingerprint: hash.digest("hex").slice(0, 16), files: names.length, bytes };
 }
 
 export async function buildCandidates(
