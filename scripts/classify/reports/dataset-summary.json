@@ -1,0 +1,50 @@
+{
+ "corpus": {
+  "db-labels.jsonl": "cba012bcbb4a1e2b",
+  "loaded-external-ids.json": "290270b41f7137ec",
+  "units-db.json": "74d62be4315b9026",
+  "final-pairs.json": "6b29c7701cb370b8",
+  "label-content-mismatch.json": "e7246407e7554dcd",
+  "hwp-latex": "C:/Users/user/orca/workspaces/testautocreator/잔여-D-HWP/scripts/qa/reports/hwp-latex"
+ },
+ "학습셋": {
+  "문항": 35468,
+  "편": 1854
+ },
+ "정렬감사": {
+  "검사한편": 1858,
+  "정렬깨진편": 3,
+  "버린문항": 214,
+  "본문라벨불일치_제외": 192,
+  "학년불일치_제외": 27,
+  "목록": [
+   {
+    "examId": "4498",
+    "matched": 20,
+    "meanSimilarity": 0.127
+   },
+   {
+    "examId": "2697",
+    "matched": 2,
+    "meanSimilarity": 0.173
+   },
+   {
+    "examId": "4511",
+    "matched": 1,
+    "meanSimilarity": 0.313
+   }
+  ]
+ },
+ "대상셋": {
+  "문항": 24463,
+  "편": 1291,
+  "제외": {
+   "이미적재": 29310,
+   "힌트있음": 2084,
+   "본문짧음": 2428,
+   "학년미상": 91,
+   "파일없음": 6,
+   "편2022이전": 161
+  }
+ }
+}

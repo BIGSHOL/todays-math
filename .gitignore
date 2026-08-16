@@ -66,3 +66,10 @@ src/lib/import/_convertRpm.fault.*.ts
 
 # 폐기 후보 기계용 목록(문서는 커밋)
 scripts/qa/reports/discard-candidates.json
+
+# 트랙 G(소단원 분류) 중간 산출물 — 재생성 가능. 판정 결과와 실측치만 남긴다.
+scripts/classify/reports/labeled.jsonl
+scripts/classify/reports/target.jsonl
+scripts/classify/reports/units-db.json
+scripts/classify/reports/db-labels.jsonl
+scripts/classify/reports/loaded-external-ids.json

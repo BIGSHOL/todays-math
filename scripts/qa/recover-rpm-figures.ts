@@ -22,13 +22,15 @@
  * 문항으로 넓히면 1,605장이다(그림을 여러 버전에 걸쳐 가진 문항은 5개뿐이고
  * 그 5개도 고른 버전이 항상 최대 집합이라, 버전 합계 1,611 중 6장은 중복이다).
  *
- * 짝짓기: 적재 때 `externalId` 를 버려서 키 조인이 안 된다(실측 0건). 그래서
- * `recover-rpm-answers.ts` 와 **같은 본문 매칭**을 쓴다 — 원본 body+choices 를 적재
- * 당시 형태와 마커 복원 형태로 모두 펴서 키를 걸고, 후보가 하나일 때만 쓴다.
+ * 짝짓기: **`externalId` 가 먼저다.** 트랙 C 가 4,843행에 원본 id 를 되짚어 넣었으므로
+ * (2026-08-16, `55afc1c`) 이제 키 조인이 된다. 본문 매칭은 `externalId` 가 없는 행에만
+ * 쓰는 보조 수단이다.
  *
- * ⚠️ 본문중복(후보 2+) 233건은 **글자는 같은데 그림만 다른 쌍둥이**다. 그래서
- * 기본 제외한다. 후보들의 그림 경로가 완전히 같은 4건만 `--include-ambiguous` 뒤에서
- * 허용한다 — 어느 원본이든 결과가 같으므로 그때만 안전하다.
+ * ⚠️ 본문 매칭을 주 수단으로 두면 **본문중복(후보 2+) 233건이 통째로 빠진다** —
+ * 글자는 같은데 그림만 다른 쌍둥이라 어느 쪽인지 가릴 수 없기 때문이다.
+ * `recover-rpm-answers.ts` 가 같은 함정에 빠져 있었고 트랙 C 가 같은 방향으로 고쳤다.
+ * `externalId` 로 짝지으면 쌍둥이도 제 그림을 받는다. 본문 매칭 경로에서는 종전대로
+ * 후보가 하나일 때만 쓰고, 경로가 완전히 같은 중복만 `--include-ambiguous` 로 연다.
  *
  * 접속 정보는 저장소에 넣지 않는다 — `SUMAEK_DATABASE_URL` / `SUMAEK_SUPABASE_URL` 을
  * 먼저 보고, 없으면 `SUMAEK_ENV_PATH`(기본 `C:\Creative\sumaek\.env`)를 파싱한다.
@@ -431,6 +433,10 @@ async function main(): Promise<void> {
     0,
   );
 
+  /** 원본 id → 행. `externalId` 조인용 (트랙 C 가 채운 키). */
+  const bySourceId = new Map<string, SourceRow>();
+  for (const row of sourceRows) bySourceId.set(row.id, row);
+
   const byKey = new Map<string, Set<SourceRow>>();
   for (const row of sourceRows) {
     for (const key of [
@@ -463,35 +469,51 @@ async function main(): Promise<void> {
   try {
     const problems = await prisma.problem.findMany({
       where: { source: "transformed" },
-      select: { id: true, content: true, figureUrls: true },
+      select: { id: true, content: true, figureUrls: true, externalId: true },
     });
 
     const plans: Plan[] = [];
+    let matchedById = 0;
     let matchedUnique = 0;
     let unmatched = 0;
     let ambiguous = 0;
     let ambiguousTaken = 0;
     let noDiagram = 0;
     let alreadyHasUrls = 0;
+    let idMiss = 0;
 
     for (const problem of problems) {
-      const candidates = candidatesFor(problem.content);
-      if (candidates.length === 0) {
-        unmatched += 1;
-        continue;
+      let source: SourceRow | null = null;
+
+      // 1) `externalId` — 트랙 C 가 채운 원본 키. 본문이 같은 쌍둥이도 이걸로는 갈린다.
+      if (problem.externalId) {
+        source = bySourceId.get(problem.externalId) ?? null;
+        if (source) {
+          matchedById += 1;
+        } else {
+          // 키는 있는데 원본에 그 행이 없다 — 조용히 본문 매칭으로 내려가지 말고 센다.
+          idMiss += 1;
+        }
       }
 
-      let source: SourceRow | null = null;
-      if (candidates.length === 1) {
-        matchedUnique += 1;
-        source = candidates[0];
-      } else {
-        // 글자는 같은데 그림만 다른 쌍둥이다 — 기본은 건드리지 않는다.
-        ambiguous += 1;
-        if (!includeAmbiguous) continue;
-        source = agreedDiagrams(candidates);
-        if (!source) continue;
-        ambiguousTaken += 1;
+      // 2) 키가 없는 행만 본문으로 되짚는다.
+      if (!source) {
+        const candidates = candidatesFor(problem.content);
+        if (candidates.length === 0) {
+          unmatched += 1;
+          continue;
+        }
+        if (candidates.length === 1) {
+          matchedUnique += 1;
+          source = candidates[0];
+        } else {
+          // 글자는 같은데 그림만 다른 쌍둥이다 — 키가 없으면 가릴 수 없다.
+          ambiguous += 1;
+          if (!includeAmbiguous) continue;
+          source = agreedDiagrams(candidates);
+          if (!source) continue;
+          ambiguousTaken += 1;
+        }
       }
 
       if (source.diagrams.length === 0) {
@@ -518,10 +540,12 @@ async function main(): Promise<void> {
         ` · 그림 장수 ${sourceSheets}`,
     );
     console.log(
-      `우리 transformed ${problems.length} — 유일매칭 ${matchedUnique}` +
+      `우리 transformed ${problems.length} — externalId 매칭 ${matchedById}` +
+        ` · 본문 유일매칭 ${matchedUnique}` +
         ` · 본문중복 ${ambiguous}(경로일치로 채택 ${ambiguousTaken}` +
         `${includeAmbiguous ? "" : ", 기본 제외 — --include-ambiguous"})` +
-        ` · 매칭실패 ${unmatched}`,
+        ` · 매칭실패 ${unmatched}` +
+        (idMiss ? ` · externalId 가 원본에 없음 ${idMiss}` : ""),
     );
     console.log(
       `회수 대상 ${plans.length}문항 / ${sheets}장` +
