@@ -23,7 +23,9 @@ import { canon, circledSet } from "./answer-notation";
 const CLASSIFIED = "scripts/qa/reports/answer-mismatch-classified.json";
 const OFFICIAL_DIR = "scripts/qa/reports/official-answers";
 const PAIRS = "scripts/qa/reports/final-pairs.json";
-const OUT = "docs/planning/tracks/track-b-numeric-conflicts.md";
+const OUT = "docs/planning/14-answer-conflicts-review.md";
+/** RPM(transformed) 번호 충돌. `recover-rpm-answers.ts` 가 자동 교정하지 않고 남긴 것. */
+const RPM_CONFLICTS = "scripts/qa/reports/rpm-number-conflicts.json";
 
 interface Row {
   id: string;
@@ -128,19 +130,39 @@ async function main(): Promise<void> {
   };
 
   const order = ["그 밖", "자릿수 포함", "정답면에 우리 값도 있음"];
+  // RPM 번호 충돌은 출처가 달라 판단 기준도 다르다. 절을 나눠 싣는다.
+  let rpm: Array<{ id: string; unit: string; grade: string; ours: string; origin: string }> = [];
+  try {
+    rpm = JSON.parse(await readFile(RPM_CONFLICTS, "utf-8"));
+  } catch {
+    // 아직 안 만들었으면 기출 절만 낸다.
+  }
+
   const parts: string[] = [
-    "# 트랙 B — 값이 갈린 수치 정답 (원장님 확인용)",
+    "# 14 — 사람이 봐야 할 정답 충돌 (원장님 확인용)",
     "",
-    `대상 **${rows.length}건**. 값 형태 불일치 중 **양쪽 다 순수 숫자인데 값이 다른 것**만 뽑았다.`,
-    "표기 차이로 설명할 여지가 없어, 그대로 두면 학생 시험지에 틀린 답이 인쇄된다.",
+    "**이 목록은 규칙으로 못 가른 것만 남긴 것이다. 규칙으로 갈린 것은 이미 반영됐다.**",
+    "",
+    `값 형태 불일치 1,131건 중 표기 차이로 설명되는 것은 전부 걷어냈고,`,
+    `여기 남은 **${rows.length + rpm.length}건**은 표기로 설명할 여지가 없다 —`,
+    "그대로 두면 학생 시험지에 틀린 답이 인쇄된다.",
+    "",
+    "출처가 둘이라 절을 나눴다. **판단 기준이 다르다.**",
+    "",
+    `- §1 기출 ${rows.length}건 — 학교가 인쇄한 정답면이 있다. 그게 정본이다`,
+    `- §2 RPM ${rpm.length}건 — 정답면이 없다. 원본 문제은행 값과 우리 값이 갈렸다`,
+    "",
+    "왼쪽 칸 `☐` 에 표시해 주시면 됩니다 — `☑` 는 **바깥 출처 값이 맞다** 로 읽겠습니다.",
+    "",
+  ];
+  parts.push(
+    `## 1. 기출 — 값이 갈린 수치 정답 ${rows.length}건`,
     "",
     "- **우리 값** = 지금 DB 에 든 값 (완료본 HWP 의 정답 필드에서 옮겨 온 것)",
     "- **정답면 값** = 같은 시험지 PDF 뒤쪽, 학교가 인쇄한 정답면에서 읽은 값",
     "- **정답면 원문** = 그 줄을 그대로 옮긴 것. 문항 본문은 싣지 않았다",
     "",
-    "왼쪽 칸에 표시해 주시면 됩니다 — `☑` 는 **정답면 값이 맞다(공식으로 교정)** 로 읽겠습니다.",
-    "",
-  ];
+  );
   for (const key of order) {
     const list = groups.get(key);
     if (!list || list.length === 0) continue;
@@ -150,12 +172,30 @@ async function main(): Promise<void> {
         : key === "자릿수 포함"
           ? "한쪽이 다른 쪽의 앞자리다. 자릿수가 잘렸을 가능성이 있어 따로 묶었다."
           : "두 값이 서로 무관하다. 어느 쪽이 맞는지 지면을 봐야 한다.";
-    parts.push(`## ${key} — ${list.length}건`, "", why, "");
+    parts.push(`### ${key} — ${list.length}건`, "", why, "");
     parts.push(
       "| | 시험지 · 문항 | 우리 값 | 정답면 값 | 정답면 원문 |",
       "|---|---|---|---|---|",
     );
     for (const row of list) parts.push(line(row));
+    parts.push("");
+  }
+  if (rpm.length > 0) {
+    parts.push(
+      `## 2. RPM(문제은행) — 번호 충돌 ${rpm.length}건`,
+      "",
+      "기출과 달리 **학교 정답면이 없다.** 우리 값과 sumaek 원본 값이 갈렸고,",
+      "`recover-rpm-answers.ts` 가 자동 교정하지 않고 남긴 것이다.",
+      "우리 쪽이 복수정답으로 적혀 있는데 원본은 하나만 적은 꼴이 많다.",
+      "",
+      "| | 학년 · 단원 | 우리 값 | 원본 값 |",
+      "|---|---|---|---|",
+    );
+    for (const row of rpm) {
+      parts.push(
+        `| ☐ | ${row.grade} ${row.unit} | \`${row.ours}\` | \`${row.origin}\` |`,
+      );
+    }
     parts.push("");
   }
   parts.push(
