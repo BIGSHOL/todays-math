@@ -17,6 +17,8 @@ import { mkdir, writeFile } from "node:fs/promises";
 
 import { PrismaClient } from "@prisma/client";
 
+import { isDirectScript } from "../import/isDirectScript";
+
 import { renderMathHtml } from "../../src/lib/math/renderMathHtml";
 
 const OUT = "scripts/qa/reports/bare-latex-audit.json";
@@ -169,4 +171,6 @@ async function main(): Promise<void> {
   }
 }
 
-void main();
+if (isDirectScript(import.meta.url)) {
+  void main();
+}
