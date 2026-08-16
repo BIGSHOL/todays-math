@@ -291,7 +291,6 @@ async function main(): Promise<void> {
       ? decisions
       : decisions.filter((decision) => !decision.byCreatedAt);
     const demote = applied.flatMap((d) => d.demote.map((c) => c.problemId));
-    const keep = decisions.map((d) => d.keep.problemId);
 
     // ── 보고 ────────────────────────────────────────────────────────────────
     console.log("── RPM 중복 88그룹 완비도 기준 (드라이런) ──");
@@ -410,9 +409,18 @@ async function main(): Promise<void> {
       console.log(`\n상세 기록 — ${jsonPath}`);
     }
 
+    // 이미 내려간 행을 그냥 다시 세면 "또 11행을 내린다" 로 읽힌다 — 실제 갱신은 0건이다.
+    const alreadyPending = problems.filter(
+      (problem) =>
+        demote.includes(problem.id) && problem.reviewStatus === "pending",
+    ).length;
     if (!apply) {
       console.log(
-        `\n드라이런 — 변경 없음. 승인 후 ALLOW_SHARED_IMPORT=1 ... --apply (강등 대상 ${demote.length})`,
+        `\n드라이런 — 변경 없음. 승인 후 ALLOW_SHARED_IMPORT=1 ... --apply` +
+          ` (강등 대상 ${demote.length}` +
+          (alreadyPending > 0
+            ? ` · 그중 ${alreadyPending}행은 **이미 pending** — 실제 갱신은 ${demote.length - alreadyPending}행)`
+            : ")"),
       );
       return;
     }

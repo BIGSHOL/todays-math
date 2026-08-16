@@ -22,6 +22,7 @@ import { PrismaClient } from "@prisma/client";
 import { classifyDrafts } from "../../src/lib/import/buildReport";
 import { convertRpmExtractedRow } from "../../src/lib/import/convertRpm";
 import { flattenStructured } from "../../src/lib/import/flattenStructured";
+import { groupBy as groupByAxes, type AxisSet, type Row as DupRow } from "./find-true-duplicates";
 import type { UnitLike } from "../../src/lib/import/types";
 import { isDirectScript } from "../import/isDirectScript";
 import {
@@ -604,6 +605,34 @@ async function build(): Promise<{
       group.index = index + 1;
     });
 
+    // 세 축(본문·그림·정답)으로 다시 묶어 **진짜 중복**을 센다.
+    // 판정 코드는 `find-true-duplicates.ts` 하나만 쓴다 — 같은 규칙이 두 벌 있으면 갈라진다.
+    const dupRows: DupRow[] = problems.map((problem) => ({
+      id: problem.id,
+      content: problem.content,
+      answer: problem.answer,
+      figureUrls: problem.figureUrls,
+    }));
+    const axisCounts: Record<string, { groups: number; rows: number }> = {};
+    for (const axes of [
+      "content",
+      "content+answer",
+      "content+figure",
+      "all-three",
+    ] as AxisSet[]) {
+      const found = groupByAxes(dupRows, axes);
+      axisCounts[axes] = {
+        groups: found.size,
+        rows: [...found.values()].reduce((sum, bucket) => sum + bucket.length, 0),
+      };
+    }
+    const allThree = groupByAxes(dupRows, "all-three");
+    const confirmedDup = [...allThree.values()].filter((bucket) =>
+      bucket.every(
+        (row) => row.answer.trim() && !row.answer.includes(SENTINEL),
+      ),
+    );
+
     const groupRowIds = new Set(groups.flatMap((group) => group.problemIds));
     const groupRowsKeyed = problems.filter(
       (problem) => groupRowIds.has(problem.id) && problem.externalId,
@@ -612,6 +641,14 @@ async function build(): Promise<{
     const totals = {
       groups: groups.length,
       groupRowsKeyed,
+      dupContentGroups: axisCounts.content.groups,
+      dupContentRows: axisCounts.content.rows,
+      dupContentAnswerGroups: axisCounts["content+answer"].groups,
+      dupContentFigureGroups: axisCounts["content+figure"].groups,
+      dupAllThreeGroups: axisCounts["all-three"].groups,
+      dupAllThreeRows: axisCounts["all-three"].rows,
+      dupConfirmed: confirmedDup.length,
+      dupConfirmedRows: confirmedDup.reduce((sum, bucket) => sum + bucket.length, 0),
       usedInTests: groups.reduce(
         (sum, g) => sum + g.members.reduce((n, m) => n + m.usedInTests, 0),
         0,
@@ -762,7 +799,7 @@ function render(
   );
   lines.push(
     `4. 해설로도 안 갈리는 ${totals.dbRows - totals.pairableRows}행(${totals.groups - totals.pairable}그룹)만 사람이 본다. ` +
-      "§7 에 그 그룹과, 따로 눈여겨볼 그룹을 함께 뽑아 뒀다.",
+      "§8 에 그 그룹과, 따로 눈여겨볼 그룹을 함께 뽑아 뒀다.",
   );
   lines.push("");
   lines.push(
@@ -772,7 +809,50 @@ function render(
   );
   lines.push("");
 
-  lines.push("## 3. 일괄 판단표 — 「이 기준으로」 한마디면 그대로 적용됩니다");
+  lines.push("## 3. ⚠️ 다음 사람이 반드시 알아야 할 함정");
+  lines.push("");
+  lines.push(
+    "**본문 글자만으로 중복을 판정하면, 그림이 빠진 문항끼리 가짜 중복이 된다.**",
+  );
+  lines.push("");
+  lines.push(
+    "이 문서가 다루는 88그룹이 정확히 그렇게 생겼다. RPM 도형 문항은 발문이 " +
+      '"다음 그림에서 ∠x의 크기를 구하시오" 처럼 **글자가 서로 완전히 같고**, ' +
+      "문항을 가르는 것은 오직 그림이다. 이관이 `diagram_assets` 를 안 봐서 그림이 " +
+      "한 장도 안 붙은 상태(0/233)에서 본문만 비교했으니, **서로 다른 문항 233개가 " +
+      "한 덩어리로 뭉쳐 「중복」으로 보였다.**",
+  );
+  lines.push("");
+  lines.push(
+    "트랙 A 가 그림을(1,088/1,088) 트랙 B 가 정답을 붙인 지금 **세 축으로 다시 묶으면** " +
+      "이렇게 갈린다:",
+  );
+  lines.push("");
+  lines.push("| 무엇으로 묶나 | 그룹 |");
+  lines.push("|---|---|");
+  lines.push(`| 본문만 (예전 방식) | **${totals.dupContentGroups}그룹 / ${totals.dupContentRows}행** |`);
+  lines.push(`| 본문 + 정답 | ${totals.dupContentAnswerGroups}그룹 |`);
+  lines.push(`| 본문 + 그림 | ${totals.dupContentFigureGroups}그룹 |`);
+  lines.push(`| 본문 + 그림 + 정답 | ${totals.dupAllThreeGroups}그룹 / ${totals.dupAllThreeRows}행 |`);
+  lines.push(
+    `| └ 그중 **정답까지 확인된 진짜 중복** | **${totals.dupConfirmed}그룹 / ${totals.dupConfirmedRows}행** |`,
+  );
+  lines.push("");
+  lines.push(
+    `**확인된 진짜 중복은 ${totals.dupConfirmed}건이다.** 남은 ${totals.dupAllThreeGroups}그룹은 ` +
+      "정답도 그림도 **양쪽 다 비어 있어** 「같다」가 아무 뜻도 없는 것들이라 판정을 미뤄 뒀다 " +
+      "(없는 것끼리 같은 것을 같다고 하지 않는다). 재현: `npx tsx scripts/qa/find-true-duplicates.ts`.",
+  );
+  lines.push("");
+  lines.push(
+    "> **교훈** — 중복 판정에 쓸 축은 그 문항을 **실제로 가르는 것**이어야 한다. " +
+      "도형 문항에서 그것은 본문이 아니라 그림이다. 이관이 아직 안 붙인 축으로 판정하면 " +
+      "「데이터가 중복이다」가 아니라 **「내 이관이 덜 됐다」를 중복으로 읽게 된다.** " +
+      "이 착시 위에서 일괄 삭제 규칙을 세웠다면 서로 다른 문항 143개를 잃을 뻔했다(§4).",
+  );
+  lines.push("");
+
+  lines.push("## 4. 일괄 판단표 — 「이 기준으로」 한마디면 그대로 적용됩니다");
   lines.push("");
   lines.push(
     "기준마다 **남는 행·버리는 행**을 미리 계산해 뒀다. 고르시면 그 목록 그대로 적용한다. " +
@@ -830,7 +910,7 @@ function render(
   );
   lines.push("");
 
-  lines.push("## 4. 그룹별 한 줄 요약 — 어느 쪽이 무엇을 갖췄나");
+  lines.push("## 5. 그룹별 한 줄 요약 — 어느 쪽이 무엇을 갖췄나");
   lines.push("");
   lines.push(
     "`정답·해설·그림·단원` 은 그룹 안에서 **그것을 갖춘 행 수 / 전체 행 수**. " +
@@ -860,7 +940,7 @@ function render(
   }
   lines.push("");
 
-  lines.push("## 5. 이 그룹들과 `externalId` 미상의 관계");
+  lines.push("## 6. 이 그룹들과 `externalId` 미상의 관계");
   lines.push("");
   lines.push(
     `이 문서의 ${totals.dbRows}행은 **본문만으로는 원본을 하나로 좁힐 수 없는** 행들이다. ` +
@@ -891,7 +971,7 @@ function render(
   );
   lines.push("");
 
-  lines.push("## 6. 숫자");
+  lines.push("## 7. 숫자");
   lines.push("");
   lines.push("| 항목 | 값 |");
   lines.push("|---|---|");
@@ -917,11 +997,11 @@ function render(
     `| 그룹 안 DB 행이 모두 같은 단원 | ${totals.sameUnit} / ${totals.groups} |`,
   );
   lines.push(
-    `| 원본 교재 학년 ≠ 배정 단원 학년 | ${totals.gradeMismatchRows}행 (${totals.gradeMismatchGroups}그룹) — §8 |`,
+    `| 원본 교재 학년 ≠ 배정 단원 학년 | ${totals.gradeMismatchRows}행 (${totals.gradeMismatchGroups}그룹) — §9 |`,
   );
   lines.push("");
 
-  lines.push("## 7. 사람이 봐야 하는 그룹");
+  lines.push("## 8. 사람이 봐야 하는 그룹");
   lines.push("");
   const exceptions = groups.filter(
     (group) =>
@@ -960,7 +1040,7 @@ function render(
   lines.push("");
 
   lines.push(
-    "## 8. 곁다리로 드러난 것 — 결함 하나, 증상 둘 (트랙 C 소관 아님)",
+    "## 9. 곁다리로 드러난 것 — 결함 하나, 증상 둘 (트랙 C 소관 아님)",
   );
   lines.push("");
   lines.push("### 증상 1 — 단원 학년 오배정");
@@ -1053,7 +1133,7 @@ function render(
   );
   lines.push("");
 
-  lines.push("## 9. 그룹별 근거표");
+  lines.push("## 10. 그룹별 근거표");
   lines.push("");
   lines.push(
     "`정답`·`그림`·`figBox` 는 **원본 기준**(`n/m` = 원본 후보 m개 중 n개 보유). " +
@@ -1080,7 +1160,7 @@ function render(
   }
   lines.push("");
 
-  lines.push("## 10. 문항 id 대조표");
+  lines.push("## 11. 문항 id 대조표");
   lines.push("");
   lines.push(
     "우리 `Problem.id` 와 원본 `questions.id` 의 앞 8자. 순서는 짝을 뜻하지 않는다 — " +
