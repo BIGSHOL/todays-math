@@ -8,7 +8,11 @@
 // 좋아 보이지만 실전에서 무너진다.
 import { describe, expect, it } from "vitest";
 
-import type { ExamPaper } from "@/contracts/predictor.contract";
+import {
+  blueprintSchema,
+  type Blueprint,
+  type ExamPaper,
+} from "@/contracts/predictor.contract";
 import { observeBlueprint } from "@/lib/predictor/blueprint";
 import {
   blueprintDistances,
@@ -66,7 +70,9 @@ function typicalPaper(id: string, year: number, round: "중간" | "기말") {
     ...Array.from({ length: 16 }, (_, i) =>
       q(i + 1, 4, "객관식", i < 8 ? "하" : "중", i % 2 === 0 ? UNIT_A : UNIT_B),
     ),
-    ...Array.from({ length: 4 }, (_, i) => q(17 + i, 9, "서술형", "상", UNIT_B)),
+    ...Array.from({ length: 4 }, (_, i) =>
+      q(17 + i, 9, "서술형", "상", UNIT_B),
+    ),
   ];
   return paper({
     externalExamId: id,
@@ -189,7 +195,12 @@ describe("[T2] 청사진 관측", () => {
 
 describe("[T2] 청사진 예측", () => {
   const target = { year: 2025, semester: 1 as const, round: "중간" as const };
-  const series = { school: "정화중", level: "중" as const, grade: 3, subject: "중3" };
+  const series = {
+    school: "정화중",
+    level: "중" as const,
+    grade: 3,
+    subject: "중3",
+  };
 
   it("과거가 없으면 코호트(전국) 평균을 그대로 낸다", () => {
     const cohort = [typicalPaper("c1", 2024, "중간")].map(observeBlueprint);
@@ -205,7 +216,9 @@ describe("[T2] 청사진 예측", () => {
     // 코호트는 30문항, 이 학교는 20문항.
     const big = paper({
       externalExamId: "c1",
-      questions: Array.from({ length: 30 }, (_, i) => q(i + 1, 10 / 3, "객관식", "중")),
+      questions: Array.from({ length: 30 }, (_, i) =>
+        q(i + 1, 10 / 3, "객관식", "중"),
+      ),
       totalScore: 100,
       period: { year: 2024, semester: 1 as const, round: "중간" as const },
     });
@@ -240,13 +253,17 @@ describe("[T2] 청사진 예측", () => {
     // §2.3·§2.7 결론대로 학교 고유 난이도를 따라가면 안 된다.
     const allHard = paper({
       externalExamId: "h",
-      questions: Array.from({ length: 20 }, (_, i) => q(i + 1, 5, "객관식", "상")),
+      questions: Array.from({ length: 20 }, (_, i) =>
+        q(i + 1, 5, "객관식", "상"),
+      ),
       totalScore: 100,
       period: { year: 2024, semester: 1 as const, round: "중간" as const },
     });
     const allEasy = paper({
       externalExamId: "e",
-      questions: Array.from({ length: 20 }, (_, i) => q(i + 1, 5, "객관식", "하")),
+      questions: Array.from({ length: 20 }, (_, i) =>
+        q(i + 1, 5, "객관식", "하"),
+      ),
       totalScore: 100,
       period: { year: 2024, semester: 1 as const, round: "중간" as const },
     });
@@ -281,11 +298,15 @@ describe("[T2] 청사진 예측", () => {
 
   it("작년 같은 회차를 직전 회차보다 무겁게 본다", () => {
     // 작년 1학기 중간(=대상과 같은 회차)은 20문항, 직전 회차(작년 2학기 기말)는 30문항.
-    const sameRoundLastYear = observeBlueprint(typicalPaper("sr", 2024, "중간"));
+    const sameRoundLastYear = observeBlueprint(
+      typicalPaper("sr", 2024, "중간"),
+    );
     const recent = observeBlueprint(
       paper({
         externalExamId: "rc",
-        questions: Array.from({ length: 30 }, (_, i) => q(i + 1, 10 / 3, "객관식", "중")),
+        questions: Array.from({ length: 30 }, (_, i) =>
+          q(i + 1, 10 / 3, "객관식", "중"),
+        ),
         totalScore: 100,
         period: { year: 2024, semester: 2 as const, round: "기말" as const },
       }),
@@ -317,10 +338,59 @@ describe("[T2] backtest 지표", () => {
     const b = observeBlueprint(
       paper({
         externalExamId: "b",
-        questions: Array.from({ length: 24 }, (_, i) => q(i + 1, 4, "객관식", "중")),
+        questions: Array.from({ length: 24 }, (_, i) =>
+          q(i + 1, 4, "객관식", "중"),
+        ),
         totalScore: 96,
       }),
     );
     expect(blueprintDistances(a, b).questionCountAbsError).toBe(4);
+  });
+});
+
+// ── 적대적 리뷰에서 재현된 두 버그 (2026-08-16) ────────────────────────
+describe("[T2] 적대적 리뷰 회귀", () => {
+  const target = { year: 2025, semester: 1 as const, round: "중간" as const };
+  const series = {
+    school: "X중",
+    level: "중" as const,
+    grade: 3,
+    subject: "중3",
+  };
+
+  it("🔴 근거가 하나도 없으면 청사진을 지어내지 않는다", () => {
+    // 이전에는 questionCount=0 · totalScore=0 인 **계약 위반** 청사진을 조용히 냈다.
+    // 원장 화면에 "0문항 0점짜리 시험이 예상됩니다" 로 나온다.
+    expect(() =>
+      predictBlueprint({ series, target, history: [], cohort: [] }),
+    ).toThrow(/근거/);
+  });
+
+  it("🔴 내놓는 청사진은 항상 계약을 만족한다", () => {
+    const cohort = [observeBlueprint(typicalPaper("c1", 2024, "중간"))];
+    const bp = predictBlueprint({ series, target, history: [], cohort });
+    // 엔진이 자기 출력을 검증하지 않으면 계약 위반이 하류로 샌다.
+    expect(blueprintSchema.safeParse(bp).success).toBe(true);
+  });
+
+  it("🔴 빈 예측은 '틀린 예측'보다 좋은 점수를 받지 못한다", () => {
+    // 총변동거리 특성상 빈 분포는 최대 0.5 까지만 벌어진다.
+    // 그대로 두면 엔진이 망가져 빈 청사진을 낼수록 backtest 점수가 좋아진다.
+    const observed = observeBlueprint(typicalPaper("o", 2025, "중간"));
+    const empty: Blueprint = {
+      ...observed,
+      kind: "predicted",
+      typeMix: {
+        객관식: { count: 0, score: 0 },
+        단답형: { count: 0, score: 0 },
+        서술형: { count: 0, score: 0 },
+      },
+      unitMix: [],
+      scoreHistogram: [],
+    };
+    const d = blueprintDistances(empty, observed);
+    expect(d.typeMixDistance).toBe(1);
+    expect(d.unitMixDistance).toBe(1);
+    expect(d.scoreGridDistance).toBe(1);
   });
 });

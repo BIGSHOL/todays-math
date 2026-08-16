@@ -1,0 +1,864 @@
+{
+  "note": "C-1 2차 — 해설(explanation) 대조로 확정한 RPM externalId 214건. 되돌릴 때 이 목록에 한정한다 (1차 4,629건과 섞지 말 것).",
+  "basis": "solution",
+  "appliedAt": "2026-08-16",
+  "count": 214,
+  "pairs": [
+    {
+      "problemId": "71e10338-43b1-4b12-be4d-1694be5247a8",
+      "externalId": "019fd1d7-3ce8-7489-ac3d-21e4028ce970"
+    },
+    {
+      "problemId": "e7c549e1-5daf-4d8a-a925-b20616bc0836",
+      "externalId": "019fd1d7-e799-74b9-bd9e-0cd8d4b665f8"
+    },
+    {
+      "problemId": "8aeb779c-78ff-4887-ac60-33a446fcefae",
+      "externalId": "019fd1d8-5e1b-702b-8bc5-de624df9efcf"
+    },
+    {
+      "problemId": "bf37913b-87e7-4c29-ae9d-bb472f6f6031",
+      "externalId": "019fd1d8-7282-71ac-8627-95cb400ed17c"
+    },
+    {
+      "problemId": "9a7fcd23-1d43-46a1-b261-c52292279241",
+      "externalId": "019fd1da-ae55-7616-9bae-e90cdbdeb88f"
+    },
+    {
+      "problemId": "2ecc8f08-b9f4-43d6-a666-9be30ae816a1",
+      "externalId": "019fd1da-b27a-72a9-9c31-defa12db2db3"
+    },
+    {
+      "problemId": "7dc4f8d0-1b08-430f-97ca-36680ab96ac7",
+      "externalId": "019fd1db-a60b-76de-8e76-cca03a55f06d"
+    },
+    {
+      "problemId": "44673a03-c6aa-4da2-b0e5-7aeba1722193",
+      "externalId": "019fd1db-c363-7110-b79b-a41cfd53537c"
+    },
+    {
+      "problemId": "dde81a77-35aa-4b20-bc80-8a7240fa4789",
+      "externalId": "019fd1d7-3d45-71fe-9896-810d1391d0af"
+    },
+    {
+      "problemId": "bdef6229-46f5-493a-8216-86b7ae5a4abf",
+      "externalId": "019fd1d7-66f4-7659-a995-3a02c792719d"
+    },
+    {
+      "problemId": "7c71e86e-9a3c-4c63-91f1-263b38825046",
+      "externalId": "019fd1db-e6ab-7395-b2cb-b378136b74c3"
+    },
+    {
+      "problemId": "712dc7b6-72d6-48da-98da-fdafc93d3412",
+      "externalId": "019fd1dd-ca36-76f1-be37-89ddc9f73d56"
+    },
+    {
+      "problemId": "70732174-414e-4b07-8700-48b75249d34c",
+      "externalId": "019fd1db-1fcf-70ef-a056-ac69c14fb7e9"
+    },
+    {
+      "problemId": "43f18f1c-12dd-4920-bf16-bbbe184aacf5",
+      "externalId": "019fd1de-4d15-774b-9fe9-a9006221e3b4"
+    },
+    {
+      "problemId": "58d7db7b-b921-4f59-bb6f-7206b627314f",
+      "externalId": "019fd1de-79aa-713e-8c23-1abbf112dc9f"
+    },
+    {
+      "problemId": "5a3d7f76-b1b3-4470-9f1c-5b325e04e6c7",
+      "externalId": "019fd1de-79f9-74ca-bdc4-7fc981880c8f"
+    },
+    {
+      "problemId": "ffa29d66-7066-4e0f-89c6-7f66db033f1c",
+      "externalId": "019fd1de-98a2-74c1-91bb-60e9946572e7"
+    },
+    {
+      "problemId": "3916eb81-9015-4042-a2ad-6b442e3f107d",
+      "externalId": "019fd1d7-674a-724d-a78a-c388ce83b57a"
+    },
+    {
+      "problemId": "c0c130e1-6d7d-4227-ae83-4ce7376c30fa",
+      "externalId": "019fd1d7-3b5f-75df-913e-05bed8592167"
+    },
+    {
+      "problemId": "af7a5b24-1f5f-4151-ac71-a84cae76c508",
+      "externalId": "019fd1d7-3bae-7425-b22c-bb5b06e6a311"
+    },
+    {
+      "problemId": "c68de627-740d-4c90-9131-22aaf7a8d195",
+      "externalId": "019fd1db-dfdb-73e6-9872-1d1b77f9a41f"
+    },
+    {
+      "problemId": "c33c21c8-b506-46c3-a440-e80b99b56c89",
+      "externalId": "019fd1de-9708-7769-b76f-ee2937eeca4a"
+    },
+    {
+      "problemId": "6e7d9b7c-b973-405f-8179-6259a922b5a8",
+      "externalId": "019fd1de-974a-725d-bf01-68c57ac1c074"
+    },
+    {
+      "problemId": "b63488e0-c2ba-475e-8b8e-54eb6476c97e",
+      "externalId": "019fd1de-978e-75a7-99aa-0df9af9ec3cd"
+    },
+    {
+      "problemId": "11eea2a2-a036-4c03-8110-435ab2568191",
+      "externalId": "019fd1db-e026-767a-9494-42bdecb7f12e"
+    },
+    {
+      "problemId": "4e4b1e73-0e19-4771-a855-b1f5cecfedba",
+      "externalId": "019fd1de-4c02-77a7-a3c4-215c2787049b"
+    },
+    {
+      "problemId": "3ab6383e-f9ab-4095-b8b4-d0acf6fa7263",
+      "externalId": "019fd1db-e071-7144-989c-ba0da48ca196"
+    },
+    {
+      "problemId": "a45c08a5-fce2-49fc-b783-2e18a3c32142",
+      "externalId": "019fd1de-4d9b-75b9-b930-880e0e12311c"
+    },
+    {
+      "problemId": "5dddd4ae-b3e2-4225-98bd-854f391a4f7d",
+      "externalId": "019fd1de-4dde-725c-95d5-25283875ad61"
+    },
+    {
+      "problemId": "5cc1bd3f-b3d4-42df-b9a4-6b44ae4fb710",
+      "externalId": "019fd1de-4e22-726d-ab17-e5d37cba29cd"
+    },
+    {
+      "problemId": "1a078e58-9e5d-4720-a503-76f64990fff9",
+      "externalId": "019fd1de-4e65-703b-a1a3-a4d455224a53"
+    },
+    {
+      "problemId": "f5f78db6-51d3-4467-899d-478b5c40a287",
+      "externalId": "019fd1db-1dff-7273-97bc-8c86103dcbe1"
+    },
+    {
+      "problemId": "d5aba4d2-e6ff-4b24-addd-b68566721c10",
+      "externalId": "019fd1db-e453-7184-a5ed-823c95921cea"
+    },
+    {
+      "problemId": "1e6ce404-82e3-4356-a085-95f9d8f97671",
+      "externalId": "019fd1db-e49c-753c-b8dc-3bee59092b24"
+    },
+    {
+      "problemId": "fb13a764-f9b3-4df6-b48b-8d67aa16cd63",
+      "externalId": "019fd1db-e4e7-71db-8e58-205eeb1b60d4"
+    },
+    {
+      "problemId": "7332caf7-be20-4f40-a787-6af17a307c72",
+      "externalId": "019fd1d7-3da9-7548-9d9d-a593f5dc91ad"
+    },
+    {
+      "problemId": "5f543ae3-4e79-45c3-b251-a20e5f1ea55a",
+      "externalId": "019fd1da-85c2-70ee-8b94-92dfaa0e7379"
+    },
+    {
+      "problemId": "7b725504-48be-4010-99c8-42f5e25df815",
+      "externalId": "019fd1da-b041-708e-a5a0-9ffb42a84f5d"
+    },
+    {
+      "problemId": "901cea19-64e5-4eae-b0e5-fbfd5d0f612d",
+      "externalId": "019fd1da-8a45-7799-a23e-662cda7167e1"
+    },
+    {
+      "problemId": "6896ad80-dad7-4137-a9d8-ec19a394d56d",
+      "externalId": "019fd1d7-78e2-734d-ad03-45046d4600f2"
+    },
+    {
+      "problemId": "b412c04b-e66e-4a8a-b462-4675a7b6b71b",
+      "externalId": "019fd1d7-7bbc-71f1-874a-eb281290a1fe"
+    },
+    {
+      "problemId": "77dc1597-e615-478a-b707-a81e886eb11c",
+      "externalId": "019fd1d7-7c09-754c-bef5-8e2f1d84a6a6"
+    },
+    {
+      "problemId": "29e6a92b-8266-43f4-bb56-7267847ea7e5",
+      "externalId": "019fd1d7-7cb1-75a7-829b-389dca43c8c4"
+    },
+    {
+      "problemId": "7b7c6a3a-68d0-4351-88d6-087e26e53948",
+      "externalId": "019fd1d7-7d01-708d-9f46-3848527e84c2"
+    },
+    {
+      "problemId": "772cc209-828c-4039-bbe5-625528df0208",
+      "externalId": "019fd1d7-7da1-7614-b63c-4234f053aeee"
+    },
+    {
+      "problemId": "287a51d5-c3ce-4572-9648-8a3b6ad06cab",
+      "externalId": "019fd1d7-7f05-758a-a997-86ed122d3114"
+    },
+    {
+      "problemId": "4f781dd0-b58b-4df9-aa96-ff15670843a4",
+      "externalId": "019fd1d7-7f56-770b-bb26-8c2331cfd658"
+    },
+    {
+      "problemId": "ed71c33d-47f3-4177-8711-7d1fc9bcd627",
+      "externalId": "019fd1d7-7fae-757d-bdcf-2bf9445d7919"
+    },
+    {
+      "problemId": "f56375e9-dc4c-4c47-928e-d1ac628d32c8",
+      "externalId": "019fd1d7-800c-75df-a591-92d38eb8db91"
+    },
+    {
+      "problemId": "bfa46b8e-4d23-482a-99fb-cd302aa5fe13",
+      "externalId": "019fd1da-b3dc-768e-a88d-b6c63608a539"
+    },
+    {
+      "problemId": "5a7ed6da-ae32-4902-a6f4-c211313be0f0",
+      "externalId": "019fd1da-b434-766b-82c1-35e92c99f859"
+    },
+    {
+      "problemId": "02ba02e2-1757-449e-9bd7-3a6d9a272f3b",
+      "externalId": "019fd1da-b48a-76cf-a950-f48e7aa92d65"
+    },
+    {
+      "problemId": "601fb4a4-702a-4b37-b54e-063f58441a64",
+      "externalId": "019fd1d7-dac6-701a-886b-4e751e15747d"
+    },
+    {
+      "problemId": "42c3295c-7ac7-43ca-9496-970458449512",
+      "externalId": "019fd1d7-db0e-70c5-8f1c-7d4e03d2a5d9"
+    },
+    {
+      "problemId": "cab8c3ad-a1fe-4e01-b6ef-bfb92efc35d1",
+      "externalId": "019fd1d8-0cde-73e8-a30e-2c9ca66c0455"
+    },
+    {
+      "problemId": "eb296f58-5087-4d31-a44b-372a1b397616",
+      "externalId": "019fd1d8-7235-705d-98c3-ec16dc34fb10"
+    },
+    {
+      "problemId": "73e535af-6437-4dd6-b771-3cb55f30cce1",
+      "externalId": "019fd1d6-d4c3-754f-8037-a310eacdfdd4"
+    },
+    {
+      "problemId": "2585e1c3-7e14-499b-afbc-2cfa3b670bc3",
+      "externalId": "019fd1d6-d51d-779b-a28c-57b3c783f379"
+    },
+    {
+      "problemId": "be953ccc-1b1f-4fd5-829a-d6140f492d03",
+      "externalId": "019fd1d6-dab6-73cf-9de5-a9fa6712998f"
+    },
+    {
+      "problemId": "2835242d-1e26-4014-916e-945dac5b353c",
+      "externalId": "019fd1d6-db0e-731a-9a94-7880e2da1e37"
+    },
+    {
+      "problemId": "e1a9fb5a-4286-4033-a3fa-ddb6fe337efc",
+      "externalId": "019fd1d7-d39d-739b-a6fd-d18012bdeb89"
+    },
+    {
+      "problemId": "8389da51-b554-4e69-9ece-bdb4b687fce9",
+      "externalId": "019fd1d7-f1b5-7079-8794-77ef35cd1f0d"
+    },
+    {
+      "problemId": "87159049-975e-480a-a3a9-cf829ee58005",
+      "externalId": "019fd1d7-e6a7-749b-a849-59fcf4668ce1"
+    },
+    {
+      "problemId": "06cb94d3-44b3-45c2-85d1-29b2d0a3d6fb",
+      "externalId": "019fd1d7-f16d-712b-b65a-cf708cb8bfa5"
+    },
+    {
+      "problemId": "737ee6ad-b4f2-480f-a294-347010b6de93",
+      "externalId": "019fd1d7-ed3b-706c-afa9-276567a0d8a0"
+    },
+    {
+      "problemId": "2848c693-d093-499b-b574-84515f63b5b9",
+      "externalId": "019fd1d7-ed85-74c4-874e-1688c416b32b"
+    },
+    {
+      "problemId": "c61dc444-37a4-43ce-9acb-ac03a87cdcf4",
+      "externalId": "019fd1d7-edcf-76be-b293-6c9c2ca567c7"
+    },
+    {
+      "problemId": "5b195f6c-4654-4a4c-b32e-a0f51925a234",
+      "externalId": "019fd1d7-f2a5-70cc-b858-3b60269f740a"
+    },
+    {
+      "problemId": "059474ad-24e6-4930-9b40-cbd8e1df2fa5",
+      "externalId": "019fd1d7-f2f0-7061-995a-3a2cb0ec6d93"
+    },
+    {
+      "problemId": "a0a91255-e070-439d-ba8e-c790378ef9d8",
+      "externalId": "019fd1d8-05de-74c8-ac6e-4acf39114552"
+    },
+    {
+      "problemId": "63a62e6b-c397-4a17-a39c-e9686fb4a60d",
+      "externalId": "019fd1d7-f8ca-7399-826d-6945b4c8a116"
+    },
+    {
+      "problemId": "c449c43d-9ff5-4694-a092-2eacd0faad9a",
+      "externalId": "019fd1d7-faa8-7799-b58d-fc82ed49959e"
+    },
+    {
+      "problemId": "f972c334-268e-4dde-8e36-69340dba1d23",
+      "externalId": "019fd1d8-0625-76ff-ba02-7c83ed6a8a8f"
+    },
+    {
+      "problemId": "613002e2-bdd9-4129-a561-4f7cda7d9dc4",
+      "externalId": "019fd1d8-03e9-7689-9261-46c41713d80c"
+    },
+    {
+      "problemId": "db32635e-9546-447e-ba61-db7551cccda8",
+      "externalId": "019fd1d8-00c8-7143-a589-a215e9e2dbaa"
+    },
+    {
+      "problemId": "988d9802-5688-4ed2-99fc-2806de8c04c2",
+      "externalId": "019fd1d8-0431-772b-b13a-d06287a89085"
+    },
+    {
+      "problemId": "ebeedd73-55d1-4635-be0f-53e97a995728",
+      "externalId": "019fd1d8-04bf-71ae-9051-0dff85955541"
+    },
+    {
+      "problemId": "8b1f9ee3-d2e7-4e10-8fcf-d990ae151e95",
+      "externalId": "019fd1d8-0506-75dd-81eb-c71230ecf526"
+    },
+    {
+      "problemId": "5e708fe3-1c55-4a21-b33c-91e270363931",
+      "externalId": "019fd1d8-054e-750e-bd0a-4230cb9cb7c9"
+    },
+    {
+      "problemId": "bf04ad59-300d-4660-b5e7-2becd7cffa05",
+      "externalId": "019fd1d8-0598-746a-8c88-49129b5157ab"
+    },
+    {
+      "problemId": "953e2740-5129-4eea-8012-d035b7433f26",
+      "externalId": "019fd1d8-0a8e-705d-9c71-e47b60505c47"
+    },
+    {
+      "problemId": "67145ec0-a349-48c8-bf0e-976105e1e5d1",
+      "externalId": "019fd1d8-0ad5-7069-8626-1911c9d099da"
+    },
+    {
+      "problemId": "983d8b6f-1dff-4268-9334-27ffe72e664c",
+      "externalId": "019fd1d8-283a-75fc-a21b-8ebef6f55fd8"
+    },
+    {
+      "problemId": "68ab1dfd-2886-4d7b-8dca-052657d59569",
+      "externalId": "019fd1d8-1b07-759a-afff-1da1425afa96"
+    },
+    {
+      "problemId": "0e3de3df-887f-400c-9207-6111ff530057",
+      "externalId": "019fd1d8-1b5c-778e-92b1-6061a3d06b63"
+    },
+    {
+      "problemId": "2418d5ac-6bfb-4b1e-b8db-fb732113eb82",
+      "externalId": "019fd1d8-235e-772d-8b7e-3e623ee354a0"
+    },
+    {
+      "problemId": "844becff-60d8-4cb4-8d11-9d593a024b62",
+      "externalId": "019fd1d8-480a-7158-a702-c1e47dc4b538"
+    },
+    {
+      "problemId": "35d96cf5-54e0-47e5-a4d0-5d5e4c1a984f",
+      "externalId": "019fd1d8-66d7-770e-9f9f-1e54fdfc8165"
+    },
+    {
+      "problemId": "fc57ac7a-56e1-41bc-bc89-04bce885e701",
+      "externalId": "019fd1da-8b37-7399-a9a3-1c0faac49741"
+    },
+    {
+      "problemId": "2a317c98-8a3b-4ea6-8ad2-64d7193085ea",
+      "externalId": "019fd1da-af9e-7713-8ea2-94f198e12bbf"
+    },
+    {
+      "problemId": "a2c7d6f6-2e57-40e1-abd1-784495e6bd04",
+      "externalId": "019fd1da-aff1-737e-a9af-59c67431c93c"
+    },
+    {
+      "problemId": "350ca7fe-e444-4c7a-bd44-a16f24b63b4b",
+      "externalId": "019fd1db-7fee-756f-a705-c32ea3c101f2"
+    },
+    {
+      "problemId": "b016f338-a155-49b2-99ff-d15d509c91ff",
+      "externalId": "019fd1da-8b96-718e-8794-cf925acf03c3"
+    },
+    {
+      "problemId": "ad9e4e21-fea0-4bbe-be5d-b86b33376910",
+      "externalId": "019fd1da-8bea-75ce-9f53-f9cda6b5007c"
+    },
+    {
+      "problemId": "e5d569ad-eb3c-4738-90d1-4a6f47e5b470",
+      "externalId": "019fd1da-518d-75ca-8079-728fdc622b18"
+    },
+    {
+      "problemId": "c4c8d5fe-053a-47af-ba5c-941300d6aac6",
+      "externalId": "019fd1da-51cf-753b-b560-7521be6ad528"
+    },
+    {
+      "problemId": "dbd01be9-56a3-4a93-93ee-a30167c558e2",
+      "externalId": "019fd1da-88da-71c8-9edf-1cfaeeb2aa7c"
+    },
+    {
+      "problemId": "6d09e726-1bb5-4494-9798-1f399d44ce88",
+      "externalId": "019fd1da-8881-703a-b289-26fb3a6ce8ff"
+    },
+    {
+      "problemId": "8eb253d5-e52b-4cb7-9144-9608a03a80a7",
+      "externalId": "019fd1da-8643-749a-af9e-e69ee8346193"
+    },
+    {
+      "problemId": "9bb22128-aaad-4495-9df2-14f0807c4fdd",
+      "externalId": "019fd1da-86a9-76a1-93c0-6122cd1380bd"
+    },
+    {
+      "problemId": "bb5fe660-185a-4deb-8f9d-927e87a539f3",
+      "externalId": "019fd1da-870d-734a-b2bf-c251e5361dfe"
+    },
+    {
+      "problemId": "5487566e-2ffb-4aa8-9bcd-7a68a98b14d2",
+      "externalId": "019fd1da-8991-748d-88f7-0d0acff9430d"
+    },
+    {
+      "problemId": "be33dd65-4e75-4cbc-81d7-cde944d170e1",
+      "externalId": "019fd1da-8c48-7353-bf42-8b4269b346ec"
+    },
+    {
+      "problemId": "ed1eb1e9-9201-49b2-aee4-fdfb226123f7",
+      "externalId": "019fd1da-af02-73d6-b0f7-4ccdb11bd6f5"
+    },
+    {
+      "problemId": "94e1af5c-1069-4f29-868e-b9f5785d6596",
+      "externalId": "019fd1da-af4f-762b-ad75-aae040cf5757"
+    },
+    {
+      "problemId": "e3b7fe6b-53a4-4992-bdd2-401cd0c673eb",
+      "externalId": "019fd1da-f736-7464-91d1-ad038a80960a"
+    },
+    {
+      "problemId": "4b65914a-b0d6-4e2d-ba6d-0081d0ab2455",
+      "externalId": "019fd1da-ae02-766a-912e-695d6c1437ec"
+    },
+    {
+      "problemId": "bd5391df-636f-44af-ad64-fa28144fa478",
+      "externalId": "019fd1da-aeb2-723a-ad40-abdebe5d6573"
+    },
+    {
+      "problemId": "ec3802ed-9334-4059-a1f7-d918958c1043",
+      "externalId": "019fd1da-b22a-720d-97c5-37a27780e269"
+    },
+    {
+      "problemId": "057487b9-8a93-48b7-bf62-388f084199aa",
+      "externalId": "019fd1da-b2cc-7381-a3f3-80d49ba5cb73"
+    },
+    {
+      "problemId": "1ea71cba-f4ce-4ad5-a938-b5c38bbe82ba",
+      "externalId": "019fd1da-b320-76fb-a1ff-62e25cb7b463"
+    },
+    {
+      "problemId": "9978450d-8920-4e5b-9d5e-2e5aff8ad7dd",
+      "externalId": "019fd1da-b371-7721-8e1f-432caf432e8f"
+    },
+    {
+      "problemId": "86f8499d-7e6d-4c68-aca6-810618136496",
+      "externalId": "019fd1da-f7a9-73ef-9787-5efa4c5b6b38"
+    },
+    {
+      "problemId": "521e0c6e-f860-4564-a397-90fe3396a523",
+      "externalId": "019fd1da-f808-76bb-903a-7f03e866562f"
+    },
+    {
+      "problemId": "c88153ec-e282-4a9d-b8e6-7240f72a91c0",
+      "externalId": "019fd1da-f86e-700c-82d7-708737e07a5f"
+    },
+    {
+      "problemId": "2a5f72e9-9b3d-48d1-8037-95cebddcdcd4",
+      "externalId": "019fd1da-f8f3-720e-aef6-0fc4989e0021"
+    },
+    {
+      "problemId": "baab67f3-7610-44c9-a8e3-fbe0c1f26ac3",
+      "externalId": "019fd1db-1eb3-7458-9848-357c2983e402"
+    },
+    {
+      "problemId": "bfc4bcd6-3d8a-44df-9b6c-33d2c45be5bf",
+      "externalId": "019fd1db-1e57-7405-9fae-d76ebce35efa"
+    },
+    {
+      "problemId": "fb03f07c-4f90-43e5-b141-2700317ef6e1",
+      "externalId": "019fd1db-1f16-723e-af1c-950c0f5eca58"
+    },
+    {
+      "problemId": "d8e6e179-2687-4209-ad71-1e9a3064d1b0",
+      "externalId": "019fd1db-1f71-7787-b729-3b95b452f413"
+    },
+    {
+      "problemId": "af9d7724-2b0b-4843-95b6-04ca29da315e",
+      "externalId": "019fd1db-202b-770c-9c7d-260584e879c3"
+    },
+    {
+      "problemId": "9018c460-755b-4392-b633-051526fff264",
+      "externalId": "019fd1db-208b-77da-9197-f5354b10335b"
+    },
+    {
+      "problemId": "558dccd2-0beb-4f84-85e8-1675500a66c7",
+      "externalId": "019fd1db-22ae-72ac-8734-c63cd09bd00d"
+    },
+    {
+      "problemId": "475180e3-dd9f-4fa2-af46-a485aa241c2b",
+      "externalId": "019fd1db-2311-76a2-a6f3-8e581622fe48"
+    },
+    {
+      "problemId": "8990ebaf-f49e-48b4-974d-3f75e7f6b033",
+      "externalId": "019fd1db-7f9f-76dd-8e6a-6d4b764301dd"
+    },
+    {
+      "problemId": "7c9618c8-af5c-4d1d-a1f8-998bfdbbe09a",
+      "externalId": "019fd1db-7d5f-71af-bd29-6a9a1b1bfc3e"
+    },
+    {
+      "problemId": "521456d5-fe19-455c-ab10-099263451b0f",
+      "externalId": "019fd1db-7db8-7619-a786-558b74a42fb4"
+    },
+    {
+      "problemId": "5facea46-9d82-4ed2-bb37-cfee84c4b069",
+      "externalId": "019fd1db-7f38-7155-9ded-91207f0a622c"
+    },
+    {
+      "problemId": "d81df718-ad02-402b-bd1b-02c14d28dfa6",
+      "externalId": "019fd1db-a070-7559-a02f-8fb9679f4781"
+    },
+    {
+      "problemId": "e636e7b5-2530-4e25-afae-3ac732234502",
+      "externalId": "019fd1db-a0c3-732f-8d59-a47851f6e00a"
+    },
+    {
+      "problemId": "6c4d6dd5-7bf7-491e-8ea6-819f50469a08",
+      "externalId": "019fd1db-a020-7769-963d-9756c213a5cf"
+    },
+    {
+      "problemId": "3c682435-bcc0-4ca2-a49a-78acf3f46b0f",
+      "externalId": "019fd1de-99f3-772e-81cf-67cbb40423a3"
+    },
+    {
+      "problemId": "394c6aef-72fe-423a-a87a-6485064bc349",
+      "externalId": "019fd1db-a117-77ec-9bc5-13c3512b97c1"
+    },
+    {
+      "problemId": "8465595e-2817-43ef-b1b0-0fe6b7ae33fa",
+      "externalId": "019fd1db-a16b-7664-9f11-1864dac006bc"
+    },
+    {
+      "problemId": "9c6ceaed-c188-4703-9a56-167f60b86308",
+      "externalId": "019fd1db-a1bd-74ad-b2e9-a1708b3203c6"
+    },
+    {
+      "problemId": "b5f1d89d-5784-4f8b-aa96-dee644054180",
+      "externalId": "019fd1db-a25a-75de-8881-556dd7997cd5"
+    },
+    {
+      "problemId": "e929818d-fb37-468d-92ab-8eb96946644a",
+      "externalId": "019fd1db-a2ab-7578-9c32-405d3a63214d"
+    },
+    {
+      "problemId": "b2d2b40a-a19f-49f8-ae5c-fd55de3e386b",
+      "externalId": "019fd1db-a2fe-71d8-86e2-3d7108d6a5af"
+    },
+    {
+      "problemId": "e1672f38-d829-471a-999d-42eada9c8a60",
+      "externalId": "019fd1db-a353-738e-97e5-f75f297b15cf"
+    },
+    {
+      "problemId": "8daebd3c-d53e-481d-9402-c51b1c0bf537",
+      "externalId": "019fd1db-a3a0-73aa-b0b1-a69997e64dec"
+    },
+    {
+      "problemId": "9def07ef-73c8-409f-8a6d-282c0607871c",
+      "externalId": "019fd1db-a3e9-73b3-aefd-b9c5e73a4b45"
+    },
+    {
+      "problemId": "4bbf65a1-4b96-466a-945f-7a42cbb2a1d0",
+      "externalId": "019fd1db-a437-762a-aaed-e838a24e33b6"
+    },
+    {
+      "problemId": "798a565f-62cf-43b6-84b3-359ccdebe948",
+      "externalId": "019fd1db-a484-71aa-8c9f-5ddc90edb11f"
+    },
+    {
+      "problemId": "a9007f68-551b-482d-81ea-db5d6be20936",
+      "externalId": "019fd1db-a4d0-768a-88c8-50ce8c3fe943"
+    },
+    {
+      "problemId": "a0ef1c16-eded-4f1e-b9bf-c6d3a00fdb81",
+      "externalId": "019fd1db-a522-72dc-82dd-d7445affc7dd"
+    },
+    {
+      "problemId": "0e6c3643-72f8-46c8-82db-35ffd1c9a70e",
+      "externalId": "019fd1db-a56b-74ec-95e0-37b22b936e0e"
+    },
+    {
+      "problemId": "2b89c2c6-941f-4846-ae03-08acfda47144",
+      "externalId": "019fd1db-a5c0-7339-9f71-2311e3433e77"
+    },
+    {
+      "problemId": "e4bef095-d779-4a4d-b5ea-2c6ddc420b1b",
+      "externalId": "019fd1db-a668-7085-afda-769299d8bb5c"
+    },
+    {
+      "problemId": "d8bbd68f-8f2f-40aa-8909-eb307613eea1",
+      "externalId": "019fd1db-a6c7-7669-9cff-9fbc11f63798"
+    },
+    {
+      "problemId": "f41b25df-ad05-44fc-97a5-36a0326c4896",
+      "externalId": "019fd1db-a718-70db-9ab7-3134db534c76"
+    },
+    {
+      "problemId": "ecba4b15-48ac-431d-af1a-1ded36be89b1",
+      "externalId": "019fd1db-e1ea-759d-b479-fdbb22380e44"
+    },
+    {
+      "problemId": "570a74a7-ac74-480c-a50e-0bea6c058cf3",
+      "externalId": "019fd1db-e19e-71ff-b427-cc9ae82bd8d3"
+    },
+    {
+      "problemId": "98e8638c-5d9a-49dd-a1f4-bd299dcf17c5",
+      "externalId": "019fd1db-c1cf-75fe-ae56-c87c5719872d"
+    },
+    {
+      "problemId": "ab3353e5-fcfe-4f68-be80-62b99688e3fd",
+      "externalId": "019fd1db-c223-7608-981c-07b1c154438d"
+    },
+    {
+      "problemId": "402d2b1e-5bbb-4f09-82aa-d43f0d1d0d68",
+      "externalId": "019fd1db-c312-752d-a57d-7e274d521c5a"
+    },
+    {
+      "problemId": "97a27e52-ef76-4ddb-9f5a-afd4f8f8e45c",
+      "externalId": "019fd1db-c3ba-77ce-b301-4d2ff208da7c"
+    },
+    {
+      "problemId": "1cea976f-ff8a-442f-9c32-0d7386331b5e",
+      "externalId": "019fd1db-c40b-73af-aa78-4dffea3424fe"
+    },
+    {
+      "problemId": "75352bb0-ceae-4676-8e49-5583057f4213",
+      "externalId": "019fd1db-c463-757e-91e4-83ada5478bec"
+    },
+    {
+      "problemId": "a1d9f2cd-023a-4f45-8a7b-a81db4de1a69",
+      "externalId": "019fd1db-c4b4-750a-83cc-1671af4c133e"
+    },
+    {
+      "problemId": "32561f89-323a-44f2-9b75-167e4bbdcaf0",
+      "externalId": "019fd1db-e108-746c-9a60-9aca97316ab3"
+    },
+    {
+      "problemId": "bc1222d7-75fb-4acb-86d7-b9b9ebc12d89",
+      "externalId": "019fd1db-e155-760c-8bb8-8654c80ea37d"
+    },
+    {
+      "problemId": "cc226da0-96a8-41bf-af03-527bbf443836",
+      "externalId": "019fd1db-e533-701a-9f7e-57bed2baf5aa"
+    },
+    {
+      "problemId": "12420d37-fad0-40cf-a5b4-96359e273187",
+      "externalId": "019fd1db-e585-7468-8198-9f8e513ca18a"
+    },
+    {
+      "problemId": "0253007d-a458-4754-bbd2-472de9a7838c",
+      "externalId": "019fd1db-e5d1-72ed-9e11-8aa667a35765"
+    },
+    {
+      "problemId": "63cf9557-b324-459f-af0c-69462d8d30fe",
+      "externalId": "019fd1db-e61a-7703-b31e-a396c59a59a7"
+    },
+    {
+      "problemId": "7cbb5746-8737-4906-a006-f90197154887",
+      "externalId": "019fd1db-e664-74e9-9fbc-0562e5ff6ccc"
+    },
+    {
+      "problemId": "b8d83542-41b6-4dbc-849c-0735c5109e70",
+      "externalId": "019fd1db-e794-73a1-9237-6eb2dd5823fa"
+    },
+    {
+      "problemId": "8337287c-3b82-4b98-93af-6ec8204a8de0",
+      "externalId": "019fd1de-2511-728d-8e4f-d68978438bc0"
+    },
+    {
+      "problemId": "242fc6c3-d2fb-4513-98a0-dd6546dd79d1",
+      "externalId": "019fd1de-9a33-7184-a3ae-5ae90e039bc8"
+    },
+    {
+      "problemId": "2019ce43-efc7-478a-a786-c34b8183a09c",
+      "externalId": "019fd1dd-c7cf-75b8-9173-6cacdaee90b0"
+    },
+    {
+      "problemId": "e84999de-5ac9-4fd0-a637-06da560f0c2c",
+      "externalId": "019fd1de-2556-72ff-8335-8a0580e9328a"
+    },
+    {
+      "problemId": "2c8aceab-ef28-486d-ba16-20f608011bb0",
+      "externalId": "019fd1dd-c9eb-73ab-b48e-455ccb39e415"
+    },
+    {
+      "problemId": "4ce35a1c-fa6f-438a-89a2-72485955d64c",
+      "externalId": "019fd1dd-c829-7069-9d82-9695527df984"
+    },
+    {
+      "problemId": "525eaca5-060e-48c4-a047-4da812d88b51",
+      "externalId": "019fd1dd-cbfb-7028-b7a9-e3ec8dee0cec"
+    },
+    {
+      "problemId": "3a190400-8df5-4ea1-bc5d-b196b8fec475",
+      "externalId": "019fd1dd-cc55-703d-a870-1421f9264ce7"
+    },
+    {
+      "problemId": "24327830-0ae0-4c0f-8586-732019ca47a8",
+      "externalId": "019fd1de-259c-76ac-8972-4f2dc7b25f92"
+    },
+    {
+      "problemId": "a9f1f6e4-5afa-4200-87eb-5b7120eafad4",
+      "externalId": "019fd1dd-ed86-768a-bade-e7b7fb9aa98b"
+    },
+    {
+      "problemId": "a9b31788-4cba-45e9-a1e8-f3558cdb694a",
+      "externalId": "019fd1dd-ee20-753a-b104-049bcc270a3e"
+    },
+    {
+      "problemId": "a6581a73-70db-4d9b-a962-f07bc929cc80",
+      "externalId": "019fd1de-48cd-75b9-b6b2-d6f40369e2fa"
+    },
+    {
+      "problemId": "1001c46d-4e2f-4265-9319-1fccde433d74",
+      "externalId": "019fd1de-4911-766a-b99c-fc52ee456188"
+    },
+    {
+      "problemId": "c0c866d0-c1da-4249-9af0-af88a64a2709",
+      "externalId": "019fd1de-4c48-7311-bfea-826e58b2a0f5"
+    },
+    {
+      "problemId": "dd87d309-30a7-46b4-aec7-573b78f54253",
+      "externalId": "019fd1de-4c8c-763e-a975-4dfb28dd4561"
+    },
+    {
+      "problemId": "a3e27179-f07f-489d-af7c-4cc8d328445a",
+      "externalId": "019fd1de-4cd2-7635-bc59-b8593bcdc16c"
+    },
+    {
+      "problemId": "31d9ed48-e110-47bc-90b1-eb4bf341d0b4",
+      "externalId": "019fd1de-4d57-72ef-85b3-5ba603e08680"
+    },
+    {
+      "problemId": "cf56a7b5-6555-47bb-a5ac-5d819e6b67a1",
+      "externalId": "019fd1de-4ef0-70af-8cf2-1ca567b8e9aa"
+    },
+    {
+      "problemId": "05f7ba29-68b4-4ae5-877e-151f3f1111ed",
+      "externalId": "019fd1de-7912-7119-85ff-dc485736c7e0"
+    },
+    {
+      "problemId": "cec15fd2-475a-4247-a198-f46defafd043",
+      "externalId": "019fd1de-5ab1-718f-a807-77a5b8a2e26f"
+    },
+    {
+      "problemId": "a3017786-9cd5-45f1-a8e2-642f5e86a841",
+      "externalId": "019fd1de-5afe-721b-b88d-e659d9b8da9e"
+    },
+    {
+      "problemId": "1e98c425-944e-416c-bc06-d7ae29dd0aa3",
+      "externalId": "019fd1de-7843-74e5-8d64-f720070409f1"
+    },
+    {
+      "problemId": "a81f1527-42a9-4f9d-adbe-9e9e9a416010",
+      "externalId": "019fd1de-7888-76a6-98a1-48acfb242eb8"
+    },
+    {
+      "problemId": "eb1ebe52-19b3-41ae-8d6b-ec43f961b9e9",
+      "externalId": "019fd1de-78cd-744e-8ba7-83d5252933d9"
+    },
+    {
+      "problemId": "676ab5fa-7ceb-4038-8952-38be614c26cf",
+      "externalId": "019fd1de-ace5-765a-aea4-c25bfe81181d"
+    },
+    {
+      "problemId": "a041a796-5e1d-48ed-9228-9e849c99ca4e",
+      "externalId": "019fd1de-7b1d-75fa-8627-203efa5aff2d"
+    },
+    {
+      "problemId": "b7aa7b38-a628-4636-8693-c722e0dc0ba3",
+      "externalId": "019fd1de-7b62-70b9-8a23-e0cbdf29c241"
+    },
+    {
+      "problemId": "d5188757-bacc-471d-a9c2-ff9eed4061bd",
+      "externalId": "019fd1de-97d1-73a8-8155-a291b5c64708"
+    },
+    {
+      "problemId": "dfebe3b1-3d42-4292-919a-c884f7ce6225",
+      "externalId": "019fd1de-9632-726b-b963-e4f61d2d98a8"
+    },
+    {
+      "problemId": "92044a41-913c-4def-ba3c-3e284053267b",
+      "externalId": "019fd1de-9681-76c9-835c-2ea410bcd82e"
+    },
+    {
+      "problemId": "0388f0cb-89f2-4bf5-bbe1-07a24edb57dd",
+      "externalId": "019fd1de-96c3-7725-80ea-07d22a4a5042"
+    },
+    {
+      "problemId": "6f39575c-cf8d-4b3f-a2f7-50196fd422a1",
+      "externalId": "019fd1de-9812-74a9-9d47-c95b4283dd55"
+    },
+    {
+      "problemId": "5fddb6ed-1ba0-43e3-afa6-fae3073ad22e",
+      "externalId": "019fd1de-9861-72cb-8f46-35ddd11f7604"
+    },
+    {
+      "problemId": "b4a3bdf0-9b69-4bcf-bede-1a8a6ee8d2a0",
+      "externalId": "019fd1de-98e6-733a-b494-c46350e91677"
+    },
+    {
+      "problemId": "6251c770-6094-42e6-8347-3979ad71af78",
+      "externalId": "019fd1de-996e-77d8-92c2-c56b0f0715fc"
+    },
+    {
+      "problemId": "898fb9a9-24f4-43e5-8720-4223360d8de4",
+      "externalId": "019fd1de-99b1-70fd-9ea6-cc3a9bb00f6d"
+    },
+    {
+      "problemId": "044b18d3-cc56-4e6a-8f47-52361be44544",
+      "externalId": "019fd1de-b11b-77ce-bb7c-876127b8872d"
+    },
+    {
+      "problemId": "95686721-ae63-4b6c-a975-606c452e4395",
+      "externalId": "019fd1de-aca2-75ca-a7bc-4de98135429d"
+    },
+    {
+      "problemId": "e50a8389-e671-4e2e-af77-5ad556560d48",
+      "externalId": "019fd1de-ad29-71bc-bf47-e72fbb946aa2"
+    },
+    {
+      "problemId": "2d177746-62b0-4269-9b0f-091c8d21a822",
+      "externalId": "019fd1de-aebc-739a-8fed-17893ffee9b0"
+    },
+    {
+      "problemId": "469b7abf-fb4f-4083-b451-2c5881197717",
+      "externalId": "019fd1de-aeff-730a-b1cf-46ac5037b089"
+    },
+    {
+      "problemId": "90889781-792c-4589-b36a-f061730d8beb",
+      "externalId": "019fd1de-af40-7750-b4c7-427346ea3ae8"
+    },
+    {
+      "problemId": "10c8eaf6-9f80-4186-9c09-2eaf1d3b508f",
+      "externalId": "019fd1de-af82-76f0-a16f-51667d264e03"
+    },
+    {
+      "problemId": "39ad000b-a5a5-40db-bc2b-9009bb516fe1",
+      "externalId": "019fd1de-afc5-738d-a375-0a07fe1b4e11"
+    },
+    {
+      "problemId": "925bc8ba-bbcb-4e2c-9690-04e4b55ffd84",
+      "externalId": "019fd1de-b007-72a7-b536-e4295eaccb08"
+    },
+    {
+      "problemId": "baf9c8b9-8ace-480d-acb9-8b0a159f7116",
+      "externalId": "019fd1de-b160-7410-ba74-ae0d11434366"
+    },
+    {
+      "problemId": "8b76dc7d-9c00-436d-88e8-27946e48e3fd",
+      "externalId": "019fd1de-c33b-75a4-a0f0-fd9770c04d79"
+    }
+  ]
+}

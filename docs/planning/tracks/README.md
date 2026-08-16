@@ -1,13 +1,22 @@
 # 잔여 과제 병렬 트랙 (2026-08-16 착수)
 
-A단계·B단계가 끝난 뒤 남은 것을 **파일 소유권과 DB 컬럼이 겹치지 않게** 셋으로 갈랐다.
-세 트랙은 서로를 기다리지 않는다.
+A단계·B단계가 끝난 뒤 남은 것을 **파일 소유권과 DB 컬럼이 겹치지 않게** 갈랐다.
+트랙끼리 서로를 기다리지 않는다.
 
 | 트랙 | 주제 | 소유 파일 | 쓰는 DB 컬럼 |
 |------|------|-----------|--------------|
 | [A](track-a-figures.md) | 그림 연결·정밀도 | `scripts/figure/**`, `recover-rpm-figures.ts` | `figureUrls` `figureSource` |
 | [B](track-b-answers.md) | 정답 대조·잔여 | `extract-official-answers.py`, `audit-answers-vs-official.ts` | `answer` |
 | [C](track-c-rpm.md) | RPM 역추적·중복 | `convertRpm.ts`, `extract-rpm.ts`, `recover-rpm-answers.ts` | `externalId` |
+| [D](track-d-hwp.md) | 본문 HWP 재추출 | `scripts/qa/hwp*`, `build-discard-list.ts` | `content` |
+| [E](track-e-todays-exam.md) | **'오늘의 시험'** 예측기 | `src/lib/predictor/**`, `scripts/predictor/**`, `src/lib/schools/**` | **새 테이블** + `Student.school*` · `Problem.questionType` |
+
+## 트랙 글자·문서 번호를 새로 붙일 때
+
+⚠️ **먼저 `ls docs/planning/tracks/` 와 `ls docs/planning/` 을 확인하고, 원장님께 알린 뒤 정한다.**
+오르카 다중 세션이 동시에 만들면 겹친다 — 2026-08-16 에 실제로 두 번 겹쳤다
+(문서 11번이 둘, 트랙 D가 둘). 겹치면 **참조가 적은 쪽 / 아직 push 안 한 쪽**을 옮긴다.
+스크립트가 생성하는 문서는 그 스크립트의 출력 경로 상수도 같이 고친다.
 
 ## 공통 규칙 (셋 다 지킨다)
 

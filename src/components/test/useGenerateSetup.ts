@@ -209,6 +209,10 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
       }
       setBusy(true);
       setSubmitError(null);
+      // 새 시도를 시작하면 지난 부족 안내는 즉시 지운다. 안 지우면 다른 사유로
+      // 재실패했을 때 옛 가용/필요 숫자와 「AI 생성」이 새 오류와 나란히 남아
+      // 원장이 엉뚱한 버튼을 누른다.
+      setInsufficient(null);
       try {
         const res = await fetch("/api/tests/generate", {
           method: "POST",

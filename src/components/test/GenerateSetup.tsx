@@ -222,7 +222,10 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
           ) : null}
 
           {form.submitError ? (
-            <p className="text-[12.5px] text-[#C5221F]">{form.submitError}</p>
+            // role 이 없으면 화면을 못 보는 사용자에겐 실패가 일어나지 않은 것과 같다.
+            <p className="text-[12.5px] text-[#C5221F]" role="alert">
+              {form.submitError}
+            </p>
           ) : null}
 
           <Button type="submit" variant="primary" disabled={form.busy}>
