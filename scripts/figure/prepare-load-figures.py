@@ -13,11 +13,20 @@ E 는 `figureUrls` 를 비운 채로 넣는다(트랙 A 컬럼이라 안 건드�
 출력: `scripts/qa/reports/figure-load-plan.json` — (편, 문항번호) → 붙일 경로들
       E 의 적재 통보를 받은 뒤 `attach-load-figures.mjs` 가 이 계획을 DB 에 반영한다.
 
-⚠️ **장수가 어긋나면 붙이지 않는다.** E 의 인계 수치는 트랙 D 의 `hwpx-figures.json`
-   기준이고 그쪽은 `hp:pic` 말고 `hp:container`(벡터로 그린 그림)·`hp:ole` 까지 센다.
-   내 색인은 BinData 를 가진 `hp:pic` 만 센다 — 벡터 도형은 꺼낼 이미지가 없다.
-   그래서 두 수가 같은 문항만 확정으로 보고, 다른 문항은 보류해 따로 보고한다.
-   (실측: 1,010행 중 raster 로 그대로 되는 것 772행, 벡터·OLE 만 있는 것 238행.)
+⚠️ **E 인계 장수는 그림이 아닌 것을 포함한다.** 그쪽은 트랙 D 의 `hwpx-figures.json`
+   기준이고 D 는 `hp:pic` 외에 `hp:container`·`hp:ole` 까지 센다. 그런데 실측해 보니
+   그 container 의 정체는 대부분 **서술형 양식 띠**였다 — 크기가 `29540×2187`(비 13.5)로
+   편·문항이 달라도 **글자 그대로 같고**, 안에 `rect` 4 + `drawText` 4 + `line` 1 이 든
+   채점란이다. 234행 중 **232행이 이 띠 하나뿐**이었다(그림이 아니라 서식이다).
+
+   그래서 세는 방식을 이렇게 맞춘다:
+     기대 그림 수 = E 인계 장수 − (그 문항의 양식 띠 개수)
+   이러면 「장수 불일치」로 보류됐던 61행이 전부 확정으로 풀린다(실측: 그 61행은
+   양식 띠 1개씩만 더 세고 있었다).
+
+   ⚠️ 파일럿에서 확인한 것 — 이 띠를 그림으로 보고 PDF 로 변환해 그 자리를 렌더하면
+   **해설 지면의 손글씨 풀이**가 잡힌다(2721-20 실측: 수직선 위 파란 펜 풀이 2장).
+   학생 시험지에 정답 스케치를 인쇄하게 된다. 렌더가 됐다와 그림이 맞다는 다른 말이다.
 """
 from __future__ import annotations
 
@@ -29,6 +38,9 @@ import sys
 import zipfile
 
 import fitz
+
+sys.path.append(str(pathlib.Path("scripts/vendor/testchanger")))
+import hwp_extract as HX  # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -42,6 +54,9 @@ INDEX = pathlib.Path("scripts/figure/hwp-figure-index.json")
 OUT = pathlib.Path("scripts/qa/reports/figure-load-plan.json")
 FIGROOT = pathlib.Path("public/figures")
 MIN_PX = 40
+# 서술형 양식 띠(채점란) — 그림이 아니다. 크기가 편·문항 무관하게 같다.
+FORM_STRIP_RATIO = 12.0
+FORM_STRIP_MAX_H = 3000
 
 HWPX_CANDIDATES = (
     r"C:\Users\user\orca\workspaces\testautocreator\잔여-D-HWP\scripts\qa\reports\hwpx",
@@ -55,6 +70,52 @@ def hwpx_dir() -> pathlib.Path:
         if c and pathlib.Path(c).is_dir():
             return pathlib.Path(c)
     raise SystemExit("hwpx 디렉터리를 찾을 수 없다. HWPX_DIR 를 설정하라.")
+
+
+def form_strips(path: pathlib.Path) -> dict[int, int]:
+    """문항별 **양식 띠** 개수 — 기대 그림 수에서 빼기 위한 것."""
+    import xml.etree.ElementTree as ET  # noqa: PLC0415
+    import re as _re  # noqa: PLC0415
+
+    HP = HX.HP  # noqa: N806
+    per: dict[int, int] = {}
+    items: list = []
+
+    def walk(node):
+        for ch in node:
+            if ch.tag in HX._SKIP_CTRL:
+                continue
+            tag = ch.tag.split("}")[-1]
+            if ch.tag == HP + "endNote":
+                items.append(("endnote", None))
+                continue
+            if tag in ("container", "ole"):
+                sz = None
+                for c in ch.iter():
+                    if c.tag.split("}")[-1] == "orgSz":
+                        try:
+                            sz = (int(c.attrib.get("width", 0)), int(c.attrib.get("height", 0)))
+                        except ValueError:
+                            sz = None
+                        break
+                items.append(("shape", sz))
+                continue
+            walk(ch)
+
+    with zipfile.ZipFile(path) as z:
+        for name in sorted(n for n in z.namelist()
+                           if _re.match(r"Contents/section\d+\.xml", n)):
+            walk(ET.fromstring(z.read(name).decode("utf-8")))
+    q = 0
+    for kind, sz in items:
+        if kind == "endnote":
+            q += 1
+            continue
+        if not q or not sz or sz[1] <= 0:
+            continue
+        if sz[0] / sz[1] >= FORM_STRIP_RATIO and sz[1] <= FORM_STRIP_MAX_H:
+            per[q] = per.get(q, 0) + 1
+    return per
 
 
 def to_png(data: bytes, ext: str) -> tuple[bytes, int, int]:
@@ -86,25 +147,38 @@ def main() -> None:
     plan, held = [], []
     stat = {
         "인계행": 0, "확정행": 0, "확정장수": 0,
-        "보류:벡터/OLE만": 0, "보류:장수불일치": 0,
+        "보류:벡터/OLE만": 0, "보류:장수불일치": 0, "그림아님:양식띠뿐": 0,
         "건너뜀:장식반복": 0, "건너뜀:너무작음": 0, "실패": 0,
         "쓴바이트": 0,
     }
     zcache: dict[str, zipfile.ZipFile] = {}
+    strips_cache: dict[str, dict[int, int]] = {}
 
     for exam, by_q in sorted(handoff["편별"].items(), key=lambda kv: int(kv[0])):
         for q_str, want in sorted(by_q.items(), key=lambda kv: int(kv[0])):
             stat["인계행"] += 1
             pics = (index.get(exam) or {}).get("q", {}).get(q_str, [])
+            if exam not in strips_cache:
+                try:
+                    strips_cache[exam] = form_strips(src / f"{exam}.hwpx")
+                except Exception:  # noqa: BLE001
+                    strips_cache[exam] = {}
+            want_real = want - strips_cache[exam].get(int(q_str), 0)
             if not pics:
-                stat["보류:벡터/OLE만"] += 1
-                held.append({"e": exam, "q": int(q_str), "want": want, "raster": 0,
-                             "사유": "HWP 에 BinData 그림이 없다(벡터·OLE 로 그린 그림)"})
+                if want_real <= 0:
+                    stat["그림아님:양식띠뿐"] += 1
+                    held.append({"e": exam, "q": int(q_str), "want": want, "raster": 0,
+                                 "사유": "그림이 아니라 서술형 양식 띠다(회수 대상 아님)"})
+                else:
+                    stat["보류:벡터/OLE만"] += 1
+                    held.append({"e": exam, "q": int(q_str), "want": want, "raster": 0,
+                                 "사유": "HWP 에 BinData 그림이 없다(벡터로 그린 진짜 그림)"})
                 continue
-            if len(pics) != want:
+            if len(pics) != want_real:
                 stat["보류:장수불일치"] += 1
                 held.append({"e": exam, "q": int(q_str), "want": want, "raster": len(pics),
-                             "사유": "E 인계 장수와 raster 장수가 다르다"})
+                             "기대": want_real,
+                             "사유": "E 인계 장수(양식 띠 제외)와 raster 장수가 다르다"})
                 continue
 
             try:
