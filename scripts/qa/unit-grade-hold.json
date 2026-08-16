@@ -1,0 +1,597 @@
+{
+  "note": "학년이 틀렸으나 옮길 자리를 근거 있게 정할 수 없어 출제에서만 뺀 행. **영구 폐기가 아니라 보류다** — 원본 시험지를 다시 보면 학년이 밝혀질 수 있다. 되살리려면 이 목록의 problemId 에 reviewStatus 를 previous 로 되돌린다. unitId 를 옮긴 125행은 unit-grade-revert.json 에 따로 있다(섞지 말 것).",
+  "count": 34,
+  "rows": [
+    {
+      "problemId": "d50b1eb2-5819-4017-9356-8bd5995d0ba9",
+      "externalId": "4384-23",
+      "school": "상원고",
+      "examId": "4384",
+      "questionNumber": 23,
+      "currentUnit": "초4 / 1-4 평면도형의 이동 / 1-4-1 점의 이동",
+      "paperGrade": "공통수학2",
+      "sourceFile": "N:\\개인\\기출\\HWP 2 PDF\\기출\\24 기출\\2학기 중간\\고1\\[상원고][1][공수2][25-2-중간대비][미래엔] (완료).PDF",
+      "signals": [
+        "학교명(상원고→고)",
+        "파일명 학년([1])",
+        "파일명 과목([공수2])",
+        "경로 폴더(고1)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "9d2c77af-c8c1-4bbf-ae97-74af521b57c0",
+      "externalId": "4384-25",
+      "school": "상원고",
+      "examId": "4384",
+      "questionNumber": 25,
+      "currentUnit": "초4 / 1-4 평면도형의 이동 / 1-4-1 점의 이동",
+      "paperGrade": "공통수학2",
+      "sourceFile": "N:\\개인\\기출\\HWP 2 PDF\\기출\\24 기출\\2학기 중간\\고1\\[상원고][1][공수2][25-2-중간대비][미래엔] (완료).PDF",
+      "signals": [
+        "학교명(상원고→고)",
+        "파일명 학년([1])",
+        "파일명 과목([공수2])",
+        "경로 폴더(고1)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "9ec91832-acff-4241-9812-ea97d8dfb39b",
+      "externalId": "4496-2",
+      "school": "제일고",
+      "examId": "4496",
+      "questionNumber": 2,
+      "currentUnit": "중2 / 1. 수와 식 / 다항식의 덧셈과 뺄셈",
+      "paperGrade": "공통수학1",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 중간고사 모음\\PDF\\고1\\[제일고][1][공수1][25-1-중간][미래엔] (재완료).PDF",
+      "signals": [
+        "학교명(제일고→고)",
+        "파일명 학년([1])",
+        "파일명 과목([공수1])",
+        "경로 폴더(고1)"
+      ],
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "41739c0e-8aa7-4a78-8b01-325f991eac97",
+      "externalId": "4496-12",
+      "school": "제일고",
+      "examId": "4496",
+      "questionNumber": 12,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "공통수학1",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 중간고사 모음\\PDF\\고1\\[제일고][1][공수1][25-1-중간][미래엔] (재완료).PDF",
+      "signals": [
+        "학교명(제일고→고)",
+        "파일명 학년([1])",
+        "파일명 과목([공수1])",
+        "경로 폴더(고1)"
+      ],
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "7e554ae0-73b5-4461-9504-96b06cac245b",
+      "externalId": "5649-21",
+      "school": "강동중",
+      "examId": "5649",
+      "questionNumber": 21,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중3",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중3\\[강동중][3][25-1-기말][신사고] (완료).PDF",
+      "signals": [
+        "학교명(강동중→중)",
+        "파일명 학년([3])",
+        "경로 폴더(중3)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "7e130825-4a06-47ce-aae1-416900abb136",
+      "externalId": "5652-20",
+      "school": "강북중",
+      "examId": "5652",
+      "questionNumber": 20,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중3",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중3\\[강북중][3][25-1-기말][동아강] (완료).PDF",
+      "signals": [
+        "학교명(강북중→중)",
+        "파일명 학년([3])",
+        "경로 폴더(중3)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "1f389782-6738-4699-9c82-46895eb752d1",
+      "externalId": "5649-20",
+      "school": "강동중",
+      "examId": "5649",
+      "questionNumber": 20,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중3",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중3\\[강동중][3][25-1-기말][신사고] (완료).PDF",
+      "signals": [
+        "학교명(강동중→중)",
+        "파일명 학년([3])",
+        "경로 폴더(중3)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "3da9b357-0802-4e4a-8b20-70c50f440179",
+      "externalId": "5652-21",
+      "school": "강북중",
+      "examId": "5652",
+      "questionNumber": 21,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중3",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중3\\[강북중][3][25-1-기말][동아강] (완료).PDF",
+      "signals": [
+        "학교명(강북중→중)",
+        "파일명 학년([3])",
+        "경로 폴더(중3)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "76023ebf-7864-4372-ad19-aa28ee98501e",
+      "externalId": "5360-14",
+      "school": "강동중",
+      "examId": "5360",
+      "questionNumber": 14,
+      "currentUnit": "중1 / 5. 기본 도형 / 평행선",
+      "paperGrade": "중2",
+      "sourceFile": "N:\\개인\\기출\\HWP 2 PDF\\기출\\24 기출\\2학기 기말\\중2\\[강동중][2][25-2-기말][동아(강)] (완료).PDF",
+      "signals": [
+        "학교명(강동중→중)",
+        "파일명 학년([2])",
+        "경로 폴더(중2)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "0ac20945-c967-4e61-b8d2-e620d9a2a1c8",
+      "externalId": "5364-12",
+      "school": "강북중",
+      "examId": "5364",
+      "questionNumber": 12,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중2",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중2\\[강북중][2][25-1-기말][동아강] (완료).PDF",
+      "signals": [
+        "학교명(강북중→중)",
+        "파일명 학년([2])",
+        "경로 폴더(중2)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "2664ab77-f722-42b7-b0ef-ba7a0ac1941d",
+      "externalId": "5824-20",
+      "school": "신명여중",
+      "examId": "5824",
+      "questionNumber": 20,
+      "currentUnit": "중2 / 1. 수와 식 / 다항식의 곱셈과 나눗셈",
+      "paperGrade": "중3",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 중간고사 모음\\PDF\\중3\\[신명여중][3][25-1-중간][동아강] (완료).PDF",
+      "signals": [
+        "학교명(신명여중→중)",
+        "파일명 학년([3])",
+        "경로 폴더(중3)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "df71d409-3e8c-417c-b3ec-1f4d324e7c42",
+      "externalId": "4496-18",
+      "school": "제일고",
+      "examId": "4496",
+      "questionNumber": 18,
+      "currentUnit": "중3 / 2. 다항식의 곱셈과 인수분해 / 인수분해",
+      "paperGrade": "공통수학1",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 중간고사 모음\\PDF\\고1\\[제일고][1][공수1][25-1-중간][미래엔] (재완료).PDF",
+      "signals": [
+        "학교명(제일고→고)",
+        "파일명 학년([1])",
+        "파일명 과목([공수1])",
+        "경로 폴더(고1)"
+      ],
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "c84336c3-8472-4389-8e63-72aa48efdb6f",
+      "externalId": "4496-3",
+      "school": "제일고",
+      "examId": "4496",
+      "questionNumber": 3,
+      "currentUnit": "중2 / 1. 수와 식 / 다항식의 덧셈과 뺄셈",
+      "paperGrade": "공통수학1",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 중간고사 모음\\PDF\\고1\\[제일고][1][공수1][25-1-중간][미래엔] (재완료).PDF",
+      "signals": [
+        "학교명(제일고→고)",
+        "파일명 학년([1])",
+        "파일명 과목([공수1])",
+        "경로 폴더(고1)"
+      ],
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "62071e42-09ef-41e1-aef0-0c83c48c5daf",
+      "externalId": "4505-7",
+      "school": "청구고",
+      "examId": "4505",
+      "questionNumber": 7,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "공통수학1",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 중간고사 모음\\PDF\\고1\\[청구고][1][공수1][25-1-중간][신사고] (완료).PDF",
+      "signals": [
+        "학교명(청구고→고)",
+        "파일명 학년([1])",
+        "파일명 과목([공수1])",
+        "경로 폴더(고1)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "37192668-b960-4884-8437-50e6a537c4f9",
+      "externalId": "4544-3",
+      "school": "화원고",
+      "examId": "4544",
+      "questionNumber": 3,
+      "currentUnit": "초4 / 1-4 평면도형의 이동 / 1-4-1 점의 이동",
+      "paperGrade": "공통수학2",
+      "sourceFile": "N:\\개인\\기출\\HWP 2 PDF\\기출\\24 기출\\2학기 중간\\고1\\[화원고][1][공수2][25-2-중간대비][미래엔] (완료).PDF",
+      "signals": [
+        "학교명(화원고→고)",
+        "파일명 학년([1])",
+        "파일명 과목([공수2])",
+        "경로 폴더(고1)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "13d3539b-b387-4f72-8cd2-19011e485b1f",
+      "externalId": "2683-14",
+      "school": "경화여고",
+      "examId": "2683",
+      "questionNumber": 14,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "공통수학1",
+      "sourceFile": "N:\\개인\\기출\\HWP 2 PDF\\기출\\24 기출\\1학기 중간\\수상\\[경화여고][1][수상][24-1-중간][비상] (완료).PDF",
+      "signals": [
+        "학교명(경화여고→고)",
+        "파일명 학년([1])",
+        "파일명 과목([수상])",
+        "경로 과목(수상)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "0f71d7f9-c6dc-4d93-900e-2e730a5627db",
+      "externalId": "4436-16",
+      "school": "신명고",
+      "examId": "4436",
+      "questionNumber": 16,
+      "currentUnit": "중2 / 2. 부등식 / 부등식",
+      "paperGrade": "공통수학1",
+      "sourceFile": "N:\\개인\\기출\\HWP 2 PDF\\기출\\24 기출\\1학기 기말\\고1\\[신명고][1][공수1][25-1-기말대비][지학사] (완료).PDF",
+      "signals": [
+        "학교명(신명고→고)",
+        "파일명 학년([1])",
+        "파일명 과목([공수1])",
+        "경로 폴더(고1)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "3db0984e-ae70-4137-986b-b1b069d17a7c",
+      "externalId": "5649-17",
+      "school": "강동중",
+      "examId": "5649",
+      "questionNumber": 17,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중3",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중3\\[강동중][3][25-1-기말][신사고] (완료).PDF",
+      "signals": [
+        "학교명(강동중→중)",
+        "파일명 학년([3])",
+        "경로 폴더(중3)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "c67d5ab4-e7d1-45da-914d-9b521d4b62d8",
+      "externalId": "4384-3",
+      "school": "상원고",
+      "examId": "4384",
+      "questionNumber": 3,
+      "currentUnit": "초4 / 1-4 평면도형의 이동 / 1-4-1 점의 이동",
+      "paperGrade": "공통수학2",
+      "sourceFile": "N:\\개인\\기출\\HWP 2 PDF\\기출\\24 기출\\2학기 중간\\고1\\[상원고][1][공수2][25-2-중간대비][미래엔] (완료).PDF",
+      "signals": [
+        "학교명(상원고→고)",
+        "파일명 학년([1])",
+        "파일명 과목([공수2])",
+        "경로 폴더(고1)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "defef57c-ce99-41e4-91f6-cf9cd0e5026b",
+      "externalId": "5173-6",
+      "school": "강북중",
+      "examId": "5173",
+      "questionNumber": 6,
+      "currentUnit": "공통수학1 / 1. 다항식 / 항등식",
+      "paperGrade": "중1",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중1\\[강북중][1][25-1-기말][동아강] (완료).PDF",
+      "signals": [
+        "학교명(강북중→중)",
+        "파일명 학년([1])",
+        "경로 폴더(중1)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "613de6e5-f63c-44a5-8b85-63af624ff158",
+      "externalId": "5364-13",
+      "school": "강북중",
+      "examId": "5364",
+      "questionNumber": 13,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중2",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중2\\[강북중][2][25-1-기말][동아강] (완료).PDF",
+      "signals": [
+        "학교명(강북중→중)",
+        "파일명 학년([2])",
+        "경로 폴더(중2)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "55e336d5-bbbf-40a6-9c1d-2f1e4b584c03",
+      "externalId": "5364-14",
+      "school": "강북중",
+      "examId": "5364",
+      "questionNumber": 14,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중2",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중2\\[강북중][2][25-1-기말][동아강] (완료).PDF",
+      "signals": [
+        "학교명(강북중→중)",
+        "파일명 학년([2])",
+        "경로 폴더(중2)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "9afeebc4-c224-4ad9-8ae7-2f57c479bbe2",
+      "externalId": "5649-11",
+      "school": "강동중",
+      "examId": "5649",
+      "questionNumber": 11,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중3",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중3\\[강동중][3][25-1-기말][신사고] (완료).PDF",
+      "signals": [
+        "학교명(강동중→중)",
+        "파일명 학년([3])",
+        "경로 폴더(중3)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "8f6be595-2169-4a44-b0e7-9facdac619d3",
+      "externalId": "5173-7",
+      "school": "강북중",
+      "examId": "5173",
+      "questionNumber": 7,
+      "currentUnit": "공통수학1 / 1. 다항식 / 항등식",
+      "paperGrade": "중1",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중1\\[강북중][1][25-1-기말][동아강] (완료).PDF",
+      "signals": [
+        "학교명(강북중→중)",
+        "파일명 학년([1])",
+        "경로 폴더(중1)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "d55de7cd-96e1-487f-b496-1dda834c21f0",
+      "externalId": "5364-15",
+      "school": "강북중",
+      "examId": "5364",
+      "questionNumber": 15,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중2",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중2\\[강북중][2][25-1-기말][동아강] (완료).PDF",
+      "signals": [
+        "학교명(강북중→중)",
+        "파일명 학년([2])",
+        "경로 폴더(중2)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "1db62476-ba3d-4608-95e7-2c7a67b40539",
+      "externalId": "5364-16",
+      "school": "강북중",
+      "examId": "5364",
+      "questionNumber": 16,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중2",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중2\\[강북중][2][25-1-기말][동아강] (완료).PDF",
+      "signals": [
+        "학교명(강북중→중)",
+        "파일명 학년([2])",
+        "경로 폴더(중2)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "124fec00-cbc6-458c-93de-792469a48d6f",
+      "externalId": "5649-12",
+      "school": "강동중",
+      "examId": "5649",
+      "questionNumber": 12,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중3",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중3\\[강동중][3][25-1-기말][신사고] (완료).PDF",
+      "signals": [
+        "학교명(강동중→중)",
+        "파일명 학년([3])",
+        "경로 폴더(중3)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "e134aa03-88b4-45c7-a5f7-084d16e88b14",
+      "externalId": "5649-16",
+      "school": "강동중",
+      "examId": "5649",
+      "questionNumber": 16,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중3",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중3\\[강동중][3][25-1-기말][신사고] (완료).PDF",
+      "signals": [
+        "학교명(강동중→중)",
+        "파일명 학년([3])",
+        "경로 폴더(중3)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "c1bb1b41-6db6-4a49-8612-7e50b330b71e",
+      "externalId": "5652-16",
+      "school": "강북중",
+      "examId": "5652",
+      "questionNumber": 16,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "중3",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중3\\[강북중][3][25-1-기말][동아강] (완료).PDF",
+      "signals": [
+        "학교명(강북중→중)",
+        "파일명 학년([3])",
+        "경로 폴더(중3)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "bea1eb9b-2cdc-493c-b081-45c1d49c0fbe",
+      "externalId": "5360-16",
+      "school": "강동중",
+      "examId": "5360",
+      "questionNumber": 16,
+      "currentUnit": "초4 / 2-2 삼각형 / 2-2-2 이등변삼각형의 성질",
+      "paperGrade": "중2",
+      "sourceFile": "N:\\개인\\기출\\HWP 2 PDF\\기출\\24 기출\\2학기 기말\\중2\\[강동중][2][25-2-기말][동아(강)] (완료).PDF",
+      "signals": [
+        "학교명(강동중→중)",
+        "파일명 학년([2])",
+        "경로 폴더(중2)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "d0563498-ef0b-4dd1-9391-7cffa91a03f7",
+      "externalId": "5759-13",
+      "school": "범물중",
+      "examId": "5759",
+      "questionNumber": 13,
+      "currentUnit": "공통수학1 / 2. 방정식과 부등식 / 인수분해가 되지 않는 연립이차방정식",
+      "paperGrade": "중3",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 중간고사 모음\\PDF\\중3\\[범물중][3][25-1-중간][천재이] (완료).PDF",
+      "signals": [
+        "학교명(범물중→중)",
+        "파일명 학년([3])",
+        "경로 폴더(중3)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "d7c3fc9e-aa7f-445d-a61d-ba1ce68b84fe",
+      "externalId": "4509-5",
+      "school": "칠성고",
+      "examId": "4509",
+      "questionNumber": 5,
+      "currentUnit": "초3 / 2-3 원 / 2-3-1 원의 중심, 지름, 반지름",
+      "paperGrade": "공통수학1",
+      "sourceFile": "N:\\개인\\기출\\HWP 2 PDF\\기출\\24 기출\\1학기 기말\\고1\\[칠성고][1][공수1][25-1-기말대비][미래엔] (완료).PDF",
+      "signals": [
+        "학교명(칠성고→고)",
+        "파일명 학년([1])",
+        "파일명 과목([공수1])",
+        "경로 폴더(고1)"
+      ],
+      "previous": "pending",
+      "next": "pending"
+    },
+    {
+      "problemId": "2906b3f7-9be7-411a-91bc-e37ab6aafa6b",
+      "externalId": "4496-21",
+      "school": "제일고",
+      "examId": "4496",
+      "questionNumber": 21,
+      "currentUnit": "공통수학2 / 3. 함수와 그래프 / 함수",
+      "paperGrade": "공통수학1",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 중간고사 모음\\PDF\\고1\\[제일고][1][공수1][25-1-중간][미래엔] (재완료).PDF",
+      "signals": [
+        "학교명(제일고→고)",
+        "파일명 학년([1])",
+        "파일명 과목([공수1])",
+        "경로 폴더(고1)"
+      ],
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "da75917f-9728-4e9f-a481-9e517bd59e38",
+      "externalId": "5293-1",
+      "school": "시지중",
+      "examId": "5293",
+      "questionNumber": 1,
+      "currentUnit": "중2 / 1. 수와 식 / 유리수와 소수",
+      "paperGrade": "중1",
+      "sourceFile": "N:\\개인\\기출\\2025 기출모음\\2025년 1학기 중간고사 모음\\PDF\\중1\\[시지중][1][25-1-중간][천재동] (완료).PDF",
+      "signals": [
+        "학교명(시지중→중)",
+        "파일명 학년([1])",
+        "경로 폴더(중1)"
+      ],
+      "previous": "approved",
+      "next": "pending"
+    }
+  ]
+}
