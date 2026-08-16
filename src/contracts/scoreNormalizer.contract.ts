@@ -23,7 +23,12 @@
  */
 import { z } from "zod";
 
-import { difficultySchema, problemSourceSchema, uuidSchema } from "./common.contract";
+import {
+  difficultySchema,
+  isoDateSchema,
+  problemSourceSchema,
+  uuidSchema,
+} from "./common.contract";
 import {
   difficultyLabelSchema,
   examPeriodSchema,
@@ -119,10 +124,9 @@ export type ScoreNormalization = z.infer<typeof scoreNormalizationSchema>;
 // 원장 수동 조정 (11 §10.4)
 // ─────────────────────────────────────────────
 
-export const manualScoreIssueSchema = z.enum(
-  ["합계_불일치", "배점_형식오류"],
-  { error: "수동 조정 오류 값이 올바르지 않습니다." },
-);
+export const manualScoreIssueSchema = z.enum(["합계_불일치", "배점_형식오류"], {
+  error: "수동 조정 오류 값이 올바르지 않습니다.",
+});
 export type ManualScoreIssue = z.infer<typeof manualScoreIssueSchema>;
 
 export const manualScoreCheckSchema = z.discriminatedUnion("ok", [
@@ -221,3 +225,95 @@ export const predictedPaperSchema = z.discriminatedUnion("ok", [
   judgementUnavailableSchema,
 ]);
 export type PredictedPaper = z.infer<typeof predictedPaperSchema>;
+
+// ─────────────────────────────────────────────
+// API 계약
+//
+// 대응 경로: POST /api/tests/predicted · PATCH /api/tests/{id}/scores
+//
+// ⚠️ 이 스키마들을 `test.contract.ts`(일일/확인테스트 계약)가 아니라 여기에 둔 이유:
+//    4개 세션이 병렬이라 공용 계약 파일을 동시에 고치면 병합이 충돌한다. 예측 문제지와
+//    배점 조정은 트랙 E 전용 경로이므로 트랙 E 계약 파일에 모은다. 합치는 편이 낫다고
+//    판단되면 코디네이터가 옮기면 된다 — REPORT.md 에 적었다.
+// ─────────────────────────────────────────────
+
+/** POST /api/tests/predicted — 예측 문제지 생성 + 적재. */
+export const predictedPaperCreateRequestSchema = z.strictObject({
+  classId: uuidSchema,
+  /** NULL 이면 반 전체 대상. */
+  studentId: uuidSchema.nullable().optional(),
+  testDate: isoDateSchema,
+  rangeStartUnitId: uuidSchema.nullable().optional(),
+  rangeEndUnitId: uuidSchema,
+  /** 문제은행에서 재료를 뽑을 단원 범위. 비면 만들 수 없다. */
+  unitIds: z.array(uuidSchema).min(1).max(60),
+  /** 어느 학교의 어느 시험을 예측하나. */
+  series: examSeriesKeySchema,
+  /**
+   * 예측 대상 시점. **이 시점 이후 자료는 근거에서 제외된다**(누출 차단, 11 §3 L5).
+   * 서버가 컷오프를 강제하므로 클라이언트가 과거 데이터를 골라 보낼 필요가 없다.
+   */
+  target: examPeriodSchema,
+});
+export type PredictedPaperCreateRequest = z.infer<
+  typeof predictedPaperCreateRequestSchema
+>;
+
+export const predictedPaperCreateResponseSchema = z.strictObject({
+  data: z.strictObject({
+    testId: uuidSchema,
+    questionCount: z.int().min(1).max(60),
+    /** 정확히 100 (D-42). */
+    totalScore: z.literal(100),
+    grid: scoreGridSchema,
+    questions: z.array(predictedPaperQuestionSchema).min(1).max(60),
+    /** 채우지 못한 칸. 비어 있어야 청사진대로 나온 시험지다. */
+    unfilled: z.array(unfilledSlotSchema),
+    /** 근거로 쓴 과거 회차 수 / 만점 100 가드(11 §11)로 뺀 회차 수. */
+    referenceUsed: z.int().min(0),
+    referenceExcluded: z.int().min(0),
+    /** 청사진이 몇 편에 근거하는가. 0이면 코호트만으로 만든 것이라 신뢰도가 낮다. */
+    evidenceCount: z.int().min(0),
+    confidence: z.number().min(0).max(1),
+  }),
+});
+export type PredictedPaperCreateResponse = z.infer<
+  typeof predictedPaperCreateResponseSchema
+>;
+
+/** PATCH /api/tests/{id}/scores — 원장 수동 배점 조정 (11 §10.4). */
+export const testScoresUpdateRequestSchema = z.strictObject({
+  scores: z
+    .array(
+      z.strictObject({
+        orderIndex: z.int().min(1).max(60),
+        score: z.number().positive().max(100),
+      }),
+    )
+    .min(1)
+    .max(60),
+});
+export type TestScoresUpdateRequest = z.infer<
+  typeof testScoresUpdateRequestSchema
+>;
+
+export const testScoresUpdateResponseSchema = z.strictObject({
+  data: z.strictObject({
+    testId: uuidSchema,
+    questionCount: z.int().min(1).max(60),
+    totalScore: z.literal(100),
+    problems: z
+      .array(
+        z.strictObject({
+          orderIndex: z.int().min(1).max(60),
+          problemId: uuidSchema,
+          score: z.number().positive().max(100),
+        }),
+      )
+      .min(1)
+      .max(60),
+  }),
+});
+export type TestScoresUpdateResponse = z.infer<
+  typeof testScoresUpdateResponseSchema
+>;

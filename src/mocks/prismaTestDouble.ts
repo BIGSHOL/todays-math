@@ -84,6 +84,8 @@ interface ProblemRow {
   originProblemId: string | null;
   difficulty: Difficulty;
   problemType: string;
+  /** 출제 형식(객관식|단답형|서술형) — T7.6 백필 전이라 실데이터도 대부분 NULL 이다. */
+  questionType: string | null;
   content: string;
   answer: string;
   solution: string | null;
@@ -303,6 +305,7 @@ function toProblemRow(entity: ProblemEntity): ProblemRow {
     // ProblemEntity(계약)엔 score가 없다 — 균등 배분 채점 경로(gradeAnswers.ts) 테스트는
     // MOCK_TEST_RESULT_PROBLEMS(score 직접 지정)로 별도 커버한다.
     score: null,
+    questionType: null,
     createdAt: new Date(entity.createdAt),
     updatedAt: new Date(entity.updatedAt),
   };
@@ -314,6 +317,7 @@ function toFixtureProblemRow(
 ): ProblemRow {
   return {
     ...fixture,
+    questionType: null,
     createdAt: new Date(fixture.createdAt),
     updatedAt: new Date(fixture.updatedAt),
   };
@@ -700,16 +704,21 @@ const prismaModels = {
     async create({
       data,
     }: {
-      data: Omit<ProblemRow, "id" | "createdAt" | "updatedAt" | "pool"> & {
+      data: Omit<
+        ProblemRow,
+        "id" | "createdAt" | "updatedAt" | "pool" | "questionType"
+      > & {
         originProblemId?: string | null;
         reviewStatus?: ReviewStatus;
         pool?: "shared" | "private";
+        questionType?: string | null;
       };
     }) {
       const now = new Date();
       const row: ProblemRow = {
         id: randomUUID(),
         ...data,
+        questionType: data.questionType ?? null,
         originProblemId: data.originProblemId ?? null,
         reviewStatus: data.reviewStatus ?? "pending",
         directUseAllowed: data.directUseAllowed ?? true,

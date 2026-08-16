@@ -49,8 +49,8 @@ export type PersistResult =
       ok: true;
       testId: string;
       questionCount: number;
-      /** 저장된 만점. 항상 100 이다. */
-      totalScore: number;
+      /** 저장된 만점. 항상 100 이다 — 그렇지 않으면 저장 자체가 거부된다(D-45). */
+      totalScore: typeof EXAM_FULL_MARK;
     }
   | { ok: false; reason: PersistRefusal; detail: string };
 
