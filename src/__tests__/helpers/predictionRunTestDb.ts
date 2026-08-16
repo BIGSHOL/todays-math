@@ -194,7 +194,9 @@ export const predictionTestDb = {
     },
   },
   predictionRun: {
-    async create(args: { data: Omit<FakePredictionRunRow, "id" | "createdAt"> }) {
+    async create(args: {
+      data: Omit<FakePredictionRunRow, "id" | "createdAt">;
+    }) {
       const data = args.data;
       const row: FakePredictionRunRow = {
         id: randomUUID(),
@@ -268,6 +270,11 @@ export interface SeedExamInput {
   questions: SeedQuestion[];
   /** 생략하면 문항 배점 합. 잘린 시험지(만점 미달)를 재현할 때만 명시한다. */
   totalScore?: number;
+  /**
+   * 원본 경로. 생략하면 실제 기출 형태로 채운다.
+   * 학원 '대비' 자료를 재현하려면 경로에 `대비` 를 넣는다(`paperSource` 판정 기준).
+   */
+  sourceFile?: string | null;
 }
 
 /**
@@ -326,7 +333,15 @@ export function seedExam(input: SeedExamInput): FakeExamRow {
     totalScore:
       input.totalScore ?? questions.reduce((sum, q) => sum + q.score, 0),
     questionCount: questions.length,
-    sourceFile: null,
+    // ⚠️ 실제 행처럼 **원본 경로를 넣는다.** 출처 판정(`paperSource`)이 이 값을 보고
+    //    학교 기출인지 학원 '대비' 자료인지 가른다. null 이면 `미상` → 학습에서 빠진다.
+    //    픽스처가 실데이터와 다른 모양이면 결함이 통과한다 — 이 저장소가 이미 낸 사고다.
+    // ⚠️ `??` 를 쓰면 **명시한 null 까지 기본값으로 덮인다** — 출처 미상 사례를
+    //    재현할 수 없게 된다. 키가 있는지로 가른다.
+    sourceFile:
+      "sourceFile" in input
+        ? (input.sourceFile ?? null)
+        : `N:\개인\기출\HWP 2 PDF\기출\[${input.school}][${input.grade ?? 3}][${input.subject ?? "중3"}][${String(input.year).slice(2)}-${input.semester}-${input.round}][비상] (완료).PDF`,
     createdAt: nextCreatedAt(),
     updatedAt: nextCreatedAt(),
     questions,

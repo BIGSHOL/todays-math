@@ -39,8 +39,8 @@ import {
 } from "../../src/lib/predictor/predictBlueprint";
 import { rangeSeriesKey, styleSeriesKey } from "../../src/lib/predictor/series";
 import { partitionTrusted } from "../../src/lib/predictor/paperTrust";
+import { isSchoolExam } from "../../src/lib/predictor/paperSource";
 import { loadCorpus } from "./loadCorpus";
-
 
 const args = process.argv.slice(2);
 function argOf(name: string, fallback: string): string {
@@ -130,7 +130,15 @@ function main() {
       ")",
   );
 
-  const entries: Entry[] = trusted.map((paper) => ({
+  // 🔴 학원이 만든 '대비' 자료는 학교 출제 패턴 학습에서 뺀다. 넣으면 엔진이
+  //    원장님의 과거 추측을 그 학교 패턴으로 배운다(paperSource.ts 머리주석).
+  const schoolExams = trusted.filter((p) => isSchoolExam(p.sourceFile));
+  const daebi = trusted.length - schoolExams.length;
+  console.log(
+    `출처 가르기: 학교 기출 ${schoolExams.length}편 사용 · 학원 대비 자료 ${daebi}편 제외`,
+  );
+
+  const entries: Entry[] = schoolExams.map((paper) => ({
     paper,
     observed: observeBlueprint(paper),
     styleKey: styleSeriesKey(paper.series),

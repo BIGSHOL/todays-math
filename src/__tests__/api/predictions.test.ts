@@ -70,7 +70,12 @@ import {
 
 const SCHOOL = "가람중";
 const OTHER_SCHOOL = "나래중";
-const SERIES = { school: SCHOOL, level: "중" as const, grade: 3, subject: "중3" };
+const SERIES = {
+  school: SCHOOL,
+  level: "중" as const,
+  grade: 3,
+  subject: "중3",
+};
 const TARGET = { year: 2026, semester: 1 as const, round: "중간" as const };
 
 function postRequest(body: unknown) {
@@ -500,6 +505,83 @@ describe("[T7.7] 🔴 근거가 없으면 청사진을 지어내지 않는다", 
   });
 });
 
+describe("[T7.7] 🔴 학원 '대비' 자료는 학교 출제 패턴 학습에서 뺀다", () => {
+  /**
+   * 원장님이 그 회차를 겨냥해 직접 만드신 예상 문제지다. 이걸 "그 학교 기출"로 학습하면
+   * 엔진이 **자기(원장님)의 과거 추측을 학교 패턴으로** 배운다 — 자기가 낸 답을 정답지로
+   * 삼는 되먹임이다. 실측 피해는 `src/lib/predictor/paperSource.ts` 머리주석 참조
+   * (다음 회차 예상 문항 수 평균 +1.2문).
+   *
+   * 대비는 25문 템플릿이라 문항 수가 실제 기출과 뚜렷이 다르다. 그래서 근거에 섞이면
+   * 청사진 문항 수가 그쪽으로 밀린다 — 그 사실을 숫자로 잠근다.
+   */
+  it("대비 자료는 근거(inputExamIds)에 들어가지 않는다", async () => {
+    seedHealthyCorpus();
+    seedExam({
+      externalExamId: "가람-대비-2025-2-기말",
+      school: SCHOOL,
+      year: 2025,
+      semester: 2,
+      round: "기말",
+      // 파일명에 '대비' — 원장님이 만드신 예상 문제지의 실제 형태다.
+      sourceFile:
+        "N:\개인\기출\HWP 2 PDF\기출\[가람고][1][공수2][25-2-기말대비][비상] (완료).PDF",
+      questions: standardQuestions(),
+    });
+
+    const res = await createPrediction(
+      postRequest({ series: SERIES, targetPeriod: TARGET }),
+    );
+    expect(res.status).toBe(201);
+    const body = predictionRunDetailResponseSchema.parse(await res.json());
+    const ids = body.data.inputExamIds;
+    expect(ids).not.toContain("가람-대비-2025-2-기말");
+    expect(ids.length).toBeGreaterThan(0);
+  });
+
+  it("뺀 편 수를 세어 남긴다 — 조용히 버리지 않는다", async () => {
+    seedHealthyCorpus();
+    seedExam({
+      externalExamId: "가람-대비-a",
+      school: SCHOOL,
+      year: 2025,
+      semester: 2,
+      round: "기말",
+      sourceFile: "N:\...\[가람고][1][공수2][25-2-기말대비][비상].PDF",
+      questions: standardQuestions(),
+    });
+
+    const res = await createPrediction(
+      postRequest({ series: SERIES, targetPeriod: TARGET }),
+    );
+    const body = await res.json();
+    const stats =
+      predictionRunDetailResponseSchema.parse(body).data.params.evidence;
+    expect(stats.excludedBySource).toBe(1);
+  });
+
+  it("출처를 모르는 편(sourceFile 없음)도 학습에 넣지 않는다", async () => {
+    seedHealthyCorpus();
+    seedExam({
+      externalExamId: "출처미상-편",
+      school: SCHOOL,
+      year: 2025,
+      semester: 2,
+      round: "기말",
+      sourceFile: null,
+      questions: standardQuestions(),
+    });
+
+    const res = await createPrediction(
+      postRequest({ series: SERIES, targetPeriod: TARGET }),
+    );
+    const body = await res.json();
+    expect(
+      predictionRunDetailResponseSchema.parse(body).data.inputExamIds,
+    ).not.toContain("출처미상-편");
+  });
+});
+
 describe("[T7.7] GET /api/predictions/{id} — 회차 상세", () => {
   async function createRun() {
     seedHealthyCorpus();
@@ -569,7 +651,9 @@ describe("[T7.7] GET /api/predictions/{id} — 회차 상세", () => {
 describe("[T7.7] GET /api/predictions — 회차 목록(계기판)", () => {
   it("학교·학년으로 조회하면 최신순 요약을 돌려준다", async () => {
     seedHealthyCorpus();
-    await createPrediction(postRequest({ series: SERIES, targetPeriod: TARGET }));
+    await createPrediction(
+      postRequest({ series: SERIES, targetPeriod: TARGET }),
+    );
     await createPrediction(
       postRequest({
         series: SERIES,
@@ -606,7 +690,9 @@ describe("[T7.7] GET /api/predictions — 회차 목록(계기판)", () => {
     }
     // 남의 run 은 total 에 섞이면 안 된다.
     sessionState.user = { id: USER_B, email: "b@t.test", name: "다른 원장" };
-    await createPrediction(postRequest({ series: SERIES, targetPeriod: TARGET }));
+    await createPrediction(
+      postRequest({ series: SERIES, targetPeriod: TARGET }),
+    );
     sessionState.user = { id: USER_A, email: "a@t.test", name: "원장" };
 
     const first = predictionRunListResponseSchema.parse(
@@ -634,7 +720,9 @@ describe("[T7.7] GET /api/predictions — 회차 목록(계기판)", () => {
 
   it("다른 사용자의 run 은 목록에 나오지 않는다", async () => {
     seedHealthyCorpus();
-    await createPrediction(postRequest({ series: SERIES, targetPeriod: TARGET }));
+    await createPrediction(
+      postRequest({ series: SERIES, targetPeriod: TARGET }),
+    );
 
     sessionState.user = { id: USER_B, email: "b@t.test", name: "다른 원장" };
     const res = await listPredictions(
@@ -649,7 +737,9 @@ describe("[T7.7] GET /api/predictions — 회차 목록(계기판)", () => {
 
   it("과목으로 더 좁힐 수 있다", async () => {
     seedHealthyCorpus();
-    await createPrediction(postRequest({ series: SERIES, targetPeriod: TARGET }));
+    await createPrediction(
+      postRequest({ series: SERIES, targetPeriod: TARGET }),
+    );
 
     const hit = await listPredictions(
       listRequest({ school: SCHOOL, grade: "3", subject: "중3" }),

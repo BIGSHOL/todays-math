@@ -62,6 +62,7 @@ import { db } from "@/lib/db";
 import type { OwnershipResult } from "@/lib/ownership";
 
 import { observeBlueprint } from "./blueprint";
+import { isSchoolExam } from "./paperSource";
 import { partitionTrusted } from "./paperTrust";
 import {
   DEFAULT_PARAMS,
@@ -208,6 +209,8 @@ interface Evidence {
   rangeHistory: ExamPaper[];
   rangeCohort: ExamPaper[];
   excludedByTrust: number;
+  /** 학원 '대비' 자료라 학습에서 뺀 편 수. 조용히 버리지 않는다. */
+  excludedBySource: number;
   invalid: number;
   pinned: boolean;
 }
@@ -215,7 +218,12 @@ interface Evidence {
 function splitEvidence(
   papers: ExamPaper[],
   series: ExamSeriesKey,
-  extras: { excludedByTrust: number; invalid: number; pinned: boolean },
+  extras: {
+    excludedByTrust: number;
+    excludedBySource: number;
+    invalid: number;
+    pinned: boolean;
+  },
 ): Evidence {
   const history = papers.filter((p) => p.series.school === series.school);
   const cohort = papers.filter((p) => p.series.school !== series.school);
@@ -273,8 +281,15 @@ async function gatherAutoEvidence(
     beforeCutoff(converted, cutoff),
   );
 
-  return splitEvidence(trusted, series, {
+  // 🔴 학원이 만든 '대비' 자료를 학교 출제 패턴 학습에서 뺀다.
+  //    넣으면 엔진이 **원장님의 과거 추측을 그 학교 패턴으로** 배운다 — 자기가 낸 답을
+  //    정답지로 삼는 되먹임이다. 근거·실측 피해는 `paperSource.ts` 머리주석 참조.
+  //    backtest·tune 과 **같은 함수**를 쓴다. 규칙이 갈라지면 지표와 실전이 어긋난다.
+  const schoolExams = trusted.filter((p) => isSchoolExam(p.sourceFile));
+
+  return splitEvidence(schoolExams, series, {
     excludedByTrust: excluded.length,
+    excludedBySource: trusted.length - schoolExams.length,
     invalid,
     pinned: false,
   });
@@ -316,6 +331,7 @@ async function gatherPinnedEvidence(
 
   return splitEvidence(papers, series, {
     excludedByTrust: 0,
+    excludedBySource: 0,
     invalid: 0,
     pinned: true,
   });
@@ -486,6 +502,7 @@ export async function runPrediction(
     rangeHistory: evidence.rangeHistory.length,
     rangeCohort: evidence.rangeCohort.length,
     excludedByTrust: evidence.excludedByTrust,
+    excludedBySource: evidence.excludedBySource,
     pinned: evidence.pinned,
   };
 
@@ -504,7 +521,8 @@ export async function runPrediction(
       userId,
       riskFlags,
       // 모르면 NULL 이다. 대상 시점에서 날짜를 만들어 채우지 않는다.
-      examDate: examDate === undefined ? null : new Date(`${examDate}T00:00:00Z`),
+      examDate:
+        examDate === undefined ? null : new Date(`${examDate}T00:00:00Z`),
       engineVersion: PREDICTOR_ENGINE_VERSION,
       school: series.school,
       level: series.level,
