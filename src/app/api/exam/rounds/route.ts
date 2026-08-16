@@ -21,11 +21,11 @@ export async function GET() {
   const session = await getSessionUser();
   if (!session) return unauthorizedError();
 
-  const { runs, actuals } = await loadVisibleRuns(session.id);
+  const { runs, actuals, ownedStudents } = await loadVisibleRuns(session.id);
 
   // 시리즈·시점이 계약을 통과하지 못한 행은 뺀다(null). 억지로 그리지 않는다.
   const data = runs
-    .map((run) => toRoundSummary(run, actuals))
+    .map((run) => toRoundSummary(run, actuals, ownedStudents))
     .filter((summary) => summary !== null);
 
   // 빈 배열이 정상 응답이다 — 아직 예측을 한 번도 안 돌렸으면 회차가 없다.

@@ -156,6 +156,7 @@ describe("[T7.10] 잔차와 구간 적중", () => {
     const summary = summarizeResiduals([]);
     expect(summary).toEqual({
       count: 0,
+      residualCount: 0,
       mae: null,
       meanResidual: null,
       intervalCount: 0,

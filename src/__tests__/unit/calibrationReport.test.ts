@@ -17,6 +17,7 @@ import type { CalibrationSample } from "@/contracts/calibration.contract";
 import { estimateCalibration } from "@/lib/predictor/calibration";
 import {
   buildCalibrationSamples,
+  countWithoutPrediction,
   renderCalibrationReport,
   resolveNominalCoverage,
   type ActualScoreRowWithRun,
@@ -26,6 +27,7 @@ const META = {
   databaseHost: "db.example.supabase.co",
   databaseReason: "Supabase 공유 DB",
   rowCount: 0,
+  withoutPrediction: 0,
   engineFilter: null,
   schoolFilter: null,
   nominalCoverage: null,
@@ -93,6 +95,36 @@ describe("[T7.11] DB 행 → 표본 변환", () => {
     expect(samples[1]!.hasInterval).toBe(false);
     expect(samples[0]!.school).toBe("정화중");
     expect(samples[0]!.engineVersion).toBe("0.2.0");
+  });
+
+  /**
+   * 🔴 회귀 가드 (adv-보정루프.md 🔴1).
+   * 예측이 없던 실측 행은 잔차가 없어 **표본이 될 수 없다.** 0 으로 채워 넣으면
+   * "정확히 맞혔다"로 세어져 MAE 가 거짓으로 내려간다. 대신 조용히 버리지도 않는다 —
+   * 몇 건을 뺐는지 리포트 머리에 찍는다.
+   */
+  it("예측이 없는 행은 표본에서 빼되 몇 건인지 센다", () => {
+    const rows = [
+      dbRow(),
+      dbRow({
+        studentId: "30000000-0000-4000-8000-000000000002",
+        predictedScore: null,
+        residual: null,
+        predictedLower: null,
+        predictedUpper: null,
+        predictedCoverage: null,
+        intervalHit: false,
+      }),
+    ];
+    expect(buildCalibrationSamples(rows)).toHaveLength(1);
+    expect(countWithoutPrediction(rows)).toBe(1);
+
+    const body = renderCalibrationReport(estimateCalibration([]), {
+      ...META,
+      rowCount: rows.length,
+      withoutPrediction: 1,
+    });
+    expect(body).toContain("예측이 없어 표본에서 뺀 행: 1건");
   });
 
   it("선언된 신뢰수준이 하나면 그것을 쓰고, 섞여 있으면 단정하지 않는다", () => {

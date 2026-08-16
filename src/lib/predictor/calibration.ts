@@ -86,13 +86,16 @@ export function isIntervalHit(
 /**
  * 잔차 요약의 입력 한 줄.
  *
+ * `residual` 이 null 이면 그 회차에 **예측이 없었다**는 뜻이다(학생 능력 엔진 11 §3 L3 가
+ * 아직 없다). 실점수는 저장되지만 잔차는 낼 수 없다.
+ *
  * `hasInterval` 은 "예측 구간 스냅샷이 저장돼 있어 적중을 **판정할 수 있다**"는 뜻이다.
  * false 면 `intervalHit` 값은 의미가 없다 — DB 컬럼이 NOT NULL 이라 무언가는 들어가 있을
  * 뿐이다. 그런 표본을 빗나감으로 세면 구간이 실제보다 부정직해 보이고, 적중으로 세면
  * 반대로 부풀려진다. **분모에서 뺀다.**
  */
 export type ResidualRow = {
-  residual: number;
+  residual: number | null;
   intervalHit: boolean;
   hasInterval: boolean;
 };
@@ -100,26 +103,35 @@ export type ResidualRow = {
 /**
  * 잔차 요약. 표본이 0이면 숫자를 지어내지 않고 null 을 돌려준다.
  * 구간 적중률은 MAE 와 **별개 지표**다 — 점 예측이 좋아도 구간이 정직하지 않을 수 있다.
+ *
+ * 🔴 분모가 셋이고 서로 다르다. 섞으면 지표가 조용히 오염된다.
+ *    - `count`         저장된 행 전부
+ *    - `residualCount` 잔차를 낼 수 있는 행 (MAE·평균 잔차의 분모)
+ *    - `intervalCount` 적중을 판정할 수 있는 행 (적중률의 분모)
+ *    예측이 없던 행을 잔차 0 으로 세면 MAE 가 0 쪽으로 희석된다 — 이 저장소가
+ *    "라벨 없는 문항을 한 칸으로 세어" 지표를 오염시킨 것과 같은 사고다.
  */
 export function summarizeResiduals(rows: ResidualRow[]): ResidualSummary {
-  if (rows.length === 0) {
-    return {
-      count: 0,
-      mae: null,
-      meanResidual: null,
-      intervalCount: 0,
-      intervalHitRate: null,
-    };
-  }
-  const n = rows.length;
-  const mae = rows.reduce((sum, r) => sum + Math.abs(r.residual), 0) / n;
-  const meanResidual = rows.reduce((sum, r) => sum + r.residual, 0) / n;
+  const withResidual = rows.filter(
+    (r): r is ResidualRow & { residual: number } => r.residual !== null,
+  );
   const judgeable = rows.filter((r) => r.hasInterval);
   const hits = judgeable.filter((r) => r.intervalHit).length;
+
+  const m = withResidual.length;
   return {
-    count: n,
-    mae: round6(mae),
-    meanResidual: round6(meanResidual),
+    count: rows.length,
+    residualCount: m,
+    mae:
+      m === 0
+        ? null
+        : round6(
+            withResidual.reduce((sum, r) => sum + Math.abs(r.residual), 0) / m,
+          ),
+    meanResidual:
+      m === 0
+        ? null
+        : round6(withResidual.reduce((sum, r) => sum + r.residual, 0) / m),
     intervalCount: judgeable.length,
     intervalHitRate:
       judgeable.length === 0 ? null : round6(hits / judgeable.length),

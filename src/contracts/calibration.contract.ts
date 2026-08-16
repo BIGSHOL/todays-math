@@ -93,10 +93,17 @@ export const actualScoreRecordSchema = z.strictObject({
   runId: uuidSchema,
   studentId: uuidSchema,
   actualScore: z.number(),
-  /** 예측 당시 값의 스냅샷. run 의 Json 을 다시 파싱하지 않기 위한 값이다. */
-  predictedScore: z.number(),
-  /** actual − predicted. 보정 계수(T7.11)의 직접 입력. */
-  residual: z.number(),
+  /**
+   * 예측 당시 값의 스냅샷. run 의 Json 을 다시 파싱하지 않기 위한 값이다.
+   *
+   * **예측이 없었으면 null 이다.** 학생 능력 엔진(11 §3 L3)이 아직 없어 현재 모든 회차의
+   * `predictedScores` 가 비어 있는데, 그렇다고 실점수를 못 받으면 보정 루프의 입력이
+   * 영영 쌓이지 않는다(11 §4 — 환산 계수는 학생 데이터를 **먼저** 모아야 구한다).
+   * 그래서 실점수는 받되 잔차는 **지어내지 않고 비운다.**
+   */
+  predictedScore: z.number().nullable(),
+  /** actual − predicted. 보정 계수(T7.11)의 직접 입력. 예측이 없으면 null. */
+  residual: z.number().nullable(),
   /**
    * 예측 **구간**이 실제를 담았는가. 점 예측 MAE 와 별개 지표다.
    * 아래 구간 스냅샷이 null 이면 이 값은 **판정 불가**라는 뜻이고, 적중률 분모에서 뺀다.
@@ -116,7 +123,17 @@ export type ActualScoreRecord = z.infer<typeof actualScoreRecordSchema>;
 
 /** 한 회차의 잔차 요약. 표본이 0이면 숫자를 지어내지 않고 null 이다. */
 export const residualSummarySchema = z.strictObject({
+  /** 저장된 실측 행 수 전체. 잔차를 낼 수 없는 행도 여기엔 들어간다. */
   count: z.int().min(0),
+  /**
+   * 예측 스냅샷이 있어 잔차를 **계산할 수 있는** 표본 수. `count` 와 다를 수 있다.
+   * MAE·평균 잔차의 분모는 이 값이다.
+   *
+   * 🔴 예측이 없던 행을 잔차 0 으로 세면 MAE 가 통째로 희석된다. 이 저장소는 이미
+   *    "라벨 없는 문항을 한 칸으로 세어" 지표를 오염시킨 적이 있다 — 같은 사고를 막는
+   *    분모다. 아래 `intervalCount` 와 같은 규칙이다.
+   */
+  residualCount: z.int().min(0),
   mae: z.number().min(0).nullable(),
   meanResidual: z.number().nullable(),
   /**

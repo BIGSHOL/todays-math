@@ -1,0 +1,32 @@
+-- 보정 루프의 입력구를 연다 — 적대적 리뷰 🔴1.
+-- 근거: docs/planning/tracks/reports/adv-보정루프.md
+--
+-- 무엇이 막혀 있었나:
+--   `PredictionRun.predictedScores` 를 채우는 것은 학생 능력 엔진(11 §3 L3)인데 그 엔진은
+--   산식조차 없는 상태다("설계 확정 전 초안"). 그래서 `predictionRunService` 는 항상 빈
+--   배열을 저장한다. 그런데 실측 저장 경로가 "그 회차가 예측한 학생만 받는다"로 되어 있어
+--   **어떤 학생의 실점수도 저장할 수 없었다.** ActualExamScore 는 영영 0행이고,
+--   따라서 보정 계수도 영영 나오지 않는다.
+--
+-- 왜 이 방향으로 푸는가:
+--   11 §3 L5-b — "실제 시험이 끝나면 시험지와 학생 점수를 **입력** → 잔차를 저장"
+--   11 §4      — "환산 계수(난이도 지수 → 점수)를 학생 데이터로 구하기 **전에는**
+--                 이 질문에 답할 수 없다"
+--   설계상 실점수가 예측보다 먼저다. 예측을 지어내서 루프를 여는 것은 이 저장소가 이미
+--   낸 사고(0문항 0점짜리 청사진)와 같은 종류라 하지 않는다. 실점수는 받고,
+--   잔차는 **낼 수 없을 때 NULL 로 둔다.**
+--
+-- 집계 영향:
+--   MAE·평균 잔차의 분모는 `residual IS NOT NULL` 인 행이다(ResidualSummary.residualCount).
+--   NULL 을 0 으로 세면 지표가 통째로 희석된다 — "라벨 없는 문항을 한 칸으로 셌다"와 같은
+--   사고라 계약과 집계 함수 양쪽에 분모를 명시했다.
+--   보정 계수 추정(`buildCalibrationSamples`)은 NULL 행을 표본에서 제외하고 그 수를 보고한다.
+--
+-- 되돌리기: 두 컬럼을 NOT NULL 로 되돌리려면 먼저 NULL 행을 지워야 한다.
+--   DELETE FROM "actual_exam_score" WHERE "predicted_score" IS NULL;
+--
+-- ⚠️ 수기 헤더 + `prisma migrate diff` 산출. 로컬 빈 DB 에 전수 적용해 검증했다.
+
+-- AlterTable
+ALTER TABLE "actual_exam_score" ALTER COLUMN "predicted_score" DROP NOT NULL,
+ALTER COLUMN "residual" DROP NOT NULL;

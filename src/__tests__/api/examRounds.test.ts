@@ -5,9 +5,11 @@
  *
  * 1. **빈 목록이 정상 응답이다.** 실측이 아직 0건이라 이 API 는 당분간 대부분 빈 배열을
  *    낸다. 그 상태에서 500 이 나거나 숫자가 지어져 나오면 화면이 첫날부터 거짓말을 한다.
- * 2. **소유권.** `PredictionRun` 에 `userId` 컬럼이 아직 없어(2026-08-16 확인) 소유권을
- *    `학생 → 반 → 반 소유자` 로 되짚는다. 이 우회 경로가 새면 남의 학생 이름과 점수가
- *    그대로 노출된다. 그래서 "남의 회차 404" 와 "남의 학생 이름 미노출"을 따로 잠근다.
+ * 2. **소유권.** 판정 근거는 `PredictionRun.userId` **컬럼 하나**다. 학생 이름은 별개
+ *    경계라 한 번 더 거른다 — 같은 회차에 남의 학생이 섞여 있어도 이름이 새면 안 된다.
+ *    그래서 "남의 회차 404" 와 "남의 학생 이름 미노출"을 따로 잠근다.
+ *    (예전에는 `userId` 컬럼이 없어 `학생 → 반 → 반 소유자` 로 되짚었는데, 그 경로가
+ *     `predictedScores` 를 거쳐서 그 Json 이 빈 지금은 내 회차조차 사라졌다 — 🔴1.)
  * 3. **없는 것을 지어내지 않는다.** `examDate`(D-day 기준)와 문제지·채점 단계는 스키마에
  *    원천이 없다. 나중에 누가 "그럴듯한 기본값"을 채워 넣지 못하게 여기서 못박는다.
  */
@@ -28,13 +30,20 @@ import { GET as listRounds } from "@/app/api/exam/rounds/route";
 import { examRoundDetailResponseSchema } from "@/components/exam/examScreen.contract";
 import { examRoundListResponseSchema } from "@/components/exam/examScreen.contract";
 import { errorResponseSchema } from "@/contracts/common.contract";
-import { MOCK_STUDENT_1, MOCK_STUDENT_2, STUDENT_IDS } from "@/mocks/data";
+import {
+  MOCK_STUDENT_1,
+  MOCK_STUDENT_2,
+  MOCK_STUDENT_3,
+  MOCK_STUDENTS,
+  STUDENT_IDS,
+} from "@/mocks/data";
 import {
   seedActualExamScores,
   seedPredictionRuns,
 } from "@/mocks/prismaTestDouble";
 import { getSessionUser } from "@/lib/session";
 
+const OTHER_TEACHER_ID = "10000000-0000-4000-8000-000000000002";
 const RUN_MINE = "70000000-0000-4000-8000-0000000000a1";
 const RUN_OTHER = "70000000-0000-4000-8000-0000000000a2";
 /** 다른 사용자 소유 반의 학생 — MOCK 픽스처에 없는 id 로 둔다. */
@@ -88,6 +97,7 @@ function scorePrediction(studentId: string, expectedScore: number) {
  */
 type SeedRun = {
   id: string;
+  userId: string;
   createdAt: Date;
   engineVersion: string;
   school: string;
@@ -109,9 +119,14 @@ type SeedRun = {
   actualRecordedAt: Date | null;
 };
 
-function runRow(id: string, predictedScores: unknown[]): SeedRun {
+function runRow(
+  id: string,
+  predictedScores: unknown[],
+  userId: string = TEACHER_ID,
+): SeedRun {
   return {
     id,
+    userId,
     createdAt: new Date("2026-08-16T00:00:00.000Z"),
     engineVersion: "0.5.0",
     school: "정화중",
@@ -161,7 +176,7 @@ describe("GET /api/exam/rounds", () => {
   it("내 학생이 든 회차만 낸다 — 남의 회차는 목록에서 빠진다", async () => {
     seedPredictionRuns([
       runRow(RUN_MINE, [scorePrediction(MOCK_STUDENT_1.id, 88)]),
-      runRow(RUN_OTHER, [scorePrediction(FOREIGN_STUDENT_ID, 71)]),
+      runRow(RUN_OTHER, [scorePrediction(FOREIGN_STUDENT_ID, 71)], OTHER_TEACHER_ID),
     ]);
 
     const res = await listRounds();
@@ -240,7 +255,7 @@ describe("GET /api/exam/rounds/{id}", () => {
 
   it("🔴 남의 회차는 403 이 아니라 404 — 존재 여부를 알리지 않는다", async () => {
     seedPredictionRuns([
-      runRow(RUN_OTHER, [scorePrediction(FOREIGN_STUDENT_ID, 71)]),
+      runRow(RUN_OTHER, [scorePrediction(FOREIGN_STUDENT_ID, 71)], OTHER_TEACHER_ID),
     ]);
 
     const res = await getRound(undefined as never, detailParams(RUN_OTHER));
@@ -250,6 +265,11 @@ describe("GET /api/exam/rounds/{id}", () => {
     );
   });
 
+  /**
+   * 명단은 **응시 명단**(내 학생 중 이 시험을 보는 학생)이지 예측 목록이 아니다.
+   * 재학 정보가 비어 있는 학생은 "모른다"라서 명단에 든다 — 예측이 없어도 점수를
+   * 넣을 자리를 줘야 하기 때문이다(adv-보정루프.md 🔴1).
+   */
   it("내 회차는 학생 이름과 예측을 함께 낸다", async () => {
     seedPredictionRuns([
       runRow(RUN_MINE, [
@@ -262,9 +282,17 @@ describe("GET /api/exam/rounds/{id}", () => {
     const body = examRoundDetailResponseSchema.parse(await res.json());
 
     expect(res.status).toBe(200);
+    // 내 학생 전원이 명단에 있다(재학 정보가 없어 아무도 못 뺀다).
     expect(body.data.students.map((s) => s.studentName).sort()).toEqual(
-      [MOCK_STUDENT_1.name, MOCK_STUDENT_2.name].sort(),
+      MOCK_STUDENTS.map((s) => s.name).sort(),
     );
+    // 예측이 있는 학생만 예측값이 실린다.
+    const byId = Object.fromEntries(
+      body.data.students.map((s) => [s.studentId, s]),
+    );
+    expect(byId[MOCK_STUDENT_1.id]!.prediction!.expectedScore).toBe(88);
+    expect(byId[MOCK_STUDENT_2.id]!.prediction!.expectedScore).toBe(74);
+    expect(byId[MOCK_STUDENT_3.id]!.prediction).toBeNull();
     expect(body.data.engineVersion).toBe("0.5.0");
   });
 
@@ -279,8 +307,9 @@ describe("GET /api/exam/rounds/{id}", () => {
     const res = await getRound(undefined as never, detailParams(RUN_MINE));
     const body = examRoundDetailResponseSchema.parse(await res.json());
 
-    expect(body.data.students).toHaveLength(1);
-    expect(body.data.students[0]!.studentId).toBe(MOCK_STUDENT_1.id);
+    const ids = body.data.students.map((s) => s.studentId);
+    expect(ids).not.toContain(FOREIGN_STUDENT_ID);
+    expect(ids.every((id) => STUDENT_IDS.includes(id))).toBe(true);
   });
 
   it("실점수가 들어오면 학생 행에 실린다", async () => {
@@ -304,11 +333,14 @@ describe("GET /api/exam/rounds/{id}", () => {
     const res = await getRound(undefined as never, detailParams(RUN_MINE));
     const body = examRoundDetailResponseSchema.parse(await res.json());
 
-    expect(body.data.students[0]!.actualScore).toBe(91);
-    // 예측 학생 전원의 실점수가 들어왔으므로 실점수 단계가 완료된다.
-    expect(body.data.summary.stages.find((s) => s.key === "actual")!.done).toBe(
-      true,
-    );
+    const row = body.data.students.find(
+      (s) => s.studentId === MOCK_STUDENT_1.id,
+    )!;
+    expect(row.actualScore).toBe(91);
+    // 분모는 응시 명단(내 학생 5명)이라 1명만으로는 아직 완료가 아니다.
+    const actual = body.data.summary.stages.find((s) => s.key === "actual")!;
+    expect(actual.progress).toEqual({ current: 1, total: MOCK_STUDENTS.length });
+    expect(actual.done).toBe(false);
   });
 
   it("🔴 실측 청사진을 담는 컬럼이 없다 — 예측값을 실측인 척 복사하지 않는다", async () => {
@@ -323,14 +355,32 @@ describe("GET /api/exam/rounds/{id}", () => {
     expect(body.data.predictedBlueprint).not.toBeNull();
   });
 
-  it("학생이 한 명도 없는 사용자에게는 아무 회차도 보이지 않는다", async () => {
-    // STUDENT_IDS 는 전부 이 강사 소유 반에 속한다 — 대조군으로 남의 학생만 둔 회차를 쓴다.
-    expect(STUDENT_IDS).toContain(MOCK_STUDENT_1.id);
-    seedPredictionRuns([runRow(RUN_OTHER, [])]);
+  it("남이 만든 회차는 목록에 없다", async () => {
+    seedPredictionRuns([runRow(RUN_OTHER, [], OTHER_TEACHER_ID)]);
 
     const body = examRoundListResponseSchema.parse(
       await (await listRounds()).json(),
     );
     expect(body.data).toEqual([]);
+  });
+
+  /**
+   * 반을 만들기 전에 예측부터 돌리는 순서도 정상이다. 그때 회차를 숨기면 원장은
+   * 예측이 실패한 줄 안다 — 소유 근거(`PredictionRun.userId`)가 있으면 보여 준다.
+   */
+  it("학생이 아직 없어도 내 회차는 목록에 보인다", async () => {
+    seedPredictionRuns([runRow(RUN_MINE, [])]);
+    vi.mocked(getSessionUser).mockResolvedValueOnce({
+      id: OTHER_TEACHER_ID,
+      email: "other@todaysmath.test",
+      name: "학생 없는 원장",
+    });
+    seedPredictionRuns([runRow(RUN_OTHER, [], OTHER_TEACHER_ID)]);
+
+    const body = examRoundListResponseSchema.parse(
+      await (await listRounds()).json(),
+    );
+    expect(body.data.map((r) => r.id)).toEqual([RUN_OTHER]);
+    expect(body.data[0]!.stages.find((s) => s.key === "actual")!.progress).toBeNull();
   });
 });

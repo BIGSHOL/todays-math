@@ -29,6 +29,7 @@ const f = vi.hoisted(() => {
   const STUDENT_B = "30000000-0000-4000-8000-000000000002";
   const STUDENT_OTHER = "30000000-0000-4000-8000-000000000003";
   const STUDENT_NOT_IN_RUN = "30000000-0000-4000-8000-000000000004";
+  const STUDENT_OTHER_SCHOOL = "30000000-0000-4000-8000-000000000006";
   const STUDENT_NO_INTERVAL = "30000000-0000-4000-8000-000000000005";
   const STUDENT_MISSING = "30000000-0000-4000-8000-0000000000ff";
 
@@ -36,6 +37,9 @@ const f = vi.hoisted(() => {
     id: string;
     userId: string;
     engineVersion: string;
+    school: string;
+    level: string;
+    grade: number;
     predictedScores: unknown;
     actualSchoolMean: number | null;
     actualSchoolStdev: number | null;
@@ -46,8 +50,8 @@ const f = vi.hoisted(() => {
     runId: string;
     studentId: string;
     actualScore: number;
-    predictedScore: number;
-    residual: number;
+    predictedScore: number | null;
+    residual: number | null;
     intervalHit: boolean;
     predictedLower: number | null;
     predictedUpper: number | null;
@@ -75,6 +79,7 @@ const f = vi.hoisted(() => {
     STUDENT_B,
     STUDENT_OTHER,
     STUDENT_NOT_IN_RUN,
+    STUDENT_OTHER_SCHOOL,
     STUDENT_NO_INTERVAL,
     STUDENT_MISSING,
     state,
@@ -86,15 +91,39 @@ vi.mock("@/lib/session", () => ({
 }));
 
 vi.mock("@/lib/db", () => {
-  const students: Record<string, { id: string; classId: string }> = {
-    [f.STUDENT_A]: { id: f.STUDENT_A, classId: f.CLASS_MINE },
-    [f.STUDENT_B]: { id: f.STUDENT_B, classId: f.CLASS_MINE },
-    [f.STUDENT_NOT_IN_RUN]: { id: f.STUDENT_NOT_IN_RUN, classId: f.CLASS_MINE },
+  type FakeStudent = {
+    id: string;
+    classId: string;
+    schoolName: string | null;
+    schoolLevel: string | null;
+    schoolGrade: number | null;
+  };
+  // 재학 정보는 "이 학생이 이 시험을 보는가"의 근거다(examRoster.takesExam).
+  // 아직 채우는 화면이 없어 실데이터는 대부분 null 이고, 그 경우 막지 않는다.
+  const unknownSchool = { schoolName: null, schoolLevel: null, schoolGrade: null };
+  const students: Record<string, FakeStudent> = {
+    [f.STUDENT_A]: { id: f.STUDENT_A, classId: f.CLASS_MINE, ...unknownSchool },
+    [f.STUDENT_B]: { id: f.STUDENT_B, classId: f.CLASS_MINE, ...unknownSchool },
+    // 예측에는 없지만 같은 시험을 보는 학생 — 실점수를 받아야 한다.
+    [f.STUDENT_NOT_IN_RUN]: {
+      id: f.STUDENT_NOT_IN_RUN,
+      classId: f.CLASS_MINE,
+      ...unknownSchool,
+    },
+    // 내 학생이지만 **다른 학교**다 — 이 시험을 보지 않는다.
+    [f.STUDENT_OTHER_SCHOOL]: {
+      id: f.STUDENT_OTHER_SCHOOL,
+      classId: f.CLASS_MINE,
+      schoolName: "가람중",
+      schoolLevel: "중",
+      schoolGrade: 3,
+    },
     [f.STUDENT_NO_INTERVAL]: {
       id: f.STUDENT_NO_INTERVAL,
       classId: f.CLASS_MINE,
+      ...unknownSchool,
     },
-    [f.STUDENT_OTHER]: { id: f.STUDENT_OTHER, classId: f.CLASS_OTHER },
+    [f.STUDENT_OTHER]: { id: f.STUDENT_OTHER, classId: f.CLASS_OTHER, ...unknownSchool },
   };
   const classes: Record<string, { id: string; userId: string }> = {
     [f.CLASS_MINE]: { id: f.CLASS_MINE, userId: f.TEACHER_ID },
@@ -241,6 +270,9 @@ beforeEach(() => {
       id: f.RUN_ID,
       userId: f.TEACHER_ID,
       engineVersion: "predictor-v0.3.0",
+      school: "정화중",
+      level: "중",
+      grade: 3,
       predictedScores: buildPredictedScores(),
       actualSchoolMean: null,
       actualSchoolStdev: null,
@@ -251,6 +283,9 @@ beforeEach(() => {
       id: f.RUN_OTHER_ID,
       userId: f.OTHER_TEACHER_ID,
       engineVersion: "predictor-v0.3.0",
+      school: "정화중",
+      level: "중",
+      grade: 3,
       predictedScores: buildPredictedScores(),
       actualSchoolMean: null,
       actualSchoolStdev: null,
@@ -291,6 +326,7 @@ describe("[T7.10] POST /api/predictions/{id}/actual — 실측 저장", () => {
 
     expect(body.data.summary).toEqual({
       count: 2,
+      residualCount: 2,
       mae: 12,
       meanResidual: -6,
       intervalCount: 2,
@@ -431,12 +467,61 @@ describe("[T7.10] POST /api/predictions/{id}/actual — 실측 저장", () => {
     expect(f.state.actualScores).toHaveLength(0);
   });
 
-  it("run 에 없는 학생을 붙이면 422다", async () => {
+  /**
+   * 🔴 회귀 가드 (adv-보정루프.md 🔴1).
+   *
+   * 예전 규칙은 "그 회차가 예측한 학생만 받는다"였다. `predictedScores` 를 채우는 학생
+   * 능력 엔진(11 §3 L3)이 없어 그 배열이 **항상 비어 있으므로**, 그 규칙은 모든 실점수를
+   * 거절했다 — 보정 루프의 입력이 한 건도 쌓일 수 없었다.
+   * 11 §3 L5-b·§4 는 실점수가 예측보다 **먼저**라고 정한다. 그래서 예측이 없어도 받되,
+   * 잔차는 지어내지 않고 비운다.
+   */
+  it("예측이 없는 학생도 실점수를 받는다 — 잔차는 지어내지 않고 비운다", async () => {
+    const res = await POST(
+      jsonRequest("POST", {
+        scores: [{ studentId: f.STUDENT_NOT_IN_RUN, actualScore: 90 }],
+      }),
+      routeContext(),
+    );
+    expect(res.status).toBe(200);
+
+    const body = actualScoreResponseSchema.parse(await res.json());
+    const row = body.data.scores[0]!;
+    expect(row.actualScore).toBe(90);
+    expect(row.predictedScore).toBeNull();
+    expect(row.residual).toBeNull();
+    expect(row.predictedLower).toBeNull();
+    expect(row.intervalHit).toBe(false);
+  });
+
+  it("예측 없는 행은 MAE 분모에서 빠진다 — 잔차 0 으로 세지 않는다", async () => {
+    const res = await POST(
+      jsonRequest("POST", {
+        scores: [
+          // 예측 72 → 잔차 +6
+          { studentId: f.STUDENT_A, actualScore: 78 },
+          // 예측 없음 → 잔차 없음
+          { studentId: f.STUDENT_NOT_IN_RUN, actualScore: 90 },
+        ],
+      }),
+      routeContext(),
+    );
+    expect(res.status).toBe(200);
+
+    const body = actualScoreResponseSchema.parse(await res.json());
+    expect(body.data.summary.count).toBe(2);
+    expect(body.data.summary.residualCount).toBe(1);
+    // 분모가 2 였다면 3 이 된다. 그 희석이 정확히 이 저장소가 낸 사고다.
+    expect(body.data.summary.mae).toBe(6);
+    expect(body.data.summary.meanResidual).toBe(6);
+  });
+
+  it("내 학생이어도 다른 학교면 422다 — 이 시험을 보지 않는다", async () => {
     const res = await POST(
       jsonRequest("POST", {
         scores: [
           { studentId: f.STUDENT_A, actualScore: 78 },
-          { studentId: f.STUDENT_NOT_IN_RUN, actualScore: 90 },
+          { studentId: f.STUDENT_OTHER_SCHOOL, actualScore: 90 },
         ],
       }),
       routeContext(),
@@ -444,7 +529,9 @@ describe("[T7.10] POST /api/predictions/{id}/actual — 실측 저장", () => {
     expect(res.status).toBe(422);
     const body = errorResponseSchema.parse(await res.json());
     expect(body.error.code).toBe("VALIDATION_ERROR");
-    expect(JSON.stringify(body.error.details)).toContain(f.STUDENT_NOT_IN_RUN);
+    expect(JSON.stringify(body.error.details)).toContain(
+      f.STUDENT_OTHER_SCHOOL,
+    );
     // 한 명이라도 어긋나면 아무것도 저장하지 않는다.
     expect(f.state.actualScores).toHaveLength(0);
   });
@@ -563,6 +650,7 @@ describe("[T7.10] GET /api/predictions/{id}/actual — 잔차 조회", () => {
     const body = actualScoreResponseSchema.parse(await res.json());
     expect(body.data.summary).toEqual({
       count: 0,
+      residualCount: 0,
       mae: null,
       meanResidual: null,
       intervalCount: 0,

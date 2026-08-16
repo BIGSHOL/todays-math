@@ -640,9 +640,14 @@ model ActualExamScore {
   actualScore    Float   @map("actual_score")
   /// 예측 당시 값의 **스냅샷**. run 의 Json 을 다시 파싱하지 않고 잔차를 집계할 수 있고,
   /// Json 모양이 나중에 바뀌어도 과거 보정 근거가 흔들리지 않는다.
-  predictedScore Float   @map("predicted_score")
-  /// actual − predicted. 보정 계수(T7.11)의 직접 입력이다.
-  residual       Float
+  ///
+  /// 예측이 없었으면 NULL 이다. 학생 능력 엔진(11 §3 L3)이 아직 없어 지금은 모든 회차가
+  /// 여기 해당한다. 그렇다고 실점수를 거절하면 보정 루프의 입력이 영영 쌓이지 않는다
+  /// (11 §4 — 환산 계수는 학생 데이터를 먼저 모아야 구한다). 실점수는 받되 잔차는
+  /// 지어내지 않는다.
+  predictedScore Float?  @map("predicted_score")
+  /// actual − predicted. 보정 계수(T7.11)의 직접 입력이다. 예측이 없으면 NULL.
+  residual       Float?
   /// 예측 **구간**이 실제를 담았는가. 점 예측 MAE 와 별개로 봐야 하는 지표다
   /// — ±5점 목표는 구간 적중률로 판정한다.
   intervalHit    Boolean @map("interval_hit")

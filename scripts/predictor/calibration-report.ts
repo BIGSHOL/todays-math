@@ -34,9 +34,10 @@ import { inspectDatabaseTargets } from "../import/resolveDbTarget";
 export interface ActualScoreRowWithRun {
   runId: string;
   studentId: string;
-  predictedScore: number;
+  /** 예측이 없던 회차면 null — 잔차를 낼 수 없어 표본이 되지 못한다. */
+  predictedScore: number | null;
   actualScore: number;
-  residual: number;
+  residual: number | null;
   intervalHit: boolean;
   predictedLower: number | null;
   predictedUpper: number | null;
@@ -49,6 +50,8 @@ export interface CalibrationReportMeta {
   databaseHost: string | null;
   databaseReason: string;
   rowCount: number;
+  /** 그 중 예측이 없어 표본이 되지 못한 행 수. 조용히 버리지 않는다. */
+  withoutPrediction: number;
   engineFilter: string | null;
   schoolFilter: string | null;
   /** 표본들이 공통으로 선언한 구간 신뢰수준. 섞여 있으면 null(정직성 판정을 하지 않는다). */
@@ -60,21 +63,44 @@ export interface CalibrationReportMeta {
 // 순수 변환 — 테스트가 여기에 걸린다
 // ─────────────────────────────────────────────
 
+/**
+ * 실측 행 → 보정 표본.
+ *
+ * 🔴 **예측 스냅샷이 없는 행은 표본이 될 수 없다.** 잔차가 없으니 계수를 추정할 근거가
+ *    아니다. 0 으로 채워 넣으면 "정확히 맞혔다"로 세어져 MAE 가 거짓으로 내려간다.
+ *    다만 **조용히 버리지 않는다** — 몇 건을 뺐는지 세어 리포트에 싣는다
+ *    (`CalibrationReportMeta.withoutPrediction`).
+ *
+ *    학생 능력 엔진(11 §3 L3)이 없는 지금은 실측 행이 전부 여기 해당한다.
+ *    그래도 실점수는 쌓아 둔다 — 11 §4 가 "환산 계수는 학생 데이터를 먼저 모아야
+ *    구한다"고 정한 순서다.
+ */
 export function buildCalibrationSamples(
   rows: ActualScoreRowWithRun[],
 ): CalibrationSample[] {
-  return rows.map((row) => ({
-    runId: row.runId,
-    studentId: row.studentId,
-    engineVersion: row.run.engineVersion,
-    school: row.run.school,
-    predicted: row.predictedScore,
-    actual: row.actualScore,
-    residual: row.residual,
-    intervalHit: row.intervalHit,
-    // 구간 스냅샷이 없으면 적중을 판정할 수 없다 — 분모에서 빠진다.
-    hasInterval: row.predictedLower !== null && row.predictedUpper !== null,
-  }));
+  const samples: CalibrationSample[] = [];
+  for (const row of rows) {
+    if (row.predictedScore === null || row.residual === null) continue;
+    samples.push({
+      runId: row.runId,
+      studentId: row.studentId,
+      engineVersion: row.run.engineVersion,
+      school: row.run.school,
+      predicted: row.predictedScore,
+      actual: row.actualScore,
+      residual: row.residual,
+      intervalHit: row.intervalHit,
+      // 구간 스냅샷이 없으면 적중을 판정할 수 없다 — 분모에서 빠진다.
+      hasInterval: row.predictedLower !== null && row.predictedUpper !== null,
+    });
+  }
+  return samples;
+}
+
+/** 예측이 없어 표본이 되지 못한 실측 행 수. 조용히 버리지 않으려고 따로 센다. */
+export function countWithoutPrediction(rows: ActualScoreRowWithRun[]): number {
+  return rows.filter((r) => r.predictedScore === null || r.residual === null)
+    .length;
 }
 
 /**
@@ -117,6 +143,13 @@ export function renderCalibrationReport(
     `- 읽은 DB: ${meta.databaseHost ?? "(없음)"} — ${meta.databaseReason}`,
   );
   lines.push(`- 실측 행 수: ${meta.rowCount}`);
+  if (meta.withoutPrediction > 0) {
+    lines.push(
+      `- 그 중 **예측이 없어 표본에서 뺀 행: ${meta.withoutPrediction}건** ` +
+        "(잔차를 낼 수 없다 — 0 으로 세지 않는다). " +
+        "학생 능력 엔진(11 §3 L3)이 붙으면 이 수가 줄어든다.",
+    );
+  }
   lines.push(`- 엔진 필터: ${meta.engineFilter ?? "(전체)"}`);
   lines.push(`- 학교 필터: ${meta.schoolFilter ?? "(전체)"}`);
   if (meta.coverageMixed) {
@@ -300,6 +333,7 @@ export async function runCalibrationReport(
       databaseHost: inspection.selected.host,
       databaseReason: inspection.selected.reason,
       rowCount: rows.length,
+      withoutPrediction: countWithoutPrediction(rows),
       engineFilter: options.engine ?? null,
       schoolFilter: options.school ?? null,
       nominalCoverage: coverage,

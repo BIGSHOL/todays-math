@@ -27,10 +27,13 @@ import {
   type Blueprint,
   type ScorePrediction,
 } from "@/contracts/predictor.contract";
+import { takesExam } from "@/lib/predictor/examRoster";
 
 /** `PredictionRun` 에서 이 화면이 읽는 필드만. 구조적 타입이라 Prisma 행이 그대로 들어간다. */
 export type PredictionRunRow = {
   id: string;
+  /** 이 회차를 만든 원장. 소유권 판정의 유일한 근거다. */
+  userId: string;
   createdAt: Date;
   engineVersion: string;
   school: string;
@@ -51,8 +54,17 @@ export type ActualScoreRow = {
   actualScore: number;
 };
 
-/** 이 사용자가 소유한 학생(반 소유자까지 확인된 것만 넘어온다). */
-export type OwnedStudent = { id: string; name: string };
+/**
+ * 이 사용자가 소유한 학생(반 소유자까지 확인된 것만 넘어온다).
+ * 재학 정보는 응시 명단을 가르는 데 쓴다 — 모르면 null 이고, 그 상태가 정상이다.
+ */
+export type OwnedStudent = {
+  id: string;
+  name: string;
+  schoolName: string | null;
+  schoolLevel: string | null;
+  schoolGrade: number | null;
+};
 
 /**
  * `predictedScores` Json → ScorePrediction[].
@@ -88,22 +100,15 @@ export function runStudentIds(run: PredictionRunRow): string[] {
 }
 
 /**
- * 소유권 판정 — **fail closed**.
+ * 소유권 판정 — `PredictionRun.userId` **컬럼 하나**가 근거다.
  *
- * 🔴 `PredictionRun` 에 `userId` 컬럼이 아직 없다(2026-08-16 확인). 그래서 소유권을
- *    `학생 → 반 → 반 소유자` 경로로 되짚는다. 이 회차가 다루는 학생 중 **하나라도**
- *    내 학생이면 내 회차로 본다. 하나도 없으면 보이지 않는다(없는 쪽으로 닫는다).
- *    `PredictionRun.userId` 가 생기면 이 함수 하나만 갈아끼우면 된다.
+ * 예전에는 이 컬럼이 없어 `학생 → 반 → 반 소유자` 경로로 되짚었다. 그런데 그 경로가
+ * `predictedScores` 를 거치는데 그 Json 이 항상 비어 있어, **원장 본인의 새 회차가
+ * 자기 계기판에 뜨지 않았다**(adv-보정루프.md 🔴1). 컬럼은 마이그레이션
+ * `20260816160000_prediction_run_owner_and_interval` 로 이미 생겼다.
  */
-export function isRunVisibleTo(
-  run: PredictionRunRow,
-  actuals: ActualScoreRow[],
-  ownedStudentIds: ReadonlySet<string>,
-): boolean {
-  if (runStudentIds(run).some((id) => ownedStudentIds.has(id))) return true;
-  return actuals.some(
-    (a) => a.runId === run.id && ownedStudentIds.has(a.studentId),
-  );
+export function isRunVisibleTo(run: PredictionRunRow, userId: string): boolean {
+  return run.userId === userId;
 }
 
 /**
@@ -115,7 +120,7 @@ export function isRunVisibleTo(
  */
 function buildStages(
   blueprint: Blueprint | null,
-  predictedStudentCount: number,
+  rosterCount: number,
   actualCount: number,
 ): ExamStageState[] {
   return [
@@ -124,16 +129,30 @@ function buildStages(
     { key: "grading", done: false, progress: null },
     {
       key: "actual",
-      done: predictedStudentCount > 0 && actualCount >= predictedStudentCount,
+      done: rosterCount > 0 && actualCount >= rosterCount,
       progress:
-        predictedStudentCount > 0
+        rosterCount > 0
           ? {
-              current: Math.min(actualCount, predictedStudentCount),
-              total: predictedStudentCount,
+              current: Math.min(actualCount, rosterCount),
+              total: rosterCount,
             }
           : null,
     },
   ];
+}
+
+/**
+ * 이 회차의 응시 명단 — 내 학생 중 이 시험을 보는 학생.
+ *
+ * 판정은 `examRoster.takesExam` 하나뿐이고 서버 저장 경로가 같은 함수를 쓴다.
+ * 두 벌로 나뉘면 화면은 입력칸을 내주는데 서버가 422 로 거절하는 어긋남이 조용히 생긴다.
+ */
+function rosterOf(
+  run: PredictionRunRow,
+  ownedStudents: OwnedStudent[],
+): OwnedStudent[] {
+  const series = { school: run.school, level: run.level, grade: run.grade };
+  return ownedStudents.filter((s) => takesExam(series, s));
 }
 
 /**
@@ -143,6 +162,7 @@ function buildStages(
 export function toRoundSummary(
   run: PredictionRunRow,
   actuals: ActualScoreRow[],
+  ownedStudents: OwnedStudent[],
 ): ExamRoundSummary | null {
   const series = examSeriesKeySchema.safeParse({
     school: run.school,
@@ -158,7 +178,6 @@ export function toRoundSummary(
   if (!series.success || !period.success) return null;
 
   const blueprint = parseBlueprint(run.predictedBlueprint);
-  const studentIds = runStudentIds(run);
   const actualCount = actuals.filter((a) => a.runId === run.id).length;
 
   return {
@@ -167,7 +186,11 @@ export function toRoundSummary(
     period: period.data,
     // 🔴 `PredictionRun.examDate` 컬럼이 아직 없다 — D-day 를 지어내지 않는다.
     examDate: null,
-    stages: buildStages(blueprint, studentIds.length, actualCount),
+    stages: buildStages(
+      blueprint,
+      rosterOf(run, ownedStudents).length,
+      actualCount,
+    ),
     evidenceCount: run.inputExamIds.length,
     confidence: blueprint?.confidence ?? null,
   };
@@ -176,17 +199,32 @@ export function toRoundSummary(
 /**
  * 회차 상세. 학생 행은 **내 학생만** 싣는다 — 같은 회차에 남의 학생이 섞여 있어도
  * 이름이 새지 않는다.
+ *
+ * 명단은 세 갈래를 합친 것이다.
+ *   ① 이 시험을 보는 내 학생 (`takesExam`) — 예측이 없어도 실점수를 넣을 자리를 준다.
+ *   ② 회차가 예측한 학생 — 예측값을 함께 싣는다.
+ *   ③ 이미 실점수가 들어온 학생 — 명단 규칙이 나중에 좁아져도 **넣은 점수를 감추지 않는다.**
+ *
+ * ①이 없으면 화면에 학생이 한 명도 안 뜬다. 예전에 ②만 보다가 그 Json 이 늘 비어 있어
+ * 실제로 그렇게 됐다(adv-보정루프.md 🔴1).
  */
 export function toRoundDetail(
   run: PredictionRunRow,
   actuals: ActualScoreRow[],
   ownedStudents: OwnedStudent[],
 ): ExamRoundDetail | null {
-  const summary = toRoundSummary(run, actuals);
+  const summary = toRoundSummary(run, actuals, ownedStudents);
   if (!summary) return null;
 
   const nameById = new Map(ownedStudents.map((s) => [s.id, s.name]));
-  const predictions = parsePredictedScores(run.predictedScores);
+  // 같은 학생이 두 번 들어 있으면 **앞엣것**을 쓴다. `new Map(...)` 은 뒤엣것으로 덮으므로
+  // 쓰지 않는다 — 엔진이 같은 학생을 두 번 낸 것은 이상 신호이고, 그럴 때 조용히
+  // 뒤엣값으로 바뀌면 어느 값이 쓰였는지 설명할 수 없다.
+  const predictionByStudent = new Map<string, ScorePrediction>();
+  for (const p of parsePredictedScores(run.predictedScores)) {
+    if (p.studentId === null || predictionByStudent.has(p.studentId)) continue;
+    predictionByStudent.set(p.studentId, p);
+  }
   const actualByStudent = new Map(
     actuals
       .filter((a) => a.runId === run.id)
@@ -196,32 +234,23 @@ export function toRoundDetail(
   const students: ExamStudentRow[] = [];
   const seen = new Set<string>();
 
-  for (const prediction of predictions) {
-    const id = prediction.studentId;
-    if (id === null || !nameById.has(id) || seen.has(id)) continue;
-    seen.add(id);
-    students.push({
-      studentId: id,
-      studentName: nameById.get(id)!,
-      prediction,
-      actualScore: actualByStudent.get(id) ?? null,
-      // 🔴 응시 여부를 담는 컬럼이 없다. 모르는 것을 "미응시"로 단정하지 않는다.
-      absent: false,
-    });
-  }
-
-  // 예측에는 없는데 실점수만 들어온 학생 — 버리지 않고 실측만 싣는다.
-  for (const [studentId, actualScore] of actualByStudent) {
-    if (seen.has(studentId) || !nameById.has(studentId)) continue;
+  const push = (studentId: string) => {
+    if (seen.has(studentId) || !nameById.has(studentId)) return;
     seen.add(studentId);
     students.push({
       studentId,
       studentName: nameById.get(studentId)!,
-      prediction: null,
-      actualScore,
+      prediction: predictionByStudent.get(studentId) ?? null,
+      actualScore: actualByStudent.get(studentId) ?? null,
+      // 🔴 응시 여부를 담는 컬럼이 없다. 모르는 것을 "미응시"로 단정하지 않는다.
       absent: false,
     });
-  }
+  };
+
+  for (const student of rosterOf(run, ownedStudents)) push(student.id);
+  for (const studentId of predictionByStudent.keys()) push(studentId);
+  // 예측에도 명단에도 없는데 실점수만 들어온 학생 — 버리지 않고 실측만 싣는다.
+  for (const studentId of actualByStudent.keys()) push(studentId);
 
   students.sort((a, b) => a.studentName.localeCompare(b.studentName, "ko"));
 

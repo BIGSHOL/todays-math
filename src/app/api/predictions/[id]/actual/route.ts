@@ -10,6 +10,11 @@
  *   ② 학생 — 붙이려는 학생이 로그인 원장의 반에 속해야 한다(`requireOwnedStudent`).
  *      조회도 같은 기준으로 한 번 더 걸러 다른 원장의 학생 점수가 새지 않게 한다.
  *
+ * 소유권과 **응시 여부**는 다른 질문이다. 내 학생이어도 다른 학교·학년이면 이 시험을
+ * 보지 않는다 — 그 판정은 `examRoster.takesExam` 이 하고, 화면도 같은 함수를 쓴다.
+ * (예전에는 "회차의 predictedScores 에 있는 학생인가"로 판정했는데, 그 Json 이 늘 비어 있어
+ *  모든 실점수가 422 로 거절됐다 — 보정 루프가 통째로 닫혀 있었다. adv-보정루프.md 🔴1.)
+ *
  * ⚠️ T7.7 이 `predictionRunService.requireOwnedPredictionRun` 을 갖고 있지만 아직
  *    main 에 없다(확인 완료). 그 파일은 T7.7 소유라 손대지 않고, 여기서는 이미 읽어 둔
  *    회차의 `ownerUserId` 로 직접 비교한다. T7.7 병합 뒤 그 헬퍼로 합치면 된다.
@@ -61,12 +66,21 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
   if (index.ownerUserId !== session.id) return forbiddenError();
 
   // 학생 소유권을 먼저 전부 확인한다 — 한 명이라도 남의 학생이면 아무것도 저장하지 않는다.
+  // 확인하면서 읽은 학생 행을 그대로 서비스에 넘긴다(응시 명단 판정의 근거다).
+  // 다시 읽지 않는다 — 두 번 읽으면 그 사이에 바뀐 값으로 판정이 갈릴 수 있다.
+  const roster = [];
   for (const entry of parsed.data.scores) {
     const owned = await requireOwnedStudent(entry.studentId, session.id);
     if (!owned.ok) return owned.response;
+    roster.push(owned.data);
   }
 
-  const result = await attachActualScores(index, parsed.data, session.id);
+  const result = await attachActualScores(
+    index,
+    parsed.data,
+    session.id,
+    roster,
+  );
 
   if (!result.ok && result.kind === "예측값_읽기실패") {
     return jsonError(
@@ -78,11 +92,11 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
   if (!result.ok) {
     return jsonError(
       "VALIDATION_ERROR",
-      "이 회차의 예측 대상이 아닌 학생이 있습니다.",
+      "이 시험을 보지 않는 학생이 있습니다.",
       422,
       result.studentIds.map((studentId) => ({
         field: "scores.studentId",
-        message: `${studentId} — 이 회차의 예측 대상이 아닙니다.`,
+        message: `${studentId} — 재학 학교·학년이 이 회차의 시험과 다릅니다.`,
       })),
     );
   }

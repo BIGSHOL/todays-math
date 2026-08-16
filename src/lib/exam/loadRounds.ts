@@ -25,7 +25,15 @@ export async function loadOwnedStudents(
   const students = await db.student.findMany({
     where: { classId: { in: classes.map((c) => c.id) } },
   });
-  return students.map((s) => ({ id: s.id, name: s.name }));
+  // 재학 정보는 응시 명단을 가르는 데 쓴다(examRoster.takesExam). 아직 채우는 화면이
+  // 없어 대부분 null 이고, 그 경우 명단에서 빼지 않는다 — 모르는 것으로 막지 않는다.
+  return students.map((s) => ({
+    id: s.id,
+    name: s.name,
+    schoolName: s.schoolName,
+    schoolLevel: s.schoolLevel,
+    schoolGrade: s.schoolGrade,
+  }));
 }
 
 export type VisibleRuns = {
@@ -35,30 +43,33 @@ export type VisibleRuns = {
 };
 
 /**
- * 이 사용자에게 보이는 회차 전부.
+ * 이 사용자에게 보이는 회차 전부 — `PredictionRun.userId` 로 **DB 가** 거른다.
  *
- * ⚠️ 성능 메모: `PredictionRun` 에 `userId` 가 없어 SQL 로 좁히지 못하고 전량을 읽어
- *    앱에서 거른다. 학원 한 곳 규모(회차 수십 건)에서는 문제가 없지만, `userId` 컬럼이
- *    생기면 `where: { userId }` 로 바꿔 이 왕복을 없애야 한다.
- *    학교명으로 미리 좁히는 방법도 검토했으나, `Student.schoolName` 이 NULL 인 학생의
- *    회차가 통째로 사라져 **조용한 누락**이 생기므로 쓰지 않았다.
+ * 예전에는 이 컬럼이 없어 전량을 읽고 앱에서 걸렀다. 그 필터가 `predictedScores` 를
+ * 거치는데 그 Json 이 항상 비어 있어, 원장 본인의 새 회차가 자기 계기판에서 사라졌다
+ * (adv-보정루프.md 🔴1). 컬럼과 `@@index([userId, createdAt desc])` 는 이미 있다.
+ *
+ * 학생이 아직 없어도 회차는 보여야 한다 — 예측을 먼저 돌리고 나중에 반을 만드는 순서도
+ * 정상이고, 회차가 안 보이면 원장이 예측이 실패한 줄 안다.
  */
 export async function loadVisibleRuns(userId: string): Promise<VisibleRuns> {
   const ownedStudents = await loadOwnedStudents(userId);
-  const ownedIds = new Set(ownedStudents.map((s) => s.id));
-  if (ownedIds.size === 0) {
-    return { runs: [], actuals: [], ownedStudents };
-  }
+  const ownedIds = ownedStudents.map((s) => s.id);
 
   const [allRuns, ownedActuals] = await Promise.all([
-    db.predictionRun.findMany({ orderBy: { createdAt: "desc" } }),
-    db.actualExamScore.findMany({
-      where: { studentId: { in: [...ownedIds] } },
+    db.predictionRun.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
     }),
+    ownedIds.length === 0
+      ? Promise.resolve([])
+      : db.actualExamScore.findMany({ where: { studentId: { in: ownedIds } } }),
   ]);
 
+  // where 로 이미 걸렀지만 판정은 한 곳(`isRunVisibleTo`)에서만 한다 — 나중에 규칙이
+  // 바뀔 때 쿼리와 앱이 어긋나지 않도록.
   const runs = (allRuns as PredictionRunRow[]).filter((run) =>
-    isRunVisibleTo(run, ownedActuals as ActualScoreRow[], ownedIds),
+    isRunVisibleTo(run, userId),
   );
   const visibleRunIds = new Set(runs.map((r) => r.id));
 
