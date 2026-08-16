@@ -167,7 +167,9 @@ describe("[T3.0] 자작 시드 변환", () => {
 });
 
 describe("[T3.0] RPM 변환", () => {
-  it("전량 directUseAllowed=false 로 잠근다", () => {
+  // D-26(RPM 잠금)은 2026-08-14 원장님 지시로 폐지됐다. 잠그면 새 이관분만
+  // 출제 풀에서 조용히 빠진다 — 이 테스트가 그 회귀를 막는다.
+  it("잠그지 않는다 — D-26 폐지 (directUseAllowed=true)", () => {
     const draft = convertRpmRow({
       id: "rpm-1",
       stem: "원본 RPM 문항",
@@ -175,7 +177,7 @@ describe("[T3.0] RPM 변환", () => {
       topic: "유리수와 소수",
     });
     expect(draft.source).toBe("transformed");
-    expect(draft.directUseAllowed).toBe(false);
+    expect(draft.directUseAllowed).toBe(true);
   });
 });
 
@@ -314,7 +316,7 @@ describe("[T3.0] 기출 header 정규화 + RPM 구조화", () => {
       ],
       answer: { text: "1" },
     });
-    expect(draft.directUseAllowed).toBe(false);
+    expect(draft.directUseAllowed).toBe(true);
     expect(draft.source).toBe("transformed");
     expect(draft.content).toContain("다음 중");
     expect(draft.content).toContain("$0.25$");

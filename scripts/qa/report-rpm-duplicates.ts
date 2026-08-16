@@ -22,6 +22,7 @@ import { PrismaClient } from "@prisma/client";
 import { classifyDrafts } from "../../src/lib/import/buildReport";
 import { convertRpmExtractedRow } from "../../src/lib/import/convertRpm";
 import { flattenStructured } from "../../src/lib/import/flattenStructured";
+import { groupBy as groupByAxes, type AxisSet, type Row as DupRow } from "./find-true-duplicates";
 import type { UnitLike } from "../../src/lib/import/types";
 import { isDirectScript } from "../import/isDirectScript";
 import {
@@ -129,6 +130,30 @@ export interface GroupRow {
   gradeMismatch: number;
   /** 해설로 못 가르는 그룹이면 그 사유. 가르면 빈 문자열. */
   blockReason: string;
+  /** 일괄 판단용 — 행마다 무엇을 갖췄나. 원장님이 한 번에 보시라고 만든다. */
+  members: MemberRow[];
+}
+
+/** 그룹 안 한 행의 상태. 무엇을 갖췄는지·출제된 적 있는지. */
+export interface MemberRow {
+  problemId: string;
+  /** 원본 인쇄번호. `externalId` 가 없으면 null (아직 원본을 못 좁힌 행). */
+  printedNumber: string | null;
+  hasAnswer: boolean;
+  hasSolution: boolean;
+  hasFigure: boolean;
+  /** 배정된 소단원의 학년이 원본 교재 학년과 맞는가. */
+  unitOk: boolean;
+  /** 갖춘 항목 수 (정답·해설·그림·단원) — 0~4. */
+  score: number;
+  /** 출제지에 실린 횟수(검수 중 교체분 제외). */
+  usedInTests: number;
+  /** 실제로 인쇄된 시험지에 실린 횟수. */
+  printedInTests: number;
+  /** 원본에 정답이 있는가 — 트랙 B 가 회수하면 `hasAnswer` 가 될 값. */
+  sourceHasAnswer: boolean;
+  /** 원본에 그림이 있는가 — 트랙 A 가 회수하면 `hasFigure` 가 될 값. */
+  sourceHasFigure: boolean;
 }
 
 /** `RPM 중학 수학 2-2 (2022 개정)` → `중2`. 못 읽으면 빈 문자열. */
@@ -196,6 +221,123 @@ interface PairingEvidence {
   controlTotal: number;
 }
 
+/**
+ * 원장님이 「이 기준으로 일괄」이라고 하시면 그대로 적용할 수 있게, 기준마다
+ * **남길 행 / 버릴 행**을 미리 계산해 둔다. 이 파일은 **판단하지 않는다** —
+ * 기준별 결과를 나란히 놓을 뿐이고, 고르는 것은 원장님이다.
+ */
+export interface Criterion {
+  key: string;
+  label: string;
+  detail: string;
+  /** 그룹 하나에서 남길 행을 고른다. 빈 배열이면 "이 기준으로는 못 고른다". */
+  pick: (members: MemberRow[]) => MemberRow[];
+}
+
+/** 동률이면 원본 인쇄번호가 빠른 쪽. 번호가 없는 행(원본 미상)은 뒤로 민다. */
+function byPrintedNumber(a: MemberRow, b: MemberRow): number {
+  if (a.printedNumber === b.printedNumber) return 0;
+  if (a.printedNumber === null) return 1;
+  if (b.printedNumber === null) return -1;
+  return a.printedNumber.localeCompare(b.printedNumber);
+}
+
+export const CRITERIA: Criterion[] = [
+  {
+    key: "keep-all",
+    label: "전부 남긴다 (현행)",
+    detail: "아무것도 지우지 않는다. 지금 상태 그대로.",
+    pick: (members) => members,
+  },
+  {
+    key: "answer-and-figure",
+    label: "정답과 그림을 둘 다 가진 행만 남긴다",
+    detail:
+      "원장님이 예로 드신 규칙. 둘 다 갖춘 행이 그룹에 하나도 없으면 그 그룹은 못 고른다.",
+    pick: (members) => members.filter((m) => m.hasAnswer && m.hasFigure),
+  },
+  {
+    key: "complete-only",
+    label: "정답·해설·그림·단원을 모두 갖춘 행만 남긴다",
+    detail: "가장 엄격하다. 네 가지를 다 갖춘 행만 남고 나머지는 버린다.",
+    pick: (members) =>
+      members.filter((m) => m.hasAnswer && m.hasSolution && m.hasFigure && m.unitOk),
+  },
+  {
+    key: "best-one",
+    label: "그룹마다 가장 많이 갖춘 행 하나만 남긴다",
+    detail:
+      "갖춘 항목 수가 가장 많은 행 하나. 동률이면 원본 인쇄번호가 빠른 쪽. 그룹당 반드시 하나는 남는다.",
+    pick: (members) => {
+      const best = Math.max(...members.map((m) => m.score));
+      const tied = members.filter((m) => m.score === best).sort(byPrintedNumber);
+      return tied.slice(0, 1);
+    },
+  },
+];
+
+export interface CriterionOutcome {
+  key: string;
+  keep: string[];
+  drop: string[];
+  /** 이 기준으로는 남길 행을 고르지 못한 그룹 수. */
+  undecided: number;
+  /** 버리는 행 중, 원본 정답이 그룹 안에서 서로 다른 그룹에 속한 것 — 서로 다른 문항이다. */
+  dropDistinct: number;
+}
+
+/**
+ * 트랙 A·B 가 원본에서 회수를 마친 뒤의 모습으로 바꿔 본다.
+ * **추측이 아니다** — 정답도 그림도 원본에 있는 것을 그대로 가져오는 일이라
+ * 무엇이 채워질지 지금 알 수 있다.
+ */
+export function projectAfterRecovery(groups: GroupRow[]): GroupRow[] {
+  return groups.map((group) => ({
+    ...group,
+    members: group.members.map((member) => {
+      const hasAnswer = member.hasAnswer || member.sourceHasAnswer;
+      const hasFigure = member.hasFigure || member.sourceHasFigure;
+      return {
+        ...member,
+        hasAnswer,
+        hasFigure,
+        score:
+          Number(hasAnswer) +
+          Number(member.hasSolution) +
+          Number(hasFigure) +
+          Number(member.unitOk),
+      };
+    }),
+  }));
+}
+
+export function applyCriteria(groups: GroupRow[]): CriterionOutcome[] {
+  return CRITERIA.map((criterion) => {
+    const keep: string[] = [];
+    const drop: string[] = [];
+    let undecided = 0;
+    let dropDistinct = 0;
+    for (const group of groups) {
+      const picked = criterion.pick(group.members);
+      if (picked.length === 0) {
+        // 못 고르면 **아무것도 버리지 않는다.** 판단 불가는 삭제 사유가 아니다.
+        undecided += 1;
+        keep.push(...group.members.map((m) => m.problemId));
+        continue;
+      }
+      const kept = new Set(picked.map((m) => m.problemId));
+      for (const member of group.members) {
+        if (kept.has(member.problemId)) keep.push(member.problemId);
+        else {
+          drop.push(member.problemId);
+          if (group.sourceAnswersDiffer) dropDistinct += 1;
+        }
+      }
+    }
+    return { key: criterion.key, keep, drop, undecided, dropDistinct };
+  });
+}
+
 function outArg(): string {
   const index = process.argv.indexOf("--out");
   if (index >= 0 && process.argv[index + 1]) return process.argv[index + 1];
@@ -256,6 +398,12 @@ async function build(): Promise<{
         figureUrls: true,
         externalId: true,
         unit: { select: { grade: true, chapter: true, section: true } },
+        testProblems: {
+          select: {
+            replaced: true,
+            test: { select: { printedAt: true } },
+          },
+        },
       },
     });
 
@@ -408,6 +556,32 @@ async function build(): Promise<{
         dbWithFigure: members.filter((m) => m.figureUrls.length > 0).length,
         pairableBySolution: pairing !== null,
         blockReason,
+        members: members.map((member) => {
+          const meta = member.externalId ? metaById.get(member.externalId) : undefined;
+          const hasAnswer =
+            Boolean(member.answer.trim()) && !member.answer.includes(SENTINEL);
+          const hasSolution = Boolean(squeeze(member.solution ?? ""));
+          const hasFigure = member.figureUrls.length > 0;
+          const expected = bookGrade(metas[0]?.book ?? "");
+          const unitOk = expected ? member.unit.grade === expected : false;
+          const live = member.testProblems.filter((t) => !t.replaced);
+          return {
+            problemId: member.id,
+            printedNumber: meta?.printedNumber ?? null,
+            hasAnswer,
+            hasSolution,
+            hasFigure,
+            unitOk,
+            score:
+              Number(hasAnswer) + Number(hasSolution) + Number(hasFigure) + Number(unitOk),
+            usedInTests: live.length,
+            printedInTests: live.filter((t) => t.test.printedAt !== null).length,
+            sourceHasAnswer: Boolean(
+              member.externalId && sourceById.get(member.externalId)?.answer,
+            ),
+            sourceHasFigure: (meta?.diagramCount ?? 0) > 0,
+          };
+        }),
         book: metas[0]?.book ?? "",
         pages: [...new Set(metas.map((m) => m.page).filter(Boolean))],
         printedNumbers: metas.map((m) => m.printedNumber),
@@ -431,6 +605,34 @@ async function build(): Promise<{
       group.index = index + 1;
     });
 
+    // 세 축(본문·그림·정답)으로 다시 묶어 **진짜 중복**을 센다.
+    // 판정 코드는 `find-true-duplicates.ts` 하나만 쓴다 — 같은 규칙이 두 벌 있으면 갈라진다.
+    const dupRows: DupRow[] = problems.map((problem) => ({
+      id: problem.id,
+      content: problem.content,
+      answer: problem.answer,
+      figureUrls: problem.figureUrls,
+    }));
+    const axisCounts: Record<string, { groups: number; rows: number }> = {};
+    for (const axes of [
+      "content",
+      "content+answer",
+      "content+figure",
+      "all-three",
+    ] as AxisSet[]) {
+      const found = groupByAxes(dupRows, axes);
+      axisCounts[axes] = {
+        groups: found.size,
+        rows: [...found.values()].reduce((sum, bucket) => sum + bucket.length, 0),
+      };
+    }
+    const allThree = groupByAxes(dupRows, "all-three");
+    const confirmedDup = [...allThree.values()].filter((bucket) =>
+      bucket.every(
+        (row) => row.answer.trim() && !row.answer.includes(SENTINEL),
+      ),
+    );
+
     const groupRowIds = new Set(groups.flatMap((group) => group.problemIds));
     const groupRowsKeyed = problems.filter(
       (problem) => groupRowIds.has(problem.id) && problem.externalId,
@@ -439,6 +641,23 @@ async function build(): Promise<{
     const totals = {
       groups: groups.length,
       groupRowsKeyed,
+      dupContentGroups: axisCounts.content.groups,
+      dupContentRows: axisCounts.content.rows,
+      dupContentAnswerGroups: axisCounts["content+answer"].groups,
+      dupContentFigureGroups: axisCounts["content+figure"].groups,
+      dupAllThreeGroups: axisCounts["all-three"].groups,
+      dupAllThreeRows: axisCounts["all-three"].rows,
+      dupConfirmed: confirmedDup.length,
+      dupConfirmedRows: confirmedDup.reduce((sum, bucket) => sum + bucket.length, 0),
+      usedInTests: groups.reduce(
+        (sum, g) => sum + g.members.reduce((n, m) => n + m.usedInTests, 0),
+        0,
+      ),
+      printedInTests: groups.reduce(
+        (sum, g) => sum + g.members.reduce((n, m) => n + m.printedInTests, 0),
+        0,
+      ),
+      totalTests: await prisma.test.count(),
       dbRows: groups.reduce((sum, g) => sum + g.problemIds.length, 0),
       sourceRows: groups.reduce((sum, g) => sum + g.sourceIds.length, 0),
       answersDiffer: groups.filter((g) => g.sourceAnswersDiffer).length,
@@ -484,6 +703,8 @@ function render(
   groups: GroupRow[],
   totals: Record<string, number>,
   evidence: PairingEvidence,
+  outcomes: CriterionOutcome[],
+  projected: CriterionOutcome[],
 ): string {
   const short = (id: string): string => id.slice(0, 8);
   const pct = (a: number, b: number): string =>
@@ -578,7 +799,7 @@ function render(
   );
   lines.push(
     `4. 해설로도 안 갈리는 ${totals.dbRows - totals.pairableRows}행(${totals.groups - totals.pairable}그룹)만 사람이 본다. ` +
-      "§5 에 그 그룹과, 따로 눈여겨볼 그룹을 함께 뽑아 뒀다.",
+      "§8 에 그 그룹과, 따로 눈여겨볼 그룹을 함께 뽑아 뒀다.",
   );
   lines.push("");
   lines.push(
@@ -588,7 +809,138 @@ function render(
   );
   lines.push("");
 
-  lines.push("## 3. 이 그룹들과 `externalId` 미상의 관계");
+  lines.push("## 3. ⚠️ 다음 사람이 반드시 알아야 할 함정");
+  lines.push("");
+  lines.push(
+    "**본문 글자만으로 중복을 판정하면, 그림이 빠진 문항끼리 가짜 중복이 된다.**",
+  );
+  lines.push("");
+  lines.push(
+    "이 문서가 다루는 88그룹이 정확히 그렇게 생겼다. RPM 도형 문항은 발문이 " +
+      '"다음 그림에서 ∠x의 크기를 구하시오" 처럼 **글자가 서로 완전히 같고**, ' +
+      "문항을 가르는 것은 오직 그림이다. 이관이 `diagram_assets` 를 안 봐서 그림이 " +
+      "한 장도 안 붙은 상태(0/233)에서 본문만 비교했으니, **서로 다른 문항 233개가 " +
+      "한 덩어리로 뭉쳐 「중복」으로 보였다.**",
+  );
+  lines.push("");
+  lines.push(
+    "트랙 A 가 그림을(1,088/1,088) 트랙 B 가 정답을 붙인 지금 **세 축으로 다시 묶으면** " +
+      "이렇게 갈린다:",
+  );
+  lines.push("");
+  lines.push("| 무엇으로 묶나 | 그룹 |");
+  lines.push("|---|---|");
+  lines.push(`| 본문만 (예전 방식) | **${totals.dupContentGroups}그룹 / ${totals.dupContentRows}행** |`);
+  lines.push(`| 본문 + 정답 | ${totals.dupContentAnswerGroups}그룹 |`);
+  lines.push(`| 본문 + 그림 | ${totals.dupContentFigureGroups}그룹 |`);
+  lines.push(`| 본문 + 그림 + 정답 | ${totals.dupAllThreeGroups}그룹 / ${totals.dupAllThreeRows}행 |`);
+  lines.push(
+    `| └ 그중 **정답까지 확인된 진짜 중복** | **${totals.dupConfirmed}그룹 / ${totals.dupConfirmedRows}행** |`,
+  );
+  lines.push("");
+  lines.push(
+    `**확인된 진짜 중복은 ${totals.dupConfirmed}건이다.** 남은 ${totals.dupAllThreeGroups}그룹은 ` +
+      "정답도 그림도 **양쪽 다 비어 있어** 「같다」가 아무 뜻도 없는 것들이라 판정을 미뤄 뒀다 " +
+      "(없는 것끼리 같은 것을 같다고 하지 않는다). 재현: `npx tsx scripts/qa/find-true-duplicates.ts`.",
+  );
+  lines.push("");
+  lines.push(
+    "> **교훈** — 중복 판정에 쓸 축은 그 문항을 **실제로 가르는 것**이어야 한다. " +
+      "도형 문항에서 그것은 본문이 아니라 그림이다. 이관이 아직 안 붙인 축으로 판정하면 " +
+      "「데이터가 중복이다」가 아니라 **「내 이관이 덜 됐다」를 중복으로 읽게 된다.** " +
+      "이 착시 위에서 일괄 삭제 규칙을 세웠다면 서로 다른 문항 143개를 잃을 뻔했다(§4).",
+  );
+  lines.push("");
+
+  lines.push("## 4. 일괄 판단표 — 「이 기준으로」 한마디면 그대로 적용됩니다");
+  lines.push("");
+  lines.push(
+    "기준마다 **남는 행·버리는 행**을 미리 계산해 뒀다. 고르시면 그 목록 그대로 적용한다. " +
+      "어느 기준으로도 **판단 불가 그룹은 한 행도 버리지 않는다** — 못 고르는 것은 버릴 사유가 아니기 때문이다.",
+  );
+  lines.push("");
+  lines.push("| 기준 | 남김 | 버림 | 판단 불가 그룹 | 버리는 것 중 *서로 다른 문항* |");
+  lines.push("|---|---|---|---|---|");
+  for (const criterion of CRITERIA) {
+    const outcome = outcomes.find((o) => o.key === criterion.key)!;
+    lines.push(
+      `| **${criterion.label}** | ${outcome.keep.length} | ${outcome.drop.length} | ` +
+        `${outcome.undecided} | ${outcome.dropDistinct} |`,
+    );
+  }
+  lines.push("");
+  lines.push(
+    "**지금은 정답을 쓰는 기준이 아무것도 고르지 못한다** — 이 233행의 정답이 아직 0건이기 때문이다" +
+      "(트랙 B 가 209건을 넣기 전이다). 그래서 같은 기준을 **회수가 끝난 뒤의 모습**으로도 계산해 뒀다. " +
+      "추측이 아니라 원본에 있는 것을 그대로 가져오는 일이라 지금 알 수 있는 값이다.",
+  );
+  lines.push("");
+  lines.push("**트랙 A·B 회수가 끝난 뒤 (같은 기준, 같은 계산)**");
+  lines.push("");
+  lines.push("| 기준 | 남김 | 버림 | 판단 불가 그룹 | 버리는 것 중 *서로 다른 문항* |");
+  lines.push("|---|---|---|---|---|");
+  for (const criterion of CRITERIA) {
+    const outcome = projected.find((o) => o.key === criterion.key)!;
+    lines.push(
+      `| **${criterion.label}** | ${outcome.keep.length} | ${outcome.drop.length} | ` +
+        `${outcome.undecided} | ${outcome.dropDistinct} |`,
+    );
+  }
+  lines.push("");
+  for (const criterion of CRITERIA) {
+    lines.push(`- **${criterion.label}** — ${criterion.detail}`);
+  }
+  lines.push("");
+  lines.push(
+    "⚠️ 맨 오른쪽 열을 먼저 봐 주시길 바란다. **버리는 행의 대부분이 서로 다른 문항이다** — " +
+      `${totals.answersDiffer}/${totals.groups} 그룹은 원본 정답부터 다르다(§0). ` +
+      "글자가 같아 보이는 것은 문항을 가르는 **그림이 본문에서 빠졌기** 때문이고, " +
+      "지금 트랙 A 가 그 그림을 붙이고 있다. 한 행만 남기면 나머지는 **다시 만들 수 없다.**",
+  );
+  lines.push("");
+  lines.push(
+    `**출제 이력은 판단 근거가 되지 못한다.** 이 ${totals.dbRows}행 중 출제지에 실린 적이 있는 것은 ` +
+      `${totals.usedInTests}행, 실제 인쇄된 시험지에 실린 것은 ${totals.printedInTests}행이다 ` +
+      `(DB 전체에 시험지가 ${totals.totalTests}장뿐이라 아직 이력이 쌓이지 않았다). ` +
+      "표에는 넣어 뒀으니 나중에 이력이 쌓이면 그때 근거가 된다.",
+  );
+  lines.push("");
+  lines.push(
+    "적용용 목록(문항 id만, 본문 없음): `scripts/qa/rpm-duplicate-decision.json` — 기준별 `keep`/`drop`.",
+  );
+  lines.push("");
+
+  lines.push("## 5. 그룹별 한 줄 요약 — 어느 쪽이 무엇을 갖췄나");
+  lines.push("");
+  lines.push(
+    "`정답·해설·그림·단원` 은 그룹 안에서 **그것을 갖춘 행 수 / 전체 행 수**. " +
+      "`가장 갖춘 행` 은 갖춘 항목이 가장 많은 행을 원본 인쇄번호로 가리킨다 " +
+      "(사실 표기이지 권고가 아니다). `동률` 이면 그 기준으로는 고를 수 없다는 뜻이다.",
+  );
+  lines.push("");
+  lines.push("| # | 행 | 교재·쪽 | 정답 | 해설 | 그림 | 단원 | 출제 | 가장 갖춘 행 |");
+  lines.push("|---|---|---|---|---|---|---|---|---|");
+  for (const group of groups) {
+    const n = group.members.length;
+    const count = (predicate: (m: MemberRow) => boolean): string =>
+      `${group.members.filter(predicate).length}/${n}`;
+    const best = Math.max(...group.members.map((m) => m.score));
+    const tied = group.members.filter((m) => m.score === best);
+    const label =
+      best === 0
+        ? "없음 (아무도 못 갖춤)"
+        : tied.length > 1
+          ? `동률 ${tied.length}행 (${best}/4)`
+          : `#${tied[0].printedNumber ?? "미상"} (${best}/4)`;
+    lines.push(
+      `| ${group.index} | ${n} | ${group.book.replace("RPM 중학 수학 ", "RPM 중")} p${group.pages.join(",")} | ` +
+        `${count((m) => m.hasAnswer)} | ${count((m) => m.hasSolution)} | ${count((m) => m.hasFigure)} | ` +
+        `${count((m) => m.unitOk)} | ${group.members.reduce((sum, m) => sum + m.usedInTests, 0)} | ${label} |`,
+    );
+  }
+  lines.push("");
+
+  lines.push("## 6. 이 그룹들과 `externalId` 미상의 관계");
   lines.push("");
   lines.push(
     `이 문서의 ${totals.dbRows}행은 **본문만으로는 원본을 하나로 좁힐 수 없는** 행들이다. ` +
@@ -619,7 +971,7 @@ function render(
   );
   lines.push("");
 
-  lines.push("## 4. 숫자");
+  lines.push("## 7. 숫자");
   lines.push("");
   lines.push("| 항목 | 값 |");
   lines.push("|---|---|");
@@ -645,11 +997,11 @@ function render(
     `| 그룹 안 DB 행이 모두 같은 단원 | ${totals.sameUnit} / ${totals.groups} |`,
   );
   lines.push(
-    `| 원본 교재 학년 ≠ 배정 단원 학년 | ${totals.gradeMismatchRows}행 (${totals.gradeMismatchGroups}그룹) — §6 |`,
+    `| 원본 교재 학년 ≠ 배정 단원 학년 | ${totals.gradeMismatchRows}행 (${totals.gradeMismatchGroups}그룹) — §9 |`,
   );
   lines.push("");
 
-  lines.push("## 5. 사람이 봐야 하는 그룹");
+  lines.push("## 8. 사람이 봐야 하는 그룹");
   lines.push("");
   const exceptions = groups.filter(
     (group) =>
@@ -688,7 +1040,7 @@ function render(
   lines.push("");
 
   lines.push(
-    "## 6. 곁다리로 드러난 것 — 결함 하나, 증상 둘 (트랙 C 소관 아님)",
+    "## 9. 곁다리로 드러난 것 — 결함 하나, 증상 둘 (트랙 C 소관 아님)",
   );
   lines.push("");
   lines.push("### 증상 1 — 단원 학년 오배정");
@@ -781,7 +1133,7 @@ function render(
   );
   lines.push("");
 
-  lines.push("## 7. 그룹별 근거표");
+  lines.push("## 10. 그룹별 근거표");
   lines.push("");
   lines.push(
     "`정답`·`그림`·`figBox` 는 **원본 기준**(`n/m` = 원본 후보 m개 중 n개 보유). " +
@@ -808,7 +1160,7 @@ function render(
   }
   lines.push("");
 
-  lines.push("## 8. 문항 id 대조표");
+  lines.push("## 11. 문항 id 대조표");
   lines.push("");
   lines.push(
     "우리 `Problem.id` 와 원본 `questions.id` 의 앞 8자. 순서는 짝을 뜻하지 않는다 — " +
@@ -826,11 +1178,33 @@ function render(
   return `${lines.join("\n")}\n`;
 }
 
+const DECISION_PATH = "scripts/qa/rpm-duplicate-decision.json";
+
 async function main(): Promise<void> {
   const { groups, totals, evidence } = await build();
+  const outcomes = applyCriteria(groups);
+  const projected = applyCriteria(projectAfterRecovery(groups));
   const out = outArg();
   await mkdir(path.dirname(out), { recursive: true });
-  await writeFile(out, render(groups, totals, evidence), "utf8");
+  await writeFile(out, render(groups, totals, evidence, outcomes, projected), "utf8");
+  // 「이 기준으로 일괄」 한마디에 바로 쓸 수 있는 목록. **문항 id 만 담는다.**
+  await writeFile(
+    DECISION_PATH,
+    `${JSON.stringify(
+      {
+        note:
+          "RPM 본문 동일 88그룹의 기준별 남김/버림 목록. 판단은 원장님 몫이고 이 파일은 " +
+          "고른 기준을 그대로 적용하기 위한 재료다. 다시 만들려면 report-rpm-duplicates.ts.",
+        criteria: CRITERIA.map((c) => ({ key: c.key, label: c.label, detail: c.detail })),
+        outcomes,
+        projectedAfterRecovery: projected,
+      },
+      null,
+      2,
+    )}
+`,
+    "utf8",
+  );
   console.log("── RPM 본문 동일 그룹 근거표 ──");
   console.log(
     `그룹 ${totals.groups} · DB행 ${totals.dbRows} · 원본후보 ${totals.sourceRows}`,
@@ -846,7 +1220,17 @@ async function main(): Promise<void> {
   console.log(
     `단원 학년 어긋남 ${totals.gradeMismatchRows}행 (${totals.gradeMismatchGroups}그룹) — 보고만 한다`,
   );
-  console.log(`기록 — ${out}`);
+  console.log(
+    `일괄 판단 기준(회수 후) — ${projected
+      .map((o) => `${o.key}: 남김 ${o.keep.length}/버림 ${o.drop.length}(판단불가 ${o.undecided}그룹)`)
+      .join(" · ")}`,
+  );
+  console.log(
+    `일괄 판단 기준(지금) — ${outcomes
+      .map((o) => `${o.key}: 남김 ${o.keep.length}/버림 ${o.drop.length}(판단불가 ${o.undecided}그룹)`)
+      .join(" · ")}`,
+  );
+  console.log(`기록 — ${out} · ${DECISION_PATH}`);
 }
 
 if (isDirectScript(import.meta.url)) {

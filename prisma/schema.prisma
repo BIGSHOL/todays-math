@@ -264,7 +264,9 @@ model Problem {
   score            Float?
   /// AI 생성물은 pending으로 시작, 검수 후 approved (D-22)
   reviewStatus     ReviewStatus @default(pending) @map("review_status")
-  /// RPM 원본 잠금 (D-26) — false면 출제 풀에서 제외하고 변형 원본으로만 쓴다.
+  /// false면 출제 풀에서 제외하고 변형 원본으로만 쓴다.
+  /// ⚠️ 원안 D-26(RPM 원본 잠금)은 **2026-08-14 폐지** — 원장님 지시로 전량 true.
+  /// 새로 잠그려면 원장님 확인이 필요하다. 이관 변환기는 true 를 내보낸다.
   directUseAllowed Boolean      @default(true) @map("direct_use_allowed")
   /// 공용 풀이 기본 (D-31). private는 소유자만 조회.
   pool             ProblemPool  @default(shared)
