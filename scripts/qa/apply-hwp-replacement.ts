@@ -44,6 +44,8 @@ const BACKUP_DEFAULT = "scripts/qa/reports/hwp-replace-backup.json";
 /** ⚠️ 필터를 걸어 일부만 쓸 때는 **백업 파일도 갈라 쓴다.** 기본 백업은 4,069행
  *  적용의 되돌리기 자산이라 덮어쓰면 그 이력을 잃는다. */
 const BACKUP_B64 = "scripts/qa/reports/hwp-replace-backup-base64.json";
+/** 신규 오염 행(아직 한 번도 안 넣은 것) 전용 백업 — 앞의 둘을 덮지 않는다. */
+const BACKUP_B64_NEW = "scripts/qa/reports/hwp-replace-backup-base64-new.json";
 /** 트랙 E 가 찾은 수식 캡션 base64. 판정 규칙(S13)과 같은 기준이다. */
 const BASE64_BLOB = /[A-Za-z0-9+/]{60,}={0,2}/;
 /** `hwp_text_clean.py` 의 strip_base64 를 옮긴 것 — 재적용 안전 판정에만 쓴다. */
@@ -229,7 +231,13 @@ async function main(): Promise<void> {
   // 그중 36행은 아직 넣은 적 없는 신규다. 이미 적재한 것과 신규를 가르려면
   // **기존 백업(4,069행)과 교집합**을 취해야 한다. 그게 승인받은 "오염 10행" 이다.
   const onlyBase64 = process.argv.includes("--only-applied-base64");
-  const BACKUP = onlyBase64 ? BACKUP_B64 : BACKUP_DEFAULT;
+  /** --only-new-base64: 오염됐지만 **아직 한 번도 안 넣은** 행만. 앞의 것과 정확히 여집합이다. */
+  const onlyNewBase64 = process.argv.includes("--only-new-base64");
+  const BACKUP = onlyBase64
+    ? BACKUP_B64
+    : onlyNewBase64
+      ? BACKUP_B64_NEW
+      : BACKUP_DEFAULT;
   // --expect-diff N: DB 와 산출물이 다른 행 수가 N 이 아니면 **멈춘다**(코디네이터 조건).
   const expectDiffIdx = process.argv.indexOf("--expect-diff");
   const expectDiff = expectDiffIdx >= 0 ? Number(process.argv[expectDiffIdx + 1]) : null;
@@ -345,7 +353,7 @@ async function main(): Promise<void> {
 
   // ── 쓰기 대상 좁히기 + 멈춤 조건 ────────────────────────────────────
   // 둘 다 **현재 DB 상태**를 봐야 하므로 여기서 한 번 읽는다(쓰기는 아직 없다).
-  if (onlyBase64 || expectDiff !== null) {
+  if (onlyBase64 || onlyNewBase64 || expectDiff !== null) {
     const { PrismaClient } = await import("@prisma/client");
     const prisma = new PrismaClient();
     let cur: Map<string, BackupRow>;
@@ -368,7 +376,7 @@ async function main(): Promise<void> {
       );
       return;
     }
-    if (onlyBase64) {
+    if (onlyBase64 || onlyNewBase64) {
       if (!existsSync(BACKUP_DEFAULT)) {
         console.log(`
 중단 — 기존 적재 백업이 없습니다(${BACKUP_DEFAULT}). 이미 적재한 행을 가릴 수 없습니다.`);
@@ -379,10 +387,14 @@ async function main(): Promise<void> {
           .rows.map((r) => r.id),
       );
       const contaminated = differ.filter((p) => BASE64_BLOB.test(cur.get(p.id)!.content));
-      plan = contaminated.filter((p) => applied.has(p.id));
+      plan = contaminated.filter((p) =>
+        onlyNewBase64 ? !applied.has(p.id) : applied.has(p.id),
+      );
+      const label = onlyNewBase64 ? "--only-new-base64" : "--only-applied-base64";
+      const kind = onlyNewBase64 ? "아직 안 넣은 것" : "이미 적재한 것";
       console.log(
-        `--only-applied-base64 — 다름 ${differ.length} · 그중 오염 ${contaminated.length}` +
-          ` · **그중 이미 적재한 것 ${plan.length}행** (나머지 ${contaminated.length - plan.length}행은 신규라 이번에 안 넣는다)`,
+        `${label} — 다름 ${differ.length} · 그중 오염 ${contaminated.length}` +
+          ` · **그중 ${kind} ${plan.length}행**`,
       );
     }
   }

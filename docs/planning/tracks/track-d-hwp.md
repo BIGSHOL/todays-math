@@ -621,7 +621,129 @@ DB 전량 오염 49행을 판정별로 가르니 **전부 내 판정 대상**이
 견주고 "백업본과 동일 10행" 이라는 무의미한 결과를 냈다. 기준선은 **그 변경 이전에
 뜬 것**이어야 한다.
 
-## 남은 것 — 신규 36행 (미적용)
+## 신규 36행 — ✅ 2026-08-16 완료
 
-S13 로 새로 「교체」가 됐지만 아직 넣지 않았다. DB 전량 오염 39행 = 신규 교체 36 + 보류 3.
-넣으려면 같은 절차로 승인이 필요하다.
+| | 값 |
+|---|---|
+| 백업 | `hwp-replace-backup-base64-new.json` · **36행** |
+| 적용 | **36행** · 남이 고침 0 · 행 없음 0 |
+| 검증 | 의도대로 **36** · 제3의 값 0 · 의도 밖 컬럼 10개 **전부 0건** |
+| **DB 전량 오염** | **49 → 3행** (남은 3은 보류분, 지시대로 둔다) |
+
+백업 파일이 셋으로 갈렸다. **어느 것도 서로 덮지 않는다** — 각각 다른 적용의 되돌리기
+자산이다.
+
+| 백업 | 대상 | 되돌릴 때 |
+|---|---|---|
+| `hwp-replace-backup.json` | 첫 본문 교체 4,069행 | `content` 만 |
+| `hwp-replace-backup-base64.json` | 오염 재적재 10행 | `content` 만 |
+| `hwp-replace-backup-base64-new.json` | 신규 오염 36행 | `content` 만 |
+| `problem-type-backup.json` | problemType 39행 | `problemType` 만 |
+
+
+---
+
+# 📌 인계 — 다음 사람이 여기부터 읽는다 (2026-08-16)
+
+## (a) 확정된 것과 남은 것
+
+### 확정 — DB 에 이미 반영됨
+
+| 작업 | 행 | 백업 |
+|---|---:|---|
+| 본문 교체 (HWP 정본으로) | **4,069** | `hwp-replace-backup.json` |
+| `problemType` 정정 (서술형 → 개념) | **39** | `problem-type-backup.json` |
+| base64 오염 재적재 (이미 적재분) | **10** | `hwp-replace-backup-base64.json` |
+| base64 오염 신규 적재 | **36** | `hwp-replace-backup-base64-new.json` |
+
+- HWP 추출 **3,302 / 3,302편 · 실패 0** · `.hwpx` 전수 검증 통과(손상 0)
+- 판정 **29,667행** — 교체 4,105 · 보류 318 · 유지 25,244
+- KaTeX 실패(교체 대상) **4.97% → 0.14%** · DB 전량 base64 오염 **49 → 3행**
+
+### 남은 것
+
+| 항목 | 규모 | 왜 안 했나 |
+|---|---:|---|
+| **보류 318행** | 318 | HWP 쪽에도 결함이 있어 사람이 봐야 한다. H 사유별로 갈라 봐야 함 |
+| └ 그중 base64 오염 | 3 | 코디네이터 지시로 그대로 둠 |
+| **문항 결손** | 하한 **1,077** | INSERT 라 트랙 D 컬럼 밖. `handoff/missing-cause.json` |
+| **`서술형 × 단답형`** | 1,309 | 원장님 판단 대기. 결정 자료는 이 문서에 있다 |
+| **단원 미분류로 빠진 결손** | 1,139 | 소단원 별칭 확충이 필요 |
+
+## (b) `hwp-latex` 를 다시 뽑아야 할 때 — base64 구멍은 이미 막혀 있다
+
+### ⚠️ 지금 corpus 는 **얼려 놓았다**
+
+트랙 F 가 이 corpus 를 원본으로 신규 적재를 돌린다. 내가 재생성하면 F 의 대상 수가
+움직인다(실측 5,816 → 6,042). **코디네이터가 해제를 통보할 때까지
+`build-hwp-latex.py` 를 돌리지 마라.**
+
+얼린 시점의 지문 (`python scripts/qa/fingerprint-corpus.py` 로 재현):
+
+```
+편 3302 · 문항 69703 · 바이트 44702015
+① 내용 sha256        2ec80ae9e646f24e
+② 파일명+내용 sha256 84704260fe4978f5
+③ 문항 본문 sha256   77e55594e6722f33
+```
+
+### 구멍은 어떻게 막혀 있나
+
+HWPX 수식 객체의 **캡션**에 base64 덩어리가 들어 있고, `hwp_extract._walk` 가
+`header`/`footer` 만 건너뛰므로 그게 발문 한가운데 섞여 들어온다.
+
+**`scripts/qa/hwp_text_clean.py` 가 두 곳에 걸려 있다.**
+
+| 어디 | 언제 |
+|---|---|
+| `hwp_extract_keep.py` | **신규 추출** — `parse_exam` 직후, JSON 쓰기 전 |
+| `build-hwp-latex.py` | **기존 산출물** — 읽은 직후, 변환 전 |
+
+그래서 **어느 경로로 다시 뽑아도 자동으로 청소된다.** 재생성 로그의
+`base64 청소 N문항` 줄로 확인할 수 있다(마지막 전량 재생성에서 307문항).
+
+⚠️ **벤더링본(`scripts/vendor/testchanger/hwp_extract.py`)은 고치지 않았다.** 원본
+저장소가 읽기 전용이고(tracks/README §3), 벤더링본을 고치면 다음 재벤더링 때 조용히
+사라지기 때문이다. **상류에 전달해야 할 결함이다** — 근본 수정은 `_SKIP_CTRL` 에
+`hp:caption` 을 넣는 것. 캡션을 통째로 버려도 되는 근거는 표본 300편의 캡션 텍스트
+351조각이 **100% base64**, 한글 캡션 0건이라는 실측이다.
+
+검사: `npx tsx scripts/qa/audit-base64-contamination.ts` (DB 전량 + 내 적재분 + 백업 대조)
+
+## (c) F 의 신규 6,042행이 들어온 뒤 판정을 다시 도는 법
+
+판정기는 로컬 스냅샷 `scripts/qa/reports/db-content.jsonl` 을 본다. 이건
+**2026-08-16 01:35 에 뜬 29,682행**이라 F 의 신규 행이 없다. 순서대로 돈다.
+
+```bash
+# 1) 스냅샷을 다시 뜬다. ⚠️ 이게 낡음 판정의 **기준선**이기도 하다 —
+#    이미 적재한 행은 이제 내 본문이 기준선이 되므로 재적용 예외가 필요 없어진다.
+npx tsx scripts/qa/export-db-content-snapshot.ts
+
+# 2) 판정 (hwp-latex 는 재생성하지 말고 그대로 읽는다)
+npx tsx scripts/qa/judge-hwp-replacement.ts
+
+# 3) 계획 확인 — 쓰기 전에 반드시
+npx tsx scripts/qa/apply-hwp-replacement.ts            # 드라이런
+npx tsx scripts/qa/apply-hwp-replacement.ts --diff     # DB 와 다른 행만
+
+# 4) 승인 후: 백업 → 적용 → 검증
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-hwp-replacement.ts --backup-only
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-hwp-replacement.ts --apply
+npx tsx scripts/qa/apply-hwp-replacement.ts --verify
+```
+
+### 예상되는 것 — 미리 알아 두면 놀라지 않는다
+
+1. **F 의 신규 행 대부분은 「유지」로 나온다.** F 가 이 corpus 를 원본으로 넣었다면
+   그 행의 본문이 곧 내 HWP 본문이라 교체할 것이 없다. 교체가 많이 나오면
+   **F 가 다른 원본을 썼다는 뜻**이니 먼저 확인할 것.
+2. **이미 적재한 4,069행은 「유지」로 바뀐다.** 스냅샷을 다시 뜨면 그 행의 DB 본문이
+   내 HWP 본문이 되므로 S 신호가 안 걸린다. 정상이다 — 이미 고쳐졌다는 뜻이다.
+3. **`--backup-only` 를 반드시 새로 떠라.** 기존 백업 넷은 각각 다른 적용의 되돌리기
+   자산이라 덮으면 안 된다. 필터를 걸어 일부만 쓸 때는 **백업 경로도 갈라라.**
+4. **되돌릴 때는 `content` 만 되쓴다.** 백업의 `answer`·`figureUrls`·`externalId`·
+   `unitId` 는 "안 바뀌었음을 증명" 하려고 담은 것이지 되돌리기용이 아니다. 같이 되쓰면
+   그 사이 다른 트랙이 한 작업을 지운다.
+5. **기준선은 변경 *이전*에 뜬 것이어야 한다.** 방금 현재 DB 에서 뜬 백업과 현재 DB 를
+   견주면 늘 같다 — 동어반복이다(실제로 한 번 냈다).
