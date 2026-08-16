@@ -27,6 +27,9 @@ sys.path.insert(0, str(_VENDOR))
 
 from hwp_extract import parse_exam, to_hwpx  # noqa: E402
 
+sys.path.insert(0, str(_HERE))
+from hwp_text_clean import clean_exam  # noqa: E402
+
 
 def main() -> None:
     ap = argparse.ArgumentParser()
@@ -62,6 +65,8 @@ def main() -> None:
         if work is not None:
             shutil.rmtree(work, ignore_errors=True)
 
+    # 수식 캡션의 base64 덩어리를 걷어낸다(hwp_text_clean.py 참조).
+    data["_b64Cleaned"] = clean_exam(data)
     data["_hwpx"] = str(target)
     pathlib.Path(a.out).write_text(
         json.dumps(data, ensure_ascii=False), encoding="utf-8"

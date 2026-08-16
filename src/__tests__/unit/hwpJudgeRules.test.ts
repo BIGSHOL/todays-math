@@ -149,6 +149,21 @@ describe("교체해야 하는 것", () => {
     expect(verdictOf(sig)).toBe("교체");
   });
 
+  it("수식 캡션에서 샌 base64 덩어리를 잡는다 (트랙 E 발견 — DB 전량 49행)", () => {
+    // 이 신호가 없어서 오염된 38행을 「유지」로 흘려보냈다. 손상은 손상으로 봐야 한다.
+    const b64 = "cShVyDHCPjH2R5IId" + "iZ65ziQwXm3F".repeat(5);
+    const row = dbRow({
+      content: `일차함수 ${b64}\n$y=ax+b$ 의 그래프가 그림과 같을 때 $a+b$ 의 값은?`,
+    });
+    const hwp = hwpQ({
+      stem: "일차함수 $y=ax+b$ 의 그래프가 그림과 같을 때 $a+b$ 의 값은?",
+      choices: ["$1$", "$2$", "$3$", "$4$", "$5$"],
+    });
+    const sig = judge(row, hwp, row.content, ["1", "2", "3", "4", "5"]);
+    expect(sig.S).toContain("S13_base64오염");
+    expect(verdictOf(sig)).toBe("교체");
+  });
+
   it("지면 머리말이 딸려 들어온 본문 — 그 오염이 `HWP 더 짧음` 을 유발하면 안 된다", () => {
     const row = dbRow({
       content:
@@ -194,6 +209,18 @@ describe("교체하면 안 되는 것 (개악 방지)", () => {
     const hwp = hwpQ({ stem: "원 O 위의 점 P 에서 그은 접선의 길이는?", choices: [] });
     const sig = judge(row, hwp, row.content);
     expect(sig.H).toContain("H7_그림단서손실");
+    expect(verdictOf(sig)).toBe("보류");
+  });
+
+  it("HWP 에 base64 가 남아 있으면 보류한다 (청소가 빠진 산출물 방어)", () => {
+    const b64 = "3igDKxhv5SIHW" + "TBr2sCD82Y".repeat(6);
+    const row = dbRow({ content: "일차함수 $y=ax+b$ 의 그래프에서 $a+b$ 의 값은? ⁄" });
+    const hwp = hwpQ({
+      stem: `일차함수 ${b64} $y=ax+b$ 의 그래프에서 $a+b$ 의 값은?`,
+      choices: ["$1$", "$2$", "$3$", "$4$", "$5$"],
+    });
+    const sig = judge(row, hwp, row.content, ["1", "2", "3", "4", "5"]);
+    expect(sig.H).toContain("H13_HWP에base64");
     expect(verdictOf(sig)).toBe("보류");
   });
 

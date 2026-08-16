@@ -289,6 +289,34 @@ async function main(): Promise<void> {
     return;
   }
 
+  // --diff: **읽기만 한다.** 지금 DB 본문과 지금 HWP 산출물이 어디서 갈리는지 센다.
+  // HWP 산출물이 나중에 고쳐졌을 때(예: base64 청소) 이미 적재한 행 중 몇 행이
+  // 다시 손봐야 하는지 알아야 한다 — 전량 재적용은 과하다.
+  if (process.argv.includes("--diff")) {
+    const { plan } = await buildPlan(false);
+    const { PrismaClient } = await import("@prisma/client");
+    const prisma = new PrismaClient();
+    try {
+      const now = await fetchRows(prisma as never, plan.map((p) => p.id));
+      let same = 0;
+      const differ: PlanRow[] = [];
+      for (const p of plan) {
+        const cur = now.get(p.id);
+        if (!cur) continue;
+        if (cur.content === p.content) same += 1;
+        else differ.push(p);
+      }
+      console.log("── DB 본문 ↔ 현재 HWP 산출물 대조 (읽기 전용) ──");
+      console.log(`계획 ${plan.length}행 · 같음 ${same} · **다름 ${differ.length}**`);
+      if (differ.length > 0) {
+        console.log("  다른 행: " + differ.slice(0, 30).map((d) => d.externalId).join(", "));
+      }
+    } finally {
+      await prisma.$disconnect();
+    }
+    return;
+  }
+
   if ((apply || backupOnly) && !(await gateOrExit())) return;
 
   const { plan, snapshot, missingHwp, before, after } = await buildPlan(fixType);

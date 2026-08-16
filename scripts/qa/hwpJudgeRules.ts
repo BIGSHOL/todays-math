@@ -126,6 +126,15 @@ const BULLET_IN_MATH = /\$[^$]*•[^$]*\$/;
 const MANGLED_REPEAT = /\.'/;
 /** 지면 머리말·학원 로고가 본문에 딸려 들어온 것. */
 const PAGE_FURNITURE = /학원\s*로고/;
+/**
+ * 수식 캡션에서 새어 나온 **base64 덩어리**(트랙 E 발견, 2026-08-16).
+ * HWPX 수식 객체의 `caption` 에 base64 가 들어 있는데 추출기가 그걸 본문으로 긁어 온다.
+ * PDF 텍스트 레이어 경로로도 같은 것이 새어 DB 본문에 박혔다 — 실측 DB 전량 49행.
+ * 임계값 60자는 트랙 E·코디네이터가 쓴 탐지 기준과 같다(숫자를 서로 대조할 수 있게).
+ * ⚠️ 이 신호가 없어서 오염된 38행을 「유지」로 흘려보냈다. 손상은 손상으로 봐야 한다.
+ */
+const BASE64_BLOB = /[A-Za-z0-9+/]{60,}={0,2}/;
+
 /** 해설지가 문항 자리에 들어온 전형적 머리표 — 발문이 `정답` 으로 시작한다. */
 const ANSWER_SHEET_HEAD =
   /^\s*(?:\[(?:서술형|서답형|단답형)\s*\$?\d*\$?\]\s*)?정답/;
@@ -252,6 +261,11 @@ export function judgeSignals(input: JudgeInput): Signals {
   const S12 = PAGE_FURNITURE.test(row.content) && !PAGE_FURNITURE.test(hwpContent);
   if (S12) S.push("S12_지면머리말혼입");
 
+  // 수식 캡션에서 샌 base64 덩어리가 본문에 박혔다.
+  if (BASE64_BLOB.test(row.content) && !BASE64_BLOB.test(hwpContent)) {
+    S.push("S13_base64오염");
+  }
+
   // ── H: HWP 가 더 나쁘다 (교체가 개악이 되는 경우) ──────────────────
   // ⚠️ 원래 `hwpSig.length < 6` (한글이 여섯 자 미만) 도 빈약으로 봤는데 **거꾸로였다.**
   // 「$\sum_{k=1}^{9} a_k = 12$ 일 때 … 의 값은?」 같은 수식 위주 문항은 한글이 원래
@@ -289,6 +303,12 @@ export function judgeSignals(input: JudgeInput): Signals {
   // HWP 쪽에도 PUA 가 남은 편이 있다(실측 문항의 0.18%). DB 에 없는 PUA 를 새로
   // 집어넣는 건 개악이다 — S3 로 잡은 훼손을 다른 훼손으로 바꾸는 꼴이 된다.
   if (PUA.test(hwpContent) && !PUA.test(row.content)) H.push("H11_HWP에PUA");
+
+  // HWP 쪽에 base64 가 남아 있으면 넣지 않는다. `hwp_text_clean.py` 가 걷어내므로
+  // 지금은 0이지만, 청소가 빠진 산출물로 돌리면 이 가드가 막는다.
+  if (BASE64_BLOB.test(hwpContent) && !BASE64_BLOB.test(row.content)) {
+    H.push("H13_HWP에base64");
+  }
 
   // **HWP 에도 지면 머리말이 딸려 들어온 편이 있다**(실측 문항의 0.26%).
   //   `2024년 1학기 중간고사 / 지수 ~ 삼각함수 / 강동고 2학년 수학1 / 학원로고 / 강민구`

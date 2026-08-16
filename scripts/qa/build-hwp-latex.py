@@ -26,6 +26,7 @@ TC = testchanger_dir()
 sys.path.insert(0, str(TC))
 from core.hwpeq_to_latex import hwpeq_to_latex  # noqa: E402
 from hwpeq_unglue import postfix_latex, unglue  # noqa: E402
+from hwp_text_clean import clean_exam  # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -55,13 +56,15 @@ def main():
     a = ap.parse_args()
 
     OUT.mkdir(parents=True, exist_ok=True)
-    n = q = skipped = 0
+    n = q = skipped = cleaned = 0
     for f in sorted(SRC.glob("*.json")):
         target = OUT / f.name
         if target.exists() and not a.force and target.stat().st_mtime >= f.stat().st_mtime:
             skipped += 1
             continue
         d = json.loads(f.read_text(encoding="utf-8"))
+        # 트랙 E 발견 결함 — 수식 캡션의 base64 가 발문에 섞여 들어온다.
+        cleaned += clean_exam(d)
         for item in d.get("questions") or []:
             item["stem"] = conv(item.get("stem"))
             item["choices"] = [conv(c) for c in (item.get("choices") or [])]
@@ -69,7 +72,8 @@ def main():
             q += 1
         target.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
         n += 1
-    print("HWP→LaTeX 변환 %d편 (건너뜀 %d) · 문항 %d → %s" % (n, skipped, q, OUT))
+    print("HWP→LaTeX 변환 %d편 (건너뜀 %d) · 문항 %d · base64 청소 %d문항 → %s"
+          % (n, skipped, q, cleaned, OUT))
 
 
 if __name__ == "__main__":
