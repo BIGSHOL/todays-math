@@ -11,6 +11,7 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 
+import { fillScore } from "../../src/lib/predictor/fillScore";
 import type {
   DifficultyLabel,
   ExamLevel,
@@ -91,11 +92,11 @@ export interface LoadStats {
   scoreFilled: number;
 }
 
-function median(values: number[]): number | null {
-  if (!values.length) return null;
-  const sorted = [...values].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+/** 문항 본문 텍스트. 서술형 머리표의 `[합 N점]` 표기를 여기서 읽는다. */
+function questionText(q: RawQuestion): string {
+  return (q.contents ?? [])
+    .map((c) => (typeof c.value === "string" ? c.value : ""))
+    .join(" ");
 }
 
 function toPaper(
@@ -111,7 +112,10 @@ function toPaper(
     stats.droppedNoPeriod += 1;
     return null;
   }
-  const level = meta?.level === "중" || meta?.level === "고" ? (meta.level as ExamLevel) : null;
+  const level =
+    meta?.level === "중" || meta?.level === "고"
+      ? (meta.level as ExamLevel)
+      : null;
   const grade = meta?.raw_grade;
   const subject = meta?.grade;
   if (!meta?.school || !level || !grade || !subject) {
@@ -127,13 +131,28 @@ function toPaper(
     return null;
   }
 
-  const answers = new Map<number, { answer?: string; topic?: string | null; difficulty?: string | null }>();
+  const answers = new Map<
+    number,
+    { answer?: string; topic?: string | null; difficulty?: string | null }
+  >();
   for (const a of doc._answers ?? []) {
     if (typeof a.number === "number") answers.set(a.number, a);
   }
 
   const raw = (doc.questions ?? []).filter((q) => typeof q.number === "number");
-  const fill = median(raw.map((q) => q.score).filter((s): s is number => typeof s === "number" && s > 0));
+
+  // 배점 채움의 근거는 **같은 유형**이 먼저다. 편 전체 중앙값으로 메우면 서술형
+  // (10점) 자리에 객관식이 지배하는 중앙값(3~4점)이 들어가 총점이 모자라고,
+  // 그 시험지가 만점 100 가드에 걸려 통째로 버려진다(`fillScore.ts` 머리주석).
+  const scored = raw
+    .map((q) => ({
+      qtype: QTYPE[q.type ?? ""] ?? null,
+      score: typeof q.score === "number" && q.score > 0 ? q.score : null,
+    }))
+    .filter(
+      (q): q is { qtype: QuestionType; score: number | null } =>
+        q.qtype !== null,
+    );
 
   const questions: ExamQuestion[] = [];
   for (const q of raw) {
@@ -143,8 +162,12 @@ function toPaper(
 
     let score = typeof q.score === "number" && q.score > 0 ? q.score : null;
     if (score === null) {
-      if (fill === null) continue;
-      score = fill;
+      const filled = fillScore(
+        { qtype, score: null, text: questionText(q) },
+        scored,
+      );
+      if (filled.score === null) continue;
+      score = filled.score;
       stats.scoreFilled += 1;
     }
 
