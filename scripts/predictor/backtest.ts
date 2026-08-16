@@ -11,6 +11,11 @@
  *   - cohort-only  : 학교 과거를 아예 안 보고 코호트(전국) 평균만 쓴다
  *   - carry-forward: 직전 회차 시험지를 그대로 다음 회차 예측으로 쓴다
  *
+ * ⚠️ `engine-sameRound` 변형이 있었으나 **1,343편 전부 engine 과 값이 같아** 걷어냈다
+ *    (2026-08-16). 단원 배분을 작년 같은 회차로 좁히는 일을 엔진이 내부에서 이미
+ *    하기 때문이다(v0.3 에서 들어갔다). 늘 똑같은 행은 정보가 아니라 잡음이다 —
+ *    독립된 모델이 넷인 것처럼 보이게 만든다.
+ *
  * 실행:
  *   npx tsx scripts/predictor/backtest.ts [--out <경로>] [--min-history 1]
  */
@@ -31,11 +36,7 @@ import {
   predictBlueprint,
   PredictorUnavailableError,
 } from "../../src/lib/predictor/predictBlueprint";
-import {
-  isSameRound,
-  rangeSeriesKey,
-  styleSeriesKey,
-} from "../../src/lib/predictor/series";
+import { rangeSeriesKey, styleSeriesKey } from "../../src/lib/predictor/series";
 import { partitionTrusted } from "../../src/lib/predictor/paperTrust";
 import { loadCorpus } from "./loadCorpus";
 
@@ -60,7 +61,7 @@ interface Entry {
   cohortKey: string;
 }
 
-type Model = "engine" | "engine-sameRound" | "cohort-only" | "carry-forward";
+type Model = "engine" | "cohort-only" | "carry-forward";
 
 interface Sample extends BlueprintDistances {
   model: Model;
@@ -203,22 +204,6 @@ function main() {
       history: history.map((e) => e.observed),
       rangeHistory: rangeHistory.map((e) => e.observed),
     });
-    // 단원 배분만 **작년 같은 회차**로 좁힌 변형 — 시험 범위가 같을 확률이 높다.
-    const sameRoundRange = rangeHistory.filter((e) =>
-      isSameRound(target.paper.period, e.paper.period),
-    );
-    const engineSameRound = predictBlueprint({
-      ...common,
-      history: history.map((e) => e.observed),
-      rangeHistory: (sameRoundRange.length ? sameRoundRange : rangeHistory).map(
-        (e) => e.observed,
-      ),
-      rangeCohort: sameRoundRange.length
-        ? cohort
-            .filter((e) => isSameRound(target.paper.period, e.paper.period))
-            .map((e) => e.observed)
-        : common.rangeCohort,
-    });
     const cohortOnly = tryPredict(() =>
       predictBlueprint({ ...common, history: [], rangeHistory: [] }),
     );
@@ -246,11 +231,6 @@ function main() {
       ...base,
       ...blueprintDistances(engine, target.observed),
     });
-    samples.push({
-      model: "engine-sameRound",
-      ...base,
-      ...blueprintDistances(engineSameRound, target.observed),
-    });
     if (cohortOnly) {
       samples.push({
         model: "cohort-only",
@@ -267,19 +247,15 @@ function main() {
     });
   }
 
-  const models: Model[] = [
-    "engine",
-    "engine-sameRound",
-    "cohort-only",
-    "carry-forward",
-  ];
+  const models: Model[] = ["engine", "cohort-only", "carry-forward"];
   const summary = Object.fromEntries(
     models.map((m) => [m, summarize(samples.filter((s) => s.model === m))]),
   );
 
   console.log(
-    `
-backtest 대상 ${samples.length / models.length}편 (과거 없음으로 제외 ${skipped}편` +
+    // ⚠️ 모델 수로 나눠 세면 안 된다 — cohort-only 는 근거가 없어 빠지는 편이 있어
+    //    나눗셈이 소수로 떨어진다(예전 "1332편"도 실제 1343편의 잘못된 값이었다).
+    `\nbacktest 대상 ${samples.filter((s) => s.model === "engine").length}편 (과거 없음으로 제외 ${skipped}편` +
       // 코호트 기준선조차 못 세운 편 — 세어만 두면 기준선 비교가 조용히 왜곡된다.
       `${unavailable ? ` · 코호트 표본 없음 ${unavailable}편` : ""})`,
   );
