@@ -1,0 +1,73 @@
+{
+  "note": "RPM 중복 88그룹 완비도 기준으로 approved → pending 으로 내린 행. 되돌리려면 이 목록의 id 에 reviewStatus 를 previous 값으로 되돌리면 된다. reviewStatus 외의 컬럼은 건드리지 않았다.",
+  "appliedBy": "scripts/qa/apply-rpm-duplicate-policy.ts",
+  "count": 11,
+  "rows": [
+    {
+      "problemId": "05f7ba29-68b4-4ae5-877e-151f3f1111ed",
+      "externalId": "019fd1de-7912-7119-85ff-dc485736c7e0",
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "29e6a92b-8266-43f4-bb56-7267847ea7e5",
+      "externalId": "019fd1d7-7cb1-75a7-829b-389dca43c8c4",
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "3916eb81-9015-4042-a2ad-6b442e3f107d",
+      "externalId": "019fd1d7-674a-724d-a78a-c388ce83b57a",
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "558dccd2-0beb-4f84-85e8-1675500a66c7",
+      "externalId": "019fd1db-22ae-72ac-8734-c63cd09bd00d",
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "63a62e6b-c397-4a17-a39c-e9686fb4a60d",
+      "externalId": "019fd1d7-f8ca-7399-826d-6945b4c8a116",
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "6d09e726-1bb5-4494-9798-1f399d44ce88",
+      "externalId": "019fd1da-8881-703a-b289-26fb3a6ce8ff",
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "7cbb5746-8737-4906-a006-f90197154887",
+      "externalId": "019fd1db-e664-74e9-9fbc-0562e5ff6ccc",
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "b412c04b-e66e-4a8a-b462-4675a7b6b71b",
+      "externalId": "019fd1d7-7bbc-71f1-874a-eb281290a1fe",
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "d8e6e179-2687-4209-ad71-1e9a3064d1b0",
+      "externalId": "019fd1db-1f71-7787-b729-3b95b452f413",
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "e1a9fb5a-4286-4033-a3fa-ddb6fe337efc",
+      "externalId": "019fd1d7-d39d-739b-a6fd-d18012bdeb89",
+      "previous": "approved",
+      "next": "pending"
+    },
+    {
+      "problemId": "eb296f58-5087-4d31-a44b-372a1b397616",
+      "externalId": "019fd1d8-7235-705d-98c3-ec16dc34fb10",
+      "previous": "approved",
+      "next": "pending"
+    }
+  ]
+}
