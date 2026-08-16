@@ -40,7 +40,17 @@ import { buildHwpContent, type HwpQ } from "./hwpJudgeRules";
 const VERDICTS = "scripts/qa/reports/hwp-verdicts.jsonl";
 const SNAPSHOT = "scripts/qa/reports/db-content.jsonl";
 const HWP_DIR = "scripts/qa/reports/hwp-latex";
-const BACKUP = "scripts/qa/reports/hwp-replace-backup.json";
+const BACKUP_DEFAULT = "scripts/qa/reports/hwp-replace-backup.json";
+/** ⚠️ 필터를 걸어 일부만 쓸 때는 **백업 파일도 갈라 쓴다.** 기본 백업은 4,069행
+ *  적용의 되돌리기 자산이라 덮어쓰면 그 이력을 잃는다. */
+const BACKUP_B64 = "scripts/qa/reports/hwp-replace-backup-base64.json";
+/** 트랙 E 가 찾은 수식 캡션 base64. 판정 규칙(S13)과 같은 기준이다. */
+const BASE64_BLOB = /[A-Za-z0-9+/]{60,}={0,2}/;
+/** `hwp_text_clean.py` 의 strip_base64 를 옮긴 것 — 재적용 안전 판정에만 쓴다. */
+const stripBase64 = (t: string): string =>
+  (t ?? "").replace(/[A-Za-z0-9+/]{60,}={0,2}/g, " ");
+/** 공백을 전부 지운다. 청소 시점 차이(필드별 vs 조립 후)로 공백만 갈리기 때문이다. */
+const squash = (t: string): string => (t ?? "").replace(/\s+/g, "");
 const PLAN = "scripts/qa/reports/hwp-replace-plan.json";
 
 /** 백업·검증에 쓰는 컬럼. **내가 안 쓰는 컬럼까지 담는 게 요점이다.** */
@@ -214,6 +224,15 @@ async function main(): Promise<void> {
   const backupOnly = process.argv.includes("--backup-only");
   const verify = process.argv.includes("--verify");
   const fixType = process.argv.includes("--fix-type");
+  // --only-applied-base64: **내가 이미 적재한 행 중 지금 오염된 것만** 쓴다.
+  // ⚠️ "오염된 행" 만으로 거르면 46행이 다 걸린다 — 다른 46행이 전부 오염 상태이고,
+  // 그중 36행은 아직 넣은 적 없는 신규다. 이미 적재한 것과 신규를 가르려면
+  // **기존 백업(4,069행)과 교집합**을 취해야 한다. 그게 승인받은 "오염 10행" 이다.
+  const onlyBase64 = process.argv.includes("--only-applied-base64");
+  const BACKUP = onlyBase64 ? BACKUP_B64 : BACKUP_DEFAULT;
+  // --expect-diff N: DB 와 산출물이 다른 행 수가 N 이 아니면 **멈춘다**(코디네이터 조건).
+  const expectDiffIdx = process.argv.indexOf("--expect-diff");
+  const expectDiff = expectDiffIdx >= 0 ? Number(process.argv[expectDiffIdx + 1]) : null;
 
   // ── 검증 모드: 백업과 현재 DB 를 대조한다 ────────────────────────────
   if (verify) {
@@ -319,8 +338,54 @@ async function main(): Promise<void> {
 
   if ((apply || backupOnly) && !(await gateOrExit())) return;
 
-  const { plan, snapshot, missingHwp, before, after } = await buildPlan(fixType);
+  const built = await buildPlan(fixType);
+  const { snapshot, missingHwp, before, after } = built;
+  let plan = built.plan;
   const pct = (a: number, b: number) => (b ? ((a * 100) / b).toFixed(2) : "0.00");
+
+  // ── 쓰기 대상 좁히기 + 멈춤 조건 ────────────────────────────────────
+  // 둘 다 **현재 DB 상태**를 봐야 하므로 여기서 한 번 읽는다(쓰기는 아직 없다).
+  if (onlyBase64 || expectDiff !== null) {
+    const { PrismaClient } = await import("@prisma/client");
+    const prisma = new PrismaClient();
+    let cur: Map<string, BackupRow>;
+    try {
+      cur = await fetchRows(prisma as never, plan.map((p) => p.id));
+    } finally {
+      await prisma.$disconnect();
+    }
+    const differ = plan.filter((p) => {
+      const c = cur.get(p.id);
+      return c != null && c.content !== p.content;
+    });
+    console.log(`대조 — 계획 ${plan.length}행 중 DB 와 다름 ${differ.length}행`);
+    if (expectDiff !== null && differ.length !== expectDiff) {
+      console.log(
+        `
+중단 — 예상 ${expectDiff}행과 다릅니다(실제 ${differ.length}행).
+` +
+          "그 사이 무엇이 바뀌었는지 먼저 확인하세요.",
+      );
+      return;
+    }
+    if (onlyBase64) {
+      if (!existsSync(BACKUP_DEFAULT)) {
+        console.log(`
+중단 — 기존 적재 백업이 없습니다(${BACKUP_DEFAULT}). 이미 적재한 행을 가릴 수 없습니다.`);
+        return;
+      }
+      const applied = new Set(
+        (JSON.parse(await readFile(BACKUP_DEFAULT, "utf-8")) as { rows: BackupRow[] })
+          .rows.map((r) => r.id),
+      );
+      const contaminated = differ.filter((p) => BASE64_BLOB.test(cur.get(p.id)!.content));
+      plan = contaminated.filter((p) => applied.has(p.id));
+      console.log(
+        `--only-applied-base64 — 다름 ${differ.length} · 그중 오염 ${contaminated.length}` +
+          ` · **그중 이미 적재한 것 ${plan.length}행** (나머지 ${contaminated.length - plan.length}행은 신규라 이번에 안 넣는다)`,
+      );
+    }
+  }
 
   // ── 백업만 뜨고 끝낸다 ──────────────────────────────────────────────
   if (backupOnly) {
@@ -410,6 +475,7 @@ async function main(): Promise<void> {
     let skippedStale = 0;
     let skippedGone = 0;
     let alreadyDone = 0;
+    let reappliedMine = 0;
     for (const p of plan) {
       const now = current.get(p.id);
       if (!now) {
@@ -421,9 +487,20 @@ async function main(): Promise<void> {
         continue;
       }
       // 판정에 쓴 본문과 지금 본문이 다르면 남의 트랙이 고친 것이다 — 덮지 않는다.
+      //
+      // ⚠️ 단 **내가 이미 쓴 행을 다시 손볼 때**는 이 가드가 거꾸로 걸린다. 기준선인
+      // 스냅샷은 내 첫 적재 **전** 값이라, 내가 덮어쓴 행은 전부 "남이 고쳤다" 가 된다
+      // (실측: 10행 전부 차단). 그래서 **그 값이 내 것이라는 증거가 있을 때만** 통과시킨다 —
+      // 지금 값에서 base64 와 공백을 걷어낸 것이 새 목표와 정확히 같으면, 둘은 오염분만
+      // 다른 같은 본문이다. 남이 쓴 다른 텍스트는 이 대조를 통과할 수 없다.
       if (now.content !== snapshot.get(p.id)!.content) {
-        skippedStale += 1;
-        continue;
+        const onlyContaminationDiffers =
+          onlyBase64 && squash(stripBase64(now.content)) === squash(p.content);
+        if (!onlyContaminationDiffers) {
+          skippedStale += 1;
+          continue;
+        }
+        reappliedMine += 1;
       }
       await prisma.problem.update({
         where: { id: p.id },
@@ -436,7 +513,8 @@ async function main(): Promise<void> {
       if (updated % 500 === 0) console.log(`  … ${updated} 적용`, { flush: true });
     }
     console.log(
-      `적용 ${updated}행 · 이미 같은 값 ${alreadyDone}` +
+      `적용 ${updated}행 (그중 내 이전 적재분 재적용 ${reappliedMine})` +
+        ` · 이미 같은 값 ${alreadyDone}` +
         ` · 스냅샷 이후 남이 고침 ${skippedStale} · 행 없음 ${skippedGone}`,
     );
   } finally {
