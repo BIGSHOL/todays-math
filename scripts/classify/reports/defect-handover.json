@@ -1,0 +1,4115 @@
+{
+ "생성": "scripts/classify/export-defect-handover.ts",
+ "결함1_학년불일치": {
+  "건수": 163,
+  "편수": 43
+ },
+ "결함2_본문라벨불일치": {
+  "건수": 56,
+  "편수": 12
+ },
+ "결함1": [
+  {
+   "problemId": "01abfe77-5893-4ef6-8b41-474c46c54f2b",
+   "externalId": "5491-20",
+   "examId": "5491",
+   "questionNumber": 20,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사대부중][2][25-1-기말][비상] (완료).PDF",
+    "학교": "사대부중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "02a9d8a7-8fea-4616-bcf0-70ed39364ef2",
+   "externalId": "5491-16",
+   "examId": "5491",
+   "questionNumber": 16,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사대부중][2][25-1-기말][비상] (완료).PDF",
+    "학교": "사대부중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "0426c3ec-556f-4375-b11c-15ac3b547b19",
+   "externalId": "5455-7",
+   "examId": "5455",
+   "questionNumber": 7,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[동부중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "동부중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "06508135-9509-4a50-82fd-0f469281d007",
+   "externalId": "5765-4",
+   "examId": "5765",
+   "questionNumber": 4,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[범일중][3][25-2-중간][비상] (완료).pdf",
+    "학교": "범일중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 2,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "0870fc6c-664b-40e5-ac79-53f300a9ee51",
+   "externalId": "5850-15",
+   "examId": "5850",
+   "questionNumber": 15,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[운암중][3][25-1-기말][비상] (완료).PDF",
+    "학교": "운암중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "0ac20945-c967-4e61-b8d2-e620d9a2a1c8",
+   "externalId": "5364-12",
+   "examId": "5364",
+   "questionNumber": 12,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강북중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "강북중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "0ad22253-c4b8-4e84-9812-e424015df19f",
+   "externalId": "5293-5",
+   "examId": "5293",
+   "questionNumber": 5,
+   "시험지학년": "중2",
+   "현재unitId": "56468ec3-5190-485a-a66b-89d0917b8576",
+   "현재단원": "중1 / 2. 정수와 유리수 / 정수와 유리수",
+   "근거": {
+    "원본파일명": "[시지중][1][25-1-중간][천재동] (완료).PDF",
+    "학교": "시지중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "0b7b9f15-b5ea-4f9f-ab07-1c8eb3c49ff6",
+   "externalId": "5492-10",
+   "examId": "5492",
+   "questionNumber": 10,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사동중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "사동중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "0f71d7f9-c6dc-4d93-900e-2e730a5627db",
+   "externalId": "4436-16",
+   "examId": "4436",
+   "questionNumber": 16,
+   "시험지학년": "공통수학1",
+   "현재unitId": "c1fe36b6-8f97-46e5-be13-f022636211f8",
+   "현재단원": "중2 / 2. 부등식 / 부등식",
+   "근거": {
+    "원본파일명": "[신명고][1][공수1][25-1-기말대비][지학사] (완료).PDF",
+    "학교": "신명고",
+    "level": "고",
+    "grade": 1,
+    "subject": "공수1",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "124fec00-cbc6-458c-93de-792469a48d6f",
+   "externalId": "5649-12",
+   "examId": "5649",
+   "questionNumber": 12,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강동중][3][25-1-기말][신사고] (완료).PDF",
+    "학교": "강동중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "13d3539b-b387-4f72-8cd2-19011e485b1f",
+   "externalId": "2683-14",
+   "examId": "2683",
+   "questionNumber": 14,
+   "시험지학년": "공통수학1",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[경화여고][1][수상][24-1-중간][비상] (완료).PDF",
+    "학교": "경화여고",
+    "level": "고",
+    "grade": 1,
+    "subject": "수상",
+    "year": 2024,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "191731b2-0351-426f-9c7a-3172e14d52a1",
+   "externalId": "5480-11",
+   "examId": "5480",
+   "questionNumber": 11,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[범일중][2][25-1-기말][비상] (완료).PDF",
+    "학교": "범일중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "1db62476-ba3d-4608-95e7-2c7a67b40539",
+   "externalId": "5364-16",
+   "examId": "5364",
+   "questionNumber": 16,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강북중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "강북중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "1f389782-6738-4699-9c82-46895eb752d1",
+   "externalId": "5649-20",
+   "examId": "5649",
+   "questionNumber": 20,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강동중][3][25-1-기말][신사고] (완료).PDF",
+    "학교": "강동중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "20415129-e7db-4fc3-ae34-e887e5173974",
+   "externalId": "5780-25",
+   "examId": "5780",
+   "questionNumber": 25,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[삼육중][3][25-1-기말][동아박] (완료).PDF",
+    "학교": "삼육중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "2664ab77-f722-42b7-b0ef-ba7a0ac1941d",
+   "externalId": "5824-20",
+   "examId": "5824",
+   "questionNumber": 20,
+   "시험지학년": "중3",
+   "현재unitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+   "현재단원": "중2 / 1. 수와 식 / 다항식의 곱셈과 나눗셈",
+   "근거": {
+    "원본파일명": "[신명여중][3][25-1-중간][동아강] (완료).PDF",
+    "학교": "신명여중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "280fd40c-b3f1-4799-aaa4-03caf077e3ac",
+   "externalId": "5492-17",
+   "examId": "5492",
+   "questionNumber": 17,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사동중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "사동중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "292842aa-c026-4fab-86f8-f8dd5ab9b8ff",
+   "externalId": "5777-22",
+   "examId": "5777",
+   "questionNumber": 22,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[삼성현중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "삼성현중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "29e2b11e-ecae-4bcf-bb37-90495c5ec810",
+   "externalId": "5293-11",
+   "examId": "5293",
+   "questionNumber": 11,
+   "시험지학년": "중2",
+   "현재unitId": "56468ec3-5190-485a-a66b-89d0917b8576",
+   "현재단원": "중1 / 2. 정수와 유리수 / 정수와 유리수",
+   "근거": {
+    "원본파일명": "[시지중][1][25-1-중간][천재동] (완료).PDF",
+    "학교": "시지중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "2adc256e-00c5-4f5b-84b4-ba2c3aae41d4",
+   "externalId": "5645-8",
+   "examId": "5645",
+   "questionNumber": 8,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "2cc5ff39-3b4b-42c7-95a1-17456c8ab67c",
+   "externalId": "5293-6",
+   "examId": "5293",
+   "questionNumber": 6,
+   "시험지학년": "중2",
+   "현재unitId": "00b288e3-0b5e-419a-842d-cb018796022f",
+   "현재단원": "중1 / 1. 소인수분해 / 최대공약수와 최소공배수의 활용",
+   "근거": {
+    "원본파일명": "[시지중][1][25-1-중간][천재동] (완료).PDF",
+    "학교": "시지중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "2d262b47-218a-4af5-89a7-7f4a905dccea",
+   "externalId": "5682-22",
+   "examId": "5682",
+   "questionNumber": 22,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[관음중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "관음중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "302f40ae-0364-4a9f-b93b-cc3125996264",
+   "externalId": "5783-17",
+   "examId": "5783",
+   "questionNumber": 17,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[상원중][3][25-1-기말][지학사] (완료).PDF",
+    "학교": "상원중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "30546f10-d169-474b-b1b1-fe9fd8c98a94",
+   "externalId": "5520-12",
+   "examId": "5520",
+   "questionNumber": 12,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "33b21e20-4f2f-49ff-bed4-010512bda232",
+   "externalId": "5465-12",
+   "examId": "5465",
+   "questionNumber": 12,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[동평중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "동평중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "33daa931-16ab-40d9-bf47-ccfd6cf3177e",
+   "externalId": "5520-6",
+   "examId": "5520",
+   "questionNumber": 6,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "37192668-b960-4884-8437-50e6a537c4f9",
+   "externalId": "4544-3",
+   "examId": "4544",
+   "questionNumber": 3,
+   "시험지학년": "공통수학2",
+   "현재unitId": "9b2e224f-8f80-4466-8515-7e9d7f1f389c",
+   "현재단원": "초4 / 1-4 평면도형의 이동 / 1-4-1 점의 이동",
+   "근거": {
+    "원본파일명": "[화원고][1][공수2][25-2-중간대비][미래엔] (완료).PDF",
+    "학교": "화원고",
+    "level": "고",
+    "grade": 1,
+    "subject": "공수2",
+    "year": 2025,
+    "semester": 2,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "3935861a-f6e4-4bd1-971e-cc30bcfd7cf6",
+   "externalId": "5765-5",
+   "examId": "5765",
+   "questionNumber": 5,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[범일중][3][25-2-중간][비상] (완료).pdf",
+    "학교": "범일중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 2,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "3c7c4d59-7fcf-48fb-859a-ed4452e5c640",
+   "externalId": "5768-20",
+   "examId": "5768",
+   "questionNumber": 20,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사대부중][3][25-1-기말][비상] (완료).PDF",
+    "학교": "사대부중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "3c89d3a6-e1f7-4483-9e62-e84cd3669fe5",
+   "externalId": "5492-14",
+   "examId": "5492",
+   "questionNumber": 14,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사동중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "사동중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "3d315676-5c28-4db6-a24f-08fa5f442d3c",
+   "externalId": "5520-1",
+   "examId": "5520",
+   "questionNumber": 1,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "3d5114e3-0aa5-45ad-a43e-8856316aee93",
+   "externalId": "5667-9",
+   "examId": "5667",
+   "questionNumber": 9,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[경신중][3][25-1-기말][미래엔] (완료).PDF",
+    "학교": "경신중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "3d574286-ca4e-47c9-8144-51adbda08ea8",
+   "externalId": "5667-7",
+   "examId": "5667",
+   "questionNumber": 7,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[경신중][3][25-1-기말][미래엔] (완료).PDF",
+    "학교": "경신중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "3da9b357-0802-4e4a-8b20-70c50f440179",
+   "externalId": "5652-21",
+   "examId": "5652",
+   "questionNumber": 21,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강북중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "강북중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "3db0984e-ae70-4137-986b-b1b069d17a7c",
+   "externalId": "5649-17",
+   "examId": "5649",
+   "questionNumber": 17,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강동중][3][25-1-기말][신사고] (완료).PDF",
+    "학교": "강동중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "3db46780-71bc-47a7-8729-e7595718b8a0",
+   "externalId": "5783-22",
+   "examId": "5783",
+   "questionNumber": 22,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[상원중][3][25-1-기말][지학사] (완료).PDF",
+    "학교": "상원중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "3dc14a1c-22cf-4f97-ab2d-b6a7c98ab499",
+   "externalId": "5682-17",
+   "examId": "5682",
+   "questionNumber": 17,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[관음중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "관음중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "41c462c2-fda9-4d8c-a0d5-1d1f9e9ca5dc",
+   "externalId": "5850-13",
+   "examId": "5850",
+   "questionNumber": 13,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[운암중][3][25-1-기말][비상] (완료).PDF",
+    "학교": "운암중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "4203c202-ffad-4d63-868a-d54cf4308e5e",
+   "externalId": "5480-7",
+   "examId": "5480",
+   "questionNumber": 7,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[범일중][2][25-1-기말][비상] (완료).PDF",
+    "학교": "범일중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "4548cfc7-ae31-4983-b20e-8574eb9dad2e",
+   "externalId": "5765-17",
+   "examId": "5765",
+   "questionNumber": 17,
+   "시험지학년": "중3",
+   "현재unitId": "3a3e9ff9-e533-49f8-ae7d-af7f3998abd4",
+   "현재단원": "공통수학2 / 1. 도형의 방정식 / 원과 직선의 위치 관계",
+   "근거": {
+    "원본파일명": "[범일중][3][25-2-중간][비상] (완료).pdf",
+    "학교": "범일중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 2,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "454c5d74-e0bd-40bf-a84e-ef72bdea9f75",
+   "externalId": "5850-11",
+   "examId": "5850",
+   "questionNumber": 11,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[운암중][3][25-1-기말][비상] (완료).PDF",
+    "학교": "운암중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "4558ae14-62cb-464d-965b-439b059ba3bb",
+   "externalId": "5850-12",
+   "examId": "5850",
+   "questionNumber": 12,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[운암중][3][25-1-기말][비상] (완료).PDF",
+    "학교": "운암중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "483d19ae-c2da-4b6b-af56-db1b5e7bfd67",
+   "externalId": "5492-16",
+   "examId": "5492",
+   "questionNumber": 16,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사동중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "사동중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "4ca38c18-be61-4596-ae14-125380ed86c9",
+   "externalId": "5491-10",
+   "examId": "5491",
+   "questionNumber": 10,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사대부중][2][25-1-기말][비상] (완료).PDF",
+    "학교": "사대부중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "4e935279-9083-4b98-acb4-404cf2396a82",
+   "externalId": "5567-8",
+   "examId": "5567",
+   "questionNumber": 8,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[오성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "오성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "502cf7ce-72da-4ad0-aa96-df265713e83e",
+   "externalId": "5783-21",
+   "examId": "5783",
+   "questionNumber": 21,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[상원중][3][25-1-기말][지학사] (완료).PDF",
+    "학교": "상원중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "51fdc506-4db3-46e7-9b13-4eaa1b82a14d",
+   "externalId": "5667-15",
+   "examId": "5667",
+   "questionNumber": 15,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[경신중][3][25-1-기말][미래엔] (완료).PDF",
+    "학교": "경신중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "541b7b54-9835-4a05-8b37-136962db0fb0",
+   "externalId": "5293-17",
+   "examId": "5293",
+   "questionNumber": 17,
+   "시험지학년": "중2",
+   "현재unitId": "56468ec3-5190-485a-a66b-89d0917b8576",
+   "현재단원": "중1 / 2. 정수와 유리수 / 정수와 유리수",
+   "근거": {
+    "원본파일명": "[시지중][1][25-1-중간][천재동] (완료).PDF",
+    "학교": "시지중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "543c6ea2-4b99-439f-9b16-e0716a7985d3",
+   "externalId": "5923-17",
+   "examId": "5923",
+   "questionNumber": 17,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][3][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "5488e3b0-1435-4da0-b528-db9692868e42",
+   "externalId": "5887-11",
+   "examId": "5887",
+   "questionNumber": 11,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[중앙중][3][25-1-기말][미래엔] (완료).PDF",
+    "학교": "중앙중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "55adb289-b60c-4203-9b1e-5476cdaed38c",
+   "externalId": "5923-22",
+   "examId": "5923",
+   "questionNumber": 22,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][3][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "55e336d5-bbbf-40a6-9c1d-2f1e4b584c03",
+   "externalId": "5364-14",
+   "examId": "5364",
+   "questionNumber": 14,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강북중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "강북중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "57310d0b-c94f-44e7-a251-960e31a187be",
+   "externalId": "5923-16",
+   "examId": "5923",
+   "questionNumber": 16,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][3][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "57937df3-20d9-4938-9bb3-bdcf363153f7",
+   "externalId": "5539-9",
+   "examId": "5539",
+   "questionNumber": 9,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[소선여중][2][25-1-기말][미래엔] (완료).PDF",
+    "학교": "소선여중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "58223086-525d-4fa6-b807-bc1a5e8b49cb",
+   "externalId": "5520-19",
+   "examId": "5520",
+   "questionNumber": 19,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "5863a694-6a03-43eb-8413-710875c541c8",
+   "externalId": "5539-13",
+   "examId": "5539",
+   "questionNumber": 13,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[소선여중][2][25-1-기말][미래엔] (완료).PDF",
+    "학교": "소선여중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "5914f59f-8811-40c1-8e6f-16f9ef509d54",
+   "externalId": "5567-18",
+   "examId": "5567",
+   "questionNumber": 18,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[오성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "오성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "5c281956-a2f0-4936-bdcf-8c6c8382584f",
+   "externalId": "5293-13",
+   "examId": "5293",
+   "questionNumber": 13,
+   "시험지학년": "중2",
+   "현재unitId": "9f485e43-b90b-4c19-b6fb-e485a51b7fe2",
+   "현재단원": "중1 / 1. 소인수분해 / 소인수분해",
+   "근거": {
+    "원본파일명": "[시지중][1][25-1-중간][천재동] (완료).PDF",
+    "학교": "시지중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "613de6e5-f63c-44a5-8b85-63af624ff158",
+   "externalId": "5364-13",
+   "examId": "5364",
+   "questionNumber": 13,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강북중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "강북중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "62071e42-09ef-41e1-aef0-0c83c48c5daf",
+   "externalId": "4505-7",
+   "examId": "4505",
+   "questionNumber": 7,
+   "시험지학년": "공통수학1",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[청구고][1][공수1][25-1-중간][신사고] (완료).PDF",
+    "학교": "청구고",
+    "level": "고",
+    "grade": 1,
+    "subject": "공수1",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "6383c08f-dac8-4216-a02c-4bec1f4827a7",
+   "externalId": "5465-19",
+   "examId": "5465",
+   "questionNumber": 19,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[동평중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "동평중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "64724786-eb9e-402b-b868-fabd2c387d59",
+   "externalId": "5746-16",
+   "examId": "5746",
+   "questionNumber": 16,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[동평중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "동평중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "6648335f-baba-48ed-867e-7dcc8d683013",
+   "externalId": "5455-8",
+   "examId": "5455",
+   "questionNumber": 8,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[동부중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "동부중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "690c15e1-85af-45f9-b015-f82fafca5725",
+   "externalId": "5765-16",
+   "examId": "5765",
+   "questionNumber": 16,
+   "시험지학년": "중3",
+   "현재unitId": "3a3e9ff9-e533-49f8-ae7d-af7f3998abd4",
+   "현재단원": "공통수학2 / 1. 도형의 방정식 / 원과 직선의 위치 관계",
+   "근거": {
+    "원본파일명": "[범일중][3][25-2-중간][비상] (완료).pdf",
+    "학교": "범일중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 2,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "6bc7beb5-f68f-482f-9237-73b14abb6fcc",
+   "externalId": "5909-19",
+   "examId": "5909",
+   "questionNumber": 19,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[학산중][3][25-1-기말][동아박] (완료).PDF",
+    "학교": "학산중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "6be29e91-8f03-4d51-a469-686cd7f18f61",
+   "externalId": "5792-22",
+   "examId": "5792",
+   "questionNumber": 22,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[새본리중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "새본리중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "6dbac40c-83d5-4c3a-8e1e-2472e8ec2a03",
+   "externalId": "5520-18",
+   "examId": "5520",
+   "questionNumber": 18,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "6f0a40ed-0356-46d5-8f70-e76092225c10",
+   "externalId": "5567-9",
+   "examId": "5567",
+   "questionNumber": 9,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[오성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "오성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "6fc0c35f-a332-4760-8cc0-6ae32ba33af1",
+   "externalId": "5491-12",
+   "examId": "5491",
+   "questionNumber": 12,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사대부중][2][25-1-기말][비상] (완료).PDF",
+    "학교": "사대부중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "71f99d9a-f6f0-4f45-a455-2583fc77a275",
+   "externalId": "5765-21",
+   "examId": "5765",
+   "questionNumber": 21,
+   "시험지학년": "중3",
+   "현재unitId": "3a3e9ff9-e533-49f8-ae7d-af7f3998abd4",
+   "현재단원": "공통수학2 / 1. 도형의 방정식 / 원과 직선의 위치 관계",
+   "근거": {
+    "원본파일명": "[범일중][3][25-2-중간][비상] (완료).pdf",
+    "학교": "범일중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 2,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "721db29f-5910-4f29-81f6-c696ff958c30",
+   "externalId": "5768-5",
+   "examId": "5768",
+   "questionNumber": 5,
+   "시험지학년": "중3",
+   "현재unitId": "e0ae27b7-948f-46d3-a730-310eaef1fa14",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 인수분해가 되지 않는 연립이차방정식",
+   "근거": {
+    "원본파일명": "[사대부중][3][25-1-기말][비상] (완료).PDF",
+    "학교": "사대부중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "73b2b493-df25-4319-9374-094c07053613",
+   "externalId": "5850-21",
+   "examId": "5850",
+   "questionNumber": 21,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[운암중][3][25-1-기말][비상] (완료).PDF",
+    "학교": "운암중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "74bd8567-c504-4812-aa19-9ca9b9cb48c3",
+   "externalId": "5480-13",
+   "examId": "5480",
+   "questionNumber": 13,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[범일중][2][25-1-기말][비상] (완료).PDF",
+    "학교": "범일중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "76023ebf-7864-4372-ad19-aa28ee98501e",
+   "externalId": "5360-14",
+   "examId": "5360",
+   "questionNumber": 14,
+   "시험지학년": "중2",
+   "현재unitId": "cce5e825-71d2-4739-95a5-c90f496eb7f2",
+   "현재단원": "중1 / 5. 기본 도형 / 평행선",
+   "근거": {
+    "원본파일명": "[강동중][2][25-2-기말][동아(강)] (완료).PDF",
+    "학교": "강동중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 2,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "76cd4065-0a3d-45d1-9b69-8fd1ab61e7d1",
+   "externalId": "5763-19",
+   "examId": "5763",
+   "questionNumber": 19,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[범일중][3][25-1-기말][비상] (완료).PDF",
+    "학교": "범일중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "77390ae7-5a45-4de3-8466-bff063002ed9",
+   "externalId": "5520-2",
+   "examId": "5520",
+   "questionNumber": 2,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "79ca1bda-fdda-45da-92d4-82b749bff1b4",
+   "externalId": "5768-14",
+   "examId": "5768",
+   "questionNumber": 14,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사대부중][3][25-1-기말][비상] (완료).PDF",
+    "학교": "사대부중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "7d44fb8f-a46a-44a4-b018-6c4609bed7f2",
+   "externalId": "5645-12",
+   "examId": "5645",
+   "questionNumber": 12,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "7e130825-4a06-47ce-aae1-416900abb136",
+   "externalId": "5652-20",
+   "examId": "5652",
+   "questionNumber": 20,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강북중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "강북중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "7e554ae0-73b5-4461-9504-96b06cac245b",
+   "externalId": "5649-21",
+   "examId": "5649",
+   "questionNumber": 21,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강동중][3][25-1-기말][신사고] (완료).PDF",
+    "학교": "강동중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "7ef3d9d2-e240-465e-acd2-55eadfab9ddd",
+   "externalId": "5539-15",
+   "examId": "5539",
+   "questionNumber": 15,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[소선여중][2][25-1-기말][미래엔] (완료).PDF",
+    "학교": "소선여중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "802e1f1d-6041-443b-998d-5eaffbdbc2a1",
+   "externalId": "5823-24",
+   "examId": "5823",
+   "questionNumber": 24,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[신명여중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "신명여중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "8147000f-dee8-41d3-bf66-d50bccb08c2e",
+   "externalId": "5777-23",
+   "examId": "5777",
+   "questionNumber": 23,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[삼성현중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "삼성현중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "81b8fcb1-bf35-4a84-8ef1-236942cc657f",
+   "externalId": "5645-9",
+   "examId": "5645",
+   "questionNumber": 9,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "8309daa8-66de-46e7-8cab-56cd200dc94f",
+   "externalId": "5645-3",
+   "examId": "5645",
+   "questionNumber": 3,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "8338fea6-9178-4b2c-b4ba-60c184b7d02e",
+   "externalId": "5293-7",
+   "examId": "5293",
+   "questionNumber": 7,
+   "시험지학년": "중2",
+   "현재unitId": "56468ec3-5190-485a-a66b-89d0917b8576",
+   "현재단원": "중1 / 2. 정수와 유리수 / 정수와 유리수",
+   "근거": {
+    "원본파일명": "[시지중][1][25-1-중간][천재동] (완료).PDF",
+    "학교": "시지중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "847272db-700f-43f8-94ee-ce27b4ae54a4",
+   "externalId": "5293-9",
+   "examId": "5293",
+   "questionNumber": 9,
+   "시험지학년": "중2",
+   "현재unitId": "56468ec3-5190-485a-a66b-89d0917b8576",
+   "현재단원": "중1 / 2. 정수와 유리수 / 정수와 유리수",
+   "근거": {
+    "원본파일명": "[시지중][1][25-1-중간][천재동] (완료).PDF",
+    "학교": "시지중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "86a76eca-5b8f-439c-a721-20bbb2e55c91",
+   "externalId": "5746-20",
+   "examId": "5746",
+   "questionNumber": 20,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[동평중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "동평중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "87cede9e-2ccf-4731-b490-1c315400c01d",
+   "externalId": "5465-11",
+   "examId": "5465",
+   "questionNumber": 11,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[동평중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "동평중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "895f3502-bc65-4ff2-9b04-8efd6fb4fa81",
+   "externalId": "5520-8",
+   "examId": "5520",
+   "questionNumber": 8,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "8c1d3f1d-9940-46c4-b68c-0e7c99790aa6",
+   "externalId": "5823-8",
+   "examId": "5823",
+   "questionNumber": 8,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[신명여중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "신명여중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "8cd1d235-9c38-480e-9e16-9507fb2a8962",
+   "externalId": "5539-11",
+   "examId": "5539",
+   "questionNumber": 11,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[소선여중][2][25-1-기말][미래엔] (완료).PDF",
+    "학교": "소선여중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "8dea3f19-092b-4980-8cc9-653ccd375edf",
+   "externalId": "5765-18",
+   "examId": "5765",
+   "questionNumber": 18,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[범일중][3][25-2-중간][비상] (완료).pdf",
+    "학교": "범일중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 2,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "8f6be595-2169-4a44-b0e7-9facdac619d3",
+   "externalId": "5173-7",
+   "examId": "5173",
+   "questionNumber": 7,
+   "시험지학년": "중1",
+   "현재unitId": "3306c073-d55f-467e-90c6-ac0c42b00a14",
+   "현재단원": "공통수학1 / 1. 다항식 / 항등식",
+   "근거": {
+    "원본파일명": "[강북중][1][25-1-기말][동아강] (완료).PDF",
+    "학교": "강북중",
+    "level": "중",
+    "grade": 1,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "9317bf75-85b4-42a1-8633-fdbb7aea742a",
+   "externalId": "5539-10",
+   "examId": "5539",
+   "questionNumber": 10,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[소선여중][2][25-1-기말][미래엔] (완료).PDF",
+    "학교": "소선여중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "93b0dcc7-2160-4b7f-b21f-8e4e2381ead4",
+   "externalId": "5667-21",
+   "examId": "5667",
+   "questionNumber": 21,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[경신중][3][25-1-기말][미래엔] (완료).PDF",
+    "학교": "경신중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "95356d65-9e22-4c72-823a-af679a01cda7",
+   "externalId": "5539-1",
+   "examId": "5539",
+   "questionNumber": 1,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[소선여중][2][25-1-기말][미래엔] (완료).PDF",
+    "학교": "소선여중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "96546531-46f7-414b-8b62-bbb3c6e3c8b1",
+   "externalId": "5567-14",
+   "examId": "5567",
+   "questionNumber": 14,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[오성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "오성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "98bd3655-322e-42e5-81cc-5a7ea8e23f74",
+   "externalId": "5465-16",
+   "examId": "5465",
+   "questionNumber": 16,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[동평중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "동평중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "9afeebc4-c224-4ad9-8ae7-2f57c479bbe2",
+   "externalId": "5649-11",
+   "examId": "5649",
+   "questionNumber": 11,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강동중][3][25-1-기말][신사고] (완료).PDF",
+    "학교": "강동중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "9be2a35f-fad2-4581-8580-eab4eafabe5c",
+   "externalId": "5780-17",
+   "examId": "5780",
+   "questionNumber": 17,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[삼육중][3][25-1-기말][동아박] (완료).PDF",
+    "학교": "삼육중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "9c4d7e4e-a012-4a82-936e-8a7134a60213",
+   "externalId": "5567-6",
+   "examId": "5567",
+   "questionNumber": 6,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[오성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "오성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "9ccc4ee5-071e-415b-a88e-fff032077d17",
+   "externalId": "5645-13",
+   "examId": "5645",
+   "questionNumber": 13,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "9d2c77af-c8c1-4bbf-ae97-74af521b57c0",
+   "externalId": "4384-25",
+   "examId": "4384",
+   "questionNumber": 25,
+   "시험지학년": "공통수학2",
+   "현재unitId": "9b2e224f-8f80-4466-8515-7e9d7f1f389c",
+   "현재단원": "초4 / 1-4 평면도형의 이동 / 1-4-1 점의 이동",
+   "근거": {
+    "원본파일명": "[상원고][1][공수2][25-2-중간대비][미래엔] (완료).PDF",
+    "학교": "상원고",
+    "level": "고",
+    "grade": 1,
+    "subject": "공수2",
+    "year": 2025,
+    "semester": 2,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "a0615dbd-d6bb-4be9-b5ff-2002636cef45",
+   "externalId": "5645-14",
+   "examId": "5645",
+   "questionNumber": 14,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "a08ab615-44b1-433b-9557-9512fa7dfdac",
+   "externalId": "5492-13",
+   "examId": "5492",
+   "questionNumber": 13,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사동중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "사동중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "a08f2c84-f066-4268-b694-31059ea68a9b",
+   "externalId": "5674-20",
+   "examId": "5674",
+   "questionNumber": 20,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[경운중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "경운중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "a2b35328-af81-4787-8574-f63573cdb1bd",
+   "externalId": "5850-16",
+   "examId": "5850",
+   "questionNumber": 16,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[운암중][3][25-1-기말][비상] (완료).PDF",
+    "학교": "운암중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "ada65c35-0573-48a7-b153-aede014650a2",
+   "externalId": "5480-19",
+   "examId": "5480",
+   "questionNumber": 19,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[범일중][2][25-1-기말][비상] (완료).PDF",
+    "학교": "범일중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "b033544c-5596-4d86-b03a-5cf383a17199",
+   "externalId": "5491-13",
+   "examId": "5491",
+   "questionNumber": 13,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사대부중][2][25-1-기말][비상] (완료).PDF",
+    "학교": "사대부중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "b0386a0f-15e4-4191-a4cc-b45f60063428",
+   "externalId": "5492-18",
+   "examId": "5492",
+   "questionNumber": 18,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사동중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "사동중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "b1608063-2248-4b18-9627-70ea466f2ce1",
+   "externalId": "5539-18",
+   "examId": "5539",
+   "questionNumber": 18,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[소선여중][2][25-1-기말][미래엔] (완료).PDF",
+    "학교": "소선여중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "b394f2ab-fed8-4cab-acba-4f0060e2ab39",
+   "externalId": "5783-11",
+   "examId": "5783",
+   "questionNumber": 11,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[상원중][3][25-1-기말][지학사] (완료).PDF",
+    "학교": "상원중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "b6950956-8c63-4163-b0e9-0fc2c06e0ad6",
+   "externalId": "5674-16",
+   "examId": "5674",
+   "questionNumber": 16,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[경운중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "경운중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "bd1561f0-6cb6-4a09-a27b-884be17394b5",
+   "externalId": "5777-25",
+   "examId": "5777",
+   "questionNumber": 25,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[삼성현중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "삼성현중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "bdbe96f4-2fc6-4a12-8d7b-c27aab0cd791",
+   "externalId": "5645-20",
+   "examId": "5645",
+   "questionNumber": 20,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "bea1eb9b-2cdc-493c-b081-45c1d49c0fbe",
+   "externalId": "5360-16",
+   "examId": "5360",
+   "questionNumber": 16,
+   "시험지학년": "중2",
+   "현재unitId": "142fa3ff-cee9-4022-8eb4-e6581c1632e0",
+   "현재단원": "초4 / 2-2 삼각형 / 2-2-2 이등변삼각형의 성질",
+   "근거": {
+    "원본파일명": "[강동중][2][25-2-기말][동아(강)] (완료).PDF",
+    "학교": "강동중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 2,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "c1bb1b41-6db6-4a49-8612-7e50b330b71e",
+   "externalId": "5652-16",
+   "examId": "5652",
+   "questionNumber": 16,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강북중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "강북중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "c1e92b99-0d26-4357-b8ee-58246b0caf42",
+   "externalId": "5909-21",
+   "examId": "5909",
+   "questionNumber": 21,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[학산중][3][25-1-기말][동아박] (완료).PDF",
+    "학교": "학산중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "c259332f-6094-41dd-87a0-194c905232c3",
+   "externalId": "5520-17",
+   "examId": "5520",
+   "questionNumber": 17,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "c53c12b6-7685-4cee-a7f3-bf1345cdaa33",
+   "externalId": "5520-3",
+   "examId": "5520",
+   "questionNumber": 3,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "c67d5ab4-e7d1-45da-914d-9b521d4b62d8",
+   "externalId": "4384-3",
+   "examId": "4384",
+   "questionNumber": 3,
+   "시험지학년": "공통수학2",
+   "현재unitId": "9b2e224f-8f80-4466-8515-7e9d7f1f389c",
+   "현재단원": "초4 / 1-4 평면도형의 이동 / 1-4-1 점의 이동",
+   "근거": {
+    "원본파일명": "[상원고][1][공수2][25-2-중간대비][미래엔] (완료).PDF",
+    "학교": "상원고",
+    "level": "고",
+    "grade": 1,
+    "subject": "공수2",
+    "year": 2025,
+    "semester": 2,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "c73cd5e3-bdfe-42ea-9242-c3b8e0c68e84",
+   "externalId": "5539-12",
+   "examId": "5539",
+   "questionNumber": 12,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[소선여중][2][25-1-기말][미래엔] (완료).PDF",
+    "학교": "소선여중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "c776db07-e67b-4be8-9d34-3824634080ec",
+   "externalId": "5923-20",
+   "examId": "5923",
+   "questionNumber": 20,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][3][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "c8e5be76-892f-4bcc-8dd9-87d763358038",
+   "externalId": "5891-10",
+   "examId": "5891",
+   "questionNumber": 10,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[청구중][3][25-1-기말][천재이] (완료).PDF",
+    "학교": "청구중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "c90faf72-5b86-44b8-ae89-f066c9e0e772",
+   "externalId": "5491-14",
+   "examId": "5491",
+   "questionNumber": 14,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사대부중][2][25-1-기말][비상] (완료).PDF",
+    "학교": "사대부중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "ca40f005-9f8c-49ec-84eb-78090fd975d3",
+   "externalId": "5465-10",
+   "examId": "5465",
+   "questionNumber": 10,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[동평중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "동평중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "cbc063b7-47bd-4c4c-9d0f-cac5a4925150",
+   "externalId": "5645-21",
+   "examId": "5645",
+   "questionNumber": 21,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "cbeaff25-2622-4319-8a4b-cbbfd2377b34",
+   "externalId": "5520-21",
+   "examId": "5520",
+   "questionNumber": 21,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "cc07c59e-7b7b-4a2e-85d3-6b52d9e8b578",
+   "externalId": "5746-21",
+   "examId": "5746",
+   "questionNumber": 21,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[동평중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "동평중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "ceb33d78-c71f-4cbe-8ac4-5ff0b699f6f3",
+   "externalId": "5667-6",
+   "examId": "5667",
+   "questionNumber": 6,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[경신중][3][25-1-기말][미래엔] (완료).PDF",
+    "학교": "경신중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "cfd25895-85c5-4b59-a012-60bd127f3d9f",
+   "externalId": "5823-25",
+   "examId": "5823",
+   "questionNumber": 25,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[신명여중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "신명여중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "d0563498-ef0b-4dd1-9391-7cffa91a03f7",
+   "externalId": "5759-13",
+   "examId": "5759",
+   "questionNumber": 13,
+   "시험지학년": "중3",
+   "현재unitId": "e0ae27b7-948f-46d3-a730-310eaef1fa14",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 인수분해가 되지 않는 연립이차방정식",
+   "근거": {
+    "원본파일명": "[범물중][3][25-1-중간][천재이] (완료).PDF",
+    "학교": "범물중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "d12cdfbd-e398-4894-9171-83fd1676c6b0",
+   "externalId": "5520-11",
+   "examId": "5520",
+   "questionNumber": 11,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "d4a59876-74e3-4d64-8c9e-d22556868880",
+   "externalId": "5520-4",
+   "examId": "5520",
+   "questionNumber": 4,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "d50b1eb2-5819-4017-9356-8bd5995d0ba9",
+   "externalId": "4384-23",
+   "examId": "4384",
+   "questionNumber": 23,
+   "시험지학년": "공통수학2",
+   "현재unitId": "9b2e224f-8f80-4466-8515-7e9d7f1f389c",
+   "현재단원": "초4 / 1-4 평면도형의 이동 / 1-4-1 점의 이동",
+   "근거": {
+    "원본파일명": "[상원고][1][공수2][25-2-중간대비][미래엔] (완료).PDF",
+    "학교": "상원고",
+    "level": "고",
+    "grade": 1,
+    "subject": "공수2",
+    "year": 2025,
+    "semester": 2,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "d55de7cd-96e1-487f-b496-1dda834c21f0",
+   "externalId": "5364-15",
+   "examId": "5364",
+   "questionNumber": 15,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강북중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "강북중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "d655c6f8-c9a8-42a6-8319-949279a19f6d",
+   "externalId": "5492-19",
+   "examId": "5492",
+   "questionNumber": 19,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사동중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "사동중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "d7c3fc9e-aa7f-445d-a61d-ba1ce68b84fe",
+   "externalId": "4509-5",
+   "examId": "4509",
+   "questionNumber": 5,
+   "시험지학년": "공통수학1",
+   "현재unitId": "a8ef3885-a036-4026-be76-c1020f2ddbc7",
+   "현재단원": "초3 / 2-3 원 / 2-3-1 원의 중심, 지름, 반지름",
+   "근거": {
+    "원본파일명": "[칠성고][1][공수1][25-1-기말대비][미래엔] (완료).PDF",
+    "학교": "칠성고",
+    "level": "고",
+    "grade": 1,
+    "subject": "공수1",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "de25ba3b-cdb3-4044-9f42-ab801d4b751d",
+   "externalId": "5567-16",
+   "examId": "5567",
+   "questionNumber": 16,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[오성중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "오성중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "dee32da5-869d-41bd-ae42-d29d0f1ed70a",
+   "externalId": "5850-14",
+   "examId": "5850",
+   "questionNumber": 14,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[운암중][3][25-1-기말][비상] (완료).PDF",
+    "학교": "운암중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "defef57c-ce99-41e4-91f6-cf9cd0e5026b",
+   "externalId": "5173-6",
+   "examId": "5173",
+   "questionNumber": 6,
+   "시험지학년": "중1",
+   "현재unitId": "3306c073-d55f-467e-90c6-ac0c42b00a14",
+   "현재단원": "공통수학1 / 1. 다항식 / 항등식",
+   "근거": {
+    "원본파일명": "[강북중][1][25-1-기말][동아강] (완료).PDF",
+    "학교": "강북중",
+    "level": "중",
+    "grade": 1,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "df89dbff-a805-4ebf-b706-c10ee68fb075",
+   "externalId": "5520-7",
+   "examId": "5520",
+   "questionNumber": 7,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "e05143c9-f300-4cc7-ac4a-2993e916a79b",
+   "externalId": "5610-8",
+   "examId": "5610",
+   "questionNumber": 8,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[중앙중][2][25-1-기말][미래엔] (완료).PDF",
+    "학교": "중앙중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "e134aa03-88b4-45c7-a5f7-084d16e88b14",
+   "externalId": "5649-16",
+   "examId": "5649",
+   "questionNumber": 16,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[강동중][3][25-1-기말][신사고] (완료).PDF",
+    "학교": "강동중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "e5547b0e-6fc3-44f1-86a0-4f2bab400716",
+   "externalId": "5923-21",
+   "examId": "5923",
+   "questionNumber": 21,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][3][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "e67d4a96-533e-4173-a8aa-6f5d42697167",
+   "externalId": "5780-26",
+   "examId": "5780",
+   "questionNumber": 26,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[삼육중][3][25-1-기말][동아박] (완료).PDF",
+    "학교": "삼육중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "eaa68481-23cf-4adb-ada3-c6848a6d3f22",
+   "externalId": "5293-14",
+   "examId": "5293",
+   "questionNumber": 14,
+   "시험지학년": "중2",
+   "현재unitId": "9f485e43-b90b-4c19-b6fb-e485a51b7fe2",
+   "현재단원": "중1 / 1. 소인수분해 / 소인수분해",
+   "근거": {
+    "원본파일명": "[시지중][1][25-1-중간][천재동] (완료).PDF",
+    "학교": "시지중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "f0c27d27-0637-4097-8d0f-fa2ed249981d",
+   "externalId": "5293-10",
+   "examId": "5293",
+   "questionNumber": 10,
+   "시험지학년": "중2",
+   "현재unitId": "00b288e3-0b5e-419a-842d-cb018796022f",
+   "현재단원": "중1 / 1. 소인수분해 / 최대공약수와 최소공배수의 활용",
+   "근거": {
+    "원본파일명": "[시지중][1][25-1-중간][천재동] (완료).PDF",
+    "학교": "시지중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "f1055ab7-0c2b-4823-96ea-f37e43539583",
+   "externalId": "5539-4",
+   "examId": "5539",
+   "questionNumber": 4,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[소선여중][2][25-1-기말][미래엔] (완료).PDF",
+    "학교": "소선여중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "f21b5e74-fb89-4f0a-be55-ad88a18b25fb",
+   "externalId": "5840-13",
+   "examId": "5840",
+   "questionNumber": 13,
+   "시험지학년": "중3",
+   "현재unitId": "ef7816b4-0a0f-4ac5-8f10-6e7bd905aaf1",
+   "현재단원": "미적분1 / 2. 미분 / 함수의 그래프",
+   "근거": {
+    "원본파일명": "[오성중][3][25-1-기말][동아박] (완료).PDF",
+    "학교": "오성중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "f244be49-bbaf-4dc9-bc45-f8b137e2836f",
+   "externalId": "5783-20",
+   "examId": "5783",
+   "questionNumber": 20,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[상원중][3][25-1-기말][지학사] (완료).PDF",
+    "학교": "상원중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "f28b5e12-bdea-4f20-8341-cad170495fc8",
+   "externalId": "5777-24",
+   "examId": "5777",
+   "questionNumber": 24,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[삼성현중][3][25-1-기말][동아강] (완료).PDF",
+    "학교": "삼성현중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "f48c773a-1926-43d8-94c3-b955a93044c7",
+   "externalId": "5539-8",
+   "examId": "5539",
+   "questionNumber": 8,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[소선여중][2][25-1-기말][미래엔] (완료).PDF",
+    "학교": "소선여중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "f5e4eed7-eee7-402d-be80-fa1eb45de637",
+   "externalId": "5465-18",
+   "examId": "5465",
+   "questionNumber": 18,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[동평중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "동평중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "f6934293-22f0-48f2-a9f9-e3f028eb696c",
+   "externalId": "5293-3",
+   "examId": "5293",
+   "questionNumber": 3,
+   "시험지학년": "중2",
+   "현재unitId": "56468ec3-5190-485a-a66b-89d0917b8576",
+   "현재단원": "중1 / 2. 정수와 유리수 / 정수와 유리수",
+   "근거": {
+    "원본파일명": "[시지중][1][25-1-중간][천재동] (완료).PDF",
+    "학교": "시지중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "f91ec968-db85-4a92-a981-73b7f94f96b2",
+   "externalId": "5492-15",
+   "examId": "5492",
+   "questionNumber": 15,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[사동중][2][25-1-기말][동아박] (완료).PDF",
+    "학교": "사동중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "fa272470-4967-4300-ab35-30692f518d39",
+   "externalId": "5520-9",
+   "examId": "5520",
+   "questionNumber": 9,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[성광중][2][25-1-기말][천재이] (완료).PDF",
+    "학교": "성광중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "fac1b266-0298-4a95-995d-b106cb5b5767",
+   "externalId": "5783-14",
+   "examId": "5783",
+   "questionNumber": 14,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[상원중][3][25-1-기말][지학사] (완료).PDF",
+    "학교": "상원중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "fb8a5441-1e30-476a-b0b9-af3c82a9d668",
+   "externalId": "5833-7",
+   "examId": "5833",
+   "questionNumber": 7,
+   "시험지학년": "중3",
+   "현재unitId": "e0ae27b7-948f-46d3-a730-310eaef1fa14",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 인수분해가 되지 않는 연립이차방정식",
+   "근거": {
+    "원본파일명": "[영남삼육중][3][25-1-중간][동아박] (완료).PDF",
+    "학교": "영남삼육중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "중간",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "fd97300b-ad95-4799-b0b2-43a509c2c5b8",
+   "externalId": "5923-13",
+   "examId": "5923",
+   "questionNumber": 13,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[효성중][3][25-1-기말][동아박] (완료).PDF",
+    "학교": "효성중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "fde96070-4b29-49c8-bcff-34a47a40806b",
+   "externalId": "5455-19",
+   "examId": "5455",
+   "questionNumber": 19,
+   "시험지학년": "중2",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[동부중][2][25-1-기말][동아강] (완료).PDF",
+    "학교": "동부중",
+    "level": "중",
+    "grade": 2,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  },
+  {
+   "problemId": "fe9b4410-b2ed-41e9-b2a1-e9a566de6e3e",
+   "externalId": "5850-22",
+   "examId": "5850",
+   "questionNumber": 22,
+   "시험지학년": "중3",
+   "현재unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+   "현재단원": "공통수학2 / 3. 함수와 그래프 / 함수",
+   "근거": {
+    "원본파일명": "[운암중][3][25-1-기말][비상] (완료).PDF",
+    "학교": "운암중",
+    "level": "중",
+    "grade": 3,
+    "subject": "수학",
+    "year": 2025,
+    "semester": 1,
+    "round": "기말",
+    "판정경로": "final-pairs 메타(level·grade·subject) → paths.ts gradeKeyOf()"
+   }
+  }
+ ],
+ "결함2": [
+  {
+   "problemId": "00c0e95e-7b48-4ae6-8c47-2da8b1f06e1a",
+   "externalId": "4485-15",
+   "examId": "4485",
+   "questionNumber": 15,
+   "현재unitId": "07acacdd-6cef-4d88-b26f-d29fb677cd58",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 미지수가 2개인 연립이차방정식(1)",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 연립이차부등식",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "연립이차부등식",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "04b0f7e6-4f4f-4fee-9899-bd5756bfbdaa",
+   "externalId": "4485-19",
+   "examId": "4485",
+   "questionNumber": 19,
+   "현재unitId": "64ac3195-6682-4736-aa90-30812d7bb2d7",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 경우의 수",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "경우의 수",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "153a68bd-1072-43fd-bec7-720c8a786527",
+   "externalId": "4485-6",
+   "examId": "4485",
+   "questionNumber": 6,
+   "현재unitId": "214359b2-6062-4e63-8401-defbc76d9278",
+   "현재단원": "공통수학1 / 4. 행렬 / 행렬의 곱셈의 성질",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 연립이차부등식",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "연립이차부등식",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "1d62168b-fb8e-4fd6-beba-a220f048d662",
+   "externalId": "4485-17",
+   "examId": "4485",
+   "questionNumber": 17,
+   "현재unitId": "3d0f311f-5ef2-400d-9874-b120f51fe2e8",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 이차부등식의 해의 조건",
+   "본문이가리키는단원": "공통수학1 / 4. 행렬 / 행렬의 곱셈의 성질",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "행렬의 곱셈",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "35c7b2a8-5f6a-4263-b885-928b9e828fdd",
+   "externalId": "4485-16",
+   "examId": "4485",
+   "questionNumber": 16,
+   "현재unitId": "034527f8-322e-46b9-a7af-4569ca522d16",
+   "현재단원": "공통수학1 / 4. 행렬 / 행렬",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 삼차방정식과 사차방정식(1)",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "삼차방정식과 사차방정식",
+    "DB본문_재추출본문_유사도": 0.897,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "4471699f-1cdf-4741-b7ab-2a669a0081cd",
+   "externalId": "4485-7",
+   "examId": "4485",
+   "questionNumber": 7,
+   "현재unitId": "632cbaac-7f59-486d-93ac-f0c9d1a9b3b5",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 연립이차부등식",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "조합",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "4926bce8-2d94-4b3a-9712-adefedcb74ce",
+   "externalId": "4485-12",
+   "examId": "4485",
+   "questionNumber": 12,
+   "현재unitId": "f691862c-0532-423a-ab3e-79b4622b4d84",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 일차부등식, 연립일차부등식(1)",
+   "본문이가리키는단원": "공통수학1 / 4. 행렬 / 행렬의 곱셈의 성질",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "행렬의 곱셈",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "5c048dcb-1f21-402c-9fe0-a575b7de496a",
+   "externalId": "4485-10",
+   "examId": "4485",
+   "questionNumber": 10,
+   "현재unitId": "07acacdd-6cef-4d88-b26f-d29fb677cd58",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 미지수가 2개인 연립이차방정식(1)",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "순열",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "5da03228-572b-4573-9c44-943c759485c4",
+   "externalId": "4485-4",
+   "examId": "4485",
+   "questionNumber": 4,
+   "현재unitId": "8660052e-4f3c-43be-b626-37aa3a1cabdf",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 경우의 수",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "순열",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "64b960e1-8aec-49a4-939b-84c4ef837689",
+   "externalId": "4485-20",
+   "examId": "4485",
+   "questionNumber": 20,
+   "현재unitId": "214359b2-6062-4e63-8401-defbc76d9278",
+   "현재단원": "공통수학1 / 4. 행렬 / 행렬의 곱셈의 성질",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 미지수가 2개인 연립이차방정식(1)",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "연립이차방정식",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "d02df02e-9305-492f-85dc-c3bf381c643c",
+   "externalId": "4485-13",
+   "examId": "4485",
+   "questionNumber": 13,
+   "현재unitId": "4d4765df-6822-4645-9367-9297a3025e75",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "순열",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "9351481f-dc17-478a-8b6a-381a00b29fc7",
+   "externalId": "4260-21",
+   "examId": "4260",
+   "questionNumber": 21,
+   "현재unitId": "d02a3e58-730c-4152-b531-e87555d2bd75",
+   "현재단원": "공통수학2 / 1. 도형의 방정식 / 원의 접선의 방정식(1)",
+   "본문이가리키는단원": "공통수학2 / 1. 도형의 방정식 / 점과 직선에 대한 대칭이동",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "대칭이동",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "062afc16-9ffe-4cdb-b857-b8611aee718a",
+   "externalId": "4451-3",
+   "examId": "4451",
+   "questionNumber": 3,
+   "현재unitId": "4d4765df-6822-4645-9367-9297a3025e75",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 이차부등식의 해의 조건",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "이차부등식의 해의 조건",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "11dffb8a-a385-4f87-bd2d-8d83c73254d0",
+   "externalId": "4451-4",
+   "examId": "4451",
+   "questionNumber": 4,
+   "현재unitId": "f691862c-0532-423a-ab3e-79b4622b4d84",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 일차부등식, 연립일차부등식(1)",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 경우의 수",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "경우의 수",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "249f79f0-6e27-4cc6-8c9c-240ec78e9a47",
+   "externalId": "4451-17",
+   "examId": "4451",
+   "questionNumber": 17,
+   "현재unitId": "3d0f311f-5ef2-400d-9874-b120f51fe2e8",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 이차부등식의 해의 조건",
+   "본문이가리키는단원": "공통수학1 / 4. 행렬 / 행렬의 곱셈의 성질",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "행렬의 곱셈",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "3cb0e3c8-733c-44e0-a3f1-98efe08fb135",
+   "externalId": "4451-19",
+   "examId": "4451",
+   "questionNumber": 19,
+   "현재unitId": "dfc9a728-7584-4718-b94a-0beb059158da",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 절댓값 기호를 포함한 일차부등식",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 이차함수의 최대·최소(1)",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "이차함수의 최대, 최소",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "40dc5069-4f3c-40e0-80b8-4af47fe2baac",
+   "externalId": "4451-8",
+   "examId": "4451",
+   "questionNumber": 8,
+   "현재unitId": "07acacdd-6cef-4d88-b26f-d29fb677cd58",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 미지수가 2개인 연립이차방정식(1)",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "조합",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "4f86bdee-98c5-452b-aa9b-40ee695f2bc1",
+   "externalId": "4451-15",
+   "examId": "4451",
+   "questionNumber": 15,
+   "현재unitId": "124ebc73-38ee-4f7c-8d06-845022829395",
+   "현재단원": "공통수학1 / 4. 행렬 / 행렬의 덧셈, 뺄셈과 실수배",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "순열",
+    "DB본문_재추출본문_유사도": 0.981,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "510b7897-312e-46d7-906f-42bc402f4700",
+   "externalId": "4451-2",
+   "examId": "4451",
+   "questionNumber": 2,
+   "현재unitId": "124ebc73-38ee-4f7c-8d06-845022829395",
+   "현재단원": "공통수학1 / 4. 행렬 / 행렬의 덧셈, 뺄셈과 실수배",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "순열",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "663c4b8a-0f8a-4fe6-b3bb-8951aba8ba29",
+   "externalId": "4451-11",
+   "examId": "4451",
+   "questionNumber": 11,
+   "현재unitId": "4d4765df-6822-4645-9367-9297a3025e75",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 경우의 수",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "경우의 수",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "749ba5ac-be6e-48fd-a4f5-91101a872e31",
+   "externalId": "4451-18",
+   "examId": "4451",
+   "questionNumber": 18,
+   "현재unitId": "64ac3195-6682-4736-aa90-30812d7bb2d7",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 미지수가 2개인 연립이차방정식(1)",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "연립이차방정식",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "903a7c17-8103-4be3-b760-6c347124b5f2",
+   "externalId": "4451-12",
+   "examId": "4451",
+   "questionNumber": 12,
+   "현재unitId": "3d0f311f-5ef2-400d-9874-b120f51fe2e8",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 이차부등식의 해의 조건",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 삼차방정식과 사차방정식(1)",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "삼차방정식과 사차방정식",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "a58e4133-d3b8-4eae-b4c6-1ac6ad877c38",
+   "externalId": "4451-7",
+   "examId": "4451",
+   "questionNumber": 7,
+   "현재unitId": "034527f8-322e-46b9-a7af-4569ca522d16",
+   "현재단원": "공통수학1 / 4. 행렬 / 행렬",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "조합",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "a76a6652-3c59-40d9-aa20-b5924362b274",
+   "externalId": "4451-10",
+   "examId": "4451",
+   "questionNumber": 10,
+   "현재unitId": "214359b2-6062-4e63-8401-defbc76d9278",
+   "현재단원": "공통수학1 / 4. 행렬 / 행렬의 곱셈의 성질",
+   "본문이가리키는단원": "공통수학1 / 4. 행렬 / 행렬의 덧셈, 뺄셈과 실수배",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "행렬의 덧셈, 뺄셈과 실수배",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "af9e0415-202d-4ced-ad9a-cbe967c66eee",
+   "externalId": "4451-5",
+   "examId": "4451",
+   "questionNumber": 5,
+   "현재unitId": "61192dff-7731-4dd8-8f60-d1e1c50c36bd",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 삼차방정식과 사차방정식(1)",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "조합",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "c9575b04-0e18-4132-9034-37bbfd04dac8",
+   "externalId": "4451-14",
+   "examId": "4451",
+   "questionNumber": 14,
+   "현재unitId": "f691862c-0532-423a-ab3e-79b4622b4d84",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 일차부등식, 연립일차부등식(1)",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 연립일차부등식(2)",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "연립부등식",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "f5e58794-d71b-4e90-9fbf-6d2d20812e0f",
+   "externalId": "4451-1",
+   "examId": "4451",
+   "questionNumber": 1,
+   "현재unitId": "8660052e-4f3c-43be-b626-37aa3a1cabdf",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 경우의 수",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 이차방정식과 이차함수의 관계",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "이차방정식과 이차함수의 관계",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "5c4eb653-65e5-446e-988f-9462af8dadcd",
+   "externalId": "3658-17",
+   "examId": "3658",
+   "questionNumber": 17,
+   "현재unitId": "74103a7e-ab11-4103-a171-3cb2bbabbbeb",
+   "현재단원": "중2 / 2. 부등식 / 일차부등식의 풀이",
+   "본문이가리키는단원": "중2 / 1. 수와 식 / 다항식의 덧셈과 뺄셈",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "다항식의 계산",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "264de81b-1a3f-4721-9700-6faec43b5486",
+   "externalId": "4539-17",
+   "examId": "4539",
+   "questionNumber": 17,
+   "현재unitId": "8660052e-4f3c-43be-b626-37aa3a1cabdf",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 경우의 수",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "조합",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "296bc404-43a4-413a-8404-590426431d42",
+   "externalId": "4539-20",
+   "examId": "4539",
+   "questionNumber": 20,
+   "현재unitId": "64ac3195-6682-4736-aa90-30812d7bb2d7",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 이차방정식과 이차함수의 관계",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "이차함수와 직선의 위치관계",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "3b4a8732-7133-48ad-a599-4385d0d3a727",
+   "externalId": "4539-12",
+   "examId": "4539",
+   "questionNumber": 12,
+   "현재unitId": "3d0f311f-5ef2-400d-9874-b120f51fe2e8",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 이차부등식의 해의 조건",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 절댓값(가우스) 기호를 포함한 이차부등식",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "이차부등식",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "6d1f0301-38d8-4d20-bedd-60fbcb3df984",
+   "externalId": "4539-7",
+   "examId": "4539",
+   "questionNumber": 7,
+   "현재unitId": "61192dff-7731-4dd8-8f60-d1e1c50c36bd",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 삼차방정식과 사차방정식(1)",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 절댓값 기호를 포함한 일차부등식",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "절댓값 기호를 포함한 일차부등식",
+    "DB본문_재추출본문_유사도": 0.933,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "708d33dd-87d0-42dd-a2d5-b0283311b4c6",
+   "externalId": "4539-10",
+   "examId": "4539",
+   "questionNumber": 10,
+   "현재unitId": "dfc9a728-7584-4718-b94a-0beb059158da",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 절댓값 기호를 포함한 일차부등식",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "조합",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "7473ef1f-78ed-4527-9339-06675061c5b9",
+   "externalId": "4539-4",
+   "examId": "4539",
+   "questionNumber": 4,
+   "현재unitId": "dfc9a728-7584-4718-b94a-0beb059158da",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 절댓값 기호를 포함한 일차부등식",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 경우의 수",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "경우의 수",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "9b03b5b2-ec3d-4295-8186-a943e0aafd01",
+   "externalId": "4539-6",
+   "examId": "4539",
+   "questionNumber": 6,
+   "현재unitId": "034527f8-322e-46b9-a7af-4569ca522d16",
+   "현재단원": "공통수학1 / 4. 행렬 / 행렬",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 삼차방정식과 사차방정식(1)",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "삼차방정식과 사차방정식",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "a4212395-a7c4-4b9c-9343-baba98cd3925",
+   "externalId": "4539-3",
+   "examId": "4539",
+   "questionNumber": 3,
+   "현재unitId": "64ac3195-6682-4736-aa90-30812d7bb2d7",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 절댓값(가우스) 기호를 포함한 이차부등식",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "이차부등식",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "beadf159-2159-4351-bcc4-16a379bcb3a7",
+   "externalId": "4539-18",
+   "examId": "4539",
+   "questionNumber": 18,
+   "현재unitId": "07acacdd-6cef-4d88-b26f-d29fb677cd58",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 미지수가 2개인 연립이차방정식(1)",
+   "본문이가리키는단원": "공통수학1 / 4. 행렬 / 행렬의 덧셈, 뺄셈과 실수배",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "행렬",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "e0c4f6f5-1c66-429a-a98e-38cd7bcaa386",
+   "externalId": "4539-8",
+   "examId": "4539",
+   "questionNumber": 8,
+   "현재unitId": "61192dff-7731-4dd8-8f60-d1e1c50c36bd",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 삼차방정식과 사차방정식(1)",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "순열",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "e1869111-47b4-4f0e-8708-a93f45ba2e7a",
+   "externalId": "4539-19",
+   "examId": "4539",
+   "questionNumber": 19,
+   "현재unitId": "64ac3195-6682-4736-aa90-30812d7bb2d7",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "본문이가리키는단원": "공통수학1 / 4. 행렬 / 행렬의 덧셈, 뺄셈과 실수배",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "행렬",
+    "DB본문_재추출본문_유사도": 0.833,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "f88e7839-61a6-4464-ac2d-06b27d340692",
+   "externalId": "4539-22",
+   "examId": "4539",
+   "questionNumber": 22,
+   "현재unitId": "64ac3195-6682-4736-aa90-30812d7bb2d7",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "조합",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "47d8b9d6-8f3c-4d29-9554-b5ac79202e38",
+   "externalId": "4266-15",
+   "examId": "4266",
+   "questionNumber": 15,
+   "현재unitId": "387393ca-67cd-482e-9fa9-56a74e7d919f",
+   "현재단원": "공통수학1 / 4. 행렬 / 행렬의 곱셈",
+   "본문이가리키는단원": "공통수학1 / 4. 행렬 / 행렬의 덧셈, 뺄셈과 실수배",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "행렬",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "825c6aa2-f31a-4a9a-bf22-7c6415190493",
+   "externalId": "4266-6",
+   "examId": "4266",
+   "questionNumber": 6,
+   "현재unitId": "034527f8-322e-46b9-a7af-4569ca522d16",
+   "현재단원": "공통수학1 / 4. 행렬 / 행렬",
+   "본문이가리키는단원": "공통수학1 / 4. 행렬 / 행렬의 덧셈, 뺄셈과 실수배",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "행렬",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "60a3c174-e37c-4585-92bf-f82bc6120019",
+   "externalId": "4457-19",
+   "examId": "4457",
+   "questionNumber": 19,
+   "현재unitId": "804e7572-c73c-4b68-8a10-ecc608a97495",
+   "현재단원": "공통수학2 / 1. 도형의 방정식 / 좌표축에 접하는 원의 방정식",
+   "본문이가리키는단원": "공통수학2 / 2. 집합과 명제 / 명제와 조건",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "명제의 참, 거짓",
+    "DB본문_재추출본문_유사도": 0.887,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "7e4270fd-6861-4c65-a8e1-1c4777201717",
+   "externalId": "3775-13",
+   "examId": "3775",
+   "questionNumber": 13,
+   "현재unitId": "a312f8e1-49c5-460c-a576-c6532e0f4715",
+   "현재단원": "중2 / 6. 도형의 닮음 / 닮은 도형",
+   "본문이가리키는단원": "중2 / 5. 도형의 성질 / 평행사변형이 되는 조건",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "평행사변형",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "1dea7fe1-b679-46fb-bc3b-32484fc39f98",
+   "externalId": "4542-14",
+   "examId": "4542",
+   "questionNumber": 14,
+   "현재unitId": "214359b2-6062-4e63-8401-defbc76d9278",
+   "현재단원": "공통수학1 / 4. 행렬 / 행렬의 곱셈의 성질",
+   "본문이가리키는단원": "공통수학1 / 4. 행렬 / 행렬",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "행렬의 뜻",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "3ef76da2-3358-46a2-88a5-7031bf66a37c",
+   "externalId": "4542-11",
+   "examId": "4542",
+   "questionNumber": 11,
+   "현재unitId": "8660052e-4f3c-43be-b626-37aa3a1cabdf",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 경우의 수",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "조합",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "5644e9db-2ad0-4249-b370-883b8c497d13",
+   "externalId": "4542-3",
+   "examId": "4542",
+   "questionNumber": 3,
+   "현재unitId": "124ebc73-38ee-4f7c-8d06-845022829395",
+   "현재단원": "공통수학1 / 4. 행렬 / 행렬의 덧셈, 뺄셈과 실수배",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 일차부등식, 연립일차부등식(1)",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "연립일차부등식",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "834e1be4-e781-4d74-bc41-6c8ae7ef3359",
+   "externalId": "4542-1",
+   "examId": "4542",
+   "questionNumber": 1,
+   "현재unitId": "4d4765df-6822-4645-9367-9297a3025e75",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 이차방정식과 이차함수의 관계",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "이차함수와 직선의 위치관계",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "936765a6-fdab-4287-b99d-1d0b13d3b67c",
+   "externalId": "4542-16",
+   "examId": "4542",
+   "questionNumber": 16,
+   "현재unitId": "4d4765df-6822-4645-9367-9297a3025e75",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "순열",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "94604535-ee3e-4b4b-a4ab-6377def03350",
+   "externalId": "4542-21",
+   "examId": "4542",
+   "questionNumber": 21,
+   "현재unitId": "214359b2-6062-4e63-8401-defbc76d9278",
+   "현재단원": "공통수학1 / 4. 행렬 / 행렬의 곱셈의 성질",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 삼차방정식의 근과 계수의 관계",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "삼차방정식의 근과 계수와의 관계",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "9d469a9c-9c83-4a07-b288-cf07e43ae70f",
+   "externalId": "4542-5",
+   "examId": "4542",
+   "questionNumber": 5,
+   "현재unitId": "f691862c-0532-423a-ab3e-79b4622b4d84",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 일차부등식, 연립일차부등식(1)",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 경우의 수",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "경우의 수",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "a1e332d9-773e-4771-a556-65c9328dbecd",
+   "externalId": "4542-20",
+   "examId": "4542",
+   "questionNumber": 20,
+   "현재unitId": "64ac3195-6682-4736-aa90-30812d7bb2d7",
+   "현재단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 조합",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "조합",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "ac173d28-6877-46af-a0a8-b50419768fae",
+   "externalId": "4542-9",
+   "examId": "4542",
+   "questionNumber": 9,
+   "현재unitId": "dfc9a728-7584-4718-b94a-0beb059158da",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 절댓값 기호를 포함한 일차부등식",
+   "본문이가리키는단원": "공통수학1 / 3. 경우의 수 / 순열",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "순열",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "edf9bed8-4faa-4530-b721-b1b0f735de96",
+   "externalId": "4498-5",
+   "examId": "4498",
+   "questionNumber": 5,
+   "현재unitId": "f691862c-0532-423a-ab3e-79b4622b4d84",
+   "현재단원": "공통수학1 / 2. 방정식과 부등식 / 일차부등식, 연립일차부등식(1)",
+   "본문이가리키는단원": "공통수학1 / 2. 방정식과 부등식 / 절댓값 기호를 포함한 일차부등식",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "절대값 기호를 포함한 일차부등식",
+    "DB본문_재추출본문_유사도": 0.765,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "88340fb7-7799-415b-b583-959a934d2044",
+   "externalId": "5749-9",
+   "examId": "5749",
+   "questionNumber": 9,
+   "현재unitId": "40a7b4e1-88d2-4cc6-8097-6d1b5f0bbbf9",
+   "현재단원": "중3 / 2. 다항식의 곱셈과 인수분해 / 인수분해의 응용",
+   "본문이가리키는단원": "중3 / 1. 실수와 그 계산 / 근호를 포함한 식의 계산",
+   "같은중단원": false,
+   "근거": {
+    "재추출본topic": "근호를 포함한 식의 계산",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  },
+  {
+   "problemId": "8e949618-9ad6-4f80-a76f-b02b1a8d2460",
+   "externalId": "4256-1",
+   "examId": "4256",
+   "questionNumber": 1,
+   "현재unitId": "ab6b68aa-2d63-454c-85a3-0bed23c7b995",
+   "현재단원": "공통수학1 / 1. 다항식 / 나머지와 인수정리(1)",
+   "본문이가리키는단원": "공통수학1 / 1. 다항식 / 다항식의 덧셈과 뺄셈",
+   "같은중단원": true,
+   "근거": {
+    "재추출본topic": "다항식의 덧셈과 뺄셈",
+    "DB본문_재추출본문_유사도": 1,
+    "판정경로": "DB content 가 그 번호의 재추출 본문과 일치(≥0.6) → 그 번호의 topic 을 mapUnitHint 로 매핑 → 현재 라벨과 다름"
+   }
+  }
+ ]
+}

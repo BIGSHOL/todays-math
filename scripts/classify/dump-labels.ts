@@ -34,6 +34,7 @@ async function main() {
       if (rows.length === 0) break;
       for (const r of rows) {
         lines.push(JSON.stringify({
+          problemId: r.id,
           externalId: r.externalId,
           examId: r.examId,
           n: r.questionNumber,
