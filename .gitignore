@@ -71,3 +71,5 @@ scripts/qa/reports/discard-candidates.json
 scripts/classify/reports/labeled.jsonl
 scripts/classify/reports/target.jsonl
 scripts/classify/reports/units-db.json
+scripts/classify/reports/db-labels.jsonl
+scripts/classify/reports/loaded-external-ids.json
