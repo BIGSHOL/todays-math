@@ -167,10 +167,14 @@ function main() {
       (d) => d.현재단원 === topTarget &&
         String(questionsOf(d.examId).get(String(d.questionNumber))?.topic ?? "") === topic,
     );
+    const loaderNumber = sample ? Number(String(sample.근거.grade ?? "")) : NaN;
     return {
       topic,
+      gradeKey: sample?.시험지학년 ?? "",
+      loaderHint: Number.isFinite(loaderNumber) ? String(loaderNumber) : "(없음)",
       withGrade: describe(mapUnitHint(topic, units, sample?.시험지학년)),
-      without: describe(mapUnitHint(topic, units, undefined)),
+      // 적재기가 실제로 넘긴 값(맨숫자)을 그대로 넣어 재현한다
+      without: describe(mapUnitHint(topic, units, Number.isFinite(loaderNumber) ? loaderNumber : undefined)),
     };
   });
 
@@ -242,21 +246,55 @@ function main() {
   md.push("|---|---|");
   for (const [topic, count] of topicTally.slice(0, 6)) md.push(`| ${topic} | ${count} |`);
   md.push("");
-  md.push("`mapUnitHint` 를 같은 topic 으로 다시 돌려 보면 원인이 그대로 나온다:");
+  md.push("**원인은 학년 힌트가 숫자로 넘어가는 것이다.** 적재기는");
+  md.push("`convertPastExam.ts` 에서 `gradeHint = paper.meta?.grade ?? paper.meta?.subject` 를 넘기는데,");
+  md.push("중2 시험지의 추출 메타는 `{ level: \"중\", grade: 2 }` 라 **맨숫자 2** 가 넘어간다.");
+  md.push("`level` 은 안 넘어간다. 그리고 `normalizeGrade` 는 맨숫자를 고등 학년으로 읽는다:");
   md.push("");
-  md.push("| topic | 학년 힌트 있을 때 | 학년 힌트 없을 때 |");
+  md.push("```ts");
+  md.push("if (typeof raw === \"number\") {");
+  md.push("  if (raw === 1) return \"공통수학1\";");
+  md.push("  if (raw === 2) return \"공통수학2\";   // ← 중2 시험지가 여기로 간다");
+  md.push("  return null;");
+  md.push("}");
+  md.push("```");
+  md.push("");
+  md.push("그래서 학년이 **공통수학2 로 풀린다.** 후보 pool 은 공통수학2 로 정상 좁혀지고,");
+  md.push("그 안에서 `longestHit` 이 도는데 공통수학2 에 이름이 그냥 `함수` 인 소단원이 있다.");
+  md.push("`includesLoose(\"일차함수와그래프\", \"함수\")` 가 참이라 거기에 붙는다.");
+  md.push("");
+  md.push("실제로 돌려 보면 그대로 재현된다:");
+  md.push("");
+  md.push("| 시험지 표기(topic) | 적재기가 넘긴 값 → 결과 | level 을 반영했다면 → 결과 |");
   md.push("|---|---|---|");
-  for (const row of reproduction) md.push(`| ${row.topic} | ${row.withGrade} | **${row.without}** |`);
+  for (const row of reproduction) {
+    md.push(`| ${row.topic} | \`${row.loaderHint}\` → **${row.without}** | \`"${row.gradeKey}"\` → ${row.withGrade} |`);
+  }
   md.push("");
-  md.push("**학년이 안 잡히면 후보 pool 이 초1~고3 전체 735개가 되고, 공통수학2 의 소단원 이름이");
-  md.push("하필 그냥 `함수` 라 `일차함수와 그래프`·`이차함수의 활용` 이 부분문자열로 걸린다.**");
-  md.push("`mapUnit.ts` 는 이 위험을 주석으로 이미 적어 뒀지만(\"학년을 모르면 pool 이 초1~고3");
-  md.push("전체라 중등 '좌표와 그래프' 가 초2 '표와 그래프' 에 붙는다\"), 그 가드는 **유사도 단계에만**");
-  md.push("걸려 있고 부분문자열 단계에는 걸려 있지 않다.");
+  md.push("**같은 자리로 가는 길이 둘이다 — 갈라 봐야 한다.**");
   md.push("");
-  md.push("> 트랙 G 는 `mapUnit.ts` 를 고치지 않았다(공용 분류 로직, 원장님 확인 후 착수 영역).");
-  md.push("> **제안**: 부분문자열 단계에도 학년 해석 여부 가드를 걸거나, 학년이 없으면 아예 미분류로");
-  md.push("> 남긴다. 다만 이 판정을 고치면 기존 적재분 전체가 영향을 받으므로 원장님 확인이 필요하다.");
+  md.push("| 무리 | 넘어간 값 | `normalizeGrade` | 무슨 일이 일어나나 |");
+  md.push("|---|---|---|---|");
+  md.push("| 중2 시험지 71건 | `2` | **공통수학2** (틀리게 풀림) | pool 이 공통수학2 로 좁혀지고 그 안 `함수` 에 붙는다 |");
+  md.push("| 중3 시험지 62건 | `3` | `null` (안 풀림) | pool 이 초1~고3 전체가 되고 `함수` 에 붙는다 |");
+  md.push("");
+  md.push("> ⚠️ **부분문자열 가드는 절반만 걸리고, 그 절반도 고치는 게 아니라 지운다.**");
+  md.push("> 중2 무리(71건)는 학년이 *틀리게 풀렸을* 뿐 풀리기는 했으므로 가드가 **걸리지 않는다.**");
+  md.push("> 중3 무리(62건)는 가드가 걸려 **미분류가 된다** — 틀린 배정이 빠지는 것은 이득이지만");
+  md.push("> 옳은 단원으로 가지는 않는다.");
+  md.push("> 실측(`simulate-mapunit-fix.ts`, DB 저장값 기준 35,706행):");
+  md.push("> **옳아지는 행 0 · 틀린 것이 미분류로 70 · 맞던 것이 미분류로 6,345 · 안 바뀜 29,291.**");
+  md.push("> 맞던 6,345행이 출제 풀에서 빠진다 — `meta.grade` 가 `3` 인 중3·확통 시험지가");
+  md.push("> 지금은 pool 이 전체여도 이름이 뚜렷해 옳게 붙고 있었는데, 가드가 그걸 끊는다.");
+  md.push("> **이득보다 손실이 크다.**");
+  md.push(">");
+  md.push("> 트랙 G 가 앞선 보고에서 원인을 \"학년이 안 잡혀 pool 이 전체가 되어서\" 하나로만");
+  md.push("> 적었던 것은 **불완전했다.** 중2 무리 71건은 그 반대(틀리게 풀림)다. 이 문단이 정정본이다.");
+  md.push("");
+  md.push("> **제안**: `mapUnit.ts` 가 아니라 **적재기가 `level` 을 반영한 학년을 넘기게** 한다");
+  md.push("> (중2 시험지 → `\"중2\"`). 실측으로 143행이 옳아지고 18행이 미분류가 된다.");
+  md.push("> 또는 `normalizeGrade` 가 맨숫자를 고등으로 단정하지 않게 한다 — 다만 이쪽은");
+  md.push("> 공용 로직이라 원장님 확인이 필요하다. 트랙 G 는 어느 쪽도 고치지 않았다.");
   md.push("");
   md.push("---");
   md.push("");
