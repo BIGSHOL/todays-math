@@ -45,9 +45,16 @@ HWPX_CANDIDATES = (
     "scripts/qa/reports/hwpx",
 )
 
-# 학원 배너(머리 띠)는 그림이 아니다. 실측상 가로:세로 10:1 안팎으로 편당 한 장씩
-# 들어간다. 5:1 을 넘으면 배너로 본다 — 문항 그림에서 이 비율은 나오지 않았다.
-BANNER_RATIO = 5.0
+# 학원 배너(머리 띠)는 그림이 아니다. 실측: 비 9.9~10.7, 폭 291,840~314,580,
+# 파일 4MB 안팎으로 편당 한 장.
+#
+# ⚠️ 처음엔 "비 5:1 이상" 으로 잡았다가 **진짜 그림을 버렸다**(2026-08-16).
+# 수직선(`P Q A R B S T` 눈금선, 비 5.4)과 가로로 긴 데이터 표(비 5.8)가
+# 그 범위에 들어간다 — 둘 다 없으면 문항을 못 푼다. 폭 조건을 같이 걸어야 한다.
+# 새 규칙으로 배너는 1,863장(전부 4MB대), 편당 2장 이상인 편이 66 → 4 로 줄고
+# 가로형 그림 158장이 되살아난다.
+BANNER_RATIO = 8.0
+BANNER_MIN_WIDTH = 200_000
 
 
 def hwpx_dir() -> pathlib.Path:
@@ -93,7 +100,9 @@ def is_banner(info: dict) -> bool:
         width, height = int(org.get("width", 0)), int(org.get("height", 0))
     except ValueError:
         return False
-    return height > 0 and width / height >= BANNER_RATIO
+    if height <= 0:
+        return False
+    return width / height >= BANNER_RATIO and width >= BANNER_MIN_WIDTH
 
 
 def index_one(path: pathlib.Path) -> dict:
