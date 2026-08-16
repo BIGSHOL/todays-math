@@ -278,13 +278,78 @@ BinData 만 골라 풀면 그 비용은 안 든다. 그래서 png 재인코딩 �
 최대 50건만 문서에 싣는다(`PER_SECTION`). 전량 대조를 하려면 `answer-solved*` 산출물을
 받아 와야 한다. **위 27건은 하한이다.**
 
-## 적재 — 아직 쓰지 않았다
+## 적재 — ✅ **2026-08-16 반영 완료 (원장님 승인)**
+
+본문 **4,069행 전부** 공유 DB 에 반영했다. `problemType` 은 **넣지 않았다** — 본문 교체와
+섞으면 어느 쪽이 무엇을 바꿨는지 못 가르기 때문이다(코디네이터 조건).
+
+| | 값 |
+|---|---|
+| 백업 | `scripts/qa/reports/hwp-replace-backup.json` · **4,069행** · 2026-08-16T00:03:52Z |
+| 적용 | **4,069행** · 이미 같은 값 0 · 스냅샷 이후 남이 고침 0 · 행 없음 0 |
+| 본문 검증 | 의도대로 바뀜 **4,069** · 그대로 0 · 제3의 값 0 |
+| KaTeX 실패 (**DB 실측**) | 4.97% → **0.14%** |
+| PUA 보유 행 | 1,353 → **0** |
+| 분수 슬래시 `⁄` 보유 행 | 819 → **0** |
+| 수식 안 `•` 보유 행 | 1,864 → **18** |
+
+### 의도 밖 컬럼 — `answer` 13행이 바뀌었다 (내 쓰기가 아니다)
+
+검증이 `answer` 13행 변경을 잡았다. 내 UPDATE 문에는 `answer` 필드가 **없다**.
+값을 보니 전부 **트랙 B 의 작업**이었다 — 적용 창(00:04~00:09)에 동시에 돌고 있었다.
+
+```
+2989-20 : "$12$$f(x)=3x+…"        → "12"                  ← 정답 필드의 HWP 스크립트 잔재 제거
+2640-19 : "98"                     → "⑴ 1000000  ⑵ 98"     ← 소문항 정답 복원
+5202-14 : "③"                      → "③, ④"                ← 복수정답 정정
+```
+
+**덮어쓰기 사고는 없었다.** 현재 상태를 보면 `answer` 는 트랙 B 의 **새 값**이고
+`content` 는 내 값이다(4,069/4,069). 둘 다 살아 있다 — 서로 다른 컬럼만 썼기 때문이다.
+`figureUrls` · `figureSource` · `externalId` · `unitId` · `score` · `difficulty` ·
+`reviewStatus` · `solution` · `problemType` 은 **전부 0건 변경**.
+
+### 되돌리는 법
+
+백업의 `content` 를 그대로 되쓰면 된다. 백업에는 `answer`·`figureUrls`·`externalId`·
+`unitId` 도 담겨 있는데 **되돌리기용이 아니라 "안 바뀌었음을 증명"하려고** 넣은 것이다.
+되돌릴 때 그 컬럼들까지 되쓰면 **트랙 B 가 그 사이에 한 정답 작업 13건을 지운다.**
+
+## `problemType` — 별건 (아직 안 씀)
 
 `scripts/qa/apply-hwp-replacement.ts` 는 **드라이런까지만** 돌렸다.
 
+`npx tsx scripts/qa/report-problem-type.ts` 로 **읽기만** 해서 분포를 냈다(29,667행).
+
+| DB `problemType` × HWP `type`(형식) | 건수 | 판단 |
+|---|---:|---|
+| 개념 × 객관식 | 22,885 | 일치 |
+| 서술형 × 서술형 | 5,248 | 일치 |
+| **서술형 × 단답형** | **1,309** | ⚠️ **미결 — 아래 참조** |
+| 개념 × 단답형 | 128 | |
+| **서술형 × 객관식** | **39** | ✅ 정정 후보 — 보기가 4개 이상인데 DB 가 서술형 |
+| 계산 × 단답형 | 38 | |
+| 개념 × 서술형 | 19 | 후보 아님 (아래) |
+
+**`--fix-type` 이 바꾸는 건 39행뿐이다** (서술형 → 개념). 보기가 4개 이상이면 객관식이
+확실하므로 형식이 명백히 어긋난 것만 고른다. `개념`은 `mapProblemType('객관식')` 의
+값이라 `convertPastExam` 이 HWP 에서 적재했을 때와 같다.
+
+**넣지 않은 것 둘:**
+
+- `개념 × 서술형` 19행 — HWP 의 `서술형` 라벨은 본문에 `[서술형 N]` 머리표가 있으면
+  붙는다. 그건 원본 시험지의 **배점 구획 머리표**라 답의 형태와 무관하다
+  (10-handoff 실측: 5,310건 중 95%가 그랬다). 근거가 못 된다.
+- **`서술형 × 단답형` 1,309행 — 원장님 판단이 필요하다.** 시험지 자신이 `[단답형]`·
+  `[서답형]` 으로 표시한 것을 우리가 `서술형` 으로 실었다. 이 라벨은 **출제 필터에
+  쓰이므로** 바꾸면 일일테스트에 들어가는 문항 구성이 달라진다. 규모가 커서 트랙 D 가
+  임의로 정할 일이 아니다.
+
 ```bash
-npx tsx scripts/qa/apply-hwp-replacement.ts                                # 드라이런
-ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-hwp-replacement.ts --apply  # 실제
+npx tsx scripts/qa/report-problem-type.ts                                             # 분포만(읽기 전용)
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-hwp-replacement.ts --backup-only        # 백업 먼저
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-hwp-replacement.ts --apply --fix-type   # 39행
+npx tsx scripts/qa/apply-hwp-replacement.ts --verify                                   # 검증
 ```
 
 - 게이트를 **PrismaClient 생성 전**에 본다. `--apply` 만 주면 접속조차 안 하고 끝난다.
