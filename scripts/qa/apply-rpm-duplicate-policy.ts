@@ -18,6 +18,19 @@
  * 교재 학년과 맞는가**로 잰다(RPM 4,629행 중 1,364행이 어긋나 있다 — 13번 문서 §8).
  * 이것도 완비도이지 값 판단이 아니다.
  *
+ * ## ⚠️ 동점 그룹은 건드리지 않는다 (2026-08-16 확정)
+ *
+ * 드라이런에서 88그룹 중 **75그룹이 점수 동점**이었고, 그중 54그룹은 `createdAt` 마저
+ * 같아(대량 `createMany`) 사실상 `id`(UUID) 순으로 떨어졌다. 그렇게 내려가는 134행 중
+ * 65행이 만점이고 143행이 **서로 다른 문항**이다 — 86/88 그룹이 원본 정답부터 다르다.
+ *
+ * 그래서 코디네이터가 **점수로 실제 갈리는 그룹만** 적용하도록 확정했다(안 B).
+ * 「중복 88그룹」이라는 전제 자체가 **그림 결손이 만든 착시**였고, 그림은 트랙 A 가
+ * 1,088/1,088 로 다 붙였다. 전제가 무너진 규칙을 밀어붙이면 멀쩡한 문항이 내려간다.
+ *
+ * 그래서 **기본값이 안 B 다.** 동점 그룹까지 내리려면 `--include-tied` 를 명시해야 하고,
+ * 그건 위 근거를 뒤집을 새 근거가 있을 때만 쓴다.
+ *
  * ## 남기지 않는 쪽
  *
  * **행을 지우지 않는다.** `reviewStatus` 를 `approved` → `pending` 으로 내린다.
@@ -157,6 +170,8 @@ function jsonArg(): string | null {
 
 async function main(): Promise<void> {
   const apply = process.argv.includes("--apply");
+  // 기본은 안 B — 점수로 실제 갈리는 그룹만. 위 머리말의 근거를 보라.
+  const includeTied = process.argv.includes("--include-tied");
 
   // 게이트를 네트워크·DB 접근 앞에 둔다.
   if (apply) {
@@ -272,14 +287,23 @@ async function main(): Promise<void> {
       );
     }
 
-    const demote = decisions.flatMap((d) => d.demote.map((c) => c.problemId));
+    const applied = includeTied
+      ? decisions
+      : decisions.filter((decision) => !decision.byCreatedAt);
+    const demote = applied.flatMap((d) => d.demote.map((c) => c.problemId));
     const keep = decisions.map((d) => d.keep.problemId);
 
     // ── 보고 ────────────────────────────────────────────────────────────────
     console.log("── RPM 중복 88그룹 완비도 기준 (드라이런) ──");
     console.log(
-      `그룹 ${decisions.length} · 대상 행 ${keep.length + demote.length}` +
-        ` — 남김 ${keep.length} · 강등 ${demote.length}`,
+      includeTied
+        ? "모드: --include-tied (안 A — 동점 그룹까지 내린다)"
+        : "모드: 기본 (안 B — 점수로 실제 갈리는 그룹만 내린다)",
+    );
+    console.log(
+      `그룹 ${decisions.length} · 대상 행 ${decisions.reduce((n, d) => n + d.members.length, 0)}` +
+        ` — 적용 그룹 ${applied.length} · 강등 ${demote.length}` +
+        ` · 손대지 않는 동점 그룹 ${decisions.length - applied.length}`,
     );
 
     console.log("\n[축별 보유 현황 — 대상 행 전체]");
