@@ -16,8 +16,13 @@ export interface ClassifyOptions {
    *
    * 못 찾으면 종전대로 제외한다. 그림 없이 본문만 들어간 문항은
    * "[그림] ..." 만 남아 **학생이 풀 수 없다**.
+   *
+   * 초안 전체를 넘긴다 — `externalId` 만 넘기면 받는 쪽이 형식을
+   * (`<examId>-<번호>`) 가정하게 된다. 출처가 섞이면 그 가정이 조용히
+   * 깨진다(2026-08-16 `build-discard-list` 사고). 받는 쪽이 `source` 로
+   * 먼저 거를 수 있어야 한다.
    */
-  resolveFigures?: (externalId: string) => string[] | undefined;
+  resolveFigures?: (draft: ImportDraft) => string[] | undefined;
 }
 
 export function classifyDrafts(
@@ -39,10 +44,13 @@ export function classifyDrafts(
     const grade = normalizeGrade(draft.gradeHint ?? gradeHint);
     if (grade === null || !gradeLabels.has(grade)) unresolvedGrade += 1;
 
-    let figureUrls: string[] | undefined;
+    // 대장을 **문항마다** 본다. 추출기(textlayer)의 `figure` 블록 유무로 조회를
+    // 막으면 추출기가 놓친 그림이 영원히 안 붙는다 — 2026-08-16 실측으로 재연결
+    // 대상 695건 중 690건이 이 구멍이었다. 대장(map-figures)은 좌표 기반이라
+    // 추출기보다 정확하다. 제외 판정만 종전대로 `hasFigure` 를 본다.
+    let figureUrls = options.resolveFigures?.(draft);
+    if (figureUrls?.length === 0) figureUrls = undefined;
     if (draft.hasFigure) {
-      figureUrls = options.resolveFigures?.(draft.externalId);
-      if (figureUrls?.length === 0) figureUrls = undefined;
       if (!figureUrls && !options.includeFigures) {
         items.push({
           externalId: draft.externalId,

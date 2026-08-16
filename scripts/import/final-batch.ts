@@ -85,12 +85,21 @@ export async function runFinalBatch(options: {
       undefined,
       {
         includeFigures: options.includeFigures,
-        resolveFigures: (externalId) => {
-          const cut = externalId.lastIndexOf("-");
-          if (cut < 0) return undefined;
-          const exam = externalId.slice(0, cut);
-          const number = String(Number(externalId.slice(cut + 1)));
-          return figures[exam]?.[number];
+        // 기출만 대장을 본다. `externalId` 형식(`<examId>-<번호>`)은 출처마다
+        // 다르므로 `source` 로 먼저 거른다(2026-08-16 코디네이터 공유 사고).
+        // 역추적 컬럼이 있으면 그것을 쓰고, 없을 때만 externalId 를 쪼갠다.
+        resolveFigures: (draft) => {
+          if (draft.source !== "past_exam") return undefined;
+          let exam = draft.examId ?? undefined;
+          let number = draft.questionNumber ?? undefined;
+          if (exam == null || number == null) {
+            const cut = draft.externalId.lastIndexOf("-");
+            if (cut < 0) return undefined;
+            exam = draft.externalId.slice(0, cut);
+            number = Number(draft.externalId.slice(cut + 1));
+          }
+          if (!Number.isFinite(number)) return undefined;
+          return figures[exam]?.[String(number)];
         },
       },
     );

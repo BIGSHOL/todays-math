@@ -487,8 +487,10 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
       UNITS,
       "중2",
       {
-        resolveFigures: (id) =>
-          id === "4212-4" ? ["/figures/4212/q04.jpeg"] : undefined,
+        resolveFigures: (draft) =>
+          draft.externalId === "4212-4"
+            ? ["/figures/4212/q04.jpeg"]
+            : undefined,
       },
     );
     expect(report.ok).toBe(1);
@@ -496,6 +498,57 @@ describe("[T3.0] 단원 매핑 + 미분류 리포트", () => {
     expect(classified[0]?.externalId).toBe("4212-4");
     expect(classified[0]?.figureUrls).toEqual(["/figures/4212/q04.jpeg"]);
     expect(classified[0]?.figureSource).toBe("source");
+  });
+
+  // 2026-08-16 실측: 재연결 못 한 695건 중 690건이 이 구멍으로 샜다.
+  // 추출기(textlayer)의 `figure` 블록 유무(`hasFigure`)로 대장 조회를 막으면,
+  // 추출기가 그림을 못 본 문항은 **대장에 그림이 있어도** 영원히 안 붙는다.
+  // 대장(map-figures, 좌표 기반)이 추출기보다 정확하다 — 대장을 먼저 본다.
+  it("추출기가 그림을 못 봐도(hasFigure=false) 대장에 있으면 붙인다", () => {
+    const { classified, report } = classifyDrafts(
+      "past_exam",
+      [{ ...figureDraft("4212-4"), hasFigure: false }],
+      UNITS,
+      "중2",
+      { resolveFigures: () => ["/figures/4212/q04.jpeg"] },
+    );
+    expect(report.ok).toBe(1);
+    expect(classified[0]?.figureUrls).toEqual(["/figures/4212/q04.jpeg"]);
+    expect(classified[0]?.figureSource).toBe("source");
+  });
+
+  // 그림이 필요 없는 문항까지 대장 조회로 그림이 붙으면 오배치가 된다.
+  // 대장에 없으면 종전대로 아무것도 붙지 않고, 제외 대상도 아니다.
+  it("대장에 없는 비그림 문항은 그대로 통과시킨다", () => {
+    const { classified, report } = classifyDrafts(
+      "past_exam",
+      [{ ...figureDraft("4212-7"), hasFigure: false }],
+      UNITS,
+      "중2",
+      { resolveFigures: () => undefined },
+    );
+    expect(report.ok).toBe(1);
+    expect(report.skippedFigure).toBe(0);
+    expect(classified[0]?.figureUrls).toBeUndefined();
+  });
+
+  // 대장 조회 콜백은 초안 전체를 받는다 — 받는 쪽이 `source` 로 먼저 거를 수
+  // 있어야 `externalId` 형식 가정이 조용히 깨지지 않는다.
+  it("대장 조회 콜백은 초안을 그대로 받는다", () => {
+    const seen: Array<{ source: string; externalId: string }> = [];
+    classifyDrafts(
+      "past_exam",
+      [{ ...figureDraft("4212-4"), hasFigure: false }],
+      UNITS,
+      "중2",
+      {
+        resolveFigures: (draft) => {
+          seen.push({ source: draft.source, externalId: draft.externalId });
+          return undefined;
+        },
+      },
+    );
+    expect(seen).toEqual([{ source: "past_exam", externalId: "4212-4" }]);
   });
 
   it("그림 경로는 적재 행까지 그대로 간다", () => {
