@@ -32,6 +32,7 @@ import {
   isSeeSolution,
   stripUnits,
 } from "./answer-notation";
+import { writeAppliedLog } from "./applied-log";
 
 const OFFICIAL_DIR = "scripts/qa/reports/official-answers";
 const BACKUP = "scripts/qa/reports/answer-render-repair.json";
@@ -179,7 +180,8 @@ async function main(): Promise<void> {
       );
       return;
     }
-    let done = 0;
+    const applied = [];
+    let skipped = 0;
     for (const item of ready) {
       const current = await prisma.problem.findUnique({
         where: { id: item.id },
@@ -187,15 +189,23 @@ async function main(): Promise<void> {
       });
       if (current?.answer !== item.before) {
         console.log(`   건너뜀 ${item.externalId} — 그 사이 값이 바뀌었다`);
+        skipped += 1;
         continue;
       }
       await prisma.problem.update({
         where: { id: item.id },
         data: { answer: item.after },
       });
-      done += 1;
+      applied.push(item);
     }
-    console.log(`\n적용 — ${done}건 복구`);
+    const logPath = await writeAppliedLog(
+      "phase2-render",
+      "scripts/qa/repair-answer-render.ts",
+      applied,
+    );
+    console.log(`
+적용 — ${applied.length}건 복구 · 건너뜀 ${skipped}`);
+    console.log(`되돌리기 목록(이 단계만) → ${logPath}`);
   } finally {
     await prisma.$disconnect();
   }
