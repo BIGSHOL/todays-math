@@ -94,6 +94,13 @@
   font-weight: 700;
 }
 
+/* 넘침 경고 — 오류(빨강)와 구분되게 주의색으로. 인쇄물에는 안 나간다(툴바 안). */
+.printWarning {
+  grid-column: 1 / -1;
+  color: #8a5a00;
+  font-weight: 600;
+}
+
 .pageGallery {
   display: flex;
   flex-direction: column;

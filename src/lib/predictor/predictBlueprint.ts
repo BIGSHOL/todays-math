@@ -19,6 +19,7 @@
  *    섞이면 던진다. backtest 숫자만 좋아 보이고 실전에서 무너지는 것을 막는 유일한 장치다.
  */
 import {
+  blueprintSchema,
   comparePeriod,
   type Blueprint,
   type ExamPeriod,
@@ -87,7 +88,11 @@ export interface PredictInput {
   params?: Partial<PredictorParams>;
 }
 
-function assertNoLeakage(items: Blueprint[], target: ExamPeriod, label: string) {
+function assertNoLeakage(
+  items: Blueprint[],
+  target: ExamPeriod,
+  label: string,
+) {
   for (const bp of items) {
     if (comparePeriod(bp.period, target) >= 0) {
       throw new Error(
@@ -136,7 +141,9 @@ function shrink(
 }
 
 function meanOf(values: number[]): number | null {
-  return values.length ? values.reduce((s, v) => s + v, 0) / values.length : null;
+  return values.length
+    ? values.reduce((s, v) => s + v, 0) / values.length
+    : null;
 }
 
 /** 가중 평균 분포(비율). */
@@ -147,7 +154,8 @@ function weightedMix(
   let total = 0;
   for (const { weight, mix } of entries) {
     const norm = normalizeMix(mix);
-    for (const [k, v] of Object.entries(norm)) acc[k] = (acc[k] ?? 0) + weight * v;
+    for (const [k, v] of Object.entries(norm))
+      acc[k] = (acc[k] ?? 0) + weight * v;
     total += weight;
   }
   return total > 0 ? { mix: normalizeMix(acc), weight: total } : null;
@@ -171,8 +179,13 @@ function shrinkMix(
 }
 
 /** 두 분포를 고정 비율로 섞는다. 한쪽이 없으면 다른 쪽을 그대로 쓴다. */
-function blendMix(own: Mix | undefined, prior: Mix | undefined, ownWeight: number): Mix {
-  if (!own || Object.keys(own).length === 0) return prior ? normalizeMix(prior) : {};
+function blendMix(
+  own: Mix | undefined,
+  prior: Mix | undefined,
+  ownWeight: number,
+): Mix {
+  if (!own || Object.keys(own).length === 0)
+    return prior ? normalizeMix(prior) : {};
   if (!prior || Object.keys(prior).length === 0) return normalizeMix(own);
   const out: Mix = {};
   for (const k of new Set([...Object.keys(own), ...Object.keys(prior)])) {
@@ -191,7 +204,8 @@ function countsMix(
 
 function gridMix(bp: Blueprint): Mix {
   const out: Mix = {};
-  for (const row of bp.scoreHistogram) out[String(row.score)] = (out[String(row.score)] ?? 0) + row.count;
+  for (const row of bp.scoreHistogram)
+    out[String(row.score)] = (out[String(row.score)] ?? 0) + row.count;
   return out;
 }
 
@@ -204,14 +218,34 @@ function unitMixOf(bp: Blueprint): Mix {
   return out;
 }
 
+/** 근거가 하나도 없을 때 던진다. 없는 예측을 지어내는 것보다 못 한다고 말하는 편이 낫다. */
+export class PredictorUnavailableError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "PredictorUnavailableError";
+  }
+}
+
 export function predictBlueprint(input: PredictInput): Blueprint {
   const params = { ...DEFAULT_PARAMS, ...input.params };
   const { series, target, history, cohort } = input;
 
+  // 🔴 근거가 하나도 없으면 청사진을 만들지 않는다.
+  //    예전에는 questionCount=0 · totalScore=0 인 계약 위반 청사진을 조용히 냈고,
+  //    화면에는 "0문항 0점짜리 시험이 예상됩니다" 로 나갔다(2026-08-16 재현).
+  if (history.length === 0 && cohort.length === 0) {
+    throw new PredictorUnavailableError(
+      `근거 없음 — ${series.school} ${series.level}${series.grade} ${series.subject} ` +
+        `${target.year}-${target.semester}-${target.round}: 과거 회차도 코호트도 없다.`,
+    );
+  }
+
   assertNoLeakage(history, target, "history");
   assertNoLeakage(cohort, target, "cohort");
-  if (input.rangeHistory) assertNoLeakage(input.rangeHistory, target, "rangeHistory");
-  if (input.rangeCohort) assertNoLeakage(input.rangeCohort, target, "rangeCohort");
+  if (input.rangeHistory)
+    assertNoLeakage(input.rangeHistory, target, "rangeHistory");
+  if (input.rangeCohort)
+    assertNoLeakage(input.rangeCohort, target, "rangeCohort");
 
   const weighted = history.map((bp) => ({
     bp,
@@ -221,20 +255,27 @@ export function predictBlueprint(input: PredictInput): Blueprint {
 
   // ── 문항 수 · 총점 — 학교 고유값 + 코호트 축소 ──
   const questionCount = shrink(
-    weightedMean(weighted.map((w) => ({ weight: w.weight, value: w.bp.questionCount }))),
+    weightedMean(
+      weighted.map((w) => ({ weight: w.weight, value: w.bp.questionCount })),
+    ),
     meanOf(cohort.map((c) => c.questionCount)),
     params.priorWeight,
   );
   const totalScore = shrink(
-    weightedMean(weighted.map((w) => ({ weight: w.weight, value: w.bp.totalScore }))),
+    weightedMean(
+      weighted.map((w) => ({ weight: w.weight, value: w.bp.totalScore })),
+    ),
     meanOf(cohort.map((c) => c.totalScore)),
     params.priorWeight,
   );
 
   // ── 유형 배분 — 학교 고유성이 확인된 항목(51.1%) ──
   const typeMixRatio = shrinkMix(
-    weightedMix(weighted.map((w) => ({ weight: w.weight, mix: countsMix(w.bp.typeMix) }))),
-    weightedMix(cohort.map((c) => ({ weight: 1, mix: countsMix(c.typeMix) })))?.mix ?? null,
+    weightedMix(
+      weighted.map((w) => ({ weight: w.weight, mix: countsMix(w.bp.typeMix) })),
+    ),
+    weightedMix(cohort.map((c) => ({ weight: 1, mix: countsMix(c.typeMix) })))
+      ?.mix ?? null,
     params.priorWeight,
   );
 
@@ -248,7 +289,9 @@ export function predictBlueprint(input: PredictInput): Blueprint {
   const difficultyRatio =
     cohortDifficulty ??
     // 코호트가 아예 없을 때만 어쩔 수 없이 학교 과거를 쓴다(근거 없음보다는 낫다).
-    weightedMix(weighted.map((w) => ({ weight: w.weight, mix: labeledMix(w.bp) })))?.mix ??
+    weightedMix(
+      weighted.map((w) => ({ weight: w.weight, mix: labeledMix(w.bp) })),
+    )?.mix ??
     {};
 
   // ── 배점 눈금 (43.3%) · 단원 배분 ──
@@ -259,7 +302,8 @@ export function predictBlueprint(input: PredictInput): Blueprint {
         mix: gridMix(bp),
       })),
     ),
-    weightedMix(cohort.map((c) => ({ weight: 1, mix: gridMix(c) })))?.mix ?? null,
+    weightedMix(cohort.map((c) => ({ weight: 1, mix: gridMix(c) })))?.mix ??
+      null,
     params.gridPriorWeight,
   );
   // ── 단원 배분 ──
@@ -282,7 +326,10 @@ export function predictBlueprint(input: PredictInput): Blueprint {
     })),
   )?.mix;
   const unitPrior = weightedMix(
-    sameRoundOrAll(input.rangeCohort ?? cohort).map((bp) => ({ weight: 1, mix: unitMixOf(bp) })),
+    sameRoundOrAll(input.rangeCohort ?? cohort).map((bp) => ({
+      weight: 1,
+      mix: unitMixOf(bp),
+    })),
   )?.mix;
   const unitRatio = blendMix(unitOwn, unitPrior, params.unitOwnWeight);
 
@@ -322,7 +369,7 @@ export function predictBlueprint(input: PredictInput): Blueprint {
       };
     });
 
-  return {
+  const blueprint: Blueprint = {
     kind: "predicted",
     series,
     period: target,
@@ -343,4 +390,16 @@ export function predictBlueprint(input: PredictInput): Blueprint {
     evidenceCount: history.length,
     confidence: evidenceWeight / (evidenceWeight + params.priorWeight),
   };
+
+  // 자기 출력을 계약으로 검증한다. 안 하면 위반이 조용히 하류로 샌다.
+  const checked = blueprintSchema.safeParse(blueprint);
+  if (!checked.success) {
+    throw new PredictorUnavailableError(
+      `청사진이 계약을 위반한다 — ${checked.error.issues
+        .map((i) => `${i.path.join(".")}: ${i.message}`)
+        .slice(0, 3)
+        .join(" / ")}`,
+    );
+  }
+  return blueprint;
 }

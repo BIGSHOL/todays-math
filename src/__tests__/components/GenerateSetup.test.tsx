@@ -232,6 +232,38 @@ describe("[T4.3 S-04] 출제 설정 — 문제 부족", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
+  it("🔴 다른 사유로 재실패하면 낡은 부족 배너가 남지 않는다", async () => {
+    const { user } = await renderSetup();
+
+    // 1차 — 문제 부족(422). 가용/필요와 AI 생성 버튼이 뜬다.
+    await user.selectOptions(screen.getByLabelText("반"), CLASS_STARVED_ID);
+    await user.click(screen.getByRole("button", { name: "출제" }));
+    expect(await screen.findByText(/가용 0/)).toBeInTheDocument();
+
+    // 2차 — 같은 화면에서 전혀 다른 사유(500)로 실패.
+    server.use(
+      http.post("/api/tests/generate", () =>
+        HttpResponse.json(
+          { error: { code: "INTERNAL_ERROR", message: "서버 오류입니다" } },
+          { status: 500 },
+        ),
+      ),
+    );
+    await user.click(screen.getByRole("button", { name: "출제" }));
+
+    // 화면을 못 보는 사용자에게도 실패가 전달돼야 한다.
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "서버 오류입니다",
+    );
+    // 옛 숫자와 AI 생성 버튼이 새 오류와 나란히 남으면 원장은 엉뚱한 걸 누른다.
+    await waitFor(() => {
+      expect(screen.queryByText(/가용 0/)).not.toBeInTheDocument();
+    });
+    expect(
+      screen.queryByRole("button", { name: "AI 생성" }),
+    ).not.toBeInTheDocument();
+  });
+
   it("문항 수 줄이기는 가용 수로 다시 출제한다", async () => {
     const generateBodies: unknown[] = [];
     server.use(
