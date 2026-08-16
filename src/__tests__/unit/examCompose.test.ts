@@ -24,6 +24,8 @@ import {
 const STUDENT_A = "30000000-0000-4000-8000-000000000001";
 const STUDENT_B = "30000000-0000-4000-8000-000000000002";
 const RUN_ID = "70000000-0000-4000-8000-0000000000f1";
+const OWNER = "90000000-0000-4000-8000-00000000000a";
+const OTHER = "90000000-0000-4000-8000-00000000000b";
 
 function prediction(studentId: string | null, expectedScore: number) {
   return {
@@ -44,6 +46,7 @@ function prediction(studentId: string | null, expectedScore: number) {
 function run(over: Partial<PredictionRunRow> = {}): PredictionRunRow {
   return {
     id: RUN_ID,
+    userId: OWNER,
     createdAt: new Date("2026-08-16T00:00:00.000Z"),
     engineVersion: "0.5.0",
     school: "정화중",
@@ -97,23 +100,50 @@ describe("runStudentIds", () => {
   });
 });
 
+describe("🔴 회귀 — 예측 점수가 비어도 내 회차는 보여야 한다", () => {
+  /**
+   * 실제로 터진 버그다. `PredictionRun.predictedScores` 는 **지금 항상 빈 배열**이다
+   * (학생 개인 점수는 능력 추정·환산 계수가 없어 아직 못 낸다 — T7.7 보고 §3-C).
+   * 그런데 회차 노출 판정이 "그 회차 예측에 내 학생이 있는가"였다. 둘을 겹치면
+   * **원장이 예측을 실행해도 계기판에 아무것도 안 뜬다** — 기능이 통째로 죽은 것처럼 보인다.
+   *
+   * 소유자 컬럼(`PredictionRun.userId`)이 생겼으니 소유권은 그걸로 판정한다.
+   */
+  it("내가 만든 회차는 예측 점수가 0건이어도 보인다", () => {
+    const row = run({ predictedScores: [], userId: OWNER });
+    expect(isRunVisibleTo(row, OWNER)).toBe(true);
+  });
+
+  it("남이 만든 회차는 보이지 않는다", () => {
+    const row = run({
+      predictedScores: [prediction(STUDENT_A, 88)],
+      userId: OTHER,
+    });
+    expect(isRunVisibleTo(row, OWNER)).toBe(false);
+  });
+});
+
 describe("isRunVisibleTo — 소유권은 없는 쪽으로 닫는다", () => {
-  it("내 학생이 하나라도 있으면 보인다", () => {
-    expect(isRunVisibleTo(run(), [], new Set([STUDENT_A]))).toBe(true);
+  /**
+   * 예전 규칙("그 회차 예측에 내 학생이 하나라도 있으면 내 것")은 소유자 컬럼이 없던
+   * 시절의 우회였고, 위 회귀 절이 보여주듯 실제로는 기능을 죽였다. 지금은 소유자를
+   * 곧장 본다 — 학생이 반을 옮기거나 졸업해도 과거 회차가 사라지지 않는다.
+   */
+  it("내 회차는 보인다", () => {
+    expect(isRunVisibleTo(run({ userId: OWNER }), OWNER)).toBe(true);
   });
 
-  it("내 학생이 하나도 없으면 안 보인다", () => {
-    expect(isRunVisibleTo(run(), [], new Set([STUDENT_B]))).toBe(false);
+  it("남의 회차는 안 보인다 — 학생이 겹쳐 보여도 마찬가지다", () => {
+    const row = run({
+      userId: OTHER,
+      predictedScores: [prediction(STUDENT_A, 88)],
+    });
+    expect(isRunVisibleTo(row, OWNER)).toBe(false);
   });
 
-  it("예측에는 없어도 실점수가 내 학생이면 보인다", () => {
-    const row = run({ predictedScores: [] });
-    const actuals = [{ runId: RUN_ID, studentId: STUDENT_B, actualScore: 61 }];
-    expect(isRunVisibleTo(row, actuals, new Set([STUDENT_B]))).toBe(true);
-  });
-
-  it("소유 학생 집합이 비면 아무것도 안 보인다", () => {
-    expect(isRunVisibleTo(run(), [], new Set())).toBe(false);
+  it("소유자를 알 수 없으면 안 보인다 — 없는 쪽으로 닫는다", () => {
+    expect(isRunVisibleTo(run({ userId: "" }), OWNER)).toBe(false);
+    expect(isRunVisibleTo(run({ userId: OWNER }), "")).toBe(false);
   });
 });
 

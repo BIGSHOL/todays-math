@@ -31,6 +31,8 @@ import {
 /** `PredictionRun` 에서 이 화면이 읽는 필드만. 구조적 타입이라 Prisma 행이 그대로 들어간다. */
 export type PredictionRunRow = {
   id: string;
+  /** 이 예측을 만든 원장. 소유권 판정의 **유일한 근거**다. */
+  userId: string;
   createdAt: Date;
   engineVersion: string;
   school: string;
@@ -88,22 +90,19 @@ export function runStudentIds(run: PredictionRunRow): string[] {
 }
 
 /**
- * 소유권 판정 — **fail closed**.
+ * 소유권 판정 — 이 회차를 **내가 만들었는가**.
  *
- * 🔴 `PredictionRun` 에 `userId` 컬럼이 아직 없다(2026-08-16 확인). 그래서 소유권을
- *    `학생 → 반 → 반 소유자` 경로로 되짚는다. 이 회차가 다루는 학생 중 **하나라도**
- *    내 학생이면 내 회차로 본다. 하나도 없으면 보이지 않는다(없는 쪽으로 닫는다).
- *    `PredictionRun.userId` 가 생기면 이 함수 하나만 갈아끼우면 된다.
+ * 🔴 예전에는 "그 회차 예측에 내 학생이 하나라도 있는가"로 판정했다. `PredictionRun` 에
+ *    소유자 컬럼이 없던 시절의 우회였는데, 실제로는 **기능을 통째로 죽였다.**
+ *    `predictedScores` 는 지금 항상 빈 배열이라(학생 개인 점수는 능력 추정·환산 계수가
+ *    없어 아직 못 낸다) 방금 만든 회차가 자기 자신에게도 안 보였다.
+ *    원장이 예측을 실행해도 계기판이 빈 채로 남는다.
+ *
+ * 소유자 컬럼이 생겼으니 그걸로 곧장 판정한다. 학생 경로를 되짚지 않으므로
+ * 학생이 반을 옮기거나 졸업해도 과거 회차가 사라지지 않는다 — 보정 이력이 남는다.
  */
-export function isRunVisibleTo(
-  run: PredictionRunRow,
-  actuals: ActualScoreRow[],
-  ownedStudentIds: ReadonlySet<string>,
-): boolean {
-  if (runStudentIds(run).some((id) => ownedStudentIds.has(id))) return true;
-  return actuals.some(
-    (a) => a.runId === run.id && ownedStudentIds.has(a.studentId),
-  );
+export function isRunVisibleTo(run: PredictionRunRow, userId: string): boolean {
+  return run.userId === userId;
 }
 
 /**
