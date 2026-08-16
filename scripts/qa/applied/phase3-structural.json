@@ -1,0 +1,253 @@
+{
+ "phase": "phase3-structural",
+ "tool": "scripts/qa/apply-official-answers.ts",
+ "appliedAt": "2026-08-16T00:06:21.228Z",
+ "count": 35,
+ "rows": [
+  {
+   "id": "4af1428a-c706-4db0-8917-f23880e1d0b1",
+   "externalId": "2640-19",
+   "before": "98",
+   "after": "⑴ 1000000    ⑵ 98",
+   "why": "우리일부만"
+  },
+  {
+   "id": "59ddc484-668d-4c7c-bc56-b65a8d397f7e",
+   "externalId": "2649-17",
+   "before": "$⑴~4$ 또는 $-4$",
+   "after": "⑴4 또는 -4  ⑵-26",
+   "why": "우리일부만"
+  },
+  {
+   "id": "75a6dc8b-c701-41f0-a94b-fa0a7118763e",
+   "externalId": "3811-19",
+   "before": "⑴ $3$",
+   "after": "⑴ 3   ⑵ 7   ⑶ 21",
+   "why": "우리일부만"
+  },
+  {
+   "id": "4fde61b6-8e48-4941-804d-5066abf777e7",
+   "externalId": "3923-17",
+   "before": "($1$) $-3$",
+   "after": "(1) -3  (2) 2  (3) x=-2,y=1",
+   "why": "우리일부만"
+  },
+  {
+   "id": "c34495e0-db1c-4e45-b283-028249d58a1a",
+   "externalId": "5445-18",
+   "before": "$⑴$ $a=42$",
+   "after": "⑴ a=42  ⑵ b=5  ⑶ a+b=47",
+   "why": "우리일부만"
+  },
+  {
+   "id": "51825653-4674-43b9-8a8b-faa5db8c7da4",
+   "externalId": "5415-17",
+   "before": "a=99, b=20",
+   "after": "(1) 22×32×5 (2) 99 (3) 20",
+   "why": "우리일부만"
+  },
+  {
+   "id": "ae6ab4d5-ecdc-49c9-8c61-eeed3f4361a7",
+   "externalId": "5856-18",
+   "before": "⑴ ① > ② <",
+   "after": "⑴ ① > ② <  ⑵ 3",
+   "why": "우리일부만"
+  },
+  {
+   "id": "183b7f14-6db5-4fea-83fe-75c70db3eabf",
+   "externalId": "2827-18",
+   "before": "a = -4, b = 7 (이때 α²+β² = 33)",
+   "after": "(1) a=-4,b=7, (2) 33",
+   "why": "우리일부만"
+  },
+  {
+   "id": "7e294412-93a3-4d2a-b74e-3a9943714c80",
+   "externalId": "2897-19",
+   "before": "26",
+   "after": "⑴ 26  ⑵ a=0, b=1",
+   "why": "우리일부만"
+  },
+  {
+   "id": "3195d28e-c135-4ba5-b36c-993b2ba9a23e",
+   "externalId": "3220-21",
+   "before": "√7",
+   "after": "(1) √7    (2) 5",
+   "why": "우리일부만"
+  },
+  {
+   "id": "6f3b067e-8182-42cc-aef1-bc1f11ae79ab",
+   "externalId": "3417-19",
+   "before": "3.7582",
+   "after": "(1) 3.7582, (2) 0.00573",
+   "why": "우리일부만"
+  },
+  {
+   "id": "98cb1f82-95c2-4852-96e7-aa797c85faca",
+   "externalId": "5415-20",
+   "before": "3",
+   "after": "(1) x>5 (2) x>a+2 (3) 3",
+   "why": "우리일부만"
+  },
+  {
+   "id": "479b513f-3920-4025-9340-c05b5c0dc5ff",
+   "externalId": "5294-24",
+   "before": "8",
+   "after": "⑴ 높이 4 높이 4 ⑵ 8",
+   "why": "우리일부만"
+  },
+  {
+   "id": "d83077c6-b427-4b01-b2b4-90eabcf381aa",
+   "externalId": "5555-18",
+   "before": "a=6, b=4, 해는 x=1, y=3",
+   "after": "⑴ a=6 ⑵  b=4 ⑶x=1,y=3",
+   "why": "우리일부만"
+  },
+  {
+   "id": "92e4b9be-07b0-4573-93e2-be486ac0dad3",
+   "externalId": "3671-16",
+   "before": "a=7, b=-6, 처음 연립방정식의 해는 x=2, y=-1",
+   "after": "(1) a=7, b=-6 (2) x=2, y=-1",
+   "why": "우리일부만"
+  },
+  {
+   "id": "cc1cd8ca-4d40-4489-94b1-60ab68a30f19",
+   "externalId": "4462-16",
+   "before": "a=0, b=1 (다른 한 근은 -i)",
+   "after": "(1) 1 (2) 8",
+   "why": "우리일부만"
+  },
+  {
+   "id": "4280c897-7876-412c-8c4a-b46379c595e8",
+   "externalId": "5584-20",
+   "before": "a=5",
+   "after": "(1) x≥1  (2) x≥-a+6  (3) a=5",
+   "why": "우리일부만"
+  },
+  {
+   "id": "2578c457-12d0-4ba3-9c8e-41aa01a9ada2",
+   "externalId": "5633-19",
+   "before": "x=1, y=2",
+   "after": "(1)a=3,(2)b=4,(3)x=1,y=2",
+   "why": "우리일부만"
+  },
+  {
+   "id": "62ae8bba-40d5-4357-a368-bfc541230156",
+   "externalId": "4543-23",
+   "before": "14",
+   "after": "⑴ 14 ⑵ (5,2) (24-2-기말 서술형5번)",
+   "why": "우리일부만"
+  },
+  {
+   "id": "492ecc0d-2328-43b7-9cb8-e079876a3000",
+   "externalId": "4401-23",
+   "before": "⑴24 ⑵9",
+   "after": "⑴ 24 ⑵ 9 ⑶ 3",
+   "why": "우리일부만"
+  },
+  {
+   "id": "8975777e-9e63-4239-b55d-ade9ef7c1b82",
+   "externalId": "3652-12",
+   "before": "①",
+   "after": "①, ⑤",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "3cd68680-6829-4f7b-8817-8bb420640b39",
+   "externalId": "3537-6",
+   "before": "③",
+   "after": "③, ④",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "4eb4fdf9-caca-4b78-bf02-ba6c48de2a80",
+   "externalId": "3725-3",
+   "before": "③",
+   "after": "③, ⑤",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "caa7849d-48a5-436c-870e-3a456518669d",
+   "externalId": "3893-7",
+   "before": "④",
+   "after": "④, ⑤",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "ef1f9f38-550a-4833-b686-c4c60e5b8f92",
+   "externalId": "3958-3",
+   "before": "②",
+   "after": "②, ④",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "b9c97c22-5d65-42f7-96dd-d397ad2b6b05",
+   "externalId": "3985-2",
+   "before": "④",
+   "after": "④, ⑤",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "840917d9-6a96-42a6-b76f-6052fa631503",
+   "externalId": "5202-14",
+   "before": "③",
+   "after": "③, ④",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "5df2ba5e-6f67-415d-bffd-f6a833141d82",
+   "externalId": "5412-3",
+   "before": "①",
+   "after": "①, ④",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "dbeb42b1-ebb4-49ac-82fc-6eb86c5a92f7",
+   "externalId": "5605-11",
+   "before": "①",
+   "after": "①, ⑤",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "7da55ecc-e35b-4a45-adcc-884eded2fcc6",
+   "externalId": "4024-6",
+   "before": "③",
+   "after": "③, ④",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "7c2b43b0-9654-4ae8-a7d9-c6cff3ba6342",
+   "externalId": "4024-7",
+   "before": "②",
+   "after": "②, ④",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "4e4e0338-7c60-4a52-895d-22a8ff380ead",
+   "externalId": "5202-15",
+   "before": "②",
+   "after": "②, ⑤",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "f21b51cc-f5e6-4a33-8742-eca472d8ba86",
+   "externalId": "5442-13",
+   "before": "②",
+   "after": "②, ④",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "1eaa2b01-f5f3-4c4f-84ff-778c1630d1e2",
+   "externalId": "3688-9",
+   "before": "④",
+   "after": "④, ⑤",
+   "why": "공식복수정답"
+  },
+  {
+   "id": "1b08c0a7-bf75-43cb-8b4c-d9186cf1f175",
+   "externalId": "4011-1",
+   "before": "②",
+   "after": "②, ⑤",
+   "why": "공식복수정답"
+  }
+ ]
+}

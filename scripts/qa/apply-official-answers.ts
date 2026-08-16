@@ -25,6 +25,7 @@ import { PrismaClient } from "@prisma/client";
 import { allowSharedImport } from "../../src/lib/import/classifyDatabaseUrl";
 import { inspectDatabaseTargets } from "../import/resolveDbTarget";
 import { hasJunkGlyph, isSeeSolution } from "./answer-notation";
+import { writeAppliedLog } from "./applied-log";
 
 const CLASSIFIED = "scripts/qa/reports/answer-mismatch-classified.json";
 const THREE_WAY = "scripts/qa/reports/answer-3way.json";
@@ -160,7 +161,8 @@ async function main(): Promise<void> {
   }
   const prisma = new PrismaClient();
   try {
-    let done = 0;
+    const applied = [];
+    let skipped = 0;
     for (const item of ready) {
       // 그 사이 다른 트랙이 바꿨을 수 있다. 우리가 본 값일 때만 덮는다.
       const current = await prisma.problem.findUnique({
@@ -169,15 +171,29 @@ async function main(): Promise<void> {
       });
       if (current?.answer !== item.row.ours) {
         console.log(`   건너뜀 ${item.row.externalId} — 그 사이 값이 바뀌었다`);
+        skipped += 1;
         continue;
       }
       await prisma.problem.update({
         where: { id: item.row.id },
         data: { answer: item.next },
       });
-      done += 1;
+      applied.push({
+        id: item.row.id,
+        externalId: item.row.externalId,
+        before: item.row.ours,
+        after: item.next,
+        why: item.why,
+      });
     }
-    console.log(`\n적용 — ${done}건 교정`);
+    const logPath = await writeAppliedLog(
+      "phase3-structural",
+      "scripts/qa/apply-official-answers.ts",
+      applied,
+    );
+    console.log(`
+적용 — ${applied.length}건 교정 · 건너뜀 ${skipped}`);
+    console.log(`되돌리기 목록(이 단계만) → ${logPath}`);
   } finally {
     await prisma.$disconnect();
   }
