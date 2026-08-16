@@ -20,7 +20,10 @@ export function convertRpmRow(row: RpmRow): ImportDraft {
   return {
     externalId: row.id,
     source: "transformed",
-    directUseAllowed: false,
+    // D-26(RPM 원본 잠금)은 **2026-08-14 원장님 지시로 폐지**됐다 — 모든 문항 잠금 해제.
+    // 여기서 false 를 내보내면 새로 이관하는 RPM 문항만 `findEligibleProblems` 에서
+    // 조용히 빠져 출제되지 않는다. 이미 적재된 4,862행은 전부 true 다.
+    directUseAllowed: true,
     difficulty: mapDifficultyLabel(
       typeof row.difficulty === "number"
         ? String(row.difficulty)
@@ -212,7 +215,8 @@ export function convertRpmExtractedRow(row: RpmExtractedRow): ImportDraft {
   return {
     externalId: row.id,
     source: "transformed",
-    directUseAllowed: false,
+    // D-26 폐지(2026-08-14) — 위 `convertRpmRow` 주석 참조. 잠그지 않는다.
+    directUseAllowed: true,
     difficulty: mapDifficultyLabel(rpmDifficultyLabel(row.difficulty)),
     problemType: mapProblemType([row.kind, ...tags].filter(Boolean).join(" ")),
     content: [body.content, choices.content].filter(Boolean).join("\n\n"),

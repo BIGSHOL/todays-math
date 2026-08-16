@@ -206,6 +206,12 @@ export function sourceChecks(
   const markerForm = mk("answer-marker-form", "객관식 정답이 보기 번호(①~⑤) 형태", "exact");
   const markerAlive = mk("choice-marker-alive", "보기 마커 ①~⑤ 가 본문에 살아 있다", "exact");
   const externalId = mk("external-id", "`externalId` 가 원본 id 로 채워진다", "exact");
+  // D-26(RPM 잠금) 폐지(2026-08-14). 잠그면 새 이관분만 출제 풀에서 조용히 빠진다.
+  const notLocked = mk(
+    "not-locked",
+    "`directUseAllowed` 를 잠그지 않는다 (D-26 폐지)",
+    "exact",
+  );
 
   const note = (check: Check, line: string): void => {
     if (check.samples.length < 5) check.samples.push(line);
@@ -227,6 +233,10 @@ export function sourceChecks(
       question_type_tags: row.question_type_tags,
       concepts: [],
     });
+
+    notLocked.total += 1;
+    if (draft.directUseAllowed) notLocked.passed += 1;
+    else note(notLocked, `${id.slice(0, 8)} directUseAllowed=false — D-26 은 폐지됐다`);
 
     externalId.total += 1;
     if (draft.externalId === id) externalId.passed += 1;
@@ -276,7 +286,15 @@ export function sourceChecks(
       }
     }
   }
-  return [noLoss, sameCount, answerFilled, markerForm, markerAlive, externalId];
+  return [
+    noLoss,
+    sameCount,
+    answerFilled,
+    markerForm,
+    markerAlive,
+    externalId,
+    notLocked,
+  ];
 }
 
 /**
@@ -442,6 +460,13 @@ export const FAULTS: Record<string, { why: string; from: string; to: string; exp
         String(index),`,
     to: `      id: (typeof record.id === "string" && record.id) || String(index),`,
     expect: ["answer-filled", "answer-marker-form"],
+  },
+  "relock": {
+    why: "폐지된 D-26 을 되살려 RPM 을 다시 잠그는 회귀 (새 이관분이 출제 풀에서 빠진다)",
+    from: `    // D-26 폐지(2026-08-14) — 위 \`convertRpmRow\` 주석 참조. 잠그지 않는다.
+    directUseAllowed: true,`,
+    to: "    directUseAllowed: false,",
+    expect: ["not-locked"],
   },
   "marker-drop": {
     why: "평문화하며 보기 번호를 떨어뜨리던 결함 (마커 1,319건 유실)",

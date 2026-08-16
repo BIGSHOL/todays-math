@@ -1,0 +1,210 @@
+{
+  "note": "RPM 중복 88그룹 완비도 기준(안 B — 점수로 실제 갈리는 그룹만) 강등 대상. 적용 전에 먼저 커밋한다. 되돌릴 때는 이 목록의 problemId 에만 reviewStatus 를 approved 로 되돌린다.",
+  "policy": "score(정답·해설·그림·소단원·externalId) 최고 하나만 남김 · 동점 그룹은 손대지 않음",
+  "decidedAt": "2026-08-16",
+  "count": 11,
+  "groups": [
+    {
+      "keep": {
+        "problemId": "eb1ebe52-19b3-41ae-8d6b-ec43f961b9e9",
+        "printedNumber": "0257",
+        "score": 5
+      },
+      "decidedBy": [
+        "unit"
+      ],
+      "demote": [
+        {
+          "problemId": "05f7ba29-68b4-4ae5-877e-151f3f1111ed",
+          "printedNumber": "0258",
+          "score": 4
+        }
+      ]
+    },
+    {
+      "keep": {
+        "problemId": "db32635e-9546-447e-ba61-db7551cccda8",
+        "printedNumber": "0529",
+        "score": 5
+      },
+      "decidedBy": [
+        "figure"
+      ],
+      "demote": [
+        {
+          "problemId": "63a62e6b-c397-4a17-a39c-e9686fb4a60d",
+          "printedNumber": "0503",
+          "score": 4
+        }
+      ]
+    },
+    {
+      "keep": {
+        "problemId": "bf37913b-87e7-4c29-ae9d-bb472f6f6031",
+        "printedNumber": "0814",
+        "score": 5
+      },
+      "decidedBy": [
+        "figure"
+      ],
+      "demote": [
+        {
+          "problemId": "eb296f58-5087-4d31-a44b-372a1b397616",
+          "printedNumber": "0813",
+          "score": 4
+        }
+      ]
+    },
+    {
+      "keep": {
+        "problemId": "bdef6229-46f5-493a-8216-86b7ae5a4abf",
+        "printedNumber": "0166",
+        "score": 5
+      },
+      "decidedBy": [
+        "figure"
+      ],
+      "demote": [
+        {
+          "problemId": "3916eb81-9015-4042-a2ad-6b442e3f107d",
+          "printedNumber": "0167",
+          "score": 4
+        }
+      ]
+    },
+    {
+      "keep": {
+        "problemId": "70732174-414e-4b07-8700-48b75249d34c",
+        "printedNumber": "0286",
+        "score": 4
+      },
+      "decidedBy": [
+        "figure"
+      ],
+      "demote": [
+        {
+          "problemId": "d8e6e179-2687-4209-ad71-1e9a3064d1b0",
+          "printedNumber": "0285",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "keep": {
+        "problemId": "6896ad80-dad7-4137-a9d8-ec19a394d56d",
+        "printedNumber": "0221",
+        "score": 5
+      },
+      "decidedBy": [],
+      "demote": []
+    },
+    {
+      "keep": {
+        "problemId": "7b7c6a3a-68d0-4351-88d6-087e26e53948",
+        "printedNumber": "0234",
+        "score": 5
+      },
+      "decidedBy": [
+        "figure"
+      ],
+      "demote": [
+        {
+          "problemId": "29e6a92b-8266-43f4-bb56-7267847ea7e5",
+          "printedNumber": "0233",
+          "score": 4
+        },
+        {
+          "problemId": "b412c04b-e66e-4a8a-b462-4675a7b6b71b",
+          "printedNumber": "0230",
+          "score": 4
+        }
+      ]
+    },
+    {
+      "keep": {
+        "problemId": "844becff-60d8-4cb4-8d11-9d593a024b62",
+        "printedNumber": "0656",
+        "score": 4
+      },
+      "decidedBy": [
+        "unit"
+      ],
+      "demote": [
+        {
+          "problemId": "e1a9fb5a-4286-4033-a3fa-ddb6fe337efc",
+          "printedNumber": "0379",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "keep": {
+        "problemId": "c449c43d-9ff5-4694-a092-2eacd0faad9a",
+        "printedNumber": "0509",
+        "score": 4
+      },
+      "decidedBy": [],
+      "demote": []
+    },
+    {
+      "keep": {
+        "problemId": "983d8b6f-1dff-4268-9334-27ffe72e664c",
+        "printedNumber": "0651",
+        "score": 5
+      },
+      "decidedBy": [],
+      "demote": []
+    },
+    {
+      "keep": {
+        "problemId": "dbd01be9-56a3-4a93-93ee-a30167c558e2",
+        "printedNumber": "0010",
+        "score": 4
+      },
+      "decidedBy": [
+        "figure"
+      ],
+      "demote": [
+        {
+          "problemId": "6d09e726-1bb5-4494-9798-1f399d44ce88",
+          "printedNumber": "0009",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "keep": {
+        "problemId": "475180e3-dd9f-4fa2-af46-a485aa241c2b",
+        "printedNumber": "0295",
+        "score": 5
+      },
+      "decidedBy": [
+        "figure"
+      ],
+      "demote": [
+        {
+          "problemId": "558dccd2-0beb-4f84-85e8-1675500a66c7",
+          "printedNumber": "0294",
+          "score": 4
+        }
+      ]
+    },
+    {
+      "keep": {
+        "problemId": "63cf9557-b324-459f-af0c-69462d8d30fe",
+        "printedNumber": "0701",
+        "score": 4
+      },
+      "decidedBy": [
+        "unit"
+      ],
+      "demote": [
+        {
+          "problemId": "7cbb5746-8737-4906-a006-f90197154887",
+          "printedNumber": "0702",
+          "score": 3
+        }
+      ]
+    }
+  ]
+}

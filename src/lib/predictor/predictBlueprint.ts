@@ -24,6 +24,7 @@ import {
   type Blueprint,
   type ExamPeriod,
   type ExamSeriesKey,
+  type PredictorParamsSnapshot,
 } from "@/contracts/predictor.contract";
 import {
   DIFFICULTY_KEYS,
@@ -38,8 +39,21 @@ export interface PredictorParams {
   decay: number;
   /** 같은 학기·같은 회차 가중 배수. */
   sameRoundBoost: number;
-  /** 코호트 사전값의 가상 표본 수. 클수록 전국 평균 쪽으로 강하게 당긴다. */
+  /**
+   * 코호트 사전값의 가상 표본 수. 클수록 전국 평균 쪽으로 강하게 당긴다.
+   *
+   * **총점 전용**이다. 총점은 전국이 사실상 100점이라 코호트가 진짜 정보다 —
+   * 당길수록 맞는다. 문항 수·유형은 반대라서 `stylePriorWeight` 로 따로 뗐다.
+   */
   priorWeight: number;
+  /**
+   * 학교 고유성이 확인된 항목(문항 수 52.5%, 유형 배분 51.1%)의 코호트 축소.
+   *
+   * 실측(연도 홀드아웃 2회, 2026-08-16): `priorWeight` 를 낮추면 문항 수·유형은
+   * 뚜렷이 좋아지는데 **총점은 두 분할 모두에서 나빠졌다.** 한 파라미터를 공유하면
+   * 어느 쪽이든 손해라서 갈랐다. 배점 눈금이 `gridPriorWeight` 로 이미 그렇게 되어 있다.
+   */
+  stylePriorWeight: number;
   /**
    * 배점 눈금 전용 축소·감쇠. backtest v0.1 에서 배점 눈금만은
    * "직전 회차를 그대로 쓰는" 편이 나았다(0.354 vs 0.382) — 학교가 쓰는 배점 눈금은
@@ -58,10 +72,41 @@ export interface PredictorParams {
   unitOwnWeight: number;
 }
 
+/**
+ * 계약 ↔ 엔진 파라미터 **양방향** 일치 단언.
+ *
+ * 한쪽에 필드가 늘거나 줄거나 타입이 달라지면 **여기서 컴파일이 깨진다.**
+ * 예전에는 계약 쪽에 같은 형태를 한 벌 더 두어서, v0.5 에서 `stylePriorWeight` 가
+ * 늘었을 때 표류가 런타임 500(18건)으로만 드러났다. 그 자리를 컴파일로 당겨왔다.
+ */
+type ExactSame<A, B> = A extends B ? (B extends A ? true : never) : never;
+export const PREDICTOR_PARAMS_MATCH_CONTRACT: ExactSame<
+  PredictorParams,
+  PredictorParamsSnapshot
+> = true;
+
+/**
+ * 엔진 버전 — **단일 정의**. `PredictionRun.engineVersion` 과 backtest 리포트가 같은 값을 쓴다.
+ * 예전에는 서비스와 `scripts/predictor/backtest.ts` 에 문자열이 따로 있어, 한쪽만 올리면
+ * 지표와 실행 기록이 조용히 다른 축이 됐다.
+ *
+ * ⚠️ **`DEFAULT_PARAMS` 를 바꾸면 이 값을 함께 올린다.** 파라미터가 다른 run 을
+ *    같은 버전으로 묶으면 보정 비교가 오염된다. 근거는 11 §12.
+ */
+export const PREDICTOR_ENGINE_VERSION = "0.5.0";
+
 export const DEFAULT_PARAMS: PredictorParams = {
   decay: 0.85,
-  sameRoundBoost: 2,
+  // 작년 같은 회차를 4배로 본다(기존 2배). 연도 홀드아웃 2회(2024·2025)에서
+  // **모든 항목이 개선**됐고 나빠진 항목이 없었다 — 범위와 출제 교사가 같을 확률이
+  // 그만큼 높다는 뜻이다.
+  sameRoundBoost: 4,
   priorWeight: 2,
+  // 문항 수·유형은 코호트로 거의 당기지 않는다(2 → 0.5). 학교 고유성이 확인된
+  // 항목이라 전국 평균으로 당길수록 손해다. 0 이 한 분할에서 더 좋았지만,
+  // **과거가 1회차뿐인 학교**를 규제 없이 그대로 믿게 되므로 0.5 로 둔다 —
+  // 축소는 바로 그 경우를 위해 있는 장치다.
+  stylePriorWeight: 0.5,
   // 배점 눈금은 코호트로 당기지 않는다(0) — 학교가 쓰는 눈금은 전국 평균과 무관한 관행이다.
   // 감쇠도 세게 건다(0.4) — 평균보다 **최근 관행**이 맞는다.
   // 2024년 이전으로 고르고 2025년으로 확인했다(scripts/predictor/tune.ts).
@@ -259,7 +304,7 @@ export function predictBlueprint(input: PredictInput): Blueprint {
       weighted.map((w) => ({ weight: w.weight, value: w.bp.questionCount })),
     ),
     meanOf(cohort.map((c) => c.questionCount)),
-    params.priorWeight,
+    params.stylePriorWeight,
   );
   const totalScore = shrink(
     weightedMean(
@@ -276,7 +321,7 @@ export function predictBlueprint(input: PredictInput): Blueprint {
     ),
     weightedMix(cohort.map((c) => ({ weight: 1, mix: countsMix(c.typeMix) })))
       ?.mix ?? null,
-    params.priorWeight,
+    params.stylePriorWeight,
   );
 
   // ── 난이도 분포 — 학교별로 배우지 않는다(§2.3·§2.7). 코호트 값을 쓴다. ──
