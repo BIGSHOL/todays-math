@@ -96,11 +96,13 @@ model User {
   /// Soft delete — 탈퇴 후 30일 뒤 배치로 Hard delete (04 §4)
   deletedAt     DateTime? @map("deleted_at")
 
-  classes  Class[]
-  problems Problem[]
-  tests    Test[]
-  accounts Account[]
-  sessions Session[]
+  classes        Class[]
+  problems       Problem[]
+  tests          Test[]
+  /// '오늘의 시험' 예측 실행 기록 (트랙 E)
+  predictionRuns PredictionRun[]
+  accounts       Account[]
+  sessions       Session[]
 
   @@map("user")
 }
@@ -569,6 +571,10 @@ model VerificationToken {
 /// — 그래서 (학교, 시점)에 유일 제약을 걸지 않는다. 섞이지 않게 engine_version 으로 가른다.
 model PredictionRun {
   id            String   @id @default(uuid()) @db.Uuid
+  /// 이 예측을 만든 원장. 소유권 경계가 여기 있어야 목록 조회를 DB where 로 거를 수 있다.
+  /// (처음엔 컬럼이 없어 `params.ownerUserId` JSON 에 임시로 실었다 — 메모리 필터라
+  ///  페이지네이션을 붙일 수 없었다. 그 임시방편을 걷어내려고 넣는다.)
+  userId        String   @map("user_id") @db.Uuid
   createdAt     DateTime @default(now()) @map("created_at")
   /// 엔진 버전. 이게 다르면 지표를 섞어서 비교하지 않는다.
   engineVersion String   @map("engine_version") @db.VarChar(40)
@@ -598,13 +604,23 @@ model PredictionRun {
   /// ScorePrediction[] — 학생별 예상 점수와 구간.
   predictedScores    Json     @map("predicted_scores")
 
+  /// 실행 단위 위험 표시. "근거가 없어 청사진을 못 만들었다"는 **run 단위 사실**이라
+  /// ScorePrediction 안에 담을 수 없다(predictedScores 가 비어 있으면 담을 데가 없다).
+  riskFlags String[] @map("risk_flags")
+
+  /// 이 시험의 실제 시행일. 화면이 D-day 를 세는 기준이고, 엔진 입력이 아니다.
+  /// 모르면 NULL — 지어내지 않는다.
+  examDate DateTime? @map("exam_date") @db.Date
+
   /// 학교가 평균을 공개하면 채운다. 안 하면 학생 표본으로 역추정한다(NULL 유지).
   actualSchoolMean  Float?    @map("actual_school_mean")
   actualSchoolStdev Float?    @map("actual_school_stdev")
   actualRecordedAt  DateTime? @map("actual_recorded_at")
 
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   actualScores ActualExamScore[]
 
+  @@index([userId, createdAt(sort: Desc)])
   @@index([school, level, grade, subject, targetYear, targetSemester, targetRound])
   @@index([engineVersion, createdAt])
   @@map("prediction_run")
@@ -628,6 +644,15 @@ model ActualExamScore {
   /// 예측 **구간**이 실제를 담았는가. 점 예측 MAE 와 별개로 봐야 하는 지표다
   /// — ±5점 목표는 구간 적중률로 판정한다.
   intervalHit    Boolean @map("interval_hit")
+
+  /// 예측 구간도 스냅샷으로 남긴다. 이게 없으면 원장이 점수를 정정할 때
+  /// `intervalHit` 만 run 의 **현재** Json 으로 다시 판정돼, 점수는 스냅샷을 지키는데
+  /// 적중 판정만 따라 움직이는 어긋남이 생긴다. 보정 정직성 판정(구간 적중률 vs
+  /// 선언 신뢰수준)에 쓸 coverage 도 저장 행에서 읽을 수 있어야 한다.
+  /// 예측 시점에 구간을 못 냈으면 NULL — 지어내지 않는다.
+  predictedLower    Float? @map("predicted_lower")
+  predictedUpper    Float? @map("predicted_upper")
+  predictedCoverage Float? @map("predicted_coverage")
 
   recordedAt DateTime @default(now()) @map("recorded_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
