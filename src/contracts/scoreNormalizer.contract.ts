@@ -124,9 +124,21 @@ export type ScoreNormalization = z.infer<typeof scoreNormalizationSchema>;
 // 원장 수동 조정 (11 §10.4)
 // ─────────────────────────────────────────────
 
-export const manualScoreIssueSchema = z.enum(["합계_불일치", "배점_형식오류"], {
-  error: "수동 조정 오류 값이 올바르지 않습니다.",
-});
+export const manualScoreIssueSchema = z.enum(
+  [
+    "합계_불일치",
+    "배점_형식오류",
+    /**
+     * 같은 문항 번호가 두 번 이상 들어왔다.
+     *
+     * 번호를 세지 않고 배점만 더하면 같은 문항을 여러 번 세어 합계 100 을 만들 수 있다.
+     * 저장은 번호로 되짚어 덮어쓰므로 그 시험지의 실제 만점은 100 이 아니게 된다
+     * (2026-08-16 적대적 리뷰 재현: 응답 100 / 실제 148).
+     */
+    "문항_중복",
+  ],
+  { error: "수동 조정 오류 값이 올바르지 않습니다." },
+);
 export type ManualScoreIssue = z.infer<typeof manualScoreIssueSchema>;
 
 export const manualScoreCheckSchema = z.discriminatedUnion("ok", [

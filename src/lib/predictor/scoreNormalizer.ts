@@ -355,6 +355,12 @@ export function normalizeScores(
  * 합계가 100 이 아니면 **저장을 거부하고 남은 점수를 알린다.**
  * 자동으로 다른 문항을 건드려 사용자를 놀라게 하지 않는다 — 고칠 곳은 원장이 정한다.
  * 눈금 밖 배점은 막지 않고 알리기만 한다(수동 조정은 원장의 권한이다).
+ *
+ * ⚠️ **문항 번호가 중복되면 합계를 세기 전에 거부한다.** 번호를 보지 않고 배점만 더하면
+ *    같은 문항을 여러 번 세어 합계 100 을 만들 수 있고, 저장은 번호로 되짚어 덮어쓰므로
+ *    실제 만점은 100 이 아니게 된다(2026-08-16 적대적 리뷰 재현: 응답 100 / 실제 148).
+ *    이 검사는 **여기 한 곳에만 둔다.** 호출자(`saveManualScores`)에 같은 검사를 겹쳐 두면
+ *    한쪽을 지워도 테스트가 빨개지지 않아 가드가 살아 있는지 확인할 수 없다.
  */
 export function validateManualScores(
   questions: ReadonlyArray<{ number: number; score: number }>,
@@ -369,8 +375,13 @@ export function validateManualScores(
   const offGrid: number[] = [];
   let total = 0;
   let malformed = false;
+  const seen = new Set<number>();
+  const duplicated: number[] = [];
 
   for (const q of questions) {
+    if (seen.has(q.number)) duplicated.push(q.number);
+    else seen.add(q.number);
+
     const centi = toCenti(q.score);
     if (centi === null || centi <= 0) {
       malformed = true;
@@ -381,6 +392,19 @@ export function validateManualScores(
   }
 
   const remaining = FULL_MARK - total;
+
+  // 합계보다 먼저 본다 — 중복으로 채운 합계 100 은 100 이 아니다.
+  if (duplicated.length > 0) {
+    const numbers = [...new Set(duplicated)].sort((a, b) => a - b);
+    return {
+      ok: false,
+      issue: "문항_중복",
+      total: total / SCORE_SCALE,
+      remaining: remaining / SCORE_SCALE,
+      message: `${numbers.join("·")}번 문항의 배점이 여러 번 들어왔습니다.`,
+      offGrid,
+    };
+  }
 
   if (malformed) {
     return {

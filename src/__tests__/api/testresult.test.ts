@@ -203,6 +203,52 @@ describe("[T7.1] POST /api/tests/{id}/submit — 자동 채점 + 예상 점수 �
     expect(body.error.code).toBe("VALIDATION_ERROR");
   });
 
+  it("같은 문항에 응답이 두 번 들어오면 VALIDATION_ERROR(400)로 거부한다", async () => {
+    // 🔴 적대적 리뷰에서 재현된 결함(2026-08-16): 고유 problemId 개수만 세면
+    //    [p1, p1, p2, p3] 이 "3개 = 문항 3개"로 통과해 p1 배점이 두 번 더해졌다.
+    //    3문항(10·10·80) 시험지에서 정답 70점이 80점으로 나왔다.
+    const res = await submitTestResult(
+      jsonRequest(submitUrl(TEST_RESULT_FIXTURE_TEST_ID), "POST", {
+        studentId: STUDENT_A,
+        answers: [
+          {
+            problemId: TEST_RESULT_PROBLEM_OBJECTIVE_CORRECT_ID,
+            selectedChoice: 2,
+            essayScore: null,
+            sequence: 1,
+          },
+          {
+            problemId: TEST_RESULT_PROBLEM_OBJECTIVE_CORRECT_ID,
+            selectedChoice: 2,
+            essayScore: null,
+            sequence: 1,
+          },
+          {
+            problemId: TEST_RESULT_PROBLEM_OBJECTIVE_WRONG_ID,
+            selectedChoice: 1,
+            essayScore: null,
+            sequence: 2,
+          },
+          {
+            problemId: TEST_RESULT_PROBLEM_ESSAY_ID,
+            selectedChoice: null,
+            essayScore: 75,
+            sequence: 3,
+          },
+        ],
+      }),
+      withId(TEST_RESULT_FIXTURE_TEST_ID),
+    );
+
+    expect(res.status).toBe(400);
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.code).toBe("VALIDATION_ERROR");
+
+    // 한 행도 쓰지 않는다 — 반만 채점된 결과를 남기지 않는다.
+    expect(await db.testResult.findMany({})).toHaveLength(0);
+    expect(await db.problemAnswer.findMany({})).toHaveLength(0);
+  });
+
   it("다른 반 소속 학생으로는 제출할 수 없다(NOT_FOUND 404)", async () => {
     const res = await submitTestResult(
       jsonRequest(submitUrl(TEST_RESULT_FIXTURE_TEST_ID), "POST", {

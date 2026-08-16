@@ -179,6 +179,15 @@ export async function saveManualScores(
     );
   }
 
+  // ⚠️ 이 개수·존재 검사만으로는 **중복을 잡지 못한다.** [1,1,1,2,3] 은 "5개 = 문항 5개" 로
+  //    통과하는데, 아래 저장 루프는 번호로 되짚어 update 하므로 1번 행만 마지막 값으로
+  //    덮이고 4·5번은 옛 배점이 남는다 — 합계 100 을 통과한 채 만점이 100 이 아닌 시험지가
+  //    저장된다(2026-08-16 적대적 리뷰 재현: 응답 100 / 실제 148).
+  //    번호 중복은 바로 아래 `validateManualScores` 가 `문항_중복` 으로 막는다. 여기서 한 번 더
+  //    세지 않는 이유는, 같은 검사를 두 곳에 두면 한쪽을 지워도 테스트가 빨개지지 않아
+  //    **가드가 살아 있는지 확인할 수 없게 되기 때문**이다(돌연변이 검사로 확인했다).
+  //    중복이 없고 개수가 같고 전부 시험지에 있으면 문항과 배점은 1:1 이다.
+
   const check = validateManualScores(
     input.scores.map((item) => ({
       number: item.orderIndex,
@@ -186,7 +195,11 @@ export async function saveManualScores(
     })),
   );
   if (!check.ok) {
-    return refuse("만점_불일치", check.message);
+    // 위에서 이미 걸렀지만, 보정기가 중복을 잡으면 그것은 만점 문제가 아니라 짝맞춤 문제다.
+    return refuse(
+      check.issue === "문항_중복" ? "문항_불일치" : "만점_불일치",
+      check.message,
+    );
   }
 
   await db.$transaction(async (tx) => {

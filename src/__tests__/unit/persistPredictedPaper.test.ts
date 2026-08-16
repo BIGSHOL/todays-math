@@ -23,6 +23,7 @@ import {
   persistPredictedPaper,
   saveManualScores,
 } from "@/lib/predictor/persistPredictedPaper";
+import { validateManualScores } from "@/lib/predictor/scoreNormalizer";
 import { gradeAnswers } from "@/lib/testResults/gradeAnswers";
 import {
   MOCK_CLASS_OTHER_USER,
@@ -266,6 +267,49 @@ describe("[T7.9] 원장 수동 조정 저장 (11 §10.4)", () => {
     expect(result.ok).toBe(false);
     if (result.ok) return;
     expect(result.reason).toBe("문항_불일치");
+  });
+
+  it("같은 문항 번호를 두 번 보내면 거부한다 — 개수·합계가 맞아도", async () => {
+    // 🔴 적대적 리뷰에서 재현된 결함(2026-08-16): 개수와 존재 여부만 보면
+    //    [1,1,1,2,3] 이 "5개 = 문항 5개"로 통과했다. 저장은 orderIndex 로 되짚어
+    //    update 하므로 1번 행만 마지막 값으로 덮이고 4·5번은 옛 배점이 남아
+    //    만점이 100 이 아닌 시험지가 저장됐다(재현: 응답 100 / 실제 148).
+    const testId = await seedTest();
+
+    const result = await saveManualScores({
+      userId: USER_TEACHER_ID,
+      testId,
+      scores: [
+        { orderIndex: 1, score: 25 },
+        { orderIndex: 1, score: 25 },
+        { orderIndex: 1, score: 25 },
+        { orderIndex: 2, score: 12.5 },
+        { orderIndex: 3, score: 12.5 },
+      ],
+    });
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.reason).toBe("문항_불일치");
+    expect(result.detail).toContain("1");
+
+    // 한 행도 건드리지 않는다.
+    const rows = await db.testProblem.findMany({
+      where: { testId },
+      orderBy: { orderIndex: "asc" },
+    });
+    expect(rows.map((r) => r.score)).toEqual([20, 20, 20, 20, 20]);
+  });
+
+  it("보정기의 수동 조정 검증도 같은 번호를 두 번 세지 않는다", () => {
+    const check = validateManualScores([
+      { number: 1, score: 50 },
+      { number: 1, score: 50 },
+    ]);
+
+    expect(check.ok).toBe(false);
+    if (check.ok) return;
+    expect(check.issue).toBe("문항_중복");
   });
 
   it("남의 시험지는 고치지 못한다", async () => {

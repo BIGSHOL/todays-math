@@ -50,6 +50,29 @@ export async function submitTestResult(
       [{ field: "answers", message: unknownAnswer.problemId }],
     );
   }
+  // 같은 문항에 응답이 두 번 들어오면 그 문항의 배점이 두 번 더해진다.
+  // 아래 개수 검사는 Set 크기만 보므로 중복을 잡지 못한다 — [p1, p1, p2, p3] 은
+  // 고유 3개라 "문항 3개"를 통과하고, 3문항(10·10·80) 시험지에서 70점이 80점이 됐다
+  // (2026-08-16 적대적 리뷰 재현). 균등배분도 answers.length 로 나누므로 같이 흔들린다.
+  if (answerProblemIds.size !== input.answers.length) {
+    const duplicated = [
+      ...new Set(
+        input.answers
+          .map((a) => a.problemId)
+          .filter((id, i, all) => all.indexOf(id) !== i),
+      ),
+    ];
+    return jsonError(
+      "VALIDATION_ERROR",
+      "같은 문항에 대한 응답이 여러 번 들어왔습니다.",
+      400,
+      duplicated.map((problemId) => ({
+        field: "answers",
+        message: problemId,
+      })),
+    );
+  }
+
   if (answerProblemIds.size !== testProblems.length) {
     return jsonError(
       "VALIDATION_ERROR",
