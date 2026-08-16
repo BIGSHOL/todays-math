@@ -1,0 +1,158 @@
+{
+ "phase": "phase2-render",
+ "tool": "scripts/qa/repair-answer-render.ts",
+ "appliedAt": "2026-08-16T00:04:31.342Z",
+ "count": 25,
+ "rows": [
+  {
+   "id": "2d25cf55-13d8-45b7-a60b-46740b61b335",
+   "externalId": "2989-20",
+   "before": "$12$$f(x)=3x+",
+   "after": "12"
+  },
+  {
+   "id": "014f448a-7d44-4330-8f13-5677bd2c843d",
+   "externalId": "2922-19",
+   "before": "$3+4e$풀이$lim _{x rarrow",
+   "after": "3+4e"
+  },
+  {
+   "id": "16337474-6ec8-43c5-84ec-f3b6495ef6b5",
+   "externalId": "2933-16",
+   "before": "$791$ⅰ$f(7)=1$$1$ⅱ$f(7)=2$$rm",
+   "after": "791"
+  },
+  {
+   "id": "3732c524-4f5a-454f-bbca-f3455043cdc2",
+   "externalId": "3040-15",
+   "before": "$329$$29",
+   "after": "329"
+  },
+  {
+   "id": "7d802f9b-f6cd-4b86-9dbb-f5a0914961d0",
+   "externalId": "3044-18",
+   "before": "$8$풀이${rm",
+   "after": "8"
+  },
+  {
+   "id": "6a53674a-272d-43f6-98a4-28ef73eea2e0",
+   "externalId": "3097-19",
+   "before": "$2$$lim _{x rarrow",
+   "after": "2"
+  },
+  {
+   "id": "992a4516-2624-4622-89c9-26f782f3e860",
+   "externalId": "3167-21",
+   "before": "$0.9104$풀이$f(14) LEQ",
+   "after": "0.9104"
+  },
+  {
+   "id": "d3a86b6c-1731-4f03-b17b-3254b6dc1045",
+   "externalId": "3274-18",
+   "before": "$0.341$풀이 ${rm",
+   "after": "0.341"
+  },
+  {
+   "id": "3c56a003-1e74-4d4b-aeb4-343438bbdbb8",
+   "externalId": "3510-18",
+   "before": "$100a+10b+c$$100 TIMES",
+   "after": "100a+10b+c"
+  },
+  {
+   "id": "ffdc16f9-cc2c-492b-b0a9-0d2404b6e225",
+   "externalId": "4443-20",
+   "before": "$1$$f(x)=ax ^{2} +bx+c`,~(a !=",
+   "after": "1"
+  },
+  {
+   "id": "700a00d2-2b94-4cbd-932f-97fb4f24f3ce",
+   "externalId": "4593-23",
+   "before": "$-2a$$alpha$에서 $beta$까지 평균변화율은 ${f( beta",
+   "after": "-2a"
+  },
+  {
+   "id": "6c7a8c95-1a22-4f43-a77a-bdc05479a3dd",
+   "externalId": "4875-14",
+   "before": "$9$풀이$t=-k$라고 하면$f(x)= lim _{k rarrow",
+   "after": "9"
+  },
+  {
+   "id": "75f9e26b-4855-4629-a6e7-f2549abcce3f",
+   "externalId": "4958-18",
+   "before": "$25$풀이) $lim _{ h`->`0} {{f(-2h) }over h",
+   "after": "25"
+  },
+  {
+   "id": "69deb8f6-e63d-4ded-9a22-9d515fd28656",
+   "externalId": "5268-20",
+   "before": "$x=1$풀이) $(x-3) TIMES",
+   "after": "x=1"
+  },
+  {
+   "id": "f365cfe8-4d0e-4a9e-87b1-84ed210884b2",
+   "externalId": "5646-19",
+   "before": "$34$풀이$360=2 ^{3} TIMES",
+   "after": "34"
+  },
+  {
+   "id": "f74e5dc7-ded7-4dd1-93b3-bae6b41c5e88",
+   "externalId": "3267-22",
+   "before": "$5$$rm A it LEFT ( 3",
+   "after": "5"
+  },
+  {
+   "id": "cd6ebfd1-f851-4db9-bb1d-9b5f64bd2384",
+   "externalId": "3667-19",
+   "before": "$28°$풀이$rm",
+   "after": "28°"
+  },
+  {
+   "id": "e0299599-dbe6-4401-ac49-d8fa142d3c6d",
+   "externalId": "3667-20",
+   "before": "$165$풀이외심의 성질에 의해,$rm",
+   "after": "165"
+  },
+  {
+   "id": "f20849c7-34a1-45fc-bba0-bc8c89cb4aff",
+   "externalId": "3667-21",
+   "before": "$57$풀이$angle{rm",
+   "after": "57"
+  },
+  {
+   "id": "715f35fd-8800-49d9-bbd0-8286dec82940",
+   "externalId": "3893-14",
+   "before": "$30$풀이 $rm",
+   "after": "30"
+  },
+  {
+   "id": "a96c4fd9-5def-4f6c-a201-d14a4e40bc6a",
+   "externalId": "5836-17",
+   "before": "$1012$$n ^{2} LEQ",
+   "after": "1012"
+  },
+  {
+   "id": "049759d3-143a-4c01-b8d0-0c90f16c0827",
+   "externalId": "4668-23",
+   "before": "$75$$lim _{x rarrow",
+   "after": "75"
+  },
+  {
+   "id": "a6d34b5b-ffff-4ae4-a9a0-f19c6088882b",
+   "externalId": "4875-18",
+   "before": "$24$풀이$f prime",
+   "after": "24"
+  },
+  {
+   "id": "7b49842f-0bff-468e-931e-b334689b833e",
+   "externalId": "4875-20",
+   "before": "$-11$풀이$x+3=t$라고 하자.$lim _{t rarrow",
+   "after": "-11"
+  },
+  {
+   "id": "72d37dba-5162-4c8e-99c5-a45cecd3af1a",
+   "externalId": "3893-18",
+   "before": "$72°$풀이$rm",
+   "after": "72°"
+  }
+ ]
+}

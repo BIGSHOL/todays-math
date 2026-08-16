@@ -1,0 +1,1562 @@
+{
+ "phase": "phase5-bare-latex",
+ "tool": "scripts/qa/repair-bare-degree.ts",
+ "appliedAt": "2026-08-16T02:31:23.385Z",
+ "count": 259,
+ "rows": [
+  {
+   "id": "b086a8cb-fd64-4b92-aef0-ee8b0fa5e101",
+   "externalId": "019fd1de-bcd8-778c-9d86-4c8e606e5f44",
+   "before": "119\\degree",
+   "after": "119°"
+  },
+  {
+   "id": "e7048654-b8ed-4b4c-9500-1b662e1aa154",
+   "externalId": "019fd1de-c452-71bf-9fc2-929636851ca1",
+   "before": "44\\degree",
+   "after": "44°"
+  },
+  {
+   "id": "50a8e453-6633-451f-b234-efaacbd4ff3a",
+   "externalId": "019fd1d7-ac8f-758b-8d3f-212b953fce87",
+   "before": "90\\degree",
+   "after": "90°"
+  },
+  {
+   "id": "288c832b-9404-4da8-967f-bebb1f1ab108",
+   "externalId": "019fd1da-d02f-7458-b023-8bfe2654e744",
+   "before": "105\\degree",
+   "after": "105°"
+  },
+  {
+   "id": "cd85267b-a5b1-42e7-a54c-a298baec1e4a",
+   "externalId": "019fd1de-a142-70ce-b790-50b490725969",
+   "before": "16\\degree",
+   "after": "16°"
+  },
+  {
+   "id": "ed71c33d-47f3-4177-8711-7d1fc9bcd627",
+   "externalId": "019fd1d7-7fae-757d-bdcf-2bf9445d7919",
+   "before": "66\\degree",
+   "after": "66°"
+  },
+  {
+   "id": "2a317c98-8a3b-4ea6-8ad2-64d7193085ea",
+   "externalId": "019fd1da-af9e-7713-8ea2-94f198e12bbf",
+   "before": "28\\degree",
+   "after": "28°"
+  },
+  {
+   "id": "1ea71cba-f4ce-4ad5-a938-b5c38bbe82ba",
+   "externalId": "019fd1da-b320-76fb-a1ff-62e25cb7b463",
+   "before": "55\\degree",
+   "after": "55°"
+  },
+  {
+   "id": "1e98c425-944e-416c-bc06-d7ae29dd0aa3",
+   "externalId": "019fd1de-7843-74e5-8d64-f720070409f1",
+   "before": "135\\degree",
+   "after": "135°"
+  },
+  {
+   "id": "92044a41-913c-4def-ba3c-3e284053267b",
+   "externalId": "019fd1de-9681-76c9-835c-2ea410bcd82e",
+   "before": "40\\degree",
+   "after": "40°"
+  },
+  {
+   "id": "044b18d3-cc56-4e6a-8f47-52361be44544",
+   "externalId": "019fd1de-b11b-77ce-bb7c-876127b8872d",
+   "before": "79\\degree",
+   "after": "79°"
+  },
+  {
+   "id": "2848c693-d093-499b-b574-84515f63b5b9",
+   "externalId": "019fd1d7-ed85-74c4-874e-1688c416b32b",
+   "before": "50\\degree",
+   "after": "50°"
+  },
+  {
+   "id": "63a62e6b-c397-4a17-a39c-e9686fb4a60d",
+   "externalId": "019fd1d7-f8ca-7399-826d-6945b4c8a116",
+   "before": "314\\degree",
+   "after": "314°"
+  },
+  {
+   "id": "83617354-8f14-4f52-aac9-f3e78d19a98d",
+   "externalId": "019fd1da-ac25-7282-b8ea-9e960fc120b2",
+   "before": "12\\degree",
+   "after": "12°"
+  },
+  {
+   "id": "e1240b3f-6069-4995-863d-196615e8ae33",
+   "externalId": "019fd1de-b5ec-7725-be41-ce2c3f781c1a",
+   "before": "89\\degree",
+   "after": "89°"
+  },
+  {
+   "id": "d0b2d2b2-9689-4119-a1a8-7e77712fcd61",
+   "externalId": "019fd1de-bbf8-73cd-9d01-569365c9a770",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "147d2100-15df-4940-9a08-10347267facb",
+   "externalId": "019fd1d7-ff30-723e-948d-6269f73504e4",
+   "before": "71\\degree",
+   "after": "71°"
+  },
+  {
+   "id": "0c053f73-ed81-4612-993d-eb6617f067a6",
+   "externalId": "019fd1de-b2f6-703d-ac7c-86644fb2ec22",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "9f02e9d8-a332-4437-a792-8953ce1b9072",
+   "externalId": "019fd1d7-ddd8-72ab-8ea0-669f18e186ea",
+   "before": "53\\degree",
+   "after": "53°"
+  },
+  {
+   "id": "ee92c664-c73f-4fa1-be32-0739ebcbd380",
+   "externalId": "019fd1d7-6660-7496-af62-ad4aa758e69d",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "10fbdf21-fe26-4f1e-8060-6d3ab328a69f",
+   "externalId": "019fd1d8-736f-7395-96e1-1d7a7aed4cc5",
+   "before": "\\square \\degree \\frac{0}{3})\\square pcm^{3}",
+   "after": "\\square ° \\frac{0}{3})\\square pcm^{3}"
+  },
+  {
+   "id": "347bc5cd-fb30-4b81-bd15-d8b34ebd156c",
+   "externalId": "019fd1da-bdca-752a-872e-cc5f9240ec78",
+   "before": "23\\degree",
+   "after": "23°"
+  },
+  {
+   "id": "ebc05a60-176a-4181-8272-8cfcd51cace4",
+   "externalId": "019fd1da-90d5-7308-8474-30110bc02fc1",
+   "before": "15\\degree",
+   "after": "15°"
+  },
+  {
+   "id": "c46e0062-fcdb-4d74-9c41-342c78a021d0",
+   "externalId": "019fd1de-ae7b-74bb-ba38-ead95b1f265f",
+   "before": "120\\degree",
+   "after": "120°"
+  },
+  {
+   "id": "90363ee0-dede-4fec-91f1-fcdf76be119b",
+   "externalId": "019fd1de-b97d-739f-bb5d-4b4573716ce1",
+   "before": "75\\degree",
+   "after": "75°"
+  },
+  {
+   "id": "ea3ec42b-17d8-49c1-9f04-1636cd9b1466",
+   "externalId": "019fd1de-bd65-7294-b98a-83a7048a8279",
+   "before": "45\\degree",
+   "after": "45°"
+  },
+  {
+   "id": "8cd228e8-3c79-42be-b273-b562c221ce5d",
+   "externalId": "019fd1de-a854-700b-a491-6423bfdfe046",
+   "before": "30\\degree",
+   "after": "30°"
+  },
+  {
+   "id": "b8907b48-6aec-427e-8a9a-f876c071e074",
+   "externalId": "019fd1de-ab8c-70da-a556-3666c153c296",
+   "before": "61\\degree",
+   "after": "61°"
+  },
+  {
+   "id": "f2cbf7e5-bc90-4b08-8b88-e56890885a4a",
+   "externalId": "019fd1de-a48b-75b6-b0f9-503d3c12676f",
+   "before": "120\\degree",
+   "after": "120°"
+  },
+  {
+   "id": "c0c130e1-6d7d-4227-ae83-4ce7376c30fa",
+   "externalId": "019fd1d7-3b5f-75df-913e-05bed8592167",
+   "before": "130\\degree",
+   "after": "130°"
+  },
+  {
+   "id": "af7a5b24-1f5f-4151-ac71-a84cae76c508",
+   "externalId": "019fd1d7-3bae-7425-b22c-bb5b06e6a311",
+   "before": "67\\degree",
+   "after": "67°"
+  },
+  {
+   "id": "b560490d-6afe-4a21-a6af-6095586142dd",
+   "externalId": "019fd1db-1339-7359-a75b-0cce9a18fbb5",
+   "before": "130\\degree",
+   "after": "130°"
+  },
+  {
+   "id": "c33c21c8-b506-46c3-a440-e80b99b56c89",
+   "externalId": "019fd1de-9708-7769-b76f-ee2937eeca4a",
+   "before": "270\\degree",
+   "after": "270°"
+  },
+  {
+   "id": "6e7d9b7c-b973-405f-8179-6259a922b5a8",
+   "externalId": "019fd1de-974a-725d-bf01-68c57ac1c074",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "b63488e0-c2ba-475e-8b8e-54eb6476c97e",
+   "externalId": "019fd1de-978e-75a7-99aa-0df9af9ec3cd",
+   "before": "25\\degree",
+   "after": "25°"
+  },
+  {
+   "id": "6fb1c1cf-9518-4856-a591-c266ee4c8043",
+   "externalId": "019fd1da-a524-73a8-9f6e-0857d6f4669f",
+   "before": "36\\degree",
+   "after": "36°"
+  },
+  {
+   "id": "d643f68b-e930-4228-a79c-2bb3f76d7d8c",
+   "externalId": "019fd1da-a8e4-72bc-a33c-6edeeea72674",
+   "before": "30\\degree",
+   "after": "30°"
+  },
+  {
+   "id": "cd1b722a-08d6-4526-a28f-95b3abe3f740",
+   "externalId": "019fd1da-aa70-7106-aaed-fd45d4158fe9",
+   "before": "80\\degree",
+   "after": "80°"
+  },
+  {
+   "id": "b3dc3c34-99c3-4ca0-8131-cd2d2ed2ee6a",
+   "externalId": "019fd1db-2e70-7089-8974-4c48f27e567d",
+   "before": "68\\degree",
+   "after": "68°"
+  },
+  {
+   "id": "7b725504-48be-4010-99c8-42f5e25df815",
+   "externalId": "019fd1da-b041-708e-a5a0-9ffb42a84f5d",
+   "before": "50\\degree",
+   "after": "50°"
+  },
+  {
+   "id": "5f543ae3-4e79-45c3-b251-a20e5f1ea55a",
+   "externalId": "019fd1da-85c2-70ee-8b94-92dfaa0e7379",
+   "before": "64\\degree",
+   "after": "64°"
+  },
+  {
+   "id": "7b34a545-d53b-4f8f-beec-ade04ee58228",
+   "externalId": "019fd1d7-66a7-743c-a7c9-321c16ffba8d",
+   "before": "95\\degree",
+   "after": "95°"
+  },
+  {
+   "id": "6896ad80-dad7-4137-a9d8-ec19a394d56d",
+   "externalId": "019fd1d7-78e2-734d-ad03-45046d4600f2",
+   "before": "50\\degree",
+   "after": "50°"
+  },
+  {
+   "id": "fd84bf79-e61f-430e-bdc0-381aff50bafd",
+   "externalId": "019fd1d7-77ec-761c-9f46-98fdcb2392d7",
+   "before": "220\\degree",
+   "after": "220°"
+  },
+  {
+   "id": "7b7c6a3a-68d0-4351-88d6-087e26e53948",
+   "externalId": "019fd1d7-7d01-708d-9f46-3848527e84c2",
+   "before": "120\\degree",
+   "after": "120°"
+  },
+  {
+   "id": "29e6a92b-8266-43f4-bb56-7267847ea7e5",
+   "externalId": "019fd1d7-7cb1-75a7-829b-389dca43c8c4",
+   "before": "55\\degree",
+   "after": "55°"
+  },
+  {
+   "id": "b412c04b-e66e-4a8a-b462-4675a7b6b71b",
+   "externalId": "019fd1d7-7bbc-71f1-874a-eb281290a1fe",
+   "before": "58\\degree",
+   "after": "58°"
+  },
+  {
+   "id": "b50ab307-8a33-4259-879e-46a7829d56c3",
+   "externalId": "019fd1d7-7d4e-759b-a009-708b73bc9202",
+   "before": "235\\degree",
+   "after": "235°"
+  },
+  {
+   "id": "fdb42482-8157-477f-8a23-e6fdfb8a1a6f",
+   "externalId": "019fd1d7-7e58-772d-b3e4-355f867f98b2",
+   "before": "112\\degree",
+   "after": "112°"
+  },
+  {
+   "id": "f56375e9-dc4c-4c47-928e-d1ac628d32c8",
+   "externalId": "019fd1d7-800c-75df-a591-92d38eb8db91",
+   "before": "25\\degree",
+   "after": "25°"
+  },
+  {
+   "id": "287a51d5-c3ce-4572-9648-8a3b6ad06cab",
+   "externalId": "019fd1d7-7f05-758a-a997-86ed122d3114",
+   "before": "55\\degree",
+   "after": "55°"
+  },
+  {
+   "id": "4f781dd0-b58b-4df9-aa96-ff15670843a4",
+   "externalId": "019fd1d7-7f56-770b-bb26-8c2331cfd658",
+   "before": "37\\degree",
+   "after": "37°"
+  },
+  {
+   "id": "df59cb31-571d-4c8a-ad4d-fcd5bbfeef0a",
+   "externalId": "019fd1d7-8265-76bf-bbf9-f2519e86cce7",
+   "before": "20\\degree",
+   "after": "20°"
+  },
+  {
+   "id": "bfa46b8e-4d23-482a-99fb-cd302aa5fe13",
+   "externalId": "019fd1da-b3dc-768e-a88d-b6c63608a539",
+   "before": "50\\degree",
+   "after": "50°"
+  },
+  {
+   "id": "263edbfe-506e-4333-b3e5-22b70c642713",
+   "externalId": "019fd1d7-da21-75bb-acdd-ed2d573f9d3a",
+   "before": "65\\degree",
+   "after": "65°"
+  },
+  {
+   "id": "601fb4a4-702a-4b37-b54e-063f58441a64",
+   "externalId": "019fd1d7-dac6-701a-886b-4e751e15747d",
+   "before": "100\\degree",
+   "after": "100°"
+  },
+  {
+   "id": "42c3295c-7ac7-43ca-9496-970458449512",
+   "externalId": "019fd1d7-db0e-70c5-8f1c-7d4e03d2a5d9",
+   "before": "40\\degree",
+   "after": "40°"
+  },
+  {
+   "id": "0d6144d6-9606-4fae-a171-5f4acf4f5c36",
+   "externalId": "019fd1d6-257f-705c-a31d-ea18f7787c8f",
+   "before": "59\\degree F",
+   "after": "59° F"
+  },
+  {
+   "id": "9819cc7d-3779-4afe-af6a-9af4230e8d27",
+   "externalId": "019fd1d7-a51c-774a-8107-d5d81a857e96",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "1a77cae7-5585-4eec-a9cd-0c104ae5c152",
+   "externalId": "019fd1d7-d511-776f-93ee-0ed2b4eadc64",
+   "before": "130\\degree",
+   "after": "130°"
+  },
+  {
+   "id": "a2d168ab-61f7-4858-87ec-354f97efd2e6",
+   "externalId": "019fd1d7-d567-722d-9fc4-e266c93fd804",
+   "before": "55\\degree",
+   "after": "55°"
+  },
+  {
+   "id": "f815bd50-b9bf-4b90-ae9a-aa4588fb47bd",
+   "externalId": "019fd1d7-dd90-777f-a121-1033f0818841",
+   "before": "110\\degree",
+   "after": "110°"
+  },
+  {
+   "id": "84fa5eab-6d5f-4fab-ab95-beb94c062465",
+   "externalId": "019fd1d7-e157-772b-a091-26089008f620",
+   "before": "110\\degree",
+   "after": "110°"
+  },
+  {
+   "id": "06cb94d3-44b3-45c2-85d1-29b2d0a3d6fb",
+   "externalId": "019fd1d7-f16d-712b-b65a-cf708cb8bfa5",
+   "before": "69\\degree",
+   "after": "69°"
+  },
+  {
+   "id": "a7f82e5f-ce7d-4f63-8ac2-431ca12a1db0",
+   "externalId": "019fd1d7-e82c-738e-85a8-0366b111ce6a",
+   "before": "44\\degree",
+   "after": "44°"
+  },
+  {
+   "id": "961d01bc-de8a-48b4-b78f-5402eea0c055",
+   "externalId": "019fd1d7-e874-738c-91c8-e5b509ecbcc1",
+   "before": "123\\degree",
+   "after": "123°"
+  },
+  {
+   "id": "ab097807-1789-4749-a00a-9e2a920b0806",
+   "externalId": "019fd1d7-eb5a-7609-8c0b-4c3c882bdede",
+   "before": "40\\degree",
+   "after": "40°"
+  },
+  {
+   "id": "4569432d-7797-4152-a2d4-e918cb6bb347",
+   "externalId": "019fd1d7-ec02-775e-8396-a9e055242dc0",
+   "before": "100\\degree",
+   "after": "100°"
+  },
+  {
+   "id": "317daca3-aabe-450d-88ae-6100678bfd93",
+   "externalId": "019fd1d7-ec4c-705a-a634-aa0598e88bf4",
+   "before": "40\\degree",
+   "after": "40°"
+  },
+  {
+   "id": "74a217fc-00d8-42b2-8c1a-164337bb70d8",
+   "externalId": "019fd1d7-ec98-735e-844b-a9e734cee18b",
+   "before": "92\\degree",
+   "after": "92°"
+  },
+  {
+   "id": "049117b6-0ae1-4eaa-aa03-28dba8158607",
+   "externalId": "019fd1d7-ea5c-764e-a37e-c04c2f9f57f2",
+   "before": "130\\degree",
+   "after": "130°"
+  },
+  {
+   "id": "ff02bf9b-35c3-4f22-9f57-950d0dbe22df",
+   "externalId": "019fd1d7-eab4-73e8-8049-d84b670c2bb3",
+   "before": "40\\degree",
+   "after": "40°"
+  },
+  {
+   "id": "5b195f6c-4654-4a4c-b32e-a0f51925a234",
+   "externalId": "019fd1d7-f2a5-70cc-b858-3b60269f740a",
+   "before": "30\\degree",
+   "after": "30°"
+  },
+  {
+   "id": "30531011-64e6-43a8-9820-5e4d6acab027",
+   "externalId": "019fd1d7-f0cd-721a-8fdb-7bdfa6017a96",
+   "before": "115\\degree",
+   "after": "115°"
+  },
+  {
+   "id": "259b8b41-419f-44f1-9e22-585a3778d109",
+   "externalId": "019fd1d7-f03b-71e8-95ae-8b4108234659",
+   "before": "105\\degree",
+   "after": "105°"
+  },
+  {
+   "id": "059474ad-24e6-4930-9b40-cbd8e1df2fa5",
+   "externalId": "019fd1d7-f2f0-7061-995a-3a2cb0ec6d93",
+   "before": "85\\degree",
+   "after": "85°"
+  },
+  {
+   "id": "9fb1291d-8a62-4c17-9980-cdfa6f09f06a",
+   "externalId": "019fd1d7-f50e-72cb-a4c6-6086baa7261a",
+   "before": "36\\degree",
+   "after": "36°"
+  },
+  {
+   "id": "7b1d4b90-425f-482e-b244-2a5aaa296051",
+   "externalId": "019fd1d7-f653-763e-8ab5-68e6e81a0a4a",
+   "before": "126\\degree",
+   "after": "126°"
+  },
+  {
+   "id": "19bea1fc-54b1-4bd8-a72d-1ac6891e1cc3",
+   "externalId": "019fd1d7-f918-7366-a004-f40434f0ec9a",
+   "before": "320\\degree",
+   "after": "320°"
+  },
+  {
+   "id": "527f710c-de53-4181-90f7-e7ad4c3a899d",
+   "externalId": "019fd1d7-fa60-709d-9186-2c0c1af155f6",
+   "before": "120\\degree",
+   "after": "120°"
+  },
+  {
+   "id": "26d78532-ca05-41ab-a74d-e249c10e21f8",
+   "externalId": "019fd1d7-fb8d-73b3-807c-b0a67784f3fa",
+   "before": "31\\degree",
+   "after": "31°"
+  },
+  {
+   "id": "db32635e-9546-447e-ba61-db7551cccda8",
+   "externalId": "019fd1d8-00c8-7143-a589-a215e9e2dbaa",
+   "before": "540\\degree",
+   "after": "540°"
+  },
+  {
+   "id": "39d445e9-d716-4c20-96ef-27f937861896",
+   "externalId": "019fd1d7-ffc6-7424-97fc-2444b920d9b7",
+   "before": "120\\degree",
+   "after": "120°"
+  },
+  {
+   "id": "be52c95f-f277-422d-8864-c7c112211885",
+   "externalId": "019fd1d8-0071-737e-b214-9e6cf1c6f0bb",
+   "before": "900\\degree",
+   "after": "900°"
+  },
+  {
+   "id": "eda3b57d-b38f-4382-bed8-0b44bed38407",
+   "externalId": "019fd1d8-0a02-75df-bda9-f08c9ce8c73d",
+   "before": "72\\degree",
+   "after": "72°"
+  },
+  {
+   "id": "e63cc2da-c4fd-4c61-9333-3badf55deb46",
+   "externalId": "019fd1d8-0a48-704f-bd40-7b4fcec6c40d",
+   "before": "135\\degree",
+   "after": "135°"
+  },
+  {
+   "id": "7d1c151a-a2b1-4f09-baea-dab3fba3b93b",
+   "externalId": "019fd1d8-11c7-73d1-a90e-761f6e26a01c",
+   "before": "130\\degree",
+   "after": "130°"
+  },
+  {
+   "id": "ee221200-33d4-4911-a91e-0004ae6c8925",
+   "externalId": "019fd1d8-0ef9-777b-82e7-08448baa99fc",
+   "before": "66\\degree",
+   "after": "66°"
+  },
+  {
+   "id": "b61b485d-7651-4e9c-af4c-526e6e9fdcc5",
+   "externalId": "019fd1d8-0f5e-70c5-9c3e-37e355923a30",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "03fee2f8-0f6e-45f1-9a69-2f02a983b86d",
+   "externalId": "019fd1d8-12cc-71d2-8d31-ac396c568191",
+   "before": "50\\degree",
+   "after": "50°"
+  },
+  {
+   "id": "232b72ea-56c2-4c3e-a105-7fe494121340",
+   "externalId": "019fd1d8-137a-732f-9848-da77d89cd9fc",
+   "before": "140\\degree",
+   "after": "140°"
+  },
+  {
+   "id": "7bce1d5d-4b5d-406d-b09a-f0e7cba54753",
+   "externalId": "019fd1d8-23a9-714c-a1aa-80320ca7cbbd",
+   "before": "80\\degree",
+   "after": "80°"
+  },
+  {
+   "id": "048c14e5-1db6-4c0d-83bd-047e79a0c9c7",
+   "externalId": "019fd1d8-25d2-761d-adc4-664c3b87fc24",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "81278db2-8fed-4a16-87ef-49cfb4426bb5",
+   "externalId": "019fd1da-c925-7444-bdcb-32f6a6ba265a",
+   "before": "38\\degree",
+   "after": "38°"
+  },
+  {
+   "id": "a2c7d6f6-2e57-40e1-abd1-784495e6bd04",
+   "externalId": "019fd1da-aff1-737e-a9af-59c67431c93c",
+   "before": "140\\degree",
+   "after": "140°"
+  },
+  {
+   "id": "824184e3-27db-4814-943a-87e147e39bac",
+   "externalId": "019fd1da-cf3c-71a8-9591-47a6b7ffaaf8",
+   "before": "115\\degree",
+   "after": "115°"
+  },
+  {
+   "id": "1da7d081-c643-43e0-89de-4341814b844f",
+   "externalId": "019fd1da-a0e5-757d-a149-91c660b79e8d",
+   "before": "64\\degree",
+   "after": "64°"
+  },
+  {
+   "id": "bb5fe660-185a-4deb-8f9d-927e87a539f3",
+   "externalId": "019fd1da-870d-734a-b2bf-c251e5361dfe",
+   "before": "130\\degree",
+   "after": "130°"
+  },
+  {
+   "id": "8eb253d5-e52b-4cb7-9144-9608a03a80a7",
+   "externalId": "019fd1da-8643-749a-af9e-e69ee8346193",
+   "before": "30\\degree",
+   "after": "30°"
+  },
+  {
+   "id": "9bb22128-aaad-4495-9df2-14f0807c4fdd",
+   "externalId": "019fd1da-86a9-76a1-93c0-6122cd1380bd",
+   "before": "30\\degree",
+   "after": "30°"
+  },
+  {
+   "id": "68a9b347-0557-4ee2-8647-3c739f9cd016",
+   "externalId": "019fd1da-8f73-70bd-8e9e-f9d90f6f1919",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "5775af4f-d7aa-400d-b58c-92b810504976",
+   "externalId": "019fd1da-8df9-70cf-b055-cfe9dfde39a9",
+   "before": "67\\degree",
+   "after": "67°"
+  },
+  {
+   "id": "ff4d7327-4306-4875-b6dd-b0296b0fc13d",
+   "externalId": "019fd1da-8ef1-748a-884a-a377da63dbee",
+   "before": "43\\degree",
+   "after": "43°"
+  },
+  {
+   "id": "b8b7336a-5058-4da1-961f-a3e4b1c13deb",
+   "externalId": "019fd1da-944d-7101-9b40-95c0d1e61dd3",
+   "before": "24\\degree",
+   "after": "24°"
+  },
+  {
+   "id": "83fa36ad-63fb-4d8d-81aa-9e659bb15f9d",
+   "externalId": "019fd1da-94b6-755d-8532-1fe406184235",
+   "before": "27\\degree",
+   "after": "27°"
+  },
+  {
+   "id": "9877706e-1691-47aa-adb5-852a4510e19b",
+   "externalId": "019fd1da-9351-72e2-ba55-56fbf06edc10",
+   "before": "56\\degree",
+   "after": "56°"
+  },
+  {
+   "id": "3d6b3d4d-e4d5-4ce9-bebb-daab68e31194",
+   "externalId": "019fd1da-93c3-769b-b73f-563812aaf60b",
+   "before": "21\\degree",
+   "after": "21°"
+  },
+  {
+   "id": "94e1af5c-1069-4f29-868e-b9f5785d6596",
+   "externalId": "019fd1da-af4f-762b-ad75-aae040cf5757",
+   "before": "35\\degree",
+   "after": "35°"
+  },
+  {
+   "id": "96fb4735-5f40-44fe-8d7b-4b131194e090",
+   "externalId": "019fd1da-a397-75be-8a0a-da3976c540ef",
+   "before": "70\\degree",
+   "after": "70°"
+  },
+  {
+   "id": "9978450d-8920-4e5b-9d5e-2e5aff8ad7dd",
+   "externalId": "019fd1da-b371-7721-8e1f-432caf432e8f",
+   "before": "126\\degree",
+   "after": "126°"
+  },
+  {
+   "id": "057487b9-8a93-48b7-bf62-388f084199aa",
+   "externalId": "019fd1da-b2cc-7381-a3f3-80d49ba5cb73",
+   "before": "20\\degree",
+   "after": "20°"
+  },
+  {
+   "id": "0fab6604-1845-4136-93aa-db1f3c2fa446",
+   "externalId": "019fd1da-b5be-71bf-bad5-021383bbf65f",
+   "before": "24\\degree",
+   "after": "24°"
+  },
+  {
+   "id": "87233f55-fdd4-48df-abba-6c78f353aa07",
+   "externalId": "019fd1da-b833-75ab-b159-acb1e6720576",
+   "before": "20\\degree",
+   "after": "20°"
+  },
+  {
+   "id": "31f23bc3-5d10-4577-8ca8-ebc857438db1",
+   "externalId": "019fd1da-b90b-745d-a398-aada25401e3f",
+   "before": "80\\degree",
+   "after": "80°"
+  },
+  {
+   "id": "f896571d-3562-4b8d-a2db-154fde08744d",
+   "externalId": "019fd1da-bb4f-716b-9fd7-80646bd07c57",
+   "before": "32\\degree",
+   "after": "32°"
+  },
+  {
+   "id": "767962b1-ea31-4e36-ad80-dea3efeee69a",
+   "externalId": "019fd1da-bc05-70df-8c4b-34a111ebca91",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "e0645e70-d76b-4f37-81ca-70fdf3a010ce",
+   "externalId": "019fd1da-bc66-7788-b782-c42e62045e11",
+   "before": "42\\degree",
+   "after": "42°"
+  },
+  {
+   "id": "795f05aa-b9dd-4e12-a370-fdaf4d5e415a",
+   "externalId": "019fd1da-bd71-77a3-9c23-a25d8568dee3",
+   "before": "31\\degree",
+   "after": "31°"
+  },
+  {
+   "id": "a68a324e-2dfd-490a-b09b-cb37f8732fc3",
+   "externalId": "019fd1da-bb00-729d-a161-7ed84fb6d0eb",
+   "before": "72\\degree",
+   "after": "72°"
+  },
+  {
+   "id": "fba2696e-7646-44fd-8cf8-a1d236d79d35",
+   "externalId": "019fd1da-bba7-77f9-93fb-0947b25f41f7",
+   "before": "110\\degree",
+   "after": "110°"
+  },
+  {
+   "id": "fe5e289a-c7cf-49ee-8c60-5b49d5d8bef8",
+   "externalId": "019fd1da-bfdf-70ce-a199-2660d7a283b2",
+   "before": "20\\degree",
+   "after": "20°"
+  },
+  {
+   "id": "d9e0db6d-e8ef-4ffc-a6dd-42bc596142b3",
+   "externalId": "019fd1da-bf8a-730a-bd22-6ac49aa5a024",
+   "before": "115\\degree",
+   "after": "115°"
+  },
+  {
+   "id": "745c6386-54b5-43b5-b543-72f8bfd2cd3a",
+   "externalId": "019fd1da-bf38-712b-8404-dd48367c6036",
+   "before": "18\\degree",
+   "after": "18°"
+  },
+  {
+   "id": "e6cdcd0d-54e3-4bbb-b8be-9cd2e6ca65f6",
+   "externalId": "019fd1da-c045-7126-9fa4-fbab640bc9b4",
+   "before": "148\\degree",
+   "after": "148°"
+  },
+  {
+   "id": "c3828e96-c996-40c6-a451-db4be1677de7",
+   "externalId": "019fd1da-c98a-722b-9b91-2a6d926d3abe",
+   "before": "61\\degree",
+   "after": "61°"
+  },
+  {
+   "id": "90f4b9d2-38b4-4b5e-9730-d48809a0a5f5",
+   "externalId": "019fd1da-ca93-744c-bacc-3535a462f38a",
+   "before": "110\\degree",
+   "after": "110°"
+  },
+  {
+   "id": "3b12c0f1-046c-4de8-be9c-a64879180640",
+   "externalId": "019fd1db-15b0-710c-b6b7-16be86deca55",
+   "before": "94\\degree",
+   "after": "94°"
+  },
+  {
+   "id": "475180e3-dd9f-4fa2-af46-a485aa241c2b",
+   "externalId": "019fd1db-2311-76a2-a6f3-8e581622fe48",
+   "before": "75\\degree",
+   "after": "75°"
+  },
+  {
+   "id": "91f2917c-a4e0-4d73-bd00-5793114d8d40",
+   "externalId": "019fd1db-33d6-756d-9333-18ed32e78354",
+   "before": "107\\degree",
+   "after": "107°"
+  },
+  {
+   "id": "b9bc2439-5976-4005-bdb8-e6ec6efaf269",
+   "externalId": "019fd1db-316b-73fe-9ccb-a450ff2e4c68",
+   "before": "17\\degree",
+   "after": "17°"
+  },
+  {
+   "id": "b4b3b735-b0c3-4645-a0f4-eca7bd517146",
+   "externalId": "019fd1db-365e-722b-a325-ff262a00fbf6",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "c8767e6d-c5f7-47b1-aacf-48bd2c78d8e9",
+   "externalId": "019fd1db-45ab-7046-92e0-9e8b93918d64",
+   "before": "90\\degree",
+   "after": "90°"
+  },
+  {
+   "id": "933e77eb-9f0c-4534-85f6-de370aa42afe",
+   "externalId": "019fd1db-47a7-712a-9239-c2a2336041ed",
+   "before": "84\\degree",
+   "after": "84°"
+  },
+  {
+   "id": "d691bfee-bd1f-4c5c-98c3-e58bb63a143c",
+   "externalId": "019fd1db-773a-707e-93f1-cf9ed9c206fd",
+   "before": "55\\degree",
+   "after": "55°"
+  },
+  {
+   "id": "8d059f42-68d3-4390-86f1-1efc33e6424d",
+   "externalId": "019fd1de-3707-7268-8563-28e872ae11d9",
+   "before": "65\\degree",
+   "after": "65°"
+  },
+  {
+   "id": "bf581fe9-a202-421e-a353-25b3d96384d9",
+   "externalId": "019fd1de-3e20-766b-b991-25303279f215",
+   "before": "104\\degree",
+   "after": "104°"
+  },
+  {
+   "id": "7da525dc-3fa5-407a-9685-829c402e84b0",
+   "externalId": "019fd1de-3f37-76bd-82f5-878357e4b3ea",
+   "before": "41\\degree",
+   "after": "41°"
+  },
+  {
+   "id": "ad872b64-7d26-4737-8aaf-60845fa557ff",
+   "externalId": "019fd1de-59d9-7471-b6c0-b2547dea8f8d",
+   "before": "135\\degree",
+   "after": "135°"
+  },
+  {
+   "id": "69f1039d-e10d-4fc9-979d-a8286a70d9cd",
+   "externalId": "019fd1de-6198-7289-892b-a11b9ea36861",
+   "before": "30\\degree",
+   "after": "30°"
+  },
+  {
+   "id": "676ab5fa-7ceb-4038-8952-38be614c26cf",
+   "externalId": "019fd1de-ace5-765a-aea4-c25bfe81181d",
+   "before": "70\\degree",
+   "after": "70°"
+  },
+  {
+   "id": "a81f1527-42a9-4f9d-adbe-9e9e9a416010",
+   "externalId": "019fd1de-7888-76a6-98a1-48acfb242eb8",
+   "before": "50\\degree",
+   "after": "50°"
+  },
+  {
+   "id": "d5188757-bacc-471d-a9c2-ff9eed4061bd",
+   "externalId": "019fd1de-97d1-73a8-8155-a291b5c64708",
+   "before": "55\\degree",
+   "after": "55°"
+  },
+  {
+   "id": "dfebe3b1-3d42-4292-919a-c884f7ce6225",
+   "externalId": "019fd1de-9632-726b-b963-e4f61d2d98a8",
+   "before": "55\\degree",
+   "after": "55°"
+  },
+  {
+   "id": "0388f0cb-89f2-4bf5-bbe1-07a24edb57dd",
+   "externalId": "019fd1de-96c3-7725-80ea-07d22a4a5042",
+   "before": "30\\degree",
+   "after": "30°"
+  },
+  {
+   "id": "6f39575c-cf8d-4b3f-a2f7-50196fd422a1",
+   "externalId": "019fd1de-9812-74a9-9d47-c95b4283dd55",
+   "before": "20\\degree",
+   "after": "20°"
+  },
+  {
+   "id": "da334615-0d0f-4614-8788-0b728f14d63b",
+   "externalId": "019fd1de-9ac0-777d-9cef-1c19127c851d",
+   "before": "48\\degree2",
+   "after": "48°2"
+  },
+  {
+   "id": "ce7c7caa-68f1-490a-a68c-56ff69f9e79b",
+   "externalId": "019fd1de-9ca9-7568-94e0-800ead5ed1cc",
+   "before": "64\\degree",
+   "after": "64°"
+  },
+  {
+   "id": "27440cde-4762-4389-a28e-4021c45e033e",
+   "externalId": "019fd1de-9d7b-718b-be40-cd72bf19deef",
+   "before": "116\\degree",
+   "after": "116°"
+  },
+  {
+   "id": "4d0d3ad4-f9d0-4d5c-9403-003e91a9afbd",
+   "externalId": "019fd1de-9b90-7432-ae90-091cc4f10663",
+   "before": "32\\degree",
+   "after": "32°"
+  },
+  {
+   "id": "b690381a-0bd2-4ca7-bd8e-f9c214ad4716",
+   "externalId": "019fd1de-a0f9-711d-9c07-021463f7ec68",
+   "before": "110\\degree",
+   "after": "110°"
+  },
+  {
+   "id": "7d1f4d48-3f97-417c-8ceb-740eb998785e",
+   "externalId": "019fd1de-9fa1-735e-b67d-00888d0edc74",
+   "before": "54\\degree",
+   "after": "54°"
+  },
+  {
+   "id": "297d6b06-0101-4243-b633-0c49620c2dff",
+   "externalId": "019fd1de-a2a0-747c-b47e-da0c1f35178e",
+   "before": "56\\degree",
+   "after": "56°"
+  },
+  {
+   "id": "601010de-7ace-4f9f-96c1-8aef75da7aa4",
+   "externalId": "019fd1de-9f5d-7566-b842-6889d79122a1",
+   "before": "65\\degree",
+   "after": "65°"
+  },
+  {
+   "id": "49d86962-61b2-4141-92e7-f953b8168262",
+   "externalId": "019fd1de-a0b5-7353-8bbe-e00216e89bb6",
+   "before": "40\\degree",
+   "after": "40°"
+  },
+  {
+   "id": "f7239825-af68-4048-8af6-5668d6a5c2f6",
+   "externalId": "019fd1de-a446-72bb-b389-c3d9b523e115",
+   "before": "35\\degree",
+   "after": "35°"
+  },
+  {
+   "id": "2100e8c3-8392-4d8c-a289-b628f1efc469",
+   "externalId": "019fd1de-a4cf-737b-a5e0-601f84466c1a",
+   "before": "70\\degree",
+   "after": "70°"
+  },
+  {
+   "id": "322c67ca-f428-43c1-9028-033371bec531",
+   "externalId": "019fd1de-a5e6-7639-ac3c-6780159c70e0",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "dd3a5767-63c3-4f94-9242-fe4cbcd0da3f",
+   "externalId": "019fd1de-a62b-77a8-adf2-41d432cb2d89",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "4a3107ae-fe29-48e4-8a81-a8f7cf7f2553",
+   "externalId": "019fd1de-a3fe-7698-8fb0-8293015653ee",
+   "before": "23\\degree",
+   "after": "23°"
+  },
+  {
+   "id": "8bb3605e-53c4-4fdd-b6ab-b9482fc7f143",
+   "externalId": "019fd1de-a6fe-7053-84a3-9cd73ddcf32f",
+   "before": "76\\degree",
+   "after": "76°"
+  },
+  {
+   "id": "2ab4a49d-17ab-4fd6-ab7a-5d5139c154d5",
+   "externalId": "019fd1de-ab04-70c6-9d69-f48deaa46c9d",
+   "before": "55\\degree",
+   "after": "55°"
+  },
+  {
+   "id": "68596174-c786-478e-a2ff-67b487e3e3c4",
+   "externalId": "019fd1de-a811-76af-9a8b-654215a7483b",
+   "before": "84\\degree",
+   "after": "84°"
+  },
+  {
+   "id": "931d9bc2-5b2b-4ade-958d-019921916e4b",
+   "externalId": "019fd1de-a6b8-7450-b2e9-13baacbe3694",
+   "before": "40\\degree",
+   "after": "40°"
+  },
+  {
+   "id": "95686721-ae63-4b6c-a975-606c452e4395",
+   "externalId": "019fd1de-aca2-75ca-a7bc-4de98135429d",
+   "before": "65\\degree",
+   "after": "65°"
+  },
+  {
+   "id": "0170278b-c977-40b7-8e50-aa948237e71d",
+   "externalId": "019fd1de-abd1-7438-948a-0a4ba718b4d8",
+   "before": "40\\degree",
+   "after": "40°"
+  },
+  {
+   "id": "2d177746-62b0-4269-9b0f-091c8d21a822",
+   "externalId": "019fd1de-aebc-739a-8fed-17893ffee9b0",
+   "before": "40\\degree",
+   "after": "40°"
+  },
+  {
+   "id": "1ab799fe-1f46-4da1-beb9-e618ce5bf701",
+   "externalId": "019fd1de-b096-7178-a46e-5561fce9a040",
+   "before": "65\\degree",
+   "after": "65°"
+  },
+  {
+   "id": "469b7abf-fb4f-4083-b451-2c5881197717",
+   "externalId": "019fd1de-aeff-730a-b1cf-46ac5037b089",
+   "before": "70\\degree",
+   "after": "70°"
+  },
+  {
+   "id": "54c6eede-c9bc-4e1d-a759-24560778ef8b",
+   "externalId": "019fd1de-ae39-75ec-a5f6-717f47f4c533",
+   "before": "75\\degree",
+   "after": "75°"
+  },
+  {
+   "id": "90889781-792c-4589-b36a-f061730d8beb",
+   "externalId": "019fd1de-af40-7750-b4c7-427346ea3ae8",
+   "before": "64\\degree",
+   "after": "64°"
+  },
+  {
+   "id": "10c8eaf6-9f80-4186-9c09-2eaf1d3b508f",
+   "externalId": "019fd1de-af82-76f0-a16f-51667d264e03",
+   "before": "140\\degree",
+   "after": "140°"
+  },
+  {
+   "id": "baf9c8b9-8ace-480d-acb9-8b0a159f7116",
+   "externalId": "019fd1de-b160-7410-ba74-ae0d11434366",
+   "before": "75\\degree",
+   "after": "75°"
+  },
+  {
+   "id": "e50a8389-e671-4e2e-af77-5ad556560d48",
+   "externalId": "019fd1de-ad29-71bc-bf47-e72fbb946aa2",
+   "before": "55\\degree",
+   "after": "55°"
+  },
+  {
+   "id": "fe383a56-e68b-43be-811e-01469d7e5d1f",
+   "externalId": "019fd1de-b1a3-710c-9374-ef52d2c2f43a",
+   "before": "120\\degree",
+   "after": "120°"
+  },
+  {
+   "id": "a8617638-fd99-4e0b-b4aa-e2b65c7b894d",
+   "externalId": "019fd1de-adb1-72bf-9301-269199a229cf",
+   "before": "80\\degree",
+   "after": "80°"
+  },
+  {
+   "id": "814c35b5-7113-4b59-8c82-63aaa5b58954",
+   "externalId": "019fd1de-b37c-7568-b354-e053a9457905",
+   "before": "65\\degree",
+   "after": "65°"
+  },
+  {
+   "id": "c1be6dd2-1a1d-46e9-8b2f-72d7e6898213",
+   "externalId": "019fd1de-b3bf-73ba-bc25-9861e9ef0c4b",
+   "before": "25\\degree",
+   "after": "25°"
+  },
+  {
+   "id": "d5312757-b289-4806-a4ba-57f66bc23e06",
+   "externalId": "019fd1de-b404-7438-9f5d-c1a7b3331a07",
+   "before": "168\\degree",
+   "after": "168°"
+  },
+  {
+   "id": "66bd90e8-5ae7-46fd-9689-e0afe553af10",
+   "externalId": "019fd1de-b48a-778c-bb8d-5afa7e3be08a",
+   "before": "127\\degree",
+   "after": "127°"
+  },
+  {
+   "id": "80f0dc2a-3303-41ae-ad79-cf43a8861747",
+   "externalId": "019fd1de-b447-739f-a1c6-4bdc4ec1ac7e",
+   "before": "68\\degree",
+   "after": "68°"
+  },
+  {
+   "id": "b3b8ff93-a0d5-408b-9eff-46eb5fa5b85f",
+   "externalId": "019fd1de-b4cc-713a-ad31-e63ceebbcd59",
+   "before": "130\\degree",
+   "after": "130°"
+  },
+  {
+   "id": "3e4d0093-0597-46f9-90e3-55f0c7b23d0b",
+   "externalId": "019fd1de-b512-73af-b168-f3995dbf64bd",
+   "before": "360\\degree",
+   "after": "360°"
+  },
+  {
+   "id": "a7d271da-6ef2-404f-896d-b829d0103c68",
+   "externalId": "019fd1de-b8f3-7069-a474-3624a64e0391",
+   "before": "38\\degree",
+   "after": "38°"
+  },
+  {
+   "id": "dc54cf17-df78-49a2-ac32-dd3768662983",
+   "externalId": "019fd1de-b339-7718-9ea0-ec3d8d910b45",
+   "before": "260\\degree",
+   "after": "260°"
+  },
+  {
+   "id": "585583ed-32ca-442f-b916-9e73515163fc",
+   "externalId": "019fd1de-b6bf-766d-966a-79ca60a2809c",
+   "before": "85\\degree",
+   "after": "85°"
+  },
+  {
+   "id": "dfce063a-98d1-4050-b8ff-532cad02f112",
+   "externalId": "019fd1de-b7dd-7735-ba28-9282be8c49b3",
+   "before": "45\\degree",
+   "after": "45°"
+  },
+  {
+   "id": "396d2c82-d2c4-41c4-b20d-7b13fbda3622",
+   "externalId": "019fd1de-bb23-758a-93ce-1e2436445fad",
+   "before": "37\\degree",
+   "after": "37°"
+  },
+  {
+   "id": "1bb8bb43-6d06-431f-a9b8-b4d126fa0ee3",
+   "externalId": "019fd1de-badb-718b-85af-f8494acc52bc",
+   "before": "24\\degree",
+   "after": "24°"
+  },
+  {
+   "id": "fe38c765-4010-4b6d-b928-46e1e41e9e39",
+   "externalId": "019fd1de-bbb0-745a-ae98-3532871f7564",
+   "before": "20\\degree",
+   "after": "20°"
+  },
+  {
+   "id": "57d41f1b-0d50-4e49-9f10-4fed8bea3233",
+   "externalId": "019fd1de-bc4e-72aa-8f0f-7bd492d73571",
+   "before": "67\\degree",
+   "after": "67°"
+  },
+  {
+   "id": "66bd0a1f-0e05-4a42-8b1a-70db26c4e6a3",
+   "externalId": "019fd1de-ba55-77fe-86fa-4307bd22626b",
+   "before": "45\\degree",
+   "after": "45°"
+  },
+  {
+   "id": "533e8dcd-62c7-4809-9aea-36aa54a03ce9",
+   "externalId": "019fd1de-be78-7170-96f5-911620a1c10c",
+   "before": "55\\degree",
+   "after": "55°"
+  },
+  {
+   "id": "06822769-4219-4fc7-a20f-6d2ab57f2e67",
+   "externalId": "019fd1de-be35-742f-af2a-c5642230dc48",
+   "before": "140\\degree",
+   "after": "140°"
+  },
+  {
+   "id": "19733c63-3d6d-4b95-8f75-fedebf4a9940",
+   "externalId": "019fd1de-c149-73e7-97bd-8e5008f763c6",
+   "before": "160\\degree",
+   "after": "160°"
+  },
+  {
+   "id": "d7ce4092-0c1a-4387-ba7a-64bfb5fda768",
+   "externalId": "019fd1de-c3c3-7391-94c7-b11904818c96",
+   "before": "78\\degree",
+   "after": "78°"
+  },
+  {
+   "id": "8b76dc7d-9c00-436d-88e8-27946e48e3fd",
+   "externalId": "019fd1de-c33b-75a4-a0f0-fd9770c04d79",
+   "before": "50\\degree",
+   "after": "50°"
+  },
+  {
+   "id": "45fa3308-98e1-4604-8506-007a0a07725e",
+   "externalId": "019fd1de-c37d-7588-aadf-80cd995ccdbe",
+   "before": "45\\degree",
+   "after": "45°"
+  },
+  {
+   "id": "558dccd2-0beb-4f84-85e8-1675500a66c7",
+   "externalId": "019fd1db-22ae-72ac-8734-c63cd09bd00d",
+   "before": "80\\degree",
+   "after": "80°"
+  },
+  {
+   "id": "128b7a40-bf33-4e22-abf6-2405502f2011",
+   "externalId": "019fd1d7-ebb3-7639-9a81-16bdee264dac",
+   "before": "120\\degree",
+   "after": "120°"
+  },
+  {
+   "id": "1ace4362-5b77-4663-b28a-0f8b07705992",
+   "externalId": "019fd1db-4d41-7178-93ab-569432a921d5",
+   "before": "80\\degree",
+   "after": "80°"
+  },
+  {
+   "id": "23494a94-af9d-469a-ae60-72b2ef9076b6",
+   "externalId": "019fd1db-3300-712f-9bbb-94212ce75fb1",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "ab6e5c1c-89b8-4e01-bcc8-10a1fd21748c",
+   "externalId": "019fd1d7-ee76-735e-805d-01a0072f599a",
+   "before": "170\\degree",
+   "after": "170°"
+  },
+  {
+   "id": "1f805483-0fb3-4859-bf8a-359a1c3df1a5",
+   "externalId": "019fd1de-b633-767d-bee1-5fbf2076efd2",
+   "before": "105\\degree",
+   "after": "105°"
+  },
+  {
+   "id": "f0561db8-77d0-47b8-9654-d99940986606",
+   "externalId": "019fd1de-9d33-74de-a5e9-1dfb3a88e2af",
+   "before": "65\\degree",
+   "after": "65°"
+  },
+  {
+   "id": "e13e7228-8281-4ee8-86ca-82176cdb8f3f",
+   "externalId": "019fd1d7-81f8-73ec-a69f-ad61b04e9059",
+   "before": "90\\degree",
+   "after": "90°"
+  },
+  {
+   "id": "86cbd162-a9cd-41ef-a171-d521361a4ef1",
+   "externalId": "019fd1da-a1bf-71c8-9e6f-6aece4e911fc",
+   "before": "59\\degree",
+   "after": "59°"
+  },
+  {
+   "id": "a580bf08-f428-4728-a438-93c9d5330c66",
+   "externalId": "019fd1db-2bf9-7035-a306-40c50f8077c9",
+   "before": "55\\degree",
+   "after": "55°"
+  },
+  {
+   "id": "42d07411-9f87-41ec-bd91-d48a9b348151",
+   "externalId": "019fd1d7-da72-77fc-b35b-441b5e06ffed",
+   "before": "35\\degree",
+   "after": "35°"
+  },
+  {
+   "id": "240bc4a2-6f53-43a4-81fc-c674448c9052",
+   "externalId": "019fd1da-9de0-759d-b010-5940237ea1d1",
+   "before": "28\\degree",
+   "after": "28°"
+  },
+  {
+   "id": "4c8ed479-7878-447e-b903-f88fe27af4bb",
+   "externalId": "019fd1da-b9ce-7711-9e39-ca0248d76684",
+   "before": "20\\degree",
+   "after": "20°"
+  },
+  {
+   "id": "6696917d-0229-4085-9c12-f59ab99b6d34",
+   "externalId": "019fd1d7-dc72-7083-aef1-925f0b35b71e",
+   "before": "135\\degree",
+   "after": "135°"
+  },
+  {
+   "id": "508c874d-13ed-4837-bf6b-43547cbf8274",
+   "externalId": "019fd1d7-dcc8-74c9-b72f-47d4d3e8e174",
+   "before": "100\\degree",
+   "after": "100°"
+  },
+  {
+   "id": "d2b10eea-c75c-4b78-b70a-4eda965c7352",
+   "externalId": "019fd1d7-ea10-77d0-92af-b1bd9afd1eb7",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "a1486580-3a51-4318-97f4-1a0470776c87",
+   "externalId": "019fd1d7-e6f2-770f-9579-1de24dc014da",
+   "before": "30\\degree",
+   "after": "30°"
+  },
+  {
+   "id": "735c52a9-246a-41d9-b932-c5a5cd2f080e",
+   "externalId": "019fd1d7-f606-737f-88ff-f5136cd366b0",
+   "before": "36\\degree",
+   "after": "36°"
+  },
+  {
+   "id": "ad1c0da8-a73b-40be-8182-8524f78ca45b",
+   "externalId": "019fd1d8-0e99-717d-97c0-eecce0c02a59",
+   "before": "36\\degree",
+   "after": "36°"
+  },
+  {
+   "id": "08d35207-4f17-4439-970d-e001960d381d",
+   "externalId": "019fd1da-be1e-707b-8b7b-1efe10a872cc",
+   "before": "10\\degree",
+   "after": "10°"
+  },
+  {
+   "id": "8ffadcec-d743-4eef-b9b0-6994112b8d8a",
+   "externalId": "019fd1da-becf-71a1-8eaa-0f21edc62c07",
+   "before": "195\\degree",
+   "after": "195°"
+  },
+  {
+   "id": "4cff41d7-57ce-4fb3-8bdb-1ab445552c92",
+   "externalId": "019fd1da-be6f-74d8-829f-0332542b0545",
+   "before": "7\\degree",
+   "after": "7°"
+  },
+  {
+   "id": "9554212e-ec4a-4884-9d2d-c0cc2360c0e8",
+   "externalId": "019fd1da-ba86-73bb-9d12-e59fb998214e",
+   "before": "104\\degree",
+   "after": "104°"
+  },
+  {
+   "id": "02ff4e9a-3a92-41bc-a83b-431d3d56bcc2",
+   "externalId": "019fd1da-a009-71ec-b1b1-f23fccdf0265",
+   "before": "70\\degree",
+   "after": "70°"
+  },
+  {
+   "id": "fcf60384-7fd9-45b4-b715-b17c62bd6dd2",
+   "externalId": "019fd1da-8d2e-722f-a633-dc2b8ba45e76",
+   "before": "64\\degree",
+   "after": "64°"
+  },
+  {
+   "id": "baf48260-f32a-4b8c-a913-445513c747fe",
+   "externalId": "019fd1db-0129-70de-9b4e-e7f9d8fa3abe",
+   "before": "73\\degree",
+   "after": "73°"
+  },
+  {
+   "id": "b8157257-b2ef-4372-955b-074930f8c20a",
+   "externalId": "019fd1db-2fac-7739-a4cc-2dff97a2091a",
+   "before": "120\\degree",
+   "after": "120°"
+  },
+  {
+   "id": "7f339969-2d62-4b99-9818-d881ee60c707",
+   "externalId": "019fd1db-37e0-77a6-bf89-a22ce130c316",
+   "before": "60\\degree",
+   "after": "60°"
+  },
+  {
+   "id": "90b4f5c9-bbd0-4ce4-9ec4-9a9936d9ecd0",
+   "externalId": "019fd1db-1bf4-73a8-a478-ab3d47513d4a",
+   "before": "95\\degree",
+   "after": "95°"
+  },
+  {
+   "id": "6629f8a8-8e82-4012-8cb1-bd4a93dda81a",
+   "externalId": "019fd1db-4bd4-7426-8b46-e0aa477c6b95",
+   "before": "110\\degree",
+   "after": "110°"
+  },
+  {
+   "id": "b134401e-d015-4772-ac56-7f5131488bf9",
+   "externalId": "019fd1de-9e4e-71ca-baa9-5895e86b52cc",
+   "before": "105\\degree",
+   "after": "105°"
+  },
+  {
+   "id": "f822fee7-0b40-496c-8ea5-46010e8dcda4",
+   "externalId": "019fd1de-a2e4-733f-97a9-d8fdfe7c77ef",
+   "before": "70\\degree",
+   "after": "70°"
+  },
+  {
+   "id": "e13696a7-28e6-44ed-9364-bde2e607e2db",
+   "externalId": "019fd1de-a671-75e3-89c5-148ec06cf595",
+   "before": "70\\degree",
+   "after": "70°"
+  },
+  {
+   "id": "056cf709-893c-4042-bd12-9a8dd6b59f2c",
+   "externalId": "019fd1de-ad6d-7458-9e42-d63b601e6047",
+   "before": "95\\degree",
+   "after": "95°"
+  },
+  {
+   "id": "77b576be-7453-438e-801a-81a4b864cdc7",
+   "externalId": "019fd1de-b2af-7342-bbbe-45f77d873653",
+   "before": "200\\degree",
+   "after": "200°"
+  },
+  {
+   "id": "e0df3b87-0aa7-4291-9c9d-52671542d569",
+   "externalId": "019fd1de-b563-70e0-be38-ca5e19f51790",
+   "before": "44\\degree",
+   "after": "44°"
+  },
+  {
+   "id": "3cbeea06-3d15-4359-97d1-d96459bfa90b",
+   "externalId": "019fd1de-b937-704f-a9de-d669fe79c80e",
+   "before": "40\\degree",
+   "after": "40°"
+  },
+  {
+   "id": "4068693e-6ebd-4e1b-989f-8d4083e1fa61",
+   "externalId": "019fd1de-ba98-7375-aec2-5d2fcbe210dc",
+   "before": "102\\degree",
+   "after": "102°"
+  },
+  {
+   "id": "696514ec-596c-481a-9650-7c060d0123b8",
+   "externalId": "019fd1de-bc92-77a3-be08-3087b999ebd2",
+   "before": "41\\degree",
+   "after": "41°"
+  },
+  {
+   "id": "e053a3ed-cd7f-4f2d-8b44-63e13b74e8f5",
+   "externalId": "019fd1de-ab48-715a-9556-b293c92c4e4d",
+   "before": "56\\degree",
+   "after": "56°"
+  },
+  {
+   "id": "68f38969-86d7-4bbf-9f42-39c30f68903b",
+   "externalId": "019fd1de-c21b-703c-b677-6186d19b88cb",
+   "before": "50\\degree",
+   "after": "50°"
+  },
+  {
+   "id": "578021b7-2837-494f-87a4-be3fb17ec782",
+   "externalId": "019fd1d7-eb02-748d-bd37-ea6c11a9ab03",
+   "before": "35\\degree",
+   "after": "35°"
+  },
+  {
+   "id": "f08167af-2c9a-441a-8e15-a9d38e5ab614",
+   "externalId": "019fd1da-ce77-74de-81da-22caed83bec5",
+   "before": "47\\degree",
+   "after": "47°"
+  },
+  {
+   "id": "1620ff98-6d52-4002-812e-d1c4c591b817",
+   "externalId": "019fd1da-952a-715d-bfb9-fb1b22ab2164",
+   "before": "40\\degree",
+   "after": "40°"
+  },
+  {
+   "id": "ef3d54c7-916a-4a58-b295-85030bb03394",
+   "externalId": "019fd1de-a558-7316-b961-45473442d68d",
+   "before": "75\\degree",
+   "after": "75°"
+  },
+  {
+   "id": "0d681924-050d-47c0-9819-514070e055cf",
+   "externalId": "019fd1d8-0014-7508-b4cf-0214887c5be0",
+   "before": "27\\degree",
+   "after": "27°"
+  },
+  {
+   "id": "a5843809-1973-47d1-bf76-a593f9221bd2",
+   "externalId": "019fd1db-0be8-7090-8507-9eeb01d21c05",
+   "before": "58\\degree",
+   "after": "58°"
+  },
+  {
+   "id": "133353c2-621d-4b90-8f8d-29e022b6c52b",
+   "externalId": "019fd1db-1c76-77fa-b433-28215d3f7698",
+   "before": "34\\degree",
+   "after": "34°"
+  },
+  {
+   "id": "461eca49-428d-41b6-9a17-f69c648e4c3f",
+   "externalId": "019fd1de-c40b-721f-8f87-64b763621ee6",
+   "before": "48\\degree",
+   "after": "48°"
+  },
+  {
+   "id": "98cb95d1-5e87-4382-9ac9-d2ba460c1204",
+   "externalId": "019fd1db-4e78-7514-8fd9-b6b4be0c790c",
+   "before": "200\\degree",
+   "after": "200°"
+  },
+  {
+   "id": "5fbc5b73-210d-406a-b090-ed917c492d9d",
+   "externalId": "019fd1d7-a362-7501-a32f-30af94ab00b0",
+   "before": "120\\degree",
+   "after": "120°"
+  },
+  {
+   "id": "2f0cce4d-3047-4774-a18d-9a6906afab4b",
+   "externalId": "019fd1d7-f341-707e-85a0-6d1021c189f0",
+   "before": "360\\degree",
+   "after": "360°"
+  },
+  {
+   "id": "dba2d846-1175-4068-be7a-86b5479b7c53",
+   "externalId": "019fd1da-cdb6-7145-b91a-64685d47717e",
+   "before": "129\\degree",
+   "after": "129°"
+  },
+  {
+   "id": "4b595243-2eec-4477-9ff0-09ef5ecaeb6d",
+   "externalId": "019fd1db-14cf-72e5-8004-002b28e9bf73",
+   "before": "70\\degree",
+   "after": "70°"
+  },
+  {
+   "id": "658d6a59-6ee5-446e-a386-616a4ed060e8",
+   "externalId": "019fd1db-1b03-71ce-8677-5c09b74b4c89",
+   "before": "63\\degree",
+   "after": "63°"
+  },
+  {
+   "id": "c1acd800-a62a-4c12-9e40-db42bbadba20",
+   "externalId": "019fd1de-a9f0-708b-8ef5-974489c54fd9",
+   "before": "30\\degree",
+   "after": "30°"
+  },
+  {
+   "id": "ffe207b4-7ed5-4c40-a6a1-4a02b34f02fc",
+   "externalId": "019fd1d7-e914-711c-9530-14d9460023a3",
+   "before": "135\\degree",
+   "after": "135°"
+  },
+  {
+   "id": "fca7e06f-d0d5-4f70-a68e-712e15139d72",
+   "externalId": "019fd1d7-efa9-737b-980c-7753c768edf3",
+   "before": "1080\\degree",
+   "after": "1080°"
+  },
+  {
+   "id": "7746505c-aa9e-4f02-9904-778ab1c68033",
+   "externalId": "019fd1d7-f787-740f-b9ff-ddaf5c3608a9",
+   "before": "70\\degree",
+   "after": "70°"
+  },
+  {
+   "id": "68dfe0e0-55da-4c3c-bacc-ba1a9c3e2800",
+   "externalId": "019fd1d7-f82c-73ff-8192-7073b70e00c9",
+   "before": "44\\degree",
+   "after": "44°"
+  },
+  {
+   "id": "a568d66f-3170-4ec7-a9f9-f9b0d2781de6",
+   "externalId": "019fd1d7-f973-73fe-bcae-2d4139718536",
+   "before": "360\\degree",
+   "after": "360°"
+  },
+  {
+   "id": "b8ccc680-fa21-4880-8b00-5c610f9fc22a",
+   "externalId": "019fd1da-fe1b-742a-8bb1-ad83a3d78788",
+   "before": "98\\degree",
+   "after": "98°"
+  }
+ ]
+}
