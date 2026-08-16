@@ -20,6 +20,7 @@ import { PrismaClient } from "@prisma/client";
 import { allowSharedImport } from "../../src/lib/import/classifyDatabaseUrl";
 import { inspectDatabaseTargets } from "../import/resolveDbTarget";
 import { hasBrokenGlyph, repairGlyphs } from "./answer-notation";
+import { writeAppliedLog } from "./applied-log";
 
 const BACKUP = "scripts/qa/reports/answer-glyph-backup.json";
 /** 되돌릴 표를 아직 못 만든 PUA. 고쳐 쓰지 말고 보고만 한다. */
@@ -91,15 +92,39 @@ async function main(): Promise<void> {
       );
       return;
     }
-    let done = 0;
+    const applied = [];
+    let skipped = 0;
     for (const row of fixable) {
+      // 공유 DB 를 네 트랙이 같이 쓴다. 우리가 본 값 그대로일 때만 덮는다.
+      const current = await prisma.problem.findUnique({
+        where: { id: row.id },
+        select: { answer: true },
+      });
+      if (current?.answer !== row.answer) {
+        console.log(`   건너뜀 ${row.externalId ?? row.id} — 그 사이 값이 바뀌었다`);
+        skipped += 1;
+        continue;
+      }
+      const after = repairGlyphs(row.answer);
       await prisma.problem.update({
         where: { id: row.id },
-        data: { answer: repairGlyphs(row.answer) },
+        data: { answer: after },
       });
-      done += 1;
+      applied.push({
+        id: row.id,
+        externalId: row.externalId,
+        before: row.answer,
+        after,
+      });
     }
-    console.log(`\n적용 — ${done}건 복구`);
+    const logPath = await writeAppliedLog(
+      "phase1-glyph",
+      "scripts/qa/repair-answer-glyphs.ts",
+      applied,
+    );
+    console.log(`
+적용 — ${applied.length}건 복구 · 건너뜀 ${skipped}`);
+    console.log(`되돌리기 목록(이 단계만) → ${logPath}`);
   } finally {
     await prisma.$disconnect();
   }
