@@ -14,12 +14,16 @@
  * 데이터: src/mocks/handlers/prediction.ts (MSW). T7.7/T7.10 실 API 는 아직 없고,
  * 계약(src/contracts/predictor.contract.ts)이 SSOT라 나중에 그대로 갈아끼운다.
  */
+import { http, HttpResponse } from "msw";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
+
+import { server } from "@/mocks/server";
 
 import ExamPage from "@/app/(main)/exam/page";
 import { RoundDetail } from "@/components/exam/RoundDetail";
 import {
+  MOCK_DETAIL_JEONGHWA_PAST,
   ROUND_DAERYUN_ID,
   ROUND_GYEONGMYEONG_ID,
   ROUND_JEONGHWA_ID,
@@ -213,9 +217,7 @@ describe("회차 상세 — 예측 | 실측 좌우 대조", () => {
     await renderDetail(ROUND_JEONGHWA_PAST_ID);
 
     const row = screen.getByRole("row", { name: /최수아/ });
-    expect(
-      within(row).getByText("예측 불가 — 응답 부족"),
-    ).toBeInTheDocument();
+    expect(within(row).getByText("예측 불가 — 응답 부족")).toBeInTheDocument();
   });
 
   it("근거가 부족한 회차는 청사진 숫자를 내지 않고 예측 불가를 알린다", async () => {
@@ -244,5 +246,78 @@ describe("회차 상세 — 예측 | 실측 좌우 대조", () => {
       "href",
       "/exam",
     );
+  });
+});
+
+// ─────────────────────────────────────────────
+// 빈 상태 · 오류 상태
+//
+// 실 API(/api/exam/rounds)는 실측이 아직 0건이라 **당분간 대부분 빈 배열을 낸다.**
+// 그 상태에서 화면이 무너지거나(빈 화면) 숫자를 지어내면 첫날부터 신뢰를 잃는다.
+// ─────────────────────────────────────────────
+describe("데이터가 없을 때", () => {
+  it("회차가 0건이면 무너지지 않고 이유를 적는다", async () => {
+    server.use(
+      http.get("/api/exam/rounds", () => HttpResponse.json({ data: [] })),
+    );
+
+    render(<ExamPage />);
+
+    expect(
+      await screen.findByText(
+        "아직 회차가 없습니다. 예측을 실행하면 여기에 쌓입니다.",
+      ),
+    ).toBeInTheDocument();
+    // 크롬은 그대로 서 있어야 한다 — 탭을 잃으면 돌아갈 길이 없다.
+    expect(
+      screen.getByRole("link", { name: "오늘의수학" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("article")).not.toBeInTheDocument();
+  });
+
+  /**
+   * 로컬 dev 로 띄워 보고 발견한 회귀 — 실측 청사진 컬럼이 아직 없어(T7.10 범위)
+   * **실점수만 먼저 들어오는 상태**가 실제로 난다. 그때 "시험 전입니다"라고 적으면
+   * 이미 친 시험을 안 쳤다고 말하는 셈이다.
+   */
+  it("실점수가 들어왔으면 실측 칸이 '시험 전'이라고 하지 않는다", async () => {
+    server.use(
+      http.get("/api/exam/rounds/:id", () =>
+        HttpResponse.json({
+          data: {
+            ...MOCK_DETAIL_JEONGHWA_PAST,
+            observedBlueprint: null,
+          },
+        }),
+      ),
+    );
+
+    render(<RoundDetail roundId={ROUND_JEONGHWA_PAST_ID} />);
+    await screen.findByRole("heading", { level: 1 });
+
+    const observed = screen.getByRole("region", { name: "실측" });
+    expect(
+      within(observed).getByText("실측 청사진 없음 — 실점수만 들어왔습니다"),
+    ).toBeInTheDocument();
+    expect(
+      within(observed).queryByText("실측 없음 — 시험 전입니다"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("회차 조회가 404면 상세가 안내를 적는다", async () => {
+    server.use(
+      http.get("/api/exam/rounds/:id", () =>
+        HttpResponse.json(
+          { error: { code: "NOT_FOUND", message: "회차를 찾을 수 없습니다." } },
+          { status: 404 },
+        ),
+      ),
+    );
+
+    render(<RoundDetail roundId={ROUND_JEONGHWA_ID} />);
+
+    expect(
+      await screen.findByText("회차를 불러오지 못했습니다"),
+    ).toBeInTheDocument();
   });
 });
