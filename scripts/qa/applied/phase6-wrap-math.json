@@ -1,0 +1,620 @@
+{
+ "phase": "phase6-wrap-math",
+ "tool": "scripts/qa/wrap-bare-math.ts",
+ "appliedAt": "2026-08-16T03:53:56.684Z",
+ "count": 102,
+ "rows": [
+  {
+   "id": "9521fe74-ebcc-45e5-a38c-a27533485092",
+   "externalId": "019fd1de-0f85-710c-86b8-4c63dc1b2867",
+   "before": "\\left(\\frac{1}{2},0\\right)",
+   "after": "$\\left(\\frac{1}{2},0\\right)$"
+  },
+  {
+   "id": "32f1c8f0-7d09-41dd-921b-e41aa9ba19dc",
+   "externalId": "019fd1de-2dfd-750f-bb61-47c67565b295",
+   "before": "\\frac{12}{13}",
+   "after": "$\\frac{12}{13}$"
+  },
+  {
+   "id": "300694fb-c3a5-4211-9e9e-7939aad81f13",
+   "externalId": "019fd1d9-6baa-7628-98b2-47485044ca51",
+   "before": "\\frac{8x+y}{6}",
+   "after": "$\\frac{8x+y}{6}$"
+  },
+  {
+   "id": "f4cbdd62-edef-498f-b406-8d24c8472a9c",
+   "externalId": "4466-19",
+   "before": "x^2+\\tfrac{5}{3}x+\\tfrac{1}{3}=0",
+   "after": "$x^2+\\tfrac{5}{3}x+\\tfrac{1}{3}=0$"
+  },
+  {
+   "id": "1f7e8c64-534b-4493-9415-36505ce93e3b",
+   "externalId": "4466-22",
+   "before": "(1)\\ 0\\quad(2)\\ 200i",
+   "after": "$(1)\\ 0\\quad(2)\\ 200i$"
+  },
+  {
+   "id": "7206d560-88ed-411b-9e49-88904b50a547",
+   "externalId": "4479-24",
+   "before": "(x,y)=(6,2),(-6,-2),(2\\sqrt5,-2\\sqrt5),(-2\\sqrt5,2\\sqrt5)",
+   "after": "$(x,y)=(6,2),(-6,-2),(2\\sqrt5,-2\\sqrt5),(-2\\sqrt5,2\\sqrt5)$"
+  },
+  {
+   "id": "b9f96589-c773-477d-8687-8e172ff3a84d",
+   "externalId": "4438-24",
+   "before": "A=\\{-1,1,\\sqrt{2}\\},\\ \\{-1,1,-\\sqrt{2}\\},\\ \\{-1,1,\\tfrac{3}{2}\\}",
+   "after": "$A=\\{-1,1,\\sqrt{2}\\},\\ \\{-1,1,-\\sqrt{2}\\},\\ \\{-1,1,\\tfrac{3}{2}\\}$"
+  },
+  {
+   "id": "7921aec2-46ed-49c5-a01a-374400befd09",
+   "externalId": "4450-4",
+   "before": "4.\\ 22\\sqrt5",
+   "after": "$4.\\ 22\\sqrt5$"
+  },
+  {
+   "id": "0de93250-826d-4690-ac32-4fdd65a59ebe",
+   "externalId": "4438-22",
+   "before": "\\frac{2}{5}\\pi",
+   "after": "$\\frac{2}{5}\\pi$"
+  },
+  {
+   "id": "9f24792e-80e0-4b57-8f7b-383b1d149dd2",
+   "externalId": "019fd1dc-0200-76d3-b13b-ed249d2399c1",
+   "before": "\\frac{84}{25}",
+   "after": "$\\frac{84}{25}$"
+  },
+  {
+   "id": "84159b71-b622-48a2-bb6f-768f0ef21302",
+   "externalId": "019fd1dc-5c53-7525-9ecd-3b4f07ea83b1",
+   "before": "\\frac{17}{18}\\frac{1}{18}",
+   "after": "$\\frac{17}{18}\\frac{1}{18}$"
+  },
+  {
+   "id": "723017b8-f37c-4651-9cbd-fd549e4eef76",
+   "externalId": "019fd1dc-6e38-71e9-a627-ab2f78bdd500",
+   "before": "\\frac{1}{4}",
+   "after": "$\\frac{1}{4}$"
+  },
+  {
+   "id": "5670ba79-aaee-486a-b7c6-c3a9bcf397af",
+   "externalId": "019fd1dd-ad83-7542-bbb9-1ba463002c50",
+   "before": "\\frac{1}{2}",
+   "after": "$\\frac{1}{2}$"
+  },
+  {
+   "id": "14a154ad-f141-45d6-9409-0553772d5aa4",
+   "externalId": null,
+   "before": "4.\\ 22\\sqrt5",
+   "after": "$4.\\ 22\\sqrt5$"
+  },
+  {
+   "id": "64b05d85-266b-4d46-b669-c138b34990bb",
+   "externalId": "019fd1da-5515-748e-8479-e37b381fa171",
+   "before": "x=\\frac{1}{5}",
+   "after": "$x=\\frac{1}{5}$"
+  },
+  {
+   "id": "9703ef85-fb9f-457a-9c90-273ff85979b3",
+   "externalId": "019fd1da-4f7f-779d-9e99-158d12828a25",
+   "before": "\\left(0,\\frac{33}{10}\\right)",
+   "after": "$\\left(0,\\frac{33}{10}\\right)$"
+  },
+  {
+   "id": "d5b0d8eb-d4e4-475c-be1a-c4b57ccf48ca",
+   "externalId": "019fd1db-8e37-7132-b8dc-2723be0f8521",
+   "before": "\\frac{17}{2}cm",
+   "after": "$\\frac{17}{2}cm$"
+  },
+  {
+   "id": "255f111c-4956-494c-81c9-7988ac61cfe2",
+   "externalId": "019fd1dd-d084-74da-b6bf-6da6be022a99",
+   "before": "\\frac{2}{5}<a<3",
+   "after": "$\\frac{2}{5}<a<3$"
+  },
+  {
+   "id": "1001ce65-e29e-4d5b-9598-06a363817c29",
+   "externalId": "019fd1de-2039-778f-9de1-efc52bfaa2df",
+   "before": "\\frac{5}{13}",
+   "after": "$\\frac{5}{13}$"
+  },
+  {
+   "id": "f51423e7-65e7-4095-93d9-e3ae8449a008",
+   "externalId": "019fd1de-2089-75a9-9d24-c425c1630716",
+   "before": "\\frac{12}{5}",
+   "after": "$\\frac{12}{5}$"
+  },
+  {
+   "id": "0a0ec5ed-72e4-453c-af53-dfdc6bf91ae3",
+   "externalId": "019fd1d7-8dd6-75ae-9f9b-a7a89b90286b",
+   "before": "\\overline{CD}",
+   "after": "$\\overline{CD}$"
+  },
+  {
+   "id": "c77973b1-bab5-419c-8af0-2184dab09da1",
+   "externalId": "019fd1db-7625-7599-9714-3b9705bbe768",
+   "before": "\\overline{FH}",
+   "after": "$\\overline{FH}$"
+  },
+  {
+   "id": "6caada15-a304-416e-90be-93bbdf7be6e3",
+   "externalId": "019fd1db-7538-70f4-957e-f06805478bff",
+   "before": "\\overline{AD}",
+   "after": "$\\overline{AD}$"
+  },
+  {
+   "id": "ce17ee56-ca59-4f01-b313-2d45fa70bbeb",
+   "externalId": "019fd1d7-3eab-739b-aabe-2067839c48e4",
+   "before": "\\overline{AO}",
+   "after": "$\\overline{AO}$"
+  },
+  {
+   "id": "849e5e13-50f8-42d0-b136-99a42c6ec4b1",
+   "externalId": "019fd1d7-3f62-731b-819a-ff261e0c72b0",
+   "before": "\\overline{AB}",
+   "after": "$\\overline{AB}$"
+  },
+  {
+   "id": "90a2f3a7-2507-4521-ac0f-1e4e76570d2a",
+   "externalId": "019fd1da-69ed-744e-ad99-25216235ab27",
+   "before": "-\\frac{1}{2}",
+   "after": "$-\\frac{1}{2}$"
+  },
+  {
+   "id": "167ae31b-4df3-4ccf-a384-ef02a28e246d",
+   "externalId": "019fd1dd-e7d7-73ac-bf24-a6c0a0ac3471",
+   "before": "-\\frac{1}{6}",
+   "after": "$-\\frac{1}{6}$"
+  },
+  {
+   "id": "6141df09-e468-40a5-ae54-2918a51616b3",
+   "externalId": "019fd1d7-8f42-763d-8d8e-d0534f7eb567",
+   "before": "\\overline{AC}",
+   "after": "$\\overline{AC}$"
+  },
+  {
+   "id": "6049d0cb-1559-4190-a43a-7ecde1cf1da7",
+   "externalId": "019fd1d7-9069-7176-955a-4ba3145f279d",
+   "before": "\\overline{AC}",
+   "after": "$\\overline{AC}$"
+  },
+  {
+   "id": "1988edc0-d267-4c4b-86cf-904a78b29452",
+   "externalId": "019fd1d5-d96a-70e9-b670-5a442abc6981",
+   "before": "-\\frac{7}{10}",
+   "after": "$-\\frac{7}{10}$"
+  },
+  {
+   "id": "07b8e54f-3307-463a-9f91-6b4c2ee91d68",
+   "externalId": "019fd1d5-d912-723d-af40-3a589e74ec6e",
+   "before": "\\frac{1}{6}",
+   "after": "$\\frac{1}{6}$"
+  },
+  {
+   "id": "94bef5cd-dff0-400a-8ce3-58e9d01f5b80",
+   "externalId": "019fd1d6-252e-7268-b5ac-cf2c2cfe5388",
+   "before": "-\\frac{8}{3}",
+   "after": "$-\\frac{8}{3}$"
+  },
+  {
+   "id": "ae4581d9-02e1-4e09-a9ef-3ef32734b66d",
+   "externalId": "019fd1d6-22fb-751e-a6b0-a162ab6fd57f",
+   "before": "\\frac{1}{2}",
+   "after": "$\\frac{1}{2}$"
+  },
+  {
+   "id": "69398fef-5ad9-4381-9a10-6eee6ce9981e",
+   "externalId": "019fd1d6-3f9a-7330-a22c-1e32175da34e",
+   "before": "\\frac{1}{2}",
+   "after": "$\\frac{1}{2}$"
+  },
+  {
+   "id": "26e84461-05c9-4f96-83ba-fb7f01ce456b",
+   "externalId": "019fd1d6-3ffa-712e-9f65-e27b9e6fbe48",
+   "before": "3x-\\frac{11}{2}",
+   "after": "$3x-\\frac{11}{2}$"
+  },
+  {
+   "id": "bf39fcc5-22ff-4661-8366-ab35a777a778",
+   "externalId": "019fd1d6-44d8-723f-91c9-1ad749404093",
+   "before": "\\frac{13x+5}{2}",
+   "after": "$\\frac{13x+5}{2}$"
+  },
+  {
+   "id": "84aeae92-d0ec-4603-b856-5394cc2e9818",
+   "externalId": "019fd1d6-430c-72ea-ae94-8d159f1dadde",
+   "before": "⑴ \\frac{11}{6}x-1 ⑵ \\frac{13}{6}x+4 ⑶ \\frac{11}{6}",
+   "after": "$⑴ \\frac{11}{6}x-1 ⑵ \\frac{13}{6}x+4 ⑶ \\frac{11}{6}$"
+  },
+  {
+   "id": "7138817b-5c98-49ad-b853-6205f90a5c8e",
+   "externalId": "019fd1d6-8e34-735a-a9dd-7729907adfe5",
+   "before": "\\frac{16}{75}(≈21.3\\%)",
+   "after": "$\\frac{16}{75}(≈21.3\\%)$"
+  },
+  {
+   "id": "73e535af-6437-4dd6-b771-3cb55f30cce1",
+   "externalId": "019fd1d6-d4c3-754f-8037-a310eacdfdd4",
+   "before": "y=-\\frac{3}{2}x",
+   "after": "$y=-\\frac{3}{2}x$"
+  },
+  {
+   "id": "2585e1c3-7e14-499b-afbc-2cfa3b670bc3",
+   "externalId": "019fd1d6-d51d-779b-a28c-57b3c783f379",
+   "before": "y=\\frac{1}{2}x",
+   "after": "$y=\\frac{1}{2}x$"
+  },
+  {
+   "id": "be953ccc-1b1f-4fd5-829a-d6140f492d03",
+   "externalId": "019fd1d6-dab6-73cf-9de5-a9fa6712998f",
+   "before": "y=\\frac{8}{x}x",
+   "after": "$y=\\frac{8}{x}x$"
+  },
+  {
+   "id": "21a230aa-b236-445e-9a63-25899111207a",
+   "externalId": "019fd1d8-01ef-76c8-97ba-f1a07c45221c",
+   "before": "\\overline{CD}",
+   "after": "$\\overline{CD}$"
+  },
+  {
+   "id": "19bc32be-f9b4-4656-b8bb-6442e9c27c4b",
+   "externalId": "019fd1d8-4c60-768f-b38a-dff35d3f4d61",
+   "before": "\\overline{DC}",
+   "after": "$\\overline{DC}$"
+  },
+  {
+   "id": "1722846f-1a99-44aa-8d75-59d0295767c4",
+   "externalId": "019fd1dc-94cd-74c3-b6fc-d4b8ab5f896b",
+   "before": "\\frac{1}{2}",
+   "after": "$\\frac{1}{2}$"
+  },
+  {
+   "id": "059755d5-e96c-41c8-a3fe-be32263053cd",
+   "externalId": "019fd1d9-17b6-72c9-8f43-f0ee46239854",
+   "before": "2.3^{H}4\\frac{211}{90}",
+   "after": "$2.3^{H}4\\frac{211}{90}$"
+  },
+  {
+   "id": "6df4e493-ee08-4ef0-9c6f-50f6f0ea1ee2",
+   "externalId": "019fd1d9-8d76-769a-9d15-4e6982af1487",
+   "before": "x\\le-5",
+   "after": "$x\\le-5$"
+  },
+  {
+   "id": "2e938cb8-3772-4ff4-bd2d-a5e5fbeadd12",
+   "externalId": "019fd1d9-8f07-77d3-9ad5-92c81946b8e1",
+   "before": "x\\le-8",
+   "after": "$x\\le-8$"
+  },
+  {
+   "id": "4d730899-eb21-4dd5-985d-44c0bdfe6417",
+   "externalId": "019fd1d9-84d4-7794-9d59-30d6317f9cad",
+   "before": "2x\\le10",
+   "after": "$2x\\le10$"
+  },
+  {
+   "id": "9b8a3b68-0db7-4647-aedf-e5199992b8b2",
+   "externalId": "019fd1d9-8517-7270-a592-93a460ed855a",
+   "before": "3x+7\\ge25",
+   "after": "$3x+7\\ge25$"
+  },
+  {
+   "id": "2ab8a94c-32f5-4d43-b43b-696230cf47f5",
+   "externalId": "019fd1d9-85b5-75f9-8419-1dbaf23f3651",
+   "before": "8x+500\\ge20000",
+   "after": "$8x+500\\ge20000$"
+  },
+  {
+   "id": "c46b1301-618d-46af-984d-afa7bb97cfb9",
+   "externalId": "019fd1da-2f3e-770b-9e34-6a620b9a7932",
+   "before": "\\frac{5}{8}",
+   "after": "$\\frac{5}{8}$"
+  },
+  {
+   "id": "b7b71012-3551-4989-a289-944957931a03",
+   "externalId": "019fd1da-2c3d-75cb-a313-f64e8ee00bc4",
+   "before": "\\frac{14}{5}",
+   "after": "$\\frac{14}{5}$"
+  },
+  {
+   "id": "188e5602-660c-44f6-a292-9c1e75928767",
+   "externalId": "019fd1da-4bed-72ad-8d57-3fb16b70e06f",
+   "before": "-\\frac{5}{3}",
+   "after": "$-\\frac{5}{3}$"
+  },
+  {
+   "id": "7194c7b4-ea21-4b94-a13e-6666b00664c9",
+   "externalId": "019fd1da-5cea-70c9-adbc-90d4ec74571e",
+   "before": "\\frac{1}{3}",
+   "after": "$\\frac{1}{3}$"
+  },
+  {
+   "id": "1d9192df-07a5-48cb-a762-783d83fa2e33",
+   "externalId": "019fd1da-6b56-74fb-8e69-ade7da0dabbe",
+   "before": "\\frac{5}{4}",
+   "after": "$\\frac{5}{4}$"
+  },
+  {
+   "id": "e636e7b5-2530-4e25-afae-3ac732234502",
+   "externalId": "019fd1db-a0c3-732f-8d59-a47851f6e00a",
+   "before": "\\frac{64}{3}",
+   "after": "$\\frac{64}{3}$"
+  },
+  {
+   "id": "9af05830-c2dd-4c2e-b2b4-287711fdb57f",
+   "externalId": "019fd1db-9f72-7675-ad30-46961b8fd3ad",
+   "before": "\\frac{15}{2}",
+   "after": "$\\frac{15}{2}$"
+  },
+  {
+   "id": "b2d2b40a-a19f-49f8-ae5c-fd55de3e386b",
+   "externalId": "019fd1db-a2fe-71d8-86e2-3d7108d6a5af",
+   "before": "\\frac{40}{3}",
+   "after": "$\\frac{40}{3}$"
+  },
+  {
+   "id": "e4bef095-d779-4a4d-b5ea-2c6ddc420b1b",
+   "externalId": "019fd1db-a668-7085-afda-769299d8bb5c",
+   "before": "\\frac{15}{2}cm",
+   "after": "$\\frac{15}{2}cm$"
+  },
+  {
+   "id": "d8bbd68f-8f2f-40aa-8909-eb307613eea1",
+   "externalId": "019fd1db-a6c7-7669-9cff-9fbc11f63798",
+   "before": "\\frac{3}{2}cm",
+   "after": "$\\frac{3}{2}cm$"
+  },
+  {
+   "id": "bbaeb6b0-b77c-4863-90ce-b2ebd8796d06",
+   "externalId": "019fd1db-a957-705f-b950-56deebe5f478",
+   "before": "\\frac{16}{3}cm",
+   "after": "$\\frac{16}{3}cm$"
+  },
+  {
+   "id": "642e075e-9e69-4962-ab9d-6ab100580b34",
+   "externalId": "019fd1db-af0b-7392-ae7d-3a2baf5a055c",
+   "before": "\\frac{9}{2}",
+   "after": "$\\frac{9}{2}$"
+  },
+  {
+   "id": "e80cbb35-63ba-47d6-bfb3-64ca4f786fb4",
+   "externalId": "019fd1db-bf24-76fe-9f21-65037be417c2",
+   "before": "\\frac{9}{8}",
+   "after": "$\\frac{9}{8}$"
+  },
+  {
+   "id": "9a650015-32c9-4614-af32-cf28db728f67",
+   "externalId": "019fd1db-cca4-7627-96eb-942703d9271a",
+   "before": "\\frac{3}{2}",
+   "after": "$\\frac{3}{2}$"
+  },
+  {
+   "id": "c20b2eb8-27f9-4119-886d-fdfe8736b8a6",
+   "externalId": "019fd1dc-5882-7336-b419-fd872fad92b5",
+   "before": "\\frac{1}{3}",
+   "after": "$\\frac{1}{3}$"
+  },
+  {
+   "id": "5800c81f-20f7-45bb-a74d-a5d94db3b03a",
+   "externalId": "019fd1dd-cb18-73dc-8c21-ec403c28cc94",
+   "before": "y=\\frac{3}{7}(x+3)^{2}-\\frac{1}{2}",
+   "after": "$y=\\frac{3}{7}(x+3)^{2}-\\frac{1}{2}$"
+  },
+  {
+   "id": "3cfcbafa-99dd-489b-a5fd-879d8df6a00c",
+   "externalId": "019fd1de-26b9-7709-9325-b1d1c2155f91",
+   "before": "\\overline{OB}",
+   "after": "$\\overline{OB}$"
+  },
+  {
+   "id": "0d25e825-7ea2-43aa-8042-40019c563f25",
+   "externalId": "019fd1de-25ec-70fd-bc32-bedeb12c6867",
+   "before": "\\overline{AB}",
+   "after": "$\\overline{AB}$"
+  },
+  {
+   "id": "c40d7c1a-30e0-4275-9ef5-caf10da8a499",
+   "externalId": "019fd1dd-e987-70cd-ac0e-7a7ee701333f",
+   "before": "B\\left(\\frac{2}{3},\\frac{1}{9}\\right)",
+   "after": "$B\\left(\\frac{2}{3},\\frac{1}{9}\\right)$"
+  },
+  {
+   "id": "d0c8c1b9-0ae8-4caf-86c1-98d8cf213768",
+   "externalId": "019fd1de-2632-75ac-b223-782d3df431f6",
+   "before": "\\overline{OB}",
+   "after": "$\\overline{OB}$"
+  },
+  {
+   "id": "1e962e68-c15f-428a-925c-16899ca123fd",
+   "externalId": "019fd1de-2676-762e-90e2-35fab68510c6",
+   "before": "\\overline{CD}",
+   "after": "$\\overline{CD}$"
+  },
+  {
+   "id": "1f1d83ed-6a29-456d-b970-35ff4dcc2077",
+   "externalId": "019fd1de-1fc2-720a-8576-19806ac04e04",
+   "before": "\\frac{12}{13}",
+   "after": "$\\frac{12}{13}$"
+  },
+  {
+   "id": "f05ed374-8daa-4312-9820-25751c790133",
+   "externalId": "019fd1de-20cf-74db-b501-384794750b3c",
+   "before": "\\frac{5}{13}",
+   "after": "$\\frac{5}{13}$"
+  },
+  {
+   "id": "7be03e39-8aa6-40d7-924c-5cfb69fbdd7b",
+   "externalId": "019fd1de-211c-7058-9f01-2bbedb24a2ba",
+   "before": "\\frac{12}{13}",
+   "after": "$\\frac{12}{13}$"
+  },
+  {
+   "id": "c1767770-7a9a-4d2c-8671-dd249e61b5ed",
+   "externalId": "019fd1de-2163-7041-8cee-a81769f5619e",
+   "before": "\\frac{5}{12}",
+   "after": "$\\frac{5}{12}$"
+  },
+  {
+   "id": "e93ebbfd-579b-4d19-bca6-3454365257fd",
+   "externalId": "019fd1de-2ff0-7688-806f-e11c070c8e6e",
+   "before": "\\frac{8}{17}",
+   "after": "$\\frac{8}{17}$"
+  },
+  {
+   "id": "0b7c73ee-bbff-456b-8376-0a1a380604e3",
+   "externalId": "019fd1de-3791-738c-8624-c7b47440c792",
+   "before": "\\frac{3}{4}",
+   "after": "$\\frac{3}{4}$"
+  },
+  {
+   "id": "48f97ba4-90dc-4453-af88-81dfd84034b8",
+   "externalId": "019fd1de-34f0-76c9-9aff-0545a312da61",
+   "before": "\\frac{10}{29}",
+   "after": "$\\frac{10}{29}$"
+  },
+  {
+   "id": "7758c2d9-8284-4fdd-8b17-c479317739de",
+   "externalId": "019fd1de-40ce-775b-a723-6382ea1c4155",
+   "before": "\\frac{7}{17}",
+   "after": "$\\frac{7}{17}$"
+  },
+  {
+   "id": "91b8eadf-9f7e-4bdc-afd9-117d47b5d81f",
+   "externalId": "019fd1de-658a-70f1-8815-d59bd679aac4",
+   "before": "\\frac{3}{5}",
+   "after": "$\\frac{3}{5}$"
+  },
+  {
+   "id": "665875c1-0538-497f-84f2-2e0e1d97e56a",
+   "externalId": "019fd1de-466a-701a-84a0-e029ec77d286",
+   "before": "\\frac{1}{4}",
+   "after": "$\\frac{1}{4}$"
+  },
+  {
+   "id": "2bde1594-539e-4032-ad0e-51b12dd95679",
+   "externalId": "019fd1da-aa10-7709-a5ef-e913b2ff4e85",
+   "before": "\\frac{12}{5}cm",
+   "after": "$\\frac{12}{5}cm$"
+  },
+  {
+   "id": "3beb2fca-549f-4f1e-b923-1084c2d78b91",
+   "externalId": "019fd1da-6c3b-7308-b8be-e1e7542ac09b",
+   "before": "\\frac{1}{4}<a<2",
+   "after": "$\\frac{1}{4}<a<2$"
+  },
+  {
+   "id": "0aa86724-b9c7-4246-aaf5-b3a598720c78",
+   "externalId": "019fd1d5-bb9f-711b-a0d0-5a896df1d82d",
+   "before": "-\\frac{11}{6}",
+   "after": "$-\\frac{11}{6}$"
+  },
+  {
+   "id": "55d48145-041b-4b85-80c2-990f85973d32",
+   "externalId": "019fd1d5-c53a-74fd-80f0-e5ac2c1ab30d",
+   "before": "\\frac{31}{12}",
+   "after": "$\\frac{31}{12}$"
+  },
+  {
+   "id": "55b8bd1a-2f30-4839-837c-bf63cdc7a747",
+   "externalId": "019fd1d6-f5a9-74f8-b940-28bac258b449",
+   "before": "-18\\frac{a}{4}",
+   "after": "$-18\\frac{a}{4}$"
+  },
+  {
+   "id": "61a7dd70-e568-4d89-8f63-b6231f98010b",
+   "externalId": "019fd1da-c21f-74c8-800c-596013b97567",
+   "before": "\\frac{4}{3}cm",
+   "after": "$\\frac{4}{3}cm$"
+  },
+  {
+   "id": "603e737d-dd08-4329-b9b1-e39bafb3efed",
+   "externalId": "019fd1db-92f7-762a-8271-34b111e2aad5",
+   "before": "\\frac{12}{5}cm",
+   "after": "$\\frac{12}{5}cm$"
+  },
+  {
+   "id": "d48edb01-ca7b-40c6-b943-2210cb3dfc66",
+   "externalId": "019fd1db-f846-7760-9903-73f32417182a",
+   "before": "\\frac{15}{2}cm",
+   "after": "$\\frac{15}{2}cm$"
+  },
+  {
+   "id": "f1826905-ad8a-4eef-af8c-10039f93fabd",
+   "externalId": "019fd1dc-56d1-773a-a163-f32d50a1e347",
+   "before": "\\frac{7}{10}",
+   "after": "$\\frac{7}{10}$"
+  },
+  {
+   "id": "660fbd6b-8694-49bc-847f-c0558a9548b2",
+   "externalId": "019fd1de-26fe-774b-bcc6-0fc9d09c7c5c",
+   "before": "\\overline{AB}",
+   "after": "$\\overline{AB}$"
+  },
+  {
+   "id": "1031a472-d383-4b2c-82c7-0bcbaf116355",
+   "externalId": "019fd1db-d2e7-74ae-b4ad-56c4b51002f3",
+   "before": "\\frac{3}{2}cm",
+   "after": "$\\frac{3}{2}cm$"
+  },
+  {
+   "id": "c031f65f-f040-4a6c-955a-724d3c04dfef",
+   "externalId": "019fd1db-952a-75bb-844b-0d5297cebe4d",
+   "before": "\\frac{35}{4}cm",
+   "after": "$\\frac{35}{4}cm$"
+  },
+  {
+   "id": "7316cc2b-bad2-4d95-a1b8-112e97db86ad",
+   "externalId": "019fd1db-fde9-711d-8e2e-b13b1d7e09eb",
+   "before": "\\frac{12}{5}",
+   "after": "$\\frac{12}{5}$"
+  },
+  {
+   "id": "eddc1a88-57dc-42b4-bd91-dc986246df7f",
+   "externalId": "019fd1dd-f9c3-7551-a8ef-409deca37973",
+   "before": "-\\frac{7}{2}",
+   "after": "$-\\frac{7}{2}$"
+  },
+  {
+   "id": "162c48aa-80e4-4491-8b7f-bf98e2d2ea1e",
+   "externalId": "019fd1de-3443-7480-ba0b-9caf9f2b6a5d",
+   "before": "\\frac{3}{5}",
+   "after": "$\\frac{3}{5}$"
+  },
+  {
+   "id": "2cdb584a-e087-4904-85b4-f67c03d04887",
+   "externalId": "019fd1db-de6e-745b-ab93-7a9fcbb342ca",
+   "before": "\\frac{3}{5}",
+   "after": "$\\frac{3}{5}$"
+  },
+  {
+   "id": "68d6a76a-fa1f-46e2-913e-6079e43c6f95",
+   "externalId": "019fd1dc-5e77-7169-8226-707a2238c0fe",
+   "before": "\\frac{7}{15}",
+   "after": "$\\frac{7}{15}$"
+  },
+  {
+   "id": "abf70644-717c-4aaf-84ee-1e0df81a371d",
+   "externalId": "019fd1dc-6b4d-7388-8f4a-f3d3f5be4c9d",
+   "before": "\\frac{4}{25}",
+   "after": "$\\frac{4}{25}$"
+  },
+  {
+   "id": "1dad1de2-c28a-4615-a672-5e4b9c169c90",
+   "externalId": "4454-15",
+   "before": "a=-\\sqrt{15}-2\\sqrt3,\\ b=\\sqrt6-\\sqrt{17}",
+   "after": "$a=-\\sqrt{15}-2\\sqrt3,\\ b=\\sqrt6-\\sqrt{17}$"
+  },
+  {
+   "id": "c2aa9eac-8812-4388-b86f-5ff2dcc4cc93",
+   "externalId": "4477-21",
+   "before": "\\tfrac12",
+   "after": "$\\tfrac12$"
+  },
+  {
+   "id": "2f46f6f0-aad0-427d-9f7e-8eb6248567d7",
+   "externalId": "4438-23",
+   "before": "x+5y-3\\sqrt{26}=0",
+   "after": "$x+5y-3\\sqrt{26}=0$"
+  }
+ ]
+}
