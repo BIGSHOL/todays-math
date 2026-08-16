@@ -18,9 +18,21 @@
  * ①의 근거가 되는 과거 시험지는 **만점 100 신뢰 가드**(11 §11, D-45)를 통과한 편만 쓴다.
  * 잘린 시험지를 그 학교 관행으로 배우면 안 된다.
  *
- * ⚠️ 순서를 하나 뒤집었다. 위 목록은 ①(학교 재출제)이 맨 앞이지만, 구현은 **칸 일치(②)를
- * 먼저 보고 그 안에서 ①을 우선**한다. ①을 무조건 앞에 두면 단원·난이도가 어긋나는 재출제
- * 문항이 맞는 칸을 밀어내 시험 범위가 깨진다. 목록은 "한 칸을 무엇으로 채우나"의 순서로 읽었다.
+ * ⚠️ 순서를 하나 뒤집었다 — **칸 일치(②)를 먼저 보고 그 안에서 ①을 우선**한다.
+ * 목록은 "한 칸을 무엇으로 채우나"의 순서로 읽는다. 2026-08-16 실측으로 확정했다(D-49).
+ *
+ *   - 학교가 같은 문항을 다시 내는 일은 **거의 없다**: 시리즈 511개, 첫 편 이후 문항
+ *     25,167개 중 앞선 회차와 본문이 같은 것이 **11개(0.04%)**.
+ *     숫자만 바꾼 재출제까지 세도 24,378개 중 **13개(0.05%)** 로 같다.
+ *   - 게다가 그 드문 재출제의 **9/13 이 다른 회차**에서 온다 — 시험 범위가 다른 문항이다.
+ *     ①을 맨 앞에 두면 하필 그 경우에 범위 밖 문항이 맞는 칸을 밀어낸다.
+ *
+ * 즉 순서를 어느 쪽으로 두든 **2,000자리에 한 자리꼴**로만 달라지지만, ①을 앞에 두면
+ * 그 드문 한 자리에서 손해를 본다. 그래서 칸을 앞에 둔다.
+ *
+ * ⚠️ 이 실측의 한계: 문자열(공백·숫자 제거) 일치로만 셌다. **말을 바꿔 낸 유사 문항은
+ * 못 잡는다.** 의미 유사도는 엔진이 없어 아직 재지 못했다 — ①을 "유사"까지 넓히려면
+ * 그 엔진을 먼저 만들고 이 판단을 다시 재야 한다.
  *
  * ## 칸 배치 — 문서에 없어서 여기서 정한 것
  *
@@ -66,7 +78,11 @@ import type {
   UnfilledSlot,
 } from "@/contracts/scoreNormalizer.contract";
 
-import { DIFFICULTY_KEYS, QUESTION_TYPES, type DifficultyKey } from "./blueprint";
+import {
+  DIFFICULTY_KEYS,
+  QUESTION_TYPES,
+  type DifficultyKey,
+} from "./blueprint";
 import { partitionTrusted } from "./paperTrust";
 import { largestRemainder, normalizeScores } from "./scoreNormalizer";
 
@@ -125,7 +141,10 @@ function expand<T>(values: readonly T[], counts: readonly number[]): T[] {
 }
 
 /** 라벨 있는 칸 사이에 라벨 없는 칸(null)을 고르게 흩는다. */
-function spreadUnlabeled<T>(labeled: readonly T[], blanks: number): Array<T | null> {
+function spreadUnlabeled<T>(
+  labeled: readonly T[],
+  blanks: number,
+): Array<T | null> {
   const total = labeled.length + blanks;
   const out: Array<T | null> = [];
   let used = 0;
@@ -187,9 +206,13 @@ function buildSlots(blueprint: Blueprint, count: number): Slot[] | null {
   }));
 }
 
-function relaxationsFor(slot: Slot, candidate: PaperCandidate): PaperRelaxation[] {
+function relaxationsFor(
+  slot: Slot,
+  candidate: PaperCandidate,
+): PaperRelaxation[] {
   const out: PaperRelaxation[] = [];
-  if (slot.unitId !== null && candidate.unitId !== slot.unitId) out.push("단원");
+  if (slot.unitId !== null && candidate.unitId !== slot.unitId)
+    out.push("단원");
   if (slot.difficulty !== null && candidate.difficulty !== slot.difficulty) {
     out.push("난이도");
   }
@@ -245,7 +268,10 @@ export function composePredictedPaper(
 
   // ── 칸 채우기: 정확 일치 1차 → 완화 2차 ──────────────────────
   const used = new Set<string>();
-  const picked = new Map<number, { candidate: PaperCandidate; relaxed: PaperRelaxation[] }>();
+  const picked = new Map<
+    number,
+    { candidate: PaperCandidate; relaxed: PaperRelaxation[] }
+  >();
 
   const best = (slot: Slot, exactOnly: boolean) => {
     let chosen: {
@@ -287,7 +313,10 @@ export function composePredictedPaper(
       const found = best(slot, pass);
       if (!found) continue;
       used.add(found.candidate.problemId);
-      picked.set(slot.index, { candidate: found.candidate, relaxed: found.relaxed });
+      picked.set(slot.index, {
+        candidate: found.candidate,
+        relaxed: found.relaxed,
+      });
     }
   }
 

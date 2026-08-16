@@ -16,26 +16,22 @@
  * 나중에 실제 내신 점수가 들어와도 무엇과 비교할지 알 수 없다.
  * 그래서 입력 스냅샷 · 엔진 버전 · 파라미터 · 출력을 통째로 남긴다.
  *
- * ## 🔴 스키마 공백 — `params` 에 임시로 싣는 두 값
+ * ## `params` 에 무엇이 들어가나
  *
- * `prisma/schema.prisma` 의 `PredictionRun` 에는 **소유자 컬럼(`userId`)도,
- * 실행 단위 riskFlag 컬럼도 없다.** 트랙 E 지시상 스키마·마이그레이션을 건드릴 수 없어
- * (4개 세션 병렬 — 각자 마이그레이션을 내면 충돌한다), 아래 두 값을 `params` JSON 안에
- * 예약 키로 싣는다. `params` 는 계약상 `z.record(z.string(), z.unknown())` 이고
- * "형태는 엔진 버전마다 다르다"고 명시돼 있어 담을 수는 있지만, **본래 자리가 아니다.**
- *
- *   - `ownerUserId` — 이 run 을 실행한 사용자. 조회 소유권 판정의 유일한 근거다.
- *   - `riskFlags`   — 실행 단위 위험 표시(청사진이 NULL 인 이유 등).
- *
- * 컬럼이 생기면 `PREDICTION_RUN_PARAMS_STOPGAP_KEYS` 를 따라 기계적으로 옮기면 된다.
- * (REPORT.md 에 코디네이터 확인 항목으로 남겼다.)
+ * 엔진 파라미터 + 근거 집계 + 진단 문구다. **소유자(`userId`)와 위험 표시(`riskFlags`)는
+ * 컬럼이다** — 한때 컬럼이 없어 이 JSON 에 실었지만 마이그레이션
+ * `20260816160000_prediction_run_owner_and_interval` 로 자리를 찾았다.
+ * 소유권 판정과 목록 필터는 이제 DB where 로 하고, 그래서 페이지네이션도 정확하다.
  */
 import { z } from "zod";
 
 import {
   dataResponseSchema,
   errorCodeSchema,
+  isoDateSchema,
   isoDateTimeSchema,
+  listResponseSchema,
+  paginationParamsSchema,
   uuidSchema,
 } from "./common.contract";
 import {
@@ -43,6 +39,7 @@ import {
   examPeriodSchema,
   examSeriesKeySchema,
   predictionRunSchema,
+  predictorParamsSchema,
   scorePredictionSchema,
 } from "./predictor.contract";
 
@@ -68,19 +65,15 @@ export const RISK_FLAG_ORDER: readonly RiskFlag[] = [
 // ─────────────────────────────────────────────
 
 /**
- * `src/lib/predictor/predictBlueprint.ts` 의 `PredictorParams` 와 같은 형태다.
- * 계약(Zod)이 SSOT 라 lib 를 import 하지 않고 여기에 형태를 둔다 —
- * 대신 `DEFAULT_PARAMS` 가 이 스키마를 통과하는지 테스트가 매번 확인한다(표류 방지).
+ * 엔진 파라미터 스냅샷 — **정의는 `predictor.contract.ts` 한 곳에만 있다.**
+ *
+ * 예전에는 여기에 같은 형태를 복제해 두고 "DEFAULT_PARAMS 가 통과하는지 테스트가
+ * 매번 확인한다"는 표류 방지를 걸었다. 실제로 엔진이 `stylePriorWeight` 를 더했을 때
+ * 그 테스트가 잡아냈지만, **잡힌 자리가 런타임(저장 API 500)이었다.**
+ * 이제 정의가 하나뿐이라 표류 자체가 불가능하다. 여기서는 이름만 다시 내보낸다.
  */
-export const predictorParamsSchema = z.strictObject({
-  decay: z.number().min(0).max(1),
-  sameRoundBoost: z.number().min(0).max(10),
-  priorWeight: z.number().min(0).max(100),
-  gridPriorWeight: z.number().min(0).max(100),
-  gridDecay: z.number().min(0).max(1),
-  unitOwnWeight: z.number().min(0).max(1),
-});
-export type PredictorParamsSnapshot = z.infer<typeof predictorParamsSchema>;
+export { predictorParamsSchema };
+export type { PredictorParamsSnapshot } from "./predictor.contract";
 
 /** 근거를 어떻게 모았는지 — 감사·디버깅용 카운트. 문항 본문은 담지 않는다. */
 export const predictionEvidenceStatsSchema = z.strictObject({
@@ -100,23 +93,18 @@ export type PredictionEvidenceStats = z.infer<
   typeof predictionEvidenceStatsSchema
 >;
 
-/** 🔴 위 파일 머리말 참고 — 컬럼이 없어 `params` 에 임시로 싣는 예약 키. */
-export const PREDICTION_RUN_PARAMS_STOPGAP_KEYS = [
-  "ownerUserId",
-  "riskFlags",
-] as const;
-
-/** DB `PredictionRun.params` 에 실제로 저장되는 형태(엔진 v0.2 기준). */
+/**
+ * DB `PredictionRun.params` 에 저장되는 형태 — **실행 스냅샷**이다.
+ *
+ * 소유자·위험 표시는 여기 없다(컬럼이다). 여기 남는 것은 "이 run 을 그대로 다시
+ * 돌리려면 무엇이 필요한가"와 "왜 이런 결과가 나왔나" 뿐이다.
+ */
 export const predictionRunParamsSchema = z.strictObject({
   /** 엔진 파라미터 스냅샷 — 이게 없으면 과거 run 을 재현할 수 없다. */
   predictor: predictorParamsSchema,
   evidence: predictionEvidenceStatsSchema,
   /** 청사진을 못 만든 이유. 만들었으면 null. */
   unavailableReason: z.string().max(300).nullable(),
-
-  // ── 아래 둘은 컬럼이 없어서 여기 있다(임시). ──
-  ownerUserId: uuidSchema,
-  riskFlags: z.array(riskFlagSchema),
 });
 export type PredictionRunParams = z.infer<typeof predictionRunParamsSchema>;
 
@@ -144,6 +132,12 @@ export const createPredictionRunRequestSchema = z.strictObject({
    *    가드 기준이 바뀌어도 같은 입력이어야 한다. **누출 검사는 예외 없이 적용된다.**
    */
   inputExamIds: z.array(z.string().min(1).max(120)).min(1).max(500).optional(),
+  /**
+   * 이 시험의 실제 시행일(YYYY-MM-DD). 화면이 D-day 를 세는 기준이고 **엔진 입력이 아니다.**
+   * 모르면 보내지 않는다 — NULL 로 저장한다. 대상 시점(`targetPeriod`)에서
+   * 임의로 날짜를 만들어 채우지 않는다.
+   */
+  examDate: isoDateSchema.optional(),
   /** 엔진 파라미터 부분 오버라이드. 생략하면 `DEFAULT_PARAMS`. */
   params: predictorParamsSchema.partial().optional(),
 });
@@ -167,6 +161,8 @@ export const predictionRunDetailSchema = predictionRunSchema.extend({
   params: predictionRunParamsSchema,
   riskFlags: z.array(riskFlagSchema),
   unavailableReason: z.string().max(300).nullable(),
+  /** 실제 시행일. 원장이 아직 안 알려줬으면 null — 지어내지 않는다. */
+  examDate: isoDateSchema.nullable(),
 });
 export type PredictionRunDetail = z.infer<typeof predictionRunDetailSchema>;
 
@@ -185,6 +181,8 @@ export const predictionRunSummarySchema = z.strictObject({
   series: examSeriesKeySchema,
   targetPeriod: examPeriodSchema,
   cutoffPeriod: examPeriodSchema,
+  /** 실제 시행일. 계기판이 D-day 를 세는 값. 모르면 null. */
+  examDate: isoDateSchema.nullable(),
   /** 근거로 쓴 시험지 편 수 = `inputExamIds.length`. */
   evidenceCount: z.int().min(0),
   riskFlags: z.array(riskFlagSchema),
@@ -199,13 +197,11 @@ export const predictionRunSummarySchema = z.strictObject({
 export type PredictionRunSummary = z.infer<typeof predictionRunSummarySchema>;
 
 /**
- * 목록 응답. 페이지네이션 meta 가 없다 —
- * 한 학교·학년 시리즈의 회차는 학기당 2편 수준이라 수십 행을 넘지 않는다.
- * `PredictionRun` 에 소유자 컬럼이 생겨 DB 단에서 필터링할 수 있게 되면 그때 붙인다
- * (지금은 소유자 필터가 조회 후 메모리에서 일어나 page/total 이 정확할 수 없다).
+ * 목록 응답 — `{data, meta}`. 소유자가 컬럼이 된 뒤로 필터·건수를 DB 가 세므로
+ * `total` 이 정확하다(메모리 필터 시절에는 붙일 수 없었다).
  */
-export const predictionRunListResponseSchema = dataResponseSchema(
-  z.array(predictionRunSummarySchema),
+export const predictionRunListResponseSchema = listResponseSchema(
+  predictionRunSummarySchema,
 );
 export type PredictionRunListResponse = z.infer<
   typeof predictionRunListResponseSchema
@@ -217,6 +213,7 @@ export const predictionRunListQuerySchema = z.strictObject({
   grade: z.coerce.number().int().min(1).max(3),
   level: examLevelSchema.optional(),
   subject: z.string().min(1).max(50).optional(),
+  ...paginationParamsSchema.shape,
 });
 export type PredictionRunListQuery = z.infer<
   typeof predictionRunListQuerySchema

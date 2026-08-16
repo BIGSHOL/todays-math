@@ -186,6 +186,46 @@ interface ExamQuestionRow {
   problemId: string | null;
 }
 
+/**
+ * T7.14 '오늘의 시험' 조회 라우트가 읽는 두 테이블.
+ * 기본은 **빈 배열**이다 — 아직 예측을 한 번도 안 돌린 상태가 정상이기 때문이다.
+ * 필요한 테스트가 `seedPredictionRuns` / `seedActualExamScores` 로 직접 채운다.
+ */
+interface PredictionRunRow {
+  id: string;
+  createdAt: Date;
+  engineVersion: string;
+  school: string;
+  level: string;
+  grade: number;
+  subject: string;
+  targetYear: number;
+  targetSemester: number;
+  targetRound: string;
+  cutoffYear: number;
+  cutoffSemester: number;
+  cutoffRound: string;
+  inputExamIds: string[];
+  params: unknown;
+  predictedBlueprint: unknown;
+  predictedScores: unknown;
+  actualSchoolMean: number | null;
+  actualSchoolStdev: number | null;
+  actualRecordedAt: Date | null;
+}
+
+interface ActualExamScoreRow {
+  id: string;
+  runId: string;
+  studentId: string;
+  actualScore: number;
+  predictedScore: number;
+  residual: number;
+  intervalHit: boolean;
+  recordedAt: Date;
+  updatedAt: Date;
+}
+
 const PROBLEM_TYPES: ProblemType[] = ["계산", "개념", "활용", "서술형"];
 
 /** 픽스처 30문항만으로는 daily 8문항·교체 후보가 부족하므로 테스트 더블에만 보강한다. */
@@ -330,6 +370,8 @@ let problemAnswerRows: ProblemAnswerRow[] = [];
 let analysisReportRows: AnalysisReportRow[] = [];
 let examRows: ExamRow[] = [];
 let examQuestionRows: ExamQuestionRow[] = [];
+let predictionRunRows: PredictionRunRow[] = [];
+let actualExamScoreRows: ActualExamScoreRow[] = [];
 
 /** 매 테스트 시작 전 Mock 픽스처 상태로 되돌린다 — 테스트 간 상태 오염 방지. */
 export function resetPrismaTestDouble() {
@@ -388,6 +430,8 @@ export function resetPrismaTestDouble() {
   analysisReportRows = [];
   examRows = [];
   examQuestionRows = [];
+  predictionRunRows = [];
+  actualExamScoreRows = [];
 }
 resetPrismaTestDouble();
 
@@ -1041,7 +1085,39 @@ const prismaModels = {
       return { count: rows.length };
     },
   },
+  // T7.14 '오늘의 시험' 조회 라우트는 이 둘을 **읽기만** 한다 — 쓰기 메서드를 두지 않는다.
+  predictionRun: {
+    async findMany({
+      where,
+      orderBy,
+    }: { where?: Record<string, unknown>; orderBy?: unknown } = {}) {
+      return applyOrder(
+        predictionRunRows.filter((row) => matchesWhere(row, where)),
+        orderBy,
+      );
+    },
+    async findUnique({ where }: { where: { id: string } }) {
+      return predictionRunRows.find((row) => row.id === where.id) ?? null;
+    },
+  },
+  actualExamScore: {
+    async findMany({ where }: { where?: Record<string, unknown> } = {}) {
+      return actualExamScoreRows.filter((row) => matchesWhere(row, where));
+    },
+  },
 };
+
+/**
+ * T7.14 전용 시드 헬퍼. `PredictionRun`/`ActualExamScore` 는 기본이 빈 배열이라
+ * (아직 예측을 안 돌린 상태가 정상) 필요한 테스트만 직접 채운다.
+ */
+export function seedPredictionRuns(rows: PredictionRunRow[]) {
+  predictionRunRows.push(...rows);
+}
+
+export function seedActualExamScores(rows: ActualExamScoreRow[]) {
+  actualExamScoreRows.push(...rows);
+}
 
 export const prismaTestDouble = {
   ...prismaModels,

@@ -32,6 +32,8 @@ import {
 /** run 의 예측 Json 을 학생별로 색인한 것. Json 파싱은 **여기 한 번뿐**이다. */
 export type RunPredictionIndex = {
   runId: string;
+  /** 이 회차를 만든 원장. 소유권 경계를 회차 자체에 건다(T7.10 후속). */
+  ownerUserId: string;
   byStudent: Map<string, PredictedScoreSnapshot>;
   /**
    * 예측 목록이 비어 있지 않은데 한 건도 읽히지 않았다 = Json 모양이 어긋났다.
@@ -65,9 +67,20 @@ type ActualScoreRow = {
   predictedScore: number;
   residual: number;
   intervalHit: boolean;
+  predictedLower: number | null;
+  predictedUpper: number | null;
+  predictedCoverage: number | null;
   recordedAt: Date;
   updatedAt: Date;
 };
+
+/**
+ * 구간 스냅샷이 있어 적중을 **판정할 수 있는** 행인가.
+ * `interval_hit` 은 NOT NULL 이라 값이 늘 들어 있지만, 구간이 없으면 그 값은 의미가 없다.
+ */
+function hasInterval(row: ActualScoreRow): boolean {
+  return row.predictedLower !== null && row.predictedUpper !== null;
+}
 
 function serialize(row: ActualScoreRow): ActualScoreRecord {
   return {
@@ -78,6 +91,9 @@ function serialize(row: ActualScoreRow): ActualScoreRecord {
     predictedScore: row.predictedScore,
     residual: row.residual,
     intervalHit: row.intervalHit,
+    predictedLower: row.predictedLower,
+    predictedUpper: row.predictedUpper,
+    predictedCoverage: row.predictedCoverage,
     recordedAt: row.recordedAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };
@@ -109,6 +125,7 @@ export async function loadRunPredictions(
 
   return {
     runId,
+    ownerUserId: run.userId,
     byStudent,
     unreadable: entries.length > 0 && readable === 0,
   };
@@ -127,7 +144,13 @@ export async function listActualScores(
   return {
     runId,
     scores: rows.map(serialize),
-    summary: summarizeResiduals(rows),
+    summary: summarizeResiduals(
+      rows.map((row) => ({
+        residual: row.residual,
+        intervalHit: row.intervalHit,
+        hasInterval: hasInterval(row),
+      })),
+    ),
   };
 }
 
@@ -164,12 +187,15 @@ export async function attachActualScores(
     for (const entry of input.scores) {
       const snapshot = index.byStudent.get(entry.studentId)!;
       const existing = existingByStudent.get(entry.studentId);
-      // 구간 적중은 회차의 현재 구간으로 판정한다 — 구간을 담아 둘 컬럼이 아직 없다.
-      // (스키마 제안은 REPORT.md 에 적어 두었다. 스키마는 이 트랙에서 건드리지 않는다.)
-      const intervalHit = isIntervalHit(entry.actualScore, snapshot.interval);
 
       if (existing) {
-        // 스냅샷(predictedScore)은 덮지 않는다. 잔차는 그 스냅샷 기준으로 다시 센다.
+        // 스냅샷(predictedScore·구간)은 덮지 않는다.
+        // 잔차와 적중 여부는 **저장된 스냅샷** 기준으로 다시 센다 — run 의 Json 을 보지 않는다.
+        // 점수 정정은 실제값이 움직인 것이므로 적중 여부도 다시 세는 것이 맞다(얼리지 않는다).
+        //
+        // 구간 스냅샷이 없는 행(예측 시점에 구간이 없었거나 이 컬럼 이전에 저장된 행)은
+        // 적중을 판정할 근거가 없다. 지어내지 않고 false 로 두되, 집계에서는
+        // `hasInterval` 이 false 라 **분모에서 빠진다**(summarizeResiduals 주석 참조).
         await tx.actualExamScore.update({
           where: {
             runId_studentId: {
@@ -183,12 +209,18 @@ export async function attachActualScores(
               entry.actualScore,
               existing.predictedScore,
             ),
-            intervalHit,
+            intervalHit: hasInterval(existing)
+              ? isIntervalHit(entry.actualScore, {
+                  lower: existing.predictedLower!,
+                  upper: existing.predictedUpper!,
+                })
+              : false,
           },
         });
         continue;
       }
 
+      const interval = snapshot.interval ?? null;
       await tx.actualExamScore.create({
         data: {
           runId: index.runId,
@@ -196,7 +228,13 @@ export async function attachActualScores(
           actualScore: entry.actualScore,
           predictedScore: snapshot.expectedScore,
           residual: computeResidual(entry.actualScore, snapshot.expectedScore),
-          intervalHit,
+          intervalHit:
+            interval === null
+              ? false
+              : isIntervalHit(entry.actualScore, interval),
+          predictedLower: interval?.lower ?? null,
+          predictedUpper: interval?.upper ?? null,
+          predictedCoverage: interval?.coverage ?? null,
         },
       });
     }

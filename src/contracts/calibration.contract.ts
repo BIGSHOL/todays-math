@@ -42,11 +42,17 @@ export const predictedScoreSnapshotSchema = z.object({
   /** null 이면 학생 개인이 아니라 시험지 평균 예측이다 — 실측 대조 대상이 아니다. */
   studentId: uuidSchema.nullable(),
   expectedScore: z.number().min(0).max(100),
-  interval: z.object({
-    lower: z.number().min(0).max(100),
-    upper: z.number().min(0).max(100),
-    coverage: z.number().min(0.5).max(0.99),
-  }),
+  /**
+   * 예측 시점에 구간이 없을 수 있다(엔진이 구간을 못 낸 경우). 그러면 null 이고,
+   * 적중 여부를 **지어내지 않는다** — 저장은 하되 적중률 분모에서 뺀다.
+   */
+  interval: z
+    .object({
+      lower: z.number().min(0).max(100),
+      upper: z.number().min(0).max(100),
+      coverage: z.number().min(0.5).max(0.99),
+    })
+    .nullish(),
 });
 export type PredictedScoreSnapshot = z.infer<
   typeof predictedScoreSnapshotSchema
@@ -91,8 +97,18 @@ export const actualScoreRecordSchema = z.strictObject({
   predictedScore: z.number(),
   /** actual − predicted. 보정 계수(T7.11)의 직접 입력. */
   residual: z.number(),
-  /** 예측 **구간**이 실제를 담았는가. 점 예측 MAE 와 별개 지표다. */
+  /**
+   * 예측 **구간**이 실제를 담았는가. 점 예측 MAE 와 별개 지표다.
+   * 아래 구간 스냅샷이 null 이면 이 값은 **판정 불가**라는 뜻이고, 적중률 분모에서 뺀다.
+   */
   intervalHit: z.boolean(),
+  /**
+   * 예측 구간의 스냅샷. `predictedScore` 와 같은 규칙 — 처음 저장할 때 복사하고
+   * 재저장(점수 정정) 때는 덮어쓰지 않는다. `intervalHit` 은 **이 값**으로 다시 센다.
+   */
+  predictedLower: z.number().nullable(),
+  predictedUpper: z.number().nullable(),
+  predictedCoverage: z.number().nullable(),
   recordedAt: isoDateTimeSchema,
   updatedAt: isoDateTimeSchema,
 });
@@ -103,6 +119,11 @@ export const residualSummarySchema = z.strictObject({
   count: z.int().min(0),
   mae: z.number().min(0).nullable(),
   meanResidual: z.number().nullable(),
+  /**
+   * 구간 스냅샷이 있어 적중을 **판정할 수 있는** 표본 수. `count` 와 다를 수 있다.
+   * 적중률의 분모는 이 값이다 — 모르는 것을 빗나감으로 세지 않는다.
+   */
+  intervalCount: z.int().min(0),
   intervalHitRate: z.number().min(0).max(1).nullable(),
 });
 export type ResidualSummary = z.infer<typeof residualSummarySchema>;
@@ -131,6 +152,11 @@ export const calibrationSampleSchema = z.strictObject({
   actual: z.number(),
   residual: z.number(),
   intervalHit: z.boolean(),
+  /**
+   * 구간 스냅샷이 있어 적중을 판정할 수 있는 표본인가.
+   * false 면 `intervalHit` 은 의미가 없고 적중률 분모에서 빠진다.
+   */
+  hasInterval: z.boolean(),
 });
 export type CalibrationSample = z.infer<typeof calibrationSampleSchema>;
 
@@ -235,8 +261,10 @@ export const calibrationResultSchema = z.strictObject({
   /** false 면 보정을 적용하지 않는 쪽이 옳다. */
   improved: z.boolean(),
 
-  /** 구간 적중률 — 점 예측 MAE 와 별개 지표다. */
-  intervalHitRate: z.number().min(0).max(1),
+  /** 구간 적중을 판정할 수 있었던 표본 수. 적중률의 분모다. */
+  intervalSampleCount: z.int().min(0),
+  /** 구간 적중률 — 점 예측 MAE 와 별개 지표다. 판정 가능한 표본이 없으면 null. */
+  intervalHitRate: z.number().min(0).max(1).nullable(),
   /** 엔진이 선언한 구간 신뢰수준. 호출자가 알려주지 않으면 null 이다. */
   nominalCoverage: z.number().min(0.5).max(0.99).nullable(),
   /** 적중률이 선언한 신뢰수준 근처인가. nominalCoverage 가 없으면 null(판단 안 함). */

@@ -111,6 +111,36 @@ export const examPaperSchema = z.strictObject({
 export type ExamPaper = z.infer<typeof examPaperSchema>;
 
 // ─────────────────────────────────────────────
+// 엔진 파라미터 — 엔진과 계약이 **한 정의**를 공유한다
+//
+// 예전에는 이 형태가 predictionRun.contract.ts 에 따로 복제돼 있었다. 엔진에
+// stylePriorWeight 를 더한 순간(v0.5) 복제본이 뒤처져 저장 API 가 500 을 냈다.
+// 스키마는 여기 한 곳에만 두고, 엔진은 자기 인터페이스가 이 스키마와 **정확히 같은지**
+// 컴파일 시점에 확인한다(predictBlueprint.ts 맨 아래). 어긋나면 빌드가 깨진다 —
+// 테스트를 돌려야 알던 것을 타입이 먼저 잡는다.
+// ─────────────────────────────────────────────
+
+export const predictorParamsSchema = z.strictObject({
+  /** 회차당 가중 감쇠율. 1이면 감쇠 없음. */
+  decay: z.number().min(0).max(1),
+  /** 같은 학기·같은 회차 가중 배수. */
+  sameRoundBoost: z.number().min(0).max(20),
+  /** 총점 전용 코호트 사전값 가상 표본 수. */
+  priorWeight: z.number().min(0).max(100),
+  /** 문항 수·유형 배분 전용 축소 계수 — 학교 고유성이 확인된 항목이라 따로 뗐다. */
+  stylePriorWeight: z.number().min(0).max(100),
+  /** 배점 눈금 전용 축소·감쇠. */
+  gridPriorWeight: z.number().min(0).max(100),
+  gridDecay: z.number().min(0).max(1),
+  /** 단원 배분에서 자기 학교 과거가 차지하는 비중(0~1). */
+  unitOwnWeight: z.number().min(0).max(1),
+});
+export type PredictorParamsSnapshot = z.infer<typeof predictorParamsSchema>;
+
+// 각 파라미터를 왜 그 값으로 골랐는지는 엔진 쪽 `PredictorParams` 주석에 있다
+// (실측 근거가 붙어 있어 조정할 때 반드시 읽어야 한다).
+
+// ─────────────────────────────────────────────
 // L1. 시험 청사진 (Blueprint)
 // 예측값과 실측값이 같은 형태를 쓴다 — 그래야 그대로 대조할 수 있다.
 // ─────────────────────────────────────────────
@@ -137,10 +167,7 @@ export const blueprintSchema = z.strictObject({
   /** 유형 배분. 예측값은 소수(기댓값)일 수 있다. */
   typeMix: z.record(questionTypeSchema, cellSchema),
   /** 난이도 배분. 라벨이 없는 문항은 `미표기` 키로 모은다. */
-  difficultyMix: z.record(
-    z.enum(["하", "중", "상", "미표기"]),
-    cellSchema,
-  ),
+  difficultyMix: z.record(z.enum(["하", "중", "상", "미표기"]), cellSchema),
   /** 그 학교가 실제로 쓰는 배점 눈금과 빈도(예: 3.2점 5문항). */
   scoreHistogram: z.array(
     z.strictObject({
