@@ -12,7 +12,7 @@
  * 90% 를 지키는 문턱이 없는 학년은 **전부 미분류로 남긴다.** 억지로 붙이지 않는다.
  */
 import { readFileSync, writeFileSync } from "node:fs";
-import { LABELED_FILE, OUT_DIR, TARGET_FILE, UNITS_FILE, Unit } from "./paths";
+import { DATASET_SUMMARY, LABELED_FILE, OUT_DIR, TARGET_FILE, UNITS_FILE, Unit } from "./paths";
 import { LabeledDoc, classify, rangeKey, train } from "../../src/lib/classify/unitClassifier";
 
 type Calibration = { 학년: string; 문턱: number | null; 소단원정확도: number | null };
@@ -83,7 +83,11 @@ function main() {
 
   writeFileSync(`${OUT_DIR}/unit-predictions.jsonl`, accepted.join("\n") + "\n", "utf8");
   confidences.sort((a, b) => a - b);
+  // 트랙 F 가 입력 corpus 지문을 기록해 두고 원본이 바뀌면 멈춘다.
+  // 이 판정이 **어느 corpus 를 보고 나온 것인지** 같이 남겨 F 가 대조할 수 있게 한다.
+  const corpus = JSON.parse(readFileSync(DATASET_SUMMARY, "utf8")).corpus;
   const summary = {
+    corpus,
     문턱방식: override === null ? "학년별 보정(calibration.json, 목표 90%)" : `전 학년 공통 ${override}`,
     실측근거: "편 단위 5겹 교차검증 — evaluation.json / calibration.json",
     대상문항: targets.length,
