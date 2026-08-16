@@ -194,9 +194,17 @@ interface ExamQuestionRow {
  * T7.14 '오늘의 시험' 조회 라우트가 읽는 두 테이블.
  * 기본은 **빈 배열**이다 — 아직 예측을 한 번도 안 돌린 상태가 정상이기 때문이다.
  * 필요한 테스트가 `seedPredictionRuns` / `seedActualExamScores` 로 직접 채운다.
+ *
+ * 🔴 **이 인터페이스는 `prisma/schema.prisma` 의 `PredictionRun` 과 같은 열을 가져야 한다.**
+ *    한때 여기에 `userId`·`examDate`·`riskFlags` 가 빠져 있었고, 그래서 픽스처가 그 열을
+ *    아예 만들지 못했다. 조회 코드가 두 열을 통째로 무시하고 있었는데도 테스트는 전부
+ *    초록이었다 — 돌연변이를 넣어도 빨개지지 않는, 있으나 마나 한 테스트였다
+ *    (2026-08-16). 열을 줄이지 말 것. 줄이면 그 열의 버그는 검출할 방법이 없다.
  */
 interface PredictionRunRow {
   id: string;
+  /** 회차 소유자. 조회 소유권 경계가 이 열이다. */
+  userId: string;
   createdAt: Date;
   engineVersion: string;
   school: string;
@@ -213,6 +221,9 @@ interface PredictionRunRow {
   params: unknown;
   predictedBlueprint: unknown;
   predictedScores: unknown;
+  riskFlags: string[];
+  /** `@db.Date`. 학교가 시행일을 공지하지 않았으면 null. */
+  examDate: Date | null;
   actualSchoolMean: number | null;
   actualSchoolStdev: number | null;
   actualRecordedAt: Date | null;

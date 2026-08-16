@@ -132,6 +132,7 @@ export function RoundDetail({
           roundAvailable={judgement.available}
           caption={`${title} · 예측 대비 실측`}
           runId={roundId}
+          predictedStudentCount={detail.predictedStudentCount}
           onActualSaved={applyActualScore}
         />
 

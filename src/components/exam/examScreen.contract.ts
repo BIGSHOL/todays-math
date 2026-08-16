@@ -91,6 +91,15 @@ export const examRoundDetailSchema = z.strictObject({
   summary: examRoundSummarySchema,
   /** 예측을 낸 엔진 버전. 아직 안 돌렸으면 null. 지표를 섞어 비교하지 않으려고 노출한다. */
   engineVersion: z.string().min(1).max(40).nullable(),
+  /**
+   * 이 회차가 학생별 예상 점수를 낸 인원 수.
+   *
+   * 🔴 `students` 가 비었을 때 **이유가 둘**이라서 필요하다.
+   *    0 이면 엔진이 아직 개인 점수를 못 내는 것이고(11 §3 L3·§2.7-3, T7.11 대기),
+   *    0 이 아닌데 비었으면 그 학생들이 내 학생이 아니다. 표가 둘을 구분해 적어야
+   *    "반에 학생이 없다"는 오해를 만들지 않는다.
+   */
+  predictedStudentCount: z.int().min(0),
   predictedBlueprint: blueprintSchema.nullable(),
   /** 시험 전에는 null 이 정상 상태다 (D-40). */
   observedBlueprint: blueprintSchema.nullable(),

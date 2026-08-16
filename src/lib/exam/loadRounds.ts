@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 
 import {
-  isRunVisibleTo,
+  isRunOwnedBy,
   type ActualScoreRow,
   type OwnedStudent,
   type PredictionRunRow,
@@ -35,38 +35,45 @@ export type VisibleRuns = {
 };
 
 /**
- * 이 사용자에게 보이는 회차 전부.
+ * 이 사용자에게 보이는 회차 전부 — **소유자는 `PredictionRun.userId`** 다.
  *
- * ⚠️ 성능 메모: `PredictionRun` 에 `userId` 가 없어 SQL 로 좁히지 못하고 전량을 읽어
- *    앱에서 거른다. 학원 한 곳 규모(회차 수십 건)에서는 문제가 없지만, `userId` 컬럼이
- *    생기면 `where: { userId }` 로 바꿔 이 왕복을 없애야 한다.
- *    학교명으로 미리 좁히는 방법도 검토했으나, `Student.schoolName` 이 NULL 인 학생의
- *    회차가 통째로 사라져 **조용한 누락**이 생기므로 쓰지 않았다.
+ * 📌 이력: 처음에는 "userId 컬럼이 아직 없다"는 전제로 `PredictionRun` 을 전량 읽어
+ *    학생 도달성으로 앱에서 걸렀다. 전제가 틀렸고(컬럼은 이미 있었다), 그 결과
+ *    **내 회차가 하나도 안 보였다** — 엔진이 학생별 예상 점수를 아직 내지 않아
+ *    `predictedScores` 가 비어 있으면 되짚을 학생이 없기 때문이다.
+ *    이제 SQL 이 `where: { userId }` 로 거른다. 전량 읽기도 함께 사라졌다
+ *    (`@@index([userId, createdAt(sort: Desc)])` 가 그대로 쓰인다).
+ *
+ * 학생 목록은 여전히 필요하다 — **이름**을 붙이고, 남의 학생 이름이 새지 않게
+ * 상세에서 한 번 더 거르는 데 쓴다(`toRoundDetail`). 다만 학생이 0명이어도 회차는
+ * 보인다: 시험지 단위 청사진은 학생 없이도 유효한 산출물이고, 회차는 내 것이다.
  */
 export async function loadVisibleRuns(userId: string): Promise<VisibleRuns> {
-  const ownedStudents = await loadOwnedStudents(userId);
-  const ownedIds = new Set(ownedStudents.map((s) => s.id));
-  if (ownedIds.size === 0) {
-    return { runs: [], actuals: [], ownedStudents };
-  }
-
-  const [allRuns, ownedActuals] = await Promise.all([
-    db.predictionRun.findMany({ orderBy: { createdAt: "desc" } }),
-    db.actualExamScore.findMany({
-      where: { studentId: { in: [...ownedIds] } },
+  const [ownedStudents, ownedRuns] = await Promise.all([
+    loadOwnedStudents(userId),
+    db.predictionRun.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
     }),
   ]);
 
-  const runs = (allRuns as PredictionRunRow[]).filter((run) =>
-    isRunVisibleTo(run, ownedActuals as ActualScoreRow[], ownedIds),
+  // SQL 이 이미 걸렀지만 조합 계층에서 같은 규칙을 한 번 더 잠근다(fail closed).
+  const runs = (ownedRuns as PredictionRunRow[]).filter((run) =>
+    isRunOwnedBy(run, userId),
   );
-  const visibleRunIds = new Set(runs.map((r) => r.id));
 
-  return {
-    runs,
-    actuals: (ownedActuals as ActualScoreRow[]).filter((a) =>
-      visibleRunIds.has(a.runId),
-    ),
-    ownedStudents,
-  };
+  const ownedIds = ownedStudents.map((s) => s.id);
+  if (ownedIds.length === 0 || runs.length === 0) {
+    return { runs, actuals: [], ownedStudents };
+  }
+
+  // 실측은 **내 학생 것만** 읽는다 — 같은 회차에 남의 학생 점수가 섞여 들어오지 않게.
+  const actuals = (await db.actualExamScore.findMany({
+    where: {
+      runId: { in: runs.map((r) => r.id) },
+      studentId: { in: ownedIds },
+    },
+  })) as ActualScoreRow[];
+
+  return { runs, actuals, ownedStudents };
 }

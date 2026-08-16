@@ -23,6 +23,7 @@ import { server } from "@/mocks/server";
 import ExamPage from "@/app/(main)/exam/page";
 import { RoundDetail } from "@/components/exam/RoundDetail";
 import {
+  MOCK_DETAIL_JEONGHWA,
   MOCK_DETAIL_JEONGHWA_PAST,
   ROUND_DAERYUN_ID,
   ROUND_GYEONGMYEONG_ID,
@@ -273,6 +274,46 @@ describe("데이터가 없을 때", () => {
       screen.getByRole("link", { name: "오늘의수학" }),
     ).toBeInTheDocument();
     expect(screen.queryByRole("article")).not.toBeInTheDocument();
+  });
+
+  /**
+   * 🔴 학생 표가 빌 때 **사유가 둘**이다. 하나로 뭉개면 원장님이 엉뚱한 곳을 고친다.
+   *
+   * 실 엔진은 오늘 학생별 예상 점수를 내지 못한다(`predictedScores: []`). 그때 표에
+   * "이 회차에 배정된 학생이 없습니다" 라고 적으면, 학생이 멀쩡히 등록된 반에서도
+   * 원장님이 반 편성을 의심하게 된다 — 원인은 반이 아니라 엔진이다.
+   */
+  it("🔴 학생별 예측이 0명이면 반 탓으로 돌리지 않고 엔진 쪽 사유를 적는다", async () => {
+    render(<RoundDetail roundId={ROUND_DAERYUN_ID} />);
+
+    expect(
+      await screen.findByText(
+        "학생별 예상 점수는 아직 내지 않습니다. 회차 단위 청사진만 있습니다.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("이 회차에 배정된 학생이 없습니다"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("예측은 냈는데 대상이 내 학생이 아니면 그렇게 적는다", async () => {
+    server.use(
+      http.get("/api/exam/rounds/:id", () =>
+        HttpResponse.json({
+          data: {
+            ...MOCK_DETAIL_JEONGHWA,
+            students: [],
+            predictedStudentCount: 4,
+          },
+        }),
+      ),
+    );
+
+    render(<RoundDetail roundId={ROUND_JEONGHWA_ID} />);
+
+    expect(
+      await screen.findByText("이 회차의 예측 대상 중 내 학생이 없습니다"),
+    ).toBeInTheDocument();
   });
 
   /**

@@ -190,6 +190,8 @@ const JEONGHWA_STUDENTS: ExamRoundDetail["students"] = [
 export const MOCK_DETAIL_JEONGHWA: ExamRoundDetail = {
   summary: MOCK_ROUND_JEONGHWA,
   engineVersion: "v0.4",
+  // 박지호(미응시)를 뺀 3명분 개인 예측을 냈다.
+  predictedStudentCount: 3,
   predictedBlueprint: JEONGHWA_PREDICTED,
   // 시험 전이라 비어 있다 — 이것이 정상 상태다(D-40).
   observedBlueprint: null,
@@ -252,6 +254,7 @@ export const MOCK_ROUND_GYEONGMYEONG: ExamRoundSummary = {
 export const MOCK_DETAIL_GYEONGMYEONG: ExamRoundDetail = {
   summary: MOCK_ROUND_GYEONGMYEONG,
   engineVersion: "v0.4",
+  predictedStudentCount: 2,
   predictedBlueprint: GYEONGMYEONG_PREDICTED,
   observedBlueprint: null,
   students: [
@@ -295,6 +298,8 @@ export const MOCK_DETAIL_DAERYUN: ExamRoundDetail = {
   summary: MOCK_ROUND_DAERYUN,
   // 아직 엔진을 돌리지 않았다 — 버전을 지어내지 않는다.
   engineVersion: null,
+  // 개인 예측이 0명이다. 학생 표가 비는 이유가 "반에 학생이 없어서"가 아님을 표가 적는다.
+  predictedStudentCount: 0,
   predictedBlueprint: null,
   observedBlueprint: null,
   students: [],
@@ -367,6 +372,7 @@ export const MOCK_ROUND_JEONGHWA_PAST: ExamRoundSummary = {
 export const MOCK_DETAIL_JEONGHWA_PAST: ExamRoundDetail = {
   summary: MOCK_ROUND_JEONGHWA_PAST,
   engineVersion: "v0.4",
+  predictedStudentCount: 3,
   predictedBlueprint: JEONGHWA_PAST_PREDICTED,
   observedBlueprint: JEONGHWA_PAST_OBSERVED,
   students: [

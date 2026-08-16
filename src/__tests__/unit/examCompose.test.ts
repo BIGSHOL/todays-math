@@ -12,7 +12,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  isRunVisibleTo,
+  isRunOwnedBy,
   parseBlueprint,
   parsePredictedScores,
   runStudentIds,
@@ -24,6 +24,8 @@ import {
 const STUDENT_A = "30000000-0000-4000-8000-000000000001";
 const STUDENT_B = "30000000-0000-4000-8000-000000000002";
 const RUN_ID = "70000000-0000-4000-8000-0000000000f1";
+const TEACHER = "10000000-0000-4000-8000-000000000001";
+const OTHER_TEACHER = "10000000-0000-4000-8000-0000000000ff";
 
 function prediction(studentId: string | null, expectedScore: number) {
   return {
@@ -44,6 +46,8 @@ function prediction(studentId: string | null, expectedScore: number) {
 function run(over: Partial<PredictionRunRow> = {}): PredictionRunRow {
   return {
     id: RUN_ID,
+    userId: TEACHER,
+    examDate: null,
     createdAt: new Date("2026-08-16T00:00:00.000Z"),
     engineVersion: "0.5.0",
     school: "정화중",
@@ -97,23 +101,45 @@ describe("runStudentIds", () => {
   });
 });
 
-describe("isRunVisibleTo — 소유권은 없는 쪽으로 닫는다", () => {
-  it("내 학생이 하나라도 있으면 보인다", () => {
-    expect(isRunVisibleTo(run(), [], new Set([STUDENT_A]))).toBe(true);
+describe("isRunOwnedBy — 소유자는 회차의 userId 다 (fail closed)", () => {
+  it("내 회차면 보인다", () => {
+    expect(isRunOwnedBy(run(), TEACHER)).toBe(true);
   });
 
-  it("내 학생이 하나도 없으면 안 보인다", () => {
-    expect(isRunVisibleTo(run(), [], new Set([STUDENT_B]))).toBe(false);
+  it("남의 회차면 안 보인다", () => {
+    expect(isRunOwnedBy(run({ userId: OTHER_TEACHER }), TEACHER)).toBe(false);
   });
 
-  it("예측에는 없어도 실점수가 내 학생이면 보인다", () => {
-    const row = run({ predictedScores: [] });
-    const actuals = [{ runId: RUN_ID, studentId: STUDENT_B, actualScore: 61 }];
-    expect(isRunVisibleTo(row, actuals, new Set([STUDENT_B]))).toBe(true);
+  it("🔴 학생별 예측이 비어 있어도 내 회차다 — 학생으로 되짚지 않는다", () => {
+    // 실 엔진은 오늘 항상 이 모양을 저장한다. 학생으로 되짚던 시절 이 회차는
+    // 목록에서 통째로 사라졌다(계기판이 영구히 빈 배열).
+    expect(isRunOwnedBy(run({ predictedScores: [] }), TEACHER)).toBe(true);
   });
 
-  it("소유 학생 집합이 비면 아무것도 안 보인다", () => {
-    expect(isRunVisibleTo(run(), [], new Set())).toBe(false);
+  it("🔴 남의 회차에 내 학생이 들어 있어도 내 회차가 아니다", () => {
+    const row = run({
+      userId: OTHER_TEACHER,
+      predictedScores: [prediction(STUDENT_A, 88)],
+    });
+    expect(isRunOwnedBy(row, TEACHER)).toBe(false);
+  });
+
+  it("세션 id 가 빈 문자열이면 아무것도 안 보인다", () => {
+    expect(isRunOwnedBy(run({ userId: "" }), "")).toBe(false);
+  });
+});
+
+describe("toRoundSummary — 시행일", () => {
+  it("🔴 exam_date 가 있으면 YYYY-MM-DD 로 낸다", () => {
+    const summary = toRoundSummary(
+      run({ examDate: new Date("2026-08-29T00:00:00.000Z") }),
+      [],
+    );
+    expect(summary!.examDate).toBe("2026-08-29");
+  });
+
+  it("exam_date 가 NULL 이면 null 이다 — 대상 시점에서 지어내지 않는다", () => {
+    expect(toRoundSummary(run({ examDate: null }), [])!.examDate).toBeNull();
   });
 });
 
@@ -163,6 +189,8 @@ describe("toRoundSummary", () => {
   });
 });
 
+const FOREIGN_STUDENT = "30000000-0000-4000-8000-000000000099";
+
 describe("toRoundDetail", () => {
   const owned = [
     { id: STUDENT_A, name: "이서준" },
@@ -187,6 +215,22 @@ describe("toRoundDetail", () => {
   it("응시 여부 원천이 없으므로 아무도 '미응시'로 단정하지 않는다", () => {
     const detail = toRoundDetail(run(), [], owned);
     expect(detail!.students.every((s) => s.absent === false)).toBe(true);
+  });
+
+  it("🔴 학생 표가 빈 이유 둘을 구분할 수 있게 예측 인원 수를 낸다", () => {
+    // (a) 엔진이 개인 점수를 아직 못 냄 → 0
+    const none = toRoundDetail(run({ predictedScores: [] }), [], owned);
+    expect(none!.students).toEqual([]);
+    expect(none!.predictedStudentCount).toBe(0);
+
+    // (b) 예측은 냈는데 그 학생이 내 학생이 아님 → 0 이 아니다
+    const foreign = toRoundDetail(
+      run({ predictedScores: [prediction(FOREIGN_STUDENT, 71)] }),
+      [],
+      owned,
+    );
+    expect(foreign!.students).toEqual([]);
+    expect(foreign!.predictedStudentCount).toBe(1);
   });
 
   it("같은 학생이 예측에 두 번 들어와도 행이 한 번만 생긴다", () => {

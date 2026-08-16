@@ -30,6 +30,8 @@ type Props = {
   caption: string;
   /** 회차 id = `PredictionRun.id`. 실점수 저장에 쓴다. */
   runId: string;
+  /** 이 회차가 학생별 예상 점수를 낸 인원. 빈 표의 사유를 가르는 값이다. */
+  predictedStudentCount: number;
   onActualSaved: (studentId: string, actualScore: number) => void;
 };
 
@@ -38,12 +40,17 @@ export function StudentScoreTable({
   roundAvailable,
   caption,
   runId,
+  predictedStudentCount,
   onActualSaved,
 }: Props) {
   if (students.length === 0) {
     return (
       <p className="mt-5 text-[13px] text-muted">
-        이 회차에 배정된 학생이 없습니다
+        {/* 🔴 빈 표의 사유가 둘이다. "배정된 학생이 없습니다" 하나로 뭉개면, 학생이 멀쩡히
+            있는 반에서도 원장님이 반 편성을 의심하게 된다 — 실제 원인은 엔진 쪽이다. */}
+        {predictedStudentCount === 0
+          ? "학생별 예상 점수는 아직 내지 않습니다. 회차 단위 청사진만 있습니다."
+          : "이 회차의 예측 대상 중 내 학생이 없습니다"}
       </p>
     );
   }

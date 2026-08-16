@@ -10,7 +10,8 @@
  *
  * 🔴 이 파일의 규칙은 하나다: **없는 것을 지어내지 않는다.**
  *    - 계약 검증에 실패한 Json 은 버린다(숫자를 못 믿으면 안 낸다).
- *    - 스키마에 없는 값(`examDate`)은 null 로 낸다 → 화면이 "일정 미정"을 적는다.
+ *    - 값이 NULL 이면 null 로 낸다 → 화면이 "일정 미정" 같은 사유를 적는다.
+ *      다만 **있는 값을 없는 척하지도 않는다** — 그것도 거짓말이다(아래 examDate 이력 참조).
  *    - 근거가 없는 단계는 미완으로 둔다. 진행한 것처럼 칠하지 않는다.
  */
 import type {
@@ -28,9 +29,17 @@ import {
   type ScorePrediction,
 } from "@/contracts/predictor.contract";
 
-/** `PredictionRun` 에서 이 화면이 읽는 필드만. 구조적 타입이라 Prisma 행이 그대로 들어간다. */
+/**
+ * `PredictionRun` 에서 이 화면이 읽는 필드만. 구조적 타입이라 Prisma 행이 그대로 들어간다.
+ *
+ * ⚠️ **여기 없는 컬럼은 픽스처에도 없게 된다.** 이 타입이 실제 테이블보다 좁으면 테스트가
+ *    "코드가 읽는 모양"만 검증하게 되고, 컬럼을 안 읽는 버그를 통과시킨다
+ *    (2026-08-16 실제 발생 — `examDate`·`userId` 참조).
+ */
 export type PredictionRunRow = {
   id: string;
+  /** 이 예측을 만든 원장. 소유권 경계는 여기다 — 학생으로 되짚지 않는다. */
+  userId: string;
   createdAt: Date;
   engineVersion: string;
   school: string;
@@ -40,6 +49,8 @@ export type PredictionRunRow = {
   targetYear: number;
   targetSemester: number;
   targetRound: string;
+  /** 시행일(`@db.Date`). 학교가 아직 공지하지 않았으면 NULL. */
+  examDate: Date | null;
   inputExamIds: string[];
   predictedBlueprint: unknown;
   predictedScores: unknown;
@@ -88,22 +99,31 @@ export function runStudentIds(run: PredictionRunRow): string[] {
 }
 
 /**
- * 소유권 판정 — **fail closed**.
+ * 소유권 판정 — **fail closed**. 회차 소유자는 `PredictionRun.userId` 다.
  *
- * 🔴 `PredictionRun` 에 `userId` 컬럼이 아직 없다(2026-08-16 확인). 그래서 소유권을
- *    `학생 → 반 → 반 소유자` 경로로 되짚는다. 이 회차가 다루는 학생 중 **하나라도**
- *    내 학생이면 내 회차로 본다. 하나도 없으면 보이지 않는다(없는 쪽으로 닫는다).
- *    `PredictionRun.userId` 가 생기면 이 함수 하나만 갈아끼우면 된다.
+ * 📌 이력: 처음에는 이 자리가 `학생 → 반 → 반 소유자` 로 되짚는 우회로였다
+ *    ("userId 컬럼이 아직 없다"는 전제). 그 전제는 이미 틀렸다 — migration
+ *    `20260816160000_prediction_run_owner_and_interval` 이 `user_id`(NOT NULL, FK)를
+ *    넣은 뒤였다. 우회로는 두 방향으로 틀렸다:
+ *      - 내 회차인데 그 안에 내 학생 id 가 없으면 **안 보였다.** 엔진은 아직 학생별
+ *        예상 점수를 내지 않으므로(`predictedScores: []`) 실제로는 내 회차가 전부
+ *        사라졌다 — 계기판이 영구히 빈 목록이었다.
+ *      - 반대로 남의 회차라도 내 학생 id 가 그 Json 에 있으면 **보였다.**
+ *    이제는 소유자 한 값만 본다. 학생 유무는 소유권과 무관하다.
+ *
+ * ⚠️ 실제 걸러내기는 SQL(`where: { userId }`)이 한다. 이 함수는 조합 계층에서 같은
+ *    규칙을 한 번 더 잠그는 안전망이다 — 목록 조회 경로가 늘어도 규칙이 갈라지지 않게.
  */
-export function isRunVisibleTo(
-  run: PredictionRunRow,
-  actuals: ActualScoreRow[],
-  ownedStudentIds: ReadonlySet<string>,
-): boolean {
-  if (runStudentIds(run).some((id) => ownedStudentIds.has(id))) return true;
-  return actuals.some(
-    (a) => a.runId === run.id && ownedStudentIds.has(a.studentId),
-  );
+export function isRunOwnedBy(run: PredictionRunRow, userId: string): boolean {
+  return Boolean(userId) && run.userId === userId;
+}
+
+/** `@db.Date` 컬럼 → `YYYY-MM-DD`. 값이 없으면 null 이다. */
+function toIsoDate(value: Date | null | undefined): string | null {
+  if (!value) return null;
+  const time = value.getTime();
+  if (Number.isNaN(time)) return null;
+  return value.toISOString().slice(0, 10);
 }
 
 /**
@@ -165,8 +185,11 @@ export function toRoundSummary(
     id: run.id,
     series: series.data,
     period: period.data,
-    // 🔴 `PredictionRun.examDate` 컬럼이 아직 없다 — D-day 를 지어내지 않는다.
-    examDate: null,
+    // 원장님이 회차를 만들며 넣은 시행일(`prediction_run.exam_date`)을 그대로 낸다.
+    // 🔴 없으면 null 이고 화면이 "일정 미정"을 적는다 — 대상 시점에서 날짜를 만들지 않는다.
+    //    반대로 **있는 날짜를 null 로 내지도 않는다.** 그러면 화면이 D-day 를 못 세고
+    //    `sortRounds` 가 통째로 무효가 된다(2026-08-16 실제 발생).
+    examDate: toIsoDate(run.examDate),
     stages: buildStages(blueprint, studentIds.length, actualCount),
     evidenceCount: run.inputExamIds.length,
     confidence: blueprint?.confidence ?? null,
@@ -187,6 +210,7 @@ export function toRoundDetail(
 
   const nameById = new Map(ownedStudents.map((s) => [s.id, s.name]));
   const predictions = parsePredictedScores(run.predictedScores);
+  const studentIds = runStudentIds(run);
   const actualByStudent = new Map(
     actuals
       .filter((a) => a.runId === run.id)
@@ -228,6 +252,9 @@ export function toRoundDetail(
   return {
     summary,
     engineVersion: run.engineVersion,
+    // 🔴 이 회차가 학생별 예상 점수를 몇 명분 냈는가. 0이면 "반에 학생이 없다"가 아니라
+    //    "엔진이 아직 개인 점수를 못 낸다"는 뜻이다. 표가 그 둘을 구분해 적어야 해서 낸다.
+    predictedStudentCount: studentIds.length,
     predictedBlueprint: parseBlueprint(run.predictedBlueprint),
     // 🔴 실측 청사진을 담는 컬럼이 없다(T7.10 범위). 예측값을 실측인 척 복사하지 않는다.
     observedBlueprint: null,
