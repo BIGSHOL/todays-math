@@ -93,10 +93,16 @@ export const actualScoreRecordSchema = z.strictObject({
   runId: uuidSchema,
   studentId: uuidSchema,
   actualScore: z.number(),
-  /** 예측 당시 값의 스냅샷. run 의 Json 을 다시 파싱하지 않기 위한 값이다. */
-  predictedScore: z.number(),
-  /** actual − predicted. 보정 계수(T7.11)의 직접 입력. */
-  residual: z.number(),
+  /**
+   * 예측 당시 값의 스냅샷. run 의 Json 을 다시 파싱하지 않기 위한 값이다.
+   *
+   * 🔴 **null 이 정상 상태다.** 학생 개인 예상 점수를 아직 못 내는 회차가 있고
+   *    (능력 추정 §3 L3 미착수), 그래도 실제 점수는 받는다 — 실제 결과는 언제나 근거다.
+   *    없는 예측을 0 이나 평균으로 지어내지 않는다.
+   */
+  predictedScore: z.number().nullable(),
+  /** actual − predicted. 예측이 없으면 null 이고, 보정 표본에서 빠진다. */
+  residual: z.number().nullable(),
   /**
    * 예측 **구간**이 실제를 담았는가. 점 예측 MAE 와 별개 지표다.
    * 아래 구간 스냅샷이 null 이면 이 값은 **판정 불가**라는 뜻이고, 적중률 분모에서 뺀다.
@@ -116,6 +122,7 @@ export type ActualScoreRecord = z.infer<typeof actualScoreRecordSchema>;
 
 /** 한 회차의 잔차 요약. 표본이 0이면 숫자를 지어내지 않고 null 이다. */
 export const residualSummarySchema = z.strictObject({
+  /** 잔차를 낼 수 있는 표본 수(예측이 있는 행). 저장된 점수 수와 다를 수 있다. */
   count: z.int().min(0),
   mae: z.number().min(0).nullable(),
   meanResidual: z.number().nullable(),

@@ -172,7 +172,6 @@ vi.mock("@/lib/db", () => {
 
 import { GET, POST } from "@/app/api/predictions/[id]/actual/route";
 import { actualScoreResponseSchema } from "@/contracts/calibration.contract";
-import { errorResponseSchema } from "@/contracts/common.contract";
 
 function jsonRequest(method: string, body?: unknown, runId: string = f.RUN_ID) {
   return new NextRequest(`http://localhost/api/predictions/${runId}/actual`, {
@@ -431,7 +430,14 @@ describe("[T7.10] POST /api/predictions/{id}/actual — 실측 저장", () => {
     expect(f.state.actualScores).toHaveLength(0);
   });
 
-  it("run 에 없는 학생을 붙이면 422다", async () => {
+  /**
+   * ⚠️ 예전에는 "그 회차 예측 목록에 없는 학생이면 422" 였다. 그 가드를 **뺐다** —
+   * `predictedScores` 가 항상 빈 배열이라 어떤 학생도 통과 못 했고, 보정 루프의 입구가
+   * 처음부터 닫혀 있었다(위 '예측이 없어도 실점수는 받는다' 절 참조).
+   *
+   * 다만 그때 함께 지켜지던 것 두 가지는 **그대로 지켜야 한다.** 여기서 잠근다.
+   */
+  it("내 회차·내 학생이면 예측 목록에 없어도 받는다", async () => {
     const res = await POST(
       jsonRequest("POST", {
         scores: [
@@ -441,11 +447,22 @@ describe("[T7.10] POST /api/predictions/{id}/actual — 실측 저장", () => {
       }),
       routeContext(),
     );
-    expect(res.status).toBe(422);
-    const body = errorResponseSchema.parse(await res.json());
-    expect(body.error.code).toBe("VALIDATION_ERROR");
-    expect(JSON.stringify(body.error.details)).toContain(f.STUDENT_NOT_IN_RUN);
-    // 한 명이라도 어긋나면 아무것도 저장하지 않는다.
+    expect(res.status).toBe(200);
+    expect(f.state.actualScores).toHaveLength(2);
+  });
+
+  it("🔴 남의 학생은 여전히 막고, 그때는 아무것도 저장하지 않는다", async () => {
+    const res = await POST(
+      jsonRequest("POST", {
+        scores: [
+          { studentId: f.STUDENT_A, actualScore: 78 },
+          { studentId: f.STUDENT_OTHER, actualScore: 90 },
+        ],
+      }),
+      routeContext(),
+    );
+    expect(res.status).toBeGreaterThanOrEqual(400);
+    // 한 명이라도 어긋나면 부분 저장을 남기지 않는다 — 무엇이 들어갔는지 알 수 없게 된다.
     expect(f.state.actualScores).toHaveLength(0);
   });
 
@@ -533,6 +550,92 @@ describe("[T7.10] POST /api/predictions/{id}/actual — 실측 저장", () => {
     );
     expect(res.status).toBe(400);
     expect(f.state.actualScores).toHaveLength(0);
+  });
+});
+
+describe("[T7.10] 🔴 예측이 없어도 실점수는 받는다 — 보정 루프의 입구를 막지 않는다", () => {
+  /**
+   * 적대적 리뷰가 두 세션에서 독립적으로 재현한 결함이다.
+   *
+   * `PredictionRun.predictedScores` 는 **지금 항상 빈 배열**이다 — 학생 개인 예상 점수는
+   * 능력 추정(§3 L3)과 환산 계수가 없어 아직 못 낸다. 그런데 실측 저장이 "이 회차의
+   * 예측 대상인가"를 그 빈 배열로 판정했다. 그래서 **어떤 학생도 통과하지 못했고**,
+   * `ActualExamScore` 에는 영원히 0건이 쌓인다 → 보정 계수는 영원히 "표본 부족"이다.
+   *
+   * 실제 결과는 언제나 근거다. 예측을 못 냈다는 것과 실제 점수를 못 받는다는 것은
+   * 다른 문제다. 예측이 없으면 **잔차를 지어내지 않고 null 로 둔다** — 나중에 개인
+   * 예측이 가능해지면 그때부터 잔차가 쌓인다. 그전에도 실제 점수는 남아 있다.
+   */
+  beforeEach(() => {
+    // 실전과 같은 모양: 엔진이 저장하는 predictedScores 는 빈 배열이다.
+    f.state.runs[0].predictedScores = [];
+  });
+
+  it("예측이 하나도 없는 회차에도 실점수를 붙일 수 있다", async () => {
+    const res = await POST(
+      jsonRequest("POST", {
+        scores: [{ studentId: f.STUDENT_A, actualScore: 78 }],
+      }),
+      routeContext(),
+    );
+
+    expect(res.status).toBe(200);
+    const body = actualScoreResponseSchema.parse(await res.json());
+    expect(body.data.scores).toHaveLength(1);
+    const a = body.data.scores[0];
+    expect(a.actualScore).toBe(78);
+    // 🔴 없는 예측을 지어내지 않는다.
+    expect(a.predictedScore).toBeNull();
+    expect(a.residual).toBeNull();
+  });
+
+  it("잔차를 못 내는 행은 요약에서 빼고 **센다** — 조용히 버리지 않는다", async () => {
+    await POST(
+      jsonRequest("POST", {
+        scores: [{ studentId: f.STUDENT_A, actualScore: 78 }],
+      }),
+      routeContext(),
+    );
+    const res = await GET(jsonRequest("GET"), routeContext());
+    const body = actualScoreResponseSchema.parse(await res.json());
+
+    expect(body.data.summary.count).toBe(0); // 잔차 표본은 0건
+    expect(body.data.summary.mae).toBeNull();
+    expect(body.data.scores).toHaveLength(1); // 그러나 점수는 남아 있다
+  });
+
+  it("예측이 있는 학생과 없는 학생이 섞여도 각각 맞게 처리한다", async () => {
+    f.state.runs[0].predictedScores = buildPredictedScores().slice(0, 1); // A 만 예측 있음
+
+    const res = await POST(
+      jsonRequest("POST", {
+        scores: [
+          { studentId: f.STUDENT_A, actualScore: 78 },
+          { studentId: f.STUDENT_B, actualScore: 70 },
+        ],
+      }),
+      routeContext(),
+    );
+    expect(res.status).toBe(200);
+    const body = actualScoreResponseSchema.parse(await res.json());
+
+    const a = body.data.scores.find((x) => x.studentId === f.STUDENT_A)!;
+    const b = body.data.scores.find((x) => x.studentId === f.STUDENT_B)!;
+    expect(a.residual).toBe(6);
+    expect(b.residual).toBeNull();
+    // 잔차 요약은 A 한 명만으로 낸다.
+    expect(body.data.summary.count).toBe(1);
+    expect(body.data.summary.mae).toBe(6);
+  });
+
+  it("남의 학생은 여전히 막는다 — 예측이 없다고 소유권까지 푸는 것이 아니다", async () => {
+    const res = await POST(
+      jsonRequest("POST", {
+        scores: [{ studentId: f.STUDENT_OTHER, actualScore: 80 }],
+      }),
+      routeContext(),
+    );
+    expect(res.status).toBeGreaterThanOrEqual(400);
   });
 });
 

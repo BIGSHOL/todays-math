@@ -144,12 +144,19 @@ export async function listActualScores(
   return {
     runId,
     scores: rows.map(serialize),
+    // 🔴 잔차를 낼 수 없는 행(예측이 없던 학생)은 **요약에서 뺀다.** 0 으로 세면
+    //    "정확히 맞혔다"가 되어 MAE 가 조용히 좋아진다. 점수 자체는 위 `scores` 에 남는다.
     summary: summarizeResiduals(
-      rows.map((row) => ({
-        residual: row.residual,
-        intervalHit: row.intervalHit,
-        hasInterval: hasInterval(row),
-      })),
+      rows
+        .filter(
+          (row): row is typeof row & { residual: number } =>
+            row.residual !== null,
+        )
+        .map((row) => ({
+          residual: row.residual,
+          intervalHit: row.intervalHit,
+          hasInterval: hasInterval(row),
+        })),
     ),
   };
 }
@@ -169,12 +176,14 @@ export async function attachActualScores(
     return { ok: false, kind: "예측값_읽기실패" };
   }
 
-  const missing = input.scores
-    .filter((entry) => !index.byStudent.has(entry.studentId))
-    .map((entry) => entry.studentId);
-  if (missing.length > 0) {
-    return { ok: false, kind: "학생_회차없음", studentIds: missing };
-  }
+  // 🔴 예전에는 "그 회차 예측 목록에 없는 학생"을 전부 422 로 막았다. 그런데
+  //    `predictedScores` 는 지금 **항상 빈 배열**이라(개인 예상 점수는 §3 L3 미착수)
+  //    어떤 학생도 통과하지 못했고, 보정 루프의 입구가 처음부터 닫혀 있었다.
+  //    적대적 리뷰 2개 세션이 독립적으로 재현했다.
+  //
+  //    실제 결과는 언제나 근거다. 예측을 못 냈다는 것과 실제 점수를 못 받는다는 것은
+  //    다른 문제다. 그래서 여기서는 막지 않고, 예측이 없으면 잔차를 **지어내지 않고
+  //    NULL 로 둔다.** 소유권(내 학생·내 회차) 검사는 호출부에 그대로 남아 있다.
 
   const existingRows = (await db.actualExamScore.findMany({
     where: { runId: index.runId },
@@ -185,7 +194,6 @@ export async function attachActualScores(
 
   await db.$transaction(async (tx) => {
     for (const entry of input.scores) {
-      const snapshot = index.byStudent.get(entry.studentId)!;
       const existing = existingByStudent.get(entry.studentId);
 
       if (existing) {
@@ -205,10 +213,10 @@ export async function attachActualScores(
           },
           data: {
             actualScore: entry.actualScore,
-            residual: computeResidual(
-              entry.actualScore,
-              existing.predictedScore,
-            ),
+            residual:
+              existing.predictedScore === null
+                ? null
+                : computeResidual(entry.actualScore, existing.predictedScore),
             intervalHit: hasInterval(existing)
               ? isIntervalHit(entry.actualScore, {
                   lower: existing.predictedLower!,
@@ -220,14 +228,19 @@ export async function attachActualScores(
         continue;
       }
 
-      const interval = snapshot.interval ?? null;
+      // 예측이 없는 학생이면 스냅샷도 없다 — 없는 값을 0 이나 평균으로 지어내지 않는다.
+      const snapshot = index.byStudent.get(entry.studentId) ?? null;
+      const interval = snapshot?.interval ?? null;
       await tx.actualExamScore.create({
         data: {
           runId: index.runId,
           studentId: entry.studentId,
           actualScore: entry.actualScore,
-          predictedScore: snapshot.expectedScore,
-          residual: computeResidual(entry.actualScore, snapshot.expectedScore),
+          predictedScore: snapshot?.expectedScore ?? null,
+          residual:
+            snapshot === null
+              ? null
+              : computeResidual(entry.actualScore, snapshot.expectedScore),
           intervalHit:
             interval === null
               ? false
