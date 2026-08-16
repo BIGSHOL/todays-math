@@ -136,17 +136,27 @@ model Class {
 // ─────────────────────────────────────────────
 
 model Student {
-  id                    String   @id @default(uuid()) @db.Uuid
-  classId               String   @map("class_id") @db.Uuid
-  name                  String   @db.VarChar(50)
-  useIndividualProgress Boolean  @default(false) @map("use_individual_progress")
-  createdAt             DateTime @default(now()) @map("created_at")
-  updatedAt             DateTime @updatedAt @map("updated_at")
+  id                    String  @id @default(uuid()) @db.Uuid
+  classId               String  @map("class_id") @db.Uuid
+  name                  String  @db.VarChar(50)
+  useIndividualProgress Boolean @default(false) @map("use_individual_progress")
 
-  class       Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
-  progresses  Progress[]
-  tests       Test[]
-  testResults TestResult[]
+  /// 재학 학교 — '오늘의 시험' 예측 대상을 정한다(트랙 E).
+  /// 표기는 eywa `school-name.ts` 규칙으로 정규화해 넣는다("경명여자중학교" → "경명여중").
+  schoolName  String? @map("school_name") @db.VarChar(50)
+  /// "중" | "고". 초등은 내신이 없어 대상이 아니다.
+  schoolLevel String? @map("school_level") @db.VarChar(2)
+  schoolGrade Int?    @map("school_grade")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  class            Class             @relation(fields: [classId], references: [id], onDelete: Cascade)
+  progresses       Progress[]
+  tests            Test[]
+  testResults      TestResult[]
+  /// '오늘의 시험' 실측 내신 점수 — 보정 루프의 입력(트랙 E)
+  actualExamScores ActualExamScore[]
 
   @@index([classId])
   @@map("student")
@@ -166,8 +176,9 @@ model Unit {
 
   progresses     Progress[]
   problems       Problem[]
-  testRangeStart Test[]     @relation("TestRangeStartUnit")
-  testRangeEnd   Test[]     @relation("TestRangeEndUnit")
+  examQuestions  ExamQuestion[]
+  testRangeStart Test[]         @relation("TestRangeStartUnit")
+  testRangeEnd   Test[]         @relation("TestRangeEndUnit")
 
   @@index([grade, orderIndex])
   @@map("unit")
@@ -211,43 +222,48 @@ model Problem {
 
   difficulty   Difficulty
   /// 계산 / 개념 / 활용 / 서술형 — 확장 가능성 고려해 자유 문자열로 유지 (열거형 아님)
-  problemType  String       @map("problem_type") @db.VarChar(20)
+  problemType  String     @map("problem_type") @db.VarChar(20)
+  /// 출제 형식 — 객관식 | 단답형 | 서술형.
+  /// ⚠️ `problemType`(계산/개념/활용/서술형)과 **다른 축**이다. 섞지 말 것.
+  /// mapProblemType 이 객관식→"개념" 으로 뭉개 원본 구분이 소실돼 있었다(11 §2.4).
+  /// 청사진의 유형 배분(학교 고유성 51.1%)을 채우려면 이 컬럼이 필요하다.
+  questionType String?    @map("question_type") @db.VarChar(10)
   /// 문제 본문 — LaTeX 수식 포함 마크다운
-  content      String       @db.Text
-  answer       String       @db.Text
-  solution     String?      @db.Text
+  content      String     @db.Text
+  answer       String     @db.Text
+  solution     String?    @db.Text
   /// 문항에 딸린 도형 SVG (testchanger figure engine 산출물, inline 렌더).
   /// 원본 시험지의 그림을 대체한다 — 이미지 파일이 아니라 SVG 문자열로 보관해
   /// 인쇄·화면이 같은 벡터를 쓰고 해상도 손실이 없다. 참조: docs/planning/09-figure-engine-guide.md
-  figureSvg    String?      @db.Text @map("figure_svg")
+  figureSvg    String?    @map("figure_svg") @db.Text
   /// 도형 출처: engine(엔진 작도) / image(외부 이미지 보정본) / source(원본 시험지 오려옴)
-  figureSource String?      @db.VarChar(20) @map("figure_source")
+  figureSource String?    @map("figure_source") @db.VarChar(20)
   /// 원본 시험지에서 오려 온 그림 파일 경로들 (`/figures/<examId>/qNN.jpg`).
   /// 완료본 PDF 에 그림이 **이미지로 심겨 있어** 다시 그릴 필요가 없다 —
   /// 원본을 그대로 오려 `public/figures/` 에 두고 여기에 경로만 적는다.
   /// 배열인 이유: 선택지마다 그림인 문항이 있다(실측 한 문항 최대 6장).
   /// 순서는 지면에 나온 순서다. 참조: docs/planning/09-figure-engine-guide.md
-  figureUrls   String[]     @map("figure_urls")
+  figureUrls   String[]   @default([]) @map("figure_urls")
 
   // ── 원본 역추적 메타데이터 (docs/planning/08-import-ledger.md) ──────────────
   // 추출기는 이 값들을 이미 갖고 있었는데 적재 단계가 버려서, 훼손·그림 문항을
   // 원본 시험지로 되짚을 수 없었다(2026-08-14). externalId는 재이관 멱등 키다.
   /// 원본 고유 키 (기출: `{exam_id}-{문항번호}`, RPM: 원본 행 id)
-  externalId     String? @unique @map("external_id") @db.VarChar(120)
+  externalId       String?      @unique @map("external_id") @db.VarChar(120)
   /// N드라이브 원본 파일 경로 (scripts/qa/nfile-inventory.txt.gz 기준 상대경로)
-  sourceFile     String? @map("source_file") @db.VarChar(500)
-  school         String? @db.VarChar(50)
-  subject        String? @db.VarChar(50)
+  sourceFile       String?      @map("source_file") @db.VarChar(500)
+  school           String?      @db.VarChar(50)
+  subject          String?      @db.VarChar(50)
   /// 시험 식별자 — 예: `2023-donmun-2-1`
-  examId         String? @map("exam_id") @db.VarChar(120)
+  examId           String?      @map("exam_id") @db.VarChar(120)
   /// 원본 시험지에서의 문항 번호
-  questionNumber Int?    @map("question_number")
+  questionNumber   Int?         @map("question_number")
   /// 배점 (3, 3.5 등)
-  score          Float?
+  score            Float?
   /// AI 생성물은 pending으로 시작, 검수 후 approved (D-22)
-  reviewStatus ReviewStatus @default(pending) @map("review_status")
+  reviewStatus     ReviewStatus @default(pending) @map("review_status")
   /// RPM 원본 잠금 (D-26) — false면 출제 풀에서 제외하고 변형 원본으로만 쓴다.
-  directUseAllowed Boolean @default(true) @map("direct_use_allowed")
+  directUseAllowed Boolean      @default(true) @map("direct_use_allowed")
   /// 공용 풀이 기본 (D-31). private는 소유자만 조회.
   pool             ProblemPool  @default(shared)
   createdAt        DateTime     @default(now()) @map("created_at")
@@ -266,6 +282,83 @@ model Problem {
   @@index([originProblemId])
   @@index([pool, unitId, reviewStatus, directUseAllowed])
   @@map("problem")
+}
+
+// ─────────────────────────────────────────────
+// EXAM — 기출 시험지 1편 (트랙 E · 11-score-predictor.md §3 L0)
+//
+// ⚠️ Problem 과 목적이 다르다. Problem 은 **출제용**이라 문항 단위로 정규화·필터링돼
+//    시험지 통계가 이미 깨져 있다(적재에서 탈락한 문항이 있다). 예측기는 시험지 통계를
+//    그대로 써야 하므로 **추출 JSON 원본**에서 이쪽을 만든다.
+// ─────────────────────────────────────────────
+
+model Exam {
+  id String @id @default(uuid()) @db.Uuid
+
+  /// 외부 인덱스 키(exam_index.db 의 exams.id). 재적재 멱등 키다.
+  externalExamId String @unique @map("external_exam_id") @db.VarChar(120)
+
+  school     String  @db.VarChar(50)
+  /// "중" | "고"
+  level      String  @db.VarChar(2)
+  grade      Int
+  /// 우리 교육과정 트리 라벨("중3", "공통수학1")
+  subject    String  @db.VarChar(50)
+  /// 시험지 원본 표기("수학", "수상"). 원문을 버리지 않는다.
+  subjectRaw String? @map("subject_raw") @db.VarChar(50)
+
+  year     Int
+  semester Int
+  /// "중간" | "기말"
+  round    String @db.VarChar(4)
+
+  totalScore    Float @map("total_score")
+  questionCount Int   @map("question_count")
+
+  sourceFile String?  @map("source_file") @db.VarChar(500)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  questions ExamQuestion[]
+
+  /// 시리즈를 시간순으로 세우는 조회 — 예측의 기본 질의다.
+  @@index([school, level, grade, subject, year, semester, round])
+  @@index([level, grade, subject, year, semester, round])
+  @@map("exam")
+}
+
+model ExamQuestion {
+  id     String @id @default(uuid()) @db.Uuid
+  examId String @map("exam_id") @db.Uuid
+
+  number Int
+  /// 배점. 3.2·3.4 처럼 소수 배점이 흔하다 — 반올림하지 말 것.
+  score  Float
+  /// 객관식 | 단답형 | 서술형
+  qtype  String @db.VarChar(10)
+
+  /// 시험지 원본의 사람 난이도 라벨: 하 | 중 | 상.
+  /// ⚠️ Difficulty(easy/mid/hard)와 **다른 축**이다. 섞지 말 것.
+  /// ⚠️ 배점으로 추정해 채우지 말 것 — 난이도로 점수를 예측하면 순환 논리가 된다(11 §2.4).
+  difficultyLabel String? @map("difficulty_label") @db.VarChar(4)
+
+  /// ⚠️ 시험지 원문 소단원 표기. 우리 트리로 매핑해도 이 값은 **보존한다**.
+  /// 학교마다 단원을 부르는 이름이 다르고, 그 표기 자체가 출제 패턴 신호다.
+  topicRaw String? @map("topic_raw") @db.VarChar(100)
+  /// 매핑 실패 시 null. 버리지 않는다.
+  unitId   String? @map("unit_id") @db.Uuid
+
+  answer    String? @db.Text
+  hasFigure Boolean @default(false) @map("has_figure")
+  /// 문제은행과 연결됐으면 그 id (없을 수 있다)
+  problemId String? @map("problem_id") @db.Uuid
+
+  exam Exam  @relation(fields: [examId], references: [id], onDelete: Cascade)
+  unit Unit? @relation(fields: [unitId], references: [id], onDelete: SetNull)
+
+  @@unique([examId, number])
+  @@index([unitId])
+  @@map("exam_question")
 }
 
 // ─────────────────────────────────────────────
@@ -322,6 +415,12 @@ model TestProblem {
   /// 검수 중 교체된 문항 여부
   replaced   Boolean @default(false)
 
+  /// 예측 문제지 전용 — 배점 보정기가 매긴 조정 배점. 시험지 합계가 정확히 100 이 된다(D-42).
+  /// ⚠️ `Problem.score`(원본 기출 배점)를 **덮어쓰지 않으려고** 시험지 쪽에 싣는다(11 §10.2).
+  ///    덮어쓰면 학습 코퍼스가 오염된다.
+  /// 일일테스트는 배점을 표기하지 않으므로(D-28·D-40) NULL 이다.
+  score Float?
+
   test    Test    @relation(fields: [testId], references: [id], onDelete: Cascade)
   problem Problem @relation(fields: [problemId], references: [id], onDelete: Restrict)
 
@@ -343,13 +442,13 @@ model TestProblem {
 /// 같은 (testId, studentId) 재응시/재채점을 막지 않는다(재시험·정정 입력 허용) — 최신값은
 /// takenAt 내림차순 조회로 가른다.
 model TestResult {
-  id        String   @id @default(uuid()) @db.Uuid
-  testId    String   @map("test_id") @db.Uuid
-  studentId String   @map("student_id") @db.Uuid
+  id             String   @id @default(uuid()) @db.Uuid
+  testId         String   @map("test_id") @db.Uuid
+  studentId      String   @map("student_id") @db.Uuid
   /// 응시(채점 입력) 일시 — 별도 입력이 없으면 서버 처리 시각
-  takenAt   DateTime @default(now()) @map("taken_at")
+  takenAt        DateTime @default(now()) @map("taken_at")
   /// 자동 채점 총점
-  score     Float
+  score          Float
   /// 판독기 계산값 — src/lib/predictor/predictStudentScore.ts (v0, 잠정) 산출물.
   /// ⚠️ 진짜 능력 추정 엔진(11-score-predictor.md §1-B)이 아직 없어 잠정 추정치다.
   predictedScore Float    @map("predicted_score")
@@ -393,14 +492,14 @@ model AnalysisReport {
   /// 1:1 FK(unique) — 이 모델이 관계를 소유한다.
   testResultId String @unique @map("test_result_id") @db.Uuid
 
-  totalScore     Float @map("total_score")
-  predictedScore Float @map("predicted_score")
+  totalScore             Float    @map("total_score")
+  predictedScore         Float    @map("predicted_score")
   /// {unitId: 정답률(0~100)} — 04-database-design.md 스타일과 달리 v2 신규라 jsonb로 유지
-  unitScores Json @map("unit_scores") @db.JsonB
+  unitScores             Json     @map("unit_scores") @db.JsonB
   /// {difficulty(easy|mid|hard): {correct, total}}
-  difficultyDistribution Json @map("difficulty_distribution") @db.JsonB
+  difficultyDistribution Json     @map("difficulty_distribution") @db.JsonB
   /// 복습 추천 단원 id 배열 — 정답률 낮은 순 최대 3개(잠정 기준선 60%)
-  recommendedUnits String[] @map("recommended_units")
+  recommendedUnits       String[] @map("recommended_units")
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -454,4 +553,113 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_token")
+}
+
+// ─────────────────────────────────────────────
+// v2 '오늘의 시험' 보정 루프 — 트랙 E (T7.7 · T7.10 · T7.11)
+// 참조: docs/planning/11-score-predictor.md §3 L5, §5
+//
+// ⚠️ 이 기록이 없으면 보정 자체가 불가능하다. 예측을 남기지 않으면
+//    나중에 실제 점수가 들어와도 무엇과 비교할지 알 수 없다.
+// ─────────────────────────────────────────────
+
+/// 예측 실행 스냅샷. 계약: `predictionRunSchema`(src/contracts/predictor.contract.ts).
+///
+/// 같은 시험을 여러 번 예측할 수 있다(엔진 버전이 오르면 과거 회차를 재실행해 비교한다)
+/// — 그래서 (학교, 시점)에 유일 제약을 걸지 않는다. 섞이지 않게 engine_version 으로 가른다.
+model PredictionRun {
+  id            String   @id @default(uuid()) @db.Uuid
+  createdAt     DateTime @default(now()) @map("created_at")
+  /// 엔진 버전. 이게 다르면 지표를 섞어서 비교하지 않는다.
+  engineVersion String   @map("engine_version") @db.VarChar(40)
+
+  /// 예측 대상 시리즈 — Exam 과 같은 축으로 둔다(조인이 아니라 값으로 맞춘다).
+  school  String @db.VarChar(50)
+  level   String @db.VarChar(2)
+  grade   Int
+  subject String @db.VarChar(50)
+
+  targetYear     Int    @map("target_year")
+  targetSemester Int    @map("target_semester")
+  targetRound    String @map("target_round") @db.VarChar(4)
+
+  /// 입력 컷오프 — **이 시점 이후 자료는 어떤 경로로도 쓰지 않았다**는 선언.
+  /// 누출 금지를 코드로 강제하는 근거값이라 반드시 남긴다.
+  cutoffYear     Int    @map("cutoff_year")
+  cutoffSemester Int    @map("cutoff_semester")
+  cutoffRound    String @map("cutoff_round") @db.VarChar(4)
+
+  /// 근거로 쓴 시험지의 externalExamId 목록. 재현·감사에 필요하다.
+  inputExamIds       String[] @map("input_exam_ids")
+  /// 엔진 파라미터 스냅샷. 형태는 엔진 버전마다 다르다.
+  params             Json
+  /// 근거가 없어 예측하지 않았으면 NULL — 0문항 0점짜리 청사진을 지어내지 않는다.
+  predictedBlueprint Json?    @map("predicted_blueprint")
+  /// ScorePrediction[] — 학생별 예상 점수와 구간.
+  predictedScores    Json     @map("predicted_scores")
+
+  /// 학교가 평균을 공개하면 채운다. 안 하면 학생 표본으로 역추정한다(NULL 유지).
+  actualSchoolMean  Float?    @map("actual_school_mean")
+  actualSchoolStdev Float?    @map("actual_school_stdev")
+  actualRecordedAt  DateTime? @map("actual_recorded_at")
+
+  actualScores ActualExamScore[]
+
+  @@index([school, level, grade, subject, targetYear, targetSemester, targetRound])
+  @@index([engineVersion, createdAt])
+  @@map("prediction_run")
+}
+
+/// 실제 내신 점수 — 보정 루프의 입력.
+///
+/// 같은 run 에 같은 학생을 두 번 붙이면 **갱신**한다(중복 행이 아니다) — 원장이
+/// 점수를 잘못 입력했을 때 고칠 수 있어야 한다.
+model ActualExamScore {
+  id        String @id @default(uuid()) @db.Uuid
+  runId     String @map("run_id") @db.Uuid
+  studentId String @map("student_id") @db.Uuid
+
+  actualScore    Float   @map("actual_score")
+  /// 예측 당시 값의 **스냅샷**. run 의 Json 을 다시 파싱하지 않고 잔차를 집계할 수 있고,
+  /// Json 모양이 나중에 바뀌어도 과거 보정 근거가 흔들리지 않는다.
+  predictedScore Float   @map("predicted_score")
+  /// actual − predicted. 보정 계수(T7.11)의 직접 입력이다.
+  residual       Float
+  /// 예측 **구간**이 실제를 담았는가. 점 예측 MAE 와 별개로 봐야 하는 지표다
+  /// — ±5점 목표는 구간 적중률로 판정한다.
+  intervalHit    Boolean @map("interval_hit")
+
+  recordedAt DateTime @default(now()) @map("recorded_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  run     PredictionRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  student Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, studentId])
+  @@index([studentId, recordedAt(sort: Desc)])
+  @@map("actual_exam_score")
+}
+
+/// 시험범위. 원장이 확정하면 예측 신뢰도가 올라가고, 없으면 riskFlag 가 붙는다.
+model ExamScope {
+  id       String @id @default(uuid()) @db.Uuid
+  school   String @db.VarChar(50)
+  level    String @db.VarChar(2)
+  grade    Int
+  subject  String @db.VarChar(50)
+  year     Int
+  semester Int
+  round    String @db.VarChar(4)
+
+  /// 범위에 든 소단원 id 목록. 비어 있으면 미확정이다.
+  unitIds     String[]  @map("unit_ids") @db.Uuid
+  /// 원장이 확정한 시각. NULL 이면 추정값이라 신뢰도를 깎는다("시험범위_미확정").
+  confirmedAt DateTime? @map("confirmed_at")
+  note        String?   @db.VarChar(200)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([school, level, grade, subject, year, semester, round])
+  @@map("exam_scope")
 }

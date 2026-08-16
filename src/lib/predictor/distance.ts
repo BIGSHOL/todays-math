@@ -19,7 +19,23 @@ export function normalizeMix(mix: Mix): Mix {
   return out;
 }
 
-/** 총변동거리. 한쪽에만 있는 키도 센다. */
+/**
+ * 분포 사이 거리. 채점용이라 **빈 분포를 특별 취급한다.**
+ *
+ * 빈 분포는 "예측 안 함" 이지 분포가 아니다. 그런데 총변동거리는 빈 쪽을 0 벡터로 봐서
+ * 최대 0.5 까지만 벌어진다 — 완전히 틀린 예측(1.0)보다 **점수가 좋아진다.**
+ * 그대로 두면 엔진이 망가져 빈 청사진을 낼수록 backtest 가 좋아 보인다(2026-08-16 재현).
+ * 그래서 한쪽만 비면 최대 거리로 친다.
+ */
+export function mixDistance(a: Mix, b: Mix): number {
+  const aEmpty = Object.keys(a).length === 0;
+  const bEmpty = Object.keys(b).length === 0;
+  if (aEmpty !== bEmpty) return 1;
+  if (aEmpty && bEmpty) return 0;
+  return totalVariationDistance(a, b);
+}
+
+/** 총변동거리. 한쪽에만 있는 키도 센다. 채점에는 `mixDistance` 를 쓴다. */
 export function totalVariationDistance(a: Mix, b: Mix): number {
   const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
   let sum = 0;
@@ -84,21 +100,21 @@ export function blueprintDistances(
       predicted.questionCount - observed.questionCount,
     ),
     totalScoreAbsError: Math.abs(predicted.totalScore - observed.totalScore),
-    typeMixDistance: totalVariationDistance(
+    typeMixDistance: mixDistance(
       normalizeMix(countsOf(predicted.typeMix)),
       normalizeMix(countsOf(observed.typeMix)),
     ),
     // '미표기'는 난이도가 아니라 **잴 수 없음**이다. 한 칸으로 세면
     // 라벨이 없는 시험지가 지표를 통째로 오염시킨다(단원과 같은 문제).
-    difficultyMixDistance: totalVariationDistance(
+    difficultyMixDistance: mixDistance(
       normalizeMix(labeledOnly(predicted.difficultyMix)),
       normalizeMix(labeledOnly(observed.difficultyMix)),
     ),
-    unitMixDistance: totalVariationDistance(
+    unitMixDistance: mixDistance(
       normalizeMix(unitCounts(predicted)),
       normalizeMix(unitCounts(observed)),
     ),
-    scoreGridDistance: totalVariationDistance(
+    scoreGridDistance: mixDistance(
       normalizeMix(gridCounts(predicted)),
       normalizeMix(gridCounts(observed)),
     ),
