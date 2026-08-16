@@ -17,7 +17,8 @@
  * 3. **감사 가능성.** `inputExamIds` 에 실제로 쓴 시험지가 전부 들어가고,
  *    `params` 스냅샷과 `engineVersion` 이 함께 저장된다. 같은 시험을 두 번 예측하면
  *    행이 **2개** 생긴다(갱신 아님) — 엔진 버전별 비교가 목적이기 때문이다.
- * 4. **소유권.** 남의 run 은 못 본다(404/403).
+ * 4. **소유권.** 남의 run 은 못 본다(404/403). 판정 근거는 `PredictionRun.userId`
+ *    **컬럼** 하나뿐이고, 목록 필터도 DB where 가 한다.
  *
  * 대응 계약: src/contracts/predictionRun.contract.ts
  * 구현: src/lib/predictor/predictionRunService.ts · src/app/api/predictions/**
@@ -208,9 +209,58 @@ describe("[T7.7] POST /api/predictions — 예측 실행 + 저장", () => {
     expect(body.data.params.evidence.pinned).toBe(false);
 
     // DB 에 저장된 raw params 도 계약 형태 그대로여야 한다(T7.10/T7.11 이 읽는다).
-    expect(() =>
-      predictionRunParamsSchema.parse(allPredictionRuns()[0].params),
-    ).not.toThrow();
+    const rawParams = allPredictionRuns()[0].params as Record<string, unknown>;
+    expect(() => predictionRunParamsSchema.parse(rawParams)).not.toThrow();
+    // 소유자·위험표시는 **컬럼**이다. params 로 되돌아오면 목록 필터가 다시
+    // 메모리로 내려가 페이지네이션이 틀어진다 — 그래서 여기서 막는다.
+    expect(rawParams).not.toHaveProperty("ownerUserId");
+    expect(rawParams).not.toHaveProperty("riskFlags");
+  });
+
+  it("소유자·위험표시·시행일을 params 가 아니라 컬럼에 쓴다", async () => {
+    seedHealthyCorpus();
+
+    const res = await createPrediction(
+      postRequest({
+        series: SERIES,
+        targetPeriod: TARGET,
+        examDate: "2026-05-04",
+      }),
+    );
+    expect(res.status).toBe(201);
+    const body = predictionRunDetailResponseSchema.parse(await res.json());
+
+    const row = allPredictionRuns()[0];
+    expect(row.userId).toBe(USER_A);
+    expect(row.riskFlags).toEqual(body.data.riskFlags);
+    expect(row.riskFlags.length).toBeGreaterThan(0);
+    expect(row.examDate?.toISOString().slice(0, 10)).toBe("2026-05-04");
+    expect(body.data.examDate).toBe("2026-05-04");
+  });
+
+  it("시행일을 모르면 NULL 로 둔다 — 대상 시점으로 지어내지 않는다", async () => {
+    seedHealthyCorpus();
+
+    const res = await createPrediction(
+      postRequest({ series: SERIES, targetPeriod: TARGET }),
+    );
+    const body = predictionRunDetailResponseSchema.parse(await res.json());
+
+    expect(body.data.examDate).toBeNull();
+    expect(allPredictionRuns()[0].examDate).toBeNull();
+  });
+
+  it("시행일 형식이 틀리면 400", async () => {
+    seedHealthyCorpus();
+    const res = await createPrediction(
+      postRequest({
+        series: SERIES,
+        targetPeriod: TARGET,
+        examDate: "2026/05/04",
+      }),
+    );
+    expect(res.status).toBe(400);
+    expect(allPredictionRuns()).toHaveLength(0);
   });
 
   it("같은 시험을 두 번 예측하면 행이 2개 생긴다(갱신이 아니다)", async () => {
@@ -538,6 +588,48 @@ describe("[T7.7] GET /api/predictions — 회차 목록(계기판)", () => {
     expect(body.data[0].targetPeriod.round).toBe("기말");
     expect(body.data[0].evidenceCount).toBeGreaterThan(0);
     expect(body.data[0].blueprint).not.toBeNull();
+    // 소유자 필터가 DB where 로 내려가서 total 이 정확하다.
+    expect(body.meta).toEqual({ page: 1, pageSize: 20, total: 2 });
+  });
+
+  it("페이지네이션이 소유자 기준으로 정확하다", async () => {
+    seedHealthyCorpus();
+    for (const round of ["중간", "기말"] as const) {
+      for (const year of [2026, 2027]) {
+        await createPrediction(
+          postRequest({
+            series: SERIES,
+            targetPeriod: { year, semester: 2, round },
+          }),
+        );
+      }
+    }
+    // 남의 run 은 total 에 섞이면 안 된다.
+    sessionState.user = { id: USER_B, email: "b@t.test", name: "다른 원장" };
+    await createPrediction(postRequest({ series: SERIES, targetPeriod: TARGET }));
+    sessionState.user = { id: USER_A, email: "a@t.test", name: "원장" };
+
+    const first = predictionRunListResponseSchema.parse(
+      await (
+        await listPredictions(
+          listRequest({ school: SCHOOL, grade: "3", page: "1", pageSize: "3" }),
+        )
+      ).json(),
+    );
+    const second = predictionRunListResponseSchema.parse(
+      await (
+        await listPredictions(
+          listRequest({ school: SCHOOL, grade: "3", page: "2", pageSize: "3" }),
+        )
+      ).json(),
+    );
+
+    expect(first.meta).toEqual({ page: 1, pageSize: 3, total: 4 });
+    expect(first.data).toHaveLength(3);
+    expect(second.data).toHaveLength(1);
+    // 페이지가 겹치지 않는다.
+    const ids = [...first.data, ...second.data].map((r) => r.id);
+    expect(new Set(ids).size).toBe(4);
   });
 
   it("다른 사용자의 run 은 목록에 나오지 않는다", async () => {
@@ -552,6 +644,7 @@ describe("[T7.7] GET /api/predictions — 회차 목록(계기판)", () => {
     expect(res.status).toBe(200);
     const body = predictionRunListResponseSchema.parse(await res.json());
     expect(body.data).toEqual([]);
+    expect(body.meta.total).toBe(0);
   });
 
   it("과목으로 더 좁힐 수 있다", async () => {

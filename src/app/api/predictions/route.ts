@@ -59,7 +59,14 @@ export async function POST(request: NextRequest) {
   }
 }
 
-const LIST_QUERY_KEYS = ["school", "grade", "level", "subject"] as const;
+const LIST_QUERY_KEYS = [
+  "school",
+  "grade",
+  "level",
+  "subject",
+  "page",
+  "pageSize",
+] as const;
 
 export async function GET(request: NextRequest) {
   const session = await getSessionUser();
@@ -75,9 +82,13 @@ export async function GET(request: NextRequest) {
   const parsed = predictionRunListQuerySchema.safeParse(raw);
   if (!parsed.success) return validationError(parsed.error);
 
-  const runs = await listPredictionRuns({
+  const { page, pageSize } = parsed.data;
+  const { runs, total } = await listPredictionRuns({
     userId: session.id,
     ...parsed.data,
   });
-  return jsonOk(predictionRunListResponseSchema, { data: runs });
+  return jsonOk(predictionRunListResponseSchema, {
+    data: runs,
+    meta: { page, pageSize, total },
+  });
 }

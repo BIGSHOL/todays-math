@@ -19,14 +19,13 @@
  *    엔진 버전별 비교가 목적이라 과거 run 을 덮어쓰면 비교 대상이 사라진다.
  * 4. **조용히 버리지 않는다** — 신뢰 가드(`paperTrust`)로 뺀 편 수를 `params` 에 센다.
  *
- * ## 🔴 스키마 공백 (코디네이터 확인 필요)
+ * ## 소유권
  *
- * `PredictionRun` 에 **소유자 컬럼도, 실행 단위 riskFlag 컬럼도 없다.** 트랙 E 지시상
- * `prisma/schema.prisma` 를 건드릴 수 없어 두 값을 `params` JSON 의 예약 키
- * (`ownerUserId` · `riskFlags`)로 싣는다. 자세한 사정은
- * `src/contracts/predictionRun.contract.ts` 머리말 참조.
+ * `PredictionRun.userId` 컬럼이 유일한 근거다. 조회·목록 필터를 전부 DB where 로 하므로
+ * 목록 `total` 이 정확하고 `@@index([userId, createdAt desc])` 를 탄다.
  */
 import { Prisma } from "@prisma/client";
+import { z } from "zod";
 import type {
   Exam as ExamRow,
   ExamQuestion as ExamQuestionRow,
@@ -35,6 +34,7 @@ import type {
 
 import {
   predictionRunParamsSchema,
+  riskFlagSchema,
   RISK_FLAG_ORDER,
   type PredictionEvidenceStats,
   type PredictionLeakageDetail,
@@ -404,13 +404,15 @@ export interface RunPredictionInput {
   /** 생략하면 대상 시점과 같다. */
   cutoffPeriod?: ExamPeriod;
   inputExamIds?: string[];
+  /** 실제 시행일(YYYY-MM-DD). 모르면 주지 않는다 — NULL 로 저장한다. */
+  examDate?: string;
   params?: Partial<PredictorParams>;
 }
 
 export async function runPrediction(
   input: RunPredictionInput,
 ): Promise<PredictionRunDetail> {
-  const { userId, series, targetPeriod } = input;
+  const { userId, series, targetPeriod, examDate } = input;
   const cutoffPeriod = input.cutoffPeriod ?? targetPeriod;
 
   // 🔴 DB 를 읽기 전에 설정부터 막는다 — 컷오프가 대상 뒤면 무엇을 모아도 누출이다.
@@ -491,8 +493,6 @@ export async function runPrediction(
     predictor: predictorParams,
     evidence: evidenceStats,
     unavailableReason,
-    ownerUserId: userId,
-    riskFlags,
   });
 
   // 근거로 **실제로 쓴** 시험지 전부. 감사 가능해야 하므로 코호트도 포함한다.
@@ -501,12 +501,10 @@ export async function runPrediction(
   // 갱신이 아니라 항상 새 행이다 — 엔진 버전별 비교가 목적이다.
   const row = await db.predictionRun.create({
     data: {
-      // 소유자 컬럼이 생겼다(20260816160000). 아직 `params.ownerUserId` 도 같이 쓴다 —
-      // 조회 경로가 그걸 보고 있어 한쪽만 바꾸면 자기 run 을 못 읽는다.
-      // 임시 이중 기록이다. 조회를 컬럼 기준으로 옮기는 것이 T7.7 후속 작업이고,
-      // 그때 `params.ownerUserId` 를 걷어낸다.
       userId,
       riskFlags,
+      // 모르면 NULL 이다. 대상 시점에서 날짜를 만들어 채우지 않는다.
+      examDate: examDate === undefined ? null : new Date(`${examDate}T00:00:00Z`),
       engineVersion: PREDICTOR_ENGINE_VERSION,
       school: series.school,
       level: series.level,
@@ -535,20 +533,6 @@ export async function runPrediction(
 // 조회 · 소유권
 // ─────────────────────────────────────────────
 
-/**
- * 이 run 을 누가 실행했나. `params.ownerUserId` 가 유일한 근거다
- * (`PredictionRun` 에 소유자 컬럼이 없다 — 파일 머리말 참조).
- * 읽을 수 없으면 null 을 돌려주고, 호출부는 **접근을 막는 쪽으로** 판단한다.
- */
-export function predictionRunOwnerId(row: { params: unknown }): string | null {
-  const params = row.params;
-  if (!params || typeof params !== "object" || Array.isArray(params)) {
-    return null;
-  }
-  const owner = (params as Record<string, unknown>).ownerUserId;
-  return typeof owner === "string" ? owner : null;
-}
-
 /** 존재하지 않으면 404, 존재하지만 남의 것이면 403 — 다른 라우트와 같은 패턴. */
 export async function requireOwnedPredictionRun(
   runId: string,
@@ -556,7 +540,7 @@ export async function requireOwnedPredictionRun(
 ): Promise<OwnershipResult<PredictionRunRow>> {
   const run = await db.predictionRun.findUnique({ where: { id: runId } });
   if (!run) return { ok: false, response: notFoundError("예측 회차") };
-  if (predictionRunOwnerId(run) !== userId) {
+  if (run.userId !== userId) {
     return { ok: false, response: forbiddenError() };
   }
   return { ok: true, data: run };
@@ -568,30 +552,38 @@ export interface ListPredictionRunsInput {
   grade: number;
   level?: ExamLevel;
   subject?: string;
+  page: number;
+  pageSize: number;
 }
 
 /**
- * 계기판 목록. 소유자 필터가 **조회 후 메모리에서** 일어난다 —
- * 소유자가 `params` JSON 안에 있어 인덱스를 걸 수 없기 때문이다.
- * 한 학교·학년 시리즈의 회차는 학기당 2편 수준이라 지금 규모에서는 문제가 없지만,
- * `userId` 컬럼이 생기면 DB where 로 옮기고 페이지네이션을 붙여야 한다.
+ * 계기판 목록. **소유자 필터를 DB where 가 한다** — `@@index([userId, createdAt desc])`
+ * 를 타고, 걸러진 뒤의 건수를 DB 가 세므로 `total` 이 정확하다.
+ * (소유자가 `params` JSON 에 있던 시절에는 메모리에서 걸러야 해서 페이지네이션을
+ *  붙일 수 없었다.)
  */
 export async function listPredictionRuns(
   input: ListPredictionRunsInput,
-): Promise<PredictionRunSummary[]> {
-  const rows = await db.predictionRun.findMany({
-    where: {
-      school: input.school,
-      grade: input.grade,
-      ...(input.level ? { level: input.level } : {}),
-      ...(input.subject ? { subject: input.subject } : {}),
-    },
-    orderBy: { createdAt: "desc" },
-  });
+): Promise<{ runs: PredictionRunSummary[]; total: number }> {
+  const where = {
+    userId: input.userId,
+    school: input.school,
+    grade: input.grade,
+    ...(input.level ? { level: input.level } : {}),
+    ...(input.subject ? { subject: input.subject } : {}),
+  };
 
-  return rows
-    .filter((row) => predictionRunOwnerId(row) === input.userId)
-    .map(serializePredictionRunSummary);
+  const [rows, total] = await Promise.all([
+    db.predictionRun.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip: (input.page - 1) * input.pageSize,
+      take: input.pageSize,
+    }),
+    db.predictionRun.count({ where }),
+  ]);
+
+  return { runs: rows.map(serializePredictionRunSummary), total };
 }
 
 // ─────────────────────────────────────────────
@@ -623,13 +615,29 @@ function cutoffOf(row: PredictionRunRow): ExamPeriod {
   };
 }
 
-/**
- * 저장된 `params` 를 계약 형태로 읽는다. 읽히지 않으면 위험 표시·소유자를 **추측하지 않는다**
- * — 빈 값을 돌려주고 호출부가 그대로 드러내게 한다.
- */
+/** 저장된 `params` 를 계약 형태로 읽는다. 형태가 어긋나면 null(호출부가 드러낸다). */
 function readParams(row: PredictionRunRow): PredictionRunParams | null {
   const parsed = predictionRunParamsSchema.safeParse(row.params);
   return parsed.success ? parsed.data : null;
+}
+
+/**
+ * `riskFlags` 는 `String[]` 컬럼이라 DB 는 값을 검사하지 않는다.
+ * 계약 열거값으로 좁히되 **모르는 값을 조용히 버리지 않는다** — 던져서 드러낸다.
+ */
+function riskFlagsOf(row: PredictionRunRow): RiskFlag[] {
+  const parsed = z.array(riskFlagSchema).safeParse(row.riskFlags);
+  if (!parsed.success) {
+    throw new Error(
+      `PredictionRun ${row.id}: riskFlags 에 계약에 없는 값이 있다 — ${row.riskFlags.join(", ")}`,
+    );
+  }
+  return parsed.data;
+}
+
+/** `@db.Date` 컬럼 → YYYY-MM-DD. 다른 라우트(`Test.testDate`)와 같은 방식. */
+function examDateOf(row: PredictionRunRow): string | null {
+  return row.examDate ? row.examDate.toISOString().slice(0, 10) : null;
 }
 
 function blueprintOf(row: PredictionRunRow): Blueprint | null {
@@ -658,15 +666,15 @@ export function serializePredictionRunDetail(
     params,
     predictedBlueprint: blueprintOf(row),
     predictedScores: row.predictedScores as unknown as ScorePrediction[],
-    riskFlags: params.riskFlags,
+    riskFlags: riskFlagsOf(row),
     unavailableReason: params.unavailableReason,
+    examDate: examDateOf(row),
   };
 }
 
 export function serializePredictionRunSummary(
   row: PredictionRunRow,
 ): PredictionRunSummary {
-  const params = readParams(row);
   const blueprint = blueprintOf(row);
   return {
     id: row.id,
@@ -675,8 +683,9 @@ export function serializePredictionRunSummary(
     series: seriesOf(row),
     targetPeriod: targetOf(row),
     cutoffPeriod: cutoffOf(row),
+    examDate: examDateOf(row),
     evidenceCount: row.inputExamIds.length,
-    riskFlags: params?.riskFlags ?? [],
+    riskFlags: riskFlagsOf(row),
     blueprint: blueprint
       ? {
           questionCount: blueprint.questionCount,
