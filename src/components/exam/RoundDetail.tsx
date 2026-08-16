@@ -48,6 +48,27 @@ export function RoundDetail({
     };
   }, [roundId]);
 
+  /**
+   * 저장된 점수를 그 자리에서 반영한다. 전체를 다시 조회하지 않는 이유는
+   * **친 즉시 잔차가 보여야** 오타를 그 자리에서 잡을 수 있기 때문이다.
+   * 서버가 200 을 준 뒤에만 부르므로 화면과 DB 가 어긋나지 않는다.
+   */
+  function applyActualScore(studentId: string, actualScore: number) {
+    setState((prev) =>
+      prev.status === "ready"
+        ? {
+            ...prev,
+            detail: {
+              ...prev.detail,
+              students: prev.detail.students.map((row) =>
+                row.studentId === studentId ? { ...row, actualScore } : row,
+              ),
+            },
+          }
+        : prev,
+    );
+  }
+
   if (state.status !== "ready") {
     return (
       <AppChrome tab="exam">
@@ -110,6 +131,8 @@ export function RoundDetail({
           students={detail.students}
           roundAvailable={judgement.available}
           caption={`${title} · 예측 대비 실측`}
+          runId={roundId}
+          onActualSaved={applyActualScore}
         />
 
         <p className="mt-4 border-t border-divider pt-3 text-[12.5px] text-muted tabular-nums">

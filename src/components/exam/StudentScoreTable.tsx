@@ -1,3 +1,4 @@
+import { ActualScoreCell } from "./ActualScoreCell";
 import type { ExamStudentRow } from "./examScreen.contract";
 import { ScoreIntervalBar } from "./ScoreIntervalBar";
 import {
@@ -27,12 +28,17 @@ type Props = {
   students: ExamStudentRow[];
   roundAvailable: boolean;
   caption: string;
+  /** 회차 id = `PredictionRun.id`. 실점수 저장에 쓴다. */
+  runId: string;
+  onActualSaved: (studentId: string, actualScore: number) => void;
 };
 
 export function StudentScoreTable({
   students,
   roundAvailable,
   caption,
+  runId,
+  onActualSaved,
 }: Props) {
   if (students.length === 0) {
     return (
@@ -105,12 +111,23 @@ export function StudentScoreTable({
                 </>
               )}
 
-              <td
-                className={`${CELL} text-right ${
-                  row.actualScore === null ? "text-ghost" : ""
-                }`}
-              >
-                {row.actualScore === null ? "—" : formatScore(row.actualScore)}
+              {/* 실측 — 보정 루프의 입력구.
+                  🔴 응시하지 않은 학생에게는 입력 자리를 주지 않는다. 붙일 예측이 없어
+                     서버가 422 로 거절할 요청을 화면이 만들어 내지 않는다. */}
+              <td className={`${CELL} text-right`}>
+                {row.absent ? (
+                  // 확정 시안은 미응시 학생의 실측 칸을 **비워** 둔다.
+                  // 사유("미응시")는 같은 행 예측 쪽에 이미 적혀 있다 — 두 번 쓰면 잡음이다.
+                  <span className="text-ghost" />
+                ) : (
+                  <ActualScoreCell
+                    actualScore={row.actualScore}
+                    onSaved={onActualSaved}
+                    runId={runId}
+                    studentId={row.studentId}
+                    studentName={row.studentName}
+                  />
+                )}
               </td>
 
               <td
