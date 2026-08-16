@@ -48,6 +48,8 @@ function buildSamples(
     predicted?: number;
     predictedCycle?: number[];
     missEvery?: number;
+    /** 이 주기마다 구간 스냅샷이 없는 표본을 만든다(판정 불가 표본). */
+    noIntervalEvery?: number;
   } = {},
 ): CalibrationSample[] {
   const out: CalibrationSample[] = [];
@@ -67,6 +69,9 @@ function buildSamples(
         actual: predicted + residual,
         residual,
         intervalHit: opts.missEvery ? i % opts.missEvery !== 0 : true,
+        hasInterval: opts.noIntervalEvery
+          ? i % opts.noIntervalEvery !== 0
+          : true,
       });
       i += 1;
     }
@@ -111,15 +116,40 @@ describe("[T7.10] 잔차와 구간 적중", () => {
 
   it("구간 적중은 점 예측 MAE 와 별개 지표다 — 둘 다 요약에 나온다", () => {
     const summary = summarizeResiduals([
-      { residual: 4, intervalHit: true },
-      { residual: -6, intervalHit: false },
-      { residual: 2, intervalHit: true },
-      { residual: 0, intervalHit: true },
+      { residual: 4, intervalHit: true, hasInterval: true },
+      { residual: -6, intervalHit: false, hasInterval: true },
+      { residual: 2, intervalHit: true, hasInterval: true },
+      { residual: 0, intervalHit: true, hasInterval: true },
     ]);
     expect(summary.count).toBe(4);
     expect(summary.mae).toBe(3);
     expect(summary.meanResidual).toBe(0);
+    expect(summary.intervalCount).toBe(4);
     expect(summary.intervalHitRate).toBe(0.75);
+  });
+
+  it("구간 스냅샷이 없는 표본은 적중률 분모에서 뺀다 — 모르는 것을 빗나감으로 세지 않는다", () => {
+    const summary = summarizeResiduals([
+      { residual: 4, intervalHit: true, hasInterval: true },
+      { residual: -6, intervalHit: false, hasInterval: true },
+      // 예측 시점에 구간이 없었던 표본. intervalHit 값은 의미가 없다.
+      { residual: 2, intervalHit: false, hasInterval: false },
+      { residual: 0, intervalHit: false, hasInterval: false },
+    ]);
+    expect(summary.count).toBe(4);
+    expect(summary.mae).toBe(3);
+    expect(summary.intervalCount).toBe(2);
+    expect(summary.intervalHitRate).toBe(0.5);
+  });
+
+  it("구간을 아무도 판정할 수 없으면 적중률은 null 이다", () => {
+    const summary = summarizeResiduals([
+      { residual: 4, intervalHit: false, hasInterval: false },
+      { residual: -6, intervalHit: false, hasInterval: false },
+    ]);
+    expect(summary.count).toBe(2);
+    expect(summary.intervalCount).toBe(0);
+    expect(summary.intervalHitRate).toBeNull();
   });
 
   it("표본이 0이면 숫자를 지어내지 않고 null 이다", () => {
@@ -128,6 +158,7 @@ describe("[T7.10] 잔차와 구간 적중", () => {
       count: 0,
       mae: null,
       meanResidual: null,
+      intervalCount: 0,
       intervalHitRate: null,
     });
   });
@@ -349,6 +380,7 @@ describe("[T7.11] 보정 전/후 MAE 와 편향", () => {
         actual,
         residual: actual - predicted,
         intervalHit: true,
+        hasInterval: true,
       };
     });
     expect(samples.length).toBeGreaterThanOrEqual(MIN_SLOPE_SAMPLES);
@@ -394,6 +426,7 @@ describe("[T7.11] 구간 적중률은 점 예측과 별개로 본다", () => {
 
   it("적중률을 세고, 선언한 신뢰수준을 모르면 정직성 판정은 하지 않는다", () => {
     const outcome = assertAvailable(estimateCalibration(samples));
+    expect(outcome.intervalSampleCount).toBe(30);
     expect(outcome.intervalHitRate).toBeCloseTo(0.8, 6);
     expect(outcome.nominalCoverage).toBeNull();
     expect(outcome.intervalHonest).toBeNull();
@@ -409,6 +442,43 @@ describe("[T7.11] 구간 적중률은 점 예측과 별개로 본다", () => {
       estimateCalibration(samples, { nominalCoverage: 0.95 }),
     );
     expect(dishonest.intervalHonest).toBe(false);
+  });
+
+  /**
+   * 구간 스냅샷이 없는 표본은 적중률을 **판정할 수 없다.** 그걸 빗나감으로 세면
+   * 구간이 실제보다 부정직해 보이고, 적중으로 세면 반대로 부풀려진다. 분모에서 뺀다.
+   */
+  it("구간을 판정할 수 없는 표본은 분모에서 뺀다", () => {
+    const mixed = buildSamples(
+      [
+        { school: "가중", residuals: repeat([5, -5], 5) },
+        { school: "나중", residuals: repeat([5, -5], 5) },
+        { school: "다중", residuals: repeat([5, -5], 5) },
+      ],
+      // 구간이 없는 표본은 intervalHit 를 false 로 두지만 분모에 들어가면 안 된다.
+      { noIntervalEvery: 3 },
+    );
+    const outcome = assertAvailable(estimateCalibration(mixed));
+    expect(outcome.sampleCount).toBe(30);
+    expect(outcome.intervalSampleCount).toBe(20);
+    expect(outcome.intervalHitRate).toBe(1);
+  });
+
+  it("구간을 아무도 판정할 수 없으면 적중률과 정직성 판정이 모두 null 이다", () => {
+    const none = buildSamples(
+      [
+        { school: "가중", residuals: repeat([5, -5], 5) },
+        { school: "나중", residuals: repeat([5, -5], 5) },
+        { school: "다중", residuals: repeat([5, -5], 5) },
+      ],
+      { noIntervalEvery: 1 },
+    );
+    const outcome = assertAvailable(
+      estimateCalibration(none, { nominalCoverage: 0.8 }),
+    );
+    expect(outcome.intervalSampleCount).toBe(0);
+    expect(outcome.intervalHitRate).toBeNull();
+    expect(outcome.intervalHonest).toBeNull();
   });
 });
 
