@@ -66,16 +66,16 @@ import { partitionTrusted } from "./paperTrust";
 import {
   DEFAULT_PARAMS,
   predictBlueprint,
+  PREDICTOR_ENGINE_VERSION,
   PredictorUnavailableError,
   type PredictorParams,
 } from "./predictBlueprint";
 
 /**
- * 엔진 버전. **이게 다르면 지표를 섞어서 비교하지 않는다.**
- * `scripts/predictor/backtest.ts` 의 `ENGINE_VERSION` 과 같은 값이어야 backtest 결과와
- * 실행 기록을 같은 축에서 볼 수 있다 — 지금은 두 곳에 문자열이 따로 있다(REPORT 참고).
+ * 엔진 버전은 엔진이 정의한다(`PREDICTOR_ENGINE_VERSION`). 여기서 다시 쓰지 않는다 —
+ * 문자열이 두 곳에 있으면 한쪽만 올라가 backtest 지표와 실행 기록이 다른 축이 된다.
  */
-export const PREDICTION_ENGINE_VERSION = "0.2.0";
+export { PREDICTOR_ENGINE_VERSION } from "./predictBlueprint";
 
 // ─────────────────────────────────────────────
 // 에러 — 라우터가 상태 코드로 옮긴다
@@ -493,7 +493,7 @@ export async function runPrediction(
   // 갱신이 아니라 항상 새 행이다 — 엔진 버전별 비교가 목적이다.
   const row = await db.predictionRun.create({
     data: {
-      engineVersion: PREDICTION_ENGINE_VERSION,
+      engineVersion: PREDICTOR_ENGINE_VERSION,
       school: series.school,
       level: series.level,
       grade: series.grade,

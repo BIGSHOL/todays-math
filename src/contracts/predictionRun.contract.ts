@@ -43,7 +43,18 @@ import {
   examPeriodSchema,
   examSeriesKeySchema,
   predictionRunSchema,
+  predictorParamsSchema,
   scorePredictionSchema,
+} from "./predictor.contract";
+
+/**
+ * 엔진 파라미터 스냅샷 — **정의는 `predictor.contract.ts` 에 하나뿐이다.**
+ * 여기서는 재수출만 한다(이 파일을 쓰는 쪽의 import 경로를 바꾸지 않으려고).
+ * 예전에 같은 형태를 여기 한 벌 더 두었다가 엔진 v0.5 와 어긋나 저장 API 가 500 을 냈다.
+ */
+export {
+  predictorParamsSchema,
+  type PredictorParamsSnapshot,
 } from "./predictor.contract";
 
 // ─────────────────────────────────────────────
@@ -66,21 +77,6 @@ export const RISK_FLAG_ORDER: readonly RiskFlag[] = [
 // ─────────────────────────────────────────────
 // 엔진 파라미터 스냅샷
 // ─────────────────────────────────────────────
-
-/**
- * `src/lib/predictor/predictBlueprint.ts` 의 `PredictorParams` 와 같은 형태다.
- * 계약(Zod)이 SSOT 라 lib 를 import 하지 않고 여기에 형태를 둔다 —
- * 대신 `DEFAULT_PARAMS` 가 이 스키마를 통과하는지 테스트가 매번 확인한다(표류 방지).
- */
-export const predictorParamsSchema = z.strictObject({
-  decay: z.number().min(0).max(1),
-  sameRoundBoost: z.number().min(0).max(10),
-  priorWeight: z.number().min(0).max(100),
-  gridPriorWeight: z.number().min(0).max(100),
-  gridDecay: z.number().min(0).max(1),
-  unitOwnWeight: z.number().min(0).max(1),
-});
-export type PredictorParamsSnapshot = z.infer<typeof predictorParamsSchema>;
 
 /** 근거를 어떻게 모았는지 — 감사·디버깅용 카운트. 문항 본문은 담지 않는다. */
 export const predictionEvidenceStatsSchema = z.strictObject({

@@ -55,8 +55,10 @@ import {
   predictionRunParamsSchema,
   predictorParamsSchema,
 } from "@/contracts/predictionRun.contract";
-import { DEFAULT_PARAMS } from "@/lib/predictor/predictBlueprint";
-import { PREDICTION_ENGINE_VERSION } from "@/lib/predictor/predictionRunService";
+import {
+  DEFAULT_PARAMS,
+  PREDICTOR_ENGINE_VERSION,
+} from "@/lib/predictor/predictBlueprint";
 import {
   allPredictionRuns,
   resetPredictionTestDb,
@@ -196,7 +198,7 @@ describe("[T7.7] POST /api/predictions — 예측 실행 + 저장", () => {
     );
     const body = predictionRunDetailResponseSchema.parse(await res.json());
 
-    expect(body.data.engineVersion).toBe(PREDICTION_ENGINE_VERSION);
+    expect(body.data.engineVersion).toBe(PREDICTOR_ENGINE_VERSION);
     expect(body.data.params.predictor).toEqual({
       ...DEFAULT_PARAMS,
       decay: 0.5,
