@@ -643,107 +643,206 @@ DB 전량 오염 49행을 판정별로 가르니 **전부 내 판정 대상**이
 
 ---
 
+---
+
 # 📌 인계 — 다음 사람이 여기부터 읽는다 (2026-08-16)
 
-## (a) 확정된 것과 남은 것
+트랙 D 는 여기서 멈췄다. **트랙 F 의 신규 6,042행에 대한 교체 판정은 시작하지 않았다** —
+그게 다음 사람의 첫 일이다(§5).
 
-### 확정 — DB 에 이미 반영됨
+---
 
-| 작업 | 행 | 백업 |
-|---|---:|---|
-| 본문 교체 (HWP 정본으로) | **4,069** | `hwp-replace-backup.json` |
-| `problemType` 정정 (서술형 → 개념) | **39** | `problem-type-backup.json` |
-| base64 오염 재적재 (이미 적재분) | **10** | `hwp-replace-backup-base64.json` |
-| base64 오염 신규 적재 | **36** | `hwp-replace-backup-base64-new.json` |
+## 1. 확정된 것 — DB 에 이미 반영됨
 
-- HWP 추출 **3,302 / 3,302편 · 실패 0** · `.hwpx` 전수 검증 통과(손상 0)
-- 판정 **29,667행** — 교체 4,105 · 보류 318 · 유지 25,244
-- KaTeX 실패(교체 대상) **4.97% → 0.14%** · DB 전량 base64 오염 **49 → 3행**
+| 작업 | 행 | 되돌리기 목록 파일 | 되쓸 컬럼 |
+|---|---:|---|---|
+| 본문 교체 (HWP 정본으로) | **4,069** | `scripts/qa/reports/hwp-replace-backup.json` | `content` |
+| `problemType` 정정 (서술형 → 개념) | **39** | `scripts/qa/reports/problem-type-backup.json` | `problemType` |
+| base64 오염 재적재 (이미 적재분) | **10** | `scripts/qa/reports/hwp-replace-backup-base64.json` | `content` |
+| base64 오염 신규 적재 | **36** | `scripts/qa/reports/hwp-replace-backup-base64-new.json` | `content` |
 
-### 남은 것
+⚠️ 백업 파일이 넷인 것은 실수가 아니다. **어느 것도 서로 덮지 않는다** — 각각 다른
+적용의 되돌리기 자산이다. 필터를 걸어 일부만 쓸 때는 **백업 경로도 반드시 갈라라.**
+한 번 덮으면 그 적용의 이력을 영영 잃는다.
 
-| 항목 | 규모 | 왜 안 했나 |
-|---|---:|---|
-| **보류 318행** | 318 | HWP 쪽에도 결함이 있어 사람이 봐야 한다. H 사유별로 갈라 봐야 함 |
-| └ 그중 base64 오염 | 3 | 코디네이터 지시로 그대로 둠 |
-| **문항 결손** | 하한 **1,077** | INSERT 라 트랙 D 컬럼 밖. `handoff/missing-cause.json` |
-| **`서술형 × 단답형`** | 1,309 | 원장님 판단 대기. 결정 자료는 이 문서에 있다 |
-| **단원 미분류로 빠진 결손** | 1,139 | 소단원 별칭 확충이 필요 |
+성과 요약: HWP 추출 3,302/3,302편(실패 0) · 판정 29,667행(교체 4,105 · 보류 318 ·
+유지 25,244) · 교체 대상 KaTeX 실패 **4.97% → 0.14%** · DB 전량 base64 오염 **49 → 3행**.
 
-## (b) `hwp-latex` 를 다시 뽑아야 할 때 — base64 구멍은 이미 막혀 있다
+---
 
-### ⚠️ 지금 corpus 는 **얼려 놓았다**
+## 2. ⚠️ 되돌릴 때의 함정 — `content` 만 되쓴다
 
-트랙 F 가 이 corpus 를 원본으로 신규 적재를 돌린다. 내가 재생성하면 F 의 대상 수가
-움직인다(실측 5,816 → 6,042). **코디네이터가 해제를 통보할 때까지
-`build-hwp-latex.py` 를 돌리지 마라.**
+> **백업의 `content` 만 되쓴다. `answer` 까지 되쓰면 트랙 B 가 그 사이에 한 작업이 지워진다.**
 
-얼린 시점의 지문 (`python scripts/qa/fingerprint-corpus.py` 로 재현):
+이건 문서에서 읽은 게 아니라 **직접 겪어 잡아낸 것**이다.
+
+4,069행 적용 뒤 검증에서 `answer` 13행이 바뀐 것이 잡혔다. 내 UPDATE 문에는 `answer`
+필드가 **없다.** 값을 확인하니 전부 트랙 B 가 같은 시간대(00:04~00:09)에 한 작업이었다.
+
+```
+2989-20 : "$12$$f(x)=3x+…"  → "12"                ← 정답 필드의 HWP 스크립트 잔재 제거
+2640-19 : "98"              → "⑴ 1000000  ⑵ 98"   ← 소문항 정답 복원
+5202-14 : "③"               → "③, ④"              ← 복수정답 정정
+```
+
+**덮어쓰기 사고는 아니었다** — `answer` 는 B 의 새 값, `content` 는 내 값으로 둘 다
+살아 있었다. 서로 다른 컬럼만 썼기 때문이다.
+
+하지만 **백업 시점 상태를 통째로 되쓰면 이야기가 달라진다.** 그건 내 변경을 되돌리는
+게 아니라 **남의 변경까지 되감는 것**이다. 백업에 `answer`·`figureUrls`·`externalId`·
+`unitId` 가 담긴 이유는 되돌리기용이 아니라 **"안 바뀌었음을 증명"** 하기 위해서다.
+
+같은 이유로 `problemType` 정정도 `problemType` 만 되쓴다.
+
+### 곁들여 — 기준선은 변경 *이전* 에 뜬 것이어야 한다
+
+오염 10행을 재적재할 때 **10행 전부가 "남이 고침" 으로 차단**됐다. 낡음 판정 기준선인
+스냅샷이 내 **첫 적재 전** 값이라, 내가 덮어쓴 행이 전부 남의 것으로 보였기 때문이다.
+
+그리고 확인하려다 **동어반복 대조를 한 번 냈다** — 방금 현재 DB 에서 뜬 백업과 현재
+DB 를 견주고 "동일 10행" 이라는 무의미한 결과를 얻었다. 기준선은 반드시 **그 변경
+이전**에 뜬 것이어야 한다.
+
+---
+
+## 3. corpus 관리 — 다시 뽑기 전에 트랙 F 에게 알린다
+
+트랙 F 의 적재기는 `hwp-latex` 를 원본으로 삼고 **지문으로 판을 확인한다.** 내가 재생성
+했을 때 F 의 대상 수가 5,816 → 6,042 로 움직여 집계가 흔들린 적이 있다.
+동결은 2026-08-16 에 해제됐지만 **다시 뽑기 전에는 F 에게 먼저 알려야 한다.**
+
+지금 지문 (`python scripts/qa/fingerprint-corpus.py` 로 재현):
 
 ```
 편 3302 · 문항 69703 · 바이트 44702015
-① 내용 sha256        2ec80ae9e646f24e
-② 파일명+내용 sha256 84704260fe4978f5
-③ 문항 본문 sha256   77e55594e6722f33
+① 내용 sha256        2ec80ae9e646f24e465e0ca17d71392a72b2f8fb2e8c4e05ca062deecd961c5c
+② 파일명+내용 sha256 84704260fe4978f56bc87fc8555621536de228acea27d89aa8e05306aac7b0d5
+③ 문항 본문 sha256   77e55594e6722f33c560fbf3d156aa139125e345a4f89152a8228c7438a49200
 ```
 
-### 구멍은 어떻게 막혀 있나
+⚠️ F 가 보고한 `346b5894c606b4c9` 는 **위 셋 중 어느 것과도 안 맞는다.** 해시 방식이
+서로 다르기 때문으로 보인다. **판이 같은지 가르는 기준은 해시가 아니라 개수다** —
+F 가 `편 3302 · 문항 69703` 을 보고 있으면 같은 판이다. 지문을 맞추려면 먼저 알고리즘을
+합의할 것.
 
-HWPX 수식 객체의 **캡션**에 base64 덩어리가 들어 있고, `hwp_extract._walk` 가
-`header`/`footer` 만 건너뛰므로 그게 발문 한가운데 섞여 들어온다.
+---
 
-**`scripts/qa/hwp_text_clean.py` 가 두 곳에 걸려 있다.**
+## 4. base64 구멍 — 막은 곳과 **아직 안 막힌 곳**
+
+### 원인
+
+HWPX 수식 객체의 **캡션**에 base64 덩어리가 있고, `hwp_extract._walk` 가
+`header`/`footer` 만 건너뛰므로 그게 발문 한가운데 섞인다.
+
+```
+530  p/run/equation/caption/subList/p/run/t
+116  p/run/tbl/tr/tc/subList/p/run/equation/caption/subList/p/run/t
+ 16  p/run/pic/caption/subList/p/run/t
+```
+
+진짜 수식은 `hp:script` 로 따로 나오므로 **base64 는 덤이지 대체물이 아니다** — 지워도
+식을 잃지 않는다. 캡션을 통째로 버려도 되는 근거: 표본 300편의 캡션 텍스트 351조각이
+**100% base64**, 한글 캡션 **0건**.
+
+### ✅ 막은 곳 — `scripts/qa/hwp_text_clean.py`
 
 | 어디 | 언제 |
 |---|---|
 | `hwp_extract_keep.py` | **신규 추출** — `parse_exam` 직후, JSON 쓰기 전 |
 | `build-hwp-latex.py` | **기존 산출물** — 읽은 직후, 변환 전 |
 
-그래서 **어느 경로로 다시 뽑아도 자동으로 청소된다.** 재생성 로그의
-`base64 청소 N문항` 줄로 확인할 수 있다(마지막 전량 재생성에서 307문항).
+어느 경로로 다시 뽑아도 자동 청소된다. 재생성 로그의 `base64 청소 N문항` 으로 확인.
+검사 도구: `npx tsx scripts/qa/audit-base64-contamination.ts`
 
-⚠️ **벤더링본(`scripts/vendor/testchanger/hwp_extract.py`)은 고치지 않았다.** 원본
-저장소가 읽기 전용이고(tracks/README §3), 벤더링본을 고치면 다음 재벤더링 때 조용히
-사라지기 때문이다. **상류에 전달해야 할 결함이다** — 근본 수정은 `_SKIP_CTRL` 에
-`hp:caption` 을 넣는 것. 캡션을 통째로 버려도 되는 근거는 표본 300편의 캡션 텍스트
-351조각이 **100% base64**, 한글 캡션 0건이라는 실측이다.
+### ❌ 아직 안 막힌 곳 — 셋
 
-검사: `npx tsx scripts/qa/audit-base64-contamination.ts` (DB 전량 + 내 적재분 + 백업 대조)
+1. **`scripts/qa/reports/hwp/*.json` (원본 추출본) 은 아직 오염돼 있다 — 307문항 / 19편.**
+   3,302편 추출이 **청소 코드보다 먼저** 끝났고, 그 뒤 청소는 `hwp-latex` 쪽만 다시
+   돌렸기 때문이다.
+   ⚠️ **트랙 B 가 이 파일을 읽는다**(`answer`·`solution`·`topic`). base64 는 `stem`·
+   `choices` 에 있어 `answer`·`topic` 은 무사하지만 **`solution` 은 오염됐을 수 있다.**
+   고치는 법은 아래 한 줄이지만, **B 가 읽는 중에 갈아치우면 F 때와 같은 사고가 난다.**
+   반드시 B 에게 먼저 알릴 것.
+   ```bash
+   python - <<'EOF'
+   import json, pathlib, sys
+   sys.path.append("scripts/qa")
+   from hwp_text_clean import clean_exam
+   n = 0
+   for f in pathlib.Path("scripts/qa/reports/hwp").glob("*.json"):
+       d = json.loads(f.read_text(encoding="utf-8"))
+       if clean_exam(d):
+           f.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8"); n += 1
+   print("청소한 편", n)
+   EOF
+   ```
 
-## (c) F 의 신규 6,042행이 들어온 뒤 판정을 다시 도는 법
+2. **벤더링본 `scripts/vendor/testchanger/hwp_extract.py` 자체.** 고치지 않았다 —
+   원본 저장소가 읽기 전용이고(tracks/README §3), 벤더링본을 고치면 다음 재벤더링 때
+   조용히 사라진다. **다른 코드가 `parse_exam` 을 직접 부르면 오염된 결과를 받는다.**
+   근본 수정은 `_SKIP_CTRL` 에 `hp:caption` 을 넣는 것 — **상류에 전달 필요.**
 
-판정기는 로컬 스냅샷 `scripts/qa/reports/db-content.jsonl` 을 본다. 이건
-**2026-08-16 01:35 에 뜬 29,682행**이라 F 의 신규 행이 없다. 순서대로 돈다.
+3. **PDF 텍스트 레이어 경로(`db/textlayer.py`).** 트랙 E 가 "`sourceFile` 이 PDF 인데도
+   오염" 을 관찰했다. 내 청소는 **HWP 경로만** 막는다. 그쪽 방어는 별도 작업이다.
+
+4. (참고) **DB 에 남은 보류 3행** — 코디네이터 지시로 그대로 뒀다.
+
+---
+
+## 5. 트랙 F 의 신규 6,042행 교체 판정 — 다음 사람의 첫 일
+
+판정기는 로컬 스냅샷 `scripts/qa/reports/db-content.jsonl` 을 본다. 이건 **2026-08-16
+01:35 에 뜬 29,682행**이라 F 의 신규 행이 없다. F 적재 후 `past_exam` 은 37,011행이다.
 
 ```bash
 # 1) 스냅샷을 다시 뜬다. ⚠️ 이게 낡음 판정의 **기준선**이기도 하다 —
-#    이미 적재한 행은 이제 내 본문이 기준선이 되므로 재적용 예외가 필요 없어진다.
+#    다시 뜨면 이미 적재한 행은 내 본문이 기준선이 되어 재적용 예외가 필요 없어진다.
 npx tsx scripts/qa/export-db-content-snapshot.ts
 
-# 2) 판정 (hwp-latex 는 재생성하지 말고 그대로 읽는다)
+# 2) 판정. ⚠️ hwp-latex 는 **재생성하지 말고** 그대로 읽는다(§3).
 npx tsx scripts/qa/judge-hwp-replacement.ts
 
-# 3) 계획 확인 — 쓰기 전에 반드시
+# 3) 쓰기 전에 반드시 확인
 npx tsx scripts/qa/apply-hwp-replacement.ts            # 드라이런
 npx tsx scripts/qa/apply-hwp-replacement.ts --diff     # DB 와 다른 행만
 
-# 4) 승인 후: 백업 → 적용 → 검증
+# 4) 승인받은 뒤: 백업 → 적용 → 검증 (백업 경로를 새로 가를 것)
 ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-hwp-replacement.ts --backup-only
 ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-hwp-replacement.ts --apply
 npx tsx scripts/qa/apply-hwp-replacement.ts --verify
 ```
 
-### 예상되는 것 — 미리 알아 두면 놀라지 않는다
+### 미리 알아 두면 놀라지 않는 것
 
-1. **F 의 신규 행 대부분은 「유지」로 나온다.** F 가 이 corpus 를 원본으로 넣었다면
-   그 행의 본문이 곧 내 HWP 본문이라 교체할 것이 없다. 교체가 많이 나오면
-   **F 가 다른 원본을 썼다는 뜻**이니 먼저 확인할 것.
+1. **F 의 신규 행 대부분은 「유지」로 나와야 정상이다.** F 가 이 corpus 를 원본으로
+   넣었다면 그 행의 본문이 곧 내 HWP 본문이라 교체할 것이 없다.
+   **교체가 많이 나오면 F 가 다른 원본을 썼다는 신호**다 — 판정을 밀어붙이기 전에
+   그것부터 확인할 것.
 2. **이미 적재한 4,069행은 「유지」로 바뀐다.** 스냅샷을 다시 뜨면 그 행의 DB 본문이
-   내 HWP 본문이 되므로 S 신호가 안 걸린다. 정상이다 — 이미 고쳐졌다는 뜻이다.
-3. **`--backup-only` 를 반드시 새로 떠라.** 기존 백업 넷은 각각 다른 적용의 되돌리기
-   자산이라 덮으면 안 된다. 필터를 걸어 일부만 쓸 때는 **백업 경로도 갈라라.**
-4. **되돌릴 때는 `content` 만 되쓴다.** 백업의 `answer`·`figureUrls`·`externalId`·
-   `unitId` 는 "안 바뀌었음을 증명" 하려고 담은 것이지 되돌리기용이 아니다. 같이 되쓰면
-   그 사이 다른 트랙이 한 작업을 지운다.
-5. **기준선은 변경 *이전*에 뜬 것이어야 한다.** 방금 현재 DB 에서 뜬 백업과 현재 DB 를
-   견주면 늘 같다 — 동어반복이다(실제로 한 번 냈다).
+   내 HWP 본문이 되어 S 신호가 안 걸린다. 정상이다 — 이미 고쳐졌다는 뜻이다.
+3. **정렬 근거가 「근거없음」인 편은 손대지 마라.** 번호를 못 믿으면 엉뚱한 문항의
+   본문을 덮는다.
+4. **보류로 내려간 것을 임의로 올리지 마라.** H 사유는 전부 실측으로 넣은 것이다.
+
+---
+
+## 6. 미결 — `서술형 × 단답형` 1,309행 (원장님 판단 대기)
+
+시험지 자신은 `[단답형]`·`[서답형]` 으로 표시했는데 우리 DB 는 `서술형` 으로 실은 행이다.
+결정 자료(지금 어떻게 취급되나 · 바꾸면 무엇이 달라지나 · 표본 5건)는 이 문서 위쪽
+「원장님 결정 요청」 절에 있다.
+
+**판단이 내려오면 이렇게 돌린다** — 대상만 바꿔 넣으면 되고 절차는 위와 같다:
+
+```bash
+npx tsx scripts/qa/report-essay-shortanswer.ts   # 대상 수 재확인(읽기 전용)
+# apply-problem-type-fix.ts 의 후보 조건(현재: 보기 4개 이상 + DB 가 서술형)을
+# 승인된 범위로 바꾼 뒤 --expect 로 건수를 못박고
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-problem-type-fix.ts --backup-only
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-problem-type-fix.ts --apply
+npx tsx scripts/qa/apply-problem-type-fix.ts --verify
+```
+
+⚠️ `[단답형]` 279건과 `[서답형]` 952건은 성격이 다르다(전자는 정답이 `10`·`117` 처럼
+짧은 값, 후자는 문장 답이 섞여 있다). **`[단답형]` 을 먼저 옮겨 출제 결과를 보고
+`[서답형]` 을 판단**하는 것이 안전하다.
