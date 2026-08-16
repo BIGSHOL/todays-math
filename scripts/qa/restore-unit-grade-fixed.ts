@@ -172,6 +172,34 @@ async function main(): Promise<void> {
       console.log(`\n⚠️ directUseAllowed=false 인 행 ${notDirect} — 올려도 출제되지 않는다.`);
     }
 
+    // 적용 전에 목록을 먼저 남길 수 있게 한다 — 지금까지의 절차와 같다.
+    const planIndex = process.argv.indexOf("--plan");
+    if (planIndex >= 0) {
+      const out = process.argv[planIndex + 1] ?? RESTORE_PATH;
+      await writeJson(out, {
+        note:
+          "출제 자격 복구 대상(적용 전 기록). 단원 이동분(unit-grade-revert.json)과 " +
+          "성격이 다르므로 섞지 않는다.",
+        count: ok.length,
+        blockedCount: blocked.length,
+        blocked: blocked.map((item) => ({
+          problemId: item.row.id,
+          externalId: item.row.externalId,
+          school: item.row.school,
+          reasons: item.reasons,
+        })),
+        rows: ok.map((row) => ({
+          problemId: row.id,
+          externalId: row.externalId,
+          school: row.school,
+          unit: `${row.unit.grade} / ${row.unit.section}`,
+          previous: row.reviewStatus,
+          next: "approved",
+        })),
+      });
+      console.log(`\n계획 기록 — ${out}`);
+    }
+
     if (!apply) {
       console.log(`\n드라이런 — 변경 없음. 승인 후 --apply (올릴 대상 ${ok.length})`);
       return;
