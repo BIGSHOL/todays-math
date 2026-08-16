@@ -42,6 +42,7 @@ const hwpQ = (over: Partial<HwpQ> = {}): HwpQ => ({
   topic: null,
   score: null,
   type: "객관식",
+  label: null,
   ...over,
 });
 

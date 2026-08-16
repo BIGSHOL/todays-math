@@ -160,6 +160,9 @@ export interface HwpQ {
   topic: string | null;
   score: number | null;
   type: string | null;
+  /** 시험지 자신이 찍은 머리표 — `[서술형 3]` · `[단답형 1]` · `[서답형 2]`.
+   *  `type` 이 이걸 근거로 정해지므로 판단할 때 원문을 같이 봐야 한다. */
+  label: string | null;
 }
 
 /** convertPastExam 과 **같은 모양**으로 본문을 짓는다 — 보기는 `1. …` 줄머리.
