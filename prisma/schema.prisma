@@ -151,10 +151,12 @@ model Student {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  class       Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
-  progresses  Progress[]
-  tests       Test[]
-  testResults TestResult[]
+  class            Class             @relation(fields: [classId], references: [id], onDelete: Cascade)
+  progresses       Progress[]
+  tests            Test[]
+  testResults      TestResult[]
+  /// '오늘의 시험' 실측 내신 점수 — 보정 루프의 입력(트랙 E)
+  actualExamScores ActualExamScore[]
 
   @@index([classId])
   @@map("student")
@@ -413,6 +415,12 @@ model TestProblem {
   /// 검수 중 교체된 문항 여부
   replaced   Boolean @default(false)
 
+  /// 예측 문제지 전용 — 배점 보정기가 매긴 조정 배점. 시험지 합계가 정확히 100 이 된다(D-42).
+  /// ⚠️ `Problem.score`(원본 기출 배점)를 **덮어쓰지 않으려고** 시험지 쪽에 싣는다(11 §10.2).
+  ///    덮어쓰면 학습 코퍼스가 오염된다.
+  /// 일일테스트는 배점을 표기하지 않으므로(D-28·D-40) NULL 이다.
+  score Float?
+
   test    Test    @relation(fields: [testId], references: [id], onDelete: Cascade)
   problem Problem @relation(fields: [problemId], references: [id], onDelete: Restrict)
 
@@ -545,4 +553,113 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_token")
+}
+
+// ─────────────────────────────────────────────
+// v2 '오늘의 시험' 보정 루프 — 트랙 E (T7.7 · T7.10 · T7.11)
+// 참조: docs/planning/11-score-predictor.md §3 L5, §5
+//
+// ⚠️ 이 기록이 없으면 보정 자체가 불가능하다. 예측을 남기지 않으면
+//    나중에 실제 점수가 들어와도 무엇과 비교할지 알 수 없다.
+// ─────────────────────────────────────────────
+
+/// 예측 실행 스냅샷. 계약: `predictionRunSchema`(src/contracts/predictor.contract.ts).
+///
+/// 같은 시험을 여러 번 예측할 수 있다(엔진 버전이 오르면 과거 회차를 재실행해 비교한다)
+/// — 그래서 (학교, 시점)에 유일 제약을 걸지 않는다. 섞이지 않게 engine_version 으로 가른다.
+model PredictionRun {
+  id            String   @id @default(uuid()) @db.Uuid
+  createdAt     DateTime @default(now()) @map("created_at")
+  /// 엔진 버전. 이게 다르면 지표를 섞어서 비교하지 않는다.
+  engineVersion String   @map("engine_version") @db.VarChar(40)
+
+  /// 예측 대상 시리즈 — Exam 과 같은 축으로 둔다(조인이 아니라 값으로 맞춘다).
+  school  String @db.VarChar(50)
+  level   String @db.VarChar(2)
+  grade   Int
+  subject String @db.VarChar(50)
+
+  targetYear     Int    @map("target_year")
+  targetSemester Int    @map("target_semester")
+  targetRound    String @map("target_round") @db.VarChar(4)
+
+  /// 입력 컷오프 — **이 시점 이후 자료는 어떤 경로로도 쓰지 않았다**는 선언.
+  /// 누출 금지를 코드로 강제하는 근거값이라 반드시 남긴다.
+  cutoffYear     Int    @map("cutoff_year")
+  cutoffSemester Int    @map("cutoff_semester")
+  cutoffRound    String @map("cutoff_round") @db.VarChar(4)
+
+  /// 근거로 쓴 시험지의 externalExamId 목록. 재현·감사에 필요하다.
+  inputExamIds       String[] @map("input_exam_ids")
+  /// 엔진 파라미터 스냅샷. 형태는 엔진 버전마다 다르다.
+  params             Json
+  /// 근거가 없어 예측하지 않았으면 NULL — 0문항 0점짜리 청사진을 지어내지 않는다.
+  predictedBlueprint Json?    @map("predicted_blueprint")
+  /// ScorePrediction[] — 학생별 예상 점수와 구간.
+  predictedScores    Json     @map("predicted_scores")
+
+  /// 학교가 평균을 공개하면 채운다. 안 하면 학생 표본으로 역추정한다(NULL 유지).
+  actualSchoolMean  Float?    @map("actual_school_mean")
+  actualSchoolStdev Float?    @map("actual_school_stdev")
+  actualRecordedAt  DateTime? @map("actual_recorded_at")
+
+  actualScores ActualExamScore[]
+
+  @@index([school, level, grade, subject, targetYear, targetSemester, targetRound])
+  @@index([engineVersion, createdAt])
+  @@map("prediction_run")
+}
+
+/// 실제 내신 점수 — 보정 루프의 입력.
+///
+/// 같은 run 에 같은 학생을 두 번 붙이면 **갱신**한다(중복 행이 아니다) — 원장이
+/// 점수를 잘못 입력했을 때 고칠 수 있어야 한다.
+model ActualExamScore {
+  id        String @id @default(uuid()) @db.Uuid
+  runId     String @map("run_id") @db.Uuid
+  studentId String @map("student_id") @db.Uuid
+
+  actualScore    Float   @map("actual_score")
+  /// 예측 당시 값의 **스냅샷**. run 의 Json 을 다시 파싱하지 않고 잔차를 집계할 수 있고,
+  /// Json 모양이 나중에 바뀌어도 과거 보정 근거가 흔들리지 않는다.
+  predictedScore Float   @map("predicted_score")
+  /// actual − predicted. 보정 계수(T7.11)의 직접 입력이다.
+  residual       Float
+  /// 예측 **구간**이 실제를 담았는가. 점 예측 MAE 와 별개로 봐야 하는 지표다
+  /// — ±5점 목표는 구간 적중률로 판정한다.
+  intervalHit    Boolean @map("interval_hit")
+
+  recordedAt DateTime @default(now()) @map("recorded_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  run     PredictionRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  student Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, studentId])
+  @@index([studentId, recordedAt(sort: Desc)])
+  @@map("actual_exam_score")
+}
+
+/// 시험범위. 원장이 확정하면 예측 신뢰도가 올라가고, 없으면 riskFlag 가 붙는다.
+model ExamScope {
+  id       String @id @default(uuid()) @db.Uuid
+  school   String @db.VarChar(50)
+  level    String @db.VarChar(2)
+  grade    Int
+  subject  String @db.VarChar(50)
+  year     Int
+  semester Int
+  round    String @db.VarChar(4)
+
+  /// 범위에 든 소단원 id 목록. 비어 있으면 미확정이다.
+  unitIds     String[]  @map("unit_ids") @db.Uuid
+  /// 원장이 확정한 시각. NULL 이면 추정값이라 신뢰도를 깎는다("시험범위_미확정").
+  confirmedAt DateTime? @map("confirmed_at")
+  note        String?   @db.VarChar(200)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([school, level, grade, subject, year, semester, round])
+  @@map("exam_scope")
 }

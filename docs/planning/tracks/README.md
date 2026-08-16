@@ -10,12 +10,13 @@ A단계·B단계가 끝난 뒤 남은 것을 **파일 소유권과 DB 컬럼이 
 | [C](track-c-rpm.md) | RPM 역추적·중복 | `convertRpm.ts`, `extract-rpm.ts`, `recover-rpm-answers.ts` | `externalId` |
 | [D](track-d-hwp.md) | 본문 HWP 재추출 | `scripts/qa/hwp*`, `build-discard-list.ts` | `content` |
 | [E](track-e-todays-exam.md) | **'오늘의 시험'** 예측기 | `src/lib/predictor/**`, `scripts/predictor/**`, `src/lib/schools/**` | **새 테이블** + `Student.school*` · `Problem.questionType` |
+| [F](track-f-newload.md) | 신규 적재 (편 단위 결손) | `scripts/qa/load-*`, 적재기 | **신규 행 INSERT 전용** (기존 행 UPDATE 금지) |
 
 ## 트랙 글자·문서 번호를 새로 붙일 때
 
 ⚠️ **먼저 `ls docs/planning/tracks/` 와 `ls docs/planning/` 을 확인하고, 원장님께 알린 뒤 정한다.**
 오르카 다중 세션이 동시에 만들면 겹친다 — 2026-08-16 에 실제로 두 번 겹쳤다
-(문서 11번이 둘, 트랙 D가 둘). 겹치면 **참조가 적은 쪽 / 아직 push 안 한 쪽**을 옮긴다.
+(문서 11번이 둘, 트랙 D가 둘, 트랙 E가 둘 — 세 번이다). 겹치면 **참조가 적은 쪽 / 아직 push 안 한 쪽**을 옮긴다.
 스크립트가 생성하는 문서는 그 스크립트의 출력 경로 상수도 같이 고친다.
 
 ## 공통 규칙 (셋 다 지킨다)
