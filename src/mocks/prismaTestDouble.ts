@@ -197,6 +197,10 @@ interface ExamQuestionRow {
  */
 interface PredictionRunRow {
   id: string;
+  /** 회차 소유자. 목록·상세 소유권이 이 값으로 판정된다. */
+  userId?: string;
+  /** 시험 시행일. 화면이 D-day 를 세는 기준이다. */
+  examDate?: Date | null;
   createdAt: Date;
   engineVersion: string;
   school: string;

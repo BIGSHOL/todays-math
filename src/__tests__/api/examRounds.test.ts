@@ -9,8 +9,8 @@
  *    예전 우회는 기능을 죽였다 — `predictedScores` 가 항상 비어 있어 방금 만든 회차가
  *    자기에게도 안 보였다(examCompose 회귀 절 참조). 회차 소유와 **학생 이름 노출**은
  *    다른 축이라, "남의 회차 404" 와 "남의 학생 이름 미노출"을 여전히 따로 잠근다.
- * 3. **없는 것을 지어내지 않는다.** `examDate`(D-day 기준)와 문제지·채점 단계는 스키마에
- *    원천이 없다. 나중에 누가 "그럴듯한 기본값"을 채워 넣지 못하게 여기서 못박는다.
+ * 3. **없는 것을 지어내지 않는다.** 시행일이 비어 있으면 null 이고(그럴듯한 날짜를
+ *    만들지 않는다), 문제지·채점 단계는 스키마에 원천이 없어 항상 미완이다.
  */
 import { describe, expect, it, vi } from "vitest";
 
@@ -104,6 +104,7 @@ type SeedRun = {
   cutoffSemester: number;
   cutoffRound: string;
   userId: string;
+  examDate?: Date | null;
   inputExamIds: string[];
   params: unknown;
   predictedBlueprint: unknown;
@@ -195,7 +196,7 @@ describe("GET /api/exam/rounds", () => {
     expect(body.data[0]!.confidence).toBe(0.62);
   });
 
-  it("🔴 examDate 컬럼이 없으므로 시행일을 지어내지 않는다", async () => {
+  it("시행일이 비어 있으면 null 이다 — 그럴듯한 날짜를 만들지 않는다", async () => {
     seedPredictionRuns([
       runRow(RUN_MINE, [scorePrediction(MOCK_STUDENT_1.id, 88)]),
     ]);
@@ -204,6 +205,18 @@ describe("GET /api/exam/rounds", () => {
       await (await listRounds()).json(),
     );
     expect(body.data[0]!.examDate).toBeNull();
+  });
+
+  it("🔴 시행일이 들어 있으면 그대로 낸다 — 원장님이 넣은 값을 '모른다'고 하지 않는다", async () => {
+    const row = runRow(RUN_MINE, [scorePrediction(MOCK_STUDENT_1.id, 88)]);
+    seedPredictionRuns([
+      { ...row, examDate: new Date("2026-08-29T00:00:00.000Z") },
+    ]);
+
+    const body = examRoundListResponseSchema.parse(
+      await (await listRounds()).json(),
+    );
+    expect(body.data[0]!.examDate).toBe("2026-08-29");
   });
 
   it("🔴 데이터 원천이 없는 문제지·채점 단계를 진행한 것으로 칠하지 않는다", async () => {

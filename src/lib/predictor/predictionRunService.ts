@@ -46,6 +46,7 @@ import {
   type RiskFlag,
 } from "@/contracts/predictionRun.contract";
 import {
+  blueprintSchema,
   comparePeriod,
   examPaperSchema,
   type Blueprint,
@@ -144,6 +145,17 @@ type ExamWithQuestions = ExamRow & { questions: ExamQuestionRow[] };
 type PaperConversion =
   | { ok: true; paper: ExamPaper }
   | { ok: false; externalExamId: string; reason: string };
+
+/**
+ * 저장된 청사진 Json 에서 **그 학교 과거 편수**를 읽는다.
+ *
+ * 계약을 통과하지 못하는 Json 이면 0 이다 — 모르는 것을 숫자로 지어내지 않는다.
+ * `inputExamIds.length` 를 쓰면 안 된다: 그 목록에는 코호트(다른 학교)가 섞여 있다.
+ */
+function parseBlueprintEvidence(value: unknown): number {
+  const parsed = blueprintSchema.safeParse(value);
+  return parsed.success ? parsed.data.evidenceCount : 0;
+}
 
 /**
  * `Exam`+`ExamQuestion` 행을 계약(`examPaperSchema`)으로 검증해 `ExamPaper` 로 옮긴다.
@@ -702,7 +714,9 @@ export function serializePredictionRunSummary(
     targetPeriod: targetOf(row),
     cutoffPeriod: cutoffOf(row),
     examDate: examDateOf(row),
-    evidenceCount: row.inputExamIds.length,
+    // 🔴 그 학교 과거 편수다. `inputExamIds` 에는 코호트(다른 학교)가 섞여 있어
+    //    그걸 세면 "근거 N회차"가 부풀려진다(화면과 같은 규칙).
+    evidenceCount: parseBlueprintEvidence(row.predictedBlueprint),
     riskFlags: riskFlagsOf(row),
     blueprint: blueprint
       ? {

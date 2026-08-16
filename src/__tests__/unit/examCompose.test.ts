@@ -43,10 +43,38 @@ function prediction(studentId: string | null, expectedScore: number) {
   };
 }
 
+/** 실제 저장 모양과 같은 청사진 Json. 계약을 통과하는 최소 형태다. */
+const BLUEPRINT = {
+  kind: "predicted",
+  series: { school: "정화중", level: "중", grade: 3, subject: "중3" },
+  period: { year: 2025, semester: 2, round: "중간" },
+  questionCount: 24,
+  totalScore: 100,
+  typeMix: {
+    객관식: { count: 18, score: 66 },
+    단답형: { count: 2, score: 8 },
+    서술형: { count: 4, score: 26 },
+  },
+  difficultyMix: {
+    하: { count: 9, score: 30 },
+    중: { count: 11, score: 44 },
+    상: { count: 4, score: 26 },
+    미표기: { count: 0, score: 0 },
+  },
+  scoreHistogram: [],
+  positionCurve: [],
+  unitMix: [{ unitId: null, topicRaw: "이차방정식", count: 24, score: 100 }],
+  expectedMean: 68.4,
+  expectedMeanInterval: { lower: 61, upper: 76, coverage: 0.8 },
+  evidenceCount: 4,
+  confidence: 0.62,
+};
+
 function run(over: Partial<PredictionRunRow> = {}): PredictionRunRow {
   return {
     id: RUN_ID,
     userId: OWNER,
+    examDate: null,
     createdAt: new Date("2026-08-16T00:00:00.000Z"),
     engineVersion: "0.5.0",
     school: "정화중",
@@ -147,6 +175,45 @@ describe("isRunVisibleTo — 소유권은 없는 쪽으로 닫는다", () => {
   });
 });
 
+describe("🔴 화면이 거짓말하지 않는가 — 근거 수 · 시행일", () => {
+  /**
+   * 적대적 리뷰가 잡은 둘. 화면이 원장님께 **틀린 사실**을 말하고 있었다.
+   *
+   * 1) `근거 5회차` 의 4편이 남의 학교 시험지였다. 화면이 `inputExamIds.length` 를 썼는데
+   *    그 목록에는 코호트(다른 학교)가 함께 들어간다. 엔진이 세는 근거
+   *    (`blueprint.evidenceCount = 그 학교 과거 편수`)와 다른 수다.
+   *    그래서 우리 학교 기출 1편만 있어도 "근거 5회차"로 보이고 `MIN_EVIDENCE_ROUNDS = 2`
+   *    가드가 통째로 무력해진다 — 근거 없는 확신을 막으려고 만든 문턱인데.
+   *
+   * 2) 원장님이 넣으신 시행일(`examDate`)이 컬럼에 있는데 화면은 늘 "일정 미정"이라 했다.
+   */
+  it("근거 회차 수는 **그 학교 과거 편수**다 — 코호트를 함께 세지 않는다", () => {
+    const row = run({
+      // 근거로 쓴 시험지는 5편이지만, 그중 우리 학교는 1편뿐이다.
+      inputExamIds: ["우리-1", "남의-1", "남의-2", "남의-3", "남의-4"],
+      predictedBlueprint: { ...BLUEPRINT, evidenceCount: 1 },
+    });
+    expect(toRoundSummary(row, [])!.evidenceCount).toBe(1);
+  });
+
+  it("청사진이 없으면 근거를 0으로 본다 — 지어내지 않는다", () => {
+    const row = run({
+      inputExamIds: ["a", "b", "c"],
+      predictedBlueprint: null,
+    });
+    expect(toRoundSummary(row, [])!.evidenceCount).toBe(0);
+  });
+
+  it("시행일이 있으면 그대로 낸다 — 원장님이 넣은 값을 '모른다'고 하지 않는다", () => {
+    const row = run({ examDate: new Date("2026-08-29T00:00:00.000Z") });
+    expect(toRoundSummary(row, [])!.examDate).toBe("2026-08-29");
+  });
+
+  it("시행일이 없으면 null 이다 — 그럴듯한 날짜를 만들지 않는다", () => {
+    expect(toRoundSummary(run({ examDate: null }), [])!.examDate).toBeNull();
+  });
+});
+
 describe("toRoundSummary", () => {
   it("학교급이 중/고가 아니면 회차를 만들지 않는다 — 억지로 그리지 않는다", () => {
     expect(toRoundSummary(run({ level: "초" }), [])).toBeNull();
@@ -156,9 +223,20 @@ describe("toRoundSummary", () => {
     expect(toRoundSummary(run({ targetSemester: 3 }), [])).toBeNull();
   });
 
-  it("근거 회차 수는 inputExamIds 개수다", () => {
-    const summary = toRoundSummary(run({ inputExamIds: ["a", "b", "c"] }), []);
-    expect(summary!.evidenceCount).toBe(3);
+  /**
+   * ⚠️ 예전에는 `inputExamIds` 개수를 근거 수로 냈다. 그 목록에는 **코호트(다른 학교)** 가
+   * 함께 들어가서, 우리 학교 기출이 1편뿐이어도 "근거 5회차"로 보였다.
+   * 근거 없는 확신을 막으려던 문턱이 그 수 때문에 무력해졌다 — 위 회귀 절 참조.
+   */
+  it("근거 회차 수는 inputExamIds 개수가 **아니다** — 청사진이 세는 값을 쓴다", () => {
+    const summary = toRoundSummary(
+      run({
+        inputExamIds: ["a", "b", "c"],
+        predictedBlueprint: { ...BLUEPRINT, evidenceCount: 2 },
+      }),
+      [],
+    );
+    expect(summary!.evidenceCount).toBe(2);
   });
 
   it("실점수가 예측 학생 수를 채우면 실점수 단계가 완료된다", () => {

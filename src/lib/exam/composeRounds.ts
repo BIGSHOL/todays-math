@@ -33,6 +33,8 @@ export type PredictionRunRow = {
   id: string;
   /** 이 예측을 만든 원장. 소유권 판정의 **유일한 근거**다. */
   userId: string;
+  /** 시험 시행일. 모르면 null — 화면이 D-day 를 세는 기준이다. */
+  examDate: Date | null;
   createdAt: Date;
   engineVersion: string;
   school: string;
@@ -83,6 +85,12 @@ export function parseBlueprint(json: unknown): Blueprint | null {
 }
 
 /** 이 회차가 예측 대상으로 삼은 학생 id 들. studentId 가 null 인 항목은 시험지 평균 예측이다. */
+/** `@db.Date` 컬럼을 화면 계약의 `YYYY-MM-DD` 로. 시간대에 흔들리지 않게 UTC 로 읽는다. */
+function toDateOnly(value: Date | null): string | null {
+  if (!value) return null;
+  return value.toISOString().slice(0, 10);
+}
+
 export function runStudentIds(run: PredictionRunRow): string[] {
   return parsePredictedScores(run.predictedScores)
     .map((p) => p.studentId)
@@ -164,10 +172,14 @@ export function toRoundSummary(
     id: run.id,
     series: series.data,
     period: period.data,
-    // 🔴 `PredictionRun.examDate` 컬럼이 아직 없다 — D-day 를 지어내지 않는다.
-    examDate: null,
+    // 원장님이 넣으신 시행일. 없으면 null — 그럴듯한 날짜를 만들지 않는다.
+    examDate: toDateOnly(run.examDate),
     stages: buildStages(blueprint, studentIds.length, actualCount),
-    evidenceCount: run.inputExamIds.length,
+    // 🔴 **그 학교 과거 편수**다. `inputExamIds` 를 세면 안 된다 — 그 목록에는
+    //    코호트(다른 학교)가 함께 들어가 "근거 5회차"의 4편이 남의 학교가 된다.
+    //    그러면 우리 학교 1편만 있어도 문턱(MIN_EVIDENCE_ROUNDS)을 넘어, 근거 없는
+    //    확신을 막으려고 만든 장치가 통째로 무력해진다.
+    evidenceCount: blueprint?.evidenceCount ?? 0,
     confidence: blueprint?.confidence ?? null,
   };
 }
