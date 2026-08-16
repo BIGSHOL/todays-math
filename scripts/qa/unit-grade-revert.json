@@ -1,0 +1,1756 @@
+{
+  "note": "단원 학년 정정으로 바꾼 unitId 의 **원래 값**. 되돌리려면 problemId 에 fromUnitId 를 다시 넣으면 된다. unitId 외의 컬럼은 건드리지 않았다.",
+  "count": 125,
+  "rows": [
+    {
+      "problemId": "86a76eca-5b8f-439c-a721-20bbb2e55c91",
+      "externalId": "5746-20",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "802e1f1d-6041-443b-998d-5eaffbdbc2a1",
+      "externalId": "5823-24",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "55adb289-b60c-4203-9b1e-5476cdaed38c",
+      "externalId": "5923-22",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "6383c08f-dac8-4216-a02c-4bec1f4827a7",
+      "externalId": "5465-19",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "3d315676-5c28-4db6-a24f-08fa5f442d3c",
+      "externalId": "5520-1",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "f91ec968-db85-4a92-a981-73b7f94f96b2",
+      "externalId": "5492-15",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "ca40f005-9f8c-49ec-84eb-78090fd975d3",
+      "externalId": "5465-10",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "a08f2c84-f066-4268-b694-31059ea68a9b",
+      "externalId": "5674-20",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "6be29e91-8f03-4d51-a469-686cd7f18f61",
+      "externalId": "5792-22",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "cfd25895-85c5-4b59-a012-60bd127f3d9f",
+      "externalId": "5823-25",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "73b2b493-df25-4319-9374-094c07053613",
+      "externalId": "5850-21",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "fe9b4410-b2ed-41e9-b2a1-e9a566de6e3e",
+      "externalId": "5850-22",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "ceb33d78-c71f-4cbe-8ac4-5ff0b699f6f3",
+      "externalId": "5667-6",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "6648335f-baba-48ed-867e-7dcc8d683013",
+      "externalId": "5455-8",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "4ca38c18-be61-4596-ae14-125380ed86c9",
+      "externalId": "5491-10",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "ada65c35-0573-48a7-b153-aede014650a2",
+      "externalId": "5480-19",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "cbc063b7-47bd-4c4c-9d0f-cac5a4925150",
+      "externalId": "5645-21",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "cc07c59e-7b7b-4a2e-85d3-6b52d9e8b578",
+      "externalId": "5746-21",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "3c7c4d59-7fcf-48fb-859a-ed4452e5c640",
+      "externalId": "5768-20",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "fd97300b-ad95-4799-b0b2-43a509c2c5b8",
+      "externalId": "5923-13",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "f244be49-bbaf-4dc9-bc45-f8b137e2836f",
+      "externalId": "5783-20",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "b1608063-2248-4b18-9627-70ea466f2ce1",
+      "externalId": "5539-18",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "5914f59f-8811-40c1-8e6f-16f9ef509d54",
+      "externalId": "5567-18",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "76cd4065-0a3d-45d1-9b69-8fd1ab61e7d1",
+      "externalId": "5763-19",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "71f99d9a-f6f0-4f45-a455-2583fc77a275",
+      "externalId": "5765-21",
+      "from": {
+        "unitId": "3a3e9ff9-e533-49f8-ae7d-af7f3998abd4",
+        "grade": "공통수학2",
+        "section": "원과 직선의 위치 관계"
+      },
+      "to": {
+        "unitId": "635abab8-4a87-452b-ad6c-d59065822f29",
+        "grade": "중3",
+        "section": "원의 접선"
+      }
+    },
+    {
+      "problemId": "33b21e20-4f2f-49ff-bed4-010512bda232",
+      "externalId": "5465-12",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "d655c6f8-c9a8-42a6-8319-949279a19f6d",
+      "externalId": "5492-19",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "9c4d7e4e-a012-4a82-936e-8a7134a60213",
+      "externalId": "5567-6",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "e05143c9-f300-4cc7-ac4a-2993e916a79b",
+      "externalId": "5610-8",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "3d574286-ca4e-47c9-8144-51adbda08ea8",
+      "externalId": "5667-7",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "302f40ae-0364-4a9f-b93b-cc3125996264",
+      "externalId": "5783-17",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "dee32da5-869d-41bd-ae42-d29d0f1ed70a",
+      "externalId": "5850-14",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "5488e3b0-1435-4da0-b528-db9692868e42",
+      "externalId": "5887-11",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "3935861a-f6e4-4bd1-971e-cc30bcfd7cf6",
+      "externalId": "5765-5",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "a2b35328-af81-4787-8574-f63573cdb1bd",
+      "externalId": "5850-16",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "77390ae7-5a45-4de3-8466-bff063002ed9",
+      "externalId": "5520-2",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "4548cfc7-ae31-4983-b20e-8574eb9dad2e",
+      "externalId": "5765-17",
+      "from": {
+        "unitId": "3a3e9ff9-e533-49f8-ae7d-af7f3998abd4",
+        "grade": "공통수학2",
+        "section": "원과 직선의 위치 관계"
+      },
+      "to": {
+        "unitId": "635abab8-4a87-452b-ad6c-d59065822f29",
+        "grade": "중3",
+        "section": "원의 접선"
+      }
+    },
+    {
+      "problemId": "6dbac40c-83d5-4c3a-8e1e-2472e8ec2a03",
+      "externalId": "5520-18",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "b6950956-8c63-4163-b0e9-0fc2c06e0ad6",
+      "externalId": "5674-16",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "3dc14a1c-22cf-4f97-ab2d-b6a7c98ab499",
+      "externalId": "5682-17",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "fac1b266-0298-4a95-995d-b106cb5b5767",
+      "externalId": "5783-14",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "454c5d74-e0bd-40bf-a84e-ef72bdea9f75",
+      "externalId": "5850-11",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "c8e5be76-892f-4bcc-8dd9-87d763358038",
+      "externalId": "5891-10",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "57310d0b-c94f-44e7-a251-960e31a187be",
+      "externalId": "5923-16",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "543c6ea2-4b99-439f-9b16-e0716a7985d3",
+      "externalId": "5923-17",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "c259332f-6094-41dd-87a0-194c905232c3",
+      "externalId": "5520-17",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "96546531-46f7-414b-8b62-bbb3c6e3c8b1",
+      "externalId": "5567-14",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "8309daa8-66de-46e7-8cab-56cd200dc94f",
+      "externalId": "5645-3",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "9ccc4ee5-071e-415b-a88e-fff032077d17",
+      "externalId": "5645-13",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "8147000f-dee8-41d3-bf66-d50bccb08c2e",
+      "externalId": "5777-23",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "33daa931-16ab-40d9-bf47-ccfd6cf3177e",
+      "externalId": "5520-6",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "f1055ab7-0c2b-4823-96ea-f37e43539583",
+      "externalId": "5539-4",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "87cede9e-2ccf-4731-b490-1c315400c01d",
+      "externalId": "5465-11",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "98bd3655-322e-42e5-81cc-5a7ea8e23f74",
+      "externalId": "5465-16",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "191731b2-0351-426f-9c7a-3172e14d52a1",
+      "externalId": "5480-11",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "b033544c-5596-4d86-b03a-5cf383a17199",
+      "externalId": "5491-13",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "c90faf72-5b86-44b8-ae89-f066c9e0e772",
+      "externalId": "5491-14",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "3c89d3a6-e1f7-4483-9e62-e84cd3669fe5",
+      "externalId": "5492-14",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "280fd40c-b3f1-4799-aaa4-03caf077e3ac",
+      "externalId": "5492-17",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "df89dbff-a805-4ebf-b706-c10ee68fb075",
+      "externalId": "5520-7",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "d12cdfbd-e398-4894-9171-83fd1676c6b0",
+      "externalId": "5520-11",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "c73cd5e3-bdfe-42ea-9242-c3b8e0c68e84",
+      "externalId": "5539-12",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "5863a694-6a03-43eb-8413-710875c541c8",
+      "externalId": "5539-13",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "4e935279-9083-4b98-acb4-404cf2396a82",
+      "externalId": "5567-8",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "81b8fcb1-bf35-4a84-8ef1-236942cc657f",
+      "externalId": "5645-9",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "3d5114e3-0aa5-45ad-a43e-8856316aee93",
+      "externalId": "5667-9",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "51fdc506-4db3-46e7-9b13-4eaa1b82a14d",
+      "externalId": "5667-15",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "f28b5e12-bdea-4f20-8341-cad170495fc8",
+      "externalId": "5777-24",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "9be2a35f-fad2-4581-8580-eab4eafabe5c",
+      "externalId": "5780-17",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "bd1561f0-6cb6-4a09-a27b-884be17394b5",
+      "externalId": "5777-25",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "e67d4a96-533e-4173-a8aa-6f5d42697167",
+      "externalId": "5780-26",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "b394f2ab-fed8-4cab-acba-4f0060e2ab39",
+      "externalId": "5783-11",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "4558ae14-62cb-464d-965b-439b059ba3bb",
+      "externalId": "5850-12",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "483d19ae-c2da-4b6b-af56-db1b5e7bfd67",
+      "externalId": "5492-16",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "721db29f-5910-4f29-81f6-c696ff958c30",
+      "externalId": "5768-5",
+      "from": {
+        "unitId": "e0ae27b7-948f-46d3-a730-310eaef1fa14",
+        "grade": "공통수학1",
+        "section": "인수분해가 되지 않는 연립이차방정식"
+      },
+      "to": {
+        "unitId": "40a7b4e1-88d2-4cc6-8097-6d1b5f0bbbf9",
+        "grade": "중3",
+        "section": "인수분해의 응용"
+      }
+    },
+    {
+      "problemId": "fb8a5441-1e30-476a-b0b9-af3c82a9d668",
+      "externalId": "5833-7",
+      "from": {
+        "unitId": "e0ae27b7-948f-46d3-a730-310eaef1fa14",
+        "grade": "공통수학1",
+        "section": "인수분해가 되지 않는 연립이차방정식"
+      },
+      "to": {
+        "unitId": "40a7b4e1-88d2-4cc6-8097-6d1b5f0bbbf9",
+        "grade": "중3",
+        "section": "인수분해의 응용"
+      }
+    },
+    {
+      "problemId": "57937df3-20d9-4938-9bb3-bdcf363153f7",
+      "externalId": "5539-9",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "f21b5e74-fb89-4f0a-be55-ad88a18b25fb",
+      "externalId": "5840-13",
+      "from": {
+        "unitId": "ef7816b4-0a0f-4ac5-8f10-6e7bd905aaf1",
+        "grade": "미적분1",
+        "section": "함수의 그래프"
+      },
+      "to": {
+        "unitId": "a0a58e33-01fd-4f33-af01-6d85e8e28624",
+        "grade": "중3",
+        "section": "이차함수와 그래프"
+      }
+    },
+    {
+      "problemId": "74bd8567-c504-4812-aa19-9ca9b9cb48c3",
+      "externalId": "5480-13",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "a08ab615-44b1-433b-9557-9512fa7dfdac",
+      "externalId": "5492-13",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "b0386a0f-15e4-4191-a4cc-b45f60063428",
+      "externalId": "5492-18",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "7ef3d9d2-e240-465e-acd2-55eadfab9ddd",
+      "externalId": "5539-15",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "de25ba3b-cdb3-4044-9f42-ab801d4b751d",
+      "externalId": "5567-16",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "7d44fb8f-a46a-44a4-b018-6c4609bed7f2",
+      "externalId": "5645-12",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "a0615dbd-d6bb-4be9-b5ff-2002636cef45",
+      "externalId": "5645-14",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "79ca1bda-fdda-45da-92d4-82b749bff1b4",
+      "externalId": "5768-14",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "502cf7ce-72da-4ad0-aa96-df265713e83e",
+      "externalId": "5783-21",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "6f0a40ed-0356-46d5-8f70-e76092225c10",
+      "externalId": "5567-9",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "3db46780-71bc-47a7-8729-e7595718b8a0",
+      "externalId": "5783-22",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "2adc256e-00c5-4f5b-84b4-ba2c3aae41d4",
+      "externalId": "5645-8",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "0426c3ec-556f-4375-b11c-15ac3b547b19",
+      "externalId": "5455-7",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "4203c202-ffad-4d63-868a-d54cf4308e5e",
+      "externalId": "5480-7",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "6fc0c35f-a332-4760-8cc0-6ae32ba33af1",
+      "externalId": "5491-12",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "0b7b9f15-b5ea-4f9f-ab07-1c8eb3c49ff6",
+      "externalId": "5492-10",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "06508135-9509-4a50-82fd-0f469281d007",
+      "externalId": "5765-4",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "64724786-eb9e-402b-b868-fabd2c387d59",
+      "externalId": "5746-16",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "292842aa-c026-4fab-86f8-f8dd5ab9b8ff",
+      "externalId": "5777-22",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "20415129-e7db-4fc3-ae34-e887e5173974",
+      "externalId": "5780-25",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "8c1d3f1d-9940-46c4-b68c-0e7c99790aa6",
+      "externalId": "5823-8",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "41c462c2-fda9-4d8c-a0d5-1d1f9e9ca5dc",
+      "externalId": "5850-13",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "0870fc6c-664b-40e5-ac79-53f300a9ee51",
+      "externalId": "5850-15",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "690c15e1-85af-45f9-b015-f82fafca5725",
+      "externalId": "5765-16",
+      "from": {
+        "unitId": "3a3e9ff9-e533-49f8-ae7d-af7f3998abd4",
+        "grade": "공통수학2",
+        "section": "원과 직선의 위치 관계"
+      },
+      "to": {
+        "unitId": "635abab8-4a87-452b-ad6c-d59065822f29",
+        "grade": "중3",
+        "section": "원의 접선"
+      }
+    },
+    {
+      "problemId": "c53c12b6-7685-4cee-a7f3-bf1345cdaa33",
+      "externalId": "5520-3",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "95356d65-9e22-4c72-823a-af679a01cda7",
+      "externalId": "5539-1",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "d4a59876-74e3-4d64-8c9e-d22556868880",
+      "externalId": "5520-4",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "8cd1d235-9c38-480e-9e16-9507fb2a8962",
+      "externalId": "5539-11",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "fa272470-4967-4300-ab35-30692f518d39",
+      "externalId": "5520-9",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "895f3502-bc65-4ff2-9b04-8efd6fb4fa81",
+      "externalId": "5520-8",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "f48c773a-1926-43d8-94c3-b955a93044c7",
+      "externalId": "5539-8",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "30546f10-d169-474b-b1b1-fe9fd8c98a94",
+      "externalId": "5520-12",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "9317bf75-85b4-42a1-8633-fdbb7aea742a",
+      "externalId": "5539-10",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "c1e92b99-0d26-4357-b8ee-58246b0caf42",
+      "externalId": "5909-21",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "8dea3f19-092b-4980-8cc9-653ccd375edf",
+      "externalId": "5765-18",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "93b0dcc7-2160-4b7f-b21f-8e4e2381ead4",
+      "externalId": "5667-21",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "2d262b47-218a-4af5-89a7-7f4a905dccea",
+      "externalId": "5682-22",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "e5547b0e-6fc3-44f1-86a0-4f2bab400716",
+      "externalId": "5923-21",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "02a9d8a7-8fea-4616-bcf0-70ed39364ef2",
+      "externalId": "5491-16",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "c776db07-e67b-4be8-9d34-3824634080ec",
+      "externalId": "5923-20",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "fde96070-4b29-49c8-bcff-34a47a40806b",
+      "externalId": "5455-19",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "01abfe77-5893-4ef6-8b41-474c46c54f2b",
+      "externalId": "5491-20",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "cbeaff25-2622-4319-8a4b-cbbfd2377b34",
+      "externalId": "5520-21",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "58223086-525d-4fa6-b807-bc1a5e8b49cb",
+      "externalId": "5520-19",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "bdbe96f4-2fc6-4a12-8d7b-c27aab0cd791",
+      "externalId": "5645-20",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    },
+    {
+      "problemId": "6bc7beb5-f68f-482f-9237-73b14abb6fcc",
+      "externalId": "5909-19",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "e3645b9f-56bb-4548-9015-d86b32d89057",
+        "grade": "중3",
+        "section": "이차함수의 최댓값과 최솟값"
+      }
+    },
+    {
+      "problemId": "f5e4eed7-eee7-402d-be80-fa1eb45de637",
+      "externalId": "5465-18",
+      "from": {
+        "unitId": "f1aec495-5178-42d6-9378-c94537d0ffd0",
+        "grade": "공통수학2",
+        "section": "함수"
+      },
+      "to": {
+        "unitId": "c3f613de-16a6-4424-9c69-ceafec7273a7",
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편"
+      }
+    }
+  ]
+}
