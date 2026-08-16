@@ -13,6 +13,7 @@ import type { ExamPaper } from "@/contracts/predictor.contract";
 
 import {
   applyBackfill,
+  BACKFILL_BATCH_SIZE,
   buildExternalIdMap,
   planBackfill,
   type ProblemJoinRow,
@@ -172,24 +173,36 @@ describe("planBackfill", () => {
 });
 
 describe("applyBackfill", () => {
-  it("questionType 한 필드만 UPDATE 한다 — externalId 를 절대 쓰지 않는다", async () => {
-    const update = vi.fn(
+  /** updateMany 호출을 받아 적는 가짜 Prisma. 실제 왕복 횟수를 세기 위한 것이다. */
+  function fakePrisma() {
+    const calls: Array<{ ids: string[]; data: Record<string, unknown> }> = [];
+    const updateMany = vi.fn(
       async ({
+        where,
         data,
       }: {
-        where: { id: string };
+        where: { id: { in: string[] } };
         data: Record<string, unknown>;
       }) => {
         if ("externalId" in data) {
           throw new Error("externalId 는 트랙 C 소유 컬럼 — 절대 쓰면 안 된다");
         }
-        return {};
+        calls.push({ ids: where.id.in, data });
+        return { count: where.id.in.length };
       },
     );
-    const prisma = { problem: { update } } as unknown as Pick<
-      PrismaClient,
-      "problem"
-    >;
+    return {
+      calls,
+      updateMany,
+      prisma: { problem: { updateMany } } as unknown as Pick<
+        PrismaClient,
+        "problem"
+      >,
+    };
+  }
+
+  it("questionType 한 필드만 UPDATE 한다 — externalId 를 절대 쓰지 않는다", async () => {
+    const { prisma, calls } = fakePrisma();
 
     const n = await applyBackfill(prisma, [
       { id: "p1", questionType: "객관식" },
@@ -197,14 +210,67 @@ describe("applyBackfill", () => {
     ]);
 
     expect(n).toBe(2);
-    expect(update).toHaveBeenCalledTimes(2);
-    expect(update).toHaveBeenNthCalledWith(1, {
-      where: { id: "p1" },
-      data: { questionType: "객관식" },
+    for (const call of calls) {
+      expect(Object.keys(call.data)).toEqual(["questionType"]);
+    }
+  });
+
+  it("🔴 유형별로 묶어 한 번에 쓴다 — 건수만큼 왕복하지 않는다", async () => {
+    const { prisma, updateMany, calls } = fakePrisma();
+    const updates = [
+      ...Array.from({ length: 30 }, (_, i) => ({
+        id: `a${i}`,
+        questionType: "객관식" as const,
+      })),
+      ...Array.from({ length: 20 }, (_, i) => ({
+        id: `b${i}`,
+        questionType: "서술형" as const,
+      })),
+    ];
+
+    const n = await applyBackfill(prisma, updates);
+
+    expect(n).toBe(50);
+    // 50건인데 왕복은 유형 수(2회)뿐이어야 한다. 한 건씩 쓰면 공유 DB 풀러로 50회다.
+    expect(updateMany).toHaveBeenCalledTimes(2);
+    expect(calls.map((c) => c.data.questionType).sort()).toEqual([
+      "객관식",
+      "서술형",
+    ]);
+  });
+
+  it("배치 한도를 넘으면 쪼개 보낸다 — IN 절이 무한정 길어지지 않게", async () => {
+    const { prisma, updateMany } = fakePrisma();
+    const updates = Array.from(
+      { length: BACKFILL_BATCH_SIZE * 2 + 1 },
+      (_, i) => ({ id: `x${i}`, questionType: "객관식" as const }),
+    );
+
+    const n = await applyBackfill(prisma, updates);
+
+    expect(n).toBe(BACKFILL_BATCH_SIZE * 2 + 1);
+    expect(updateMany).toHaveBeenCalledTimes(3);
+  });
+
+  it("진행 상황을 알린다 — 중간에 끊겨도 어디까지 갔는지 알아야 한다", async () => {
+    const { prisma } = fakePrisma();
+    const seen: number[] = [];
+    const updates = Array.from({ length: BACKFILL_BATCH_SIZE + 1 }, (_, i) => ({
+      id: `x${i}`,
+      questionType: "객관식" as const,
+    }));
+
+    await applyBackfill(prisma, updates, (done, total) => {
+      seen.push(done);
+      expect(total).toBe(updates.length);
     });
-    expect(update).toHaveBeenNthCalledWith(2, {
-      where: { id: "p2" },
-      data: { questionType: "서술형" },
-    });
+
+    expect(seen).toEqual([BACKFILL_BATCH_SIZE, BACKFILL_BATCH_SIZE + 1]);
+  });
+
+  it("갱신할 게 없으면 DB 를 아예 건드리지 않는다", async () => {
+    const { prisma, updateMany } = fakePrisma();
+    expect(await applyBackfill(prisma, [])).toBe(0);
+    expect(updateMany).not.toHaveBeenCalled();
   });
 });

@@ -112,23 +112,51 @@ export function planBackfill(
   };
 }
 
+/** 한 번의 UPDATE 에 실을 최대 행 수. IN 절이 무한정 길어지지 않게 자른다. */
+export const BACKFILL_BATCH_SIZE = 500;
+
+function chunk<T>(items: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < items.length; i += size)
+    out.push(items.slice(i, i + size));
+  return out;
+}
+
 /**
  * 계획된 UPDATE 를 실행한다. `questionType` 한 필드만 쓴다 — 절대 `externalId` 를
  * 건드리지 않는다(트랙 C 소유, 위 파일 헤더 참조).
+ *
+ * **유형별로 묶어 `updateMany` 로 쓴다.** 한 건씩 쓰면 실데이터 29,622건에 공유 DB
+ * 풀러 왕복이 29,622회라 수십 분이 걸리고, 중간에 끊기면 어디까지 갔는지 알 수 없다.
+ * 유형은 3가지뿐이라 배치로 자르면 왕복이 60회 남짓으로 줄어든다.
+ *
+ * 트랜잭션으로 묶지는 않는다 — 이 백필은 멱등이라(이미 같은 값이면 계획에서 빠진다)
+ * 끊긴 자리에서 다시 돌리면 된다. 3만 행을 한 트랜잭션에 묶는 쪽이 더 위험하다.
  */
 export async function applyBackfill(
   prisma: Pick<PrismaClient, "problem">,
   updates: BackfillPlan["updates"],
+  onProgress?: (done: number, total: number) => void,
 ): Promise<number> {
-  let n = 0;
+  const byType = new Map<QuestionType, string[]>();
   for (const update of updates) {
-    await prisma.problem.update({
-      where: { id: update.id },
-      data: { questionType: update.questionType },
-    });
-    n += 1;
+    const bucket = byType.get(update.questionType);
+    if (bucket) bucket.push(update.id);
+    else byType.set(update.questionType, [update.id]);
   }
-  return n;
+
+  let done = 0;
+  for (const [questionType, ids] of byType) {
+    for (const batch of chunk(ids, BACKFILL_BATCH_SIZE)) {
+      const result = await prisma.problem.updateMany({
+        where: { id: { in: batch } },
+        data: { questionType },
+      });
+      done += result.count;
+      onProgress?.(done, updates.length);
+    }
+  }
+  return done;
 }
 
 async function main(): Promise<void> {
@@ -183,8 +211,14 @@ async function main(): Promise<void> {
       return;
     }
 
-    const n = await applyBackfill(prisma, plan.updates);
-    console.log(`\n적용 완료 — ${n}건`);
+    console.log(`
+적용 시작 — ${plan.updates.length}건`);
+    const n = await applyBackfill(prisma, plan.updates, (done, total) => {
+      if (done % 5000 < BACKFILL_BATCH_SIZE || done === total) {
+        console.log(`  ${done}/${total}`);
+      }
+    });
+    console.log(`적용 완료 — ${n}건`);
   } finally {
     await prisma.$disconnect();
   }
