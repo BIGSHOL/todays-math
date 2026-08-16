@@ -151,6 +151,8 @@ interface TestProblemRow {
   problemId: string;
   orderIndex: number;
   replaced: boolean;
+  /** T7.9 — 배점 보정기가 매긴 조정 배점. 일일테스트는 NULL(D-28). */
+  score: number | null;
 }
 
 /** T7.3 — 예측기 코퍼스 적재기(scripts/predictor/load-exams.ts) 전용. */
@@ -336,6 +338,7 @@ function toTestProblemRow(
     problemId: item.problemId,
     orderIndex: item.orderIndex,
     replaced: item.replaced,
+    score: null,
   };
 }
 
@@ -412,6 +415,7 @@ export function resetPrismaTestDouble() {
     problemId: RECENT_BLOCK_PROBLEM_ID,
     orderIndex: 1,
     replaced: false,
+    score: null,
   });
 
   // ── T7.1 채점 테스트 전용(TestResult/ProblemAnswer/AnalysisReport) ──
@@ -423,6 +427,7 @@ export function resetPrismaTestDouble() {
       problemId: item.problemId,
       orderIndex: item.orderIndex,
       replaced: false,
+      score: null,
     })),
   );
   testResultRows = [];
@@ -856,6 +861,7 @@ const prismaModels = {
         problemId: string;
         orderIndex: number;
         replaced?: boolean;
+        score?: number | null;
       };
     }) {
       const row: TestProblemRow = {
@@ -864,6 +870,7 @@ const prismaModels = {
         problemId: data.problemId,
         orderIndex: data.orderIndex,
         replaced: data.replaced ?? false,
+        score: data.score ?? null,
       };
       testProblemRows.push(row);
       return row;

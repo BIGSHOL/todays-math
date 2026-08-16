@@ -64,6 +64,9 @@ export async function submitTestResult(
     difficulty: tp.problem.difficulty,
     answer: tp.problem.answer,
     score: tp.problem.score ?? null,
+    // 배점 보정기가 이 시험지에 매긴 조정 배점(11 §10, D-42). 있으면 원본보다 우선한다 —
+    // 짜깁기 시험지의 만점을 100으로 맞추는 경로가 여기다. 없으면 기존 규칙 그대로.
+    adjustedScore: tp.score ?? null,
   }));
 
   const { graded, score } = gradeAnswers(input.answers, gradingProblems);
