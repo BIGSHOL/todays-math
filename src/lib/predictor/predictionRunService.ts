@@ -99,7 +99,9 @@ export class PredictionInputNotFoundError extends Error {
 
 /** 요청이 지정한 근거 시험지가 계약을 위반한다(추출 결손 등). */
 export class PredictionInputInvalidError extends Error {
-  constructor(readonly issues: Array<{ externalExamId: string; reason: string }>) {
+  constructor(
+    readonly issues: Array<{ externalExamId: string; reason: string }>,
+  ) {
     super(
       `근거 시험지가 계약을 위반합니다: ${issues
         .slice(0, 3)
@@ -267,7 +269,9 @@ async function gatherAutoEvidence(
 
   // 만점이 100 이 아닌 편은 원본이 잘린 것이다 — 학습에 넣으면 그 학교가
   // "문항을 12개만 낸다"고 배운다. 결손이 아니라 **편향**이 된다.
-  const { trusted, excluded } = partitionTrusted(beforeCutoff(converted, cutoff));
+  const { trusted, excluded } = partitionTrusted(
+    beforeCutoff(converted, cutoff),
+  );
 
   return splitEvidence(trusted, series, {
     excludedByTrust: excluded.length,
@@ -302,7 +306,11 @@ async function gatherPinnedEvidence(
   for (const row of rows) {
     const result = toExamPaper(row);
     if (result.ok) papers.push(result.paper);
-    else issues.push({ externalExamId: result.externalExamId, reason: result.reason });
+    else
+      issues.push({
+        externalExamId: result.externalExamId,
+        reason: result.reason,
+      });
   }
   if (issues.length > 0) throw new PredictionInputInvalidError(issues);
 
@@ -493,6 +501,12 @@ export async function runPrediction(
   // 갱신이 아니라 항상 새 행이다 — 엔진 버전별 비교가 목적이다.
   const row = await db.predictionRun.create({
     data: {
+      // 소유자 컬럼이 생겼다(20260816160000). 아직 `params.ownerUserId` 도 같이 쓴다 —
+      // 조회 경로가 그걸 보고 있어 한쪽만 바꾸면 자기 run 을 못 읽는다.
+      // 임시 이중 기록이다. 조회를 컬럼 기준으로 옮기는 것이 T7.7 후속 작업이고,
+      // 그때 `params.ownerUserId` 를 걷어낸다.
+      userId,
+      riskFlags,
       engineVersion: PREDICTOR_ENGINE_VERSION,
       school: series.school,
       level: series.level,

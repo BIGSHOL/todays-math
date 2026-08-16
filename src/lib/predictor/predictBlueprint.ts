@@ -448,3 +448,19 @@ export function predictBlueprint(input: PredictInput): Blueprint {
   }
   return blueprint;
 }
+
+// ─────────────────────────────────────────────
+// 계약과 엔진이 어긋나면 **컴파일이 깨진다**
+//
+// 파라미터를 하나 더해 놓고 계약(`predictorParamsSchema`)에 안 넣으면 저장 API 가
+// 런타임에 500 을 낸다 — 실제로 그렇게 깨졌다(v0.5 의 `stylePriorWeight`).
+// 양방향 extends 로 **필드가 정확히 같을 때만** 통과하게 걸어, 그걸 타입이 먼저 잡게 한다.
+// 여기서 빨간 줄이 뜨면 predictor.contract.ts 의 스키마에 같은 필드를 더하면 된다.
+// ─────────────────────────────────────────────
+type ParamsMatchContract = PredictorParams extends PredictorParamsSnapshot
+  ? PredictorParamsSnapshot extends PredictorParams
+    ? true
+    : never
+  : never;
+const _paramsMatchContract: ParamsMatchContract = true;
+void _paramsMatchContract;
