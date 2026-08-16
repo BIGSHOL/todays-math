@@ -212,7 +212,18 @@ describe("[T2] 청사진 예측", () => {
     expect(bp.confidence).toBeLessThan(0.3);
   });
 
-  it("과거가 쌓일수록 학교 고유값 쪽으로 옮겨간다 (계층 축소)", () => {
+  /**
+   * 🔴 여기서 규칙이 **항목마다 다르다.** 예전에는 문항 수도 코호트로 당겼는데
+   * (`stylePriorWeight` 2), 학원 '대비' 자료 130편을 이력에서 걷어내고 다시 재니
+   * **당기지 않는 쪽(0)이 두 분할 모두에서 나았다**(11 §14). 그래서 갈랐다.
+   *
+   *   - 문항 수·유형 : 학교 고유성이 확인된 항목 → 코호트로 **안 당긴다**
+   *   - 총점        : 전국이 사실상 100점 → 코호트가 진짜 정보라 **당긴다**
+   *
+   * "몇 학기 돌리면 정확해진다"는 요구는 축소가 아니라 **표본이 쌓여 평균이 안정되는 것**
+   * 으로 충족된다(backtest 실측: 1편 0.818 → 2편 0.638 → 3편 0.624).
+   */
+  it("문항 수는 코호트로 당기지 않는다 — 학교 고유값을 그대로 쓴다", () => {
     // 코호트는 30문항, 이 학교는 20문항.
     const big = paper({
       externalExamId: "c1",
@@ -230,6 +241,62 @@ describe("[T2] 청사진 예측", () => {
       history: [observeBlueprint(typicalPaper("a", 2024, "중간"))],
       cohort,
     });
+
+    expect(one.questionCount).toBeCloseTo(20, 6);
+  });
+
+  it("🔴 그 학교 과거가 하나도 없으면 코호트로 떨어진다 — 근거 없이 20을 지어내지 않는다", () => {
+    const big = paper({
+      externalExamId: "c1",
+      questions: Array.from({ length: 30 }, (_, i) =>
+        q(i + 1, 10 / 3, "객관식", "중"),
+      ),
+      totalScore: 100,
+      period: { year: 2024, semester: 1 as const, round: "중간" as const },
+    });
+
+    const none = predictBlueprint({
+      series,
+      target,
+      history: [],
+      cohort: [observeBlueprint(big)],
+    });
+
+    expect(none.questionCount).toBeCloseTo(30, 6);
+    expect(none.confidence).toBe(0);
+  });
+
+  it("총점은 코호트로 당긴다 — 전국이 사실상 100점이라 그게 진짜 정보다", () => {
+    // 이 학교 과거만 60점이고 코호트는 100점이면, 예측은 그 사이로 당겨져야 한다.
+    const low = paper({
+      externalExamId: "low",
+      questions: Array.from({ length: 20 }, (_, i) =>
+        q(i + 1, 3, "객관식", "중"),
+      ),
+      totalScore: 60,
+      period: { year: 2024, semester: 1 as const, round: "중간" as const },
+    });
+    const normal = paper({
+      externalExamId: "c2",
+      questions: Array.from({ length: 20 }, (_, i) =>
+        q(i + 1, 5, "객관식", "중"),
+      ),
+      totalScore: 100,
+      period: { year: 2024, semester: 1 as const, round: "중간" as const },
+    });
+
+    const out = predictBlueprint({
+      series,
+      target,
+      history: [observeBlueprint(low)],
+      cohort: [observeBlueprint(normal)],
+    });
+
+    expect(out.totalScore).toBeGreaterThan(60);
+    expect(out.totalScore).toBeLessThan(100);
+  });
+
+  it("근거가 쌓이면 신뢰도가 올라간다", () => {
     const three = predictBlueprint({
       series,
       target,
@@ -238,13 +305,15 @@ describe("[T2] 청사진 예측", () => {
         observeBlueprint(typicalPaper("b", 2024, "중간")),
         observeBlueprint(typicalPaper("c", 2024, "기말")),
       ],
-      cohort,
+      cohort: [],
+    });
+    const one = predictBlueprint({
+      series,
+      target,
+      history: [observeBlueprint(typicalPaper("a", 2024, "중간"))],
+      cohort: [],
     });
 
-    expect(one.questionCount).toBeGreaterThan(20);
-    expect(one.questionCount).toBeLessThan(30);
-    // 근거가 늘면 학교 값(20)에 더 가까워진다.
-    expect(three.questionCount).toBeLessThan(one.questionCount);
     expect(three.confidence).toBeGreaterThan(one.confidence);
   });
 

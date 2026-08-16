@@ -5,9 +5,10 @@
  *
  * 1. **빈 목록이 정상 응답이다.** 실측이 아직 0건이라 이 API 는 당분간 대부분 빈 배열을
  *    낸다. 그 상태에서 500 이 나거나 숫자가 지어져 나오면 화면이 첫날부터 거짓말을 한다.
- * 2. **소유권.** `PredictionRun` 에 `userId` 컬럼이 아직 없어(2026-08-16 확인) 소유권을
- *    `학생 → 반 → 반 소유자` 로 되짚는다. 이 우회 경로가 새면 남의 학생 이름과 점수가
- *    그대로 노출된다. 그래서 "남의 회차 404" 와 "남의 학생 이름 미노출"을 따로 잠근다.
+ * 2. **소유권.** 회차 소유는 `PredictionRun.userId` 로 판정한다. 학생 경로를 되짚던
+ *    예전 우회는 기능을 죽였다 — `predictedScores` 가 항상 비어 있어 방금 만든 회차가
+ *    자기에게도 안 보였다(examCompose 회귀 절 참조). 회차 소유와 **학생 이름 노출**은
+ *    다른 축이라, "남의 회차 404" 와 "남의 학생 이름 미노출"을 여전히 따로 잠근다.
  * 3. **없는 것을 지어내지 않는다.** `examDate`(D-day 기준)와 문제지·채점 단계는 스키마에
  *    원천이 없다. 나중에 누가 "그럴듯한 기본값"을 채워 넣지 못하게 여기서 못박는다.
  */
@@ -37,6 +38,8 @@ import { getSessionUser } from "@/lib/session";
 
 const RUN_MINE = "70000000-0000-4000-8000-0000000000a1";
 const RUN_OTHER = "70000000-0000-4000-8000-0000000000a2";
+/** 남의 원장 — 회차 소유가 `PredictionRun.userId` 로 판정되므로 픽스처도 그 축을 쓴다. */
+const OTHER_TEACHER_ID = "10000000-0000-4000-8000-0000000000ff";
 /** 다른 사용자 소유 반의 학생 — MOCK 픽스처에 없는 id 로 둔다. */
 const FOREIGN_STUDENT_ID = "30000000-0000-4000-8000-000000000099";
 
@@ -100,6 +103,7 @@ type SeedRun = {
   cutoffYear: number;
   cutoffSemester: number;
   cutoffRound: string;
+  userId: string;
   inputExamIds: string[];
   params: unknown;
   predictedBlueprint: unknown;
@@ -109,9 +113,14 @@ type SeedRun = {
   actualRecordedAt: Date | null;
 };
 
-function runRow(id: string, predictedScores: unknown[]): SeedRun {
+function runRow(
+  id: string,
+  predictedScores: unknown[],
+  userId: string = TEACHER_ID,
+): SeedRun {
   return {
     id,
+    userId,
     createdAt: new Date("2026-08-16T00:00:00.000Z"),
     engineVersion: "0.5.0",
     school: "정화중",
@@ -161,7 +170,11 @@ describe("GET /api/exam/rounds", () => {
   it("내 학생이 든 회차만 낸다 — 남의 회차는 목록에서 빠진다", async () => {
     seedPredictionRuns([
       runRow(RUN_MINE, [scorePrediction(MOCK_STUDENT_1.id, 88)]),
-      runRow(RUN_OTHER, [scorePrediction(FOREIGN_STUDENT_ID, 71)]),
+      runRow(
+        RUN_OTHER,
+        [scorePrediction(FOREIGN_STUDENT_ID, 71)],
+        OTHER_TEACHER_ID,
+      ),
     ]);
 
     const res = await listRounds();
@@ -240,7 +253,11 @@ describe("GET /api/exam/rounds/{id}", () => {
 
   it("🔴 남의 회차는 403 이 아니라 404 — 존재 여부를 알리지 않는다", async () => {
     seedPredictionRuns([
-      runRow(RUN_OTHER, [scorePrediction(FOREIGN_STUDENT_ID, 71)]),
+      runRow(
+        RUN_OTHER,
+        [scorePrediction(FOREIGN_STUDENT_ID, 71)],
+        OTHER_TEACHER_ID,
+      ),
     ]);
 
     const res = await getRound(undefined as never, detailParams(RUN_OTHER));
@@ -326,7 +343,7 @@ describe("GET /api/exam/rounds/{id}", () => {
   it("학생이 한 명도 없는 사용자에게는 아무 회차도 보이지 않는다", async () => {
     // STUDENT_IDS 는 전부 이 강사 소유 반에 속한다 — 대조군으로 남의 학생만 둔 회차를 쓴다.
     expect(STUDENT_IDS).toContain(MOCK_STUDENT_1.id);
-    seedPredictionRuns([runRow(RUN_OTHER, [])]);
+    seedPredictionRuns([runRow(RUN_OTHER, [], OTHER_TEACHER_ID)]);
 
     const body = examRoundListResponseSchema.parse(
       await (await listRounds()).json(),

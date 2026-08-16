@@ -86,6 +86,11 @@ export const predictionEvidenceStatsSchema = z.strictObject({
   rangeCohort: z.int().min(0),
   /** 신뢰 가드(`paperTrust`)에서 빠진 편 수. 조용히 버리지 않고 센다. */
   excludedByTrust: z.int().min(0),
+  /**
+   * 학원이 만든 '대비' 자료라 학습에서 뺀 편 수(`paperSource`).
+   * 이 값이 크면 그 학교는 **실제 기출이 얇다**는 뜻이다 — 신뢰도를 그만큼 낮게 읽어야 한다.
+   */
+  excludedBySource: z.int().min(0),
   /** 요청이 근거를 직접 지정했는가(재실행 비교용 핀). */
   pinned: z.boolean(),
 });

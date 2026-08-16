@@ -35,30 +35,32 @@ export type VisibleRuns = {
 };
 
 /**
- * 이 사용자에게 보이는 회차 전부.
+ * 이 사용자에게 보이는 회차 전부 — 소유자 컬럼으로 **SQL 에서** 좁힌다.
  *
- * ⚠️ 성능 메모: `PredictionRun` 에 `userId` 가 없어 SQL 로 좁히지 못하고 전량을 읽어
- *    앱에서 거른다. 학원 한 곳 규모(회차 수십 건)에서는 문제가 없지만, `userId` 컬럼이
- *    생기면 `where: { userId }` 로 바꿔 이 왕복을 없애야 한다.
- *    학교명으로 미리 좁히는 방법도 검토했으나, `Student.schoolName` 이 NULL 인 학생의
- *    회차가 통째로 사라져 **조용한 누락**이 생기므로 쓰지 않았다.
+ * 예전에는 소유자 컬럼이 없어 전량을 읽고 "그 회차에 내 학생이 있는가"로 앱에서 걸렀다.
+ * 그 우회가 실제로는 기능을 죽였다 — `predictedScores` 가 항상 비어 있어 방금 만든
+ * 회차가 자기에게도 안 보였다(`isRunVisibleTo` 주석 참조).
  */
 export async function loadVisibleRuns(userId: string): Promise<VisibleRuns> {
   const ownedStudents = await loadOwnedStudents(userId);
   const ownedIds = new Set(ownedStudents.map((s) => s.id));
-  if (ownedIds.size === 0) {
-    return { runs: [], actuals: [], ownedStudents };
-  }
 
-  const [allRuns, ownedActuals] = await Promise.all([
-    db.predictionRun.findMany({ orderBy: { createdAt: "desc" } }),
-    db.actualExamScore.findMany({
-      where: { studentId: { in: [...ownedIds] } },
+  // 학생이 아직 없어도 **내 회차는 보여야 한다** — 예측을 먼저 돌려 볼 수 있다.
+  const [myRuns, ownedActuals] = await Promise.all([
+    db.predictionRun.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
     }),
+    ownedIds.size === 0
+      ? Promise.resolve([])
+      : db.actualExamScore.findMany({
+          where: { studentId: { in: [...ownedIds] } },
+        }),
   ]);
 
-  const runs = (allRuns as PredictionRunRow[]).filter((run) =>
-    isRunVisibleTo(run, ownedActuals as ActualScoreRow[], ownedIds),
+  // 이중 확인 — where 절이 나중에 느슨해져도 앱에서 한 번 더 닫는다.
+  const runs = (myRuns as PredictionRunRow[]).filter((run) =>
+    isRunVisibleTo(run, userId),
   );
   const visibleRunIds = new Set(runs.map((r) => r.id));
 

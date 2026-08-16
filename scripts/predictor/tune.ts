@@ -26,6 +26,7 @@ import type {
 } from "../../src/contracts/predictor.contract";
 import { observeBlueprint } from "../../src/lib/predictor/blueprint";
 import { blueprintDistances } from "../../src/lib/predictor/distance";
+import { isSchoolExam } from "../../src/lib/predictor/paperSource";
 import { partitionTrusted } from "../../src/lib/predictor/paperTrust";
 import {
   DEFAULT_PARAMS,
@@ -64,10 +65,13 @@ function build() {
   const { papers } = loadCorpus();
   // backtest 와 **같은 코퍼스**를 봐야 한다. 다르면 튜닝이 딴 데이터에 맞춰진다.
   const { trusted, excluded } = partitionTrusted(papers);
+  // 학원 '대비' 자료를 넣으면 원장님의 과거 추측을 학교 패턴으로 배운다(paperSource.ts).
+  const schoolExams = trusted.filter((p) => isSchoolExam(p.sourceFile));
   console.log(
-    `신뢰 가드: ${trusted.length}편 사용 · ${excluded.length}편 제외`,
+    `신뢰 가드 ${trusted.length}편(제외 ${excluded.length}) → 학교 기출만 ${schoolExams.length}편` +
+      ` (대비 ${trusted.length - schoolExams.length}편 제외)`,
   );
-  const entries: Entry[] = trusted.map((paper) => ({
+  const entries: Entry[] = schoolExams.map((paper) => ({
     paper,
     observed: observeBlueprint(paper),
     styleKey: styleSeriesKey(paper.series),
