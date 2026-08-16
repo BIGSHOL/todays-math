@@ -48,3 +48,30 @@ A단계·B단계가 끝난 뒤 남은 것을 **파일 소유권과 DB 컬럼이 
   **몰림은 조사 단서일 뿐 배제 근거가 아니다.**
 - **AI 로 푸는 것보다 원본에서 되찾는 게 늘 나았다.** 여섯 결함 전부 이관 단계 유실이었다.
   **AI 를 돌리기 전에 이관 코드를 먼저 의심하라.** 토큰 0 에 정확도가 높다.
+
+---
+
+## ⚠️ 워크트리를 지우지 마라 — 저장소 밖에 1.9GB 가 있다
+
+`scripts/qa/reports/` 는 **gitignore 대상**이다. main 에 병합해도 따라가지 않는다.
+워크트리를 지우면 아래가 **함께 사라진다.**
+
+| 워크트리 | 크기 | 무엇 |
+|---|---|---|
+| `잔여-D-HWP/scripts/qa/reports/` | **1.9G** | 아래 셋이 핵심 |
+| └ `hwpx/` | 1.8G | HWP → HWPX 변환 3,302편. **다시 뽑으면 약 10.5시간** |
+| └ `hwp-latex/` | 51M | 수식이 LaTeX 로 변환된 판. **모든 트랙이 원본으로 쓴다** |
+| └ `hwp/` · `db-content.jsonl` · `hwp-verdicts.jsonl` | 82M | 원본 추출본 · DB 스냅숏 · 교체 판정 |
+| `잔여-B-정답/scripts/qa/reports/` | 26M | 공식 정답면 추출본 |
+| `잔여-E-신규적재/scripts/qa/reports/` | 17M | 적재 목록 · corpus 지문 |
+| `잔여-A-그림/scripts/qa/reports/` | 15M | 그림 색인 |
+| `잔여-C-RPM/scripts/qa/reports/` | 11M | RPM 대조본 |
+| `잔여-G-소단원분류/scripts/classify/reports/` | 9.2M | 분류 실측 결과 |
+
+경로 기준: `C:/Users/user/orca/workspaces/testautocreator/<워크트리>/`
+
+**터미널(에이전트 세션)은 닫아도 된다.** 각 트랙이 인계 문서를 남겼고 코드는 main 에 있다.
+사라지면 안 되는 것은 위 파일들이다.
+
+`hwp-latex/` 를 다시 뽑아야 한다면 그 전에 트랙 F 에게 알려라 — 적재기가 입력 corpus
+지문을 기록해 두어서, 지문이 달라지면 멈춘다(그게 설계다).
