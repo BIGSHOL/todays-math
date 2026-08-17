@@ -18,6 +18,7 @@ import {
   MOCK_AI_TRANSFORMED_PROBLEMS,
   MOCK_PROBLEM_WITH_FRACTION,
   MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL,
+  MOCK_PROBLEMS,
   MOCK_UNITS,
 } from "@/mocks/data";
 import { server } from "@/mocks/server";
@@ -56,7 +57,6 @@ describe("[T3.3 S-08] 문제은행 — 크롬·필터·액션", () => {
   it("목록에서 분수·도형 수식을 MathText로 렌더하고 [교체]는 없다", async () => {
     const { container } = await renderBank();
 
-    expect(container.textContent).toMatch(/밑변의 길이가/);
     expect(container.querySelectorAll(".katex").length).toBeGreaterThan(1);
     expect(container.querySelector(".katex-error")).toBeNull();
     expect(
@@ -69,7 +69,7 @@ describe("[T3.3 S-08] 문제은행 — 크롬·필터·액션", () => {
 describe("[T3.3 S-08] 문제은행 — 필터 (MSW)", () => {
   it("필터 요청 실패 뒤 이전 필터의 문제를 계속 보여 주지 않는다", async () => {
     const { user } = await renderBank();
-    expect(screen.getByText(/밑변의 길이가/)).toBeInTheDocument();
+    expect(screen.getByText(/를 유한소수로 나타내어라/)).toBeInTheDocument();
 
     server.use(
       http.get(
@@ -82,7 +82,9 @@ describe("[T3.3 S-08] 문제은행 — 필터 (MSW)", () => {
     expect(
       await screen.findByText("목록을 불러오지 못했습니다"),
     ).toBeInTheDocument();
-    expect(screen.queryByText(/밑변의 길이가/)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/를 유한소수로 나타내어라/),
+    ).not.toBeInTheDocument();
   });
 
   it("API가 돌려준 실제 단원 ID를 필터와 등록 폼에 사용한다", async () => {
@@ -150,6 +152,63 @@ describe("[T3.3 S-08] 문제은행 — 필터 (MSW)", () => {
     await waitFor(() => {
       expect(screen.getByText("등록된 문제가 없습니다")).toBeInTheDocument();
     });
+  });
+});
+
+describe("[T3.3 S-08] 문제은행 — 페이지네이션", () => {
+  // MSW 전체 풀 = 등록형 30 + 타 사용자 shared 1 + AI 생성/변형 픽스처
+  const TOTAL =
+    MOCK_PROBLEMS.length +
+    1 +
+    MOCK_AI_GENERATED_PROBLEMS.length +
+    MOCK_AI_TRANSFORMED_PROBLEMS.length;
+
+  it("20건 단위로 나누고 다음/이전으로 이동한다", async () => {
+    const { user, container } = await renderBank();
+
+    expect(container.querySelectorAll("article")).toHaveLength(20);
+    expect(screen.getAllByText(`총 ${TOTAL}문제`).length).toBeGreaterThan(0);
+    expect(screen.getAllByText("1 / 2 페이지").length).toBeGreaterThan(0);
+    const prev = screen.getAllByRole("button", { name: "이전" })[0]!;
+    const next = screen.getAllByRole("button", { name: "다음" })[0]!;
+    expect(prev).toBeDisabled();
+    expect(next).toBeEnabled();
+
+    await user.click(next);
+
+    // MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL(30번째)은 2페이지에 있다
+    await screen.findByText(/밑변의 길이가/);
+    expect(container.querySelectorAll("article")).toHaveLength(TOTAL - 20);
+    expect(screen.getAllByText("2 / 2 페이지").length).toBeGreaterThan(0);
+    expect(
+      screen.queryByText(/를 유한소수로 나타내어라/),
+    ).not.toBeInTheDocument();
+    for (const button of screen.getAllByRole("button", { name: "다음" })) {
+      expect(button).toBeDisabled();
+    }
+  });
+
+  it("2페이지에서 이전을 누르면 1페이지로 돌아온다", async () => {
+    const { user } = await renderBank();
+    await user.click(screen.getAllByRole("button", { name: "다음" })[0]!);
+    await screen.findByText(/밑변의 길이가/);
+
+    await user.click(screen.getAllByRole("button", { name: "이전" })[0]!);
+
+    await screen.findByText(/를 유한소수로 나타내어라/);
+    expect(screen.getAllByText("1 / 2 페이지").length).toBeGreaterThan(0);
+  });
+
+  it("필터를 바꾸면 1페이지로 돌아간다", async () => {
+    const { user } = await renderBank();
+    await user.click(screen.getAllByRole("button", { name: "다음" })[0]!);
+    await screen.findByText(/밑변의 길이가/);
+
+    await user.selectOptions(screen.getByLabelText("난이도"), "easy");
+
+    await screen.findByText(/를 유한소수로 나타내어라/);
+    expect(screen.getAllByText(/^1 \/ \d+ 페이지$/).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("button", { name: "이전" })[0]!).toBeDisabled();
   });
 });
 

@@ -218,6 +218,21 @@ describe("[T3.1] GET /api/problems — 단원/난이도/유형/출처/검수상�
     const body = errorResponseSchema.parse(await res.json());
     expect(body.error.code).toBe("UNAUTHORIZED");
   });
+
+  // 이관 배치는 같은 초 안에 수천 건이 생겨 createdAt만으로는 순서가 유일하지 않다.
+  // 보조 정렬 키가 없으면 페이지 사이에 같은 문항이 겹치거나 빠진다(실서버 실측: 1↔2페이지 4건 중복).
+  it("createdAt이 같은 행이 많아도 페이지가 겹치지 않도록 id 보조 정렬 키를 쓴다", async () => {
+    const spy = vi.spyOn(db.problem, "findMany");
+    const res = await listProblems(
+      jsonRequest("http://localhost/api/problems?page=1&pageSize=20", "GET"),
+    );
+    expect(res.status).toBe(200);
+    expect(spy.mock.calls.at(-1)![0]?.orderBy).toEqual([
+      { createdAt: "desc" },
+      { id: "desc" },
+    ]);
+    spy.mockRestore();
+  });
 });
 
 describe("[T3.1] GET /api/problems/{id} — LaTeX 본문 무손실 조회", () => {
