@@ -124,9 +124,12 @@ export type ScoreNormalization = z.infer<typeof scoreNormalizationSchema>;
 // 원장 수동 조정 (11 §10.4)
 // ─────────────────────────────────────────────
 
-export const manualScoreIssueSchema = z.enum(["합계_불일치", "배점_형식오류"], {
-  error: "수동 조정 오류 값이 올바르지 않습니다.",
-});
+export const manualScoreIssueSchema = z.enum(
+  ["합계_불일치", "배점_형식오류", "문항번호_중복"],
+  {
+    error: "수동 조정 오류 값이 올바르지 않습니다.",
+  },
+);
 export type ManualScoreIssue = z.infer<typeof manualScoreIssueSchema>;
 
 export const manualScoreCheckSchema = z.discriminatedUnion("ok", [

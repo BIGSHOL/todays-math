@@ -42,7 +42,9 @@ export type PersistRefusal =
   /** 대상 시험지나 반이 없다. */
   | "대상_없음"
   /** 시험지 문항과 넘어온 배점이 짝이 안 맞는다. */
-  | "문항_불일치";
+  | "문항_불일치"
+  /** 배점을 표기하지 않는 시험지(일일/확인테스트)다. D-28·D-40. */
+  | "배점_대상아님";
 
 export type PersistResult =
   | {
@@ -164,18 +166,39 @@ export async function saveManualScores(
     return refuse("권한_없음", "이 시험지를 고칠 권한이 없습니다.");
   }
 
+  // 🔴 일일·확인테스트는 **배점을 표기하지 않는다**(D-28·D-40). `TestProblem.score` 는
+  //    예측 문제지 전용이고 그 시험지들에선 NULL 이어야 한다. 소유권만 보고 통과시키면
+  //    이미 인쇄·채점까지 끝난 일일테스트의 채점 기준이 그 순간부터 바뀐다
+  //    (재현: 원래 10·10·80 으로 채점되던 시험지가 98·1·1 이 됐다). 되돌릴 NULL 도 안 남는다.
+  const hasAdjustedScore = await db.testProblem.count({
+    where: { testId: input.testId, NOT: { score: null } },
+  });
+  if (hasAdjustedScore === 0) {
+    return refuse(
+      "배점_대상아님",
+      "이 시험지는 배점을 표기하지 않습니다. 예측 문제지에서만 배점을 조정할 수 있습니다.",
+    );
+  }
+
   const rows = await db.testProblem.findMany({
     where: { testId: input.testId },
   });
   const byOrder = new Map(rows.map((row) => [row.orderIndex, row]));
 
+  // 🔴 개수와 존재 여부만 보면 `[1,1,1,2,3]` 이 통과한다 — 개수 5, 전부 존재.
+  //    그러면 두 문항만 갱신되고 나머지는 옛 배점 그대로 남아 만점이 100 이 아니게 된다.
+  //    **1:1 짝이 맞는지**를 봐야 한다. `validateManualScores` 도 중복을 막지만,
+  //    여기서 한 번 더 닫는다 — 저장 직전이 마지막 방어선이다.
+  const sent = new Set(input.scores.map((item) => item.orderIndex));
   if (
     rows.length !== input.scores.length ||
+    sent.size !== input.scores.length ||
     input.scores.some((item) => !byOrder.has(item.orderIndex))
   ) {
     return refuse(
       "문항_불일치",
-      `시험지 문항은 ${rows.length}개인데 배점은 ${input.scores.length}개 들어왔습니다.`,
+      `시험지 문항은 ${rows.length}개인데 배점은 ${input.scores.length}개` +
+        `(서로 다른 번호 ${sent.size}개) 들어왔습니다.`,
     );
   }
 

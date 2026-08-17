@@ -200,6 +200,57 @@ describe("[T7.9] 원장 수동 조정 저장 (11 §10.4)", () => {
     return created.testId;
   }
 
+  it("🔴 배점을 표기하지 않는 시험지에는 배점을 심을 수 없다 (D-28·D-40)", async () => {
+    /**
+     * 적대적 리뷰 재현. 소유권만 보고 통과시켜, 이미 인쇄·채점까지 끝난 일일테스트의
+     * `TestProblem.score` 를 덮어쓸 수 있었다. 그 순간부터 채점 기준이 바뀌고
+     * (재현: 10·10·80 → 98·1·1) 되돌릴 NULL 도 남지 않는다.
+     *
+     * ⚠️ 예측 문제지가 `testType: "review"` 로 저장돼 **일반 확인테스트와 구분되지
+     *    않는다.** 오늘 쓸 수 있는 유일한 신호는 배점 유무다 — 예측 문제지는 만들 때
+     *    배점을 함께 싣고, 일일/확인테스트는 NULL 이다.
+     */
+    const test = await db.test.create({
+      data: {
+        userId: USER_TEACHER_ID,
+        classId: CLASS_ID,
+        studentId: null,
+        testType: "daily",
+        rangeStartUnitId: null,
+        rangeEndUnitId: UNIT_ID,
+        status: "printed",
+        modified: false,
+        testDate: new Date("2026-08-16T00:00:00.000Z"),
+      },
+    });
+    for (const [i, problemId] of MIXED_PROBLEM_IDS.slice(0, 2).entries()) {
+      await db.testProblem.create({
+        data: {
+          testId: test.id,
+          problemId,
+          orderIndex: i + 1,
+          replaced: false,
+          // 배점을 표기하지 않는 시험지 — NULL 이 정상이다.
+        },
+      });
+    }
+
+    const result = await saveManualScores({
+      testId: test.id,
+      userId: USER_TEACHER_ID,
+      scores: [
+        { orderIndex: 1, score: 98 },
+        { orderIndex: 2, score: 2 },
+      ],
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.ok === false && result.reason).toBe("배점_대상아님");
+
+    const rows = await db.testProblem.findMany({ where: { testId: test.id } });
+    expect(rows.every((r) => r.score === null)).toBe(true);
+  });
+
   it("합계가 100 이면 저장한다", async () => {
     const testId = await seedTest();
 

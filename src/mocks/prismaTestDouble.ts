@@ -461,9 +461,31 @@ function matchesWhere<T extends object>(
     );
   }
 
+  // 🔴 모르는 최상위 연산자를 **조용히 필드 이름으로 취급하면** 가짜가 실제 Prisma 와
+  //    다른 답을 낸다. `NOT: { score: null }` 이 그렇게 늘 false 가 되어, 프로덕션에서
+  //    맞는 가드가 테스트에서만 틀리게 동작했다. 지원하는 것만 받고 나머지는 던진다.
+  if (where.NOT !== undefined) {
+    if (Array.isArray(where.NOT)) {
+      const anyMatch = where.NOT.some((clause) =>
+        matchesWhere(row, clause as Record<string, unknown>),
+      );
+      if (anyMatch) return false;
+    } else if (matchesWhere(row, where.NOT as Record<string, unknown>)) {
+      return false;
+    }
+  }
+  for (const key of Object.keys(where)) {
+    if (key === key.toUpperCase() && !["AND", "OR", "NOT"].includes(key)) {
+      throw new Error(
+        `prismaTestDouble: 지원하지 않는 where 연산자 '${key}' — 조용히 통과시키지 않는다`,
+      );
+    }
+  }
+
   const orClauses = where.OR;
   const rest = { ...where };
   delete rest.OR;
+  delete rest.NOT;
   if (Array.isArray(orClauses)) {
     const orOk = orClauses.some((clause) =>
       matchesWhere(row, clause as Record<string, unknown>),

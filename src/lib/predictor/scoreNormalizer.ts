@@ -209,7 +209,10 @@ export function normalizeScores(
         `배점 눈금 ${row.score} 은 0.01점 단위가 아닙니다.`,
       );
     }
-    weightByValue.set(centi, (weightByValue.get(centi) ?? 0) + Math.max(row.count, 0));
+    weightByValue.set(
+      centi,
+      (weightByValue.get(centi) ?? 0) + Math.max(row.count, 0),
+    );
   }
 
   if (weightByValue.size === 0) {
@@ -315,8 +318,7 @@ export function normalizeScores(
       const preferred = value[i];
       // 최대잉여법이 정한 값에 가장 가까운 눈금부터. 같으면 높은 쪽을 먼저 준다.
       const options = [...grid].sort(
-        (a, b) =>
-          Math.abs(a - preferred) - Math.abs(b - preferred) || b - a,
+        (a, b) => Math.abs(a - preferred) - Math.abs(b - preferred) || b - a,
       );
       const picked = options.find(
         (option) => remaining - option >= 0 && reach[left][remaining - option],
@@ -364,6 +366,28 @@ export function validateManualScores(
   for (const value of grid ?? []) {
     const centi = toCenti(value);
     if (centi !== null) gridCenti.add(centi);
+  }
+
+  // 🔴 같은 문항 번호가 두 번 오면 **합계 계산이 거짓이 된다.** 저장은 번호로 되짚어
+  //    갱신하므로 그 문항엔 마지막 값만 남고, 보내지 않은 문항은 옛 배점 그대로다.
+  //    합계 100 을 통과시켜 놓고 실제 만점은 100 이 아닌 시험지가 저장된다
+  //    (재현: 148점 시험지). 세기 전에 먼저 막는다.
+  const seen = new Set<number>();
+  const duplicated = new Set<number>();
+  for (const q of questions) {
+    if (seen.has(q.number)) duplicated.add(q.number);
+    seen.add(q.number);
+  }
+  if (duplicated.size > 0) {
+    const numbers = [...duplicated].sort((a, b) => a - b);
+    return {
+      ok: false,
+      issue: "문항번호_중복",
+      total: 0,
+      remaining: FULL_MARK / SCORE_SCALE,
+      message: `문항 번호가 중복됐습니다 — ${numbers.join(", ")}번`,
+      offGrid: [],
+    };
   }
 
   const offGrid: number[] = [];

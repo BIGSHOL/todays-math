@@ -68,6 +68,55 @@ function submitUrl(testId: string) {
   return `http://localhost/api/tests/${testId}/submit`;
 }
 
+describe("[T7.19] 🔴 중복 응답으로 이중 채점되지 않는다", () => {
+  /**
+   * 적대적 리뷰 재현. "모든 문항에 응답이 필요하다" 검사가 **고유 problemId 개수**만
+   * 세어서, 같은 문항을 한 번 더 넣으면 검사를 통과하고 그 배점이 두 번 더해졌다
+   * (재현: 정상 70점이 80점). ProblemAnswer 에도 중복 행이 남는다 —
+   * 스키마에 (testResultId, problemId) 유일 제약이 없다.
+   *
+   * 예측 문제지는 만점 100 을 보장하므로(D-42) 중복 한 건이 곧 **만점 초과 점수**다.
+   */
+  it("같은 문항 응답을 두 번 보내면 400 이다", async () => {
+    const res = await submitTestResult(
+      jsonRequest(submitUrl(TEST_RESULT_FIXTURE_TEST_ID), "POST", {
+        studentId: STUDENT_A,
+        answers: [
+          {
+            problemId: TEST_RESULT_PROBLEM_OBJECTIVE_CORRECT_ID,
+            selectedChoice: 2,
+            essayScore: null,
+            sequence: 1,
+          },
+          {
+            // 같은 문항을 한 번 더 — 예전에는 이게 통과해 배점이 두 번 더해졌다.
+            problemId: TEST_RESULT_PROBLEM_OBJECTIVE_CORRECT_ID,
+            selectedChoice: 2,
+            essayScore: null,
+            sequence: 2,
+          },
+          {
+            problemId: TEST_RESULT_PROBLEM_OBJECTIVE_WRONG_ID,
+            selectedChoice: 1,
+            essayScore: null,
+            sequence: 3,
+          },
+          {
+            problemId: TEST_RESULT_PROBLEM_ESSAY_ID,
+            selectedChoice: null,
+            essayScore: 75,
+            sequence: 4,
+          },
+        ],
+      }),
+      withId(TEST_RESULT_FIXTURE_TEST_ID),
+    );
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(JSON.stringify(body)).toContain("두 번");
+  });
+});
+
 describe("[T7.1] POST /api/tests/{id}/submit — 자동 채점 + 예상 점수 산출", () => {
   it("객관식 정답/오답 + 서술형을 채점해 총점을 계산한다(오답 위주 -> 예상 점수는 위로 보정)", async () => {
     const res = await submitTestResult(

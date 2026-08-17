@@ -50,6 +50,17 @@ export async function submitTestResult(
       [{ field: "answers", message: unknownAnswer.problemId }],
     );
   }
+  // 🔴 `Set` 크기만 보면 중복이 사라져 `[p1, p1, p2, p3]` 이 3 === 3 으로 통과한다.
+  //    그러면 그 문항의 배점이 **두 번 더해져** 학생 점수가 만점을 넘고, ProblemAnswer
+  //    에도 중복 행이 남는다(스키마에 (testResultId, problemId) 유일 제약이 없다).
+  //    배점 없는 시험지의 균등배분은 `answers.length` 로 나누므로 문항당 배점까지 흔들린다.
+  if (answerProblemIds.size !== input.answers.length) {
+    return jsonError(
+      "VALIDATION_ERROR",
+      "같은 문항에 응답이 두 번 들어왔습니다.",
+      400,
+    );
+  }
   if (answerProblemIds.size !== testProblems.length) {
     return jsonError(
       "VALIDATION_ERROR",
