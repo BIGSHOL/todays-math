@@ -160,16 +160,16 @@ function toPaper(
     const qtype = QTYPE[q.type ?? ""] ?? null;
     if (!qtype) continue;
 
-    let score = typeof q.score === "number" && q.score > 0 ? q.score : null;
-    if (score === null) {
-      const filled = fillScore(
-        { qtype, score: null, text: questionText(q) },
-        scored,
-      );
-      if (filled.score === null) continue;
-      score = filled.score;
-      stats.scoreFilled += 1;
-    }
+    // 배점이 있어도 fillScore 를 태운다 — 본문에 `[합/총 N점]` 표기가 남아 있고
+    // 기록 배점이 그보다 작으면 하위 소문항 오집이라 표기로 **정정**된다(15 §A.1).
+    const raw0 = typeof q.score === "number" && q.score > 0 ? q.score : null;
+    const filled = fillScore(
+      { qtype, score: raw0, text: questionText(q) },
+      scored,
+    );
+    if (filled.score === null) continue;
+    const score = filled.score;
+    if (filled.basis !== "없음") stats.scoreFilled += 1;
 
     const label = q.difficulty ?? merged?.difficulty ?? null;
     const topic = q.topic ?? merged?.topic ?? null;
