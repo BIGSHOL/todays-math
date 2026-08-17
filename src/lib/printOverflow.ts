@@ -13,7 +13,8 @@
  *    그건 인쇄 미리보기에서만 가능하다. 잘림을 놓치는 것보다 한 번 더 보게 하는 쪽이 낫다.
  */
 import type { TestPrintProblem } from "@/components/print/types";
-import { displayWidth } from "@/lib/math/displayWidth";
+import { displayWidth, fitsTwoColumns } from "@/lib/math/displayWidth";
+import { parseProblemContent } from "@/lib/problem/parseProblemContent";
 
 /**
  * 본문 **표시 폭** 한계. 원문 글자 수가 아니다 — 한글·전각은 2, 수식은 글리프 근사로 센다
@@ -32,6 +33,135 @@ export const OVERFLOW_WIDTH_LIMIT = 530;
 /** 그림이 이 장수 이상이면 세로 공간을 넘길 개연성이 크다. */
 export const OVERFLOW_FIGURE_LIMIT = 2;
 
+/* ────────────────────────────────────────────────────────────────────────
+ * 줄 수 추정 — 폭 총합이 못 보는 것을 본다
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/**
+ * 문항 열 한 줄에 들어가는 **표시폭**.
+ *
+ * 근거는 `displayWidth.ts` 의 `TWO_COLUMN_WIDTH_LIMIT` 와 같은 계산이다 —
+ * 2열 한 칸(약 147px)이 표시폭 24 이므로 1 단위 ≈ 6.13px 이고,
+ * 문항 열 폭 364px 는 약 59 단위다.
+ *
+ * ⚠️ `.paperParity` 폭 식이나 `JASEUP_GEOMETRY.problemColumns` 를 바꾸면 여기도
+ *    같이 바꿔야 한다. 한쪽만 바꾸면 판정이 지면과 조용히 어긋난다.
+ */
+const COLUMN_UNITS = 59;
+
+/**
+ * 상자 하나가 글자 말고 더 먹는 세로 공간을, 줄 수로 환산한 값.
+ * 테두리 1px×2 + 안쪽 여백 16px×2 ≈ 34px, 본문 행높이 20px(12.5px × 1.6) → 약 1.7줄.
+ * 라벨 줄(`<보기>`)은 따로 센다.
+ */
+const BOX_CHROME_LINES = 2;
+
+/** 표시폭을 열 폭으로 나눠 줄 수로. 빈 문자열은 0줄이다. */
+function linesFor(text: string, unitsPerLine = COLUMN_UNITS): number {
+  const width = displayWidth(text);
+  if (width <= 0) return 0;
+  return Math.ceil(width / unitsPerLine);
+}
+
+/**
+ * 항목 목록이 차지하는 줄 수. **렌더러와 같은 함수로 열 수를 정한다**
+ * (`fitsTwoColumns`) — 둘이 갈라지면 "화면은 1열인데 판정은 2열로 셈"이 된다.
+ */
+function linesForItems(items: readonly string[]): number {
+  if (items.length === 0) return 0;
+  if (fitsTwoColumns(items)) {
+    // 2열: 두 칸이 한 행. 각 항목이 한 칸에 들어가므로 행마다 1줄.
+    return Math.ceil(items.length / 2);
+  }
+  // 1열: 항목마다 제 폭만큼 줄을 먹는다.
+  return items.reduce((sum, item) => sum + Math.max(1, linesFor(item)), 0);
+}
+
+/**
+ * 문항 본문이 지면에서 차지하는 **줄 수**를 추정한다.
+ *
+ * 폭 총합(`displayWidth`)과 달리 이 값은 배치를 본다 — 보기가 1열로 내려가거나
+ * 상자가 생기면 글자 수가 그대로여도 값이 늘어난다. 2026-08-17 상자·열 수
+ * 수리로 실제 지면이 그렇게 바뀌었고, 총합 지표는 그 변화를 한 글자도 못 봤다.
+ *
+ * 확정이 아니라 **개연성**이다. 정확한 높이는 실제 렌더에서만 나온다.
+ */
+export function estimateProblemLines(content: string): number {
+  const { question, choices } = parseProblemContent(content);
+
+  // `parseProblemContent` 는 상자를 이미 **인용문 마크다운**으로 굳혀 준다
+  //   `> <보기2>` / `>` / `> ㄱ. …`
+  // 라벨 뒤 숫자가 렌더러가 정한 **열 수**다. 여기서 다시 판단하지 않고 그대로 읽는다 —
+  // 판정이 스스로 열 수를 정하면 렌더러와 갈라져 조용히 어긋난다.
+  let lines = 0;
+  let plain: string[] = [];
+  let box: string[] | null = null;
+
+  const flushPlain = () => {
+    if (plain.length === 0) return;
+    lines += linesFor(plain.join(" "));
+    plain = [];
+  };
+  const flushBox = () => {
+    if (box === null) return;
+    // 문단(빈 `>` 줄로 나뉜 덩어리)으로 나눈다. 첫 문단이 라벨이다.
+    const paras = box
+      .join("\n")
+      .split(/\n\s*\n/)
+      .map((part) => part.trim())
+      .filter(Boolean);
+    const header = paras[0] ?? "";
+    const items = paras.slice(1);
+    const cols = Number(header.match(/(\d+)\s*[>〉】］\]]/)?.[1] ?? 1);
+
+    lines += BOX_CHROME_LINES + 1; // 테두리·여백 + 라벨 줄
+    if (cols >= 2) {
+      // 2열은 항목이 전부 한 칸에 들어갈 때만 선택된다(`fitsTwoColumns`).
+      lines += Math.ceil(items.length / cols);
+    } else {
+      lines += items.reduce(
+        (sum, item) => sum + Math.max(1, linesFor(item)),
+        0,
+      );
+    }
+    box = null;
+  };
+
+  for (const rawLine of question.split(/\r?\n/)) {
+    const line = rawLine.trimStart();
+    if (line.startsWith(">")) {
+      flushPlain();
+      if (box === null) box = [];
+      box.push(line.replace(/^>\s?/, ""));
+      continue;
+    }
+    flushBox();
+    if (line) plain.push(line);
+  }
+  flushPlain();
+  flushBox();
+
+  lines += linesForItems(choices);
+  return lines;
+}
+
+/**
+ * 반 페이지 문항 칸에 들어가는 줄 수의 한계.
+ *
+ * 값의 근거 (실데이터 47,152건, `scripts/qa/calibrate-overflow-lines.ts`):
+ * 폭 규칙(530)이 605건을 잡는데, 줄 수 한계 **14** 가 477건으로 그 규모에 가장
+ * 가깝다. 즉 **엄격도를 그대로 두고 보는 것만 바꿨다.**
+ *
+ *   둘 다 잡음   259
+ *   줄 수만 잡음 218  ← 글자는 짧은데 **배치가 높은** 문항. 폭 총합은 이걸 못 본다
+ *   폭만 잡음    346  ← 글자는 긴데 배치가 납작한 문항(긴 수식이 흐르는 경우 등)
+ *
+ * ⚠️ 임계값을 바꿀 때는 `OVERFLOW_WIDTH_LIMIT` 주석과 같은 규칙을 지킬 것 —
+ *    **같은 경고 건수로 맞춰** 비교한다. 분모가 다르면 "새 규칙이 더 잡는다"가
+ *    임계값을 낮춰서 생긴 착시인지 배치가 실제로 높아져서인지 갈리지 않는다.
+ */
+export const OVERFLOW_LINE_LIMIT = 14;
+
 export interface OverflowRisk {
   /** 지면에 찍히는 문항 번호(1부터). 배열 위치가 아니다 — 원장이 지면에서 찾는 번호다. */
   number: number;
@@ -48,6 +178,13 @@ export function assessOverflowRisk(
     const reasons: string[] = [];
     if (displayWidth(problem.content) > OVERFLOW_WIDTH_LIMIT)
       reasons.push("본문이 길다");
+    // 폭 총합이 못 보는 배치(상자·보기 1열)를 줄 수로 따로 본다.
+    // 같은 문항이 둘 다에 걸리면 사유를 겹쳐 적지 않는다 — 원장이 읽을 문장이다.
+    if (
+      !reasons.length &&
+      estimateProblemLines(problem.content) > OVERFLOW_LINE_LIMIT
+    )
+      reasons.push("배치가 높다(상자·보기 1열)");
     if ((problem.figureUrls?.length ?? 0) >= OVERFLOW_FIGURE_LIMIT)
       reasons.push("그림이 여러 장이다");
 
