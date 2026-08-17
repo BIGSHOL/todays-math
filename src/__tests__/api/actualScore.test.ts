@@ -105,6 +105,15 @@ vi.mock("@/lib/db", () => {
     student: {
       findUnique: async ({ where }: { where: { id: string } }) =>
         students[where.id] ?? null,
+      // 소유권 확인이 학생마다 왕복하지 않고 반을 조인해 한 번에 읽는다.
+      findMany: async ({ where }: { where: { id: { in: string[] } } }) =>
+        where.id.in
+          .map((id) => students[id])
+          .filter((row): row is NonNullable<typeof row> => row !== undefined)
+          .map((row) => ({
+            id: row.id,
+            class: { userId: classes[row.classId]?.userId },
+          })),
     },
     class: {
       findUnique: async ({ where }: { where: { id: string } }) =>

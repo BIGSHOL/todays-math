@@ -33,7 +33,7 @@ import {
   unauthorizedError,
   validationError,
 } from "@/lib/apiResponse";
-import { requireOwnedStudent } from "@/lib/ownership";
+import { db } from "@/lib/db";
 import {
   attachActualScores,
   listActualScores,
@@ -61,9 +61,28 @@ export async function POST(request: NextRequest, { params }: RouteContext) {
   if (index.ownerUserId !== session.id) return forbiddenError();
 
   // 학생 소유권을 먼저 전부 확인한다 — 한 명이라도 남의 학생이면 아무것도 저장하지 않는다.
+  //
+  // 🔴 예전에는 학생마다 `requireOwnedStudent` 를 순차로 await 했다. 그 헬퍼는 학생 1회 +
+  //    소속 반 1회를 읽으므로 **30명이면 60번 순차 왕복**이었다. 반을 조인해 한 번에 읽는다.
+  //
+  //    거부 응답 계약은 그대로다. `requireOwnedStudent` 는 "없으면 404(학생), 있는데 내
+  //    반이 아니면 403" 이었고, 여러 명이 문제면 **요청 순서상 처음 걸린 한 명**의 응답을
+  //    냈다. 그래서 여기서도 `parsed.data.scores` 를 원래 순서대로 훑으며 처음 걸린 것을
+  //    낸다 — 조회만 한 번으로 합치고 판정 순서는 건드리지 않는다.
+  //    (반은 Student.class_id NOT NULL 이라 학생이 있으면 반드시 있다.)
+  const studentOwners = await db.student.findMany({
+    where: {
+      id: { in: [...new Set(parsed.data.scores.map((s) => s.studentId))] },
+    },
+    select: { id: true, class: { select: { userId: true } } },
+  });
+  const ownerByStudent = new Map(
+    studentOwners.map((row) => [row.id, row.class.userId]),
+  );
   for (const entry of parsed.data.scores) {
-    const owned = await requireOwnedStudent(entry.studentId, session.id);
-    if (!owned.ok) return owned.response;
+    const ownerUserId = ownerByStudent.get(entry.studentId);
+    if (ownerUserId === undefined) return notFoundError("학생");
+    if (ownerUserId !== session.id) return forbiddenError();
   }
 
   const result = await attachActualScores(index, parsed.data, session.id);

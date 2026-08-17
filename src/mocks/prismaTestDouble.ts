@@ -746,15 +746,31 @@ const prismaModels = {
       where,
       skip = 0,
       take,
+      select,
     }: {
       where?: Record<string, unknown>;
       skip?: number;
       take?: number;
+      select?: Record<string, unknown>;
     } = {}) {
-      return paginate(
-        studentRows.filter((row) => matchesWhere(row, where)),
-        skip,
-        take,
+      return applySelect(
+        paginate(
+          studentRows.filter((row) => matchesWhere(row, where)),
+          skip,
+          take,
+        ),
+        select,
+        {
+          // 소유권은 Student 가 아니라 소속 반이 가진다. 조인해 한 번에 읽는 경로가 있다.
+          class: (row, spec) => {
+            const cls = classRows.find((c) => c.id === row.classId);
+            if (!cls) return null;
+            return applySelect(
+              [cls],
+              (spec as { select?: Record<string, unknown> }).select,
+            )[0];
+          },
+        },
       );
     },
     async count({ where }: { where?: Record<string, unknown> } = {}) {
