@@ -290,6 +290,24 @@
   margin-bottom: 6px;
 }
 
+/* 서술형 표시 (D-07 시안 A — 번호 옆 인라인 배지).
+   본문에 박혀 있던 원본 라벨 `[서술형 3]` 을 걷어낸 자리를 조판이 채운다.
+   문항 열이 1.15fr 로 좁아 오른쪽 끝 정렬(시안 C)은 짧은 발문에서 배지가
+   붕 뜬다. 번호 줄의 시선 흐름을 깨지 않는 인라인을 기본으로 둔다.
+   ⚠️ 지면 형태라 원장님 확정 대상이다 — tracks/reports/render-c-body-postfix.md §3. */
+.essayBadge {
+  margin-left: 8px;
+  padding: 2px 6px;
+  border: 1px solid var(--paper-gold);
+  border-radius: 2px;
+  color: var(--paper-gold);
+  font-family: var(--paper-font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  vertical-align: 2px;
+}
+
 .problemText {
   color: var(--paper-ink);
   font-size: 12.5px;

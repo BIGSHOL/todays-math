@@ -48,6 +48,9 @@ export default async function TestPrintPage({ params }: TestPrintPageProps) {
           content: item.problem.content,
           answer: item.problem.answer,
           solution: item.problem.solution,
+          // 본문에서 원본 라벨 `[서술형 3]` 을 걷어낸 뒤로 지면의 「서술형 n」
+          // 표시는 **이 컬럼 하나**에 달려 있다(assignEssayLabels).
+          questionType: item.problem.questionType,
           // 원본에서 오려 온 그림 — 인쇄물에도 같이 나가야 문제가 성립한다.
           figureUrls: item.problem.figureUrls,
         })),
