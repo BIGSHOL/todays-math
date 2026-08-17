@@ -1,0 +1,798 @@
+{
+ "적용": "directUseAllowed=false (출제 풀 제외)",
+ "근거": "scripts/classify/reports/unit-audit-consolidated.json",
+ "바꾼건수": 158,
+ "되돌리기": "ALLOW_UNIT_FIX=1 npx tsx scripts/classify/apply-unit-audit-mitigation.ts --revert",
+ "이전상태": [
+  {
+   "id": "00057ae7-abc8-4fba-8b88-38bb2881f8c2",
+   "externalId": null,
+   "directUseAllowed": true
+  },
+  {
+   "id": "0185c08a-1b48-4510-af70-7992a1737565",
+   "externalId": "019fd1d5-5cdb-7570-b0ef-7664808d6a52",
+   "directUseAllowed": true
+  },
+  {
+   "id": "03161b24-0016-494c-8a8a-09d9f98fb061",
+   "externalId": "019fd1da-f58a-7593-bda0-00fc24bb9bd6",
+   "directUseAllowed": true
+  },
+  {
+   "id": "043d7657-9244-4b5d-89be-49f6c0367231",
+   "externalId": "019fd1d7-91e6-75ed-af5c-b6fa98369c14",
+   "directUseAllowed": true
+  },
+  {
+   "id": "04808078-ec82-43a7-b177-590dbc6eb46b",
+   "externalId": "019fd1d5-62cb-74b6-affb-79d8c931c2b4",
+   "directUseAllowed": true
+  },
+  {
+   "id": "0562a4d6-acbc-4145-ae40-0064fb9520f1",
+   "externalId": "019fd1dc-a6c3-741f-881b-1d383ec1d2ef",
+   "directUseAllowed": true
+  },
+  {
+   "id": "0635f96b-d5b2-4af7-bd50-b74e06a65122",
+   "externalId": "019fd1d7-8fd0-7684-8e1b-1b39973c2921",
+   "directUseAllowed": true
+  },
+  {
+   "id": "079322ec-2ced-4ad4-b30f-e54e5fade87d",
+   "externalId": "019fd1d5-581b-7184-8bf1-fd7da587c3e5",
+   "directUseAllowed": true
+  },
+  {
+   "id": "09f03681-bfdd-4c24-b592-38804e0f726f",
+   "externalId": "019fd1d7-d6c6-77ff-b61e-e530d0e45550",
+   "directUseAllowed": true
+  },
+  {
+   "id": "0ac20945-c967-4e61-b8d2-e620d9a2a1c8",
+   "externalId": "5364-12",
+   "directUseAllowed": true
+  },
+  {
+   "id": "0e2495a5-aa80-4fc9-9435-7eb96ad11c4a",
+   "externalId": "019fd1da-f6d2-7168-8542-c5805ab68b34",
+   "directUseAllowed": true
+  },
+  {
+   "id": "0e29ef80-82fa-4714-92a8-55cd262f82f1",
+   "externalId": "019fd1d5-5a19-7772-b42c-8da50e39eaa3",
+   "directUseAllowed": true
+  },
+  {
+   "id": "0ed2d328-29b2-44d5-b549-383bd298f083",
+   "externalId": "019fd1dc-a67a-7238-947c-805a623f8a59",
+   "directUseAllowed": true
+  },
+  {
+   "id": "0f71d7f9-c6dc-4d93-900e-2e730a5627db",
+   "externalId": "4436-16",
+   "directUseAllowed": true
+  },
+  {
+   "id": "0feae743-ec96-464d-bf48-6531e3013d08",
+   "externalId": "019fd1d5-657a-758f-9e0f-4237603d1673",
+   "directUseAllowed": true
+  },
+  {
+   "id": "1064e295-622a-45a9-a193-a176d27a4d89",
+   "externalId": "019fd1d5-589d-770a-87ee-672c4b575c7d",
+   "directUseAllowed": true
+  },
+  {
+   "id": "10d68bf2-f533-4923-b1dc-4106898fbf06",
+   "externalId": "019fd1d7-d4c2-76cf-867e-59c91977d92a",
+   "directUseAllowed": true
+  },
+  {
+   "id": "110362e8-a314-4b45-aacd-220aedc5ae79",
+   "externalId": null,
+   "directUseAllowed": true
+  },
+  {
+   "id": "124fec00-cbc6-458c-93de-792469a48d6f",
+   "externalId": "5649-12",
+   "directUseAllowed": true
+  },
+  {
+   "id": "13d3539b-b387-4f72-8cd2-19011e485b1f",
+   "externalId": "2683-14",
+   "directUseAllowed": true
+  },
+  {
+   "id": "16efb851-b50b-4fc1-92f5-60c60dde651c",
+   "externalId": "019fd1d5-61f5-759f-861a-fcf7df44fbef",
+   "directUseAllowed": true
+  },
+  {
+   "id": "1964e99d-d777-4fc0-8edf-fa20d7614ca9",
+   "externalId": "019fd1d6-f293-7407-a191-8c07d0ed14d1",
+   "directUseAllowed": true
+  },
+  {
+   "id": "19eabf36-272a-46cd-b8e7-98e5250555ed",
+   "externalId": "019fd1dc-a70a-7545-b635-24487b6a5bc6",
+   "directUseAllowed": true
+  },
+  {
+   "id": "1a77cae7-5585-4eec-a9cd-0c104ae5c152",
+   "externalId": "019fd1d7-d511-776f-93ee-0ed2b4eadc64",
+   "directUseAllowed": true
+  },
+  {
+   "id": "1b302ca4-aa83-4f99-9e80-d0d62b57de08",
+   "externalId": "019fd1d7-9276-7112-beb2-69a54e47548d",
+   "directUseAllowed": true
+  },
+  {
+   "id": "1db62476-ba3d-4608-95e7-2c7a67b40539",
+   "externalId": "5364-16",
+   "directUseAllowed": true
+  },
+  {
+   "id": "1f389782-6738-4699-9c82-46895eb752d1",
+   "externalId": "5649-20",
+   "directUseAllowed": true
+  },
+  {
+   "id": "207ee0db-1734-45a8-8d72-a813238c2c2f",
+   "externalId": "019fd1d5-5e39-71bc-b002-8fdc769dbf0a",
+   "directUseAllowed": true
+  },
+  {
+   "id": "20ae5997-c1e8-4cab-a565-6a9ccd2ff955",
+   "externalId": "019fd1de-4bc0-747b-b8d0-db2a35c9cf5e",
+   "directUseAllowed": true
+  },
+  {
+   "id": "210c8b82-8730-4570-9ec5-39920df7596d",
+   "externalId": "019fd1d5-5920-7579-ba67-058c2003753a",
+   "directUseAllowed": true
+  },
+  {
+   "id": "2155d284-219d-41da-8151-ad54410d1d56",
+   "externalId": "019fd1d9-125e-72fa-9c25-f37d49f5d614",
+   "directUseAllowed": true
+  },
+  {
+   "id": "240cfff7-3b90-47ef-9d47-fd24de6d1d83",
+   "externalId": "019fd1d5-59dc-706d-a378-231c4076b186",
+   "directUseAllowed": true
+  },
+  {
+   "id": "25af855e-48f3-4b1d-9163-e87b46473c90",
+   "externalId": "019fd1d5-579a-711d-aee1-ac009e499527",
+   "directUseAllowed": true
+  },
+  {
+   "id": "2664ab77-f722-42b7-b0ef-ba7a0ac1941d",
+   "externalId": "5824-20",
+   "directUseAllowed": true
+  },
+  {
+   "id": "2719ef3d-0aec-4731-9ac9-63f56339ae94",
+   "externalId": null,
+   "directUseAllowed": true
+  },
+  {
+   "id": "272e425b-4f54-47c3-abbb-202729a2e304",
+   "externalId": "019fd1d5-65be-7089-8ed2-19defe222442",
+   "directUseAllowed": true
+  },
+  {
+   "id": "27503ff7-089e-4fe0-a66f-6041eb5f45b1",
+   "externalId": "019fd1d5-623c-77af-989a-1fce31d17557",
+   "directUseAllowed": true
+  },
+  {
+   "id": "2906b3f7-9be7-411a-91bc-e37ab6aafa6b",
+   "externalId": "4496-21",
+   "directUseAllowed": true
+  },
+  {
+   "id": "2a5f72e9-9b3d-48d1-8037-95cebddcdcd4",
+   "externalId": "019fd1da-f8f3-720e-aef6-0fc4989e0021",
+   "directUseAllowed": true
+  },
+  {
+   "id": "2f0f0caf-4e22-43bd-aeba-0fb3a2628fc1",
+   "externalId": "019fd1de-4eab-7593-87c3-0d8cd79d7407",
+   "directUseAllowed": true
+  },
+  {
+   "id": "30c2ae44-a101-41d2-9210-6f8f918cb970",
+   "externalId": "019fd1d5-5759-76ff-b905-2e581e5e166c",
+   "directUseAllowed": true
+  },
+  {
+   "id": "33cf3cfd-89ab-47dd-bff7-d5189b6ca43c",
+   "externalId": "019fd1d6-199c-7728-8e7f-08715aff3dc0",
+   "directUseAllowed": true
+  },
+  {
+   "id": "366d5a59-9e91-4e27-80a1-7a64f52d7e36",
+   "externalId": "019fd1d9-12a5-724b-bc37-3313ee0a9c5b",
+   "directUseAllowed": true
+  },
+  {
+   "id": "37192668-b960-4884-8437-50e6a537c4f9",
+   "externalId": "4544-3",
+   "directUseAllowed": true
+  },
+  {
+   "id": "378d9735-7728-451e-9f6f-eb8777e74c72",
+   "externalId": null,
+   "directUseAllowed": true
+  },
+  {
+   "id": "38df5724-6587-4534-94d8-9c06e67aee9f",
+   "externalId": "019fd1d7-3f05-7071-aa9f-d6331bfa46ec",
+   "directUseAllowed": true
+  },
+  {
+   "id": "3af2521c-c7a1-4032-9cfb-82e5bc00a861",
+   "externalId": "019fd1d5-5f12-750e-ad32-c1e97ef7866d",
+   "directUseAllowed": true
+  },
+  {
+   "id": "3da9b357-0802-4e4a-8b20-70c50f440179",
+   "externalId": "5652-21",
+   "directUseAllowed": true
+  },
+  {
+   "id": "3db0984e-ae70-4137-986b-b1b069d17a7c",
+   "externalId": "5649-17",
+   "directUseAllowed": true
+  },
+  {
+   "id": "41739c0e-8aa7-4a78-8b01-325f991eac97",
+   "externalId": "4496-12",
+   "directUseAllowed": true
+  },
+  {
+   "id": "4562e87d-3a1c-4c41-a060-e322944430ea",
+   "externalId": "019fd1d7-3fb6-7259-a51a-1af322d27308",
+   "directUseAllowed": true
+  },
+  {
+   "id": "4822f891-e80d-4f71-8561-606c9266f3be",
+   "externalId": null,
+   "directUseAllowed": true
+  },
+  {
+   "id": "4825c17d-3485-4741-9d4e-8594c7e45884",
+   "externalId": "019fd1d7-d5b9-7397-8883-b14542ad2fd4",
+   "directUseAllowed": true
+  },
+  {
+   "id": "4a914de1-10c3-4f92-90c8-7dfb463d06c5",
+   "externalId": "019fd1d5-5a97-7752-9ddf-fd565b41f5cd",
+   "directUseAllowed": true
+  },
+  {
+   "id": "4a98baf8-6634-4ece-bd50-935b1f51fde2",
+   "externalId": "019fd1d7-d462-70a5-b945-ba35ef5f7b2a",
+   "directUseAllowed": true
+  },
+  {
+   "id": "4b7fb7a7-4cfe-43f2-83c4-10d49249567c",
+   "externalId": null,
+   "directUseAllowed": true
+  },
+  {
+   "id": "4c0d70f1-748a-42ca-8f76-186830915ad4",
+   "externalId": "019fd1db-20e3-763c-a51e-7396cf486d59",
+   "directUseAllowed": true
+  },
+  {
+   "id": "521e0c6e-f860-4564-a397-90fe3396a523",
+   "externalId": "019fd1da-f808-76bb-903a-7f03e866562f",
+   "directUseAllowed": true
+  },
+  {
+   "id": "55e336d5-bbbf-40a6-9c1d-2f1e4b584c03",
+   "externalId": "5364-14",
+   "directUseAllowed": true
+  },
+  {
+   "id": "573fc22f-aea6-494f-91bb-6f5d2c3d6c74",
+   "externalId": "019fd1d5-5d6c-751a-8de2-1516ca0e4556",
+   "directUseAllowed": true
+  },
+  {
+   "id": "5c4b574b-5c91-4b42-a2c2-dab61fef2645",
+   "externalId": "019fd1d5-569a-76c1-ac66-b8dc1530cb0c",
+   "directUseAllowed": true
+  },
+  {
+   "id": "5dd9294d-9b4b-4df7-ba93-b3ea29d6eae6",
+   "externalId": "019fd1d5-5c58-721e-9fed-a85025bdfc5c",
+   "directUseAllowed": true
+  },
+  {
+   "id": "5f543ae3-4e79-45c3-b251-a20e5f1ea55a",
+   "externalId": "019fd1da-85c2-70ee-8b94-92dfaa0e7379",
+   "directUseAllowed": true
+  },
+  {
+   "id": "613de6e5-f63c-44a5-8b85-63af624ff158",
+   "externalId": "5364-13",
+   "directUseAllowed": true
+  },
+  {
+   "id": "6141df09-e468-40a5-ae54-2918a51616b3",
+   "externalId": "019fd1d7-8f42-763d-8d8e-d0534f7eb567",
+   "directUseAllowed": true
+  },
+  {
+   "id": "62071e42-09ef-41e1-aef0-0c83c48c5daf",
+   "externalId": "4505-7",
+   "directUseAllowed": true
+  },
+  {
+   "id": "643fe7c7-45c6-463b-bf6b-c1b5c7dcaf1d",
+   "externalId": "019fd1d5-5ebe-71ab-b3e8-06cc900b814e",
+   "directUseAllowed": true
+  },
+  {
+   "id": "644b57d7-8dcd-4442-9b6f-6edf59452435",
+   "externalId": null,
+   "directUseAllowed": true
+  },
+  {
+   "id": "6d6ce87e-f2fc-400a-8b1b-9b9c335ff822",
+   "externalId": "019fd1d5-5650-75c9-a975-6b5a345be812",
+   "directUseAllowed": true
+  },
+  {
+   "id": "70732174-414e-4b07-8700-48b75249d34c",
+   "externalId": "019fd1db-1fcf-70ef-a056-ac69c14fb7e9",
+   "directUseAllowed": true
+  },
+  {
+   "id": "71303643-bc43-4ae8-bb07-794465f798b8",
+   "externalId": "019fd1d5-5e7c-72f9-8e3c-31da3f5096a4",
+   "directUseAllowed": true
+  },
+  {
+   "id": "7332caf7-be20-4f40-a787-6af17a307c72",
+   "externalId": "019fd1d7-3da9-7548-9d9d-a593f5dc91ad",
+   "directUseAllowed": true
+  },
+  {
+   "id": "75e1b014-1099-46e8-823e-2661324cb3ba",
+   "externalId": "019fd1d5-699e-7572-b753-fd31374642fe",
+   "directUseAllowed": true
+  },
+  {
+   "id": "76023ebf-7864-4372-ad19-aa28ee98501e",
+   "externalId": "5360-14",
+   "directUseAllowed": true
+  },
+  {
+   "id": "7ccd2aab-7b59-43d7-8d53-f2e7be02498a",
+   "externalId": "019fd1da-f5fc-75cc-bb49-85a612edf2e5",
+   "directUseAllowed": true
+  },
+  {
+   "id": "7e130825-4a06-47ce-aae1-416900abb136",
+   "externalId": "5652-20",
+   "directUseAllowed": true
+  },
+  {
+   "id": "7e554ae0-73b5-4461-9504-96b06cac245b",
+   "externalId": "5649-21",
+   "directUseAllowed": true
+  },
+  {
+   "id": "7f4808b4-066a-473f-a84b-a369e8c19a82",
+   "externalId": "019fd1d6-1a3e-77e2-919f-53d81c28df37",
+   "directUseAllowed": true
+  },
+  {
+   "id": "80e69348-5b60-4d3e-9280-0dc178fecec3",
+   "externalId": "019fd1da-f667-7214-8cbf-b42ddb00ebee",
+   "directUseAllowed": true
+  },
+  {
+   "id": "826bfe69-e839-49f8-b6eb-037361c45d42",
+   "externalId": "019fd1d5-5f52-770d-87bd-1c7da199c178",
+   "directUseAllowed": true
+  },
+  {
+   "id": "83370e33-cb6f-4ce5-8b0f-cf78ecba5966",
+   "externalId": "019fd1d5-6286-72b7-8687-c8e17e90affc",
+   "directUseAllowed": true
+  },
+  {
+   "id": "849e5e13-50f8-42d0-b136-99a42c6ec4b1",
+   "externalId": "019fd1d7-3f62-731b-819a-ff261e0c72b0",
+   "directUseAllowed": true
+  },
+  {
+   "id": "857ae446-85b9-4b1d-a0af-03ea7929123c",
+   "externalId": "019fd1d5-58de-70d7-b3d4-8d32a7876904",
+   "directUseAllowed": true
+  },
+  {
+   "id": "86c0f47b-c956-48bf-80db-11244357cb04",
+   "externalId": "019fd1da-f973-7746-bcdd-89ae39860745",
+   "directUseAllowed": true
+  },
+  {
+   "id": "86f8499d-7e6d-4c68-aca6-810618136496",
+   "externalId": "019fd1da-f7a9-73ef-9787-5efa4c5b6b38",
+   "directUseAllowed": true
+  },
+  {
+   "id": "89086b06-5f13-48ad-bc70-10593a6a25f9",
+   "externalId": "019fd1d5-695d-73ed-8b90-81f0c494411a",
+   "directUseAllowed": true
+  },
+  {
+   "id": "8b5b2682-42eb-4b6c-9b1e-e49f794a09e2",
+   "externalId": "019fd1d7-3e5d-74dc-a522-36989b0e267b",
+   "directUseAllowed": true
+  },
+  {
+   "id": "8e01f7eb-f0bb-4951-8d79-c30c077dd809",
+   "externalId": "019fd1d5-5c9a-73f9-ab47-fb202edfb72a",
+   "directUseAllowed": true
+  },
+  {
+   "id": "8eac70e4-2274-43f8-bced-7a59ea074fca",
+   "externalId": "019fd1d5-5a58-759f-a87d-42b460f27c2f",
+   "directUseAllowed": true
+  },
+  {
+   "id": "8eb253d5-e52b-4cb7-9144-9608a03a80a7",
+   "externalId": "019fd1da-8643-749a-af9e-e69ee8346193",
+   "directUseAllowed": true
+  },
+  {
+   "id": "8f6be595-2169-4a44-b0e7-9facdac619d3",
+   "externalId": "5173-7",
+   "directUseAllowed": true
+  },
+  {
+   "id": "9018c460-755b-4392-b633-051526fff264",
+   "externalId": "019fd1db-208b-77da-9197-f5354b10335b",
+   "directUseAllowed": true
+  },
+  {
+   "id": "91dd8727-c2ac-415e-b25d-02bf2d8590cc",
+   "externalId": "019fd1d5-5bd6-71e8-9345-20f6d2e7869f",
+   "directUseAllowed": true
+  },
+  {
+   "id": "99a05ddc-00fc-41a9-8af7-91435d3ae597",
+   "externalId": "019fd1d5-5ad6-76dd-ac5f-d8f9051c428c",
+   "directUseAllowed": true
+  },
+  {
+   "id": "9aefbf8f-ab87-4226-85ce-145f91ffb11a",
+   "externalId": "019fd1d6-f2ed-701f-aaeb-63d4b73211b1",
+   "directUseAllowed": true
+  },
+  {
+   "id": "9afeebc4-c224-4ad9-8ae7-2f57c479bbe2",
+   "externalId": "5649-11",
+   "directUseAllowed": true
+  },
+  {
+   "id": "9bb22128-aaad-4495-9df2-14f0807c4fdd",
+   "externalId": "019fd1da-86a9-76a1-93c0-6122cd1380bd",
+   "directUseAllowed": true
+  },
+  {
+   "id": "9d2c77af-c8c1-4bbf-ae97-74af521b57c0",
+   "externalId": "4384-25",
+   "directUseAllowed": true
+  },
+  {
+   "id": "9ec91832-acff-4241-9812-ea97d8dfb39b",
+   "externalId": "4496-2",
+   "directUseAllowed": true
+  },
+  {
+   "id": "a2d0ee18-c35a-4650-8beb-56aa753ebb6f",
+   "externalId": "019fd1dc-a7a3-714e-86e6-6d21a79ce1eb",
+   "directUseAllowed": true
+  },
+  {
+   "id": "a2d168ab-61f7-4858-87ec-354f97efd2e6",
+   "externalId": "019fd1d7-d567-722d-9fc4-e266c93fd804",
+   "directUseAllowed": true
+  },
+  {
+   "id": "a3e27179-f07f-489d-af7c-4cc8d328445a",
+   "externalId": "019fd1de-4cd2-7635-bc59-b8593bcdc16c",
+   "directUseAllowed": true
+  },
+  {
+   "id": "ab3a38bf-95f5-4e0f-b3c8-feb885f694fd",
+   "externalId": "019fd1da-84f3-7674-bbc1-4c6762930fc5",
+   "directUseAllowed": true
+  },
+  {
+   "id": "ad59ca5c-8643-46d0-9468-b956f4b57449",
+   "externalId": "019fd1d5-5b55-7425-b948-336d15b658ce",
+   "directUseAllowed": true
+  },
+  {
+   "id": "af9d7724-2b0b-4843-95b6-04ca29da315e",
+   "externalId": "019fd1db-202b-770c-9c7d-260584e879c3",
+   "directUseAllowed": true
+  },
+  {
+   "id": "b1658c38-86bf-4c16-85f9-5a2ae86ae330",
+   "externalId": "019fd1d5-63bb-738c-89b7-d7747891117a",
+   "directUseAllowed": true
+  },
+  {
+   "id": "b31c5871-d5ce-43a4-bf8a-a88de138e600",
+   "externalId": "019fd1d5-585d-7037-9bdc-bf792fdd355e",
+   "directUseAllowed": true
+  },
+  {
+   "id": "b85dd098-1506-4f87-ab1f-c595b5690dd0",
+   "externalId": "019fd1d5-5daf-733e-97d4-03e804f4050e",
+   "directUseAllowed": true
+  },
+  {
+   "id": "baab67f3-7610-44c9-a8e3-fbe0c1f26ac3",
+   "externalId": "019fd1db-1eb3-7458-9848-357c2983e402",
+   "directUseAllowed": true
+  },
+  {
+   "id": "bad3fe52-4104-4c0a-8254-689e7a07c2d5",
+   "externalId": "019fd1dc-a752-709d-8cc9-da5951755c4e",
+   "directUseAllowed": true
+  },
+  {
+   "id": "bb5fe660-185a-4deb-8f9d-927e87a539f3",
+   "externalId": "019fd1da-870d-734a-b2bf-c251e5361dfe",
+   "directUseAllowed": true
+  },
+  {
+   "id": "be90d8cd-eec0-4175-bfa3-4ad2ca471582",
+   "externalId": null,
+   "directUseAllowed": true
+  },
+  {
+   "id": "bea1eb9b-2cdc-493c-b081-45c1d49c0fbe",
+   "externalId": "5360-16",
+   "directUseAllowed": true
+  },
+  {
+   "id": "bfc4bcd6-3d8a-44df-9b6c-33d2c45be5bf",
+   "externalId": "019fd1db-1e57-7405-9fae-d76ebce35efa",
+   "directUseAllowed": true
+  },
+  {
+   "id": "c0c130e1-6d7d-4227-ae83-4ce7376c30fa",
+   "externalId": "019fd1d7-3b5f-75df-913e-05bed8592167",
+   "directUseAllowed": true
+  },
+  {
+   "id": "c0c866d0-c1da-4249-9af0-af88a64a2709",
+   "externalId": "019fd1de-4c48-7311-bfea-826e58b2a0f5",
+   "directUseAllowed": true
+  },
+  {
+   "id": "c1234f7c-7db6-4cb8-b542-0d3a02d6a60c",
+   "externalId": "019fd1d5-56d9-77aa-be52-638503326fc3",
+   "directUseAllowed": true
+  },
+  {
+   "id": "c1bb1b41-6db6-4a49-8612-7e50b330b71e",
+   "externalId": "5652-16",
+   "directUseAllowed": true
+  },
+  {
+   "id": "c613a0bb-1230-4474-93c0-f144bac7b123",
+   "externalId": "019fd1d5-5df3-718e-82a1-e1842fe86962",
+   "directUseAllowed": true
+  },
+  {
+   "id": "c67d5ab4-e7d1-45da-914d-9b521d4b62d8",
+   "externalId": "4384-3",
+   "directUseAllowed": true
+  },
+  {
+   "id": "c6ba5ab6-fae2-4e11-9fb8-72f44ccc66d3",
+   "externalId": "019fd1dc-e539-719d-91e6-5d3240878d23",
+   "directUseAllowed": true
+  },
+  {
+   "id": "c815399f-9d59-46be-8c63-95a32f6e02e8",
+   "externalId": "019fd1dc-a7ed-750b-88e5-390bb7447363",
+   "directUseAllowed": true
+  },
+  {
+   "id": "c84336c3-8472-4389-8e63-72aa48efdb6f",
+   "externalId": "4496-3",
+   "directUseAllowed": true
+  },
+  {
+   "id": "c88153ec-e282-4a9d-b8e6-7240f72a91c0",
+   "externalId": "019fd1da-f86e-700c-82d7-708737e07a5f",
+   "directUseAllowed": true
+  },
+  {
+   "id": "c9001f6e-fbf6-4d10-88a2-8c1e0089d249",
+   "externalId": "019fd1d5-6601-757a-9494-f15b82b9b4ff",
+   "directUseAllowed": true
+  },
+  {
+   "id": "ca0cd971-9d22-44bd-9b09-69a4f0ca73f8",
+   "externalId": "019fd1d5-5b15-7252-9839-88246994ec43",
+   "directUseAllowed": true
+  },
+  {
+   "id": "cca51a28-31b2-430c-924b-076428dce123",
+   "externalId": "019fd1d5-6689-70ca-ad27-efa577fe2996",
+   "directUseAllowed": true
+  },
+  {
+   "id": "ce17ee56-ca59-4f01-b313-2d45fa70bbeb",
+   "externalId": "019fd1d7-3eab-739b-aabe-2067839c48e4",
+   "directUseAllowed": true
+  },
+  {
+   "id": "cec13155-81e5-4323-852b-d00469a2fd07",
+   "externalId": "019fd1d5-691b-76dc-ad10-78d743de897a",
+   "directUseAllowed": true
+  },
+  {
+   "id": "d0563498-ef0b-4dd1-9391-7cffa91a03f7",
+   "externalId": "5759-13",
+   "directUseAllowed": true
+  },
+  {
+   "id": "d0e1f192-9cac-4ef4-8e16-601955cc6a3a",
+   "externalId": "019fd1d5-68d6-766f-b19e-815f5fdfa748",
+   "directUseAllowed": true
+  },
+  {
+   "id": "d50b1eb2-5819-4017-9356-8bd5995d0ba9",
+   "externalId": "4384-23",
+   "directUseAllowed": true
+  },
+  {
+   "id": "d52433b6-3ee6-4131-9f6a-81de44333691",
+   "externalId": "3982-21",
+   "directUseAllowed": true
+  },
+  {
+   "id": "d55de7cd-96e1-487f-b496-1dda834c21f0",
+   "externalId": "5364-15",
+   "directUseAllowed": true
+  },
+  {
+   "id": "d7c3fc9e-aa7f-445d-a61d-ba1ce68b84fe",
+   "externalId": "4509-5",
+   "directUseAllowed": true
+  },
+  {
+   "id": "d88ce3c1-d078-4090-be13-915934b78c9a",
+   "externalId": "019fd1dc-a838-7528-a781-b7729d03014d",
+   "directUseAllowed": true
+  },
+  {
+   "id": "d8e6e179-2687-4209-ad71-1e9a3064d1b0",
+   "externalId": "019fd1db-1f71-7787-b729-3b95b452f413",
+   "directUseAllowed": true
+  },
+  {
+   "id": "da75917f-9728-4e9f-a481-9e517bd59e38",
+   "externalId": "5293-1",
+   "directUseAllowed": true
+  },
+  {
+   "id": "dce5fb81-1a34-46d0-83a5-410f7c1367d2",
+   "externalId": "019fd1d5-5d21-7129-9530-a408ecb2ff29",
+   "directUseAllowed": true
+  },
+  {
+   "id": "defef57c-ce99-41e4-91f6-cf9cd0e5026b",
+   "externalId": "5173-6",
+   "directUseAllowed": true
+  },
+  {
+   "id": "df71d409-3e8c-417c-b3ec-1f4d324e7c42",
+   "externalId": "4496-18",
+   "directUseAllowed": true
+  },
+  {
+   "id": "dfe3eead-bdb5-45cc-8968-650f7262ca3e",
+   "externalId": "4221-1",
+   "directUseAllowed": true
+  },
+  {
+   "id": "e01539fc-ae36-4744-b36e-d8ab5baa5df3",
+   "externalId": "019fd1d5-66c9-77ec-ab61-4f79854d18c3",
+   "directUseAllowed": true
+  },
+  {
+   "id": "e05bb1b9-0e01-4d03-8137-e2e959276211",
+   "externalId": "019fd1dc-e581-745f-a791-d21e17fbe48b",
+   "directUseAllowed": true
+  },
+  {
+   "id": "e134aa03-88b4-45c7-a5f7-084d16e88b14",
+   "externalId": "5649-16",
+   "directUseAllowed": true
+  },
+  {
+   "id": "e3b7fe6b-53a4-4992-bdd2-401cd0c673eb",
+   "externalId": "019fd1da-f736-7464-91d1-ad038a80960a",
+   "directUseAllowed": true
+  },
+  {
+   "id": "e3c5c9a8-dcb9-4ac9-b4f5-76bcfb54e70d",
+   "externalId": "019fd1d5-670d-7249-a269-de63b19917b7",
+   "directUseAllowed": true
+  },
+  {
+   "id": "e7f32709-2963-4901-9efb-4e29d709af1b",
+   "externalId": "019fd1d7-922f-7441-8e04-0b11ef4c3f66",
+   "directUseAllowed": true
+  },
+  {
+   "id": "e8185b2e-e05e-4d71-a4eb-74933610db8d",
+   "externalId": "019fd1da-f4d8-7682-94b5-a374d55163ad",
+   "directUseAllowed": true
+  },
+  {
+   "id": "eb7566e9-1ecb-4d13-9a98-be01a359395e",
+   "externalId": "019fd1d6-f343-7444-96fb-b98017771fe9",
+   "directUseAllowed": true
+  },
+  {
+   "id": "ecc75035-4e3c-446c-8b79-a4cccb019c10",
+   "externalId": "019fd1dc-e5d1-7340-8b1e-8f171b0de3e0",
+   "directUseAllowed": true
+  },
+  {
+   "id": "f5f78db6-51d3-4467-899d-478b5c40a287",
+   "externalId": "019fd1db-1dff-7273-97bc-8c86103dcbe1",
+   "directUseAllowed": true
+  },
+  {
+   "id": "f6d385dc-6277-4645-b236-501eaec37463",
+   "externalId": "019fd1d5-6337-754d-b1a2-f1b4e596c6cc",
+   "directUseAllowed": true
+  },
+  {
+   "id": "fa8aa8ec-8960-4346-83b8-57a384738c70",
+   "externalId": "019fd1dc-e4f3-718d-bd60-ff5824b7569a",
+   "directUseAllowed": true
+  },
+  {
+   "id": "fa8edd98-ec4d-4b08-99ee-0fcac8a8a821",
+   "externalId": "019fd1d5-57dc-73ee-9461-2c139636180a",
+   "directUseAllowed": true
+  },
+  {
+   "id": "fb03f07c-4f90-43e5-b141-2700317ef6e1",
+   "externalId": "019fd1db-1f16-723e-af1c-950c0f5eca58",
+   "directUseAllowed": true
+  },
+  {
+   "id": "fdb41213-a7b1-4163-a2eb-abb5abe967c9",
+   "externalId": "019fd1d9-12f5-71a6-9e00-59db62acf6b2",
+   "directUseAllowed": true
+  },
+  {
+   "id": "fe8fac63-e51b-4f40-9bbb-8eee6309d806",
+   "externalId": "019fd1d5-5718-775b-8b58-28fc57b12843",
+   "directUseAllowed": true
+  }
+ ]
+}
