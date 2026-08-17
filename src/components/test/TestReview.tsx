@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/Button";
@@ -21,6 +22,13 @@ export function TestReview({ testId }: Props) {
     replacedCount,
     actionError,
   } = useTestReview(testId);
+
+  // 카드마다 새 화살표 함수를 만들면 ReviewProblemCard 의 memo 가 죽는다 —
+  // 번호는 카드가 인자로 돌려주고, 여기서는 고정된 함수 하나만 넘긴다.
+  const replaceProblem = useCallback(
+    (orderIndex: number) => void replace(orderIndex),
+    [replace],
+  );
 
   if (state.status === "loading") {
     return (
@@ -64,9 +72,7 @@ export function TestReview({ testId }: Props) {
               orderIndex={item.orderIndex}
               problem={item.problem}
               replacing={replacingSeq !== null}
-              onReplace={
-                draft ? () => void replace(item.orderIndex) : undefined
-              }
+              onReplace={draft ? replaceProblem : undefined}
             />
           ))}
         </div>

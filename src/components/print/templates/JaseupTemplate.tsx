@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { A4Page } from "@/components/print/A4Page";
 import type {
   JaseupPrintMeta,
@@ -20,7 +22,13 @@ function formatPrintDate(date: string): string {
   return match ? `${match[1]}.${match[2]}.${match[3]}` : date;
 }
 
-export function JaseupTemplate({
+/**
+ * `memo` 인 이유: 한 장은 문항 두 개의 KaTeX 조판이고, 30문항이면 15장이다.
+ * 모드 전환(문제지↔정답지)·인쇄 진행 상태·오류 문구 때문에 전 장을 다시
+ * 조판할 이유가 없다. props 는 TestPrint 가 `useMemo` 로 고정해 준다
+ * (`meta` 를 매 렌더 새 객체로 만들면 이 memo 가 통째로 죽는다).
+ */
+export const JaseupTemplate = memo(function JaseupTemplate({
   meta,
   page,
   problems,
@@ -105,4 +113,4 @@ export function JaseupTemplate({
       </footer>
     </A4Page>
   );
-}
+});

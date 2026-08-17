@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import { MathText } from "@/components/math/MathText";
 import { ProblemExcerpt } from "@/components/problem/ProblemExcerpt";
@@ -12,13 +12,22 @@ import { DIFFICULTY_LABEL } from "./labels";
 type Props = {
   orderIndex: number;
   problem: ProblemEntity;
-  onReplace?: () => void;
+  /**
+   * 교체 핸들러. 호출부가 카드마다 화살표 함수를 새로 만들면 아래 `memo` 가
+   * 매 렌더 죽으므로, 번호는 인자로 받고 함수 자체는 고정된 것을 넘기게 한다.
+   */
+  onReplace?: (orderIndex: number) => void;
   replacing?: boolean;
 };
 
 const MICRO = "text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]";
 
-export function ReviewProblemCard({
+/**
+ * `memo` 인 이유: 검수는 한 화면에 최대 30카드이고 카드마다 본문 KaTeX 조판이
+ * 붙는다. 확정 진행 상태·오류 문구처럼 카드와 무관한 상태가 바뀔 때 전 카드를
+ * 다시 조판할 이유가 없다.
+ */
+export const ReviewProblemCard = memo(function ReviewProblemCard({
   orderIndex,
   problem,
   onReplace,
@@ -107,11 +116,11 @@ export function ReviewProblemCard({
           variant="ghost"
           className="shrink-0 self-start"
           disabled={replacing}
-          onClick={onReplace}
+          onClick={() => onReplace(orderIndex)}
         >
           교체
         </Button>
       ) : null}
     </article>
   );
-}
+});

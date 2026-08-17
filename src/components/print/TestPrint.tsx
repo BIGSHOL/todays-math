@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { PrintAnswerKeyPage } from "@/components/print/PrintAnswerKeyPage";
 import { JaseupTemplate } from "@/components/print/templates/JaseupTemplate";
@@ -59,17 +59,26 @@ export function TestPrint({ data, initialMode = "questions" }: TestPrintProps) {
   const [printError, setPrintError] = useState<string | null>(null);
   const [isPrinting, setIsPrinting] = useState(false);
   const title = `${TEST_TYPE_LABEL[data.testType]} · ${data.section}`;
-  const questionPages = packProblems(data.problems);
+  const problems = data.problems;
+
+  // 지면 분할·경고는 **문항 목록이 바뀔 때만** 다시 센다. 모드 전환·인쇄 중
+  // 상태·오류 문구 때문에 다시 셀 이유가 없다. 결과가 같아야 하므로
+  // `printPack.test.ts` 가 분할 출력을 잠근다 (절대 규칙 6).
+  const questionPages = useMemo(() => packProblems(problems), [problems]);
   // 지면 형태는 D-07 확정이라 바꾸지 않는다 — 잘릴 만하면 **알리기만** 한다.
-  const overflowRisks = assessOverflowRisk(data.problems);
-  const answerPages = paginateAnswerKey(data.problems);
-  const meta: JaseupPrintMeta = {
-    academyName: "오늘의수학",
-    title,
-    examDate: data.testDate,
-    todayGoal: data.todayGoal,
-    conceptNote: data.conceptNote,
-  };
+  const overflowRisks = useMemo(() => assessOverflowRisk(problems), [problems]);
+  const answerPages = useMemo(() => paginateAnswerKey(problems), [problems]);
+  // 매 렌더 새 객체를 만들면 아래 JaseupTemplate 의 memo 가 통째로 무력해진다.
+  const meta = useMemo<JaseupPrintMeta>(
+    () => ({
+      academyName: "오늘의수학",
+      title,
+      examDate: data.testDate,
+      todayGoal: data.todayGoal,
+      conceptNote: data.conceptNote,
+    }),
+    [title, data.testDate, data.todayGoal, data.conceptNote],
+  );
 
   async function printCurrentMode() {
     setIsPrinting(true);
@@ -98,7 +107,7 @@ export function TestPrint({ data, initialMode = "questions" }: TestPrintProps) {
           <div className={styles.previewEyebrow}>PRINT PREVIEW</div>
           <h1>{title}</h1>
           <p>
-            {data.className} · {data.problems.length}문항
+            {data.className} · {problems.length}문항
           </p>
         </div>
         <div className={styles.toolbarActions}>
@@ -160,7 +169,7 @@ export function TestPrint({ data, initialMode = "questions" }: TestPrintProps) {
             ))
           : answerPages.map((page, index) => (
               <PrintAnswerKeyPage
-                allProblems={data.problems}
+                allProblems={problems}
                 key={`answers-${index + 1}`}
                 page={index + 1}
                 pageProblems={page.problems}

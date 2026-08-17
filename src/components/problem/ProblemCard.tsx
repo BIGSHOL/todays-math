@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import { MathText } from "@/components/math/MathText";
 import { PaperProblemView } from "@/components/print/PaperProblemView";
@@ -17,8 +17,15 @@ type ProblemCardProps = {
  * Q 배지 + 문제 카드 + 보기 그리드 + 정답·해설 토글.
  *
  * D-30: 카드 자체는 클릭 대상이 아니다. 펼침은 실제 <button> 컨트롤만 담당한다.
+ *
+ * `memo` 인 이유: 문제은행은 한 페이지에 20카드이고 카드마다 본문·보기의 KaTeX
+ * 조판이 붙는다. 그런데 패널 열기/닫기·안내 문구·오류 문구·단원 목록 도착처럼
+ * **카드와 무관한 상태** 하나만 바뀌어도 20카드가 전부 다시 렌더됐다.
+ * `problem` 은 API 응답 객체 그대로라 이런 렌더에서 참조가 바뀌지 않는다.
  */
-export function ProblemCard({ problem }: ProblemCardProps) {
+export const ProblemCard = memo(function ProblemCard({
+  problem,
+}: ProblemCardProps) {
   const [showSolution, setShowSolution] = useState(false);
 
   return (
@@ -83,4 +90,4 @@ export function ProblemCard({ problem }: ProblemCardProps) {
       </div>
     </article>
   );
-}
+});
