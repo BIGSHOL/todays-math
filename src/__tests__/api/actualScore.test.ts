@@ -143,6 +143,23 @@ vi.mock("@/lib/db", () => {
         f.state.actualScores.push(row);
         return row;
       },
+      // 한 INSERT 로 여러 행을 넣는다(실제 코드가 새 학생을 이렇게 저장한다).
+      createMany: async ({
+        data,
+      }: {
+        data: Array<Record<string, unknown>>;
+      }) => {
+        for (const item of data) {
+          f.state.seq += 1;
+          f.state.actualScores.push({
+            id: `bbbbbbbb-0000-4000-8000-${String(f.state.seq).padStart(12, "0")}`,
+            recordedAt: new Date("2026-08-16T00:00:00.000Z"),
+            updatedAt: new Date("2026-08-16T00:00:00.000Z"),
+            ...item,
+          } as never);
+        }
+        return { count: data.length };
+      },
       update: async ({
         where,
         data,
@@ -162,8 +179,12 @@ vi.mock("@/lib/db", () => {
         return row;
       },
     },
-    async $transaction<T>(work: (tx: unknown) => Promise<T>): Promise<T> {
-      return work(db);
+    // 🔴 실제 코드는 **배열 형태**로도 부른다(`$transaction([...ops])`). 콜백만 받으면
+    //    배열이 함수가 아니라 그대로 실행돼 조용히 아무 일도 안 일어난다.
+    async $transaction<T>(
+      arg: ((tx: unknown) => Promise<T>) | Promise<unknown>[],
+    ): Promise<T | unknown[]> {
+      return typeof arg === "function" ? arg(db) : Promise.all(arg);
     },
   };
 

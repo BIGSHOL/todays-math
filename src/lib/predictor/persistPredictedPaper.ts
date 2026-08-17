@@ -136,18 +136,18 @@ export async function persistPredictedPaper(
       },
     });
 
-    for (const question of paper.questions) {
-      await tx.testProblem.create({
-        data: {
-          testId: test.id,
-          problemId: question.problemId,
-          orderIndex: question.orderIndex,
-          replaced: false,
-          // ⚠️ 조정 배점은 여기에만 쓴다. Problem.score 는 건드리지 않는다.
-          score: question.score,
-        },
-      });
-    }
+    // 🔴 문항 수만큼 INSERT 를 순차로 await 하던 자리다. 한 INSERT 로 넣는다 —
+    //    같은 트랜잭션 안이므로 "만점이 안 맞으면 아무것도 쓰지 않는다"는 그대로다.
+    // ⚠️ 조정 배점은 여기에만 쓴다. Problem.score 는 건드리지 않는다.
+    await tx.testProblem.createMany({
+      data: paper.questions.map((question) => ({
+        testId: test.id,
+        problemId: question.problemId,
+        orderIndex: question.orderIndex,
+        replaced: false,
+        score: question.score,
+      })),
+    });
 
     return test;
   });
@@ -229,16 +229,26 @@ export async function saveManualScores(
     return refuse("만점_불일치", check.message);
   }
 
-  await db.$transaction(async (tx) => {
-    for (const item of input.scores) {
-      const row = byOrder.get(item.orderIndex);
-      if (!row) continue;
-      await tx.testProblem.update({
-        where: { id: row.id },
-        data: { score: item.score },
-      });
-    }
-  });
+  // 🔴 문항 수만큼 UPDATE 를 순차로 await 하던 자리다. 같은 배점을 받는 문항끼리 묶어
+  //    `updateMany` 로 내리고, 그 묶음들을 배열 트랜잭션 하나로 보낸다(왕복 1회).
+  //    배점은 보통 몇 종류뿐이라(3·4·5점…) 25문항이 3~5개 문장으로 줄어든다.
+  //    원자성은 그대로 — 하나라도 실패하면 전부 되돌아간다.
+  const idsByScore = new Map<number, string[]>();
+  for (const item of input.scores) {
+    const row = byOrder.get(item.orderIndex);
+    if (!row) continue;
+    const bucket = idsByScore.get(item.score);
+    if (bucket) bucket.push(row.id);
+    else idsByScore.set(item.score, [row.id]);
+  }
+  await db.$transaction(
+    [...idsByScore].map(([score, ids]) =>
+      db.testProblem.updateMany({
+        where: { id: { in: ids } },
+        data: { score },
+      }),
+    ),
+  );
 
   return {
     ok: true,

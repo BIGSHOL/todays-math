@@ -95,18 +95,18 @@ export async function submitTestResult(
       },
     });
 
-    for (const g of graded) {
-      await tx.problemAnswer.create({
-        data: {
-          testResultId: testResult.id,
-          problemId: g.problemId,
-          selectedChoice: g.selectedChoice,
-          essayScore: g.essayScore,
-          isCorrect: g.isCorrect,
-          sequence: g.sequence,
-        },
-      });
-    }
+    // 🔴 문항 수만큼 INSERT 를 순차로 await 하던 자리다. 한 INSERT 로 넣는다 —
+    //    같은 트랜잭션 안이라 TestResult·ProblemAnswer·AnalysisReport 원자 생성은 그대로다.
+    await tx.problemAnswer.createMany({
+      data: graded.map((g) => ({
+        testResultId: testResult.id,
+        problemId: g.problemId,
+        selectedChoice: g.selectedChoice,
+        essayScore: g.essayScore,
+        isCorrect: g.isCorrect,
+        sequence: g.sequence,
+      })),
+    });
 
     const analysisReport = await tx.analysisReport.create({
       data: {

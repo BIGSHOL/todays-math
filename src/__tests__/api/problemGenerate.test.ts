@@ -151,17 +151,17 @@ describe("[T3.2] POST /api/problems/generate", () => {
     const before = await prismaTestDouble.problem.count({
       where: { userId: USER_TEACHER_ID },
     });
-    const realCreate = prismaTestDouble.problem.create.bind(
-      prismaTestDouble.problem,
-    );
-    let createCalls = 0;
-    const createSpy = vi
-      .spyOn(prismaTestDouble.problem, "create")
-      .mockImplementation(async (args) => {
-        createCalls += 1;
-        if (createCalls === 2) throw new Error("두 번째 저장 실패");
-        return realCreate(args);
-      });
+
+    // 🔴 이 묶음은 이제 **한 문장**으로 저장된다(`createManyAndReturn` =
+    //    `INSERT ... RETURNING`). 그래서 "두 번째 INSERT 만 실패" 라는 상태가 아예
+    //    존재할 수 없다 — 예전에는 문항 수만큼 INSERT 를 돌며 트랜잭션에 기대야 했다.
+    //    보장이 약해진 게 아니라 **더 강해졌다.** 검사는 그 사실에 맞춘다:
+    //    (1) 저장 문장이 정확히 하나이고 묶음 전체가 그 한 번에 실려 있는가,
+    //    (2) 그 문장이 실패하면 아무 행도 남지 않는가.
+    //    (1) 이 없으면 나중에 누가 다시 루프로 되돌려도 (2) 만으로는 안 잡힌다.
+    const createManySpy = vi
+      .spyOn(prismaTestDouble.problem, "createManyAndReturn")
+      .mockRejectedValueOnce(new Error("묶음 저장 실패"));
 
     try {
       await expect(
@@ -172,14 +172,17 @@ describe("[T3.2] POST /api/problems/generate", () => {
             count: 2,
           }),
         ),
-      ).rejects.toThrow("두 번째 저장 실패");
+      ).rejects.toThrow("묶음 저장 실패");
+
+      expect(createManySpy).toHaveBeenCalledTimes(1);
+      expect(createManySpy.mock.calls[0]![0]!.data).toHaveLength(2);
       expect(
         await prismaTestDouble.problem.count({
           where: { userId: USER_TEACHER_ID },
         }),
       ).toBe(before);
     } finally {
-      createSpy.mockRestore();
+      createManySpy.mockRestore();
     }
   });
 });
@@ -273,17 +276,11 @@ describe("[T3.2] POST /api/problems/transform", () => {
     const before = await prismaTestDouble.problem.count({
       where: { userId: USER_TEACHER_ID },
     });
-    const realCreate = prismaTestDouble.problem.create.bind(
-      prismaTestDouble.problem,
-    );
-    let createCalls = 0;
-    const createSpy = vi
-      .spyOn(prismaTestDouble.problem, "create")
-      .mockImplementation(async (args) => {
-        createCalls += 1;
-        if (createCalls === 2) throw new Error("두 번째 저장 실패");
-        return realCreate(args);
-      });
+
+    // 생성 쪽과 같은 이유 — 변형 묶음도 한 문장으로 저장된다. 위 주석 참조.
+    const createManySpy = vi
+      .spyOn(prismaTestDouble.problem, "createManyAndReturn")
+      .mockRejectedValueOnce(new Error("묶음 저장 실패"));
 
     try {
       await expect(
@@ -293,14 +290,17 @@ describe("[T3.2] POST /api/problems/transform", () => {
             count: 2,
           }),
         ),
-      ).rejects.toThrow("두 번째 저장 실패");
+      ).rejects.toThrow("묶음 저장 실패");
+
+      expect(createManySpy).toHaveBeenCalledTimes(1);
+      expect(createManySpy.mock.calls[0]![0]!.data).toHaveLength(2);
       expect(
         await prismaTestDouble.problem.count({
           where: { userId: USER_TEACHER_ID },
         }),
       ).toBe(before);
     } finally {
-      createSpy.mockRestore();
+      createManySpy.mockRestore();
     }
   });
 });

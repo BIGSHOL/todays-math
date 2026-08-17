@@ -165,16 +165,16 @@ export async function generateDraftTest(
       },
     });
 
-    for (const [index, problem] of selected.problems.entries()) {
-      await tx.testProblem.create({
-        data: {
-          testId: test.id,
-          problemId: problem.id,
-          orderIndex: index + 1,
-          replaced: false,
-        },
-      });
-    }
+    // 🔴 문항 수만큼 INSERT 를 순차로 await 하던 자리다(25문항이면 25왕복).
+    //    한 INSERT 로 넣는다 — 같은 트랜잭션 안이라 원자성은 그대로다.
+    await tx.testProblem.createMany({
+      data: selected.problems.map((problem, index) => ({
+        testId: test.id,
+        problemId: problem.id,
+        orderIndex: index + 1,
+        replaced: false,
+      })),
+    });
 
     const items = await tx.testProblem.findMany({
       where: { testId: test.id },

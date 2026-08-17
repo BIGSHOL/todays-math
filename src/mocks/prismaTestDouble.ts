@@ -870,6 +870,43 @@ const prismaModels = {
       problemRows.push(row);
       return row;
     },
+    /**
+     * PostgreSQL 전용 — 한 INSERT 로 넣고 넣은 행을 그대로 돌려준다.
+     * 반환 순서는 입력 순서(INSERT ... RETURNING)다. 응답이 그 순서를 그대로 싣는다.
+     */
+    async createManyAndReturn({
+      data,
+    }: {
+      data: Array<
+        Omit<
+          ProblemRow,
+          "id" | "createdAt" | "updatedAt" | "pool" | "questionType"
+        > & {
+          originProblemId?: string | null;
+          reviewStatus?: ReviewStatus;
+          pool?: "shared" | "private";
+          questionType?: string | null;
+        }
+      >;
+    }) {
+      const now = new Date();
+      const rows = data.map((item) => {
+        const row: ProblemRow = {
+          id: randomUUID(),
+          ...item,
+          questionType: item.questionType ?? null,
+          originProblemId: item.originProblemId ?? null,
+          reviewStatus: item.reviewStatus ?? "pending",
+          directUseAllowed: item.directUseAllowed ?? true,
+          pool: item.pool ?? "shared",
+          createdAt: now,
+          updatedAt: now,
+        };
+        return row;
+      });
+      problemRows.push(...rows);
+      return rows;
+    },
     async findMany({
       where,
       skip = 0,
@@ -1051,6 +1088,28 @@ const prismaModels = {
       testProblemRows.push(row);
       return row;
     },
+    async createMany({
+      data,
+    }: {
+      data: Array<{
+        testId: string;
+        problemId: string;
+        orderIndex: number;
+        replaced?: boolean;
+        score?: number | null;
+      }>;
+    }) {
+      const rows: TestProblemRow[] = data.map((item) => ({
+        id: randomUUID(),
+        testId: item.testId,
+        problemId: item.problemId,
+        orderIndex: item.orderIndex,
+        replaced: item.replaced ?? false,
+        score: item.score ?? null,
+      }));
+      testProblemRows.push(...rows);
+      return { count: rows.length };
+    },
     async findMany({
       where,
       include,
@@ -1083,6 +1142,17 @@ const prismaModels = {
       if (!row) throw new Error(`testProblem not found: ${where.id}`);
       Object.assign(row, data);
       return row;
+    },
+    async updateMany({
+      where,
+      data,
+    }: {
+      where?: Record<string, unknown>;
+      data: Partial<Omit<TestProblemRow, "id" | "testId">>;
+    }) {
+      const rows = testProblemRows.filter((row) => matchesWhere(row, where));
+      rows.forEach((row) => Object.assign(row, data));
+      return { count: rows.length };
     },
   },
   testResult: {
@@ -1168,6 +1238,30 @@ const prismaModels = {
       };
       problemAnswerRows.push(row);
       return row;
+    },
+    async createMany({
+      data,
+    }: {
+      data: Array<{
+        testResultId: string;
+        problemId: string;
+        selectedChoice: number | null;
+        essayScore: number | null;
+        isCorrect: boolean;
+        sequence: number;
+      }>;
+    }) {
+      const rows: ProblemAnswerRow[] = data.map((item) => ({
+        id: randomUUID(),
+        testResultId: item.testResultId,
+        problemId: item.problemId,
+        selectedChoice: item.selectedChoice,
+        essayScore: item.essayScore,
+        isCorrect: item.isCorrect,
+        sequence: item.sequence,
+      }));
+      problemAnswerRows.push(...rows);
+      return { count: rows.length };
     },
     async findMany({ where }: { where?: Record<string, unknown> } = {}) {
       return problemAnswerRows.filter((row) => matchesWhere(row, where));
@@ -1332,44 +1426,56 @@ export function seedActualExamScores(rows: ActualExamScoreRow[]) {
   actualExamScoreRows.push(...rows);
 }
 
+function snapshotRows() {
+  return structuredClone({
+    classRows,
+    studentRows,
+    unitRows,
+    progressRows,
+    problemRows,
+    testRows,
+    testProblemRows,
+    testResultRows,
+    problemAnswerRows,
+    analysisReportRows,
+    examRows,
+    examQuestionRows,
+  });
+}
+
+function restoreRows(snapshot: ReturnType<typeof snapshotRows>) {
+  classRows = snapshot.classRows;
+  studentRows = snapshot.studentRows;
+  unitRows = snapshot.unitRows;
+  progressRows = snapshot.progressRows;
+  problemRows = snapshot.problemRows;
+  testRows = snapshot.testRows;
+  testProblemRows = snapshot.testProblemRows;
+  testResultRows = snapshot.testResultRows;
+  problemAnswerRows = snapshot.problemAnswerRows;
+  analysisReportRows = snapshot.analysisReportRows;
+  examRows = snapshot.examRows;
+  examQuestionRows = snapshot.examQuestionRows;
+}
+
 export const prismaTestDouble = {
   ...prismaModels,
+  /**
+   * 🔴 **배열 형태도 트랜잭션이다.** 예전에는 `Promise.all` 만 하고 롤백을 안 걸었다.
+   *    실제 Prisma 의 `$transaction([...])` 은 하나가 실패하면 전부 되돌린다 —
+   *    가짜가 반쯤 쓰인 상태를 남기면 "원자성 유지"를 확인하는 테스트가 무의미해진다.
+   */
   async $transaction<T>(
     arg: ((tx: typeof prismaModels) => Promise<T>) | Promise<unknown>[],
   ): Promise<T | unknown[]> {
-    if (typeof arg === "function") {
-      const snapshot = structuredClone({
-        classRows,
-        studentRows,
-        unitRows,
-        progressRows,
-        problemRows,
-        testRows,
-        testProblemRows,
-        testResultRows,
-        problemAnswerRows,
-        analysisReportRows,
-        examRows,
-        examQuestionRows,
-      });
-      try {
-        return await arg(prismaModels);
-      } catch (error) {
-        classRows = snapshot.classRows;
-        studentRows = snapshot.studentRows;
-        unitRows = snapshot.unitRows;
-        progressRows = snapshot.progressRows;
-        problemRows = snapshot.problemRows;
-        testRows = snapshot.testRows;
-        testProblemRows = snapshot.testProblemRows;
-        testResultRows = snapshot.testResultRows;
-        problemAnswerRows = snapshot.problemAnswerRows;
-        analysisReportRows = snapshot.analysisReportRows;
-        examRows = snapshot.examRows;
-        examQuestionRows = snapshot.examQuestionRows;
-        throw error;
-      }
+    const snapshot = snapshotRows();
+    try {
+      return typeof arg === "function"
+        ? await arg(prismaModels)
+        : await Promise.all(arg);
+    } catch (error) {
+      restoreRows(snapshot);
+      throw error;
     }
-    return Promise.all(arg);
   },
 };
