@@ -16,6 +16,44 @@ import {
  * 🔴 **읽기 전용.** 이 경로에는 create/update/delete 가 없다.
  */
 
+/**
+ * 화면이 `PredictionRun` 에서 **실제로 읽는 컬럼만**.
+ *
+ * 예전에는 select 가 없어 행 전체를 읽었고, 거기에는 엔진 파라미터 스냅샷(`params`,
+ * Json — 엔진 버전마다 커진다)이 통째로 들어 있었다. 계기판은 그것을 그리지 않는다.
+ * 뺀 것: params · cutoff* · riskFlags · actualSchool* · actualRecordedAt.
+ *
+ * `PredictionRunRow`(composeRounds) 가 요구하는 필드와 1:1 이다 — 하나라도 빠지면
+ * 타입이 즉시 빨개진다. 그래서 이 목록은 조용히 어긋날 수 없다.
+ */
+const RUN_SELECT = {
+  id: true,
+  userId: true,
+  examDate: true,
+  createdAt: true,
+  engineVersion: true,
+  school: true,
+  level: true,
+  grade: true,
+  subject: true,
+  targetYear: true,
+  targetSemester: true,
+  targetRound: true,
+  inputExamIds: true,
+  predictedBlueprint: true,
+  predictedScores: true,
+} as const;
+
+/**
+ * 계기판 목록이 한 번에 읽는 회차 수 상한.
+ *
+ * ⚠️ **조용한 절단이다.** 이 목록 응답 계약(`examRoundListResponseSchema`)에는
+ * 페이지네이션 칸이 없어서 "더 있다"를 응답에 실을 수가 없다. 계약을 바꾸는 것은
+ * 이 작업(성능 수리)의 범위 밖이라, 지금은 **최신순 상한**으로 둔다.
+ * 회차가 이 수를 넘기 시작하면 목록 계약에 페이지네이션을 붙여야 한다.
+ */
+const MAX_VISIBLE_RUNS = 50;
+
 /** 이 사용자가 소유한 학생 — 반(Class.userId)까지 거슬러 확인한다. */
 export async function loadOwnedStudents(
   userId: string,
@@ -37,6 +75,24 @@ export type VisibleRuns = {
   ownedStudents: OwnedStudent[];
 };
 
+/** 회차 id 목록에 연결된 예측 문제지와 채점 존재 여부. */
+async function loadLinkedTests(runIds: string[]): Promise<LinkedTestRow[]> {
+  if (runIds.length === 0) return [];
+  const rows = await db.test.findMany({
+    where: { predictionRunId: { in: runIds } },
+    select: {
+      id: true,
+      predictionRunId: true,
+      testResults: { select: { id: true }, take: 1 },
+    },
+  });
+  return rows.map((t) => ({
+    id: t.id,
+    predictionRunId: t.predictionRunId,
+    graded: t.testResults.length > 0,
+  }));
+}
+
 /**
  * 이 사용자에게 보이는 회차 전부 — 소유자 컬럼으로 **SQL 에서** 좁힌다.
  *
@@ -53,6 +109,8 @@ export async function loadVisibleRuns(userId: string): Promise<VisibleRuns> {
     db.predictionRun.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
+      take: MAX_VISIBLE_RUNS,
+      select: RUN_SELECT,
     }),
     ownedIds.size === 0
       ? Promise.resolve([])
@@ -68,28 +126,60 @@ export async function loadVisibleRuns(userId: string): Promise<VisibleRuns> {
   const visibleRunIds = new Set(runs.map((r) => r.id));
 
   // 연결된 예측 문제지와 채점 존재 여부 — 문제지·채점 단계의 실데이터 근거.
-  const linkedRows =
-    runs.length === 0
-      ? []
-      : await db.test.findMany({
-          where: { predictionRunId: { in: [...visibleRunIds] } },
-          select: {
-            id: true,
-            predictionRunId: true,
-            testResults: { select: { id: true }, take: 1 },
-          },
-        });
-  const linkedTests: LinkedTestRow[] = linkedRows.map((t) => ({
-    id: t.id,
-    predictionRunId: t.predictionRunId,
-    graded: t.testResults.length > 0,
-  }));
+  const linkedTests = await loadLinkedTests([...visibleRunIds]);
 
   return {
     runs,
     actuals: (ownedActuals as ActualScoreRow[]).filter((a) =>
       visibleRunIds.has(a.runId),
     ),
+    ownedStudents,
+    linkedTests,
+  };
+}
+
+export type VisibleRun = {
+  run: PredictionRunRow;
+  actuals: ActualScoreRow[];
+  ownedStudents: OwnedStudent[];
+  linkedTests: LinkedTestRow[];
+};
+
+/**
+ * **회차 1건**만 읽는다 — 상세 화면 전용.
+ *
+ * 예전에는 상세도 `loadVisibleRuns` 로 내 회차를 **전부** 읽어 온 뒤 JS `find` 로 한 건을
+ * 골랐다. 회차가 늘수록 상세 1건의 비용이 같이 늘고, 실측·연결 문제지도 전 회차분을
+ * 읽어 버린다. 여기서는 그 세 조회를 전부 이 회차로 좁힌다.
+ *
+ * 🔴 소유권 판정은 그대로다 — 남의 회차는 403 이 아니라 **null**(호출부가 404)이다.
+ *    `isRunVisibleTo` 를 그대로 쓰므로 판정 근거가 한 곳에 남는다.
+ */
+export async function loadVisibleRun(
+  userId: string,
+  runId: string,
+): Promise<VisibleRun | null> {
+  const run = (await db.predictionRun.findUnique({
+    where: { id: runId },
+    select: RUN_SELECT,
+  })) as PredictionRunRow | null;
+  if (!run || !isRunVisibleTo(run, userId)) return null;
+
+  const ownedStudents = await loadOwnedStudents(userId);
+  const ownedIds = ownedStudents.map((s) => s.id);
+
+  const [ownedActuals, linkedTests] = await Promise.all([
+    ownedIds.length === 0
+      ? Promise.resolve([])
+      : db.actualExamScore.findMany({
+          where: { runId, studentId: { in: ownedIds } },
+        }),
+    loadLinkedTests([runId]),
+  ]);
+
+  return {
+    run,
+    actuals: ownedActuals as ActualScoreRow[],
     ownedStudents,
     linkedTests,
   };

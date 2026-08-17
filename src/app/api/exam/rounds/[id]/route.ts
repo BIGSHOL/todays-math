@@ -12,7 +12,7 @@ import type { NextRequest } from "next/server";
 import { examRoundDetailResponseSchema } from "@/components/exam/examScreen.contract";
 import { jsonOk, notFoundError, unauthorizedError } from "@/lib/apiResponse";
 import { toRoundDetail } from "@/lib/exam/composeRounds";
-import { loadVisibleRuns } from "@/lib/exam/loadRounds";
+import { loadVisibleRun } from "@/lib/exam/loadRounds";
 import { getSessionUser } from "@/lib/session";
 
 export async function GET(
@@ -23,13 +23,12 @@ export async function GET(
   if (!session) return unauthorizedError();
 
   const { id } = await params;
-  const { runs, actuals, ownedStudents, linkedTests } = await loadVisibleRuns(
-    session.id,
-  );
-
-  // 내게 보이는 회차 목록에서만 찾는다 — 남의 회차는 애초에 여기 없다.
-  const run = runs.find((r) => r.id === id);
-  if (!run) return notFoundError("회차");
+  // 🔴 예전에는 `loadVisibleRuns` 로 내 회차를 **전부** 읽고 JS find 로 한 건을 골랐다.
+  //    상세 1건의 비용이 회차 수에 비례해 커지는 구조였다. 소유권 판정은 그대로
+  //    (`isRunVisibleTo`) 두고 조회만 이 회차로 좁힌다 — 남의 회차는 여전히 **404** 다.
+  const visible = await loadVisibleRun(session.id, id);
+  if (!visible) return notFoundError("회차");
+  const { run, actuals, ownedStudents, linkedTests } = visible;
 
   const detail = toRoundDetail(run, actuals, ownedStudents, linkedTests);
   if (!detail) return notFoundError("회차");

@@ -892,19 +892,38 @@ const prismaModels = {
       skip = 0,
       take,
       orderBy,
+      select,
     }: {
       where?: Record<string, unknown>;
       skip?: number;
       take?: number;
       orderBy?: unknown;
+      select?: Record<string, unknown>;
     } = {}) {
-      return paginate(
-        applyOrder(
-          testRows.filter((row) => matchesWhere(row, where)),
-          orderBy,
+      return applySelect(
+        paginate(
+          applyOrder(
+            testRows.filter((row) => matchesWhere(row, where)),
+            orderBy,
+          ),
+          skip,
+          take,
         ),
-        skip,
-        take,
+        select,
+        {
+          // `loadRounds` 가 "이 시험지에 채점이 있는가"를 take:1 로 확인한다.
+          // 가짜가 이 관계를 안 채우면 `t.testResults.length` 가 그대로 터진다 —
+          // 예전에는 픽스처의 predictionRunId 가 전부 null 이라 우연히 빈 배열만 나와
+          // 이 경로가 한 번도 실행되지 않았다.
+          testResults: (row, spec) => {
+            const { take: relTake } = (spec ?? {}) as { take?: number };
+            const rows = testResultRows.filter((r) => r.testId === row.id);
+            return applySelect(
+              paginate(rows, 0, relTake),
+              (spec as { select?: Record<string, unknown> }).select,
+            );
+          },
+        },
       );
     },
     async count({ where }: { where?: Record<string, unknown> } = {}) {
@@ -1182,14 +1201,36 @@ const prismaModels = {
     async findMany({
       where,
       orderBy,
-    }: { where?: Record<string, unknown>; orderBy?: unknown } = {}) {
-      return applyOrder(
-        predictionRunRows.filter((row) => matchesWhere(row, where)),
-        orderBy,
+      take,
+      select,
+    }: {
+      where?: Record<string, unknown>;
+      orderBy?: unknown;
+      take?: number;
+      select?: Record<string, unknown>;
+    } = {}) {
+      return applySelect(
+        paginate(
+          applyOrder(
+            predictionRunRows.filter((row) => matchesWhere(row, where)),
+            orderBy,
+          ),
+          0,
+          take,
+        ),
+        select,
       );
     },
-    async findUnique({ where }: { where: { id: string } }) {
-      return predictionRunRows.find((row) => row.id === where.id) ?? null;
+    async findUnique({
+      where,
+      select,
+    }: {
+      where: { id: string };
+      select?: Record<string, unknown>;
+    }) {
+      const row = predictionRunRows.find((r) => r.id === where.id) ?? null;
+      if (!row) return null;
+      return applySelect([row], select)[0];
     },
   },
   actualExamScore: {
@@ -1204,7 +1245,12 @@ const prismaModels = {
  * (아직 예측을 안 돌린 상태가 정상) 필요한 테스트만 직접 채운다.
  */
 export function seedPredictionRuns(rows: PredictionRunRow[]) {
-  predictionRunRows.push(...rows);
+  // 🔴 실제 컬럼은 NULL 이지 **부재**가 아니다. `exam_date` 는 스키마에 늘 있고
+  //    Prisma 는 select 하면 항상 값(또는 null)을 돌려준다. 픽스처가 생략한 것을 그대로
+  //    두면 select 투영에서 "없는 필드"가 된다. 여기서 DB 기본값(NULL)으로 정규화한다.
+  //    ⚠️ NOT NULL 컬럼(`user_id`)은 **채우지 않는다** — 없으면 그대로 터져야 픽스처
+  //    누락이 드러난다. 그럴듯한 기본값을 지어넣으면 소유권 테스트가 조용히 무의미해진다.
+  predictionRunRows.push(...rows.map((row) => ({ examDate: null, ...row })));
 }
 
 export function seedActualExamScores(rows: ActualExamScoreRow[]) {
