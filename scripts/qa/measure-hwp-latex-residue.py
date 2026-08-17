@@ -12,8 +12,16 @@ BS = chr(92)
 SPAN = re.compile(r"[$]([^$]+)[$]")
 LEFTOVER = ["over", "atop", "pile", "LEFT", "RIGHT", "SUM", "INT", "LIM",
             "TIMES", "DIV", "CDOT", "ANGLE", "TRIANGLE", "SQRT", "ROOT", "OF"]
-# 백슬래시(LaTeX 명령)나 다른 영문자에 이어지지 않은 **맨 키워드**만 잔재로 센다.
+# ⚠️ 이 지표가 **구조적으로 못 세던 부류**가 있었다 (2026-08-17 발견).
+#    `DIV` 를 `(?![A-Za-z])` 로 닫아 두어 `DIVIDE` 는 뒤의 `I` 에 막혀 영원히 0이었다.
+#    그래서 "잔재 0.06% 로 줄였다"는 과거 보고가 `aDIVIDEb` 를 통째로 놓쳤고,
+#    실제 지면에는 그 날 글자가 그대로 나가고 있었다.
+#    **글루된 대문자 키워드는 앞뒤가 영문자인 것이 정상이다** — 그 lookaround 가
+#    바로 실패를 침묵시킨다. 백슬래시(정상 LaTeX 명령)만 피하면 된다.
+#    소문자 키워드는 영어 낱말의 일부일 수 있어 기존 가드를 유지한다.
+GLUED_KW = ["DIVIDE", "divide", "TIMES", "CDOTS"]
 PATS = {kw: re.compile("(?<![A-Za-z" + BS + BS + "])" + kw + "(?![A-Za-z])") for kw in LEFTOVER}
+PATS.update({kw: re.compile("(?<!" + BS + BS + ")" + kw) for kw in GLUED_KW})
 GLUED = re.compile("[A-Za-z0-9](over|atop|sqrt|root)[A-Za-z0-9]")
 cnt = collections.Counter(); spans = 0; bad = 0
 glued = collections.Counter(); badq = 0; qs_all = 0

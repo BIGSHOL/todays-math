@@ -67,10 +67,26 @@ _RMIT = re.compile(
 # `hwpeq_to_latex` 의 역매핑에 없어 그대로 새어 나오는 HWP 키워드.
 # 실측 잔재(수식 span 159,545 기준): BOX 374 · DIVIDE 189 · != 87 · == 58 · <= 7.
 # 변환 **뒤** 산출 LaTeX 에 적용한다. 앞에 백슬래시가 붙은 것(정상 명령)은 건드리지 않는다.
+#
+# ⚠️ **DIVIDE 계열의 lookaround 를 다시 좁히지 말 것** (2026-08-17 실측).
+#    원래 `(?<![\\A-Za-z])DIVIDE(?![A-Za-z])` 였다. 그런데 HWP 원본의 실제 모양은
+#    `xDIVIDE(-6)` · `aDIVIDEbDIVIDEc` · `4DIVIDEunder` 처럼 **양옆이 영문자**다.
+#    그래서 이 규칙은 "정확히 고쳐야 할 자리에서만" 안 걸렸고, 지면에 `aDIVIDEb` 가
+#    날 글자로 나갔다(DB 전수 82행 · 원장님 스크린샷). 같은 이유로 성적표였던
+#    `measure-hwp-latex-residue.py` 도 `DIV` 패턴이 뒤의 `I` 에 막혀 0을 가리켰다.
+#    영문자 lookaround 는 **정상 LaTeX 명령을 지키는 장치가 아니다** — 그건
+#    백슬래시 lookbehind 가 한다. 대문자 HWP 키워드는 영어 낱말일 리가 없다.
 _POST = [
     (re.compile(r"(?<![\\A-Za-z])(?:BOX|box)(?![A-Za-z])"), r"\\square "),
-    (re.compile(r"(?<![\\A-Za-z])DIVIDE(?![A-Za-z])"), r"\\div "),
+    (re.compile(r"(?<!\\)DIVIDE"), r"\\div "),
+    (re.compile(r"(?<!\\)divide"), r"\\div "),
+    (re.compile(r"(?<!\\)TIMES"), r"\\times "),
     (re.compile(r"(?<![\\A-Za-z])ANGL(?![A-Za-z])"), r"\\angle "),
+    # `RM`/`IT` 가 구분자를 삼킨 잔여분 — `\mathit{LEFT}(t,~t\right)` 처럼 짝 없는
+    # `\right` 를 남겨 KaTeX 를 깨뜨린다.
+    (re.compile(r"\\mathit\{LEFT\}"), r"\\left"),
+    (re.compile(r"\\mathit\{RIGHT\}"), r"\\right"),
+    (re.compile(r"\\mathit\{ANGLE([A-Za-z]*)\}"), r"\\angle \1"),
     (re.compile(r"!="), r"\\neq "),
     (re.compile(r"<="), r"\\leq "),
     (re.compile(r">="), r"\\geq "),

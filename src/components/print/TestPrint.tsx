@@ -11,6 +11,7 @@ import type {
 import { paginateAnswerKey } from "@/lib/printLayout";
 import { assessOverflowRisk } from "@/lib/printOverflow";
 import { packProblems } from "@/lib/printPack";
+import { assignEssayLabels } from "@/lib/tests/essayLabels";
 
 import styles from "./TestPrint.module.css";
 
@@ -68,6 +69,9 @@ export function TestPrint({ data, initialMode = "questions" }: TestPrintProps) {
   // 지면 형태는 D-07 확정이라 바꾸지 않는다 — 잘릴 만하면 **알리기만** 한다.
   const overflowRisks = useMemo(() => assessOverflowRisk(problems), [problems]);
   const answerPages = useMemo(() => paginateAnswerKey(problems), [problems]);
+  // 서술형 순번은 **시험지 전체**를 가로지르므로 장별로 셀 수 없다.
+  // 여기서 한 번 만들어 넘긴다 — 매 렌더 새 Map 이면 JaseupTemplate 의 memo 가 죽는다.
+  const essayLabels = useMemo(() => assignEssayLabels(problems), [problems]);
   // 매 렌더 새 객체를 만들면 아래 JaseupTemplate 의 memo 가 통째로 무력해진다.
   const meta = useMemo<JaseupPrintMeta>(
     () => ({
@@ -160,6 +164,7 @@ export function TestPrint({ data, initialMode = "questions" }: TestPrintProps) {
         {mode === "questions"
           ? questionPages.map((page, index) => (
               <JaseupTemplate
+                essayLabels={essayLabels}
                 key={`questions-${index + 1}`}
                 meta={meta}
                 page={index + 1}

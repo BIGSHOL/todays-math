@@ -15,6 +15,12 @@ interface JaseupTemplateProps {
   page: number;
   problems: TestPrintProblem[];
   startingNumber: number;
+  /**
+   * 문항 id → 서술형 지면 순번. 장 단위로 못 세는 이유는 번호가 **시험지 전체**를
+   * 가로지르기 때문이다(2장 첫 문항이 서술형 3일 수 있다). `TestPrint` 가
+   * `useMemo` 로 한 번 만들어 넘긴다 — 매 렌더 새 Map 을 만들면 이 memo 가 죽는다.
+   */
+  essayLabels?: ReadonlyMap<string, number>;
 }
 
 function formatPrintDate(date: string): string {
@@ -33,6 +39,7 @@ export const JaseupTemplate = memo(function JaseupTemplate({
   page,
   problems,
   startingNumber,
+  essayLabels,
 }: JaseupTemplateProps) {
   const isFirstPage = page === 1;
 
@@ -79,6 +86,7 @@ export const JaseupTemplate = memo(function JaseupTemplate({
       <BodyContainer>
         {problems.map((problem, index) => {
           const problemNumber = startingNumber + index;
+          const essayNumber = essayLabels?.get(problem.id);
           return (
             <article
               className={styles.problemItem}
@@ -86,7 +94,14 @@ export const JaseupTemplate = memo(function JaseupTemplate({
               key={problem.id}
             >
               <div className={styles.questionArea}>
-                <div className={styles.questionNumber}>문 {problemNumber}</div>
+                <div className={styles.questionNumber}>
+                  문 {problemNumber}
+                  {essayNumber ? (
+                    <span className={styles.essayBadge}>
+                      서술형 {essayNumber}
+                    </span>
+                  ) : null}
+                </div>
                 <ProblemBody problem={problem} />
                 <div className={styles.answerBlank}>
                   <strong>내 정답</strong>

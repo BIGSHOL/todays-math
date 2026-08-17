@@ -217,4 +217,47 @@ describe("TestPrint — 인쇄 사고 방지", () => {
     const alert = await screen.findByRole("alert");
     expect(alert).toHaveTextContent("서버");
   });
+
+  /**
+   * 원장님 지시: "서술형은 기본적으로 [서술형1] 이런 문구는 제외해야지.
+   * 문제 배치될때 알아서 스마트하게 [서술형 n] 되도록해야지."
+   * 본문에서 뗀 라벨을 **조판이** 채운다.
+   */
+  describe("서술형 지면 표시", () => {
+    const mixedTypes: TestPrintDocument = {
+      ...PRINT_DOCUMENT,
+      problems: PRINT_DOCUMENT.problems.map((problem, index) => ({
+        ...problem,
+        // 1·3·5번째가 서술형 → 지면에는 서술형 1·2·3 으로 나가야 한다.
+        questionType: index % 2 === 0 ? "서술형" : "객관식",
+      })),
+    };
+
+    it("서술형 문항에만 지면 순번을 붙인다", () => {
+      const { container } = render(<TestPrint data={mixedTypes} />);
+      const badges = [...container.querySelectorAll("[data-problem-number]")]
+        .map((el) => el.textContent ?? "")
+        .map((text) => /서술형 (\d+)/.exec(text)?.[1] ?? null);
+
+      // 문 1·3·5 만 배지를 갖고, 번호는 장을 넘어가며 이어진다.
+      expect(badges).toEqual(["1", null, "2", null, "3"]);
+    });
+
+    it("서술형이 없으면 배지를 붙이지 않는다", () => {
+      const { container } = render(<TestPrint data={PRINT_DOCUMENT} />);
+      expect(container.textContent).not.toContain("서술형");
+    });
+
+    it("questionType 을 모르면 서술형이라 단정하지 않는다", () => {
+      const unknown: TestPrintDocument = {
+        ...PRINT_DOCUMENT,
+        problems: PRINT_DOCUMENT.problems.map((p) => ({
+          ...p,
+          questionType: null,
+        })),
+      };
+      const { container } = render(<TestPrint data={unknown} />);
+      expect(container.textContent).not.toContain("서술형");
+    });
+  });
 });
