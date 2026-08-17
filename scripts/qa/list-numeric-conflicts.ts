@@ -27,6 +27,34 @@ const OUT = "docs/planning/14-answer-conflicts-review.md";
 /** RPM(transformed) 번호 충돌. `recover-rpm-answers.ts` 가 자동 교정하지 않고 남긴 것. */
 const RPM_CONFLICTS = "scripts/qa/reports/rpm-number-conflicts.json";
 
+/** 이 줄 아래는 생성기가 건드리지 않는다. 사람이 조사해 넣은 절이 산다. */
+export const SENTINEL =
+  "<!-- 생성기 경계 — 아래는 손으로 쓴 절이다. 덮어쓰지 마라 -->";
+
+const DEFAULT_TAIL = [
+  SENTINEL,
+  "",
+  "---",
+  "",
+  "재생성: `npx tsx scripts/qa/list-numeric-conflicts.ts`",
+  "**§1·§2 만 다시 만든다.** 위 표식 아래는 손대지 않는다.",
+  "",
+  "지면을 직접 보고 싶으시면 그 줄만 오려서 그림으로 냅니다 —",
+  "`python scripts/qa/shot-official-answer.py <examId>-<번호> ...`",
+  "",
+].join("\n");
+
+/** 기존 문서에서 표식 이후를 그대로 돌려준다. 없으면 null. */
+async function readTailBelowSentinel(): Promise<string | null> {
+  try {
+    const current = await readFile(OUT, "utf-8");
+    const at = current.indexOf(SENTINEL);
+    return at === -1 ? null : current.slice(at);
+  } catch {
+    return null;
+  }
+}
+
 interface Row {
   id: string;
   externalId: string;
@@ -48,11 +76,7 @@ const NUMERIC = /^-?\d+(?:\.\d+)?$/;
 
 /** 정답면 블록 원문. 표에 그대로 넣을 수 있게 한 줄로 접는다. */
 function fold(text: string): string {
-  return text
-    .replace(/\s+/g, " ")
-    .replace(/\|/g, "\\|")
-    .trim()
-    .slice(0, 70);
+  return text.replace(/\s+/g, " ").replace(/\|/g, "\\|").trim().slice(0, 70);
 }
 
 /** `14` 가 `143` 의 앞자리인지 — 자릿수가 잘린 낌새. */
@@ -73,9 +97,9 @@ async function main(): Promise<void> {
     rules: Array<{ rule: string; verdict: string; items: Row[] }>;
   };
   const pairs = new Map<number, Pair>(
-    (
-      JSON.parse(await readFile(PAIRS, "utf-8")) as { pairs: Pair[] }
-    ).pairs.map((p) => [p.examId, p]),
+    (JSON.parse(await readFile(PAIRS, "utf-8")) as { pairs: Pair[] }).pairs.map(
+      (p) => [p.examId, p],
+    ),
   );
 
   const blocks = new Map<string, string>();
@@ -117,7 +141,9 @@ async function main(): Promise<void> {
   }
 
   const line = (row: Row): string => {
-    const examId = Number(row.externalId.slice(0, row.externalId.lastIndexOf("-")));
+    const examId = Number(
+      row.externalId.slice(0, row.externalId.lastIndexOf("-")),
+    );
     const number = row.externalId.slice(row.externalId.lastIndexOf("-") + 1);
     const pair = pairs.get(examId);
     const where = pair
@@ -131,7 +157,13 @@ async function main(): Promise<void> {
 
   const order = ["그 밖", "자릿수 포함", "정답면에 우리 값도 있음"];
   // RPM 번호 충돌은 출처가 달라 판단 기준도 다르다. 절을 나눠 싣는다.
-  let rpm: Array<{ id: string; unit: string; grade: string; ours: string; origin: string }> = [];
+  let rpm: Array<{
+    id: string;
+    unit: string;
+    grade: string;
+    ours: string;
+    origin: string;
+  }> = [];
   try {
     rpm = JSON.parse(await readFile(RPM_CONFLICTS, "utf-8"));
   } catch {
@@ -151,6 +183,8 @@ async function main(): Promise<void> {
     "",
     `- §1 기출 ${rows.length}건 — 학교가 인쇄한 정답면이 있다. 그게 정본이다`,
     `- §2 RPM ${rpm.length}건 — 정답면이 없다. 원본 문제은행 값과 우리 값이 갈렸다`,
+    "- §3 지면 표기 · §4 훼손된 값 — **아래에 이어진다.** 사람이 조사해 넣은 절이라",
+    "  이 생성기가 만들지도 지우지도 않는다. §4 는 이미 처리가 끝나 볼 것이 없다",
     "",
     "왼쪽 칸 `☐` 에 표시해 주시면 됩니다 — `☑` 는 **바깥 출처 값이 맞다** 로 읽겠습니다.",
     "",
@@ -161,6 +195,14 @@ async function main(): Promise<void> {
     "- **우리 값** = 지금 DB 에 든 값 (완료본 HWP 의 정답 필드에서 옮겨 온 것)",
     "- **정답면 값** = 같은 시험지 PDF 뒤쪽, 학교가 인쇄한 정답면에서 읽은 값",
     "- **정답면 원문** = 그 줄을 그대로 옮긴 것. 문항 본문은 싣지 않았다",
+    "",
+    "⚠️ **정답면이 정본이라는 전제가 이미 한 번 깨졌다.** `4398-19`(선화여고 공수1)는",
+    "정답면 텍스트가 `25` 인데 **지면은 `2^5`(=32)** 다 — 위첨자가 평문으로 뭉개졌다.",
+    "우리 값 `32` 가 맞다. 표시하면 **맞는 답을 틀리게 바꾼다.**",
+    "",
+    "그래서 값만 보고 정하지 말고 지면을 봐라 —",
+    "`python scripts/qa/shot-official-answer.py <examId>-<번호> ...`",
+    "29건 전량 지면은 2026-08-17 에 뽑아 원장님께 올렸다.",
     "",
   );
   for (const key of order) {
@@ -198,15 +240,11 @@ async function main(): Promise<void> {
     }
     parts.push("");
   }
-  parts.push(
-    "---",
-    "",
-    "재생성: `npx tsx scripts/qa/list-numeric-conflicts.ts`",
-    "",
-    "지면을 직접 보고 싶으시면 그 줄만 오려서 그림으로 냅니다 —",
-    "`python scripts/qa/shot-official-answer.py <examId>-<번호> ...`",
-    "",
-  );
+  // ⚠️ **이 생성기는 §1·§2 만 만든다.** §3(지면 표기)·§4(훼손된 값)는 사람이
+  // 조사해 손으로 넣은 절이고, 예전엔 재생성 한 번에 조용히 날아갔다
+  // (2026-08-17 실제 발생, 98줄 유실). 문서 꼬리에 "재생성" 명령까지 적혀 있어
+  // 누구든 밟게 돼 있었다. 그래서 아래 표식부터는 **그대로 옮겨 붙인다.**
+  parts.push((await readTailBelowSentinel()) ?? DEFAULT_TAIL);
 
   await mkdir("docs/planning/tracks", { recursive: true });
   await writeFile(OUT, parts.join("\n"), "utf-8");
