@@ -40,13 +40,24 @@ export async function generateDraftTest(
     if (!studentOwned.ok) return studentOwned.response;
   }
 
+  // 진도 이력은 append-only 라 전량 읽으면 학기가 갈수록 자란다. `getCurrentProgress`
+  // 와 **같은 정렬**(recordedAt desc, 동률이면 createdAt desc)을 DB 로 내리고 1건만 읽는다.
+  // 반/개별 구분과 개별 이력 0건 시 반 진도 폴백은 그대로다(GET /api/progress 와 동일).
+  const latestFirst = [
+    { recordedAt: "desc" as const },
+    { createdAt: "desc" as const },
+  ];
   const [classProgress, studentProgressRows, student] = await Promise.all([
     db.progress.findMany({
       where: { classId: input.classId, studentId: null },
+      orderBy: latestFirst,
+      take: 1,
     }),
     input.studentId
       ? db.progress.findMany({
           where: { classId: input.classId, studentId: input.studentId },
+          orderBy: latestFirst,
+          take: 1,
         })
       : Promise.resolve([]),
     input.studentId

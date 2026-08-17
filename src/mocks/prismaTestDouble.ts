@@ -507,28 +507,80 @@ function matchesWhere<T extends object>(
       !Array.isArray(cond) &&
       !(cond instanceof Date)
     ) {
-      const obj = cond as { in?: unknown[]; not?: unknown };
+      const obj = cond as {
+        in?: unknown[];
+        not?: unknown;
+        gt?: unknown;
+        gte?: unknown;
+        lt?: unknown;
+        lte?: unknown;
+      };
       if (Array.isArray(obj.in)) return obj.in.includes(value);
       if ("not" in obj) return value !== obj.not;
+
+      // 🔴 범위 연산자를 모르면 이 함수는 `value === {gte: ...}` 로 떨어져 **항상 false**
+      //    를 낸다. 날짜 창을 JS filter 에서 SQL where 로 옮기는 순간 조회가 조용히
+      //    빈 배열이 되는 자리다. 지원하는 것만 받고 나머지는 아래에서 던진다.
+      const RANGE_KEYS = ["gt", "gte", "lt", "lte"] as const;
+      const ranges = RANGE_KEYS.filter((k) => k in obj);
+      if (ranges.length > 0) {
+        const unknownKeys = Object.keys(obj).filter(
+          (k) => !RANGE_KEYS.includes(k as (typeof RANGE_KEYS)[number]),
+        );
+        if (unknownKeys.length > 0) {
+          throw new Error(
+            `prismaTestDouble: 범위 조건과 섞인 미지원 연산자 '${unknownKeys.join(",")}'`,
+          );
+        }
+        return ranges.every((k) => {
+          const bound = comparable(obj[k]);
+          const target = comparable(value);
+          if (bound === null || target === null) return false;
+          if (k === "gt") return target > bound;
+          if (k === "gte") return target >= bound;
+          if (k === "lt") return target < bound;
+          return target <= bound;
+        });
+      }
+
+      throw new Error(
+        `prismaTestDouble: 지원하지 않는 필드 조건 '${JSON.stringify(cond)}' — 조용히 통과시키지 않는다`,
+      );
     }
     return value === cond;
   });
 }
 
+/** 범위 비교용 정규화 — Date 는 epoch, 숫자/문자열은 그대로. 그 외는 비교 불가(null). */
+function comparable(value: unknown): number | string | null {
+  if (value instanceof Date) return value.getTime();
+  if (typeof value === "number" || typeof value === "string") return value;
+  return null;
+}
+
+/**
+ * `orderBy` 정렬.
+ *
+ * 🔴 **배열 형태를 지원해야 한다.** 예전에는 첫 키 하나만 보고 나머지를 버렸는데,
+ *    이 저장소가 실제로 쓰는 정렬은 대부분 동률 보조 키가 붙은 복합 정렬이다
+ *    (`[{recordedAt:desc},{createdAt:desc}]`, `[{createdAt:desc},{id:desc}]`).
+ *    보조 키를 버리면 "최신 1건"(take:1)이 동률에서 아무거나 골라 조용히 흔들린다.
+ *    문자열 비교도 필요하다 — 버리면 `id desc` 가 아무 일도 하지 않는다.
+ */
 function applyOrder<T extends object>(rows: T[], orderBy?: unknown): T[] {
   if (!orderBy || typeof orderBy !== "object") return rows;
-  const [key, dir] = Object.entries(orderBy as Record<string, string>)[0] ?? [];
-  if (!key) return rows;
+  const specs = (Array.isArray(orderBy) ? orderBy : [orderBy]).flatMap(
+    (entry) => Object.entries(entry as Record<string, string>),
+  );
+  if (specs.length === 0) return rows;
   return [...rows].sort((a, b) => {
-    const av = (a as Record<string, unknown>)[key];
-    const bv = (b as Record<string, unknown>)[key];
-    if (av instanceof Date && bv instanceof Date) {
-      return dir === "desc"
-        ? bv.getTime() - av.getTime()
-        : av.getTime() - bv.getTime();
-    }
-    if (typeof av === "number" && typeof bv === "number") {
-      return dir === "desc" ? bv - av : av - bv;
+    for (const [key, dir] of specs) {
+      const av = comparable((a as Record<string, unknown>)[key]);
+      const bv = comparable((b as Record<string, unknown>)[key]);
+      if (av === null || bv === null || typeof av !== typeof bv) continue;
+      if (av === bv) continue;
+      const asc = av < bv ? -1 : 1;
+      return dir === "desc" ? -asc : asc;
     }
     return 0;
   });
@@ -765,8 +817,28 @@ const prismaModels = {
       progressRows.push(row);
       return row;
     },
-    async findMany({ where }: { where?: Record<string, unknown> } = {}) {
-      return progressRows.filter((row) => matchesWhere(row, where));
+    async findMany({
+      where,
+      orderBy,
+      take,
+      select,
+    }: {
+      where?: Record<string, unknown>;
+      orderBy?: unknown;
+      take?: number;
+      select?: Record<string, unknown>;
+    } = {}) {
+      return applySelect(
+        paginate(
+          applyOrder(
+            progressRows.filter((row) => matchesWhere(row, where)),
+            orderBy,
+          ),
+          0,
+          take,
+        ),
+        select,
+      );
     },
   },
   problem: {
@@ -983,15 +1055,18 @@ const prismaModels = {
       where,
       include,
       orderBy,
+      select,
     }: {
       where?: Record<string, unknown>;
       include?: { problem?: boolean };
       orderBy?: unknown;
+      select?: Record<string, unknown>;
     } = {}) {
       const rows = applyOrder(
         testProblemRows.filter((row) => matchesWhere(row, where)),
         orderBy,
       );
+      if (select) return applySelect(rows, select);
       return hydrateTestProblems(rows, include);
     },
     async count({ where }: { where?: Record<string, unknown> } = {}) {
