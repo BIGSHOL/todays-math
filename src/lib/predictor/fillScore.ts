@@ -77,12 +77,20 @@ export function fillScore(
   target: ScoredQuestion,
   all: readonly ScoredQuestion[],
 ): { score: number | null; basis: FillBasis } {
+  const fromText = scoreFromText(target.text);
+
   if (typeof target.score === "number" && target.score > 0) {
+    // "읽힌 값은 덮지 않는다"의 **예외** — 본문에 `[합/총 N점]` 이 있는데 기록 배점이
+    // 그보다 작으면, 추출기가 `합` 을 몰라 첫 소문항의 `[2점]` 을 집은 것이다
+    // (15 §A.0 실측 53문항 · 범물중 "추출 78점 / 원본 100점"의 경로). 표기가 증거다.
+    // 같거나 크면 건드리지 않는다 — 증거 없는 정정은 하지 않는다.
+    if (fromText !== null && target.score < fromText) {
+      return { score: fromText, basis: "본문표기" };
+    }
     return { score: target.score, basis: "없음" };
   }
 
   // 본문에 배점이 적혀 있으면 그건 **추정이 아니라 실제 값**이다. 중앙값보다 먼저.
-  const fromText = scoreFromText(target.text);
   if (fromText !== null) return { score: fromText, basis: "본문표기" };
 
   const sameType = median(
