@@ -12,6 +12,7 @@ A단계·B단계가 끝난 뒤 남은 것을 **파일 소유권과 DB 컬럼이 
 | [E](track-e-todays-exam.md) | **'오늘의 시험'** 예측기 | `src/lib/predictor/**`, `scripts/predictor/**`, `src/lib/schools/**` | **새 테이블** + `Student.school*` · `Problem.questionType` |
 | [F](track-f-newload.md) | 신규 적재 (편 단위 결손) | `scripts/qa/load-*`, 적재기 | **신규 행 INSERT 전용** (기존 행 UPDATE 금지) |
 | [G](track-g-classify.md) | 소단원 분류 기준 | `src/lib/classify/**`, `scripts/classify/**` | **없음 — DB 를 쓰지 않는다.** 판정 파일만 낸다 |
+| **F2** | [G 판정 적재](track-f2-report.md) (2차) | `scripts/qa/load2-*` | **신규 행 INSERT 전용** (F 와 같은 규칙) |
 
 ## 트랙 글자·문서 번호를 새로 붙일 때
 
