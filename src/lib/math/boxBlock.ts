@@ -160,7 +160,7 @@ interface ItemHit {
 }
 
 /** 계열 원소를 **순서대로** 앞에서 뒤로 훑는다 → 오름차순이 구조적으로 보장된다. */
-function findFamilyItems(probe: string, family: Family): ItemHit[] {
+function scanAscending(probe: string, family: Family): ItemHit[] {
   const hits: ItemHit[] = [];
   let cursor = 0;
   for (let i = 0; i < family.seq.length; i += 1) {
@@ -177,6 +177,35 @@ function findFamilyItems(probe: string, family: Family): ItemHit[] {
     cursor = match.index + match[0].length;
   }
   return hits;
+}
+
+/**
+ * 원본 지면이 **2단**이면 추출 순서가 `ㄱ ㄷ ㄴ ㄹ` 이 된다(세로로 읽는 배치).
+ * 오름차순만 보면 `ㄷ` 가 `ㄱ` 항목에 붙어 버린다 — 실측 41건(상자의 1.1%).
+ *
+ * 그래서 «각 원소가 **정확히 한 번**» 나올 때만 순서를 풀고 **나온 자리 순서**로 쓴다.
+ * 「정확히 한 번」이 열쇠다. 문장 끝 `다.` 는 여러 번 나오므로 여기 걸리지 않는다.
+ * 가나다처럼 평문과 겹치는 계열(`requireFirst`)은 아예 이 완화를 쓰지 않는다.
+ */
+function scanUnique(probe: string, family: Family): ItemHit[] {
+  const hits: ItemHit[] = [];
+  for (const element of family.seq) {
+    const regex = new RegExp(family.pattern(element), "g");
+    const matches = [...probe.matchAll(regex)];
+    if (matches.length === 0) continue;
+    if (matches.length > 1) return []; // 여러 번 나오면 항목 마커로 못 믿는다
+    const match = matches[0]!;
+    const padding = match[0].length - match[0].trimStart().length;
+    hits.push({ start: match.index + padding });
+  }
+  return hits.sort((a, b) => a.start - b.start);
+}
+
+function findFamilyItems(probe: string, family: Family): ItemHit[] {
+  const ascending = scanAscending(probe, family);
+  if (family.requireFirst) return ascending;
+  const unique = scanUnique(probe, family);
+  return unique.length > ascending.length ? unique : ascending;
 }
 
 /**
@@ -238,6 +267,11 @@ function findItemRun(probe: string): ItemHit[] {
 const MATH_SPAN_RE = /\$\$[\s\S]*?\$\$|\$[^$\n]*\$/g;
 
 const PUNCTUATION_ONLY_MATH = /^[\s.,;:]+$/;
+/**
+ * `$ㄱ.$` · `$ㄱ.~$` — OCR 이 **항목 마커 자체**를 수식으로 감싼 흔적.
+ * 자모 하나에 마침표뿐인 수식은 실제 수식일 수 없으므로 드러내도 안전하다.
+ */
+const JAMO_MARKER_MATH = /^\s*[ㄱ-ㅎ]\s*[.)]\s*[~\s]*$/;
 
 function maskMathInPlace(text: string): string {
   return text.replace(MATH_SPAN_RE, (span) => {
@@ -245,8 +279,15 @@ function maskMathInPlace(text: string): string {
     // 구두점만 든 수식(`$.$`, `$,$`)은 가리지 않는다 — OCR 이 항목 마침표를
     // 통째로 수식으로 감싼 흔적이라, 가리면 `ㄱ $.$ …ㄴ $.$ …` 이 한 덩어리로 남는다(실측).
     // 달러 기호만 공백으로 바꾸므로 **길이는 그대로**이고, 바뀌는 것은 탐지용 사본뿐이다.
-    if (inner.length > 0 && PUNCTUATION_ONLY_MATH.test(inner))
-      return span.replace(/\$/g, " ");
+    if (
+      inner.length > 0 &&
+      (PUNCTUATION_ONLY_MATH.test(inner) || JAMO_MARKER_MATH.test(inner))
+    ) {
+      // 내용을 **여는 `$` 자리로 당겨** 놓는다. 그래야 항목 경계가 `$` 앞에서 잘려
+      // `$` 짝이 맞은 채로 남는다 (뒤에서 자르면 `ㄱ.$ $y=1$` 처럼 짝이 깨진다).
+      const marker = inner.trim();
+      return marker + " ".repeat(span.length - marker.length);
+    }
     return "\u0000".repeat(span.length);
   });
 }
