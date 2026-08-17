@@ -20,8 +20,14 @@ export type ProblemListFilters = {
   reviewStatus?: ReviewStatus;
 };
 
-function listQuery(filters: ProblemListFilters) {
-  const params = new URLSearchParams({ page: "1", pageSize: "100" });
+/** 문제은행 목록 페이지 크기 — 계약 기본값(paginationParamsSchema)과 동일. */
+export const PROBLEM_PAGE_SIZE = 20;
+
+function listQuery(filters: ProblemListFilters, page: number) {
+  const params = new URLSearchParams({
+    page: String(page),
+    pageSize: String(PROBLEM_PAGE_SIZE),
+  });
   if (filters.unitId) params.set("unitId", filters.unitId);
   if (filters.difficulty) params.set("difficulty", filters.difficulty);
   if (filters.problemType) params.set("problemType", filters.problemType);
@@ -29,8 +35,8 @@ function listQuery(filters: ProblemListFilters) {
   return params.toString();
 }
 
-export async function loadProblems(filters: ProblemListFilters) {
-  const res = await fetch(`/api/problems?${listQuery(filters)}`);
+export async function loadProblems(filters: ProblemListFilters, page = 1) {
+  const res = await fetch(`/api/problems?${listQuery(filters, page)}`);
   if (!res.ok) throw new Error("목록을 불러오지 못했습니다");
   return problemListResponseSchema.parse(await res.json());
 }

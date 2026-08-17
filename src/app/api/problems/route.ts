@@ -92,7 +92,8 @@ export async function GET(request: NextRequest) {
       where,
       skip: (page - 1) * pageSize,
       take: pageSize,
-      orderBy: { createdAt: "desc" },
+      // 이관 배치는 createdAt이 같은 행이 수천 건이라 id 보조 키 없이는 페이지가 겹친다.
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     }),
     db.problem.count({ where }),
   ]);

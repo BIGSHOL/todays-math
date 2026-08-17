@@ -8,6 +8,7 @@ import type { ProblemEntity, ProblemType } from "@/contracts/problem.contract";
 import type { UnitEntity } from "@/contracts/unit.contract";
 import {
   loadProblems,
+  PROBLEM_PAGE_SIZE,
   type ProblemListFilters,
 } from "@/lib/problem/problemApi";
 import { loadUnits } from "@/lib/units/unitApi";
@@ -38,6 +39,8 @@ export function ProblemBank() {
   const [difficulty, setDifficulty] = useState("");
   const [problemType, setProblemType] = useState("");
   const [reviewStatus, setReviewStatus] = useState("");
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [problems, setProblems] = useState<ProblemEntity[]>([]);
   const [units, setUnits] = useState<UnitEntity[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,10 +62,11 @@ export function ProblemBank() {
 
   useEffect(() => {
     let cancelled = false;
-    loadProblems(filters)
+    loadProblems(filters, page)
       .then((body) => {
         if (cancelled) return;
         setProblems(body.data);
+        setTotal(body.meta.total);
         setError(null);
         setLoading(false);
       })
@@ -74,7 +78,7 @@ export function ProblemBank() {
     return () => {
       cancelled = true;
     };
-  }, [filters]);
+  }, [filters, page]);
 
   useEffect(() => {
     let cancelled = false;
@@ -97,10 +101,22 @@ export function ProblemBank() {
 
   const defaultUnitId = unitId || units[0]?.id || "";
   const unitActionsDisabled = unitsLoading || units.length === 0;
+  const totalPages = Math.max(1, Math.ceil(total / PROBLEM_PAGE_SIZE));
 
   function startProblemReload() {
     setLoading(true);
     setError(null);
+  }
+
+  /** 필터가 바뀌면 항상 1페이지부터 다시 본다. */
+  function resetToFirstPage() {
+    startProblemReload();
+    setPage(1);
+  }
+
+  function goToPage(next: number) {
+    startProblemReload();
+    setPage(next);
   }
 
   function toggle(next: Exclude<Panel, null>) {
@@ -108,10 +124,11 @@ export function ProblemBank() {
   }
 
   function prepend(count: number, created: ProblemEntity[], label: string) {
-    setProblems((current) => [
-      ...created.filter((problem) => matchesFilters(problem, filters)),
-      ...current,
-    ]);
+    const matching = created.filter((problem) =>
+      matchesFilters(problem, filters),
+    );
+    setProblems((current) => [...matching, ...current]);
+    setTotal((current) => current + matching.length);
     setNotice(`${count}건 ${label}`);
     setPanel(null);
     setError(null);
@@ -147,7 +164,7 @@ export function ProblemBank() {
           value={unitId}
           disabled={unitsLoading || units.length === 0}
           onChange={(event) => {
-            startProblemReload();
+            resetToFirstPage();
             setUnitId(event.target.value);
           }}
         >
@@ -162,7 +179,7 @@ export function ProblemBank() {
           label="난이도"
           value={difficulty}
           onChange={(event) => {
-            startProblemReload();
+            resetToFirstPage();
             setDifficulty(event.target.value);
           }}
         >
@@ -175,7 +192,7 @@ export function ProblemBank() {
           label="유형"
           value={problemType}
           onChange={(event) => {
-            startProblemReload();
+            resetToFirstPage();
             setProblemType(event.target.value);
           }}
         >
@@ -190,7 +207,7 @@ export function ProblemBank() {
           label="상태"
           value={reviewStatus}
           onChange={(event) => {
-            startProblemReload();
+            resetToFirstPage();
             setReviewStatus(event.target.value);
           }}
         >
@@ -240,6 +257,15 @@ export function ProblemBank() {
         <p className="mt-4 text-[12.5px] text-[#6A6A68]">불러오는 중</p>
       ) : null}
 
+      {!loading && !error ? (
+        <PaginationRow
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          onMove={goToPage}
+        />
+      ) : null}
+
       <section className="mt-4">
         {!loading && !error && problems.length === 0 ? (
           <p className="text-[12.5px] text-[#6A6A68]">등록된 문제가 없습니다</p>
@@ -249,6 +275,59 @@ export function ProblemBank() {
           ))
         ) : null}
       </section>
+
+      {!loading && !error && problems.length > 0 ? (
+        <PaginationRow
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          onMove={goToPage}
+        />
+      ) : null}
     </main>
+  );
+}
+
+type PaginationRowProps = {
+  page: number;
+  totalPages: number;
+  total: number;
+  onMove: (page: number) => void;
+};
+
+function PaginationRow({
+  page,
+  totalPages,
+  total,
+  onMove,
+}: PaginationRowProps) {
+  return (
+    <nav
+      aria-label="페이지"
+      className="mt-4 flex flex-wrap items-center justify-between gap-3"
+    >
+      <span className="text-[12.5px] text-[#6A6A68]">
+        {`총 ${total.toLocaleString("ko-KR")}문제`}
+      </span>
+      <span className="flex items-center gap-3">
+        <Button
+          variant="secondary"
+          disabled={page <= 1}
+          onClick={() => onMove(page - 1)}
+        >
+          이전
+        </Button>
+        <span className="text-[12.5px] font-bold text-[#161616]">
+          {`${page} / ${totalPages} 페이지`}
+        </span>
+        <Button
+          variant="secondary"
+          disabled={page >= totalPages}
+          onClick={() => onMove(page + 1)}
+        >
+          다음
+        </Button>
+      </span>
+    </nav>
   );
 }
