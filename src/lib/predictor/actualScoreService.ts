@@ -253,11 +253,17 @@ export async function attachActualScores(
     }
 
     if (input.schoolMean !== undefined || input.schoolStdev !== undefined) {
+      // 🔴 undefined(미전송)와 null(명시 삭제)은 다르다. `?? null` 로 덮으면 평균만
+      //    정정해 보낸 원장의 표준편차가 조용히 사라진다(adv1 🟡). 보낸 필드만 바꾼다.
       await tx.predictionRun.update({
         where: { id: index.runId },
         data: {
-          actualSchoolMean: input.schoolMean ?? null,
-          actualSchoolStdev: input.schoolStdev ?? null,
+          ...(input.schoolMean !== undefined
+            ? { actualSchoolMean: input.schoolMean }
+            : {}),
+          ...(input.schoolStdev !== undefined
+            ? { actualSchoolStdev: input.schoolStdev }
+            : {}),
           actualRecordedAt: new Date(),
         },
       });

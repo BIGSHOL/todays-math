@@ -242,6 +242,11 @@ export type PredictedPaper = z.infer<typeof predictedPaperSchema>;
 
 /** POST /api/tests/predicted — 예측 문제지 생성 + 적재. */
 export const predictedPaperCreateRequestSchema = z.strictObject({
+  /**
+   * '오늘의 시험' 회차에서 만드는 문제지면 그 회차 id (15 §B).
+   * 생략하면 단독 생성 — 회차와 연결되지 않아 계기판 파이프라인에 잡히지 않는다.
+   */
+  predictionRunId: uuidSchema.optional(),
   classId: uuidSchema,
   /** NULL 이면 반 전체 대상. */
   studentId: uuidSchema.nullable().optional(),

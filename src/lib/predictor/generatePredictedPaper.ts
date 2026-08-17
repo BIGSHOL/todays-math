@@ -230,6 +230,8 @@ export interface GeneratePredictedPaperInput {
   unitIds: string[];
   series: ExamSeriesKey;
   target: ExamPeriod;
+  /** '오늘의 시험' 회차에서 만드는 문제지면 그 회차 id. */
+  predictionRunId?: string | null;
 }
 
 export async function generatePredictedPaper(
@@ -238,6 +240,27 @@ export async function generatePredictedPaper(
   // 1. 무거운 조회를 하기 전에 권한부터 본다.
   const owner = await db.class.findUnique({ where: { id: input.classId } });
   if (!owner) return refuse("대상_없음", "반을 찾을 수 없습니다.");
+
+  // 회차를 지정했으면 **내 회차·같은 시리즈**인지 먼저 본다. 남의 회차에 문제지를
+  // 붙이거나, 정화중 회차에 경북고 문제지를 붙이면 계기판 파이프라인이 거짓말을 한다.
+  if (input.predictionRunId) {
+    const run = await db.predictionRun.findUnique({
+      where: { id: input.predictionRunId },
+    });
+    if (!run || run.userId !== input.userId) {
+      return refuse("대상_없음", "회차를 찾을 수 없습니다.");
+    }
+    if (
+      run.school !== input.series.school ||
+      run.level !== input.series.level ||
+      run.grade !== input.series.grade
+    ) {
+      return refuse(
+        "권한_없음",
+        "회차와 시험지의 학교·학년이 다릅니다. 같은 회차의 문제지만 연결할 수 있습니다.",
+      );
+    }
+  }
   if (owner.userId !== input.userId) {
     return refuse("권한_없음", "이 반에 시험지를 만들 권한이 없습니다.");
   }
@@ -316,6 +339,7 @@ export async function generatePredictedPaper(
 
   // 8. 적재 — TestProblem.score 에만 쓴다.
   const saved = await persistPredictedPaper({
+    predictionRunId: input.predictionRunId ?? null,
     userId: input.userId,
     classId: input.classId,
     studentId: input.studentId ?? null,

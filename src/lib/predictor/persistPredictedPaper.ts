@@ -44,7 +44,9 @@ export type PersistRefusal =
   /** 시험지 문항과 넘어온 배점이 짝이 안 맞는다. */
   | "문항_불일치"
   /** 배점을 표기하지 않는 시험지(일일/확인테스트)다. D-28·D-40. */
-  | "배점_대상아님";
+  | "배점_대상아님"
+  /** 청사진 칸을 다 못 채웠다 — 반쪽 시험지는 저장하지 않는다(D-46 과 같은 철학). */
+  | "문항_부족";
 
 export type PersistResult =
   | {
@@ -71,6 +73,8 @@ export interface PersistPredictedPaperInput {
   rangeEndUnitId: string;
   /** `composePredictedPaper` 의 결과. 판단 불가면 저장하지 않는다. */
   paper: PredictedPaper;
+  /** '오늘의 시험' 회차에서 만든 문제지면 그 회차 id. 구분·파이프라인의 정본이다(15 §B). */
+  predictionRunId?: string | null;
 }
 
 /**
@@ -87,6 +91,17 @@ export async function persistPredictedPaper(
   // 판단 불가를 시험지로 만들지 않는다. 근거 없는 값을 저장하는 것이 제일 나쁘다.
   if (!paper.ok) {
     return refuse("판단_불가", paper.detail);
+  }
+
+  // 🔴 못 채운 칸이 있으면 저장하지 않는다. 예전에는 21/25 문항짜리 반쪽 시험지가
+  //    조용히 저장돼 확정·인쇄까지 갔고, `unfilled` 는 응답에만 실려 흔적이 사라졌다.
+  //    D-46 과 같은 철학이다 — 지어내지도, 조용히 넘어가지도 않고 알린다.
+  if (paper.unfilled.length > 0) {
+    return refuse(
+      "문항_부족",
+      `청사진 칸 ${paper.unfilled.length}개를 채우지 못했습니다. ` +
+        "문제은행에 문항을 보충하거나 문항 수를 줄여 다시 요청하십시오.",
+    );
   }
 
   const total = sumScores(paper.questions.map((q) => q.score));
@@ -111,6 +126,8 @@ export async function persistPredictedPaper(
         studentId: input.studentId ?? null,
         // 예측 문제지는 범위 기반이라 확인테스트로 저장한다(위 주석의 타협).
         testType: "review",
+        // 회차 연결 — 구분과 파이프라인 판정의 정본. 없으면 NULL(단독 생성).
+        predictionRunId: input.predictionRunId ?? null,
         rangeStartUnitId: input.rangeStartUnitId ?? null,
         rangeEndUnitId: input.rangeEndUnitId,
         status: "draft",

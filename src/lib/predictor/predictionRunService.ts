@@ -341,6 +341,27 @@ async function gatherPinnedEvidence(
   }
   if (issues.length > 0) throw new PredictionInputInvalidError(issues);
 
+  // 🔴 학년·과목이 다른 시험지는 근거가 될 수 없다(adv1 🟡). 학교는 달라도 된다 —
+  //    코호트를 핀으로 재현하는 것은 정당하다. 그러나 급·학년·과목이 다르면
+  //    코호트 통계에 섞여 청사진을 조용히 흔든다. 재실행 비교는 같은 시리즈 안에서만
+  //    의미가 있으므로 못 박기 전에 막는다.
+  const seriesIssues = papers
+    .filter(
+      (p) =>
+        p.series.level !== series.level ||
+        p.series.grade !== series.grade ||
+        p.series.subject !== series.subject,
+    )
+    .map((p) => ({
+      externalExamId: p.externalExamId,
+      reason:
+        `요청 시리즈(${series.level}${series.grade}·${series.subject})와 다른 ` +
+        `${p.series.level}${p.series.grade}·${p.series.subject} 시험지입니다`,
+    }));
+  if (seriesIssues.length > 0) {
+    throw new PredictionInputInvalidError(seriesIssues);
+  }
+
   return splitEvidence(papers, series, {
     excludedByTrust: 0,
     excludedBySource: 0,

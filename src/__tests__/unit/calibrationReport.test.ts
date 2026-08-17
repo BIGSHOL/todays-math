@@ -116,7 +116,7 @@ describe("[T7.11] 표본이 쌓였을 때의 리포트", () => {
       runId: "aaaaaaaa-0000-4000-8000-000000000001",
       studentId: `30000000-0000-4000-8000-${String(i + 1).padStart(12, "0")}`,
       engineVersion: "0.2.0",
-      school: i < 15 ? "정화중" : "경명여중",
+      school: ["정화중", "경명여중", "대륜중"][i % 3]!,
       predicted: 70,
       actual: 70 + residual,
       residual,

@@ -194,11 +194,12 @@ describe("[T7.11] 표본이 부족하면 점수를 지어내지 않는다", () =
   });
 
   it("최소 표본 수를 채우면 판단한다 (경계)", () => {
+    // 학교 하한(MIN_CALIBRATION_SCHOOLS)도 함께 만족해야 한다 — 표본 수만의 경계를 재려고
+    // 학교를 셋으로 펼친다(합계는 그대로 MIN_CALIBRATION_SAMPLES).
     const samples = buildSamples([
-      {
-        school: "정화중",
-        residuals: repeat([5, -5], MIN_CALIBRATION_SAMPLES / 2),
-      },
+      { school: "정화중", residuals: repeat([5, -5], 4) },
+      { school: "경명여중", residuals: repeat([5, -5], 3) },
+      { school: "대륜중", residuals: repeat([5, -5], 3) },
     ]);
     expect(samples).toHaveLength(MIN_CALIBRATION_SAMPLES);
     expect(estimateCalibration(samples).judgementUnavailable).toBe(false);
@@ -206,10 +207,11 @@ describe("[T7.11] 표본이 부족하면 점수를 지어내지 않는다", () =
 
   it("엔진 버전이 섞이면 표본이 충분해도 판단하지 않는다 — 지표를 섞어 비교하지 않는다", () => {
     const a = buildSamples([
-      { school: "정화중", residuals: repeat([5, -5], 10) },
+      { school: "정화중", residuals: repeat([5, -5], 5) },
+      { school: "경명여중", residuals: repeat([5, -5], 5) },
     ]);
     const b = buildSamples(
-      [{ school: "정화중", residuals: repeat([5, -5], 10) }],
+      [{ school: "대륜중", residuals: repeat([5, -5], 10) }],
       {
         engineVersion: "predictor-v0.4.0",
       },
@@ -375,7 +377,7 @@ describe("[T7.11] 보정 전/후 MAE 와 편향", () => {
         engineVersion: ENGINE,
         // 학교는 잡음의 부호와 무관하게 앞뒤로 가른다 — 이 테스트가 보려는 것은
         // 학교 효과가 아니라 척도(기울기)뿐이다.
-        school: i < noise.length / 2 ? "가중" : "나중",
+        school: ["가중", "나중", "다중"][i % 3]!,
         predicted,
         actual,
         residual: actual - predicted,
@@ -398,9 +400,14 @@ describe("[T7.11] 보정 전/후 MAE 와 편향", () => {
   it("기울기는 예측값에 폭이 없으면 아예 제안하지 않는다", () => {
     const outcome = assertAvailable(
       estimateCalibration(
-        buildSamples([{ school: "가중", residuals: repeat([10, 6], 15) }], {
-          predicted: 70,
-        }),
+        buildSamples(
+          [
+            { school: "가중", residuals: repeat([10, 6], 5) },
+            { school: "나중", residuals: repeat([10, 6], 5) },
+            { school: "다중", residuals: repeat([10, 6], 5) },
+          ],
+          { predicted: 70 },
+        ),
       ),
     );
     const slopeStage = outcome.stages.find((s) => s.name === "전체_기울기")!;

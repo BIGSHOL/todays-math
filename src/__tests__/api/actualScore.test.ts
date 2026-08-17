@@ -481,6 +481,54 @@ describe("[T7.10] POST /api/predictions/{id}/actual — 실측 저장", () => {
     expect(f.state.runs[0]!.actualRecordedAt).toBeInstanceOf(Date);
   });
 
+  it("🔴 평균만 다시 보내면 저장돼 있던 표준편차가 지워지지 않는다 (adv1 🟡)", async () => {
+    /**
+     * 예전에는 `input.schoolStdev ?? null` 로 덮어서, 원장이 평균만 정정해 보내면
+     * 애써 넣은 표준편차가 조용히 사라졌다. 계약은 undefined(미전송)와 null(명시 삭제)을
+     * 이미 구분한다 — 서비스가 그 구분을 지켜야 한다.
+     */
+    await POST(
+      jsonRequest("POST", {
+        scores: [{ studentId: f.STUDENT_A, actualScore: 78 }],
+        schoolMean: 62.5,
+        schoolStdev: 12,
+      }),
+      routeContext(),
+    );
+    // 평균만 정정 — stdev 는 보내지 않는다(undefined).
+    const res = await POST(
+      jsonRequest("POST", {
+        scores: [{ studentId: f.STUDENT_A, actualScore: 78 }],
+        schoolMean: 64,
+      }),
+      routeContext(),
+    );
+    expect(res.status).toBe(200);
+    expect(f.state.runs[0]!.actualSchoolMean).toBe(64);
+    expect(f.state.runs[0]!.actualSchoolStdev).toBe(12); // 지워지면 안 된다
+  });
+
+  it("null 을 **명시**하면 삭제다 — 미전송과 다르다", async () => {
+    await POST(
+      jsonRequest("POST", {
+        scores: [{ studentId: f.STUDENT_A, actualScore: 78 }],
+        schoolMean: 62.5,
+        schoolStdev: 12,
+      }),
+      routeContext(),
+    );
+    const res = await POST(
+      jsonRequest("POST", {
+        scores: [{ studentId: f.STUDENT_A, actualScore: 78 }],
+        schoolStdev: null,
+      }),
+      routeContext(),
+    );
+    expect(res.status).toBe(200);
+    expect(f.state.runs[0]!.actualSchoolStdev).toBeNull();
+    expect(f.state.runs[0]!.actualSchoolMean).toBe(62.5); // 평균은 그대로
+  });
+
   it("없는 회차면 404다", async () => {
     const res = await POST(
       jsonRequest("POST", {
