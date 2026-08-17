@@ -3,11 +3,13 @@
 import { useCallback, useEffect, useState } from "react";
 
 import type { TestEntity, TestProblemItem } from "@/contracts/test.contract";
-import {
-  testConfirmResponseSchema,
-  testDetailResponseSchema,
-  testProblemReplaceResponseSchema,
-} from "@/contracts/test.contract";
+
+/**
+ * 계약 스키마는 **런타임 값으로 정적 import 하지 않는다** (성능 수리 C-1).
+ * 검수 화면의 검증은 모두 `fetch` 응답 이후라, 초기 번들에서 zod + 계약 모듈
+ * (279KB)을 빼도 검증은 하나도 줄지 않는다.
+ */
+const testContract = () => import("@/contracts/test.contract");
 
 type ReadyState = {
   status: "ready";
@@ -36,6 +38,7 @@ export function useTestReview(testId: string) {
           return;
         }
         if (!res.ok) throw new Error("fail");
+        const { testDetailResponseSchema } = await testContract();
         const body = testDetailResponseSchema.parse(await res.json());
         if (!cancelled) {
           setState({
@@ -71,6 +74,7 @@ export function useTestReview(testId: string) {
           setActionError("문제를 교체하지 못했습니다");
           return;
         }
+        const { testProblemReplaceResponseSchema } = await testContract();
         const body = testProblemReplaceResponseSchema.parse(await res.json());
         setState((prev) => {
           if (prev.status !== "ready") return prev;
@@ -103,6 +107,7 @@ export function useTestReview(testId: string) {
         setActionError("테스트를 확정하지 못했습니다");
         return;
       }
+      const { testConfirmResponseSchema } = await testContract();
       const body = testConfirmResponseSchema.parse(await res.json());
       setState((prev) =>
         prev.status === "ready" ? { ...prev, test: body.data } : prev,
