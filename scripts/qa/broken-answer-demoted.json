@@ -1,0 +1,678 @@
+{
+ "생성시각": "2026-08-17T03:58:16.124Z",
+ "사유": "정답 값 훼손(square)",
+ "entries": [
+  {
+   "id": "d0a84b99-ece8-4e5b-8380-7d123f1b34f6",
+   "externalId": "019fd1de-6152-70c5-9095-4dc649889727",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "\\square"
+  },
+  {
+   "id": "6dd4d26c-ca19-4ee9-bd84-f99c0ee53a19",
+   "externalId": "019fd1dc-ec84-74c8-a04e-27eaa0c0a44e",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$$^{2}$$\\square$$\\square$"
+  },
+  {
+   "id": "dd87d309-30a7-46b4-aec7-573b78f54253",
+   "externalId": "019fd1de-4c8c-763e-a975-4dfb28dd4561",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square=9$$3$$9$$3$"
+  },
+  {
+   "id": "46aede27-aa36-4a3c-86d4-f4dc7ffde645",
+   "externalId": "019fd1de-55e0-71a6-a1e5-6a839a157289",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square60=h+3h$, $(1+3)h=6060$∴ $h==30($$3-1)1+3$∴ $\\overli"
+  },
+  {
+   "id": "70277d34-d441-4b8f-b59c-ac9d2e64567f",
+   "externalId": "019fd1de-5379-70a0-9e50-64db640ff880",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$따라서 두 지점 $A$, $C$ 사이의 거리는 $3$$7m$이다.$3$$7m$"
+  },
+  {
+   "id": "10fbdf21-fe26-4f1e-8060-6d3ab328a69f",
+   "externalId": "019fd1d8-736f-7395-96e1-1d7a7aed4cc5",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "\\square ° \\frac{0}{3})\\square pcm^{3}"
+  },
+  {
+   "id": "19bf48b2-8d7f-446e-b844-fb1d59acde31",
+   "externalId": "019fd1de-38ac-76ac-a67e-061d0bf9bf4b",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$∴ $BC=3$$2$$3$s$DBC$에서 $tan30\\degree=\\frac{\\overlin"
+  },
+  {
+   "id": "4e4b1e73-0e19-4771-a855-b1f5cecfedba",
+   "externalId": "019fd1de-4c02-77a7-a3c4-215c2787049b",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square3=\\frac{1}{2}\\times 4\\times 6\\times=6$$3$$6$$3$"
+  },
+  {
+   "id": "2f8695b9-b24b-4054-a2e3-653ab515e7d2",
+   "externalId": "019fd1de-a215-70dd-819b-f528ecbe27cc",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$cm\\square\\square$$)$따라서 원 $O$의 지름의 길이는 $2$$13cm$이다.$2$$13cm"
+  },
+  {
+   "id": "5dddd4ae-b3e2-4225-98bd-854f391a4f7d",
+   "externalId": "019fd1de-4dde-725c-95d5-25283875ad61",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square2=6\\times 3\\times=9$$2$$9$$22$"
+  },
+  {
+   "id": "5cc1bd3f-b3d4-42df-b9a4-6b44ae4fb710",
+   "externalId": "019fd1de-4e22-726d-ab17-e5d37cba29cd",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square2=56$$2$$56$$2$"
+  },
+  {
+   "id": "1a078e58-9e5d-4720-a503-76f64990fff9",
+   "externalId": "019fd1de-4e65-703b-a1a3-a4d455224a53",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square3=20$$3$$20$$3$"
+  },
+  {
+   "id": "a45c08a5-fce2-49fc-b783-2e18a3c32142",
+   "externalId": "019fd1de-4d9b-75b9-b930-880e0e12311c",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square3=5\\times 4\\times=10$$3$$10$$32$"
+  },
+  {
+   "id": "5356e90b-14f5-459d-a000-ceebfb55d138",
+   "externalId": "019fd1de-570e-712f-9ec5-45505948a480",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square10=3h-h$, $($$3-1)h=10$∴ $h=\\frac{10}{3-1}=5($$3+1)$"
+  },
+  {
+   "id": "60ffea21-c097-4fde-a81c-9f150058764e",
+   "externalId": "019fd1dc-be8b-7781-9a5c-230bed041fc6",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$$^{2}$"
+  },
+  {
+   "id": "466cdbe1-04e0-415a-baf4-8e3cd65889db",
+   "externalId": "019fd1dc-d7fe-709e-8ac0-6340ccf9d429",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$$3$$\\square6-2$$3$$6-2$$3$"
+  },
+  {
+   "id": "029e5724-6abc-431c-a9d4-0bc43b304faf",
+   "externalId": "019fd1dc-d846-751e-b1e5-ebb032ca2069",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$3\\square2-2$$6$$1-6$$1-6$"
+  },
+  {
+   "id": "e7262e7a-b2dc-4595-b1f5-1c2c7f4c78f5",
+   "externalId": "019fd1dc-d88c-706e-9959-a948528fdfe7",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$6\\square3+6$$3+6$"
+  },
+  {
+   "id": "87966486-fbe5-472b-bfc3-f81374c8c3af",
+   "externalId": "019fd1dc-d772-7579-8c8e-59f76a65f767",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "㈎$\\square3$㈏$3$㈐$18$㈑$2$"
+  },
+  {
+   "id": "8337287c-3b82-4b98-93af-6ec8204a8de0",
+   "externalId": "019fd1de-2511-728d-8e4f-d68978438bc0",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square3$$\\square cos30\\degree=\\frac{y}{6}=$이므로 $y=3$$3$$x="
+  },
+  {
+   "id": "88e8d3d7-0e53-4f1d-9b6e-dcad90ac24f5",
+   "externalId": "019fd1dc-e275-720e-a981-6581a4bf05fd",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "⑴$61cm$⑵$10cm\\square$$^{2}$"
+  },
+  {
+   "id": "7ff2b87a-ea13-4f41-9f6a-682a1defc4db",
+   "externalId": "019fd1dc-eb99-700e-9d1b-9fabcd3232b3",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square=18$$6(cm^{2})$$18$$6cm^{2}$"
+  },
+  {
+   "id": "f87a0598-4098-4ca8-a77a-b5310e0de7ba",
+   "externalId": "019fd1dc-f464-7129-aa20-d2227ede7e60",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "\\square"
+  },
+  {
+   "id": "63f43b10-0434-453f-b52a-16e810977982",
+   "externalId": "019fd1dc-f324-7183-9864-c0c949bb72f8",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square(3-2)-(-1+2)=3-2+1-2=4-2$$2$$4-2$$2$"
+  },
+  {
+   "id": "9e88765a-04bc-4d72-839b-1cebca1fa56f",
+   "externalId": "019fd1dc-f615-7232-89e8-95c766ba3aac",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "\\square"
+  },
+  {
+   "id": "cf281acf-a8a7-4c5b-901e-3964459372cb",
+   "externalId": "019fd1dc-f664-710e-a25f-5d5f29b922a7",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "\\square"
+  },
+  {
+   "id": "94b0b1cd-1e95-4d23-8430-0fe6178fe67d",
+   "externalId": "019fd1dd-1ef0-73b9-8385-407a67b7bcb9",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$7-2\\square$$\\square$"
+  },
+  {
+   "id": "e84999de-5ac9-4fd0-a637-06da560f0c2c",
+   "externalId": "019fd1de-2556-72ff-8335-8a0580e9328a",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$x=4\\square2,$$y=4$"
+  },
+  {
+   "id": "b409c0dc-a771-4f58-85f2-3c38f87a6417",
+   "externalId": "019fd1de-22d4-719d-b242-320da7698906",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$5$$\\square$$\\square\\frac{10}{x}$$=$∴ $x=10$$5$$10$$5$"
+  },
+  {
+   "id": "d8037ce4-ab39-4ec8-9255-2be3af64fca2",
+   "externalId": "019fd1de-21a8-74fb-b525-15c5f6b5f011",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "\\square7"
+  },
+  {
+   "id": "9833f72f-710b-4baa-9b1d-9ddcc7c2e09f",
+   "externalId": "019fd1de-21ee-721b-9912-306b1101079c",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$sinB=\\square$$,$$cosB=\\frac{3}{4}$$,$$tanB=\\frac{\\square}{3"
+  },
+  {
+   "id": "b5463b06-c645-4652-8dfd-18ed1b18ba42",
+   "externalId": "019fd1de-2290-723d-a0b4-e80110178a7a",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square\\frac{x}{12}=$∴ $x=6$$3$$6$$3$"
+  },
+  {
+   "id": "dbe5b9d8-3f7b-4027-8fe1-b1eb07d715fd",
+   "externalId": "019fd1de-2f4b-7771-a4f5-bb3c2157944d",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$s$ABC=\\frac{1}{2}\\times 5\\times 2$$5=5$$5$$5$$5$"
+  },
+  {
+   "id": "d15943b2-d1bc-4d74-9e13-f389ef007eb1",
+   "externalId": "019fd1de-2f06-7745-bbe6-786827b66669",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "∴ $\\overline{AC}=\\square20^{2}-12^{2}=256=16$$16$"
+  },
+  {
+   "id": "8f12af26-7860-4dd0-b82e-2f75dbb0de53",
+   "externalId": "019fd1de-2f9d-73f5-84e5-05a4a26ba95c",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square\\square2$$10$$10sinC=\\frac{\\overline{AB}}{\\overline{"
+  },
+  {
+   "id": "6f74fa6c-7bea-400e-9b0b-9672a912f9d2",
+   "externalId": "019fd1de-32d7-7517-b051-12bcc157cf22",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "32$\\square$"
+  },
+  {
+   "id": "be8a8f6b-b343-4277-bf6b-664c21f145e7",
+   "externalId": "019fd1de-37d7-7598-8d93-73f048229cff",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square3$s$ADC$에서 $sin60\\degree=\\frac{6}{\\overline{AC}}$$=$"
+  },
+  {
+   "id": "ad5a00e6-33e2-4e53-856f-aeb0aa2cec7a",
+   "externalId": "019fd1de-3944-7716-a676-edc39c4a082b",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square3sin60\\degree=\\frac{\\overline{CD}}{10}$$=$∴ $\\overli"
+  },
+  {
+   "id": "77dc79c6-9cf4-4b97-beaa-796feb881adf",
+   "externalId": "019fd1de-4427-76b6-a416-de206cbb9509",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square3$$3y=x+3$$y=x+33$$3$"
+  },
+  {
+   "id": "c9fddbd9-d8b9-420b-ab99-d4ef96723afd",
+   "externalId": "019fd1de-47f5-771a-a210-9c659e6bdd90",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$6$, $4\\square3$, $6$, $2\\square3$"
+  },
+  {
+   "id": "4937db3d-d1cf-45bb-9424-87e2ba806d1c",
+   "externalId": "019fd1de-4888-7538-b983-7baf725cf122",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$9$, $6\\square3$, $9$, $3\\square3$"
+  },
+  {
+   "id": "b6b3143e-6030-418a-90a8-72af3f444d52",
+   "externalId": "019fd1de-47af-712f-ab59-65700ea3c932",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$$\\square$"
+  },
+  {
+   "id": "4f713eb0-7fb4-4deb-ae0f-b29b024529f8",
+   "externalId": "019fd1de-4843-779a-b49a-ecc4670bcb44",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$4$, $2\\square2$, $4$, $2\\square2$"
+  },
+  {
+   "id": "a3e27179-f07f-489d-af7c-4cc8d328445a",
+   "externalId": "019fd1de-4cd2-7635-bc59-b8593bcdc16c",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square=\\frac{1}{2}\\times 7\\times 12\\times=21$$3$$21$$3$"
+  },
+  {
+   "id": "cf56a7b5-6555-47bb-a5ac-5d819e6b67a1",
+   "externalId": "019fd1de-4ef0-70af-8cf2-1ca567b8e9aa",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square=\\times 12\\times 10\\times2=30$$3$$30$$3$"
+  },
+  {
+   "id": "545f1c3c-df5a-474d-96ad-8cfd4421e405",
+   "externalId": "019fd1de-4af2-75ed-8dc5-b64bd1e26a6e",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "4(3-\\square3)"
+  },
+  {
+   "id": "32b710cb-d5f3-44fb-9719-2563cd69ca68",
+   "externalId": "019fd1de-4b37-72eb-bc39-502c574f00f3",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square\\overline{BH}=htan60\\degree=3h$$3h$"
+  },
+  {
+   "id": "c46d4162-09a7-4595-b3b2-8211bb046048",
+   "externalId": "019fd1de-4b7b-737c-9344-42fab86e2653",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square33$$3\\overline{CH}=htan30\\degree=h$$h$"
+  },
+  {
+   "id": "20ae5997-c1e8-4cab-a565-6a9ccd2ff955",
+   "externalId": "019fd1de-4bc0-747b-b8d0-db2a35c9cf5e",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square3$$2$$34=3h-h$, $h=4$∴ $h=2$$3$$2$$3$"
+  },
+  {
+   "id": "4f744b4c-3d83-4514-aa66-deacd918db53",
+   "externalId": "019fd1de-4a26-7307-ab4d-1cb2a0ee2a61",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$2\\square2$, $2\\square2$, $4\\square2$"
+  },
+  {
+   "id": "bc36054d-c862-47f3-b20b-55a229ef20b0",
+   "externalId": "019fd1de-50ee-74f8-a84b-c9eeb608c634",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$… 3"
+  },
+  {
+   "id": "9c73c486-45cb-4316-8304-cf81ad7cf1fc",
+   "externalId": "019fd1de-524a-73ed-8a0c-0f02cf30bf20",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$… 32"
+  },
+  {
+   "id": "0cb37a10-b289-46bf-9bb7-0d5dee548fb8",
+   "externalId": "019fd1de-54f5-755c-a759-000b76c3dad2",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square\\overline{BH}===3$$3 (cm)tan60\\degree$$3$∴ $\\overlin"
+  },
+  {
+   "id": "e5f992a8-67fe-4451-a08f-5398e5b59c75",
+   "externalId": "019fd1de-5540-7105-b2ec-cc2780836da8",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square3$$4$$38=3h+h$, $h=83$$3$∴ $h=2$$3$$2$$3$"
+  },
+  {
+   "id": "d60c41d8-88f7-4eca-bc8d-c47629fb574d",
+   "externalId": "019fd1de-567c-724c-b1b6-bede3a54fc8e",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$∴ $h==3+3$$3+33-3$"
+  },
+  {
+   "id": "59bd4fbe-d82c-4c9c-be4d-03de3d0cc43f",
+   "externalId": "019fd1de-5464-741b-8df1-2a82b7fa8029",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$4$$2$$\\square$$\\square\\overline{AB}==4\\div=4$$2$$4$$2sin45\\"
+  },
+  {
+   "id": "5525f375-59a5-40c2-9406-708d14ac5e21",
+   "externalId": "019fd1de-594a-741b-9a50-afff6fa1aea0",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square=\\frac{1}{2}\\times 8\\times 10\\times=20$$3 (cm^{2})$$"
+  },
+  {
+   "id": "dcc30c89-2462-4770-8e16-cc1cd982793c",
+   "externalId": "019fd1de-5cb0-702c-98aa-cd7fba1af515",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$82$$\\square\\frac{1}{2}\\times 6\\times\\overline{BD}\\times=12$"
+  },
+  {
+   "id": "5b343ed1-02e9-4d3c-8259-d9012f8c68ab",
+   "externalId": "019fd1de-5bd6-737e-86f3-83ecdcf5ac7d",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square3=20$$3 (cm^{2})$∴ s$ABO=\\frac{1}{4}$f$ABCD=\\times 2"
+  },
+  {
+   "id": "9ef424cb-4d6c-4689-b5ca-25ca39442a0d",
+   "externalId": "019fd1de-5c6a-74ca-bdf3-bb661fbec0fe",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square=\\frac{1}{2}\\times 14\\times 10\\times=35$$3 (cm^{2})$"
+  },
+  {
+   "id": "770f06c2-5fbe-499f-aa1d-6c0768ced0ac",
+   "externalId": "019fd1de-626f-774b-9ec2-dc1ee0850458",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "\\square"
+  },
+  {
+   "id": "b0f8def2-4c74-4f6b-8a16-3497eb99037f",
+   "externalId": "019fd1de-aac0-723f-af42-8a4ad91e3c12",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$2"
+  },
+  {
+   "id": "b3223f05-77ef-48fa-9d45-248fb3954626",
+   "externalId": "019fd1de-bf4a-7188-9b93-5bcea063bc8c",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$이때 $\\overline{BC}>0$이므로 $\\overline{BC}=4$$6 (cm)$$4"
+  },
+  {
+   "id": "7f1a3374-77d9-48a1-aa39-e9cb5595803a",
+   "externalId": "019fd1de-c49e-70fb-a73e-1242675c5c9a",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "3\\square6cm"
+  },
+  {
+   "id": "f5b0d0c4-eb15-48a0-a842-67176a0e878a",
+   "externalId": "019fd1de-c260-7452-a767-f69a343c0a8c",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "8\\square3cm^{2}"
+  },
+  {
+   "id": "6a8e44d8-5f9e-41f3-af67-5aaf4014a9c8",
+   "externalId": "019fd1dd-a53c-733e-87d9-47fb385f5635",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$1+5\\square$$\\square$$\\square$$\\square$"
+  },
+  {
+   "id": "86c7aa71-b2ba-4b18-885b-558e53fe1f78",
+   "externalId": "019fd1de-6542-7771-a633-a5a797c7b23a",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "\\square"
+  },
+  {
+   "id": "8f44baf5-9f22-4a52-8914-0a98e5f2e187",
+   "externalId": "019fd1db-f911-7506-afc9-fcc3865f89a9",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "\\frac{20}{3})\\square cm^{2}"
+  },
+  {
+   "id": "8b51ec6f-e01b-4692-864b-e9cea0e43e5d",
+   "externalId": "019fd1dc-e22b-70cb-a870-9f1947868866",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$3$$6cm\\square$"
+  },
+  {
+   "id": "757a422e-fb96-4deb-8372-e6746844fd93",
+   "externalId": "019fd1dc-e7d9-7556-a5dd-5d7f638ae5d9",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$$^{2}$"
+  },
+  {
+   "id": "45bb7af9-9dfa-4de2-a5b2-1e6465e3453d",
+   "externalId": "019fd1dc-b3c9-710e-8be2-e11b4a902c0c",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square ^{4}$$^{2}$"
+  },
+  {
+   "id": "b7e22779-7b12-4885-ac10-dc3efcf9922b",
+   "externalId": "019fd1dc-a051-708b-bd86-39217e5af0cd",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "\\square"
+  },
+  {
+   "id": "945fea14-4d6c-4e2f-9e39-f946a2ac2fcd",
+   "externalId": "019fd1dc-af81-74dd-93c9-a8d1ad7043cc",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$$^{2}$"
+  },
+  {
+   "id": "4fb7033a-9579-4665-88a7-0ff04e806023",
+   "externalId": "019fd1de-2eb3-74ba-9427-a66dc8598b6d",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "\\square77tan"
+  },
+  {
+   "id": "8906246e-073f-45aa-8a13-2b8f4a67734c",
+   "externalId": "019fd1de-2e5c-77fb-b51b-48506f542354",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square23$$3$$3cos$"
+  },
+  {
+   "id": "30b6a20f-2fe2-4420-903f-6b996f665da5",
+   "externalId": "019fd1de-407a-714a-99f9-799482f15f94",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square3tan75\\degree=\\frac{\\overline{AC}}{\\overline{BC}}$$="
+  },
+  {
+   "id": "0042cff5-8668-4c07-9696-4331221e6ce0",
+   "externalId": "019fd1de-49de-71a8-ab17-5003ea7d0f8f",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$4\\square3$, $2\\square3$, $2\\square3$, $2\\square7$"
+  },
+  {
+   "id": "84706ddd-464b-4d36-9986-c16f4f5949af",
+   "externalId": "019fd1de-4266-77fe-a660-ce3634d75443",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "\\square\\square"
+  },
+  {
+   "id": "4a5b7570-f420-48fb-abcd-b50b731e4a84",
+   "externalId": "019fd1de-540e-74ca-8788-a332a35b73f9",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square6$$3$$2\\overline{AB}==6$$3\\div=6$$6$$6$$6sin45\\degre"
+  },
+  {
+   "id": "8f10044d-f388-42db-bb69-4a0ab1339cb4",
+   "externalId": "019fd1de-5018-744f-857f-158f918b244e",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square3\\times 3\\times 3$$6=27$$6 (cm^{3})$$27$$6cm^{3}$"
+  },
+  {
+   "id": "f98d6faa-aaa1-41d7-976d-396905464c40",
+   "externalId": "019fd1de-4a6a-72ae-9cb1-9bdaa7c9d4ec",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square33$$3\\overline{BH}=htan30\\degree=h$$h$"
+  },
+  {
+   "id": "c917d321-076b-4879-8ba0-ce2ebc0798df",
+   "externalId": "019fd1de-5322-769d-96ba-f44edd9c5e82",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "\\square"
+  },
+  {
+   "id": "d8f7e98c-1062-415e-ac60-f068a2ddfd03",
+   "externalId": "019fd1de-5757-730c-b651-a2855ad1a7e2",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$21"
+  },
+  {
+   "id": "a5773f7c-70d8-4bec-81bb-d65313e31fe8",
+   "externalId": "019fd1de-5634-76fb-ab31-7afb10090e8d",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$∴ s$ABC=\\frac{1}{2}\\times 6\\times 3(3-3)=9(3-3) (cm"
+  },
+  {
+   "id": "1025fca9-670f-46cd-93b7-0de374ea32b7",
+   "externalId": "019fd1de-646c-7429-a344-30db9977eece",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "… $\\square$3"
+  },
+  {
+   "id": "0ae76f04-7cd5-4dfd-ab11-5099a4cc54d9",
+   "externalId": "019fd1de-a189-7228-8e63-f8bcb326e976",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square \\square \\square \\square \\overline{C}$$7$$7$∴ $cosA="
+  },
+  {
+   "id": "4889abb4-af5a-4302-9521-d5df250501f7",
+   "externalId": "019fd1de-65d4-7072-93e0-5e3402c81e66",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "2\\square31km\\square"
+  },
+  {
+   "id": "5e6df9cc-1c34-4500-ab9b-7ea821be3bf4",
+   "externalId": "019fd1dc-e371-7145-8159-218e4a56d245",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$$^{2}$"
+  },
+  {
+   "id": "91b48550-578d-45a7-9f9e-590cecd58886",
+   "externalId": "019fd1dc-ed27-70b4-a96d-edb210ec659d",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$$B$ 3"
+  },
+  {
+   "id": "88101869-2efe-4d15-a629-892bd050596b",
+   "externalId": "019fd1de-4758-734b-b6f6-acbf1a123b8e",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square\\square10$$10cos$$cos$$MCF$$2$$104$"
+  },
+  {
+   "id": "ce309e11-2a86-4dc0-808e-05c8431007c3",
+   "externalId": "019fd1de-5e0d-742c-bd9c-1d4af8904ada",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "이므로$\\square$$\\square$$\\square\\overline{AB}=\\overline{AC}-\\ov"
+  },
+  {
+   "id": "35193294-396f-41f8-86ff-71c630987bee",
+   "externalId": "019fd1de-60bd-70da-9f40-171b96494e35",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "에서 $\\square$$\\square$"
+  },
+  {
+   "id": "b67b790a-f738-4524-8aef-8ffd2f6d6b04",
+   "externalId": "019fd1de-64b7-76d3-8239-8f088455e30e",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$32"
+  },
+  {
+   "id": "733479d7-1057-4bb0-a8aa-8e62cea9f55c",
+   "externalId": "019fd1de-bf90-712b-8f86-bf560ccd0c38",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$… $\\square$3"
+  },
+  {
+   "id": "d732c1a5-0b52-4b35-9b5b-c35b36a344c1",
+   "externalId": "019fd1dc-d7b7-734d-80f1-b518612aec2d",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square$$5$$\\square\\square4$$5+15$$4$$5+15$"
+  },
+  {
+   "id": "d4b37776-d6f9-47d7-aa29-2fb2675815fb",
+   "externalId": "019fd1dc-ecda-75d5-a7a5-ef4ebccb9410",
+   "previous": "approved",
+   "next": "pending",
+   "answerHead": "$\\square^{2}=4$$5-2$$5=2$$5(cm)$(상자의 밑면의 세로의 길이)$=125-2$$5=5"
+  }
+ ]
+}
