@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 
 import {
   isRunVisibleTo,
+  type LinkedTestRow,
   type ActualScoreRow,
   type OwnedStudent,
   type PredictionRunRow,
@@ -29,6 +30,8 @@ export async function loadOwnedStudents(
 }
 
 export type VisibleRuns = {
+  /** 회차에 연결된 예측 문제지 — 파이프라인 문제지·채점 단계의 근거(15 §B). */
+  linkedTests: LinkedTestRow[];
   runs: PredictionRunRow[];
   actuals: ActualScoreRow[];
   ownedStudents: OwnedStudent[];
@@ -64,11 +67,30 @@ export async function loadVisibleRuns(userId: string): Promise<VisibleRuns> {
   );
   const visibleRunIds = new Set(runs.map((r) => r.id));
 
+  // 연결된 예측 문제지와 채점 존재 여부 — 문제지·채점 단계의 실데이터 근거.
+  const linkedRows =
+    runs.length === 0
+      ? []
+      : await db.test.findMany({
+          where: { predictionRunId: { in: [...visibleRunIds] } },
+          select: {
+            id: true,
+            predictionRunId: true,
+            testResults: { select: { id: true }, take: 1 },
+          },
+        });
+  const linkedTests: LinkedTestRow[] = linkedRows.map((t) => ({
+    id: t.id,
+    predictionRunId: t.predictionRunId,
+    graded: t.testResults.length > 0,
+  }));
+
   return {
     runs,
     actuals: (ownedActuals as ActualScoreRow[]).filter((a) =>
       visibleRunIds.has(a.runId),
     ),
     ownedStudents,
+    linkedTests,
   };
 }

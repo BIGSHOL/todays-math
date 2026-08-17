@@ -175,6 +175,53 @@ describe("isRunVisibleTo — 소유권은 없는 쪽으로 닫는다", () => {
   });
 });
 
+describe("🔴 파이프라인 문제지·채점 단계 — FK 가 생겨 실데이터 판정이 된다 (15 §B)", () => {
+  /**
+   * 예전에는 이 두 단계가 "데이터 원천이 없어 항상 미완"이었다(스키마에 담을 자리가
+   * 없었다). `Test.predictionRunId` 가 생겨 이제 판정할 수 있다:
+   *   문제지 = 이 회차에 연결된 시험지가 존재  ·  채점 = 그 시험지에 채점 결과가 존재
+   */
+  it("연결된 시험지가 없으면 문제지·채점 둘 다 미완이다", () => {
+    const summary = toRoundSummary(run(), [], []);
+    expect(summary!.stages[1]).toMatchObject({ key: "paper", done: false });
+    expect(summary!.stages[2]).toMatchObject({ key: "grading", done: false });
+  });
+
+  it("시험지가 연결되면 문제지 단계가 완료된다", () => {
+    const summary = toRoundSummary(
+      run(),
+      [],
+      [{ id: "t1", predictionRunId: RUN_ID, graded: false }],
+    );
+    expect(summary!.stages[1]).toMatchObject({ key: "paper", done: true });
+    expect(summary!.stages[2]).toMatchObject({ key: "grading", done: false });
+  });
+
+  it("연결된 시험지에 채점 결과가 있으면 채점 단계도 완료된다", () => {
+    const summary = toRoundSummary(
+      run(),
+      [],
+      [{ id: "t1", predictionRunId: RUN_ID, graded: true }],
+    );
+    expect(summary!.stages[2]).toMatchObject({ key: "grading", done: true });
+  });
+
+  it("🔴 다른 회차의 시험지는 세지 않는다", () => {
+    const summary = toRoundSummary(
+      run(),
+      [],
+      [
+        {
+          id: "t9",
+          predictionRunId: "99999999-0000-4000-8000-000000000000",
+          graded: true,
+        },
+      ],
+    );
+    expect(summary!.stages[1]).toMatchObject({ done: false });
+  });
+});
+
 describe("🔴 화면이 거짓말하지 않는가 — 근거 수 · 시행일", () => {
   /**
    * 적대적 리뷰가 잡은 둘. 화면이 원장님께 **틀린 사실**을 말하고 있었다.

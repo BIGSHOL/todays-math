@@ -145,6 +145,8 @@ interface TestRow {
   testDate: Date;
   printedAt: Date | null;
   createdAt: Date;
+  /** '오늘의 시험' 회차 연결. 일반 시험지는 null. */
+  predictionRunId: string | null;
 }
 
 interface TestProblemRow {
@@ -333,6 +335,7 @@ function toTestRow(entity: TestEntity): TestRow {
     testDate: new Date(`${entity.testDate}T00:00:00.000Z`),
     printedAt: entity.printedAt ? new Date(entity.printedAt) : null,
     createdAt: new Date(entity.createdAt),
+    predictionRunId: null,
   };
 }
 
@@ -365,6 +368,7 @@ function toFixtureTestRow(): TestRow {
     modified: fixture.modified,
     testDate: new Date(`${fixture.testDate}T00:00:00.000Z`),
     printedAt: new Date(fixture.printedAt),
+    predictionRunId: null,
     createdAt: new Date(fixture.createdAt),
   };
 }
@@ -415,6 +419,7 @@ export function resetPrismaTestDouble() {
     modified: false,
     testDate: new Date("2026-08-12T00:00:00.000Z"),
     printedAt: new Date("2026-08-12T09:00:00.000Z"),
+    predictionRunId: null,
     createdAt: new Date("2026-08-12T08:00:00.000Z"),
   });
   testProblemRows.push({
@@ -818,6 +823,7 @@ const prismaModels = {
         modified?: boolean;
         testDate: Date;
         printedAt?: Date | null;
+        predictionRunId?: string | null;
       };
     }) {
       const row: TestRow = {
@@ -832,6 +838,7 @@ const prismaModels = {
         modified: data.modified ?? false,
         testDate: data.testDate,
         printedAt: data.printedAt ?? null,
+        predictionRunId: data.predictionRunId ?? null,
         createdAt: new Date(),
       };
       testRows.push(row);

@@ -49,6 +49,14 @@ export type PredictionRunRow = {
   predictedScores: unknown;
 };
 
+/** 회차에 연결된 예측 문제지 요약 — 파이프라인 문제지·채점 단계의 근거. */
+export type LinkedTestRow = {
+  id: string;
+  predictionRunId: string | null;
+  /** 이 시험지에 채점 결과(TestResult)가 하나라도 있는가. */
+  graded: boolean;
+};
+
 export type ActualScoreRow = {
   runId: string;
   studentId: string;
@@ -124,11 +132,16 @@ function buildStages(
   blueprint: Blueprint | null,
   predictedStudentCount: number,
   actualCount: number,
+  linkedTests: readonly LinkedTestRow[],
 ): ExamStageState[] {
+  // 예전에는 문제지·채점이 "데이터 원천이 없어 항상 미완"이었다. `Test.predictionRunId`
+  // 가 생겨(15 §B) 실데이터로 판정한다 — "아마 됐을 것"으로 칠하지 않는 원칙은 그대로다.
+  const paperDone = linkedTests.length > 0;
+  const gradingDone = linkedTests.some((t) => t.graded);
   return [
     { key: "blueprint", done: blueprint !== null, progress: null },
-    { key: "paper", done: false, progress: null },
-    { key: "grading", done: false, progress: null },
+    { key: "paper", done: paperDone, progress: null },
+    { key: "grading", done: gradingDone, progress: null },
     {
       key: "actual",
       done: predictedStudentCount > 0 && actualCount >= predictedStudentCount,
@@ -150,6 +163,7 @@ function buildStages(
 export function toRoundSummary(
   run: PredictionRunRow,
   actuals: ActualScoreRow[],
+  linkedTests: readonly LinkedTestRow[] = [],
 ): ExamRoundSummary | null {
   const series = examSeriesKeySchema.safeParse({
     school: run.school,
@@ -174,7 +188,12 @@ export function toRoundSummary(
     period: period.data,
     // 원장님이 넣으신 시행일. 없으면 null — 그럴듯한 날짜를 만들지 않는다.
     examDate: toDateOnly(run.examDate),
-    stages: buildStages(blueprint, studentIds.length, actualCount),
+    stages: buildStages(
+      blueprint,
+      studentIds.length,
+      actualCount,
+      linkedTests.filter((t) => t.predictionRunId === run.id),
+    ),
     // 🔴 **그 학교 과거 편수**다. `inputExamIds` 를 세면 안 된다 — 그 목록에는
     //    코호트(다른 학교)가 함께 들어가 "근거 5회차"의 4편이 남의 학교가 된다.
     //    그러면 우리 학교 1편만 있어도 문턱(MIN_EVIDENCE_ROUNDS)을 넘어, 근거 없는
@@ -192,8 +211,9 @@ export function toRoundDetail(
   run: PredictionRunRow,
   actuals: ActualScoreRow[],
   ownedStudents: OwnedStudent[],
+  linkedTests: readonly LinkedTestRow[] = [],
 ): ExamRoundDetail | null {
-  const summary = toRoundSummary(run, actuals);
+  const summary = toRoundSummary(run, actuals, linkedTests);
   if (!summary) return null;
 
   const nameById = new Map(ownedStudents.map((s) => [s.id, s.name]));

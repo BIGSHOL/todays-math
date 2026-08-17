@@ -35,6 +35,7 @@ import {
 } from "@/mocks/data";
 
 const CLASS_ID = MOCK_CLASSES[0]!.id;
+const RUN_ID = "70000000-0000-4000-8000-0000000000b1";
 const UNIT_ID = MOCK_UNITS[0]!.id;
 
 /** 기출 2문항(원본 배점 10점) + 자작 3문항(원본 배점 NULL) — 11 §10.1 이 말하는 그 혼합이다. */
@@ -199,6 +200,67 @@ describe("[T7.9] 원장 수동 조정 저장 (11 §10.4)", () => {
     if (!created.ok) throw new Error("픽스처 적재 실패");
     return created.testId;
   }
+
+  it("🔴 회차 id 를 주면 시험지에 연결해 저장한다 (15 §B)", async () => {
+    /**
+     * 예측 문제지는 testType 이 "review" 라 일반 확인테스트와 구분되지 않았다.
+     * `Test.predictionRunId` 가 구분의 정본이고, 계기판 파이프라인의 문제지·채점
+     * 단계가 이 연결로 실데이터 판정이 된다.
+     */
+    const result = await persistPredictedPaper({
+      ...baseInput(),
+      predictionRunId: RUN_ID,
+      paper: paper([20, 20, 20, 20, 20]),
+    });
+    expect(result.ok).toBe(true);
+    const test = await db.test.findUnique({
+      where: { id: (result as { testId: string }).testId },
+    });
+    expect(test?.predictionRunId).toBe(RUN_ID);
+  });
+
+  it("회차 없이 만든 시험지는 연결이 NULL 이다", async () => {
+    const result = await persistPredictedPaper({
+      ...baseInput(),
+      paper: paper([20, 20, 20, 20, 20]),
+    });
+    expect(result.ok).toBe(true);
+    const test = await db.test.findUnique({
+      where: { id: (result as { testId: string }).testId },
+    });
+    expect(test?.predictionRunId).toBeNull();
+  });
+
+  it("🔴 못 채운 칸이 있는 반쪽 시험지는 저장하지 않는다 — 저장 뒤엔 결손 흔적이 없다", async () => {
+    /**
+     * 적대적 리뷰(adv2 🟡): 청사진 25문항 중 21개만 채워도 201 로 저장되고
+     * 확정·인쇄까지 아무 저항 없이 통과했다. `unfilled` 는 생성 응답에만 실리고
+     * 어디에도 저장되지 않아, 응답을 흘려보낸 뒤에는 결손을 알 방법이 없다.
+     * D-46 과 같은 철학으로 처리한다 — 지어내지도, 조용히 넘어가지도 않고 알린다.
+     */
+    const p = paper([25, 25, 25, 25]);
+    if (!p.ok) throw new Error("픽스처가 판단 불가를 냈다");
+    const withUnfilled: typeof p = {
+      ...p,
+      unfilled: [
+        {
+          slotIndex: 5,
+          unitId: null,
+          difficulty: null,
+          qtype: "서술형",
+          detail: "후보 없음",
+        },
+      ],
+    };
+
+    const result = await persistPredictedPaper({
+      ...baseInput(),
+      paper: withUnfilled,
+    });
+    expect(result.ok).toBe(false);
+    expect(result.ok === false && result.reason).toBe("문항_부족");
+    expect(result.ok === false && result.detail).toContain("1");
+  });
 
   it("🔴 배점을 표기하지 않는 시험지에는 배점을 심을 수 없다 (D-28·D-40)", async () => {
     /**

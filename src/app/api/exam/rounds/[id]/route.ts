@@ -23,13 +23,15 @@ export async function GET(
   if (!session) return unauthorizedError();
 
   const { id } = await params;
-  const { runs, actuals, ownedStudents } = await loadVisibleRuns(session.id);
+  const { runs, actuals, ownedStudents, linkedTests } = await loadVisibleRuns(
+    session.id,
+  );
 
   // 내게 보이는 회차 목록에서만 찾는다 — 남의 회차는 애초에 여기 없다.
   const run = runs.find((r) => r.id === id);
   if (!run) return notFoundError("회차");
 
-  const detail = toRoundDetail(run, actuals, ownedStudents);
+  const detail = toRoundDetail(run, actuals, ownedStudents, linkedTests);
   if (!detail) return notFoundError("회차");
 
   return jsonOk(examRoundDetailResponseSchema, { data: detail });

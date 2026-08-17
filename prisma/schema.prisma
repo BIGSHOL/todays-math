@@ -390,19 +390,31 @@ model Test {
   testDate  DateTime   @map("test_date") @db.Date
   /// 인쇄 시각 — 노스스타(주 5일 사용) 측정
   printedAt DateTime?  @map("printed_at")
-  createdAt DateTime   @default(now()) @map("created_at")
 
-  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  class          Class         @relation(fields: [classId], references: [id], onDelete: Cascade)
-  student        Student?      @relation(fields: [studentId], references: [id], onDelete: SetNull)
-  rangeStartUnit Unit?         @relation("TestRangeStartUnit", fields: [rangeStartUnitId], references: [id], onDelete: Restrict)
-  rangeEndUnit   Unit          @relation("TestRangeEndUnit", fields: [rangeEndUnitId], references: [id], onDelete: Restrict)
+  /// '오늘의 시험' 예측 문제지면 그 회차(PredictionRun)의 id. 일반 시험지는 NULL.
+  ///
+  /// 이 한 컬럼이 세 가지를 정직하게 만든다(15 §B):
+  ///   1. 예측 문제지 구분 — 배점 유무라는 간접 신호를 대체한다
+  ///   2. 계기판 파이프라인의 문제지·채점 단계 — "데이터 원천이 없어 항상 미완"이던
+  ///      자리에 실데이터 판정이 생긴다
+  ///   3. 반쪽 시험지 차단 — 확정 시 회차 청사진의 문항 수와 대조할 수 있다
+  predictionRunId String?  @map("prediction_run_id") @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  class          Class          @relation(fields: [classId], references: [id], onDelete: Cascade)
+  student        Student?       @relation(fields: [studentId], references: [id], onDelete: SetNull)
+  rangeStartUnit Unit?          @relation("TestRangeStartUnit", fields: [rangeStartUnitId], references: [id], onDelete: Restrict)
+  /// 회차가 지워져도 시험지는 남긴다 — 인쇄물이 이미 나갔을 수 있다.
+  predictionRun  PredictionRun? @relation(fields: [predictionRunId], references: [id], onDelete: SetNull)
+  rangeEndUnit   Unit           @relation("TestRangeEndUnit", fields: [rangeEndUnitId], references: [id], onDelete: Restrict)
   testProblems   TestProblem[]
   testResults    TestResult[]
 
   @@index([userId, testDate(sort: Desc)])
   @@index([classId, testDate(sort: Desc)])
   @@index([studentId])
+  @@index([predictionRunId])
   @@map("test")
 }
 
@@ -621,6 +633,8 @@ model PredictionRun {
 
   user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   actualScores ActualExamScore[]
+  /// 이 회차로 만든 예측 문제지들.
+  tests        Test[]
 
   @@index([userId, createdAt(sort: Desc)])
   @@index([school, level, grade, subject, targetYear, targetSemester, targetRound])
