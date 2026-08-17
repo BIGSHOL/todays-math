@@ -160,6 +160,25 @@ describe("TestPrint — 인쇄 사고 방지", () => {
     expect(screen.getByRole("button", { name: "인쇄하기" })).toBeEnabled();
   });
 
+  it("미리보기 지면의 그림은 지연 로딩하지 않는다 — 인쇄 때 빠지면 안 된다", () => {
+    // 절대 규칙 6. 화면 목록(문제은행·검수)만 미루고, 지면은 미루지 않는다.
+    const withFigures: TestPrintDocument = {
+      ...PRINT_DOCUMENT,
+      problems: PRINT_DOCUMENT.problems.map((problem, index) => ({
+        ...problem,
+        figureUrls: [`/figures/2658/q${index + 1}.png`],
+      })),
+    };
+    render(<TestPrint data={withFigures} />);
+
+    const figures = screen.getAllByRole("img");
+    expect(figures).toHaveLength(withFigures.problems.length);
+    for (const figure of figures) {
+      expect(figure).not.toHaveAttribute("loading");
+      expect(figure).not.toHaveAttribute("decoding");
+    }
+  });
+
   it("인쇄 실패는 서버가 준 사유를 그대로 보여 준다 (401 을 409 로 뭉개지 않는다)", async () => {
     vi.stubGlobal(
       "fetch",

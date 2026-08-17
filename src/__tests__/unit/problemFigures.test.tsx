@@ -12,6 +12,8 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { ProblemContent } from "@/components/math/ProblemContent";
+import { PaperProblemView } from "@/components/print/PaperProblemView";
+import { ProblemBody } from "@/components/print/templates/ProblemBody";
 import { serializeProblem } from "@/lib/serializers";
 
 const STEM = "그림과 같이 밑변이 $40$m인 삼각형의 넓이를 구하시오.";
@@ -75,6 +77,60 @@ describe("[그림] ProblemContent", () => {
     );
     const wrapper = screen.getByRole("img").parentElement;
     expect(wrapper?.className).toContain("print:break-inside-avoid");
+  });
+});
+
+describe("[그림] 로딩 정책 — 화면은 미루고 인쇄는 미루지 않는다", () => {
+  // public/figures 는 12,129장에 최대 1.95MB. 목록 화면에서 화면 밖 그림까지
+  // 원본 크기로 내려받아 디코딩하면 목록이 통째로 느려진다.
+  // 반대로 인쇄 지면에서 미루면 인쇄 시점에 안 그려진 그림이 **빠진 채**
+  // 학생에게 나간다 — 절대 규칙 6. 두 방향을 모두 잠근다.
+  it("화면 목록(문제은행·검수)에서는 지연 로딩한다", () => {
+    render(
+      <PaperProblemView content={STEM} figureUrls={["/figures/1/q01.png"]} />,
+    );
+    const img = screen.getByRole("img");
+    expect(img).toHaveAttribute("loading", "lazy");
+    expect(img).toHaveAttribute("decoding", "async");
+  });
+
+  it("인쇄 지면(framed=false)에서는 지연 로딩 속성을 아예 붙이지 않는다", () => {
+    render(
+      <PaperProblemView
+        content={STEM}
+        figureUrls={["/figures/1/q01.png"]}
+        framed={false}
+      />,
+    );
+    const img = screen.getByRole("img");
+    expect(img).not.toHaveAttribute("loading");
+    expect(img).not.toHaveAttribute("decoding");
+  });
+
+  it("인쇄 템플릿(ProblemBody)이 실제로 인쇄 지면 쪽을 고른다", () => {
+    render(
+      <ProblemBody
+        problem={{
+          id: "p1",
+          orderIndex: 1,
+          content: STEM,
+          answer: "$200$",
+          solution: null,
+          figureUrls: ["/figures/1/q01.png"],
+        }}
+      />,
+    );
+    expect(screen.getByRole("img")).not.toHaveAttribute("loading");
+  });
+
+  it("원본 치수를 모르므로 width/height 를 지어내지 않는다", () => {
+    // 잘못된 치수를 적으면 비율이 틀어져 지면이 어긋난다.
+    render(
+      <ProblemContent content={STEM} figureUrls={["/figures/1/q01.png"]} />,
+    );
+    const img = screen.getByRole("img");
+    expect(img).not.toHaveAttribute("width");
+    expect(img).not.toHaveAttribute("height");
   });
 });
 
