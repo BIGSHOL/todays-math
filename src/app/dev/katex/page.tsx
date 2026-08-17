@@ -1,3 +1,6 @@
+import { notFound } from "next/navigation";
+import { connection } from "next/server";
+
 import { MathText } from "@/components/math/MathText";
 import {
   MOCK_PROBLEM_WITH_EXPONENT,
@@ -41,7 +44,19 @@ const CASES: { title: string; text: string }[] = [
   },
 ];
 
-export default function KatexDevPage() {
+export default async function KatexDevPage() {
+  await connection();
+
+  // 이웃 dev 페이지(dev/transfer-qa)와 **같은 가드**다. 이게 없어서 이 페이지만
+  // 프로덕션에 프리렌더됐고(.next/server/app/dev/katex.html 87KB), 목 픽스처 배럴
+  // (@/mocks/data, 10개 모듈 188KB)을 그대로 끌고 들어갔다.
+  if (
+    process.env.NODE_ENV === "production" &&
+    process.env.ENABLE_KATEX_QA !== "1"
+  ) {
+    notFound();
+  }
+
   return (
     <main className="mx-auto max-w-3xl px-6 py-10 text-[#161616]">
       <p className="text-[11px] font-extrabold tracking-[0.16em] text-[#6a6a68]">
