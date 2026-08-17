@@ -227,7 +227,12 @@ async function main(): Promise<void> {
   const prisma = new PrismaClient();
   try {
     if (revert) {
-      await runRevert(prisma, kindArg);
+      const logAt = argv.indexOf("--log");
+      await runRevert(
+        prisma,
+        kindArg,
+        logAt >= 0 ? argv[logAt + 1] : undefined,
+      );
       return;
     }
 
@@ -332,8 +337,18 @@ async function main(): Promise<void> {
   }
 }
 
-async function runRevert(prisma: PrismaClient, kind: Kind): Promise<void> {
-  const log = JSON.parse(await readFile(logPath(kind), "utf-8")) as {
+/**
+ * `--log` 로 다른 경로를 줄 수 있다. `scripts/qa/reports/` 는 gitignore 라
+ * 워크트리를 지우면 사라지므로, **적용한 로그는 추적되는 경로에 복사해 둔다**
+ * (`docs/planning/tracks/reports/render-c-revert-*.json`). 그 복사본으로도
+ * 되돌릴 수 있어야 되돌리기 경로가 진짜로 있는 것이다.
+ */
+async function runRevert(
+  prisma: PrismaClient,
+  kind: Kind,
+  logFile?: string,
+): Promise<void> {
+  const log = JSON.parse(await readFile(logFile ?? logPath(kind), "utf-8")) as {
     items: Array<{ id: string; before: string; after: string }>;
   };
   const inspection = await inspectDatabaseTargets();

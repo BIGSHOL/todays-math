@@ -1,0 +1,455 @@
+{
+  "kind": "residue",
+  "items": [
+    {
+      "id": "00a214c4-3033-4ea2-8806-374aadd9d251",
+      "before": "[서답형 $6$] 다음 식에 대하여 물음에 답하시오.\n [총 $4$점]\n$1-\\left\\{ 5-4DIVIDEunder\\left( -\\frac{2}{3}\\right) ^{2}\\right\\} \\times \\frac{1}{2}#\\,\\,\\,\\,\\uparrow \\,\\,\\,\\,\\,\\,\\,\\,\\uparrow \\,\\,\\,\\,\\,\\uparrow \\,\\,\\,\\,\\,\\,\\,\\,\\uparrow \\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\uparrow #\\,\\,\\,\\,㉠\\,\\,\\,\\,\\,\\,\\,\\,㉡\\,\\,\\,\\,\\,㉢\\,\\,\\,\\,\\,\\,\\,\\,㉣\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,㉤$\n$[6-1]$ 계산 순서대로 $㉠SIM㉤$을 차례로 나열하시오.\n$[6-2]$ 위의 계산 순서대로 식을 계산하시오.\n2024년 1학기 중간고사\n\n구암중 1학년 수학",
+      "after": "[서답형 $6$] 다음 식에 대하여 물음에 답하시오.\n [총 $4$점]\n$1-\\left\\{ 5-4\\div under\\left( -\\frac{2}{3}\\right) ^{2}\\right\\} \\times \\frac{1}{2}#\\,\\,\\,\\,\\uparrow \\,\\,\\,\\,\\,\\,\\,\\,\\uparrow \\,\\,\\,\\,\\,\\uparrow \\,\\,\\,\\,\\,\\,\\,\\,\\uparrow \\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\uparrow #\\,\\,\\,\\,㉠\\,\\,\\,\\,\\,\\,\\,\\,㉡\\,\\,\\,\\,\\,㉢\\,\\,\\,\\,\\,\\,\\,\\,㉣\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,㉤$\n$[6-1]$ 계산 순서대로 $㉠SIM㉤$을 차례로 나열하시오.\n$[6-2]$ 위의 계산 순서대로 식을 계산하시오.\n2024년 1학기 중간고사\n\n구암중 1학년 수학"
+    },
+    {
+      "id": "047f30c8-f764-4476-b12c-cd17911d40a5",
+      "before": "기호 $\\times ,~\\div $를 생략한 식으로 나타낸 것 중 옳은 것만을 <보기>에서 있는 대로 고른 것은?\n< 보 기 >\nㄱ. $xDIVIDE(-6)=-\\frac{x}{6}$ ㄴ. $x+yDIVIDEz=\\frac{x+y}{z}$\nㄷ. $b\\times (-1)\\times a=-1ab$ ㄹ. $a\\times a\\times (-4)=a^{2}-4$\nㅁ. $5DIVIDEa+b\\times 2=\\frac{5}{a}+2b$\n\n1. ㄱ, ㄷ\n2. ㄱ, ㅁ\n3. ㄴ, ㄷ\n4. ㄱ, ㄹ, ㅁ\n5. ㄴ, ㄷ, ㅁ",
+      "after": "기호 $\\times ,~\\div $를 생략한 식으로 나타낸 것 중 옳은 것만을 <보기>에서 있는 대로 고른 것은?\n< 보 기 >\nㄱ. $x\\div (-6)=-\\frac{x}{6}$ ㄴ. $x+y\\div z=\\frac{x+y}{z}$\nㄷ. $b\\times (-1)\\times a=-1ab$ ㄹ. $a\\times a\\times (-4)=a^{2}-4$\nㅁ. $5\\div a+b\\times 2=\\frac{5}{a}+2b$\n\n1. ㄱ, ㄷ\n2. ㄱ, ㅁ\n3. ㄴ, ㄷ\n4. ㄱ, ㄹ, ㅁ\n5. ㄴ, ㄷ, ㅁ"
+    },
+    {
+      "id": "0d54f12b-18a4-4a60-986b-aabdc261d9e0",
+      "before": "기호 $\\times ,~\\div $를 생략하여 나타낸 것으로 옳은 것은?\n\n1. $3\\times a=a^{3}$\n2. $aDIVIDE5=\\frac{5}{a}$\n3. $0.1\\times a\\times b=0.ab$\n4. $a\\times \\left( -3\\right) \\times b\\times a=\\,-3ab^{2}$\n5. $aDIVIDE4-a\\times \\left( bDIVIDE3\\right) =\\frac{a}{4}-\\frac{ab}{3}$",
+      "after": "기호 $\\times ,~\\div $를 생략하여 나타낸 것으로 옳은 것은?\n\n1. $3\\times a=a^{3}$\n2. $a\\div 5=\\frac{5}{a}$\n3. $0.1\\times a\\times b=0.ab$\n4. $a\\times \\left( -3\\right) \\times b\\times a=\\,-3ab^{2}$\n5. $a\\div 4-a\\times \\left( b\\div 3\\right) =\\frac{a}{4}-\\frac{ab}{3}$"
+    },
+    {
+      "id": "0dd1fd20-03a6-4196-8d55-d96f31dc2fa2",
+      "before": "[서술형 $2$] $\\mathrm{A},~B,~C,~D$가 다음과 같을 때, 물음에 답하시오. [총 $10$점]\n$\\mathrm{A}=1+\\left\\{ 6-(5-7)\\right\\} \\times \\left( \\mathit{-}\\frac{1}{2}\\right) ^{2},~~\\mathrm{B}=5-\\left[ \\left\\{ 6-(-8)\\right\\} \\times \\frac{1}{2}+1\\right]$\n$\\mathrm{C}=\\mathit{(}-3)^{3}\\times \\left\\{ \\left( \\frac{3}{2}+\\frac{1}{4}\\right) \\div \\frac{3}{4}\\right\\} \\,\\,,~~~\\mathrm{D}=\\mathit{(}-2)^{3}\\times \\left\\{ \\frac{3}{2}\\div \\left( \\mathit{-}4\\right) \\right\\} -7$\n$(1)$ $\\mathrm{A}$의 값을 구하는 풀이과정과 답을 적으시오. \n$(2)$ $\\mathrm{B}$의 값을 구하는 풀이과정과 답을 적으시오. \n$(3)$ $\\mathrm{C}$의 값을 구하는 풀이과정과 답을 적으시오. \n$(4)$ $\\mathrm{D}$의 값을 구하는 풀이과정과 답을 적으시오. \n$(5)$ $(6\\mathrm{A}-B)DIVIDEC\\times D$의 값을 구하는 풀이과정과 답을 적으시오.",
+      "after": "[서술형 $2$] $\\mathrm{A},~B,~C,~D$가 다음과 같을 때, 물음에 답하시오. [총 $10$점]\n$\\mathrm{A}=1+\\left\\{ 6-(5-7)\\right\\} \\times \\left( \\mathit{-}\\frac{1}{2}\\right) ^{2},~~\\mathrm{B}=5-\\left[ \\left\\{ 6-(-8)\\right\\} \\times \\frac{1}{2}+1\\right]$\n$\\mathrm{C}=\\mathit{(}-3)^{3}\\times \\left\\{ \\left( \\frac{3}{2}+\\frac{1}{4}\\right) \\div \\frac{3}{4}\\right\\} \\,\\,,~~~\\mathrm{D}=\\mathit{(}-2)^{3}\\times \\left\\{ \\frac{3}{2}\\div \\left( \\mathit{-}4\\right) \\right\\} -7$\n$(1)$ $\\mathrm{A}$의 값을 구하는 풀이과정과 답을 적으시오. \n$(2)$ $\\mathrm{B}$의 값을 구하는 풀이과정과 답을 적으시오. \n$(3)$ $\\mathrm{C}$의 값을 구하는 풀이과정과 답을 적으시오. \n$(4)$ $\\mathrm{D}$의 값을 구하는 풀이과정과 답을 적으시오. \n$(5)$ $(6\\mathrm{A}-B)\\div C\\times D$의 값을 구하는 풀이과정과 답을 적으시오."
+    },
+    {
+      "id": "0ecaeadd-9e87-4031-ac72-a215c7340df8",
+      "before": "삼각비의 표를 이용하여 $\\tan (3x+4°)=1.1504$일 때, $\\cos \\,2xDIVIDE\\,\\tan \\,4x+\\sin \\,6x$의 값을 구하면?\n(단, $0°<x<90°$)\n각도\n$\\sin$\n$\\cos$\n$\\tan$\n$47°$\n$0.7314$\n$0.6820$\n$1.0724$\n$48°$\n$0.7431$\n$0.6691$\n$1.1106$\n$49°$\n$0.7547$\n$0.6561$\n$1.1504$\n$50°$\n$0.7660$\n$0.6428$\n$1.1918$\n$51°$\n$0.7771$\n$0.6293$\n$1.2349$\n\n1. $\\frac{\\sqrt{3}}{4}$\n2. $\\frac{1}{2}$\n3. $\\frac{\\sqrt{3}}{2}$\n4. $\\frac{3}{2}$\n5. $2$",
+      "after": "삼각비의 표를 이용하여 $\\tan (3x+4°)=1.1504$일 때, $\\cos \\,2x\\div \\,\\tan \\,4x+\\sin \\,6x$의 값을 구하면?\n(단, $0°<x<90°$)\n각도\n$\\sin$\n$\\cos$\n$\\tan$\n$47°$\n$0.7314$\n$0.6820$\n$1.0724$\n$48°$\n$0.7431$\n$0.6691$\n$1.1106$\n$49°$\n$0.7547$\n$0.6561$\n$1.1504$\n$50°$\n$0.7660$\n$0.6428$\n$1.1918$\n$51°$\n$0.7771$\n$0.6293$\n$1.2349$\n\n1. $\\frac{\\sqrt{3}}{4}$\n2. $\\frac{1}{2}$\n3. $\\frac{\\sqrt{3}}{2}$\n4. $\\frac{3}{2}$\n5. $2$"
+    },
+    {
+      "id": "102210f8-e802-4fa1-920a-bd65a8038918",
+      "before": "다음을 만족하는 두 다항식 $A,~B$에 대하여 $10A-\\frac{1}{2}B$를 계산하면? \n$\\left( -\\frac{1}{3}xy\\right) \\times A=-\\frac{2}{15}x^{5}y^{2}-\\frac{1}{6}x^{3}y^{7}$\n$BDIVIDE\\left( -2x^{2}\\right) =-x^{2}y+9y^{6}$\n\n1. $3x^{4}y+4x^{2}y^{6}$\n2. $3x^{4}y+14x^{2}y^{6}$\n3. $5x^{4}y-4x^{2}y^{4}$\n4. $5x^{6}y+14x^{2}y^{6}$\n5. $4x^{6}y^{3}+5x^{4}y^{8}-x^{4}y+9x^{2}y^{6}$",
+      "after": "다음을 만족하는 두 다항식 $A,~B$에 대하여 $10A-\\frac{1}{2}B$를 계산하면? \n$\\left( -\\frac{1}{3}xy\\right) \\times A=-\\frac{2}{15}x^{5}y^{2}-\\frac{1}{6}x^{3}y^{7}$\n$B\\div \\left( -2x^{2}\\right) =-x^{2}y+9y^{6}$\n\n1. $3x^{4}y+4x^{2}y^{6}$\n2. $3x^{4}y+14x^{2}y^{6}$\n3. $5x^{4}y-4x^{2}y^{4}$\n4. $5x^{6}y+14x^{2}y^{6}$\n5. $4x^{6}y^{3}+5x^{4}y^{8}-x^{4}y+9x^{2}y^{6}$"
+    },
+    {
+      "id": "1036f329-d820-46d4-bc89-dbfd8e110047",
+      "before": "다음 중 기호 $\\times ,~\\div $를 쓰지 않고 나타낸 것으로 옳은 것은?\n\n1. $xDIVIDE5\\times 2y=\\frac{x}{10y}$\n2. $0.1\\times xDIVIDEy+2=\\frac{0.1x}{y+2}$\n3. $x\\times (-2)\\times 2y=x-4y$\n4. $x\\times x-yDIVIDE\\frac{x}{y}=2x-\\frac{y^{2}}{x}$\n5. $2xDIVIDE(y-z)\\div \\frac{4}{3}=\\frac{3x}{2(y-z)}$",
+      "after": "다음 중 기호 $\\times ,~\\div $를 쓰지 않고 나타낸 것으로 옳은 것은?\n\n1. $x\\div 5\\times 2y=\\frac{x}{10y}$\n2. $0.1\\times x\\div y+2=\\frac{0.1x}{y+2}$\n3. $x\\times (-2)\\times 2y=x-4y$\n4. $x\\times x-y\\div \\frac{x}{y}=2x-\\frac{y^{2}}{x}$\n5. $2x\\div (y-z)\\div \\frac{4}{3}=\\frac{3x}{2(y-z)}$"
+    },
+    {
+      "id": "11e521b4-7e81-4974-aaad-402d409addf5",
+      "before": "다음 식을 간단히 하였을 때 $x$의 계수를 $a$, 상수항을 $b$라 하자. $a-b$의 값은?\n$(-4x+8)divide\\left( -2^{2}\\right) -(6x-3)\\times \\left( -\\frac{2}{3}\\right) ^{2}$\n\n1. $\\frac{8}{3}$\n2. $2$\n3. $-1$\n4. $-\\frac{4}{3}$\n5. $-\\frac{5}{3}$",
+      "after": "다음 식을 간단히 하였을 때 $x$의 계수를 $a$, 상수항을 $b$라 하자. $a-b$의 값은?\n$(-4x+8)\\div \\left( -2^{2}\\right) -(6x-3)\\times \\left( -\\frac{2}{3}\\right) ^{2}$\n\n1. $\\frac{8}{3}$\n2. $2$\n3. $-1$\n4. $-\\frac{4}{3}$\n5. $-\\frac{5}{3}$"
+    },
+    {
+      "id": "14295b5f-0aec-4ccd-861e-44197592598c",
+      "before": "[서술형 $4$] 네 점 $\\mathrm{A}\\left( -\\frac{7}{4}\\right)$, $\\mathrm{B}\\left( \\mathit{x}\\right)$, $\\mathrm{C}\\left( -\\frac{5}{7}\\right)$, $\\mathrm{D}\\left( \\mathit{y}\\right)$가 이 순서대로 수직선 위에 놓여 있을 때, 네 점 사이의 간격이 일정하다. $xDIVIDEy$의 값을 구하시오.",
+      "after": "[서술형 $4$] 네 점 $\\mathrm{A}\\left( -\\frac{7}{4}\\right)$, $\\mathrm{B}\\left( \\mathit{x}\\right)$, $\\mathrm{C}\\left( -\\frac{5}{7}\\right)$, $\\mathrm{D}\\left( \\mathit{y}\\right)$가 이 순서대로 수직선 위에 놓여 있을 때, 네 점 사이의 간격이 일정하다. $x\\div y$의 값을 구하시오."
+    },
+    {
+      "id": "14f4a948-b266-4fad-b8e3-b592c621cb9e",
+      "before": "[서술형 $3$] 세 유리수 $a,~b,~c$에 대하여 $<a,~b>\\,=aDIVIDEb,~[a,~b,~c]=a\\times b\\times c$로 정의할 때, 다음 식을 구하는 풀이 과정과 답을 쓰시오. \n$[\\,<\\frac{6}{7},\\,-\\frac{3}{2}>,\\,<\\,-\\frac{10}{9},\\,-\\frac{2}{3}>,\\,<\\frac{6}{5},\\,-2>]\\,$",
+      "after": "[서술형 $3$] 세 유리수 $a,~b,~c$에 대하여 $<a,~b>\\,=a\\div b,~[a,~b,~c]=a\\times b\\times c$로 정의할 때, 다음 식을 구하는 풀이 과정과 답을 쓰시오. \n$[\\,<\\frac{6}{7},\\,-\\frac{3}{2}>,\\,<\\,-\\frac{10}{9},\\,-\\frac{2}{3}>,\\,<\\frac{6}{5},\\,-2>]\\,$"
+    },
+    {
+      "id": "1bf44ae5-9924-4a76-98a7-54bc6b52d561",
+      "before": "$a=\\left( -5\\right) divide\\left( \\frac{5}{-3^{2}}\\right) +\\left\\{ \\left( -\\frac{1}{2}\\right) ^{2}\\times \\left( -\\frac{8}{5}\\right) -\\frac{4}{5}\\right\\}$, $b=17.2\\times 21.6+3\\times 14.2-17.2\\times 24.6$일 때, 두 수 $a$, $b$ 사이에 있는 모든 정수의 합은?\n\n1. $-8$\n2. $-7$\n3. $0$\n4. $7$\n5. $8$",
+      "after": "$a=\\left( -5\\right) \\div \\left( \\frac{5}{-3^{2}}\\right) +\\left\\{ \\left( -\\frac{1}{2}\\right) ^{2}\\times \\left( -\\frac{8}{5}\\right) -\\frac{4}{5}\\right\\}$, $b=17.2\\times 21.6+3\\times 14.2-17.2\\times 24.6$일 때, 두 수 $a$, $b$ 사이에 있는 모든 정수의 합은?\n\n1. $-8$\n2. $-7$\n3. $0$\n4. $7$\n5. $8$"
+    },
+    {
+      "id": "1da9a947-c3ab-4831-a0e3-7ba6d9833d7d",
+      "before": "두 수 $a,~b\\,$가 있을 때, $b-a<0,~ab<0$가 성립한다.\n이 때, 계산 결과의 부호가 다른 것은?\n\n1. $a+b^{2}$\n2. $a^{2}-b$\n3. $b^{3}-a$\n4. $aDIVIDE(-b)$\n5. $(a-b)\\div \\left( -\\frac{1}{6}\\right) ^{2}$",
+      "after": "두 수 $a,~b\\,$가 있을 때, $b-a<0,~ab<0$가 성립한다.\n이 때, 계산 결과의 부호가 다른 것은?\n\n1. $a+b^{2}$\n2. $a^{2}-b$\n3. $b^{3}-a$\n4. $a\\div (-b)$\n5. $(a-b)\\div \\left( -\\frac{1}{6}\\right) ^{2}$"
+    },
+    {
+      "id": "22aabb99-61d0-4782-bed1-b06abb5385a9",
+      "before": "[서술형 $4$] $-\\frac{3}{4}$보다 $-\\frac{2}{3}$만큼 작은 수를 $a\\,,~\\left| x\\right| =\\frac{1}{2}$을 만족하는 $x$의 값 중에서 작은 수를 $b\\,,~-\\frac{1}{5}\\div \\frac{1}{c}=\\frac{2}{15}$를 만족하는 수를 $c\\,$라고 할 때, $aDIVIDEb+c^{\\,2}$의 값을 구하는 풀이과정과 답을 자세히 서술하시오.",
+      "after": "[서술형 $4$] $-\\frac{3}{4}$보다 $-\\frac{2}{3}$만큼 작은 수를 $a\\,,~\\left| x\\right| =\\frac{1}{2}$을 만족하는 $x$의 값 중에서 작은 수를 $b\\,,~-\\frac{1}{5}\\div \\frac{1}{c}=\\frac{2}{15}$를 만족하는 수를 $c\\,$라고 할 때, $a\\div b+c^{\\,2}$의 값을 구하는 풀이과정과 답을 자세히 서술하시오."
+    },
+    {
+      "id": "22c0dda1-4525-46db-b3eb-6af8d6eeaefa",
+      "before": "[서술형 $4$] 여섯 유리수 $\\frac{4}{3},~(-1)^{10},~(-3)^{3},~-1.5,~-\\frac{5}{9},~-(-2)^{3}$ 중에서 서로 다른 세 수를 뽑아 곱한 값 중 가장 큰 것을 $A$, 가장 작은 것을 $B\\,$라 하자. 이때, $ADIVIDEB$의 값을 구하고 그 과정을 <조건>에 맞게 서술하시오. \n< 조 건 >\n• 풀이과정에서 $A,~B\\,$의 값을 반드시 명시할 것.\n• 풀이과정에서 $A,~B\\,$를 구하기 위해 세 수를 뽑은 이유를 반드시 포함할 것.\n• 답안에 분수를 표기할 경우 기약분수로 나타낼 것.",
+      "after": "[서술형 $4$] 여섯 유리수 $\\frac{4}{3},~(-1)^{10},~(-3)^{3},~-1.5,~-\\frac{5}{9},~-(-2)^{3}$ 중에서 서로 다른 세 수를 뽑아 곱한 값 중 가장 큰 것을 $A$, 가장 작은 것을 $B\\,$라 하자. 이때, $A\\div B$의 값을 구하고 그 과정을 <조건>에 맞게 서술하시오. \n< 조 건 >\n• 풀이과정에서 $A,~B\\,$의 값을 반드시 명시할 것.\n• 풀이과정에서 $A,~B\\,$를 구하기 위해 세 수를 뽑은 이유를 반드시 포함할 것.\n• 답안에 분수를 표기할 경우 기약분수로 나타낼 것."
+    },
+    {
+      "id": "26881833-6701-4ec9-8c83-f80f276e9632",
+      "before": "[서답형 $3$] $x,\\,\\,\\,\\,y\\neq 0$일 때, 다음을 만족시키는 식 $A$를 구하시오. (단, 풀이 과정과 답을 구체적으로 서술하시오.) \n$4xy^{4}\\times ADIVIDE\\left( -\\frac{2}{3}x^{2}y\\right) ^{3}=6x^{3}y^{5}$",
+      "after": "[서답형 $3$] $x,\\,\\,\\,\\,y\\neq 0$일 때, 다음을 만족시키는 식 $A$를 구하시오. (단, 풀이 과정과 답을 구체적으로 서술하시오.) \n$4xy^{4}\\times A\\div \\left( -\\frac{2}{3}x^{2}y\\right) ^{3}=6x^{3}y^{5}$"
+    },
+    {
+      "id": "294fd598-31c9-48e2-bd87-0d22b3c6641a",
+      "before": "곱셈 기호 $\\times$와 나눗셈 기호 $\\div $를 생략하여 나타낸 것으로 옳지 않은 것은?\n\n1. $a\\times (-2)=\\,-2a$\n2. $a-bDIVIDE2=a-\\frac{b}{2}$\n3. $a\\times 3\\times aDIVIDEb=3a\\frac{^{2}}{b}$\n4. $3\\times (-1)DIVIDEa=\\,-\\frac{a}{3}$\n5. $(a+b)\\times 2-cdivide5=2(a+b)-\\frac{c}{5}$",
+      "after": "곱셈 기호 $\\times$와 나눗셈 기호 $\\div $를 생략하여 나타낸 것으로 옳지 않은 것은?\n\n1. $a\\times (-2)=\\,-2a$\n2. $a-b\\div 2=a-\\frac{b}{2}$\n3. $a\\times 3\\times a\\div b=3a\\frac{^{2}}{b}$\n4. $3\\times (-1)\\div a=\\,-\\frac{a}{3}$\n5. $(a+b)\\times 2-c\\div 5=2(a+b)-\\frac{c}{5}$"
+    },
+    {
+      "id": "2cd69e1b-b21c-4dac-b839-ae8799b818ae",
+      "before": "곱셈 기호 $\\times$와 나눗셈 기호 $\\div$를 생략하여 나타낸 것으로 옳지 않은 것은?\n\n1. $3\\div x=\\frac{3}{x}$\n2. $a-b\\div 2=a-\\frac{b}{2}$\n3. $5\\times (-1)DIVIDEa=\\,-\\frac{5}{a}$\n4. $a\\times a\\times a\\times (-3)=\\,-3a^{3}$\n5. $4\\times (x+y)+z\\div 3=4(x+y)+\\frac{z}{3}$",
+      "after": "곱셈 기호 $\\times$와 나눗셈 기호 $\\div$를 생략하여 나타낸 것으로 옳지 않은 것은?\n\n1. $3\\div x=\\frac{3}{x}$\n2. $a-b\\div 2=a-\\frac{b}{2}$\n3. $5\\times (-1)\\div a=\\,-\\frac{5}{a}$\n4. $a\\times a\\times a\\times (-3)=\\,-3a^{3}$\n5. $4\\times (x+y)+z\\div 3=4(x+y)+\\frac{z}{3}$"
+    },
+    {
+      "id": "2ea7bc7c-2bab-41c6-b435-45a32d507dcc",
+      "before": "[서술형 $3$] $a>0$, $a\\times b<0$, $aDIVIDEc>0$, $\\frac{\\left| a\\right|}{2}=\\left| c\\right|$일 때, $a,~b,~c$의 크기를 비교하려고 한다. 다음 물음에 답하시오.\n[총 $8$점]\n$\\left( 1\\right)$ $b,~c$가 양수인지 음수인지를 구하시오.\n$\\left( 2\\right)$ $a,~b,~c$의 크기가 작은 수부터 차례로 나열하고 그 이유를 서술하시오.",
+      "after": "[서술형 $3$] $a>0$, $a\\times b<0$, $a\\div c>0$, $\\frac{\\left| a\\right|}{2}=\\left| c\\right|$일 때, $a,~b,~c$의 크기를 비교하려고 한다. 다음 물음에 답하시오.\n[총 $8$점]\n$\\left( 1\\right)$ $b,~c$가 양수인지 음수인지를 구하시오.\n$\\left( 2\\right)$ $a,~b,~c$의 크기가 작은 수부터 차례로 나열하고 그 이유를 서술하시오."
+    },
+    {
+      "id": "2f9e2403-f551-48d1-a3d4-4371457faefe",
+      "before": "$(8x^{2}+4x)divide(-2x)+(-2x^{2}y+y)\\,divide\\frac{y}{3}$를 계산하였을 때, $x^{2}$의 계수는?\n\n1. $-6$\n2. $-3$\n3. $0$\n4. $3$\n5. $6$",
+      "after": "$(8x^{2}+4x)\\div (-2x)+(-2x^{2}y+y)\\,\\div \\frac{y}{3}$를 계산하였을 때, $x^{2}$의 계수는?\n\n1. $-6$\n2. $-3$\n3. $0$\n4. $3$\n5. $6$"
+    },
+    {
+      "id": "2fff55f9-b3ab-492d-b70c-a53036b1ceee",
+      "before": "<보기>는 곱셈 기호 $\\times$와 나눗셈 기호 $\\div $를 생략하여 나타낸 것이다. 옳은 것만을 고른 것은? \n<보기>\nㄱ. $a\\times (-2)=a-2$ ㄴ. $0.1\\times a=0.1a$\nㄷ. $aDIVIDE3\\times b=\\frac{a}{3b}\\,\\,$ ㄹ. $a+bDIVIDE4=a+\\frac{b}{4}$\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄷ\n3. ㄴ, ㄷ\n4. ㄴ, ㄹ\n5. ㄷ, ㄹ",
+      "after": "<보기>는 곱셈 기호 $\\times$와 나눗셈 기호 $\\div $를 생략하여 나타낸 것이다. 옳은 것만을 고른 것은? \n<보기>\nㄱ. $a\\times (-2)=a-2$ ㄴ. $0.1\\times a=0.1a$\nㄷ. $a\\div 3\\times b=\\frac{a}{3b}\\,\\,$ ㄹ. $a+b\\div 4=a+\\frac{b}{4}$\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄷ\n3. ㄴ, ㄷ\n4. ㄴ, ㄹ\n5. ㄷ, ㄹ"
+    },
+    {
+      "id": "31f6aa0e-341a-484e-ae3e-5581222102eb",
+      "before": "[서술형 $1$] $2.\\dot{8}$의 역수를 $a$, $1.\\dot{2}$의 역수를 $b$라고 할 때 물음에 답하시오. [총 $10$점]\n$⑴$ $a,~b$를 각각 구하시오. \n$⑵$ $bDIVIDEa$를 순환소수로 나타내시오.",
+      "after": "[서술형 $1$] $2.\\dot{8}$의 역수를 $a$, $1.\\dot{2}$의 역수를 $b$라고 할 때 물음에 답하시오. [총 $10$점]\n$⑴$ $a,~b$를 각각 구하시오. \n$⑵$ $b\\div a$를 순환소수로 나타내시오."
+    },
+    {
+      "id": "35f1f0b9-1d3d-4f14-8689-10b2e7c15cea",
+      "before": "다음의 계산 과정 중 \n 안에 들어갈 단항식 $A,~B$에 대하여 $A\\times B$를 간단히 한 것은? \n$6a^{3}bDIVIDE\\frac{3}{2}ab^{3}\\times 4a^{2}b=6a^{3}b\\times$$A$\n$\\times 4a^{2}b=$$B$\n\n1. $\\frac{32}{3}a^{7}b^{8}$\n2. $\\frac{32a^{3}}{3b^{4}}$\n3. $\\frac{24a^{3}}{b^{4}}$\n4. $\\frac{64a^{2}}{3b^{4}}$\n5. $\\frac{54}{3}a^{7}b^{8}$",
+      "after": "다음의 계산 과정 중 \n 안에 들어갈 단항식 $A,~B$에 대하여 $A\\times B$를 간단히 한 것은? \n$6a^{3}b\\div \\frac{3}{2}ab^{3}\\times 4a^{2}b=6a^{3}b\\times$$A$\n$\\times 4a^{2}b=$$B$\n\n1. $\\frac{32}{3}a^{7}b^{8}$\n2. $\\frac{32a^{3}}{3b^{4}}$\n3. $\\frac{24a^{3}}{b^{4}}$\n4. $\\frac{64a^{2}}{3b^{4}}$\n5. $\\frac{54}{3}a^{7}b^{8}$"
+    },
+    {
+      "id": "370a9567-af0f-4b47-a0e2-5c605d9b45a2",
+      "before": "네 수 $a\\,,~b\\,,~c\\,,~d\\,$가 다음 <조건>을 모두 만족할 때, 나머지 넷과 부호가 다른 하나는?\n< 조 건 >\n$a\\times b\\times c\\times d>0$\n$a+b=0$\n$a-c<0$\n$\\frac{b}{d}\\,<0$\n\n1. $a\\times b$\n2. $\\frac{d}{a}$\n3. $a\\times bDIVIDEd$\n4. $b-d$\n5. $\\left( \\,b-a\\,\\right) DIVIDEc$",
+      "after": "네 수 $a\\,,~b\\,,~c\\,,~d\\,$가 다음 <조건>을 모두 만족할 때, 나머지 넷과 부호가 다른 하나는?\n< 조 건 >\n$a\\times b\\times c\\times d>0$\n$a+b=0$\n$a-c<0$\n$\\frac{b}{d}\\,<0$\n\n1. $a\\times b$\n2. $\\frac{d}{a}$\n3. $a\\times b\\div d$\n4. $b-d$\n5. $\\left( \\,b-a\\,\\right) \\div c$"
+    },
+    {
+      "id": "37b9307d-b23d-4662-a284-ad1765df7632",
+      "before": "다음 <보기> 중 곱셈기호 $\\times$, 나눗셈 기호 $\\div \\,$를 쓰지 않고 옳게 나타낸 것을 모두 고른 것은?\n<보기>\nㄱ. $x\\div y\\div z=\\frac{x}{yz}$\nㄴ. $a+bDIVIDE3\\times x=\\frac{a+b}{3x}$\nㄷ. $a\\div 2\\times b=\\frac{a}{2}b$\n\n1. ㄱ\n2. ㄱ,ㄴ\n3. ㄱ,ㄷ\n4. ㄴ,ㄷ\n5. ㄱ,ㄴ,ㄷ",
+      "after": "다음 <보기> 중 곱셈기호 $\\times$, 나눗셈 기호 $\\div \\,$를 쓰지 않고 옳게 나타낸 것을 모두 고른 것은?\n<보기>\nㄱ. $x\\div y\\div z=\\frac{x}{yz}$\nㄴ. $a+b\\div 3\\times x=\\frac{a+b}{3x}$\nㄷ. $a\\div 2\\times b=\\frac{a}{2}b$\n\n1. ㄱ\n2. ㄱ,ㄴ\n3. ㄱ,ㄷ\n4. ㄴ,ㄷ\n5. ㄱ,ㄴ,ㄷ"
+    },
+    {
+      "id": "39f1413b-a865-4171-950e-244cdc64bfc9",
+      "before": "$\\times$, $\\div \\,$기호를 생략하여 나타낸 것으로 옳은 것은?\n\n1. $0.1\\times a=0.a$\n2. $b\\times b\\times b=bbb$\n3. $a+bDIVIDEc=\\frac{a+b}{c}$\n4. $a\\times b\\times \\left( -2\\right) =-2ab$\n5. $x+10DIVIDEy\\times x=\\frac{x+10}{xy}$",
+      "after": "$\\times$, $\\div \\,$기호를 생략하여 나타낸 것으로 옳은 것은?\n\n1. $0.1\\times a=0.a$\n2. $b\\times b\\times b=bbb$\n3. $a+b\\div c=\\frac{a+b}{c}$\n4. $a\\times b\\times \\left( -2\\right) =-2ab$\n5. $x+10\\div y\\times x=\\frac{x+10}{xy}$"
+    },
+    {
+      "id": "400ea482-6bd7-403a-ab2e-a99f66ddee94",
+      "before": "세 유리수 $a,~b,~c$에 대하여 $a<0,~a\\times cDIVIDEb<0,~2<\\left| a\\right| <\\left| b\\right| <\\left| c\\right|$일 때, 다음 중 가장 큰 것은? (단, 세 수중 부호가 다른 것이 반드시 있다.)\n\n1. $c^{2}$\n2. $a+b$\n3. $a^{2}$\n4. $\\frac{1}{b}$\n5. $\\frac{1}{c}$",
+      "after": "세 유리수 $a,~b,~c$에 대하여 $a<0,~a\\times c\\div b<0,~2<\\left| a\\right| <\\left| b\\right| <\\left| c\\right|$일 때, 다음 중 가장 큰 것은? (단, 세 수중 부호가 다른 것이 반드시 있다.)\n\n1. $c^{2}$\n2. $a+b$\n3. $a^{2}$\n4. $\\frac{1}{b}$\n5. $\\frac{1}{c}$"
+    },
+    {
+      "id": "431387eb-884e-43b7-bd66-4d5167231882",
+      "before": "$a=2$, $b=-1$일 때, $\\left( 2a^{2}b-6ab^{2}\\right) \\div 2ab-\\left( 3b^{2}-2ab\\right) DIVIDEb$의 값은?\n\n1. $12$\n2. $13$\n3. $14$\n4. $15$\n5. $16$",
+      "after": "$a=2$, $b=-1$일 때, $\\left( 2a^{2}b-6ab^{2}\\right) \\div 2ab-\\left( 3b^{2}-2ab\\right) \\div b$의 값은?\n\n1. $12$\n2. $13$\n3. $14$\n4. $15$\n5. $16$"
+    },
+    {
+      "id": "43cf9465-d61c-40a0-a38a-85dc34dc27c8",
+      "before": "$a-b\\,<\\,0,~a\\times c\\,>\\,0,~cDIVIDEb\\,<\\,0\\,$일 때, 옳은 것은?\n\n1. $a\\,>\\,0,~b\\,>\\,0,~c\\,>\\,0$\n2. $a\\,>\\,0,~b\\,>\\,0,~c\\,<\\,0$\n3. $a\\,>\\,0,~b\\,<\\,0,~c\\,>\\,0$\n4. $a\\,<\\,0,~b\\,>\\,0,~c\\,>\\,0$\n5. $a\\,<\\,0,~b\\,>\\,0,~c\\,<\\,0$",
+      "after": "$a-b\\,<\\,0,~a\\times c\\,>\\,0,~c\\div b\\,<\\,0\\,$일 때, 옳은 것은?\n\n1. $a\\,>\\,0,~b\\,>\\,0,~c\\,>\\,0$\n2. $a\\,>\\,0,~b\\,>\\,0,~c\\,<\\,0$\n3. $a\\,>\\,0,~b\\,<\\,0,~c\\,>\\,0$\n4. $a\\,<\\,0,~b\\,>\\,0,~c\\,>\\,0$\n5. $a\\,<\\,0,~b\\,>\\,0,~c\\,<\\,0$"
+    },
+    {
+      "id": "459b8345-b513-4f35-9c1c-2cfa974563cf",
+      "before": "$2.\\dot{1}$보다 $0.\\dot{1}$만큼 작은 수를 $a$, $1.1\\dot{3}$의 역수를 $b$라 할 때, $aDIVIDEb$의 값은?\n\n1. $\\frac{15}{17}$\n2. $\\frac{17}{15}$\n3. $\\frac{34}{15}$\n4. $\\frac{30}{17}$\n5. $\\frac{35}{17}$",
+      "after": "$2.\\dot{1}$보다 $0.\\dot{1}$만큼 작은 수를 $a$, $1.1\\dot{3}$의 역수를 $b$라 할 때, $a\\div b$의 값은?\n\n1. $\\frac{15}{17}$\n2. $\\frac{17}{15}$\n3. $\\frac{34}{15}$\n4. $\\frac{30}{17}$\n5. $\\frac{35}{17}$"
+    },
+    {
+      "id": "46e83423-6c65-4d67-b788-2a451fc90207",
+      "before": "<보기>에서 옳은 것만을 고른 것은? \n< 보 기 >\nㄱ. $x^{7}DIVIDEx^{7}=0$ ㄴ. $\\left( b^{3}\\right) ^{5}=b^{8}$ \nㄷ. $a\\times a=a^{2}$ ㄹ. $32\\div 2^{2}=2^{2}$ \nㅁ. $x^{2}\\times y^{4}DIVIDEx^{7}\\times y^{2}=\\frac{y^{6}}{x^{5}}$\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄷ\n3. ㄴ, ㅁ\n4. ㄷ, ㄹ\n5. ㄷ, ㅁ",
+      "after": "<보기>에서 옳은 것만을 고른 것은? \n< 보 기 >\nㄱ. $x^{7}\\div x^{7}=0$ ㄴ. $\\left( b^{3}\\right) ^{5}=b^{8}$ \nㄷ. $a\\times a=a^{2}$ ㄹ. $32\\div 2^{2}=2^{2}$ \nㅁ. $x^{2}\\times y^{4}\\div x^{7}\\times y^{2}=\\frac{y^{6}}{x^{5}}$\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄷ\n3. ㄴ, ㅁ\n4. ㄷ, ㄹ\n5. ㄷ, ㅁ"
+    },
+    {
+      "id": "4a3e60b8-02e3-4bdf-bd60-c1a7ee82079d",
+      "before": "[서술형 $2$] 아래 그림과 같은 전개도를 접어 정육면체를 만들려고 한다. 마주 보는 면에 적힌 두 수가 서로 역수일 때, $\\left( a-c\\right) DIVIDEb\\,$의 값을 구하시오. (단, 모든 풀이 과정을 자세히 쓰시오.)\n$b$\n$a$\n$-\\frac{2}{5}$\n$-\\frac{2}{3}$\n$c$\n$\\frac{1}{4}$",
+      "after": "[서술형 $2$] 아래 그림과 같은 전개도를 접어 정육면체를 만들려고 한다. 마주 보는 면에 적힌 두 수가 서로 역수일 때, $\\left( a-c\\right) \\div b\\,$의 값을 구하시오. (단, 모든 풀이 과정을 자세히 쓰시오.)\n$b$\n$a$\n$-\\frac{2}{5}$\n$-\\frac{2}{3}$\n$c$\n$\\frac{1}{4}$"
+    },
+    {
+      "id": "4cd5947b-7e6b-417a-8ac1-49f1f09d2a59",
+      "before": "다음 식을 간단히 하였을 때 $x$의 계수를 $a$, 상수항을 $b$라 하자. $a-b$의 값은?\n$(-4x+8)divide\\left( -2^{2}\\right) -(6x-3)\\times \\left( -\\frac{2}{3}\\right) ^{2}$\n\n1. $\\frac{8}{3}$\n2. $2$\n3. $-1$\n4. $-\\frac{4}{3}$\n5. $-\\frac{5}{3}$",
+      "after": "다음 식을 간단히 하였을 때 $x$의 계수를 $a$, 상수항을 $b$라 하자. $a-b$의 값은?\n$(-4x+8)\\div \\left( -2^{2}\\right) -(6x-3)\\times \\left( -\\frac{2}{3}\\right) ^{2}$\n\n1. $\\frac{8}{3}$\n2. $2$\n3. $-1$\n4. $-\\frac{4}{3}$\n5. $-\\frac{5}{3}$"
+    },
+    {
+      "id": "51088bc2-6057-4e63-a021-45a040aa5c59",
+      "before": "두 유리수 $a$, $b$의 부호가 $a<0$, $b<0$일 때, 항상 양수인 것은?\n\n1. $a+b$\n2. $b-a$\n3. $a-b$\n4. $a\\times b\\times b$\n5. $adivideb$",
+      "after": "두 유리수 $a$, $b$의 부호가 $a<0$, $b<0$일 때, 항상 양수인 것은?\n\n1. $a+b$\n2. $b-a$\n3. $a-b$\n4. $a\\times b\\times b$\n5. $a\\div b$"
+    },
+    {
+      "id": "5266e1cb-290e-40dd-b137-f56629e9e056",
+      "before": "[서술형 $5$] 어느 지역에서 축제 부스 운영을 위하여 $A,~B,~C,~D$ 네 가지 계획안을 제시하였다. 이 지역의 주민들을 대상으로 네가지 축제 부스 운영 계획안에 대한 선호도를 조사한 결과는 다음과 같다.\n계획안\n$A$\n$B$\n$C$\n$D$\n합계\n선호도(%)\n$a$\n$b$\n$17$\n$23$\n$100$\n임의로 뽑은 $400$명의 주민들이 각각 한가지씩의 계획안을 선택한다고 할 때, 계획안 $A$, 계획안 $B$를 선택할 주민의 수를 각각 확률변수 $X,~Y$라 하자. $\\mathrm{V}\\mathit{LEFT}(\\frac{1}{5}Y\\right) =4$일 때, $\\mathrm{P}\\mathit{(}46\\leq X\\leq 52)$의 값을 아래의 표준정규분포표를 이용하여 구하는 풀이과정과 답을 적으시오.\n(단, $a,~b$는 상수이고 $a<b$이다.)\n$z$\n$\\mathrm{P}(0\\leq \\mathit{Z}\\leq z)$\n$0.5$\n$0.1915$\n$1.0$\n$0.3413$\n$1.5$\n$0.4332$\n$2.0$\n$0.4772$",
+      "after": "[서술형 $5$] 어느 지역에서 축제 부스 운영을 위하여 $A,~B,~C,~D$ 네 가지 계획안을 제시하였다. 이 지역의 주민들을 대상으로 네가지 축제 부스 운영 계획안에 대한 선호도를 조사한 결과는 다음과 같다.\n계획안\n$A$\n$B$\n$C$\n$D$\n합계\n선호도(%)\n$a$\n$b$\n$17$\n$23$\n$100$\n임의로 뽑은 $400$명의 주민들이 각각 한가지씩의 계획안을 선택한다고 할 때, 계획안 $A$, 계획안 $B$를 선택할 주민의 수를 각각 확률변수 $X,~Y$라 하자. $\\mathrm{V}\\left(\\frac{1}{5}Y\\right) =4$일 때, $\\mathrm{P}\\mathit{(}46\\leq X\\leq 52)$의 값을 아래의 표준정규분포표를 이용하여 구하는 풀이과정과 답을 적으시오.\n(단, $a,~b$는 상수이고 $a<b$이다.)\n$z$\n$\\mathrm{P}(0\\leq \\mathit{Z}\\leq z)$\n$0.5$\n$0.1915$\n$1.0$\n$0.3413$\n$1.5$\n$0.4332$\n$2.0$\n$0.4772$"
+    },
+    {
+      "id": "536b2017-9c3c-4d64-9149-6f96de8e433f",
+      "before": "$1\\times 2TIMES3TIMES4TIMES6TIMES9\\,$의 약수는 모두 몇 개인가?\n\n1. $4$개\n2. $10$개\n3. $16$개\n4. $25$개\n5. $30$개",
+      "after": "$1\\times 2\\times 3\\times 4\\times 6\\times 9\\,$의 약수는 모두 몇 개인가?\n\n1. $4$개\n2. $10$개\n3. $16$개\n4. $25$개\n5. $30$개"
+    },
+    {
+      "id": "5670c804-a490-4133-a39b-da4c8e509b6a",
+      "before": "[서술형 $3$] 다음 조건을 만족하는 다항식 $A,~B,~C$에 대하여 $C=2x+1$일 때, $a+b$의 값을 구하시오. (단, $a,~b$는 상수) [$7$점, 부분점수 있음.]\n∘ $(ax+b)\\div \\left( -\\frac{3}{2}\\right) =A$\n∘ $ADIVIDE\\frac{1}{2}=B$\n∘ $(10x+13)-B=C$\n< 조 건 >\n∘ 풀이 과정 속에 다항식 $A,~B$가 각각 드러나도록 작성할 것.\n∘ 풀이 과정을 자세하게 쓸 것.",
+      "after": "[서술형 $3$] 다음 조건을 만족하는 다항식 $A,~B,~C$에 대하여 $C=2x+1$일 때, $a+b$의 값을 구하시오. (단, $a,~b$는 상수) [$7$점, 부분점수 있음.]\n∘ $(ax+b)\\div \\left( -\\frac{3}{2}\\right) =A$\n∘ $A\\div \\frac{1}{2}=B$\n∘ $(10x+13)-B=C$\n< 조 건 >\n∘ 풀이 과정 속에 다항식 $A,~B$가 각각 드러나도록 작성할 것.\n∘ 풀이 과정을 자세하게 쓸 것."
+    },
+    {
+      "id": "56cdcf0d-06bf-467e-a57b-94f96dd22dc1",
+      "before": "$\\left( -2\\right) divide\\left( -\\frac{3}{10}\\right) \\times \\left( -\\frac{3}{5}\\right) ^{2}$을 계산하면?\n\n1. $-\\frac{11}{2}$\n2. $-\\frac{6}{5}$\n3. $-\\frac{9}{25}$\n4. $\\frac{27}{25}$\n5. $\\frac{12}{5}$",
+      "after": "$\\left( -2\\right) \\div \\left( -\\frac{3}{10}\\right) \\times \\left( -\\frac{3}{5}\\right) ^{2}$을 계산하면?\n\n1. $-\\frac{11}{2}$\n2. $-\\frac{6}{5}$\n3. $-\\frac{9}{25}$\n4. $\\frac{27}{25}$\n5. $\\frac{12}{5}$"
+    },
+    {
+      "id": "5a641eb5-fb47-402e-812d-ee27bb21c161",
+      "before": "두 수 $a,~b$에 대하여 $a-b>0$, $a\\times b<0$가 성립할 때, <보기>에서 옳은 것을 고른 것은?\n<보기>\n ㄱ. $a<b$ ㄴ. $adivideb<0$\n ㄷ. $a>0$ ㄹ. $a^{2}\\times b>0$\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄹ\n3. ㄴ, ㄷ\n4. ㄴ, ㄹ\n5. ㄷ, ㄹ",
+      "after": "두 수 $a,~b$에 대하여 $a-b>0$, $a\\times b<0$가 성립할 때, <보기>에서 옳은 것을 고른 것은?\n<보기>\n ㄱ. $a<b$ ㄴ. $a\\div b<0$\n ㄷ. $a>0$ ㄹ. $a^{2}\\times b>0$\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄹ\n3. ㄴ, ㄷ\n4. ㄴ, ㄹ\n5. ㄷ, ㄹ"
+    },
+    {
+      "id": "5ce43b3b-790b-4258-9e51-7501fa6cad0a",
+      "before": "다음 <보기>중 옳은 것만을 있는 대로 고른 것은? \n< 보 기 >\nㄱ. $x^{3}\\times x^{4}=x^{7}$ ㄴ. $x^{8}DIVIDEx^{4}=x^{2}$\nㄷ. $x^{6}DIVIDEx^{4}DIVIDEx^{2}=1$ ㄹ. $\\left( -3x^{3}y^{2}\\right) ^{4}=12x^{12}y^{8}$\nㅁ. $\\left( -\\frac{2y^{2}}{x}\\right) ^{3}=-\\frac{2y^{6}}{x^{3}}$\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄷ\n3. ㄱ, ㄹ\n4. ㄱ, ㄷ, ㅁ\n5. ㄴ, ㄹ, ㅁ",
+      "after": "다음 <보기>중 옳은 것만을 있는 대로 고른 것은? \n< 보 기 >\nㄱ. $x^{3}\\times x^{4}=x^{7}$ ㄴ. $x^{8}\\div x^{4}=x^{2}$\nㄷ. $x^{6}\\div x^{4}\\div x^{2}=1$ ㄹ. $\\left( -3x^{3}y^{2}\\right) ^{4}=12x^{12}y^{8}$\nㅁ. $\\left( -\\frac{2y^{2}}{x}\\right) ^{3}=-\\frac{2y^{6}}{x^{3}}$\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄷ\n3. ㄱ, ㄹ\n4. ㄱ, ㄷ, ㅁ\n5. ㄴ, ㄹ, ㅁ"
+    },
+    {
+      "id": "5e10f2dc-13e1-4d78-9098-d348d17af147",
+      "before": "$-\\frac{4}{3}$의 역수를 $a$, $0.8$의 역수를 $b$라 할 때, $aDIVIDEb$의 값은?\n\n1. $-3$\n2. $-2$\n3. $-1$\n4. $-\\frac{3}{5}$\n5. $-\\frac{1}{2}$",
+      "after": "$-\\frac{4}{3}$의 역수를 $a$, $0.8$의 역수를 $b$라 할 때, $a\\div b$의 값은?\n\n1. $-3$\n2. $-2$\n3. $-1$\n4. $-\\frac{3}{5}$\n5. $-\\frac{1}{2}$"
+    },
+    {
+      "id": "6066036a-29e2-4055-9d86-9b12d50daccd",
+      "before": "$a>b$일 때, $□$안에 들어갈 부등호의 방향이 나머지 넷과 다른 것은?\n\n1. $3a-1~□~3b-1$\n2. $aDIVIDE\\frac{2}{3}~□~bDIVIDE\\frac{2}{3}$\n3. $2-\\frac{a}{5}~□~2-\\frac{b}{5}$\n4. $-7+2a~□~-7+2b$\n5. $a-(-6)~□~b-(-6)$",
+      "after": "$a>b$일 때, $□$안에 들어갈 부등호의 방향이 나머지 넷과 다른 것은?\n\n1. $3a-1~□~3b-1$\n2. $a\\div \\frac{2}{3}~□~b\\div \\frac{2}{3}$\n3. $2-\\frac{a}{5}~□~2-\\frac{b}{5}$\n4. $-7+2a~□~-7+2b$\n5. $a-(-6)~□~b-(-6)$"
+    },
+    {
+      "id": "62b0e1dc-fc83-4881-b0ff-d4faf6907f2e",
+      "before": "식 $\\mathrm{A},~B,~C$가 다음과 같을 때, $\\mathrm{2A}+\\sqrt{6}B+C$의 값은?\n\n $\\mathrm{A}=cos60°-tan45°+sin0°$\n $\\mathrm{B}=sin45°DIVIDEsin90°\\times tan30°+tan0°$\n $\\mathrm{C}=sin30°-cos30°DIVIDEtan60°+cos0°$\n\n1. $\\sqrt{2}-1$\n2. $1$\n3. $2$\n4. $2+\\sqrt{6}$\n5. $4+2\\sqrt{2}$",
+      "after": "식 $\\mathrm{A},~B,~C$가 다음과 같을 때, $\\mathrm{2A}+\\sqrt{6}B+C$의 값은?\n\n $\\mathrm{A}=cos60°-tan45°+sin0°$\n $\\mathrm{B}=sin45°\\div sin90°\\times tan30°+tan0°$\n $\\mathrm{C}=sin30°-cos30°\\div tan60°+cos0°$\n\n1. $\\sqrt{2}-1$\n2. $1$\n3. $2$\n4. $2+\\sqrt{6}$\n5. $4+2\\sqrt{2}$"
+    },
+    {
+      "id": "6b3d5946-5d40-4daf-8ef3-97b3f935024c",
+      "before": "$\\frac{22}{3}divide\\left\\{ \\left( -2\\right) +\\frac{3}{2}\\times \\left( -\\frac{4}{3}\\right) ^{2}\\right\\}$을 계산하면?\n\n1. $-24$\n2. $-8$\n3. $-\\frac{15}{7}$\n4. $\\frac{11}{3}$\n5. $11$",
+      "after": "$\\frac{22}{3}\\div \\left\\{ \\left( -2\\right) +\\frac{3}{2}\\times \\left( -\\frac{4}{3}\\right) ^{2}\\right\\}$을 계산하면?\n\n1. $-24$\n2. $-8$\n3. $-\\frac{15}{7}$\n4. $\\frac{11}{3}$\n5. $11$"
+    },
+    {
+      "id": "756871c0-e83d-438c-8f35-afedd9674a5b",
+      "before": "그림에서 가로, 세로, 대각선의 세 수의 합이 모두 같을 때, $abDIVIDE(c+d)-e$의 값은?\n\n1. $-3$\n2. $-2$\n3. $0$\n4. $2$\n5. $3$",
+      "after": "그림에서 가로, 세로, 대각선의 세 수의 합이 모두 같을 때, $ab\\div (c+d)-e$의 값은?\n\n1. $-3$\n2. $-2$\n3. $0$\n4. $2$\n5. $3$"
+    },
+    {
+      "id": "77ac126b-3681-4b49-8a38-550a60caecae",
+      "before": "<보기>에서 옳은 것만을 있는 대로 고른 것은? \nㄱ. $x^{3}\\times x^{2}=x^{6}$\nㄴ. $2^{2}+2^{2}=2^{3}$\nㄷ. $(-2xy^{3})^{3}=-6x^{3}y^{9}$\nㄹ. $x^{3}DIVIDEx^{3}=0$\nㅁ. $\\left. \\left( \\frac{a^{3}}{b^{2}}\\right) ^{3}=\\left( \\frac{a^{9}}{b^{6}}\\right) \\right.$\nㅂ. $a\\times a=2a$\n\n1. ㄱ, ㄷ\n2. ㄴ, ㅁ\n3. ㄱ, ㄷ, ㅂ\n4. ㄴ, ㄹ. ㅁ\n5. ㄴ, ㅁ, ㅂ",
+      "after": "<보기>에서 옳은 것만을 있는 대로 고른 것은? \nㄱ. $x^{3}\\times x^{2}=x^{6}$\nㄴ. $2^{2}+2^{2}=2^{3}$\nㄷ. $(-2xy^{3})^{3}=-6x^{3}y^{9}$\nㄹ. $x^{3}\\div x^{3}=0$\nㅁ. $\\left. \\left( \\frac{a^{3}}{b^{2}}\\right) ^{3}=\\left( \\frac{a^{9}}{b^{6}}\\right) \\right.$\nㅂ. $a\\times a=2a$\n\n1. ㄱ, ㄷ\n2. ㄴ, ㅁ\n3. ㄱ, ㄷ, ㅂ\n4. ㄴ, ㄹ. ㅁ\n5. ㄴ, ㅁ, ㅂ"
+    },
+    {
+      "id": "7a48269a-2e6f-4f64-857b-b9aeeb8c90d8",
+      "before": "다음 그림에서 각 변에 놓인 세 수를 곱한 결과가 모두 같다. $aDIVIDEbDIVIDEc$의 값은?\n\n1. $\\frac{2}{9}$\n2. $\\frac{4}{9}$\n3. $4$\n4. $8$\n5. $16$",
+      "after": "다음 그림에서 각 변에 놓인 세 수를 곱한 결과가 모두 같다. $a\\div b\\div c$의 값은?\n\n1. $\\frac{2}{9}$\n2. $\\frac{4}{9}$\n3. $4$\n4. $8$\n5. $16$"
+    },
+    {
+      "id": "7d0e27bf-1678-42d6-9bce-bb20f2630399",
+      "before": "다음을 계산한 결과는?\n$24\\times \\,\\left[ \\left\\{ \\left( -\\frac{2}{3}\\right) +\\frac{3}{4}divide\\left( -3^{2}\\right) \\right\\} +\\frac{1}{8}\\right]$\n\n1. $-17$\n2. $-15$\n3. $-13$\n4. $13$\n5. $15$",
+      "after": "다음을 계산한 결과는?\n$24\\times \\,\\left[ \\left\\{ \\left( -\\frac{2}{3}\\right) +\\frac{3}{4}\\div \\left( -3^{2}\\right) \\right\\} +\\frac{1}{8}\\right]$\n\n1. $-17$\n2. $-15$\n3. $-13$\n4. $13$\n5. $15$"
+    },
+    {
+      "id": "7dc43c09-963d-4c0c-a491-48c636829f27",
+      "before": "$\\frac{10}{3}divide\\left\\{ (-2)+\\frac{3}{4}\\times \\left( -\\frac{2}{3}\\right) ^{2}\\right\\}$을 계산하면?\n\n1. $-5$\n2. $-2$\n3. $0$\n4. $2$\n5. $5$",
+      "after": "$\\frac{10}{3}\\div \\left\\{ (-2)+\\frac{3}{4}\\times \\left( -\\frac{2}{3}\\right) ^{2}\\right\\}$을 계산하면?\n\n1. $-5$\n2. $-2$\n3. $0$\n4. $2$\n5. $5$"
+    },
+    {
+      "id": "804aee29-37c5-4bd0-a26c-39b16c186e9d",
+      "before": "$a>0,~b<0$일 때, <보기> 중에서 양수인 것의 총개수는?\n\n< 보 기 >\nㄱ. $a-b$ ㄴ. $a\\times b$ ㄷ. $aDIVIDE\\left( -b\\right)$\nㄹ. $a+b^{2}$ ㅁ. $b-a$ ㅂ. $a^{2}\\times \\left( -b\\right)$\n\n1. $1$개\n2. $2$개\n3. $3$개\n4. $4$개\n5. $5$개",
+      "after": "$a>0,~b<0$일 때, <보기> 중에서 양수인 것의 총개수는?\n\n< 보 기 >\nㄱ. $a-b$ ㄴ. $a\\times b$ ㄷ. $a\\div \\left( -b\\right)$\nㄹ. $a+b^{2}$ ㅁ. $b-a$ ㅂ. $a^{2}\\times \\left( -b\\right)$\n\n1. $1$개\n2. $2$개\n3. $3$개\n4. $4$개\n5. $5$개"
+    },
+    {
+      "id": "8349414f-cb64-4f2d-8296-83461067a0f2",
+      "before": "$3.\\dot{6}$의 역수를 $a$, $0.7\\dot{8}$의 역수를 $b$라 할 때, $aDIVIDEb$의 값은?\n\n1. $0.0\\dot{2}$\n2. $0.1\\dot{2}$\n3. $0.1\\dot{5}\\dot{3}$\n4. $0.2\\dot{1}\\dot{5}$\n5. $0.\\dot{2}5\\dot{1}$\n  \n  \n*",
+      "after": "$3.\\dot{6}$의 역수를 $a$, $0.7\\dot{8}$의 역수를 $b$라 할 때, $a\\div b$의 값은?\n\n1. $0.0\\dot{2}$\n2. $0.1\\dot{2}$\n3. $0.1\\dot{5}\\dot{3}$\n4. $0.2\\dot{1}\\dot{5}$\n5. $0.\\dot{2}5\\dot{1}$\n  \n  \n*"
+    },
+    {
+      "id": "845baf17-9555-417d-b1de-65fcba5b38a1",
+      "before": "곱셈기호 $\\times$와 나눗셈 기호 $\\div $를 생략하여 나타낸 것으로 옳은 것은?\n\n1. $xDIVIDEyDIVIDEz=\\frac{x}{yz}$\n2. $xDIVIDE\\left( yDIVIDEz\\right) =\\frac{xy}{z}$\n3. $x+2DIVIDEy=\\frac{x+2}{y}$\n4. $0.1\\times c\\times d=0.cd$\n5. $b\\times b\\times \\left( -1\\right) \\times a=\\,-1ab^{2}$",
+      "after": "곱셈기호 $\\times$와 나눗셈 기호 $\\div $를 생략하여 나타낸 것으로 옳은 것은?\n\n1. $x\\div y\\div z=\\frac{x}{yz}$\n2. $x\\div \\left( y\\div z\\right) =\\frac{xy}{z}$\n3. $x+2\\div y=\\frac{x+2}{y}$\n4. $0.1\\times c\\times d=0.cd$\n5. $b\\times b\\times \\left( -1\\right) \\times a=\\,-1ab^{2}$"
+    },
+    {
+      "id": "84be847d-7dd6-441f-a9b9-da6e80fd0429",
+      "before": "자연수 $n$에 대하여 두 원\n$x^{2}+y^{2}=4$, $(x-2)^{2}+y^{2}=\\frac{2}{n^{2}}$\n의 교점의 $x$좌표를 $a_{n}$이라 할 때, 자연수 전체의 집합을 정의역으로 하는 함수 $f(n)$이\n$f(n)=\\lim _{x\\,\\Rightarrow \\,0}\\frac{\\ln (1+nx)}{6n^{3}a_{n}x}$\n라 하자. $f(p)=\\frac{1}{105}$이고 $\\sum _{n=1}^{\\infty }f(n)=q$일 때, $pDIVIDEq$의 값은?\n\n1. $16$\n2. $18$\n3. $20$\n4. $22$\n5. $24$",
+      "after": "자연수 $n$에 대하여 두 원\n$x^{2}+y^{2}=4$, $(x-2)^{2}+y^{2}=\\frac{2}{n^{2}}$\n의 교점의 $x$좌표를 $a_{n}$이라 할 때, 자연수 전체의 집합을 정의역으로 하는 함수 $f(n)$이\n$f(n)=\\lim _{x\\,\\Rightarrow \\,0}\\frac{\\ln (1+nx)}{6n^{3}a_{n}x}$\n라 하자. $f(p)=\\frac{1}{105}$이고 $\\sum _{n=1}^{\\infty }f(n)=q$일 때, $p\\div q$의 값은?\n\n1. $16$\n2. $18$\n3. $20$\n4. $22$\n5. $24$"
+    },
+    {
+      "id": "91b7ca90-05f7-44ce-ae41-dbda67da557f",
+      "before": "절댓값이 각각 $\\frac{4}{7},~\\frac{4}{5}$인 두 유리수의 합과 곱은 모두 음수이다. 두 유리수 중 큰 수를 $a$, 작은 수를 $b$라 할 때, $aDIVIDEb$를 구하면?\n\n1. $-\\frac{8}{5}$\n2. $-\\frac{7}{5}$\n3. $-\\frac{5}{7}$\n4. $-\\frac{4}{7}$\n5. $-\\frac{4}{5}$",
+      "after": "절댓값이 각각 $\\frac{4}{7},~\\frac{4}{5}$인 두 유리수의 합과 곱은 모두 음수이다. 두 유리수 중 큰 수를 $a$, 작은 수를 $b$라 할 때, $a\\div b$를 구하면?\n\n1. $-\\frac{8}{5}$\n2. $-\\frac{7}{5}$\n3. $-\\frac{5}{7}$\n4. $-\\frac{4}{7}$\n5. $-\\frac{4}{5}$"
+    },
+    {
+      "id": "92b1b4cb-07fe-4aed-8fda-f3f2cc868e27",
+      "before": "식을 간단히 하여 $ax+b$로 나타낼 때, $a+b$의 값이 가장 큰 것은? (단, $a$, $b$는 상수)\n\n1. $2-\\frac{2(x-5)}{3}$\n2. $(3x-1)\\times \\frac{3}{5}$\n3. $5x-\\frac{2}{4}-\\frac{x-3}{2}$\n4. $2(-5x-1)-3(x-4)$\n5. $5\\left( \\frac{7}{5}x-\\frac{3}{20}\\right) +3(-2x+1)divide6$",
+      "after": "식을 간단히 하여 $ax+b$로 나타낼 때, $a+b$의 값이 가장 큰 것은? (단, $a$, $b$는 상수)\n\n1. $2-\\frac{2(x-5)}{3}$\n2. $(3x-1)\\times \\frac{3}{5}$\n3. $5x-\\frac{2}{4}-\\frac{x-3}{2}$\n4. $2(-5x-1)-3(x-4)$\n5. $5\\left( \\frac{7}{5}x-\\frac{3}{20}\\right) +3(-2x+1)\\div 6$"
+    },
+    {
+      "id": "a1ad3fd3-db01-4654-b8ed-9bb7d5720969",
+      "before": "이차방정식 $2x^{2}+x-6=3x\\,$을 $(x+p)^{2}=q\\,$의 꼴로 변형할 때, $pDIVIDEq\\,$의 값은?\n\n1. $-\\frac{8}{13}\\,$\n2. $-\\frac{2}{13}$\n3. $\\frac{2}{13}$\n4. $\\frac{8}{13}$\n5. $\\frac{13}{8}$",
+      "after": "이차방정식 $2x^{2}+x-6=3x\\,$을 $(x+p)^{2}=q\\,$의 꼴로 변형할 때, $p\\div q\\,$의 값은?\n\n1. $-\\frac{8}{13}\\,$\n2. $-\\frac{2}{13}$\n3. $\\frac{2}{13}$\n4. $\\frac{8}{13}$\n5. $\\frac{13}{8}$"
+    },
+    {
+      "id": "a3a6a553-2496-4ce6-b529-3db1be2ce84b",
+      "before": "곱셈 기호 $\\times$와 나눗셈 기호 $\\div $를 쓰지 않고 식을 옳게 나타낸 것은?\n\n1. $a\\times 0.1DIVIDEb=\\frac{0.a}{b}$\n2. $a+bDIVIDE4=\\,\\frac{a+b}{4}$\n3. $y\\times \\left( -9\\right) \\times x=9xy$\n4. $x\\times x\\times y\\times x=3x\\times y$\n5. $aDIVIDE3\\,-\\,bDIVIDE2=\\,\\frac{a}{3}-\\frac{b}{2}$",
+      "after": "곱셈 기호 $\\times$와 나눗셈 기호 $\\div $를 쓰지 않고 식을 옳게 나타낸 것은?\n\n1. $a\\times 0.1\\div b=\\frac{0.a}{b}$\n2. $a+b\\div 4=\\,\\frac{a+b}{4}$\n3. $y\\times \\left( -9\\right) \\times x=9xy$\n4. $x\\times x\\times y\\times x=3x\\times y$\n5. $a\\div 3\\,-\\,b\\div 2=\\,\\frac{a}{3}-\\frac{b}{2}$"
+    },
+    {
+      "id": "a3b56712-9d65-410a-951d-8b704e4315d8",
+      "before": "최고차항의 계수가 $1$인 삼차함수 $f\\left( x\\right)$가 다음 조건을 만족시킨다.\n(가) $f\\prime \\left( 0\\right) =0$\n(나) 양수 $t$와 실수 $s$에 대하여 함수 $y=f\\left( x\\right)$의 그래프와 직선 $y=x$는 서로 다른 세 점 $\\mathrm{O}\\left( 0,~0\\right)$, $\\mathrm{P}\\mathit{LEFT}(t,~t\\right)$, $\\mathrm{Q}\\,\\mathit{\\left( }s,~s\\right)$에서 만난다.\n$\\int _{0}^{t}f\\left( x\\right) dx=0$일 때, $f\\left( 6\\right)$의 값은?\n\n1. $64$\n2. $100$\n3. $144$\n4. $162$\n5. $216$",
+      "after": "최고차항의 계수가 $1$인 삼차함수 $f\\left( x\\right)$가 다음 조건을 만족시킨다.\n(가) $f\\prime \\left( 0\\right) =0$\n(나) 양수 $t$와 실수 $s$에 대하여 함수 $y=f\\left( x\\right)$의 그래프와 직선 $y=x$는 서로 다른 세 점 $\\mathrm{O}\\left( 0,~0\\right)$, $\\mathrm{P}\\left(t,~t\\right)$, $\\mathrm{Q}\\,\\mathit{\\left( }s,~s\\right)$에서 만난다.\n$\\int _{0}^{t}f\\left( x\\right) dx=0$일 때, $f\\left( 6\\right)$의 값은?\n\n1. $64$\n2. $100$\n3. $144$\n4. $162$\n5. $216$"
+    },
+    {
+      "id": "b0fef6c3-7074-445b-b203-39a1bedd67ca",
+      "before": "다음 중 일차식은 모두 몇 개인가?\n$1$, $\\frac{x+1}{2}$, $2DIVIDEx$, $x+2y$, $0\\times x^{2}-4x+1$\n\n1. $1$개\n2. $2$개\n3. $3$개\n4. $4$개\n5. $5$개",
+      "after": "다음 중 일차식은 모두 몇 개인가?\n$1$, $\\frac{x+1}{2}$, $2\\div x$, $x+2y$, $0\\times x^{2}-4x+1$\n\n1. $1$개\n2. $2$개\n3. $3$개\n4. $4$개\n5. $5$개"
+    },
+    {
+      "id": "b803ab02-ecfe-4fc4-9bff-35abcd8e3a88",
+      "before": "유리수 $a,~b$에 대하여 $aDIVIDE2=-2$이고, $b$의 역수는 $-\\frac{4}{3}$일 때, $aDIVIDEb$의 값은?\n\n1. $\\frac{16}{3}$\n2. $3$\n3. $\\frac{3}{16}$\n4. $-3$\n5. $-\\frac{16}{3}$",
+      "after": "유리수 $a,~b$에 대하여 $a\\div 2=-2$이고, $b$의 역수는 $-\\frac{4}{3}$일 때, $a\\div b$의 값은?\n\n1. $\\frac{16}{3}$\n2. $3$\n3. $\\frac{3}{16}$\n4. $-3$\n5. $-\\frac{16}{3}$"
+    },
+    {
+      "id": "ba0b0b8e-47dd-4199-adc0-79b3e28f4e20",
+      "before": "다음 다섯 개의 수 중에서 세 개를 택하여 곱했을 때, 가장 큰 수를 $a$, 가장 작은 수를 $b$라 하자. 이때 $aDIVIDEb$의 값은?\n $-4,\\,\\,-\\,\\frac{4}{5},\\,\\,-1,\\,\\,\\frac{3}{2},\\,\\,\\frac{7}{3}$\n\n1. $-\\frac{2}{3}$\n2. $-\\frac{1}{6}$\n3. $-\\frac{1}{12}$\n4. $\\frac{1}{6}$\n5. $\\frac{5}{6}$",
+      "after": "다음 다섯 개의 수 중에서 세 개를 택하여 곱했을 때, 가장 큰 수를 $a$, 가장 작은 수를 $b$라 하자. 이때 $a\\div b$의 값은?\n $-4,\\,\\,-\\,\\frac{4}{5},\\,\\,-1,\\,\\,\\frac{3}{2},\\,\\,\\frac{7}{3}$\n\n1. $-\\frac{2}{3}$\n2. $-\\frac{1}{6}$\n3. $-\\frac{1}{12}$\n4. $\\frac{1}{6}$\n5. $\\frac{5}{6}$"
+    },
+    {
+      "id": "bbf67d5b-d4bd-42d1-aea1-1535fbb9a819",
+      "before": "기호 $\\times$, $divide$를 생략하여 나타낸 식으로 옳은 것을 <보기>에서 고른 것은?\n< 보 기 >\nㄱ. $a\\,divide\\left( 8\\times \\,x\\right) =\\frac{ax}{8}$\nㄴ. $a+b\\times 5=a+5b$\nㄷ. $\\left( -3\\right) \\times xdividey=-\\frac{3x}{y}$\nㄹ. $2\\times x\\times x+5dividey=\\frac{2x^{2}+5}{y}$\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄷ\n3. ㄴ, ㄷ\n4. ㄴ, ㄹ\n5. ㄷ, ㄹ",
+      "after": "기호 $\\times$, $\\div $를 생략하여 나타낸 식으로 옳은 것을 <보기>에서 고른 것은?\n< 보 기 >\nㄱ. $a\\,\\div \\left( 8\\times \\,x\\right) =\\frac{ax}{8}$\nㄴ. $a+b\\times 5=a+5b$\nㄷ. $\\left( -3\\right) \\times x\\div y=-\\frac{3x}{y}$\nㄹ. $2\\times x\\times x+5\\div y=\\frac{2x^{2}+5}{y}$\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄷ\n3. ㄴ, ㄷ\n4. ㄴ, ㄹ\n5. ㄷ, ㄹ"
+    },
+    {
+      "id": "bc33f240-4113-4189-8651-3e7e7965c5cd",
+      "before": "[서술형 $1$] $(-4)^{2}$의 양의 제곱근을 $a$, $1.\\dot{7}$의 음의 제곱근을 $b$라 할 때, $aDIVIDEb$의 값을 구하시오. \n(단, 풀이 과정을 자세히 서술하시오.)",
+      "after": "[서술형 $1$] $(-4)^{2}$의 양의 제곱근을 $a$, $1.\\dot{7}$의 음의 제곱근을 $b$라 할 때, $a\\div b$의 값을 구하시오. \n(단, 풀이 과정을 자세히 서술하시오.)"
+    },
+    {
+      "id": "bccf34c4-4088-4236-83ec-da0bade92100",
+      "before": "다음 중 계산 결과가 옳지 않은 것은?\n$9a\\times \\frac{1}{3}=3a$ ② $3\\times \\left( -7a\\right) =-21a$\n③ $\\left( -12x\\right) \\div 4=-3x$ ④ $\\frac{2}{3}xDIVIDE\\left( -\\frac{1}{6}\\right) =-4x$\n⑤ $\\left( -\\frac{3}{2}b\\right) \\div \\left( -\\frac{3}{4}\\right) =\\frac{9}{8}b$",
+      "after": "다음 중 계산 결과가 옳지 않은 것은?\n$9a\\times \\frac{1}{3}=3a$ ② $3\\times \\left( -7a\\right) =-21a$\n③ $\\left( -12x\\right) \\div 4=-3x$ ④ $\\frac{2}{3}x\\div \\left( -\\frac{1}{6}\\right) =-4x$\n⑤ $\\left( -\\frac{3}{2}b\\right) \\div \\left( -\\frac{3}{4}\\right) =\\frac{9}{8}b$"
+    },
+    {
+      "id": "bd2a9ef4-f224-43c7-9499-37eae39e33b6",
+      "before": "다음 식을 계산했을 때, $y$의 계수는? \n$3y^{3}DIVIDEx^{4}y^{2}\\times (-3x^{2})^{2}-(8x^{2}y-2xy)\\div \\left( -\\frac{2}{3}x\\right)$\n\n1. $12$\n2. $\\frac{47}{3}$\n3. $24$\n4. $27$\n5. $30$",
+      "after": "다음 식을 계산했을 때, $y$의 계수는? \n$3y^{3}\\div x^{4}y^{2}\\times (-3x^{2})^{2}-(8x^{2}y-2xy)\\div \\left( -\\frac{2}{3}x\\right)$\n\n1. $12$\n2. $\\frac{47}{3}$\n3. $24$\n4. $27$\n5. $30$"
+    },
+    {
+      "id": "bdd54129-d939-4f93-a5c3-fb8838f686a1",
+      "before": "직각삼각형 $\\mathrm{ABC}\\,$에서 $\\mathrm{\\overline{AD}}=\\overline{DC}=\\overline{BC}\\,$이고, $\\mathrm{\\angle }ABD=\\mathit{ANGLEx}\\,$\n일 때, $\\tan \\,x\\,$의 값은?\n\n1. $\\frac{1}{3}$\n2. $\\frac{\\sqrt{10}}{10}$\n3. $\\frac{3\\sqrt{10}}{10}$\n4. $\\frac{5\\sqrt{10}}{2}$\n5. $\\sqrt{10}$",
+      "after": "직각삼각형 $\\mathrm{ABC}\\,$에서 $\\mathrm{\\overline{AD}}=\\overline{DC}=\\overline{BC}\\,$이고, $\\mathrm{\\angle }ABD=\\angle x\\,$\n일 때, $\\tan \\,x\\,$의 값은?\n\n1. $\\frac{1}{3}$\n2. $\\frac{\\sqrt{10}}{10}$\n3. $\\frac{3\\sqrt{10}}{10}$\n4. $\\frac{5\\sqrt{10}}{2}$\n5. $\\sqrt{10}$"
+    },
+    {
+      "id": "bdd7ac02-4bde-49b2-808a-3725df8e28e5",
+      "before": "$a_{1}=7,~a_{2}=14$인 수열 $\\left\\{ a_{n}\\right\\}$이 모든 자연수 $n$에 대하여 $a_{n}+1dividea_{n}=a_{n}+2dividea_{n}+1$를 만족시킬 때, $a_{5}$의 값은?\n\n1. $35$\n2. $49$\n3. $56$\n4. $112$\n5. $224$",
+      "after": "$a_{1}=7,~a_{2}=14$인 수열 $\\left\\{ a_{n}\\right\\}$이 모든 자연수 $n$에 대하여 $a_{n}+1\\div a_{n}=a_{n}+2\\div a_{n}+1$를 만족시킬 때, $a_{5}$의 값은?\n\n1. $35$\n2. $49$\n3. $56$\n4. $112$\n5. $224$"
+    },
+    {
+      "id": "bf24084c-7148-4058-baac-3c67a698dd29",
+      "before": "[서술형 $5$] 네 개의 유리수 $\\frac{1}{5},~-\\frac{2}{5},~-\\frac{7}{2},~-5$ 중에서 서로 다른 세 수를 택하여 곱한 값 중 가장 큰 수를 $a$, 가장 작은 수를 $b$라 할 때, 물음에 답하시오.\n$\\left( 1\\right)$ $a,~b$의 값을 각각 구하는 과정과 답을 쓰시오.\n$\\left( 2\\right)$ $aDIVIDEb$의 값을 구하시오.",
+      "after": "[서술형 $5$] 네 개의 유리수 $\\frac{1}{5},~-\\frac{2}{5},~-\\frac{7}{2},~-5$ 중에서 서로 다른 세 수를 택하여 곱한 값 중 가장 큰 수를 $a$, 가장 작은 수를 $b$라 할 때, 물음에 답하시오.\n$\\left( 1\\right)$ $a,~b$의 값을 각각 구하는 과정과 답을 쓰시오.\n$\\left( 2\\right)$ $a\\div b$의 값을 구하시오."
+    },
+    {
+      "id": "c639f016-b8ff-4f91-a3e4-eb1aafa05111",
+      "before": "다음은 곱셈 기호, 나눗셈 기호를 생략하여 나타낸 것이다. 다음 중 옳은 것은 모두 몇 개인가?\nㄱ. $0.1\\times a=0.a$\nㄴ. $3DIVIDEa\\times b=\\frac{3}{ab}$\nㄷ. $aDIVIDEbDIVIDEc=\\frac{a}{bc}$\nㄹ. $a\\times 3\\times a\\times b=3ab$\nㅁ. $x\\times \\left( -2\\right) \\times y=-2xy$\nㅂ. $2\\div \\left( x+y\\right) =\\frac{1}{2}\\left( x+y\\right)$\nㅅ. $aDIVIDEbDIVIDE\\left( x+y\\right) =\\frac{a+y}{bx}$\nㅇ. $2\\times x\\times x-3DIVIDEy=\\frac{2x^{2}-3}{y}$\nㅈ. $\\left( x-y\\right) \\div 3\\times a=\\frac{a\\left( x-y\\right)}{3}$\nㅊ. $-3\\times \\left( x+y\\right) \\times b=-3x+by$\n\n1. $2$개\n2. $3$개\n3. $4$개\n4. $5$개\n5. $6$개",
+      "after": "다음은 곱셈 기호, 나눗셈 기호를 생략하여 나타낸 것이다. 다음 중 옳은 것은 모두 몇 개인가?\nㄱ. $0.1\\times a=0.a$\nㄴ. $3\\div a\\times b=\\frac{3}{ab}$\nㄷ. $a\\div b\\div c=\\frac{a}{bc}$\nㄹ. $a\\times 3\\times a\\times b=3ab$\nㅁ. $x\\times \\left( -2\\right) \\times y=-2xy$\nㅂ. $2\\div \\left( x+y\\right) =\\frac{1}{2}\\left( x+y\\right)$\nㅅ. $a\\div b\\div \\left( x+y\\right) =\\frac{a+y}{bx}$\nㅇ. $2\\times x\\times x-3\\div y=\\frac{2x^{2}-3}{y}$\nㅈ. $\\left( x-y\\right) \\div 3\\times a=\\frac{a\\left( x-y\\right)}{3}$\nㅊ. $-3\\times \\left( x+y\\right) \\times b=-3x+by$\n\n1. $2$개\n2. $3$개\n3. $4$개\n4. $5$개\n5. $6$개"
+    },
+    {
+      "id": "c90f3d83-edf8-46d5-891c-985ed9fea12a",
+      "before": "곱셈 기호 $\\times$와 나눗셈 기호 $\\div $를 생략하여 나타낸 것으로 옳지 않은 것은?\n\n1. $a\\times (-2)=\\,-2a$\n2. $a-bDIVIDE2=a-\\frac{b}{2}$\n3. $a\\times 3\\times aDIVIDEb=3a\\frac{^{2}}{b}$\n4. $3\\times (-1)DIVIDEa=\\,-\\frac{a}{3}$\n5. $(a+b)\\times 2-cdivide5=2(a+b)-\\frac{c}{5}$",
+      "after": "곱셈 기호 $\\times$와 나눗셈 기호 $\\div $를 생략하여 나타낸 것으로 옳지 않은 것은?\n\n1. $a\\times (-2)=\\,-2a$\n2. $a-b\\div 2=a-\\frac{b}{2}$\n3. $a\\times 3\\times a\\div b=3a\\frac{^{2}}{b}$\n4. $3\\times (-1)\\div a=\\,-\\frac{a}{3}$\n5. $(a+b)\\times 2-c\\div 5=2(a+b)-\\frac{c}{5}$"
+    },
+    {
+      "id": "ccd2512e-d046-4509-b606-31a7ecda85ee",
+      "before": "$\\angle \\mathrm{B}=90°$인 직각삼각형 $\\mathrm{ABC}$에서 $tanA=\\frac{\\sqrt{7}}{3}$일 때, $\\cos \\,ADIVIDE\\tan \\,C$의 값은?\n\n1. $\\frac{\\sqrt{7}}{4}$\n2. $\\frac{3}{4}$\n3. $\\frac{3\\sqrt{7}}{7}$\n4. $\\frac{4\\sqrt{7}}{7}$\n5. $\\frac{4}{3}$",
+      "after": "$\\angle \\mathrm{B}=90°$인 직각삼각형 $\\mathrm{ABC}$에서 $tanA=\\frac{\\sqrt{7}}{3}$일 때, $\\cos \\,A\\div \\tan \\,C$의 값은?\n\n1. $\\frac{\\sqrt{7}}{4}$\n2. $\\frac{3}{4}$\n3. $\\frac{3\\sqrt{7}}{7}$\n4. $\\frac{4\\sqrt{7}}{7}$\n5. $\\frac{4}{3}$"
+    },
+    {
+      "id": "cd393337-ee0d-4b52-91d1-4cf334c597ee",
+      "before": "세 내각의 크기의 비가 $3\\,:\\,7\\,:\\,8$인 삼각형의 가장 작은 내각의 크기를 $A$라 할 때, $\\sin \\,A\\times \\,\\cos \\,ADIVIDE\\,\\tan \\,A$의 값은?\n\n1. $\\frac{1}{4}$\n2. $\\frac{1}{3}$\n3. $\\frac{1}{2}$\n4. $\\frac{3}{4\\,}$\n5. $\\frac{4}{3}$",
+      "after": "세 내각의 크기의 비가 $3\\,:\\,7\\,:\\,8$인 삼각형의 가장 작은 내각의 크기를 $A$라 할 때, $\\sin \\,A\\times \\,\\cos \\,A\\div \\,\\tan \\,A$의 값은?\n\n1. $\\frac{1}{4}$\n2. $\\frac{1}{3}$\n3. $\\frac{1}{2}$\n4. $\\frac{3}{4\\,}$\n5. $\\frac{4}{3}$"
+    },
+    {
+      "id": "cf635f67-c1c5-4676-a81b-26a9bdc89171",
+      "before": "표의 가로, 세로, 대각선에 놓인 세 다항식의 합이 모두 같을 때, 식 $A$, $B$에 대하여 $A-B$를 계산한 다항식은? \n$-5x(2x-1)+4$\n$A$\n$-10x^{2}-7x+8$\n$-5x^{2}+3$\n$(7x^{2}-2x)DIVIDEx$\n$B$\n\n1. $-5x^{2}+5x+7$\n2. $5x^{2}-5x-1$\n3. $-10x^{2}+12x+2$\n4. $-10x^{2}-2x+6$\n5. $-15x^{2}-7x+11$",
+      "after": "표의 가로, 세로, 대각선에 놓인 세 다항식의 합이 모두 같을 때, 식 $A$, $B$에 대하여 $A-B$를 계산한 다항식은? \n$-5x(2x-1)+4$\n$A$\n$-10x^{2}-7x+8$\n$-5x^{2}+3$\n$(7x^{2}-2x)\\div x$\n$B$\n\n1. $-5x^{2}+5x+7$\n2. $5x^{2}-5x-1$\n3. $-10x^{2}+12x+2$\n4. $-10x^{2}-2x+6$\n5. $-15x^{2}-7x+11$"
+    },
+    {
+      "id": "d4030f85-7bda-4775-a5cd-5e2e9ed53a9d",
+      "before": "다음 $\\square ~~~$ 안에 알맞은 수를 구하여 모두 더한 것은? \n(단, $a\\neq 0,~b\\neq 0$) \n⚪$a^{10}DIVIDEa^{7}\\times a^{2}=a^{\\square ~~}$\n⚪$3a^{2}\\div \\left( -18a^{10}\\right) =-\\frac{1}{6a^{\\square ~~}}$\n⚪$a^{4}b^{2}\\times \\left( -ab\\right) DIVIDEa^{2}=-a^{\\square ~~}b^{3}$\n⚪$\\left( -12a^{6}b^{4}\\right) \\div \\frac{2}{3}a^{5}b=\\square ~~\\times ab^{\\square ~~}$\n\n1. $-3$\n2. $-2$\n3. $1$\n4. $4$\n5. $7$",
+      "after": "다음 $\\square ~~~$ 안에 알맞은 수를 구하여 모두 더한 것은? \n(단, $a\\neq 0,~b\\neq 0$) \n⚪$a^{10}\\div a^{7}\\times a^{2}=a^{\\square ~~}$\n⚪$3a^{2}\\div \\left( -18a^{10}\\right) =-\\frac{1}{6a^{\\square ~~}}$\n⚪$a^{4}b^{2}\\times \\left( -ab\\right) \\div a^{2}=-a^{\\square ~~}b^{3}$\n⚪$\\left( -12a^{6}b^{4}\\right) \\div \\frac{2}{3}a^{5}b=\\square ~~\\times ab^{\\square ~~}$\n\n1. $-3$\n2. $-2$\n3. $1$\n4. $4$\n5. $7$"
+    },
+    {
+      "id": "d4dccf59-b497-41ea-9d63-9b2bdf029bef",
+      "before": "그림과 같이 $\\angle \\mathrm{C}=\\mathit{90}°$인 직각삼각형 $\\mathrm{ABC}$에서 $\\mathrm{\\overline{BC}}=12$, $\\mathrm{\\overline{AC}}=5$이다. 변 $\\mathrm{BC}$ 위의 점 $\\mathrm{D}$에서 변 $\\mathrm{AB}$에 내린 수선의 발을 $\\mathrm{E}$라고 할 때, $sinxDIVIDE\\,cosx$의 값은?\n\n1. $\\frac{5}{17}$\n2. $\\frac{5}{12}$\n3. $\\frac{13}{17}$\n4. $\\frac{17}{13}$\n5. $\\frac{12}{5}$",
+      "after": "그림과 같이 $\\angle \\mathrm{C}=\\mathit{90}°$인 직각삼각형 $\\mathrm{ABC}$에서 $\\mathrm{\\overline{BC}}=12$, $\\mathrm{\\overline{AC}}=5$이다. 변 $\\mathrm{BC}$ 위의 점 $\\mathrm{D}$에서 변 $\\mathrm{AB}$에 내린 수선의 발을 $\\mathrm{E}$라고 할 때, $sinx\\div \\,cosx$의 값은?\n\n1. $\\frac{5}{17}$\n2. $\\frac{5}{12}$\n3. $\\frac{13}{17}$\n4. $\\frac{17}{13}$\n5. $\\frac{12}{5}$"
+    },
+    {
+      "id": "d59c6464-e908-442b-a94f-13181a135547",
+      "before": "다음 식을 곱셈기호 $\\times$, 나눗셈 기호 $\\div $를 생략하여 바르게 나타낸 것은?\n\n1. $b\\times a\\times a\\times (-1)=-2ab$\n2. $x+yDIVIDE3=\\frac{x+y}{3}$\n3. $xDIVIDEy+5=\\frac{x}{y+5}$\n4. $xDIVIDEyDIVIDE2=\\frac{2x}{y}$\n5. $xDIVIDE\\left( -\\frac{6}{5}\\right) \\times y=-\\frac{5xy}{6}$",
+      "after": "다음 식을 곱셈기호 $\\times$, 나눗셈 기호 $\\div $를 생략하여 바르게 나타낸 것은?\n\n1. $b\\times a\\times a\\times (-1)=-2ab$\n2. $x+y\\div 3=\\frac{x+y}{3}$\n3. $x\\div y+5=\\frac{x}{y+5}$\n4. $x\\div y\\div 2=\\frac{2x}{y}$\n5. $x\\div \\left( -\\frac{6}{5}\\right) \\times y=-\\frac{5xy}{6}$"
+    },
+    {
+      "id": "d603b010-57a2-4330-9202-32339bdc13ec",
+      "before": "[서술형 $4$] 어느 회사에서 생산하는 샴푸 $1$개의 용량은 정규분포 $\\mathrm{N}(\\mathit{m},~\\sigma ^{2})$을 따른다고 한다. 이 회사에서 생산하는 샴푸 중에서 $49$개를 임의추출하여 얻은 표본평균을 이용하여 구한 $m$에 대한 신뢰도 $95%$의 신뢰구간이 $754.8\\leq m\\leq 757.6$이다. 이 회사에서 생산하는 샴푸 중에서 $n$개를 임의추출하여 얻은 표본평균을 이용하여 구하는 $m$에 대한 신뢰도 $99%$의 신뢰구간이 $a\\leq m\\leq b$일 때, $b-a$의 값이 $2$ 이하가 되기 위한 자연수 $n$의 최솟값을 풀이 과정과 함께 쓰시오. (단, 용량의 단위는 $\\mathrm{mL}$이고, $Z$가 표준정규분포를 따르는 확률변수일 때, $\\mathrm{P}(\\mathit{LEFT}|Z\\,\\right| \\leq 1.96)=0.95$, $\\mathrm{P}(\\mathit{\\left| }Z\\,\\right| \\leq 2.58)=0.99$로 계산한다.) [$7$점, 부분 점수 있음]",
+      "after": "[서술형 $4$] 어느 회사에서 생산하는 샴푸 $1$개의 용량은 정규분포 $\\mathrm{N}(\\mathit{m},~\\sigma ^{2})$을 따른다고 한다. 이 회사에서 생산하는 샴푸 중에서 $49$개를 임의추출하여 얻은 표본평균을 이용하여 구한 $m$에 대한 신뢰도 $95%$의 신뢰구간이 $754.8\\leq m\\leq 757.6$이다. 이 회사에서 생산하는 샴푸 중에서 $n$개를 임의추출하여 얻은 표본평균을 이용하여 구하는 $m$에 대한 신뢰도 $99%$의 신뢰구간이 $a\\leq m\\leq b$일 때, $b-a$의 값이 $2$ 이하가 되기 위한 자연수 $n$의 최솟값을 풀이 과정과 함께 쓰시오. (단, 용량의 단위는 $\\mathrm{mL}$이고, $Z$가 표준정규분포를 따르는 확률변수일 때, $\\mathrm{P}(\\left|Z\\,\\right| \\leq 1.96)=0.95$, $\\mathrm{P}(\\mathit{\\left| }Z\\,\\right| \\leq 2.58)=0.99$로 계산한다.) [$7$점, 부분 점수 있음]"
+    },
+    {
+      "id": "d66f95b9-7141-41e4-b18a-a9cfe2290aed",
+      "before": "[서술형 $6$] 수직선 위의 세 점 $\\mathrm{A}$, $\\mathrm{B}$, $\\mathrm{C}$에 대응하는 수를 각각 $a$, $b$, $c$라 하자.\n $a=1-\\left\\{ \\left( -\\frac{2}{3}\\right) ^{2}-(4-6)\\right\\} \\times 9$,\n $b=\\frac{3}{5}\\times \\left[ 4-\\left\\{ \\frac{1}{2}+\\frac{9}{5}divide\\left( -\\frac{3}{5}\\right) ^{2}\\right\\} \\times (-2)\\right]$\n이고, 점 $\\mathrm{C}$는 두 점 $\\mathrm{A}$, $\\mathrm{B}$로부터 같은 거리에 있다고 할 때, 수 $c$의 값을 구하시오.\n< 조 건 >\n∘ $a$, $b$의 계산과정을 각각 네 단계 이상 나타낼 것\n∘ 점 $\\mathrm{A}$와 점 $\\mathrm{B}$ 사이의 거리를 계산하여 나타낼 것\n2024년 1학기 중간고사\n대건중 1학년 수학",
+      "after": "[서술형 $6$] 수직선 위의 세 점 $\\mathrm{A}$, $\\mathrm{B}$, $\\mathrm{C}$에 대응하는 수를 각각 $a$, $b$, $c$라 하자.\n $a=1-\\left\\{ \\left( -\\frac{2}{3}\\right) ^{2}-(4-6)\\right\\} \\times 9$,\n $b=\\frac{3}{5}\\times \\left[ 4-\\left\\{ \\frac{1}{2}+\\frac{9}{5}\\div \\left( -\\frac{3}{5}\\right) ^{2}\\right\\} \\times (-2)\\right]$\n이고, 점 $\\mathrm{C}$는 두 점 $\\mathrm{A}$, $\\mathrm{B}$로부터 같은 거리에 있다고 할 때, 수 $c$의 값을 구하시오.\n< 조 건 >\n∘ $a$, $b$의 계산과정을 각각 네 단계 이상 나타낼 것\n∘ 점 $\\mathrm{A}$와 점 $\\mathrm{B}$ 사이의 거리를 계산하여 나타낼 것\n2024년 1학기 중간고사\n대건중 1학년 수학"
+    },
+    {
+      "id": "d70fada3-4b79-46b8-b7ed-de08e1d2a5ca",
+      "before": "$\\left( \\frac{1}{2}-1\\right) divide\\left( \\frac{1}{3}-1\\right) divide\\left( \\frac{1}{4}-1\\right) divide\\,\\cdots \\,divide\\left( \\frac{1}{30}-1\\right)$을 계산하면?\n\n1. $-\\frac{15}{2}$\n2. $-\\frac{2}{15}$\n3. $-\\frac{1}{30}$\n4. $\\frac{1}{30}$\n5. $\\frac{15}{2}$",
+      "after": "$\\left( \\frac{1}{2}-1\\right) \\div \\left( \\frac{1}{3}-1\\right) \\div \\left( \\frac{1}{4}-1\\right) \\div \\,\\cdots \\,\\div \\left( \\frac{1}{30}-1\\right)$을 계산하면?\n\n1. $-\\frac{15}{2}$\n2. $-\\frac{2}{15}$\n3. $-\\frac{1}{30}$\n4. $\\frac{1}{30}$\n5. $\\frac{15}{2}$"
+    },
+    {
+      "id": "d85f13ba-243b-465c-addd-c0f13a25d758",
+      "before": "다음은 $2$이상의 모든 자연수 $n$에 대하여 부등식 $\\frac{1}{n+1}+\\frac{1}{n+2}+\\frac{1}{n+3}+\\cdots +\\frac{1}{2n}>\\frac{1}{2}\\,\\,\\,\\cdots \\cdots ㉠$\n이 성립함을 수학적 귀납법으로 증명한 것이다.\n$cel$\n$(i)$ $n=2$일 때 ㉠에서\n(좌변) $=$ $\\square \\,\\,\\,\\,\\,(가)\\,\\,\\,\\,$ $>\\frac{1}{2}=$(우변)\n따라서 $n=2$일 때 ㉠이 성립한다.\n$(ii)$ $n=k$($k\\geq 2$) 일 때 ㉠이 성립한다고 가정하면\n$\\frac{1}{k+1}+\\frac{1}{k+2}+\\frac{1}{k+3}+\\cdots +\\frac{1}{2k}>\\frac{1}{2}\\cdots \\cdots ㉡$\n㉡의 양변에 $\\square \\,\\,\\,\\,\\,(나)\\,\\,\\,\\,$을(를) 더하면\n$\\frac{1}{k+1}+\\frac{1}{k+2}+\\frac{1}{k+3}+\\cdots +\\frac{1}{2k}+$$\\square \\,\\,\\,\\,\\,(나)\\,\\,\\,\\,$$>\\frac{1}{2}+$$\\square \\,\\,\\,\\,\\,(나)\\,\\,\\,\\,$\n$\\frac{1}{k+2}+\\frac{1}{k+3}+\\cdots +\\frac{1}{2k}+$$\\square \\,\\,\\,\\,\\,(나)\\,\\,\\,\\,$>$\\frac{1}{2}+$$\\square \\,\\,\\,\\,\\,(나)\\,\\,\\,\\,$$-\\frac{1}{k+1}$\n$=\\frac{1}{2}+\\frac{1}{(2k+1)(2k+2)}>\\frac{1}{2}$\n이므로 $n=k+1$일 때에도 ㉠이 성립한다.\n따라서 $2$이상인 모든 자연수 $n$에 대하여 부등식 ㉠은 성립한다.\n$cel$\n위의 증명에서 (가)에 알맞은 값은 $a$, (나)에 알맞은 식은 $f(k)$라고 할 때, $38\\times aDIVIDEf(4)$의 값은?\n\n1. $101$\n2. $102$\n3. $103$\n4. $104$\n5. $105$",
+      "after": "다음은 $2$이상의 모든 자연수 $n$에 대하여 부등식 $\\frac{1}{n+1}+\\frac{1}{n+2}+\\frac{1}{n+3}+\\cdots +\\frac{1}{2n}>\\frac{1}{2}\\,\\,\\,\\cdots \\cdots ㉠$\n이 성립함을 수학적 귀납법으로 증명한 것이다.\n$cel$\n$(i)$ $n=2$일 때 ㉠에서\n(좌변) $=$ $\\square \\,\\,\\,\\,\\,(가)\\,\\,\\,\\,$ $>\\frac{1}{2}=$(우변)\n따라서 $n=2$일 때 ㉠이 성립한다.\n$(ii)$ $n=k$($k\\geq 2$) 일 때 ㉠이 성립한다고 가정하면\n$\\frac{1}{k+1}+\\frac{1}{k+2}+\\frac{1}{k+3}+\\cdots +\\frac{1}{2k}>\\frac{1}{2}\\cdots \\cdots ㉡$\n㉡의 양변에 $\\square \\,\\,\\,\\,\\,(나)\\,\\,\\,\\,$을(를) 더하면\n$\\frac{1}{k+1}+\\frac{1}{k+2}+\\frac{1}{k+3}+\\cdots +\\frac{1}{2k}+$$\\square \\,\\,\\,\\,\\,(나)\\,\\,\\,\\,$$>\\frac{1}{2}+$$\\square \\,\\,\\,\\,\\,(나)\\,\\,\\,\\,$\n$\\frac{1}{k+2}+\\frac{1}{k+3}+\\cdots +\\frac{1}{2k}+$$\\square \\,\\,\\,\\,\\,(나)\\,\\,\\,\\,$>$\\frac{1}{2}+$$\\square \\,\\,\\,\\,\\,(나)\\,\\,\\,\\,$$-\\frac{1}{k+1}$\n$=\\frac{1}{2}+\\frac{1}{(2k+1)(2k+2)}>\\frac{1}{2}$\n이므로 $n=k+1$일 때에도 ㉠이 성립한다.\n따라서 $2$이상인 모든 자연수 $n$에 대하여 부등식 ㉠은 성립한다.\n$cel$\n위의 증명에서 (가)에 알맞은 값은 $a$, (나)에 알맞은 식은 $f(k)$라고 할 때, $38\\times a\\div f(4)$의 값은?\n\n1. $101$\n2. $102$\n3. $103$\n4. $104$\n5. $105$"
+    },
+    {
+      "id": "da05972a-b43e-40d6-a2a1-3f1ade431bd7",
+      "before": "문자와 식에 대한 설명으로 옳은 것만을 <보기>에서 고른 것은?\n< 보 기 >\nㄱ. $x=2$일 때, $x+1$의 값은 $3$이다.\nㄴ. $-5\\left( 3a-b\\right)$를 계산하면 $-15a-5b$이다.\nㄷ. $3x-2y+x+5y$에서 동류항은 $3x$와 $x$, $2y$와 $5y$이다.\nㄹ. $3\\,DIVIDEa\\,\\times \\,b$를 기호 $\\times ,\\,\\,\\,\\,\\div $를 생략한 식으로 나타내면\n $\\frac{3b}{a}$이다.\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄹ\n3. ㄴ, ㄷ\n4. ㄴ, ㄹ\n5. ㄷ, ㄹ",
+      "after": "문자와 식에 대한 설명으로 옳은 것만을 <보기>에서 고른 것은?\n< 보 기 >\nㄱ. $x=2$일 때, $x+1$의 값은 $3$이다.\nㄴ. $-5\\left( 3a-b\\right)$를 계산하면 $-15a-5b$이다.\nㄷ. $3x-2y+x+5y$에서 동류항은 $3x$와 $x$, $2y$와 $5y$이다.\nㄹ. $3\\,\\div a\\,\\times \\,b$를 기호 $\\times ,\\,\\,\\,\\,\\div $를 생략한 식으로 나타내면\n $\\frac{3b}{a}$이다.\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄹ\n3. ㄴ, ㄷ\n4. ㄴ, ㄹ\n5. ㄷ, ㄹ"
+    },
+    {
+      "id": "db60113f-f658-43ac-99f6-e60fe1eb8753",
+      "before": "두 수 $a,~b\\,$가 있을 때, $a<0,~b>0\\,$이고 $b\\,$의 절댓값이 $a\\,$의 절댓값보다 크다. 다음 중 계산 결과가 음수인 것은?\n\n1. $a+b$\n2. $b-a$\n3. $a^{2}+b$\n4. $aDIVIDEb^{2}$\n5. $a^{2}\\times b$",
+      "after": "두 수 $a,~b\\,$가 있을 때, $a<0,~b>0\\,$이고 $b\\,$의 절댓값이 $a\\,$의 절댓값보다 크다. 다음 중 계산 결과가 음수인 것은?\n\n1. $a+b$\n2. $b-a$\n3. $a^{2}+b$\n4. $a\\div b^{2}$\n5. $a^{2}\\times b$"
+    },
+    {
+      "id": "dffca06b-a394-42cb-b8d9-77836393629e",
+      "before": "곱셈, 나눗셈 기호를 생략하여 나타낸 식으로 옳은 것만을 <보기>에서 있는 대로 고른 것은?\n< 보 기 >\nㄱ. $aDIVIDE(b\\times 4)=\\frac{4a}{b}$\nㄴ. $(a-b)\\div 3=\\frac{a-b}{3}$\nㄷ. $2\\times a-5DIVIDEb=\\frac{2a-5}{b}$\nㄹ. $x\\times y\\times (-5)\\times x=-5x^{2}y$\n\n1. ㄱ, ㄷ\n2. ㄴ, ㄹ\n3. ㄷ, ㄹ\n4. ㄱ, ㄴ, ㄹ\n5. ㄴ, ㄷ, ㄹ",
+      "after": "곱셈, 나눗셈 기호를 생략하여 나타낸 식으로 옳은 것만을 <보기>에서 있는 대로 고른 것은?\n< 보 기 >\nㄱ. $a\\div (b\\times 4)=\\frac{4a}{b}$\nㄴ. $(a-b)\\div 3=\\frac{a-b}{3}$\nㄷ. $2\\times a-5\\div b=\\frac{2a-5}{b}$\nㄹ. $x\\times y\\times (-5)\\times x=-5x^{2}y$\n\n1. ㄱ, ㄷ\n2. ㄴ, ㄹ\n3. ㄷ, ㄹ\n4. ㄱ, ㄴ, ㄹ\n5. ㄴ, ㄷ, ㄹ"
+    },
+    {
+      "id": "e26be163-8378-4515-a138-98b43467a6c0",
+      "before": "기호 $\\times$, $divide$를 생략하여 나타낸 식으로 옳지 않은 것은?\n\n1. $(-1)dividea\\times b=\\mathit{-}\\frac{b}{a}$\n2. $(x-2y)divide3=\\frac{x-2y}{3}$\n3. $-xdivide(y\\times 5)=\\mathit{-}5\\frac{x}{y}$\n4. $a\\times 10+7divide(-b)=10a-\\frac{7}{b}$\n5. $(-1)^{3}\\times x^{2}\\times y=\\mathit{-}x^{2}y$",
+      "after": "기호 $\\times$, $\\div $를 생략하여 나타낸 식으로 옳지 않은 것은?\n\n1. $(-1)\\div a\\times b=\\mathit{-}\\frac{b}{a}$\n2. $(x-2y)\\div 3=\\frac{x-2y}{3}$\n3. $-x\\div (y\\times 5)=\\mathit{-}5\\frac{x}{y}$\n4. $a\\times 10+7\\div (-b)=10a-\\frac{7}{b}$\n5. $(-1)^{3}\\times x^{2}\\times y=\\mathit{-}x^{2}y$"
+    },
+    {
+      "id": "e36474f8-febf-4852-9281-16212255a94e",
+      "before": "연속확률변수 $X$가 갖는 값의 범위는 $-3\\leq X\\leq 3$이고, 확률변수 $X$의 확률밀도함수 $y=f(x)$의 그래프가 그림과 같다. $a\\times \\mathrm{P}\\left( \\mathit{LEFT}|X\\right| \\leq 2\\right)$의 값은? (단, $a$는 상수이다.)\n\n1. $\\frac{4}{27}$\n2. $\\frac{2}{9}$\n3. $\\frac{8}{27}$\n4. $\\frac{10}{27}$\n5. $\\frac{4}{9}$",
+      "after": "연속확률변수 $X$가 갖는 값의 범위는 $-3\\leq X\\leq 3$이고, 확률변수 $X$의 확률밀도함수 $y=f(x)$의 그래프가 그림과 같다. $a\\times \\mathrm{P}\\left( \\left|X\\right| \\leq 2\\right)$의 값은? (단, $a$는 상수이다.)\n\n1. $\\frac{4}{27}$\n2. $\\frac{2}{9}$\n3. $\\frac{8}{27}$\n4. $\\frac{10}{27}$\n5. $\\frac{4}{9}$"
+    },
+    {
+      "id": "e7a28d38-0a68-4af2-ab76-1e60c2fe192b",
+      "before": "두 수 $a,~b$에 대하여 $a>0$, $b<0$일 때, 다음 중 항상 양수인 것은?\n\n1. $a+b$\n2. $a-b$\n3. $\\left| b\\right| -a$\n4. $a^{2}\\times b$\n5. $\\left| a\\right| DIVIDEb$",
+      "after": "두 수 $a,~b$에 대하여 $a>0$, $b<0$일 때, 다음 중 항상 양수인 것은?\n\n1. $a+b$\n2. $a-b$\n3. $\\left| b\\right| -a$\n4. $a^{2}\\times b$\n5. $\\left| a\\right| \\div b$"
+    },
+    {
+      "id": "ed59f09e-4684-4dd7-bcdc-e055dd943400",
+      "before": "다음 중 $\\times \\,$기호, $\\div \\,$기호를 생략하여 나타낸 것으로 옳지 않은 것은?\n\n1. $xDIVIDE\\left( yDIVIDEz\\right) =\\frac{xz}{y}$\n2. $4\\times a\\times aDIVIDE\\left( a+b\\right) \\,=\\,\\frac{4a^{2}}{a+b}\\,$\n3. $lDIVIDE\\left( m\\times n\\right) \\div 5\\,=\\frac{l}{5mn}$\n4. $pDIVIDEq\\times pDIVIDE\\frac{1}{7}=\\,\\frac{7p^{2}}{q}$\n5. $a\\times bDIVIDE\\left( cDIVIDEd\\right) \\,=\\,\\frac{ab}{cd}$",
+      "after": "다음 중 $\\times \\,$기호, $\\div \\,$기호를 생략하여 나타낸 것으로 옳지 않은 것은?\n\n1. $x\\div \\left( y\\div z\\right) =\\frac{xz}{y}$\n2. $4\\times a\\times a\\div \\left( a+b\\right) \\,=\\,\\frac{4a^{2}}{a+b}\\,$\n3. $l\\div \\left( m\\times n\\right) \\div 5\\,=\\frac{l}{5mn}$\n4. $p\\div q\\times p\\div \\frac{1}{7}=\\,\\frac{7p^{2}}{q}$\n5. $a\\times b\\div \\left( c\\div d\\right) \\,=\\,\\frac{ab}{cd}$"
+    },
+    {
+      "id": "ede6aee2-4000-42ed-b449-de57c5fc4f0e",
+      "before": "[서술형 $3$] $x=\\frac{1}{5}$, $y=2$ 일 때, 다음 식의 값을 구하고 그 과정을 서술하시오. \n$(-2x^{2})^{3}\\times 2y^{3}DIVIDEx^{5}y^{3}-(15xy-10y^{2})\\div \\frac{5}{3}y$",
+      "after": "[서술형 $3$] $x=\\frac{1}{5}$, $y=2$ 일 때, 다음 식의 값을 구하고 그 과정을 서술하시오. \n$(-2x^{2})^{3}\\times 2y^{3}\\div x^{5}y^{3}-(15xy-10y^{2})\\div \\frac{5}{3}y$"
+    },
+    {
+      "id": "f16d0154-921f-4b47-94c2-1c6eb19c1221",
+      "before": "다섯 개의 수 $-1,~+2,~-3,~-4,~+5$ 중에서 서로 다른 세 수를 뽑아 곱한 값 중에서 가장 큰 수를 $M$, 가장 작은 수를 $m$이라 할 때, $MDIVIDEm$의 값은?\n\n1. $-\\frac{3}{2}$\n2. $-\\frac{5}{2}$\n3. $-3$\n4. $-\\frac{7}{2}$\n5. $-5$",
+      "after": "다섯 개의 수 $-1,~+2,~-3,~-4,~+5$ 중에서 서로 다른 세 수를 뽑아 곱한 값 중에서 가장 큰 수를 $M$, 가장 작은 수를 $m$이라 할 때, $M\\div m$의 값은?\n\n1. $-\\frac{3}{2}$\n2. $-\\frac{5}{2}$\n3. $-3$\n4. $-\\frac{7}{2}$\n5. $-5$"
+    },
+    {
+      "id": "fa0cb06b-96b1-402c-b459-6674a5015023",
+      "before": "기호 $\\times ,\\,\\div $를 생략하여 나타낸 것으로 옳은 것만을 ＜보기＞ 에서 고른 것은?\n<보기>\n ㄱ. $aDIVIDE\\frac{1}{5}=5a$ ㄴ. $a\\times 2a\\times 3a=6a$\n ㄷ. $3\\div \\frac{1}{x}\\div 2y=\\frac{3}{2xy}$ ㄹ. $xDIVIDE(-3)\\times \\frac{3}{y}=-\\frac{x}{y}$\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄹ\n3. ㄴ, ㄷ\n4. ㄴ, ㄹ\n5. ㄷ, ㄹ",
+      "after": "기호 $\\times ,\\,\\div $를 생략하여 나타낸 것으로 옳은 것만을 ＜보기＞ 에서 고른 것은?\n<보기>\n ㄱ. $a\\div \\frac{1}{5}=5a$ ㄴ. $a\\times 2a\\times 3a=6a$\n ㄷ. $3\\div \\frac{1}{x}\\div 2y=\\frac{3}{2xy}$ ㄹ. $x\\div (-3)\\times \\frac{3}{y}=-\\frac{x}{y}$\n\n1. ㄱ, ㄴ\n2. ㄱ, ㄹ\n3. ㄴ, ㄷ\n4. ㄴ, ㄹ\n5. ㄷ, ㄹ"
+    },
+    {
+      "id": "ff92d8da-cd61-442a-80f4-fb4234b05288",
+      "before": "[서술형 $3$] $0.75$의 역수를 $a$, $-2\\frac{1}{4}$의 역수를 $b$라 할 때, $aDIVIDEb$의 값을 구하는 과정을 서술하시오. ($a,~b,~aDIVIDEb$의 값을 구하는 풀이 과정을 각각 서술하시오.)",
+      "after": "[서술형 $3$] $0.75$의 역수를 $a$, $-2\\frac{1}{4}$의 역수를 $b$라 할 때, $a\\div b$의 값을 구하는 과정을 서술하시오. ($a,~b,~a\\div b$의 값을 구하는 풀이 과정을 각각 서술하시오.)"
+    }
+  ]
+}
