@@ -132,6 +132,14 @@ describe("[isWholesaleHwpScript] 통째로 변환이 안 된 행 가리기", () 
     expect(isWholesaleHwpScript("${cases{x+y=3&#2x-3y=1}}$")).toBe(true);
   });
 
+  it("수식 안의 맨 `rm ` 도 미변환 표지다 — 공백까지 뭉개진 행이다", () => {
+    expect(isWholesaleHwpScript("표준편차(점)$rm A$$25$$3$")).toBe(true);
+    // 바깥 한글 지문에 우연히 섞인 것까지 잡지는 않는다.
+    expect(isWholesaleHwpScript("rm 이라는 글자가 지문에 있다 $x+1$")).toBe(
+      false,
+    );
+  });
+
   it("정상 LaTeX 에 DIVIDE 만 낀 행은 미변환이 아니다", () => {
     expect(isWholesaleHwpScript("ㄱ. $xDIVIDE(-6)=-\\frac{x}{6}$")).toBe(false);
   });
@@ -176,6 +184,17 @@ describe("[fixHwpResidue] 남은 HWP 키워드 옮기기", () => {
       fixHwpResidue("$\\mathrm{P}(\\mathit{LEFT}|Z\\right| \\leq 1.96)$")
         .content,
     ).toBe("$\\mathrm{P}(\\left|Z\\right| \\leq 1.96)$");
+  });
+
+  it("한 글자 `veca` 는 `\\vec{a}` 다", () => {
+    expect(fixHwpResidue("$veca\\,+vecb\\,+vecc\\,=vec0$").content).toBe(
+      "$\\vec{a}\\,+\\vec{b}\\,+\\vec{c}\\,=\\vec{0}$",
+    );
+  });
+
+  it("여러 글자 `vecab` 는 건드리지 않는다 — 한 벡터인지 두 개인지 못 정한다", () => {
+    const text = "$vecab$";
+    expect(fixHwpResidue(text).content).toBe(text);
   });
 
   it("`\\mathit{ANGLEx}` 는 `\\angle x` 다", () => {

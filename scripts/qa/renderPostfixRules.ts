@@ -128,6 +128,10 @@ const WHOLESALE_MARKERS: Array<[string, RegExp]> = [
   ["cdots", /(?<![\\A-Za-z])cdots|(?<!\\)CDOTS/],
   ["cases", /(?<![\\A-Za-z])cases\s*\{/],
   ["atop/pile", /(?<![\\A-Za-z])(?:atop|pile)(?![A-Za-z])/],
+  // 수식 **안**의 맨 `rm ` — HWP 의 로만체 지시자다(`$rm A$$25$`). 바깥 한글 지문에
+  // 우연히 섞이는 걸 막으려고 `$...$` 안으로 한정한다. 이게 있는 행은 공백까지
+  // 뭉개져 있어(`$$이때$rm B$반에수학점수가`) 키워드 치환으로는 살릴 수 없다.
+  ["rm", /\$[^$]*(?<![\\A-Za-z])(?:rm|RM)\s[^$]*\$/],
   // HWP 의 폭 조절 백틱. 정상 LaTeX 본문에는 쓰이지 않는다.
   ["backtick", /`/],
   // 원본 시험지 꼬리말이 본문에 딸려 들어온 행 — 구조가 이미 무너져 있다.
@@ -160,6 +164,9 @@ const RESIDUE_RULES: Array<[string, RegExp, string]> = [
   [String.raw`\mathit{RIGHT}`, /\\mathit\{RIGHT\}/g, "\\right"],
   // `\mathit{ANGLEx}` → `\angle x`. RM/IT 가 삼킨 기호(hwpeq_unglue §3)의 잔여분.
   [String.raw`\mathit{ANGLE}`, /\\mathit\{ANGLE([A-Za-z]*)\}/g, "\\angle $1"],
+  // `veca` → `\vec{a}`. **한 글자짜리만** 옮긴다 — `vecab` 는 `ab` 가 한 벡터인지
+  // `a` 다음에 `b` 인지 정할 수 없으므로 건드리지 않고 목록에 남긴다.
+  ["vec", /(?<![\\A-Za-z])vec([A-Za-z0-9])(?![A-Za-z0-9])/g, "\\vec{$1}"],
 ];
 
 export interface ResidueFixResult {

@@ -167,9 +167,16 @@ async function buildPlan(prisma: PrismaClient, kind: Kind): Promise<Plan> {
   return { kind, scanned, items, holds };
 }
 
-/** 잔재 키워드가 실제로 있는 행만 보류 목록에 넣기 위한 값싼 판정. */
+/**
+ * 잔재 키워드가 실제로 있는 행만 보류 목록에 넣기 위한 값싼 판정.
+ *
+ * ⚠️ 소문자 키워드 뒤에 `(?![A-Za-z])` 를 **다시 붙이지 말 것.** 붙였더니
+ * `veca`·`vecOA`·`1overn` 처럼 **글자에 붙은 형태**가 통째로 안 잡혔다 —
+ * 그런데 글자에 붙는 것이 바로 이 결함의 본모습이다(실측 vec 15행이
+ * "1행"으로 보고됐다). 정상 LaTeX 명령은 백슬래시 lookbehind 가 지킨다.
+ */
 const RESIDUE_PROBE =
-  /(?<!\\)(?:DIVIDE|divide|TIMES|CDOT|TRIANGLE|ANGLE|SQRT|ROOT|RIGHT|LEFT|OVER)|(?<![A-Za-z\\])(?:over|atop|pile|sqrt|root|bar|hat|vec)(?![A-Za-z])/;
+  /(?<!\\)(?:DIVIDE|divide|TIMES|CDOT|TRIANGLE|ANGLE|SQRT|ROOT|RIGHT|LEFT|OVER)|(?<![A-Za-z\\])(?:over|atop|pile|sqrt|root|bar|hat|vec)/;
 function hasResidueKeyword(text: string): boolean {
   for (const m of text.matchAll(/\$([^$]+)\$/g)) {
     if (RESIDUE_PROBE.test(m[1])) return true;
@@ -179,7 +186,7 @@ function hasResidueKeyword(text: string): boolean {
 
 /** 고친 **뒤에도** 수식 안에 남아 있는 HWP 키워드. 반쪽짜리 수리를 드러낸다. */
 const RESIDUAL_PROBE =
-  /(?<!\\)(?:DIVIDE|divide|TIMES|CDOTS?|TRIANGLE|ANGLE|SQRT|ROOT|RIGHT|LEFT|OVER|UNDER)|(?<![A-Za-z\\])(?:over|under|atop|pile|sqrt|root|bar|hat|vec)(?![A-Za-z])/g;
+  /(?<!\\)(?:DIVIDE|divide|TIMES|CDOTS?|TRIANGLE|ANGLE|SQRT|ROOT|RIGHT|LEFT|OVER|UNDER)|(?<![A-Za-z\\])(?:over|under|atop|pile|sqrt|root|bar|hat|vec)[A-Za-z0-9]*/g;
 function residualKeywords(text: string): string[] {
   const found = new Set<string>();
   for (const m of text.matchAll(/\$([^$]+)\$/g)) {

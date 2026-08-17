@@ -1,0 +1,80 @@
+{
+  "kind": "residue",
+  "items": [
+    {
+      "id": "0953c6af-ec2d-490c-8529-438672c3215f",
+      "before": "두 벡터 $veca\\,=\\left( 2,~-4\\right)$와 $vecb=\\left( 1,~3\\right)$에 대하여 $veca\\,⦁vecb$의 값은?\n\n1. $-2$\n2. $-4$\n3. $-6$\n4. $-8$\n5. $-10$",
+      "after": "두 벡터 $\\vec{a}\\,=\\left( 2,~-4\\right)$와 $\\vec{b}=\\left( 1,~3\\right)$에 대하여 $\\vec{a}\\,⦁\\vec{b}$의 값은?\n\n1. $-2$\n2. $-4$\n3. $-6$\n4. $-8$\n5. $-10$"
+    },
+    {
+      "id": "251b0fce-a885-4418-b82c-85fd9e729797",
+      "before": "[서술형 $3$] 서로 다른 네 점 $\\mathrm{O},~A,~B,~C\\,$에 대하여\n$\\mathrm{\\vec{OA}}\\,=\\mathit{-}3\\vec{a}\\,+2\\vec{b}\\,,\\mathrm{~}\\vec{OB}\\,=\\mathit{\\vec{a}}\\,-2\\vec{b}\\,,\\mathrm{~}\\vec{OC}\\,=\\mathit{3}\\vec{a}\\,+k\\,vecb$\n일 때, 다음의 물음에 답하시오. (단, 두 벡터 $veca$와 $vecb$는 영벡터가 아니며 서로 평행하지 않다.) [총 $8$점]\n⑴ $\\mathrm{vecOA}\\,$와 $\\mathrm{vecOC}$가 서로 평행하도록 실수 $k$의 값을 구하고 그 과정을 서술하시오. [$4$점, 부분 점수 있음]\n⑵ 세 점 $\\mathrm{A},~B,~C$가 한 직선 위에 있도록 실수 $k$의 값을 구하고 그 과정을 서술하시오. [$4$점, 부분 점수 있음]",
+      "after": "[서술형 $3$] 서로 다른 네 점 $\\mathrm{O},~A,~B,~C\\,$에 대하여\n$\\mathrm{\\vec{OA}}\\,=\\mathit{-}3\\vec{a}\\,+2\\vec{b}\\,,\\mathrm{~}\\vec{OB}\\,=\\mathit{\\vec{a}}\\,-2\\vec{b}\\,,\\mathrm{~}\\vec{OC}\\,=\\mathit{3}\\vec{a}\\,+k\\,\\vec{b}$\n일 때, 다음의 물음에 답하시오. (단, 두 벡터 $\\vec{a}$와 $\\vec{b}$는 영벡터가 아니며 서로 평행하지 않다.) [총 $8$점]\n⑴ $\\mathrm{vecOA}\\,$와 $\\mathrm{vecOC}$가 서로 평행하도록 실수 $k$의 값을 구하고 그 과정을 서술하시오. [$4$점, 부분 점수 있음]\n⑵ 세 점 $\\mathrm{A},~B,~C$가 한 직선 위에 있도록 실수 $k$의 값을 구하고 그 과정을 서술하시오. [$4$점, 부분 점수 있음]"
+    },
+    {
+      "id": "41db11e7-cb1a-4fb0-b29d-8b6075cee7d8",
+      "before": "[서술형 $4$] 세 벡터 $veca\\,,~vecb\\,,~vecc$가 다음 조건을 모두 만족시킬 때, 다음의 물음에 답하시오. [총 $9$점]\n(가) $\\left| veca\\right| =3,~\\left| vecb\\right| =4,~\\left| vecc\\right| =5$\n(나) $veca\\,+vecb\\,+vecc\\,=vec0$\n⑴ 두 벡터 $veca\\,,~vecc$가 이루는 각을 $\\theta$라 할 때, $costheta$의 값을 구하고 그 과정을 서술하시오. [$5$점, 부분 점수 있음]\n⑵ $\\left| veca\\,+2\\,vecc\\right|$의 값을 구하고 그 과정을 서술하시오. \n[$4$점, 부분 점수 있음]",
+      "after": "[서술형 $4$] 세 벡터 $\\vec{a}\\,,~\\vec{b}\\,,~\\vec{c}$가 다음 조건을 모두 만족시킬 때, 다음의 물음에 답하시오. [총 $9$점]\n(가) $\\left| \\vec{a}\\right| =3,~\\left| \\vec{b}\\right| =4,~\\left| \\vec{c}\\right| =5$\n(나) $\\vec{a}\\,+\\vec{b}\\,+\\vec{c}\\,=\\vec{0}$\n⑴ 두 벡터 $\\vec{a}\\,,~\\vec{c}$가 이루는 각을 $\\theta$라 할 때, $costheta$의 값을 구하고 그 과정을 서술하시오. [$5$점, 부분 점수 있음]\n⑵ $\\left| \\vec{a}\\,+2\\,\\vec{c}\\right|$의 값을 구하고 그 과정을 서술하시오. \n[$4$점, 부분 점수 있음]"
+    },
+    {
+      "id": "4b2d7bce-9534-49de-9d1a-69b2ef418bb3",
+      "before": "좌표평면에서 두 벡터 $\\vec{a}=(x+1,~x-4),~vecb=(2,~2x)$에 대하여 $veca$⦁$\\vec{b}$ 의 값이 최소일 때, 실수 $x$의 값은?\n\n1. $\\frac{1}{2}$\n2. $1$\n3. $\\frac{3}{2}$\n4. $2$\n5. $\\frac{5}{2}$",
+      "after": "좌표평면에서 두 벡터 $\\vec{a}=(x+1,~x-4),~\\vec{b}=(2,~2x)$에 대하여 $\\vec{a}$⦁$\\vec{b}$ 의 값이 최소일 때, 실수 $x$의 값은?\n\n1. $\\frac{1}{2}$\n2. $1$\n3. $\\frac{3}{2}$\n4. $2$\n5. $\\frac{5}{2}$"
+    },
+    {
+      "id": "5aca6c1f-7fe2-4600-b5cd-06f4ee74b97a",
+      "before": "영벡터가 아닌 두 벡터 $vecx\\,,~vecy$에 대하여 \n$3\\vec{x}\\,-\\vec{y}\\,=-\\vec{a}\\,,~5\\vec{x}\\,-2\\vec{y}\\,=\\vec{b}$\n이다. 이 때 $\\vec{x}\\,-\\vec{y}\\,=m\\vec{a}\\,+n\\vec{b}$을 만족시키는 두 실수 $m,~n$에 대하여 $m+n$의 값은?\n\n1. $2$\n2. $3$\n3. $4$\n4. $5$\n5. $6$",
+      "after": "영벡터가 아닌 두 벡터 $\\vec{x}\\,,~\\vec{y}$에 대하여 \n$3\\vec{x}\\,-\\vec{y}\\,=-\\vec{a}\\,,~5\\vec{x}\\,-2\\vec{y}\\,=\\vec{b}$\n이다. 이 때 $\\vec{x}\\,-\\vec{y}\\,=m\\vec{a}\\,+n\\vec{b}$을 만족시키는 두 실수 $m,~n$에 대하여 $m+n$의 값은?\n\n1. $2$\n2. $3$\n3. $4$\n4. $5$\n5. $6$"
+    },
+    {
+      "id": "67de2b23-040a-412c-a69f-66e837f85606",
+      "before": "두 실수 $k,~l$과 두 벡터 $\\vec{a},~vecb$에 대하여 $4(\\vec{a}\\,+2\\vec{b}\\,)-3(\\vec{a}\\,-\\vec{b}\\,)=k\\,veca\\,+l\\,vecb$ 일 때, $k+l$의 값은?(단, 두 벡터 $veca$와 $vecb$는 영벡터가 아니고 서로 평행하지 않다.)\n\n1. $9$\n2. $10$\n3. $11$\n4. $12$\n5. $13$",
+      "after": "두 실수 $k,~l$과 두 벡터 $\\vec{a},~\\vec{b}$에 대하여 $4(\\vec{a}\\,+2\\vec{b}\\,)-3(\\vec{a}\\,-\\vec{b}\\,)=k\\,\\vec{a}\\,+l\\,\\vec{b}$ 일 때, $k+l$의 값은?(단, 두 벡터 $\\vec{a}$와 $\\vec{b}$는 영벡터가 아니고 서로 평행하지 않다.)\n\n1. $9$\n2. $10$\n3. $11$\n4. $12$\n5. $13$"
+    },
+    {
+      "id": "6f6e4cab-621c-43c8-9b6d-76036c26d201",
+      "before": "두 벡터 $veca=(2,~5),~vecb=(1,~4)$에 대하여 $\\vec{c}=(5,~11)$를 $mveca+nvecb$꼴로 나타낼 때, $m+n$의 값은? (단, $m,~n$은 실수)\n\n1. $1$\n2. $2$\n3. $3$\n4. $4$\n5. $5$",
+      "after": "두 벡터 $\\vec{a}=(2,~5),~\\vec{b}=(1,~4)$에 대하여 $\\vec{c}=(5,~11)$를 $mveca+nvecb$꼴로 나타낼 때, $m+n$의 값은? (단, $m,~n$은 실수)\n\n1. $1$\n2. $2$\n3. $3$\n4. $4$\n5. $5$"
+    },
+    {
+      "id": "715bcc8f-1d2d-4a1b-9abd-ea369a159356",
+      "before": "그림과 같이 삼각형 $\\mathrm{OAB}$에서 $\\mathrm{vecOA}\\,=veca$, $\\mathrm{vecOB}\\,=vecb$라 하고, 변 $\\mathrm{OA}$의 중점을 $\\mathrm{P}$, 변 $\\mathrm{AB}$를 $3:2$로 내분하는 점을 $\\mathrm{Q}$라 하자. 이때 $\\mathrm{\\vec{PQ}}\\,=\\mathit{m}\\,\\mathrm{\\vec{a}}+\\mathit{n}\\,vecb$를 만족시키는 두 실수 $m,~n$에 대하여 $m+n$의 값은?\n\n1. $\\frac{1}{5}$\n2. $\\frac{3}{10}$\n3. $\\frac{2}{5}$\n4. $\\frac{1}{2}$\n5. $\\frac{3}{5}$",
+      "after": "그림과 같이 삼각형 $\\mathrm{OAB}$에서 $\\mathrm{vecOA}\\,=\\vec{a}$, $\\mathrm{vecOB}\\,=\\vec{b}$라 하고, 변 $\\mathrm{OA}$의 중점을 $\\mathrm{P}$, 변 $\\mathrm{AB}$를 $3:2$로 내분하는 점을 $\\mathrm{Q}$라 하자. 이때 $\\mathrm{\\vec{PQ}}\\,=\\mathit{m}\\,\\mathrm{\\vec{a}}+\\mathit{n}\\,\\vec{b}$를 만족시키는 두 실수 $m,~n$에 대하여 $m+n$의 값은?\n\n1. $\\frac{1}{5}$\n2. $\\frac{3}{10}$\n3. $\\frac{2}{5}$\n4. $\\frac{1}{2}$\n5. $\\frac{3}{5}$"
+    },
+    {
+      "id": "7e704707-07d4-43c7-90a3-12fd14abf8be",
+      "before": "[서술형 $2$] 두 벡터 $veca\\,=(3,~-2)$, $vecb\\,=(2,~k)$에 대하여 다음을 구하는 풀이 과정과 답을 쓰시오.[$6$점, 각 $3$점]\n⑴ 두 벡터가 평행이 되도록 하는 실수 $k$의 값\n⑵ 두 벡터가 수직이 되도록 하는 실수 $k$의 값",
+      "after": "[서술형 $2$] 두 벡터 $\\vec{a}\\,=(3,~-2)$, $\\vec{b}\\,=(2,~k)$에 대하여 다음을 구하는 풀이 과정과 답을 쓰시오.[$6$점, 각 $3$점]\n⑴ 두 벡터가 평행이 되도록 하는 실수 $k$의 값\n⑵ 두 벡터가 수직이 되도록 하는 실수 $k$의 값"
+    },
+    {
+      "id": "a3bd3a85-9929-4cf7-8296-cd3d57fa917b",
+      "before": "두 점 $\\mathrm{P},~Q$의 위치벡터를 각각 $vecp$, $vecq$라 하자. 세 벡터 $\\vec{a}\\,=(1,~5)$, $vecc\\,=(4,~2)$, $vecn\\,=(3,~-1)$에 대하여 두 벡터 $vecp$, $vecq$가 각각 $vecn\\,\\bullet (vecp\\,-veca\\,)=0$, $\\left| vecq\\,-vecc\\right| =3$을 만족시킬 때. 선분 $\\mathrm{PQ}$의 길이의 최솟값은 $\\frac{a+b\\,\\sqrt{10}}{5}$이다. $a+b$의 값은? (단, $a$와 $b$는 상수이다)\n\n1. $-13$\n2. $-9$\n3. $-5$\n4. $-1$\n5. $3$",
+      "after": "두 점 $\\mathrm{P},~Q$의 위치벡터를 각각 $\\vec{p}$, $\\vec{q}$라 하자. 세 벡터 $\\vec{a}\\,=(1,~5)$, $\\vec{c}\\,=(4,~2)$, $\\vec{n}\\,=(3,~-1)$에 대하여 두 벡터 $\\vec{p}$, $\\vec{q}$가 각각 $\\vec{n}\\,\\bullet (\\vec{p}\\,-\\vec{a}\\,)=0$, $\\left| \\vec{q}\\,-\\vec{c}\\right| =3$을 만족시킬 때. 선분 $\\mathrm{PQ}$의 길이의 최솟값은 $\\frac{a+b\\,\\sqrt{10}}{5}$이다. $a+b$의 값은? (단, $a$와 $b$는 상수이다)\n\n1. $-13$\n2. $-9$\n3. $-5$\n4. $-1$\n5. $3$"
+    },
+    {
+      "id": "bbc07752-deb8-4e15-be26-30bb659c7202",
+      "before": "오른쪽 그림과 같이 한 변의 길이가 $1$인 정육각형 $\\mathrm{ABCDEF}$에서 $\\mathrm{\\vec{AB}}\\,=\\vec{\\,\\mathit{a}\\mathrm{}}\\mathit{\\,},~\\vec{\\mathrm{BC}\\mathit{}}\\,=\\vec{\\mathit{b}},~\\vec{\\mathrm{CD}}\\,=\\vec{\\mathit{c}}$라 할 때, 벡터 $veca\\,-vecb\\,+2vecc$와 같은 벡터는?\n\n1. $\\mathrm{vecAE}$\n2. $\\mathrm{vecAF}$\n3. $\\mathrm{vecBE}$\n4. $\\mathrm{vecCE}$\n5. $\\mathrm{vecDC}$",
+      "after": "오른쪽 그림과 같이 한 변의 길이가 $1$인 정육각형 $\\mathrm{ABCDEF}$에서 $\\mathrm{\\vec{AB}}\\,=\\vec{\\,\\mathit{a}\\mathrm{}}\\mathit{\\,},~\\vec{\\mathrm{BC}\\mathit{}}\\,=\\vec{\\mathit{b}},~\\vec{\\mathrm{CD}}\\,=\\vec{\\mathit{c}}$라 할 때, 벡터 $\\vec{a}\\,-\\vec{b}\\,+2\\vec{c}$와 같은 벡터는?\n\n1. $\\mathrm{vecAE}$\n2. $\\mathrm{vecAF}$\n3. $\\mathrm{vecBE}$\n4. $\\mathrm{vecCE}$\n5. $\\mathrm{vecDC}$"
+    },
+    {
+      "id": "c6a8573b-aaf4-418e-9af5-1155a1f33364",
+      "before": "좌표평면에서 세 점 $\\mathrm{A},~B,~P$의 위치벡터를 각각 $\\vec{a},~\\vec{b},~\\vec{p}$라 할 때, 두 점 $\\mathrm{A}(-1,~2),~B(3,~-4)$에 대하여 $\\left( \\vec{p}-veca\\right)$⦁$\\left( \\vec{p}-vecb\\right) =0$을 만족시키는 점 $\\mathrm{P}$가 나타내는 도형의 넓이는?\n\n1. $9\\pi$\n2. $10\\pi$\n3. $11\\pi$\n4. $12\\pi$\n5. $13\\pi$",
+      "after": "좌표평면에서 세 점 $\\mathrm{A},~B,~P$의 위치벡터를 각각 $\\vec{a},~\\vec{b},~\\vec{p}$라 할 때, 두 점 $\\mathrm{A}(-1,~2),~B(3,~-4)$에 대하여 $\\left( \\vec{p}-\\vec{a}\\right)$⦁$\\left( \\vec{p}-\\vec{b}\\right) =0$을 만족시키는 점 $\\mathrm{P}$가 나타내는 도형의 넓이는?\n\n1. $9\\pi$\n2. $10\\pi$\n3. $11\\pi$\n4. $12\\pi$\n5. $13\\pi$"
+    },
+    {
+      "id": "c6f0756e-7e83-4d67-997e-6e3719eb1ea9",
+      "before": "두 벡터 $veca\\,=(2,~-4)$와, $vecb\\,=(1,~3)$가 이루는 각의 크기는?\n\n1. $45°$\n2. $60°$\n3. $90°$\n4. $120°$\n5. $135°$",
+      "after": "두 벡터 $\\vec{a}\\,=(2,~-4)$와, $\\vec{b}\\,=(1,~3)$가 이루는 각의 크기는?\n\n1. $45°$\n2. $60°$\n3. $90°$\n4. $120°$\n5. $135°$"
+    },
+    {
+      "id": "ea318ba7-027f-4000-b223-1f39bf724ef4",
+      "before": "두 벡터 $\\vec{a},~vecb$에 대하여 $\\left| \\vec{a}\\right| =5,~\\left| \\vec{b}\\right| =4,~\\left| veca-vecb\\right| =6$일 때, $veca$⦁$\\vec{b}$의 값은?\n\n1. $\\frac{1}{2}$\n2. $\\frac{3}{2}$\n3. $\\frac{5}{2}$\n4. $\\frac{7}{2}$\n5. $\\frac{9}{2}$",
+      "after": "두 벡터 $\\vec{a},~\\vec{b}$에 대하여 $\\left| \\vec{a}\\right| =5,~\\left| \\vec{b}\\right| =4,~\\left| \\vec{a}-\\vec{b}\\right| =6$일 때, $\\vec{a}$⦁$\\vec{b}$의 값은?\n\n1. $\\frac{1}{2}$\n2. $\\frac{3}{2}$\n3. $\\frac{5}{2}$\n4. $\\frac{7}{2}$\n5. $\\frac{9}{2}$"
+    },
+    {
+      "id": "fb102195-cd52-4025-9da6-5f0e366428e4",
+      "before": "두 벡터 $veca$와 $\\vec{b}$가 이루는 각의 크기가 $30°$이고 $\\left| \\vec{b}\\right| =\\sqrt{3}$, $\\left| \\vec{a}\\,-3\\vec{b}\\right| =\\sqrt{15}$일 때, $\\left| veca\\right|$의 최댓값은 $\\frac{p+\\sqrt{q}}{2}$이다. $p+q$의 값은? (단, $p$와 $q$는 상수이다.)\n\n1. $40$\n2. $41$\n3. $42$\n4. $43$\n5. $44$",
+      "after": "두 벡터 $\\vec{a}$와 $\\vec{b}$가 이루는 각의 크기가 $30°$이고 $\\left| \\vec{b}\\right| =\\sqrt{3}$, $\\left| \\vec{a}\\,-3\\vec{b}\\right| =\\sqrt{15}$일 때, $\\left| \\vec{a}\\right|$의 최댓값은 $\\frac{p+\\sqrt{q}}{2}$이다. $p+q$의 값은? (단, $p$와 $q$는 상수이다.)\n\n1. $40$\n2. $41$\n3. $42$\n4. $43$\n5. $44$"
+    }
+  ]
+}

@@ -69,17 +69,23 @@ const HWP_KEYWORDS = [
 
 /**
  * 맨 키워드 판정 — 백슬래시(정상 LaTeX 명령)에 붙지 않은 것만 잔재로 센다.
- * 대문자 키워드는 앞뒤가 영문자여도 잔재다(`aDIVIDEb` 가 바로 그 모양).
- * 소문자 키워드는 영어 단어의 일부일 수 있어 **양옆이 숫자·기호일 때만** 센다.
- * 단 `divide` 는 영어 단어로 볼 여지가 없어 붙어 있어도 센다(`cdivide5`).
+ *
+ * ⚠️ **뒤에 `(?![A-Za-z])` 를 붙이지 않는다.** 이 지표가 세 번 틀린 자리가 전부
+ * 여기다 — `DIVIDE`(→`DIV` 가 `I` 에 막힘) · `divide` · `veca`/`vecOA`/`1overn`.
+ * HWP 잔재는 **글자에 들러붙은 것이 본모습**이라, 뒤에 영문자를 금지하면
+ * 지표가 정확히 결함만 골라서 못 본다. 실측 vec 은 15행인데 "1"로 보고됐다.
+ * 정상 LaTeX 명령을 지키는 것은 백슬래시 lookbehind 지 영문자 lookahead 가 아니다.
+ *
+ * 앞쪽 가드만 남긴다: 소문자 키워드는 **앞이 영문자면** 영어 낱말의 꼬리일 수
+ * 있으므로 세지 않는다(`overall` 의 `all` 이 아니라 `Rover` 의 `over` 쪽).
  */
 function residueHits(expr: string): Map<string, number> {
   const hits = new Map<string, number>();
   for (const kw of HWP_KEYWORDS) {
-    const glued = kw === kw.toUpperCase() || kw === "divide";
-    const pattern = glued
+    const upper = kw === kw.toUpperCase();
+    const pattern = upper
       ? new RegExp(`(?<!\\\\)${kw}`, "g")
-      : new RegExp(`(?<![A-Za-z\\\\])${kw}(?![A-Za-z])`, "g");
+      : new RegExp(`(?<![A-Za-z\\\\])${kw}`, "g");
     const n = expr.match(pattern)?.length ?? 0;
     if (n > 0) hits.set(kw, (hits.get(kw) ?? 0) + n);
   }
