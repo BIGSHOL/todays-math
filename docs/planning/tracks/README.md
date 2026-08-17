@@ -52,27 +52,50 @@ A단계·B단계가 끝난 뒤 남은 것을 **파일 소유권과 DB 컬럼이 
 
 ---
 
-## ⚠️ 워크트리를 지우지 마라 — 저장소 밖에 1.9GB 가 있다
+## 저장소 밖 산출물은 `C:/Creative/testautocreator-data/` 에 있다
 
-`scripts/qa/reports/` 는 **gitignore 대상**이다. main 에 병합해도 따라가지 않는다.
-워크트리를 지우면 아래가 **함께 사라진다.**
+`scripts/qa/reports/` 는 **gitignore 대상**이라 main 병합으로 따라가지 않는다.
+그래서 트랙 워크트리를 지우기 전에 **저장소 밖 고정 위치로 옮겨 두었다**
+(2026-08-17). 워크트리는 지웠고 산출물은 남아 있다.
 
-| 워크트리 | 크기 | 무엇 |
-|---|---|---|
-| `잔여-D-HWP/scripts/qa/reports/` | **1.9G** | 아래 셋이 핵심 |
-| └ `hwpx/` | 1.8G | HWP → HWPX 변환 3,302편. **다시 뽑으면 약 10.5시간** |
-| └ `hwp-latex/` | 51M | 수식이 LaTeX 로 변환된 판. **모든 트랙이 원본으로 쓴다** |
-| └ `hwp/` · `db-content.jsonl` · `hwp-verdicts.jsonl` | 82M | 원본 추출본 · DB 스냅숏 · 교체 판정 |
-| `잔여-B-정답/scripts/qa/reports/` | 26M | 공식 정답면 추출본 |
-| `잔여-E-신규적재/scripts/qa/reports/` | 17M | 적재 목록 · corpus 지문 |
-| `잔여-A-그림/scripts/qa/reports/` | 15M | 그림 색인 |
-| `잔여-C-RPM/scripts/qa/reports/` | 11M | RPM 대조본 |
-| `잔여-G-소단원분류/scripts/classify/reports/` | 9.2M | 분류 실측 결과 |
+```
+C:/Creative/testautocreator-data/
+  D-HWP/qa-reports/          1.9G   ← 대부분이 여기다
+    hwpx/                    1.8G   3,302편. 다시 뽑으면 약 10.5시간
+    hwp-latex/                51M   3,302편. 수식이 LaTeX 로 변환된 판
+    hwp/                      49M   원본 추출본
+    db-content.jsonl          22M   DB 스냅숏 (몇 분이면 다시 뜬다)
+  G-소단원분류/               57M   분류 학습·평가 데이터
+  B-정답/                     26M   공식 정답면 추출본
+  E-신규적재/                 25M   적재 대조본
+  A-그림/                     15M   그림 색인
+  C-RPM/                      11M   RPM 대조본
+```
 
-경로 기준: `C:/Users/user/orca/workspaces/testautocreator/<워크트리>/`
+**되살릴 수 없는 것은 `hwpx/` 하나뿐이다.** 나머지는 거기서 다시 만들거나
+(hwp-latex) DB 에서 몇 분이면 다시 뜬다(db-content.jsonl).
 
-**터미널(에이전트 세션)은 닫아도 된다.** 각 트랙이 인계 문서를 남겼고 코드는 main 에 있다.
-사라지면 안 되는 것은 위 파일들이다.
+### 중요한 기록은 이미 git 에 있다
 
-`hwp-latex/` 를 다시 뽑아야 한다면 그 전에 트랙 F 에게 알려라 — 적재기가 입력 corpus
-지문을 기록해 두어서, 지문이 달라지면 멈춘다(그게 설계다).
+부피 때문에 밖으로 뺀 것은 **중간 산출물**이고, 되짚는 데 필요한 **기록**은
+저장소 안에 있다. 산출물 폴더가 사라져도 아래는 남는다.
+
+| 파일 | 무엇 |
+|---|---|
+| `scripts/classify/reports/unit-predictions.jsonl` | 트랙 G 의 소단원 판정 4,566건 (근거·확신 포함) |
+| `scripts/qa/handoff/load2-external-ids.json` | **추정 배정분 4,513행** — 소단원을 통계로 붙인 행 목록 |
+| `scripts/qa/handoff/` 전체 18개 | 트랙 간 인계 산출물 |
+| `scripts/qa/rpm-external-id-solution-batch.json` 류 | 되돌리기 목록 |
+
+### 다시 쓸 때
+
+스크립트는 `scripts/qa/reports/` 상대경로를 본다. 산출물이 필요하면 그 경로로
+디렉터리 링크를 걸거나 복사해서 쓴다.
+
+```bash
+# 예: D 산출물을 새 워크트리에서 쓰기 (관리자 명령 프롬프트)
+mklink /J scripts\qa\reports C:\Creative\testautocreator-data\D-HWP\qa-reports
+```
+
+`hwp-latex/` 를 다시 뽑아야 한다면 그 전에 적재 담당에게 알려라 — 적재기가 입력
+corpus 지문을 기록해 두어서, 지문이 달라지면 멈춘다(그게 설계다).
