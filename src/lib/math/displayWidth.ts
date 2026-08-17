@@ -75,3 +75,33 @@ export function displayWidth(text: string): number {
 
   return width + plainWidth(text.slice(pos));
 }
+
+/**
+ * **2열 배치가 가능한 최대 표시폭.**
+ *
+ * 원장님 지적(2026-08-17): "보기가 보기내에서 두줄처리되잖아".
+ * 지금 `ProblemContent` 는 `md:grid-cols-2 print:grid-cols-2` 로 2열을 **강제**해서
+ * 조금만 긴 보기도 열 안에서 두 줄로 접힌다.
+ *
+ * 실측으로 뽑은 한계값 — 인쇄 지면 기준(`TestPrint.module.css`):
+ *   문항 열 폭  = (210mm − 100px − 14px) × 1.15 / 2.15 ≈ 364px
+ *   2열 한 칸   = (364 − gap 32px) / 2 ≈ 166px, 여기서 마커(①)와 간격 약 19px 제외 ≈ 147px
+ *   본문 12.5px 한글은 한 글자 ≈ 12.5px → 약 11.8자 → 표시폭(한글=2) 약 23.6
+ * 그래서 **24** 를 넘으면 2열에서 반드시 접힌다. 상자 카드도 거의 같다
+ * (안쪽 폭 ≈ 330px, 2열 한 칸 ≈ 153px → 표시폭 약 24.4).
+ *
+ * DB 전수(보기 있는 문항 34,411건) 분포: 최장 보기 표시폭이 24를 넘는 문항은 6.0%.
+ * 즉 94%는 지금처럼 2열로 남고, 접히던 6%만 1열로 내려온다.
+ */
+export const TWO_COLUMN_WIDTH_LIMIT = 24;
+
+/**
+ * 항목 전부가 2열 한 칸에 들어가는가. **하나라도** 넘으면 전체를 1열로 내린다 —
+ * 한 칸만 두 줄이 되면 그 행 전체가 어긋나 보이기 때문이다(원장님 지적).
+ */
+export function fitsTwoColumns(texts: readonly string[]): boolean {
+  return (
+    texts.length >= 2 &&
+    texts.every((text) => displayWidth(text) <= TWO_COLUMN_WIDTH_LIMIT)
+  );
+}

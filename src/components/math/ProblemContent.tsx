@@ -7,6 +7,7 @@
  * 보기 마커가 없는 문항(OCR 유실 등)은 지문만 렌더한다 — 임의로 쪼개지 않는다.
  */
 import { MarkdownRenderer } from "@/components/math/MarkdownRenderer";
+import { fitsTwoColumns } from "@/lib/math/displayWidth";
 import { parseProblemContent } from "@/lib/problem/parseProblemContent";
 
 const CHOICE_MARKS = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"];
@@ -41,6 +42,14 @@ export function ProblemContent({
 }: ProblemContentProps) {
   const { question, choices } = parseProblemContent(content);
   const figures = figureUrls ?? [];
+  /**
+   * 2열은 **들어갈 때만** 쓴다 (원장님 지적: "보기가 보기내에서 두줄처리되잖아").
+   * 예전에는 `md:grid-cols-2 print:grid-cols-2` 로 강제해 조금만 긴 보기도 열 안에서
+   * 접혔다. 한계값 근거는 `displayWidth.ts` 의 `TWO_COLUMN_WIDTH_LIMIT` 주석 —
+   * 인쇄 문항 열 폭에서 실제로 접히는 지점이다. 실측 6.0% 가 1열로 내려온다.
+   * **인쇄 지면도 같이 바뀐다**(절대 규칙 6 — 실물 출력 검수 대상).
+   */
+  const choicesInTwoColumns = fitsTwoColumns(choices);
   // undefined 면 React 가 속성 자체를 만들지 않는다 — 인쇄 지면은 종전 그대로.
   const figureLoading = deferFigures ? "lazy" : undefined;
   const figureDecoding = deferFigures ? "async" : undefined;
@@ -72,7 +81,11 @@ export function ProblemContent({
         </div>
       ) : null}
       {choices.length > 0 ? (
-        <div className="mt-4 grid grid-cols-1 gap-x-8 gap-y-2 md:grid-cols-2 print:grid-cols-2">
+        <div
+          className={`mt-4 grid grid-cols-1 gap-x-8 gap-y-2${
+            choicesInTwoColumns ? " md:grid-cols-2 print:grid-cols-2" : ""
+          }`}
+        >
           {choices.map((choice, index) => (
             <div
               key={index}
