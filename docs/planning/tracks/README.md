@@ -94,7 +94,7 @@ C:/Creative/testautocreator-data/
 
 ```bash
 # 예: D 산출물을 새 워크트리에서 쓰기 (관리자 명령 프롬프트)
-mklink /J scripts\qaeports C:\Creative	estautocreator-data\D-HWP\qa-reports
+mklink /J scripts\qa\reports C:\Creative\testautocreator-data\D-HWP\qa-reports
 ```
 
 `hwp-latex/` 를 다시 뽑아야 한다면 그 전에 적재 담당에게 알려라 — 적재기가 입력
