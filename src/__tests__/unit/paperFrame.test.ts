@@ -77,3 +77,30 @@ describe("[렌더 수리 A] 지면 톤 — 화면 틀에서만 빼고 인쇄 지
     expect(paper).toMatch(/font-family:\s*var\(--paper-font-serif\)/);
   });
 });
+
+/**
+ * 2026-08-17 원장님 "이런것도 자동 줄바꿈 되면 좋겠지만" — 한 덩어리라 못 끊는 긴
+ * 수식이 지면 열을 넘칠 때. 화면에서는 **열 경계에서** 가로 스크롤로 가둔다.
+ *
+ * `overflow-x: auto` 만 걸면 `overflow-y` 도 auto 가 돼 KaTeX 세로 오버행이 잘린다
+ * (실측 분수 5px). 그래서 `padding-block` 이 **짝으로** 있어야 한다 — 하나만 남으면
+ * 조용히 잘리므로 둘을 같이 잠근다.
+ */
+describe("[렌더 수리 A] 긴 수식 — 지면 열 경계에서 가로 스크롤", () => {
+  const paper = (() => {
+    const found = CSS.match(/\.paperParity\s*\{([\s\S]*?)\}/);
+    expect(found).not.toBeNull();
+    return found![1];
+  })();
+
+  it("가로 넘침은 지면 열 안에서 스크롤한다", () => {
+    expect(paper).toMatch(/overflow-x:\s*auto/);
+  });
+
+  it("세로 오버행을 흡수할 padding-block 이 함께 있다", () => {
+    const padding = paper.match(/padding-block:\s*([\d.]+)em/);
+    expect(padding).not.toBeNull();
+    // 실측 최대 오버행 5px(=0.4em @12.5px) 보다 커야 잘리지 않는다.
+    expect(Number(padding![1])).toBeGreaterThanOrEqual(0.5);
+  });
+});
