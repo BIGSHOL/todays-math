@@ -256,9 +256,29 @@ function main() {
   }
 
   const models: Model[] = ["engine", "cohort-only", "carry-forward"];
-  const summary = Object.fromEntries(
-    models.map((m) => [m, summarize(samples.filter((s) => s.model === m))]),
+
+  // 🔴 모델 비교는 **공통 표본**으로만 한다. cohort-only 는 코호트 근거가 없어 일부
+  //    편에서 예측 자체를 못 하는데, 그 편들이 engine 쪽에만 남아 평균을 밀어 올렸다.
+  //    §12.4 의 "단원·난이도는 cohort-only 가 낫다"가 이 아티팩트였다(adv4 재현:
+  //    같은 1,098편으로 짝지으면 단원도 engine 이 유의하게 낫다).
+  const idsByModel = new Map<Model, Set<string>>();
+  for (const m of models) idsByModel.set(m, new Set());
+  for (const s of samples) idsByModel.get(s.model)!.add(s.examId);
+  const commonIds = new Set(
+    [...idsByModel.get("engine")!].filter((id) =>
+      models.every((m) => idsByModel.get(m)!.has(id)),
+    ),
   );
+  // 비교표는 공통 표본으로, engine 절대 성능은 전체 표본으로 — 서로 다른 질문이다.
+  const summary = Object.fromEntries(
+    models.map((m) => [
+      m,
+      summarize(
+        samples.filter((s) => s.model === m && commonIds.has(s.examId)),
+      ),
+    ]),
+  );
+  const engineFull = summarize(samples.filter((s) => s.model === "engine"));
 
   console.log(
     // ⚠️ 모델 수로 나눠 세면 안 된다 — cohort-only 는 근거가 없어 빠지는 편이 있어
@@ -266,6 +286,11 @@ function main() {
     `\nbacktest 대상 ${samples.filter((s) => s.model === "engine").length}편 (과거 없음으로 제외 ${skipped}편` +
       // 코호트 기준선조차 못 세운 편 — 세어만 두면 기준선 비교가 조용히 왜곡된다.
       `${unavailable ? ` · 코호트 표본 없음 ${unavailable}편` : ""})`,
+  );
+  console.log(
+    `
+[모델 비교 — 공통 표본 ${commonIds.size}편] 세 모델이 모두 예측한 편만 비교한다.` +
+      " 못 푼 편이 한쪽 평균에만 얹히면 표가 거짓말을 한다(§12.4 아티팩트).",
   );
   console.log(
     `\n${"모델".padEnd(15)}${"문항수MAE".padStart(11)}${"총점MAE".padStart(10)}` +
@@ -284,6 +309,21 @@ function main() {
         s.difficultyMixDistance.toFixed(4).padStart(11),
     );
   }
+
+  console.log(
+    "engine(전체표본)".padEnd(15) +
+      engineFull.questionCountAbsError.toFixed(3).padStart(9) +
+      engineFull.totalScoreAbsError.toFixed(3).padStart(10) +
+      engineFull.typeMixDistance.toFixed(4).padStart(10) +
+      engineFull.scoreGridDistance.toFixed(4).padStart(10) +
+      engineFull.unitMixDistance.toFixed(4).padStart(10) +
+      engineFull.difficultyMixDistance.toFixed(4).padStart(11),
+  );
+  // 난이도는 엔진이 코호트 분포를 **그대로** 쓰므로 두 모델이 같은 값이다
+  // (1,299/1,299편 동일 — adv4 전수 확인). 열이 달라 보였다면 전부 표본 차이였다.
+  console.log(
+    "  (난이도: engine ≡ cohort-only — 엔진이 난이도를 코호트에서 그대로 가져온다)",
+  );
 
   // 과거 회차가 쌓일수록 나아지는가 — "몇 학기 돌리면 정확해진다"의 직접 검증.
   console.log("\n과거 회차 수별 (engine, 문항수MAE · 유형거리 · 단원거리):");
