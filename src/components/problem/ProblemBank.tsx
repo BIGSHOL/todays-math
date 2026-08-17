@@ -15,7 +15,7 @@ import { loadUnits } from "@/lib/units/unitApi";
 
 import { FieldSelect } from "./FieldSelect";
 import { PROBLEM_TYPES } from "./labels";
-import { ProblemCard } from "./ProblemCard";
+import { ProblemCard } from "./ProblemCardLazy";
 import { ProblemGenerateForm } from "./ProblemGenerateForm";
 import { ProblemRegisterForm } from "./ProblemRegisterForm";
 import { ProblemTransformForm } from "./ProblemTransformForm";

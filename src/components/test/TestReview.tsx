@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/Button";
 
-import { ReviewProblemCard } from "./ReviewProblemCard";
+import { ReviewProblemCard } from "./ReviewProblemCardLazy";
 import { useTestReview } from "./useTestReview";
 
 type Props = {
