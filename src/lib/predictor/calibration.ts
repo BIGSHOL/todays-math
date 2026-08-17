@@ -346,6 +346,47 @@ function holdoutErrors(
   });
 }
 
+/**
+ * 개선이 **잡음보다 큰가** — 짝지은 부트스트랩으로 판정한다.
+ *
+ * 🔴 이게 없으면 `improved` 를 믿을 수 없다. 단계별 오차는 leave-one-out 이라 정직하지만,
+ *    **어느 단계를 채택할지도 같은 표본으로 정한다.** 진짜 신호가 없어도 어떤 단계는
+ *    우연히 나아 보이고, 그게 채택되어 "개선"으로 보고된다.
+ *
+ *    실측(신호가 전혀 없는 합성 표본 40건 × 10회): 예전 규칙은 **10회 중 3회 개선을
+ *    주장**했다. 그 계수를 실제 새 학생에게 적용하면 오히려 더 틀린다.
+ *
+ * 그래서 "평균이 조금 낮다"로는 채택하지 않는다. 짝지은 차이(before−after)의 95% 구간이
+ * **전부 0보다 커야** 개선으로 본다. 결정적 난수를 쓰므로 같은 입력이면 같은 답이 나온다.
+ */
+function improvementIsReal(
+  baseErrors: readonly number[],
+  finalErrors: readonly number[],
+): boolean {
+  const n = baseErrors.length;
+  if (n === 0) return false;
+  const diffs = baseErrors.map((b, i) => b - finalErrors[i]!);
+  if (diffs.every((d) => d === 0)) return false;
+
+  // 결정적 선형 합동 난수 — 재현 가능해야 한다(같은 표본이면 같은 판정).
+  let seed = 20260817;
+  const next = () => {
+    seed = (seed * 1103515245 + 12345) % 2147483648;
+    return seed / 2147483648;
+  };
+
+  const ROUNDS = 2000;
+  const means: number[] = [];
+  for (let r = 0; r < ROUNDS; r += 1) {
+    let sum = 0;
+    for (let k = 0; k < n; k += 1) sum += diffs[Math.floor(next() * n)]!;
+    means.push(sum / n);
+  }
+  means.sort((a, b) => a - b);
+  const lower = means[Math.floor(ROUNDS * 0.025)]!;
+  return lower > 0;
+}
+
 // ─────────────────────────────────────────────
 // 본체
 // ─────────────────────────────────────────────
@@ -573,7 +614,10 @@ export function estimateCalibration(
     bias,
     maeBefore: round6(maeBefore),
     maeAfter: round6(finalMae),
-    improved: round6(finalMae) < round6(maeBefore),
+    // 평균이 조금 낮다는 것만으로는 개선이 아니다 — `improvementIsReal` 머리주석 참조.
+    improved:
+      round6(finalMae) < round6(maeBefore) &&
+      improvementIsReal(baseErrors, finalErrors),
     intervalSampleCount,
     intervalHitRate: hitRate === null ? null : round6(hitRate),
     nominalCoverage,
