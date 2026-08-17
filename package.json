@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "lint:affordance": "node src/lint/check-affordance.mjs",
+    "analyze": "next build --experimental-analyze && node scripts/perf/report-bundle.mjs",
+    "analyze:webpack": "node scripts/perf/analyze-webpack.mjs",
+    "bundle:report": "node scripts/perf/report-bundle.mjs",
     "type-check": "tsc --noEmit",
     "prepare": "husky",
     "test": "vitest run",
@@ -43,6 +46,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.3.1",
     "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "^10.4.1",

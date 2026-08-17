@@ -2,9 +2,22 @@
 // 참조: docs/planning/02-trd.md §7.3 (테스트 도구), §7.6 (품질 게이트)
 import "@testing-library/jest-dom/vitest";
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
-import { cleanup } from "@testing-library/react";
+import { cleanup, configure } from "@testing-library/react";
 
 import { server } from "@/mocks/server";
+
+// findBy*/waitFor 의 기본 상한 1초를 올린다 (성능 수리 C-2).
+//
+// 문제 카드(문제은행·검수)는 이제 `next/dynamic` 지연 청크다. 그래서 한 테스트
+// 파일의 **첫 렌더**가 KaTeX + unified/remark 모듈 그래프를 처음 적재하는 비용을
+// 문다 — 격리 실행에서는 350ms 지만, 전체 실행에서 워커들이 CPU 를 다투면 1초를
+// 넘겨 첫 테스트만 간헐 실패했다(3회 중 2회 재현). 두 번째 렌더부터는 모듈이
+// 캐시돼 즉시다. **렌더가 느려진 게 아니라 적재 시점이 옮겨간 것**이다.
+//
+// vitest.config.mts 가 같은 렌더 스택 때문에 testTimeout 을 5초→20초로 올린 것과
+// 같은 성질의 조정이다. 단언 내용은 아무것도 바뀌지 않는다 — 깨진 렌더는 여전히
+// 실패하고, 다만 1초가 아니라 5초 뒤에 실패한다(testTimeout 20초 안이다).
+configure({ asyncUtilTimeout: 5000 });
 
 // Phase 2, T2.1 — `src/__tests__/api/class.test.ts`(및 이후 progress/problem/test API
 // 테스트)는 Route Handler를 fetch가 아니라 함수로 직접 호출하므로 MSW(위 server)가 가로챌 수
