@@ -46,6 +46,7 @@ import { getSessionUser } from "@/lib/session";
 import {
   MOCK_PENDING_PROBLEM,
   MOCK_PROBLEMS,
+  MOCK_UNITS,
   MOCK_PROBLEM_OTHER_SHARED,
   MOCK_PROBLEM_OTHER_USER,
   MOCK_PROBLEM_WITH_FRACTION,
@@ -235,8 +236,10 @@ describe("[T3.1] GET /api/problems — 단원/난이도/유형/출처/검수상�
     spy.mockRestore();
   });
 
-  // 계단식 단원 필터(S-08) — 테스트 더블은 relation 필터를 실행하지 못하므로
-  // orderBy 테스트와 같은 spy 패턴으로 where 형태를 고정한다.
+  // 계단식 단원 필터(S-08) — 아래 두 개는 **보내는 where 의 형태**를 spy 로 고정한다
+  // (problem 컬럼으로 새면 Prisma 가 죽는 자리라 형태 자체가 계약이다).
+  // 그 where 가 실제로 **거르는지**는 바로 아래 "관계 필터가 실제로 거른다" 가 잠근다 —
+  // 형태만 보면 더블이 관계를 무시해도(전량 통과) 초록이라 그것만으로는 부족하다.
   it("grade/chapterPrefix는 problem 컬럼이 아니라 unit relation 필터로 보낸다", async () => {
     const spy = vi.spyOn(db.problem, "findMany");
     const res = await listProblems(
@@ -276,6 +279,48 @@ describe("[T3.1] GET /api/problems — 단원/난이도/유형/출처/검수상�
       unit: { grade: "중2", chapter: "2. 부등식" },
     });
     spy.mockRestore();
+  });
+
+  it("관계 필터가 실제로 거른다 — 형태만 맞고 결과가 안 걸리면 조용한 초록이다", async () => {
+    // 픽스처 단원은 전부 중2 이고 중단원은 "1. 수와 식"·"2. 부등식" 둘뿐이다.
+    const targetChapter = "2. 부등식";
+    const targetUnitIds = new Set(
+      MOCK_UNITS.filter((u) => u.chapter === targetChapter).map((u) => u.id),
+    );
+    expect(targetUnitIds.size).toBeGreaterThan(0);
+
+    const res = await listProblems(
+      jsonRequest(
+        `http://localhost/api/problems?grade=${encodeURIComponent("중2")}&chapter=${encodeURIComponent(targetChapter)}&pageSize=100`,
+        "GET",
+      ),
+    );
+    expect(res.status).toBe(200);
+    const body = problemListResponseSchema.parse(await res.json());
+
+    // ① 걸러진 쪽이 비어 있으면 안 된다(관계 해석이 늘 null 이면 여기서 잡힌다).
+    expect(body.data.length).toBeGreaterThan(0);
+    // ② 다른 중단원 문항이 섞이면 안 된다(관계를 무시하고 전량 통과시키면 여기서 잡힌다).
+    for (const problem of body.data) {
+      expect(targetUnitIds.has(problem.unitId)).toBe(true);
+    }
+    // ③ 실제로 걸러 냈는지 — 픽스처에 다른 중단원 문항이 존재해야 이 검사가 의미를 갖는다.
+    const otherChapterExists = MOCK_PROBLEMS.some(
+      (p) => p.unitId !== null && !targetUnitIds.has(p.unitId),
+    );
+    expect(otherChapterExists).toBe(true);
+  });
+
+  it("일치하는 단원이 없으면 빈 목록이다 — 관계 조건을 무시하고 전량 돌려주지 않는다", async () => {
+    const res = await listProblems(
+      jsonRequest(
+        `http://localhost/api/problems?grade=${encodeURIComponent("초1")}&pageSize=100`,
+        "GET",
+      ),
+    );
+    expect(res.status).toBe(200);
+    const body = problemListResponseSchema.parse(await res.json());
+    expect(body.data).toHaveLength(0);
   });
 });
 

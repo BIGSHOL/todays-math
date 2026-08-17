@@ -472,16 +472,26 @@ function prismaKnownError(
   });
 }
 
+/**
+ * 관계 이름 → 그 행이 가리키는 상대 행을 돌려주는 해석기.
+ *
+ * 🔴 관계 조건(`{ unit: { grade, chapter } }`)을 **평범한 컬럼 조건으로 취급하면**
+ *    `row["unit"]` 이 undefined 라 늘 false 가 된다. 조회가 조용히 빈 배열이 되는
+ *    자리라, 아는 관계만 여기 등록하고 모르는 것은 아래에서 던진다.
+ */
+type RelationResolvers<T> = Record<string, (row: T) => object | null>;
+
 function matchesWhere<T extends object>(
   row: T,
   where?: Record<string, unknown>,
+  relations: RelationResolvers<T> = {},
 ): boolean {
   if (!where) return true;
   const record = row as Record<string, unknown>;
 
   if (Array.isArray(where.AND)) {
     return where.AND.every((clause) =>
-      matchesWhere(row, clause as Record<string, unknown>),
+      matchesWhere(row, clause as Record<string, unknown>, relations),
     );
   }
 
@@ -491,10 +501,12 @@ function matchesWhere<T extends object>(
   if (where.NOT !== undefined) {
     if (Array.isArray(where.NOT)) {
       const anyMatch = where.NOT.some((clause) =>
-        matchesWhere(row, clause as Record<string, unknown>),
+        matchesWhere(row, clause as Record<string, unknown>, relations),
       );
       if (anyMatch) return false;
-    } else if (matchesWhere(row, where.NOT as Record<string, unknown>)) {
+    } else if (
+      matchesWhere(row, where.NOT as Record<string, unknown>, relations)
+    ) {
       return false;
     }
   }
@@ -512,13 +524,22 @@ function matchesWhere<T extends object>(
   delete rest.NOT;
   if (Array.isArray(orClauses)) {
     const orOk = orClauses.some((clause) =>
-      matchesWhere(row, clause as Record<string, unknown>),
+      matchesWhere(row, clause as Record<string, unknown>, relations),
     );
     if (!orOk) return false;
   }
 
   return Object.entries(rest).every(([key, cond]) => {
     if (cond === undefined) return true;
+
+    // 관계 조건 — 상대 행을 실제로 찾아 그 위에서 다시 판정한다.
+    const resolveRelation = relations[key];
+    if (resolveRelation) {
+      const related = resolveRelation(row);
+      if (related === null) return false;
+      return matchesWhere(related, cond as Record<string, unknown>);
+    }
+
     const value = record[key];
     if (
       cond !== null &&
@@ -529,6 +550,7 @@ function matchesWhere<T extends object>(
       const obj = cond as {
         in?: unknown[];
         not?: unknown;
+        startsWith?: unknown;
         gt?: unknown;
         gte?: unknown;
         lt?: unknown;
@@ -536,6 +558,9 @@ function matchesWhere<T extends object>(
       };
       if (Array.isArray(obj.in)) return obj.in.includes(value);
       if ("not" in obj) return value !== obj.not;
+      if (typeof obj.startsWith === "string") {
+        return typeof value === "string" && value.startsWith(obj.startsWith);
+      }
 
       // 🔴 범위 연산자를 모르면 이 함수는 `value === {gte: ...}` 로 떨어져 **항상 false**
       //    를 낸다. 날짜 창을 JS filter 에서 SQL where 로 옮기는 순간 조회가 조용히
@@ -604,6 +629,17 @@ function applyOrder<T extends object>(rows: T[], orderBy?: unknown): T[] {
     return 0;
   });
 }
+
+/**
+ * `problem` 이 아는 관계. S-08 계단식 단원 필터가 `{ unit: { grade, chapter } }` 로
+ * 좁히므로, 가짜도 `unitId` 를 따라가 실제 Unit 행 위에서 판정해야 한다.
+ */
+const PROBLEM_RELATIONS = {
+  unit: (row: { unitId: string | null }) =>
+    row.unitId === null
+      ? null
+      : (unitRows.find((unit) => unit.id === row.unitId) ?? null),
+};
 
 function paginate<T>(rows: T[], skip = 0, take?: number): T[] {
   return take === undefined ? rows.slice(skip) : rows.slice(skip, skip + take);
@@ -965,7 +1001,9 @@ const prismaModels = {
     } = {}) {
       return applySelect(
         paginate(
-          problemRows.filter((row) => matchesWhere(row, where)),
+          problemRows.filter((row) =>
+            matchesWhere(row, where, PROBLEM_RELATIONS),
+          ),
           skip,
           take,
         ),
@@ -973,7 +1011,9 @@ const prismaModels = {
       );
     },
     async count({ where }: { where?: Record<string, unknown> } = {}) {
-      return problemRows.filter((row) => matchesWhere(row, where)).length;
+      return problemRows.filter((row) =>
+        matchesWhere(row, where, PROBLEM_RELATIONS),
+      ).length;
     },
     async findUnique({ where }: { where: { id: string } }) {
       return problemRows.find((row) => row.id === where.id) ?? null;
