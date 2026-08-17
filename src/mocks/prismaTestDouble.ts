@@ -538,6 +538,44 @@ function paginate<T>(rows: T[], skip = 0, take?: number): T[] {
   return take === undefined ? rows.slice(skip) : rows.slice(skip, skip + take);
 }
 
+/**
+ * `select` 투영 — 실제 Prisma 는 **고른 컬럼만** 돌려준다.
+ *
+ * 가짜가 행 전체를 돌려주면 "조회는 5컬럼으로 좁혔는데 테스트는 28컬럼을 보고 통과"
+ * 하는 침묵 회귀가 생긴다. 그래서 여기서도 실제로 잘라 낸다.
+ * 모르는 필드·지원하지 않는 관계는 조용히 넘기지 않고 **던진다**(matchesWhere 와 같은 원칙).
+ */
+function applySelect<T extends object>(
+  rows: T[],
+  select: Record<string, unknown> | undefined,
+  relations: Record<string, (row: T, spec: unknown) => unknown> = {},
+): unknown[] {
+  if (!select) return rows;
+  return rows.map((row) => {
+    const projected: Record<string, unknown> = {};
+    for (const [key, spec] of Object.entries(select)) {
+      if (spec === false || spec === undefined) continue;
+      if (spec === true) {
+        if (!(key in row)) {
+          throw new Error(
+            `prismaTestDouble: select 에 없는 필드 '${key}' — 조용히 undefined 를 내지 않는다`,
+          );
+        }
+        projected[key] = (row as Record<string, unknown>)[key];
+        continue;
+      }
+      const resolve = relations[key];
+      if (!resolve) {
+        throw new Error(
+          `prismaTestDouble: 지원하지 않는 관계 select '${key}' — 조용히 통과시키지 않는다`,
+        );
+      }
+      projected[key] = resolve(row, spec);
+    }
+    return projected;
+  });
+}
+
 function hydrateTestProblems(
   rows: TestProblemRow[],
   include?: { problem?: boolean },
@@ -764,16 +802,21 @@ const prismaModels = {
       where,
       skip = 0,
       take,
+      select,
     }: {
       where?: Record<string, unknown>;
       skip?: number;
       take?: number;
       orderBy?: unknown;
+      select?: Record<string, unknown>;
     } = {}) {
-      return paginate(
-        problemRows.filter((row) => matchesWhere(row, where)),
-        skip,
-        take,
+      return applySelect(
+        paginate(
+          problemRows.filter((row) => matchesWhere(row, where)),
+          skip,
+          take,
+        ),
+        select,
       );
     },
     async count({ where }: { where?: Record<string, unknown> } = {}) {

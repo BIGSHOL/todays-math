@@ -11,12 +11,17 @@ import type { ShortfallItem } from "@/contracts/test.contract";
 
 import {
   balanceDifficulty,
+  type SelectableProblem,
   type SubstitutionRecord,
 } from "./balanceDifficulty";
 import { seededShuffle } from "./seededRandom";
 
-export interface SelectProblemsArgs {
-  pool: ProblemEntity[];
+export type { SelectableProblem };
+
+export interface SelectProblemsArgs<
+  T extends SelectableProblem = ProblemEntity,
+> {
+  pool: T[];
   difficultyRatio: DifficultyRatio;
   count: number;
   /** 최근 출제되어 후보에서 제외할 problemId 목록 — 날짜 판정은 호출자/excludeRecent가
@@ -26,8 +31,10 @@ export interface SelectProblemsArgs {
   seed: string;
 }
 
-export interface SelectProblemsResult {
-  problems: ProblemEntity[];
+export interface SelectProblemsResult<
+  T extends SelectableProblem = ProblemEntity,
+> {
+  problems: T[];
   substitutions: SubstitutionRecord[];
   shortfall: ShortfallItem[];
 }
@@ -35,7 +42,9 @@ export interface SelectProblemsResult {
 /** 이 값을 넘겨 배치되면(3연속) 같은 유형이 반복 배치된 것으로 본다. */
 const MAX_CONSECUTIVE_SAME_TYPE = 2;
 
-export function selectProblems(args: SelectProblemsArgs): SelectProblemsResult {
+export function selectProblems<T extends SelectableProblem>(
+  args: SelectProblemsArgs<T>,
+): SelectProblemsResult<T> {
   const { pool, difficultyRatio, count, recentProblemIds, seed } = args;
 
   const excludedIds = new Set(recentProblemIds);
@@ -62,15 +71,15 @@ export function selectProblems(args: SelectProblemsArgs): SelectProblemsResult {
  * 재배열한다. 매 단계 "직전 연속 조건을 어기지 않는" 유형 중 남은 개수가 가장 많은
  * 유형을 우선 배치하는 결정론적 그리디 방식이다(입력 순서 외 무작위성 없음).
  */
-function arrangeByType(items: ProblemEntity[]): ProblemEntity[] {
-  const byType = new Map<string, ProblemEntity[]>();
+function arrangeByType<T extends SelectableProblem>(items: T[]): T[] {
+  const byType = new Map<string, T[]>();
   for (const item of items) {
     const bucket = byType.get(item.problemType);
     if (bucket) bucket.push(item);
     else byType.set(item.problemType, [item]);
   }
 
-  const result: ProblemEntity[] = [];
+  const result: T[] = [];
   while (result.length < items.length) {
     const lastTypes = result
       .slice(-MAX_CONSECUTIVE_SAME_TYPE)
