@@ -14,6 +14,7 @@ import { describe, expect, it } from "vitest";
 
 import ProblemsPage from "@/app/(main)/problems/page";
 import { PROBLEM_CARD_MIN_WIDTH } from "@/components/print/tokens";
+import { FIELD_SELECT_WIDTH } from "@/components/problem/FieldSelect";
 import {
   MOCK_AI_GENERATED_PROBLEMS,
   MOCK_AI_TRANSFORMED_PROBLEMS,
@@ -607,5 +608,59 @@ describe("[렌더 수리 A] 문제은행 — 목록 다단 배치", () => {
 
     expect(card).not.toBeNull();
     expect(card!.className).not.toMatch(/(^|\s)mb-6(\s|$)/);
+  });
+});
+
+/**
+ * 2026-08-17 원장님 지시 — "필터 선택할때마다 크기 제각각인데 고정된 크기에서
+ * 선택만 바뀌도록", 이어서 "드랍다운 버튼은 그대로 두고, 드랍다운 목록을 키우는걸로
+ * 가로너비".
+ *
+ * jsdom 은 레이아웃을 계산하지 않으므로 **폭 규칙**과 **말줄임/툴팁 장치**를 잠근다.
+ * 실제 폭(모든 칸 192px, 선택을 바꿔도 동일)과 네이티브 팝업 폭(394px)은 실물
+ * Chrome 실측으로 확인했다 (docs/planning/tracks/reports/render-a-layout.md §5).
+ */
+describe("[렌더 수리 A] 문제은행 — 필터 폭 고정", () => {
+  it("필터 바는 고정 폭 트랙 그리드다 — 내용에 따라 늘어나지 않는다", async () => {
+    const { container } = await renderBank();
+    const bar = container.querySelector<HTMLElement>("[data-filter-bar]");
+
+    expect(bar).not.toBeNull();
+    expect(bar!.className).toContain("grid");
+    // minmax/1fr 이 아니라 **고정 트랙**이어야 선택값·옵션 길이에 흔들리지 않는다.
+    expect(bar!.style.gridTemplateColumns).toBe(
+      `repeat(auto-fill, ${FIELD_SELECT_WIDTH})`,
+    );
+  });
+
+  it("칸이 늘거나 줄어도(학기 칸) 폭이 그대로다 — auto-fill 이라 트랙이 유지된다", async () => {
+    const { container } = await renderBank();
+    const bar = container.querySelector<HTMLElement>("[data-filter-bar]")!;
+
+    expect(bar.style.gridTemplateColumns).toContain("auto-fill");
+    expect(bar.style.gridTemplateColumns).not.toContain("auto-fit");
+  });
+
+  it("select 는 칸을 채우고 넘치는 값은 말줄임한다", async () => {
+    await renderBank();
+    const select = screen.getByLabelText("소단원");
+
+    expect(select.className).toContain("w-full");
+    expect(select.className).toContain("text-ellipsis");
+    expect(select.className).toContain("overflow-hidden");
+    expect(select.className).toContain("whitespace-nowrap");
+  });
+
+  it("잘려도 무엇을 골랐는지 알 수 있게 선택값을 title 로 노출한다", async () => {
+    const { user } = await renderBank();
+    const select = screen.getByLabelText("소단원");
+
+    expect(select).toHaveAttribute("title", "전체");
+
+    const unit = MOCK_UNITS[0]!;
+    await user.selectOptions(select, unit.id);
+    await waitFor(() => {
+      expect(select).toHaveAttribute("title", unit.section);
+    });
   });
 });

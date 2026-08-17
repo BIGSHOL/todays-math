@@ -4,7 +4,10 @@ import { useState } from "react";
 
 import { AppChrome } from "@/components/chrome/AppChrome";
 import { PROBLEM_CARD_MIN_WIDTH } from "@/components/print/tokens";
-import { FieldSelect } from "@/components/problem/FieldSelect";
+import {
+  FieldSelect,
+  FIELD_SELECT_WIDTH,
+} from "@/components/problem/FieldSelect";
 import { ProblemCard } from "@/components/problem/ProblemCard";
 import { Button } from "@/components/ui/Button";
 
@@ -16,6 +19,10 @@ import {
   SECTION_OPTIONS,
 } from "./options";
 import styles from "./renderAPreview.module.css";
+
+const FILTER_GRID_STYLE = {
+  gridTemplateColumns: `repeat(auto-fill, ${FIELD_SELECT_WIDTH})`,
+};
 
 const GRID_STYLE = {
   gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, ${PROBLEM_CARD_MIN_WIDTH}), 1fr))`,
@@ -45,6 +52,7 @@ type ToneKey = (typeof TONES)[number]["key"];
  */
 export function PreviewClient() {
   const [tone, setTone] = useState<ToneKey>("C");
+  const [section, setSection] = useState("");
   const toneClass = TONES.find((item) => item.key === tone)?.className ?? "";
 
   return (
@@ -75,7 +83,11 @@ export function PreviewClient() {
           ))}
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-3" data-preview-filters>
+        <div
+          className="mt-4 grid gap-3"
+          style={FILTER_GRID_STYLE}
+          data-preview-filters
+        >
           <FieldSelect label="학년" defaultValue="">
             <option value="">전체</option>
             {GRADE_OPTIONS.map((option) => (
@@ -97,7 +109,11 @@ export function PreviewClient() {
               </option>
             ))}
           </FieldSelect>
-          <FieldSelect label="소단원" defaultValue="">
+          <FieldSelect
+            label="소단원"
+            value={section}
+            onChange={(event) => setSection(event.target.value)}
+          >
             <option value="">전체</option>
             {[...SECTION_OPTIONS, ...SECTION_COLLIDING].map((option) => (
               <option key={option} value={option}>

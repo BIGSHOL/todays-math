@@ -14,7 +14,7 @@ import {
 } from "@/lib/problem/problemApi";
 import { loadUnits } from "@/lib/units/unitApi";
 
-import { FieldSelect } from "./FieldSelect";
+import { FieldSelect, FIELD_SELECT_WIDTH } from "./FieldSelect";
 import { PROBLEM_TYPES } from "./labels";
 import { ProblemCard } from "./ProblemCardLazy";
 import {
@@ -45,6 +45,23 @@ const SEMESTER_CHAPTER_RE = /^[12]-/;
  */
 const PROBLEM_GRID_STYLE = {
   gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, ${PROBLEM_CARD_MIN_WIDTH}), 1fr))`,
+} as const;
+
+/**
+ * 필터 바 (2026-08-17 원장님 "필터 선택할때마다 크기 제각각인데 고정된 크기에서
+ * 선택만 바뀌도록").
+ *
+ * 종전 `flex flex-wrap` 은 각 칸이 **내용만큼** 자랐다 — 네이티브 select 는 가장 긴
+ * option 만큼 넓어지므로 소단원만 466px 로 벌어지고(실측), 선택을 바꾸면 자리가 흔들렸다.
+ * 그리드로 바꿔 **모든 칸을 같은 고정 폭**으로 두고, 창이 좁아지면 열 수만 줄인다
+ * (카드 다단과 같은 원칙 — 브레이크포인트 대신 남는 폭에 반응).
+ *
+ * `auto-fill` 인 이유: 학기 칸은 초등에서만 나타나 칸 수가 6↔7 로 변한다. `auto-fit`
+ * 이면 빈 트랙이 접혀 남은 칸이 늘어나므로, 칸이 하나 생겼다 사라질 때 폭이 흔들린다.
+ * `auto-fill` 은 트랙을 유지하므로 **칸 수가 변해도 폭이 그대로**다.
+ */
+const FILTER_GRID_STYLE = {
+  gridTemplateColumns: `repeat(auto-fill, ${FIELD_SELECT_WIDTH})`,
 } as const;
 
 function matchesFilters(
@@ -277,7 +294,11 @@ export function ProblemBank() {
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-3">
+      <div
+        className="mt-4 grid gap-3"
+        style={FILTER_GRID_STYLE}
+        data-filter-bar
+      >
         <FieldSelect
           label="학년"
           value={grade}
