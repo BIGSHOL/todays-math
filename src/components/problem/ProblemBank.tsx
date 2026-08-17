@@ -22,12 +22,30 @@ import { ProblemTransformForm } from "./ProblemTransformForm";
 
 type Panel = "register" | "generate" | "transform" | null;
 
+/** 초등 chapter는 "1-1 9까지의 수" 꼴 — 앞 숫자가 학기. 그 외 학년은 학기 개념이 없다. */
+const SEMESTER_CHAPTER_RE = /^[12]-/;
+
 function matchesFilters(
   problem: ProblemEntity,
   filters: ProblemListFilters,
+  unitById: Map<string, UnitEntity>,
 ): boolean {
+  if (filters.unitId && problem.unitId !== filters.unitId) return false;
+  if (filters.grade || filters.chapter || filters.chapterPrefix) {
+    const unit = unitById.get(problem.unitId);
+    if (!unit) return false;
+    if (filters.grade && unit.grade !== filters.grade) return false;
+    // 서버(route.ts)와 동일: chapter 정확 일치가 있으면 chapterPrefix는 무시.
+    if (filters.chapter) {
+      if (unit.chapter !== filters.chapter) return false;
+    } else if (
+      filters.chapterPrefix &&
+      !unit.chapter.startsWith(filters.chapterPrefix)
+    ) {
+      return false;
+    }
+  }
   return (
-    (!filters.unitId || problem.unitId === filters.unitId) &&
     (!filters.difficulty || problem.difficulty === filters.difficulty) &&
     (!filters.problemType || problem.problemType === filters.problemType) &&
     (!filters.reviewStatus || problem.reviewStatus === filters.reviewStatus)
@@ -35,6 +53,9 @@ function matchesFilters(
 }
 
 export function ProblemBank() {
+  const [grade, setGrade] = useState("");
+  const [semester, setSemester] = useState("");
+  const [chapter, setChapter] = useState("");
   const [unitId, setUnitId] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [problemType, setProblemType] = useState("");
@@ -50,15 +71,24 @@ export function ProblemBank() {
   const [notice, setNotice] = useState<string | null>(null);
   const [panel, setPanel] = useState<Panel>(null);
 
-  const filters: ProblemListFilters = useMemo(
-    () => ({
-      unitId: unitId || undefined,
+  // 서버에 보낼 단원 필터 우선순위: 소단원 > 중단원 > 학기 > 학년 (가장 좁은 것 하나만).
+  const filters: ProblemListFilters = useMemo(() => {
+    const unitFilter: ProblemListFilters = unitId
+      ? { unitId }
+      : chapter
+        ? { grade, chapter }
+        : semester
+          ? { grade, chapterPrefix: `${semester}-` }
+          : grade
+            ? { grade }
+            : {};
+    return {
+      ...unitFilter,
       difficulty: (difficulty || undefined) as Difficulty | undefined,
       problemType: (problemType || undefined) as ProblemType | undefined,
       reviewStatus: (reviewStatus || undefined) as ReviewStatus | undefined,
-    }),
-    [unitId, difficulty, problemType, reviewStatus],
-  );
+    };
+  }, [unitId, chapter, semester, grade, difficulty, problemType, reviewStatus]);
 
   useEffect(() => {
     let cancelled = false;
@@ -103,6 +133,51 @@ export function ProblemBank() {
   const unitActionsDisabled = unitsLoading || units.length === 0;
   const totalPages = Math.max(1, Math.ceil(total / PROBLEM_PAGE_SIZE));
 
+  const unitById = useMemo(
+    () => new Map(units.map((unit) => [unit.id, unit])),
+    [units],
+  );
+  // 학년 옵션 — units 등장 순서(=orderIndex 순) 그대로, 중복 제거.
+  const gradeOptions = useMemo(() => {
+    const seen = new Set<string>();
+    const list: string[] = [];
+    for (const unit of units) {
+      if (seen.has(unit.grade)) continue;
+      seen.add(unit.grade);
+      list.push(unit.grade);
+    }
+    return list;
+  }, [units]);
+  // 학기 select는 chapter가 "1-"/"2-"로 시작하는 학년(초등)에서만 보인다.
+  const semesterVisible =
+    grade !== "" &&
+    units.some(
+      (unit) => unit.grade === grade && SEMESTER_CHAPTER_RE.test(unit.chapter),
+    );
+  // 학년(+학기)으로 좁힌 단원 — 중단원/소단원 옵션의 모집단.
+  const scopedUnits = useMemo(
+    () =>
+      units.filter(
+        (unit) =>
+          (!grade || unit.grade === grade) &&
+          (!semester || unit.chapter.startsWith(`${semester}-`)),
+      ),
+    [units, grade, semester],
+  );
+  const chapterOptions = useMemo(() => {
+    const seen = new Set<string>();
+    const list: string[] = [];
+    for (const unit of scopedUnits) {
+      if (seen.has(unit.chapter)) continue;
+      seen.add(unit.chapter);
+      list.push(unit.chapter);
+    }
+    return list;
+  }, [scopedUnits]);
+  const sectionOptions = chapter
+    ? scopedUnits.filter((unit) => unit.chapter === chapter)
+    : scopedUnits;
+
   function startProblemReload() {
     setLoading(true);
     setError(null);
@@ -119,13 +194,35 @@ export function ProblemBank() {
     setPage(next);
   }
 
+  // 상위 select를 바꾸면 하위 선택은 전체("")로 되돌리고 1페이지부터 본다.
+  function handleGradeChange(next: string) {
+    resetToFirstPage();
+    setGrade(next);
+    setSemester("");
+    setChapter("");
+    setUnitId("");
+  }
+
+  function handleSemesterChange(next: string) {
+    resetToFirstPage();
+    setSemester(next);
+    setChapter("");
+    setUnitId("");
+  }
+
+  function handleChapterChange(next: string) {
+    resetToFirstPage();
+    setChapter(next);
+    setUnitId("");
+  }
+
   function toggle(next: Exclude<Panel, null>) {
     setPanel((current) => (current === next ? null : next));
   }
 
   function prepend(count: number, created: ProblemEntity[], label: string) {
     const matching = created.filter((problem) =>
-      matchesFilters(problem, filters),
+      matchesFilters(problem, filters, unitById),
     );
     setProblems((current) => [...matching, ...current]);
     setTotal((current) => current + matching.length);
@@ -160,7 +257,44 @@ export function ProblemBank() {
 
       <div className="mt-4 flex flex-wrap gap-3">
         <FieldSelect
-          label="단원"
+          label="학년"
+          value={grade}
+          disabled={unitsLoading || units.length === 0}
+          onChange={(event) => handleGradeChange(event.target.value)}
+        >
+          <option value="">전체</option>
+          {gradeOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </FieldSelect>
+        {semesterVisible ? (
+          <FieldSelect
+            label="학기"
+            value={semester}
+            onChange={(event) => handleSemesterChange(event.target.value)}
+          >
+            <option value="">전체</option>
+            <option value="1">1학기</option>
+            <option value="2">2학기</option>
+          </FieldSelect>
+        ) : null}
+        <FieldSelect
+          label="중단원"
+          value={chapter}
+          disabled={unitsLoading || units.length === 0 || grade === ""}
+          onChange={(event) => handleChapterChange(event.target.value)}
+        >
+          <option value="">전체</option>
+          {chapterOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </FieldSelect>
+        <FieldSelect
+          label="소단원"
           value={unitId}
           disabled={unitsLoading || units.length === 0}
           onChange={(event) => {
@@ -169,7 +303,7 @@ export function ProblemBank() {
           }}
         >
           <option value="">전체</option>
-          {units.map((unit) => (
+          {sectionOptions.map((unit) => (
             <option key={unit.id} value={unit.id}>
               {unit.section}
             </option>

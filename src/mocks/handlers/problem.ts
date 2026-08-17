@@ -32,6 +32,7 @@ import {
   MOCK_PROBLEM_OTHER_SHARED,
   MOCK_PROBLEM_OTHER_USER,
   MOCK_PROBLEMS,
+  MOCK_UNITS,
   PROBLEM_OTHER_ID,
   PROBLEM_OTHER_SHARED_ID,
   USER_TEACHER_ID,
@@ -52,6 +53,9 @@ const ALL_PROBLEMS = [
   ...MOCK_AI_GENERATED_PROBLEMS,
   ...MOCK_AI_TRANSFORMED_PROBLEMS,
 ];
+
+/** 계단식 단원 필터(S-08)의 grade/chapter 판정용 — 실서버의 Unit relation 필터를 미러링. */
+const UNIT_BY_ID = new Map(MOCK_UNITS.map((unit) => [unit.id, unit]));
 
 function findAccessibleProblem(id: string) {
   if (id === PROBLEM_OTHER_ID) {
@@ -116,6 +120,19 @@ export const problemHandlers: HttpHandler[] = [
     const filtered = ALL_PROBLEMS.filter((p) => {
       if (p.pool === "private" && p.userId !== USER_TEACHER_ID) return false;
       if (filters.unitId && p.unitId !== filters.unitId) return false;
+      if (filters.grade || filters.chapter || filters.chapterPrefix) {
+        const unit = UNIT_BY_ID.get(p.unitId);
+        if (!unit) return false;
+        if (filters.grade && unit.grade !== filters.grade) return false;
+        if (filters.chapter) {
+          if (unit.chapter !== filters.chapter) return false;
+        } else if (
+          filters.chapterPrefix &&
+          !unit.chapter.startsWith(filters.chapterPrefix)
+        ) {
+          return false;
+        }
+      }
       if (filters.difficulty && p.difficulty !== filters.difficulty)
         return false;
       if (filters.problemType && p.problemType !== filters.problemType)

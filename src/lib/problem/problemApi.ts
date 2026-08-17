@@ -15,6 +15,10 @@ import {
 
 export type ProblemListFilters = {
   unitId?: string;
+  /** 계단식 단원 필터(S-08) — unitId가 없을 때 grade(+chapter 또는 +chapterPrefix)로 좁힌다. */
+  grade?: string;
+  chapter?: string;
+  chapterPrefix?: string;
   difficulty?: Difficulty;
   problemType?: ProblemType;
   reviewStatus?: ReviewStatus;
@@ -29,6 +33,9 @@ function listQuery(filters: ProblemListFilters, page: number) {
     pageSize: String(PROBLEM_PAGE_SIZE),
   });
   if (filters.unitId) params.set("unitId", filters.unitId);
+  if (filters.grade) params.set("grade", filters.grade);
+  if (filters.chapter) params.set("chapter", filters.chapter);
+  if (filters.chapterPrefix) params.set("chapterPrefix", filters.chapterPrefix);
   if (filters.difficulty) params.set("difficulty", filters.difficulty);
   if (filters.problemType) params.set("problemType", filters.problemType);
   if (filters.reviewStatus) params.set("reviewStatus", filters.reviewStatus);
