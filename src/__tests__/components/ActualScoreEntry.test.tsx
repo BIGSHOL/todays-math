@@ -114,6 +114,26 @@ describe("[T7.15] 실점수 입력 — 저장", () => {
     });
   });
 
+  it("소수 점수 87.5 도 반올림하지 않고 그대로 보낸다", async () => {
+    // 수행·서술형 부분점수가 있으면 내신 점수는 소수가 된다. 잘라 보내면
+    // 그 오차만큼 잔차가 오염된다 (적대적 리뷰 ③ ADV-10 에서 확인한 경로).
+    const seen = captureSave();
+    const user = await renderDetail();
+
+    await user.click(
+      within(rowOf("이서준")).getByRole("button", { name: "실점수 입력" }),
+    );
+    await user.type(
+      within(rowOf("이서준")).getByRole("spinbutton", { name: /이서준/ }),
+      "87.5{Enter}",
+    );
+
+    expect(seen).toHaveLength(1);
+    expect(seen[0].body).toMatchObject({
+      scores: [{ actualScore: 87.5 }],
+    });
+  });
+
   it("🔴 저장되면 그 자리에서 잔차가 보인다 — 오타를 나중에 발견하면 늦다", async () => {
     captureSave();
     const user = await renderDetail();
