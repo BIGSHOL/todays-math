@@ -43,6 +43,16 @@ import type {
 export const MIN_CALIBRATION_SAMPLES = 20;
 
 /**
+ * 계수를 추정하려면 학교가 최소 몇 곳 필요한가.
+ *
+ * 학교가 1~2곳이면 **전역 편향(엔진 탓)과 학교 편향(그 학교 탓)을 구분할 수 없다.**
+ * 그런데 전역 오프셋은 학교를 가리지 않고 더해지므로, 한 학교의 편향이 실측 0건인
+ * 다른 학교의 예상 점수를 통째로 움직인다(adv1 재현: +8.01점). 구분이 가능해지는
+ * 최소 구도(3곳)를 하한으로 둔다.
+ */
+export const MIN_CALIBRATION_SCHOOLS = 3;
+
+/**
  * 기울기(척도)를 제안하기 위한 최소 표본 수.
  * 기울기는 오프셋에 이은 **두 번째 파라미터**라 같은 표본으로는 오차가 훨씬 크다.
  * 30 을 바닥으로 두되, 실제 방어선은 `|β−1| > 2·SE(β)` t 판정과 홀드아웃 비교다.
@@ -413,6 +423,19 @@ export function estimateCalibration(
       sampleCount: samples.length,
       requiredSampleCount: MIN_CALIBRATION_SAMPLES,
       message: `실측 표본이 ${samples.length}건이다. ${MIN_CALIBRATION_SAMPLES}건 미만에서는 계수를 추정하지 않는다.`,
+    };
+  }
+
+  const distinctSchools = new Set(samples.map((s) => s.school)).size;
+  if (distinctSchools < MIN_CALIBRATION_SCHOOLS) {
+    return {
+      judgementUnavailable: true,
+      reason: "학교_부족",
+      sampleCount: samples.length,
+      requiredSampleCount: MIN_CALIBRATION_SAMPLES,
+      message:
+        `실측이 ${distinctSchools}개 학교에서만 왔다. ${MIN_CALIBRATION_SCHOOLS}개 학교 미만이면 ` +
+        "전역 편향(엔진 탓)과 학교 편향(그 학교 탓)을 구분할 수 없어 계수를 추정하지 않는다.",
     };
   }
 

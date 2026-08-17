@@ -582,6 +582,54 @@ describe("[T7.7] 🔴 학원 '대비' 자료는 학교 출제 패턴 학습에�
   });
 });
 
+describe("[T7.7] 🔴 핀 경로 — 학년·과목이 다른 시험지는 근거로 못 박을 수 없다 (adv1 🟡)", () => {
+  /**
+   * `inputExamIds` 직접 지정은 "과거 run 을 그대로 재실행해 비교"하기 위한 경로라
+   * 신뢰 가드를 안 탄다. 그런데 학년·과목 검사도 없어서, 중2 회차에 고1 시험지를
+   * 못 박아도 통과했다 — 그 시험지가 코호트 통계에 섞여 청사진을 조용히 흔든다.
+   * 재실행 비교는 같은 시리즈 안에서만 의미가 있다.
+   */
+  it("학년이 다른 시험지를 지정하면 거부되고 run 이 저장되지 않는다", async () => {
+    seedHealthyCorpus();
+    seedExam({
+      externalExamId: "엉뚱-고1",
+      school: SCHOOL,
+      level: "고",
+      grade: 1,
+      subject: "공통수학1",
+      year: 2025,
+      semester: 1,
+      round: "중간",
+      questions: standardQuestions(),
+    });
+
+    const res = await createPrediction(
+      postRequest({
+        series: SERIES,
+        targetPeriod: TARGET,
+        inputExamIds: ["가람-2025-1-중간", "엉뚱-고1"],
+      }),
+    );
+    // 근거 지정 오류는 기존 관례대로 400 VALIDATION_ERROR 다(결손 시험지 지정과 같은 부류).
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(JSON.stringify(body)).toContain("엉뚱-고1");
+    expect(allPredictionRuns()).toHaveLength(0);
+  });
+
+  it("같은 시리즈 시험지만 지정하면 그대로 통과한다", async () => {
+    seedHealthyCorpus();
+    const res = await createPrediction(
+      postRequest({
+        series: SERIES,
+        targetPeriod: TARGET,
+        inputExamIds: ["가람-2025-1-중간", "가람-2025-2-중간"],
+      }),
+    );
+    expect(res.status).toBe(201);
+  });
+});
+
 describe("[T7.7] GET /api/predictions/{id} — 회차 상세", () => {
   async function createRun() {
     seedHealthyCorpus();

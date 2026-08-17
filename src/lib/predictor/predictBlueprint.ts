@@ -93,7 +93,7 @@ export const PREDICTOR_PARAMS_MATCH_CONTRACT: ExactSame<
  * ⚠️ **`DEFAULT_PARAMS` 를 바꾸면 이 값을 함께 올린다.** 파라미터가 다른 run 을
  *    같은 버전으로 묶으면 보정 비교가 오염된다. 근거는 11 §12.
  */
-export const PREDICTOR_ENGINE_VERSION = "0.5.0";
+export const PREDICTOR_ENGINE_VERSION = "0.6.0";
 
 export const DEFAULT_PARAMS: PredictorParams = {
   decay: 0.85,

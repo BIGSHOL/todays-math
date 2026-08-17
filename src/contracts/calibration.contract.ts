@@ -171,6 +171,8 @@ export type CalibrationSample = z.infer<typeof calibrationSampleSchema>;
 export const calibrationUnavailableReasonSchema = z.enum([
   "표본_부족",
   "엔진버전_혼재",
+  /** 학교가 너무 적어 전역 편향과 학교 편향을 구분할 수 없다(15 §D.1). */
+  "학교_부족",
 ]);
 export type CalibrationUnavailableReason = z.infer<
   typeof calibrationUnavailableReasonSchema
