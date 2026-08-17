@@ -48,3 +48,32 @@ describe("[렌더 수리 A] 지면 문항 열 폭 — CSS 와 TS 상수가 같�
     );
   });
 });
+
+/**
+ * 2026-08-17 원장님 "문제 내부 색상이 왜 다르지?" — 화면 카드(흰색) 안에 지면 크림색
+ * 상자가 앉아 톤이 갈라졌다. 화면 틀에서 배경을 빼되, **인쇄 지면의 종이색은 그대로**
+ * 남아야 한다(절대 규칙 6 — 인쇄물 색은 바꾸지 않는다).
+ */
+describe("[렌더 수리 A] 지면 톤 — 화면 틀에서만 빼고 인쇄 지면은 그대로", () => {
+  function block(selector: string): string {
+    const found = CSS.match(new RegExp(`\\${selector}\\s*\\{([\\s\\S]*?)\\}`));
+    expect(found).not.toBeNull();
+    return found![1];
+  }
+
+  it("화면 틀(.paperParity)은 배경을 칠하지 않는다", () => {
+    expect(block(".paperParity")).not.toMatch(
+      /(?:^|\n)\s*background(?:-color)?:/,
+    );
+  });
+
+  it("인쇄 지면(.a4Page)은 종이색을 그대로 쓴다", () => {
+    expect(block(".a4Page")).toMatch(/background:\s*var\(--paper-warm\)/);
+  });
+
+  it("화면 틀은 지면 본문 색·서체는 유지한다 — 색만 뺀 것이지 틀을 버린 게 아니다", () => {
+    const paper = block(".paperParity");
+    expect(paper).toMatch(/color:\s*var\(--paper-ink\)/);
+    expect(paper).toMatch(/font-family:\s*var\(--paper-font-serif\)/);
+  });
+});
