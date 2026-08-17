@@ -1,0 +1,22 @@
+/*
+ * 렌더 수리 A 시안 전용 — 지면 톤 3안을 **같은 화면에서** 바꿔 보기 위한 오버라이드.
+ * 제품 CSS 가 아니다. 확정된 안은 `TestPrint.module.css` 에만 남는다.
+ */
+
+/* 안 A — 수리 전 상태: 흰 카드 안에 지면 크림색 상자. */
+.toneA [data-paper-view] {
+  background: #fcfcf8;
+}
+
+/* 안 B — 카드 전체를 지면 크림으로. 상자가 사라지고 카드 자체가 종이가 된다. */
+.toneB article {
+  background: #fcfcf8;
+  border-color: #e3e3d8;
+}
+
+.toneB article > div:first-child {
+  background: #f4f4ea;
+  border-color: #e3e3d8;
+}
+
+/* 안 C — 현재 적용안: 화면 틀은 배경을 칠하지 않고 카드 바탕을 그대로 쓴다. */

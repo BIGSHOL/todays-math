@@ -29,7 +29,9 @@ export const ProblemCard = memo(function ProblemCard({
   const [showSolution, setShowSolution] = useState(false);
 
   return (
-    <article className="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm print:mb-4 print:rounded-none print:border-none print:shadow-none">
+    // 카드 사이 간격은 목록 그리드의 gap 이 준다(`ProblemBank`). 화면에서 `mb-6` 을
+    // 같이 걸면 세로 간격만 두 배가 된다. 인쇄는 그리드를 쓰지 않으므로 `print:mb-4` 유지.
+    <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm print:mb-4 print:rounded-none print:border-none print:shadow-none">
       <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 bg-slate-50 px-6 py-4 print:bg-transparent print:px-0">
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-lg font-bold text-white print:bg-black">
           Q
