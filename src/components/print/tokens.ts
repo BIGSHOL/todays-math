@@ -22,3 +22,18 @@ export const A4_DIMENSIONS = {
   widthPx: 794,
   heightPx: 1123,
 } as const;
+
+/**
+ * 지면 CSS 변수 — A4Page(인쇄)와 PaperProblemView(화면 지면 틀)가 같은 값을 쓴다.
+ * 한쪽만 바꾸면 화면과 인쇄물이 갈라지므로 반드시 여기서만 정의한다.
+ */
+export const PAPER_CSS_VARIABLES = {
+  "--a4-width": `${A4_DIMENSIONS.widthMm}mm`,
+  "--a4-height": `${A4_DIMENSIONS.heightMm}mm`,
+  "--paper-color": PAPER_COLORS.paper,
+  "--paper-warm": PAPER_COLORS.paperWarm,
+  "--paper-ink": PAPER_COLORS.ink,
+  "--paper-gold": PAPER_COLORS.accentGold,
+  "--paper-font-serif": PAPER_FONTS.serifKR,
+  "--paper-font-sans": PAPER_FONTS.sansKR,
+} as const;

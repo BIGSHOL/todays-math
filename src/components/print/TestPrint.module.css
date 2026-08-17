@@ -297,6 +297,18 @@
   overflow-wrap: anywhere;
 }
 
+/* 화면(문제은행·검수)이 인쇄 문항 열과 줄바꿈까지 동일하게 쓰는 지면 틀 (PaperProblemView).
+   폭 = 지면 내용폭(210mm − 좌우 패딩 50px×2) 중 .problemItem 그리드(1.15fr:1fr, gap 14px)의
+   문항 열. .problemItem 열 구성이나 .jaseupFirst 패딩을 바꾸면 이 calc 도 같이 바꿔야 한다. */
+.paperParity {
+  /* max-width 로 줄이면 줄바꿈이 지면과 달라지므로 폭은 고정한다 — 좁은 화면은 부모가 가로 스크롤. */
+  width: calc((210mm - 100px - 14px) * 1.15 / 2.15);
+  flex: none;
+  background: var(--paper-warm);
+  color: var(--paper-ink);
+  font-family: var(--paper-font-serif);
+}
+
 .answerBlank {
   display: flex;
   align-items: center;

@@ -62,6 +62,16 @@ describe("TestPrint", () => {
     expect(pages[1]).not.toHaveTextContent("핵심 개념 정리");
   });
 
+  // 문제은행·검수 카드와 같은 지면 문항 뷰 한 경로로 렌더한다 — 화면과 인쇄의 줄바꿈 통일 근거.
+  it("모든 문항 본문이 지면 문항 뷰(data-paper-view)로 렌더된다", () => {
+    const { container } = render(<TestPrint data={PRINT_DOCUMENT} />);
+
+    const problems = container.querySelectorAll("[data-problem-number]");
+    for (const problem of problems) {
+      expect(problem.querySelector("[data-paper-view]")).not.toBeNull();
+    }
+  });
+
   it("정답지 모드에서 빠른 정답과 2단 해설을 표시한다", async () => {
     const user = userEvent.setup();
     render(<TestPrint data={PRINT_DOCUMENT} />);

@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { MathText } from "@/components/math/MathText";
-import { ProblemContent } from "@/components/math/ProblemContent";
+import { PaperProblemView } from "@/components/print/PaperProblemView";
 import type { ProblemEntity } from "@/contracts/problem.contract";
 
 import { DIFFICULTY_LABEL, REVIEW_STATUS_LABEL } from "./labels";
@@ -41,11 +41,10 @@ export function ProblemCard({ problem }: ProblemCardProps) {
         </span>
       </div>
 
-      <div className="p-6 print:px-0">
-        <ProblemContent
+      <div className="overflow-x-auto p-6 print:px-0">
+        <PaperProblemView
           content={problem.content}
           figureUrls={problem.figureUrls}
-          className="text-lg text-slate-800 print:text-black"
         />
 
         <div className="mt-6 flex justify-end print:hidden">
