@@ -103,14 +103,12 @@ export async function generateDraftTest(
   const difficultyRatio = (input.difficultyRatio ??
     owned.data.difficultyRatio) as DifficultyRatio;
 
-  const eligible = await findEligibleProblems({
-    userId: session.id,
-    unitIds,
-  });
-  const recentProblemIds = await loadRecentProblemIds(
-    session.id,
-    input.testDate,
-  );
+  // 두 조회는 서로를 전혀 참조하지 않는다(풀은 단원, 최근 출제는 날짜로만 좁힌다).
+  // 순차로 await 하면 그냥 두 왕복이 더해진다.
+  const [eligible, recentProblemIds] = await Promise.all([
+    findEligibleProblems({ userId: session.id, unitIds }),
+    loadRecentProblemIds(session.id, input.testDate),
+  ]);
 
   const selected = selectProblems({
     pool: eligible,

@@ -40,13 +40,25 @@ export async function requireOwnedStudent(
   studentId: string,
   userId: string,
 ): Promise<OwnershipResult<StudentRow>> {
-  const student = await db.student.findUnique({ where: { id: studentId } });
+  // 🔴 예전에는 학생을 읽고 **그 다음에** 반을 또 읽었다(순차 2왕복). 반 소유자는
+  //    조인 한 번으로 같이 온다. 이 헬퍼는 진도 조회·출제·채점 등 거의 모든 쓰기 경로가
+  //    부르므로 왕복 하나가 그대로 곱해진다.
+  //
+  //    판정 순서와 응답은 그대로다 — 학생이 없으면 404(학생), 있는데 반 소유자가
+  //    다르면 403. (Student.class_id 는 NOT NULL 이라 학생이 있으면 반은 반드시 있다.
+  //    그래서 `requireOwnedClass` 의 "반 404" 갈래는 여기서 도달 불가였고 지금도 그렇다.)
+  const student = await db.student.findUnique({
+    where: { id: studentId },
+    include: { class: true },
+  });
   if (!student) return { ok: false, response: notFoundError("학생") };
 
-  const owned = await requireOwnedClass(student.classId, userId);
-  if (!owned.ok) return owned;
+  const { class: ownerClass, ...row } = student;
+  if (ownerClass.userId !== userId) {
+    return { ok: false, response: forbiddenError() };
+  }
 
-  return { ok: true, data: student };
+  return { ok: true, data: row };
 }
 
 /**

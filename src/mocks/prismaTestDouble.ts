@@ -9,6 +9,8 @@
  */
 import { randomUUID } from "node:crypto";
 
+import { Prisma } from "@prisma/client";
+
 import type {
   ClassEntity,
   ProgressEntity,
@@ -453,6 +455,23 @@ export function resetPrismaTestDouble() {
 }
 resetPrismaTestDouble();
 
+/**
+ * 🔴 **진짜 Prisma 에러를 던져야 한다.** `isPrismaErrorCode` 는
+ *    `error instanceof Prisma.PrismaClientKnownRequestError` 로 좁힌다.
+ *    `Object.assign(new Error(...), { code })` 는 그 검사를 통과하지 못해서,
+ *    라우트의 코드별 분기(P2003 소단원 404, P2025 인쇄 충돌)가 **테스트에서만**
+ *    통째로 건너뛰어진다 — 프로덕션에서 맞는 가드가 여기서만 틀리게 동작한다.
+ */
+function prismaKnownError(
+  code: string,
+  message: string,
+): Prisma.PrismaClientKnownRequestError {
+  return new Prisma.PrismaClientKnownRequestError(message, {
+    code,
+    clientVersion: Prisma.prismaVersion.client,
+  });
+}
+
 function matchesWhere<T extends object>(
   row: T,
   where?: Record<string, unknown>,
@@ -776,8 +795,17 @@ const prismaModels = {
     async count({ where }: { where?: Record<string, unknown> } = {}) {
       return studentRows.filter((row) => matchesWhere(row, where)).length;
     },
-    async findUnique({ where }: { where: { id: string } }) {
-      return studentRows.find((row) => row.id === where.id) ?? null;
+    async findUnique({
+      where,
+      include,
+    }: {
+      where: { id: string };
+      include?: { class?: boolean };
+    }) {
+      const row = studentRows.find((r) => r.id === where.id) ?? null;
+      if (!row || !include?.class) return row;
+      // 소유권은 소속 반이 가진다 — 조인해 한 번에 읽는 경로.
+      return { ...row, class: classRows.find((c) => c.id === row.classId) };
     },
     async update({
       where,
@@ -968,9 +996,7 @@ const prismaModels = {
       const index = problemRows.findIndex((r) => r.id === where.id);
       if (index === -1) throw new Error(`problem not found: ${where.id}`);
       if (testProblemRows.some((row) => row.problemId === where.id)) {
-        throw Object.assign(new Error("foreign key constraint failed"), {
-          code: "P2003",
-        });
+        throw prismaKnownError("P2003", "foreign key constraint failed");
       }
       const [removed] = problemRows.splice(index, 1);
       return removed!;
@@ -1057,15 +1083,26 @@ const prismaModels = {
     async findUnique({ where }: { where: { id: string } }) {
       return testRows.find((row) => row.id === where.id) ?? null;
     },
+    /**
+     * 🔴 `where` 는 id 말고 **추가 조건**도 받는다(Prisma 5+ extendedWhereUnique).
+     *    조건이 안 맞으면 실제 Prisma 는 P2025 를 던진다. 가짜가 id 만 보고 갱신하면
+     *    "확정된 시험지만 인쇄" 같은 원자적 가드가 테스트에서만 통과한다.
+     */
     async update({
       where,
       data,
     }: {
-      where: { id: string };
+      where: { id: string } & Record<string, unknown>;
       data: Partial<Omit<TestRow, "id" | "userId" | "createdAt">>;
     }) {
-      const row = testRows.find((r) => r.id === where.id);
-      if (!row) throw new Error(`test not found: ${where.id}`);
+      const { id, ...rest } = where;
+      const row = testRows.find((r) => r.id === id);
+      if (!row || !matchesWhere(row, rest)) {
+        throw prismaKnownError(
+          "P2025",
+          "An operation failed because it depends on one or more records that were required but not found.",
+        );
+      }
       Object.assign(row, data);
       return row;
     },

@@ -24,17 +24,19 @@ export async function submitTestResult(
   const owned = await requireOwnedTest(testId, session.id);
   if (!owned.ok) return owned.response;
 
-  const studentOwned = await requireOwnedStudentInClass(
-    input.studentId,
-    owned.data.classId,
-    session.id,
-  );
+  // 🔴 보안 순서는 그대로다 — **시험지 소유권이 먼저**(위 `requireOwnedTest`) 통과해야
+  //    여기까지 온다. 그 관문을 지난 뒤의 두 조회는 서로 독립이라 같이 보낸다:
+  //    학생 소유권 확인은 studentId·classId 로, 문항 조회는 testId 로만 좁힌다.
+  //    문항 조회 결과는 학생 판정이 실패하면 **쓰이지 않고 버려진다** — 내가 소유한
+  //    시험지의 문항이므로 새어 나갈 것도 없다.
+  const [studentOwned, testProblems] = await Promise.all([
+    requireOwnedStudentInClass(input.studentId, owned.data.classId, session.id),
+    db.testProblem.findMany({
+      where: { testId },
+      include: { problem: true },
+    }),
+  ]);
   if (!studentOwned.ok) return studentOwned.response;
-
-  const testProblems = await db.testProblem.findMany({
-    where: { testId },
-    include: { problem: true },
-  });
 
   const testProblemIds = new Set(testProblems.map((tp) => tp.problemId));
   const answerProblemIds = new Set(input.answers.map((a) => a.problemId));
