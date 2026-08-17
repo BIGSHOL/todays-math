@@ -130,6 +130,32 @@ describe("[T4.3 S-04] 출제 설정 — 폼 골격", () => {
       }),
     ).toBeInTheDocument();
   });
+
+  it("문항 수를 고친 뒤에도 소단원 선택이 그대로 살아 있다", async () => {
+    // 소단원 option 은 실제로 1,472개다. 글자 하나마다 두 벌을 다시 조정하지
+    // 않도록 select 를 memo 로 잘라 뒀는데, 잘못 자르면 핸들러가 옛 값을 붙든
+    // 채 굳는다(고전적인 memo 사고). 그 방향을 잠근다.
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+
+    const start = screen.getByLabelText("시작 소단원");
+    const kept = (start as HTMLSelectElement).value;
+
+    const count = screen.getByLabelText("문항 수");
+    await user.clear(count);
+    await user.type(count, "12");
+
+    expect(screen.getByLabelText("문항 수")).toHaveValue(12);
+    // 목록·선택값 모두 그대로다.
+    expect(screen.getByLabelText("시작 소단원")).toHaveValue(kept);
+    await user.selectOptions(
+      screen.getByLabelText("끝 소단원"),
+      MOCK_REVIEW_RANGE_END_UNIT.id,
+    );
+    expect(screen.getByLabelText("끝 소단원")).toHaveValue(
+      MOCK_REVIEW_RANGE_END_UNIT.id,
+    );
+  });
 });
 
 describe("[T4.3 S-04] 출제 설정 — 출제 요청", () => {
