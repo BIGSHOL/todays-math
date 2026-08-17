@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { useState, type FormEvent } from "react";
+import { useState, useSyncExternalStore, type FormEvent } from "react";
 
 import {
   CREDENTIALS_ERROR,
@@ -34,6 +34,14 @@ export function AuthForm({ mode, callbackUrl }: AuthFormProps) {
   const [name, setName] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [pending, setPending] = useState(false);
+
+  // 하이드레이션 전에는 onSubmit 이 안 붙어 있어 네이티브 GET 제출이 일어나고,
+  // 비밀번호가 /login?password=... 로 URL 에 노출된다 (2026-08-17 실측). 그 전엔 버튼을 잠근다.
+  const hydrated = useSyncExternalStore(
+    subscribeNever,
+    () => true,
+    () => false,
+  );
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -133,7 +141,12 @@ export function AuthForm({ mode, callbackUrl }: AuthFormProps) {
           onChange={(event) => setName(event.target.value)}
         />
       ) : null}
-      <Button type="submit" variant="ink" disabled={pending} className="w-full">
+      <Button
+        type="submit"
+        variant="ink"
+        disabled={pending || !hydrated}
+        className="w-full"
+      >
         {title}
       </Button>
       <Link
@@ -146,11 +159,17 @@ export function AuthForm({ mode, callbackUrl }: AuthFormProps) {
   );
 }
 
+function subscribeNever() {
+  return () => {};
+}
+
 async function signInWithCredentials(email: string, password: string) {
   const result = await signIn("credentials", {
     email,
     password,
     redirect: false,
   });
-  return result?.ok === true;
+  // next-auth v5 beta 는 자격 증명이 틀려도 HTTP 200 이라 ok:true 로 온다.
+  // 실패 여부는 error("CredentialsSignin") 필드가 유일한 근거다.
+  return result?.ok === true && !result.error;
 }

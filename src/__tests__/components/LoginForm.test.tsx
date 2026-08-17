@@ -7,6 +7,7 @@
  */
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { renderToString } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { LoginForm } from "@/components/auth/LoginForm";
@@ -84,6 +85,17 @@ describe("[T1.2] LoginForm", () => {
     });
   });
 
+  // 하이드레이션 전에 제출하면 onSubmit 이 없어 네이티브 GET 제출이 일어나고,
+  // 비밀번호가 /login?password=... 로 URL 에 노출된다 (2026-08-17 실측). SSR 마크업은 버튼을 잠가야 한다.
+  it("하이드레이션 전(SSR) 마크업에서는 제출 버튼이 비활성이다", () => {
+    const container = document.createElement("div");
+    container.innerHTML = renderToString(<LoginForm />);
+
+    const button = container.querySelector('button[type="submit"]');
+    expect(button).not.toBeNull();
+    expect(button).toHaveAttribute("disabled");
+  });
+
   it("가입 전환 링크가 /signup 을 가리킨다", () => {
     render(<LoginForm />);
 
@@ -138,6 +150,29 @@ describe("[T1.2] LoginForm", () => {
       ok: false,
       error: "CredentialsSignin",
       status: 401,
+      url: null,
+    });
+
+    render(<LoginForm />);
+    await user.type(screen.getByLabelText("이메일"), "teacher@example.com");
+    await user.type(screen.getByLabelText("비밀번호"), "password123");
+    await user.click(screen.getByRole("button", { name: "로그인" }));
+
+    expect(
+      await screen.findByText("이메일 또는 비밀번호가 올바르지 않습니다."),
+    ).toBeInTheDocument();
+    expect(push).not.toHaveBeenCalled();
+  });
+
+  // next-auth v5 beta 실측: 자격 증명이 틀려도 HTTP 200 이라 ok:true 로 오고,
+  // 실패는 error("CredentialsSignin") 필드로만 구분된다 (node_modules/next-auth/react.js signIn).
+  it("실패인데 ok:true 인 v5 beta 응답에서도 에러를 보여 주고 이동하지 않는다", async () => {
+    const user = userEvent.setup();
+    signIn.mockResolvedValue({
+      ok: true,
+      error: "CredentialsSignin",
+      code: "credentials",
+      status: 200,
       url: null,
     });
 
