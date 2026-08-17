@@ -16,9 +16,11 @@ import { loadUnits } from "@/lib/units/unitApi";
 import { FieldSelect } from "./FieldSelect";
 import { PROBLEM_TYPES } from "./labels";
 import { ProblemCard } from "./ProblemCardLazy";
-import { ProblemGenerateForm } from "./ProblemGenerateForm";
-import { ProblemRegisterForm } from "./ProblemRegisterForm";
-import { ProblemTransformForm } from "./ProblemTransformForm";
+import {
+  ProblemGenerateForm,
+  ProblemRegisterForm,
+  ProblemTransformForm,
+} from "./ProblemPanelsLazy";
 
 type Panel = "register" | "generate" | "transform" | null;
 
