@@ -16,14 +16,34 @@ import type { Difficulty, DifficultyRatio } from "@/contracts/common.contract";
 import type { ProblemEntity } from "@/contracts/problem.contract";
 import type { ShortfallItem } from "@/contracts/test.contract";
 
+/**
+ * 출제 엔진이 문항에 대해 **실제로 읽는 것 전부**. 딱 5개다.
+ *
+ * `ProblemEntity` 를 그대로 받던 시절에는 조회가 본문·정답·풀이·도형 SVG(TEXT 4개 포함
+ * 28컬럼)를 통째로 끌어왔다. 엔진은 그 중 아무것도 보지 않는다 — 구조적 타입이라
+ * `ProblemEntity` 는 여기에 그대로 들어맞고(기존 테스트·호출부 무변경), 조회는
+ * `findEligibleProblems` 가 select 로 5컬럼만 읽게 좁힐 수 있다.
+ */
+export interface SelectableProblem {
+  id: string;
+  /** shortfall 보고의 단원 귀속에만 쓴다. */
+  unitId: string;
+  difficulty: Difficulty;
+  problemType: string;
+  /** false 면 변형 원본 전용 — 직접 출제하지 않는다(D-26). */
+  directUseAllowed: boolean;
+}
+
 export interface SubstitutionRecord {
   requestedDifficulty: Difficulty;
   substitutedDifficulty: Difficulty;
   problemId: string;
 }
 
-export interface BalanceDifficultyResult {
-  selected: ProblemEntity[];
+export interface BalanceDifficultyResult<
+  T extends SelectableProblem = ProblemEntity,
+> {
+  selected: T[];
   substitutions: SubstitutionRecord[];
   shortfall: ShortfallItem[];
 }
@@ -37,10 +57,10 @@ const ADJACENT_DIFFICULTY: Record<Difficulty, Difficulty[]> = {
   hard: ["mid"],
 };
 
-function groupByDifficulty(
-  pool: ProblemEntity[],
-): Record<Difficulty, ProblemEntity[]> {
-  const grouped: Record<Difficulty, ProblemEntity[]> = {
+function groupByDifficulty<T extends SelectableProblem>(
+  pool: T[],
+): Record<Difficulty, T[]> {
+  const grouped: Record<Difficulty, T[]> = {
     easy: [],
     mid: [],
     hard: [],
@@ -55,13 +75,13 @@ function groupByDifficulty(
  * 후보 목록에서 유형 사용 빈도가 가장 낮은 문제부터 최대 `target`개를 뽑는다.
  * 동률이면 후보 목록 순서(호출자가 이미 시드로 셔플해 넘긴 순서)를 그대로 지킨다.
  */
-function pickTypeBalanced(
-  candidates: ProblemEntity[],
+function pickTypeBalanced<T extends SelectableProblem>(
+  candidates: T[],
   target: number,
   typeUsage: Map<string, number>,
-): ProblemEntity[] {
+): T[] {
   const remaining = [...candidates];
-  const picked: ProblemEntity[] = [];
+  const picked: T[] = [];
 
   while (picked.length < target && remaining.length > 0) {
     let bestIndex = 0;
@@ -84,14 +104,14 @@ function pickTypeBalanced(
   return picked;
 }
 
-export function balanceDifficulty(
-  pool: ProblemEntity[],
+export function balanceDifficulty<T extends SelectableProblem>(
+  pool: T[],
   ratio: DifficultyRatio,
   count: number,
-): BalanceDifficultyResult {
+): BalanceDifficultyResult<T> {
   const grouped = groupByDifficulty(pool);
   const selectedIds = new Set<string>();
-  const selected: ProblemEntity[] = [];
+  const selected: T[] = [];
   const substitutions: SubstitutionRecord[] = [];
   const shortfall: ShortfallItem[] = [];
   const typeUsage = new Map<string, number>();

@@ -40,13 +40,24 @@ export async function generateDraftTest(
     if (!studentOwned.ok) return studentOwned.response;
   }
 
+  // 진도 이력은 append-only 라 전량 읽으면 학기가 갈수록 자란다. `getCurrentProgress`
+  // 와 **같은 정렬**(recordedAt desc, 동률이면 createdAt desc)을 DB 로 내리고 1건만 읽는다.
+  // 반/개별 구분과 개별 이력 0건 시 반 진도 폴백은 그대로다(GET /api/progress 와 동일).
+  const latestFirst = [
+    { recordedAt: "desc" as const },
+    { createdAt: "desc" as const },
+  ];
   const [classProgress, studentProgressRows, student] = await Promise.all([
     db.progress.findMany({
       where: { classId: input.classId, studentId: null },
+      orderBy: latestFirst,
+      take: 1,
     }),
     input.studentId
       ? db.progress.findMany({
           where: { classId: input.classId, studentId: input.studentId },
+          orderBy: latestFirst,
+          take: 1,
         })
       : Promise.resolve([]),
     input.studentId
@@ -92,14 +103,12 @@ export async function generateDraftTest(
   const difficultyRatio = (input.difficultyRatio ??
     owned.data.difficultyRatio) as DifficultyRatio;
 
-  const eligible = await findEligibleProblems({
-    userId: session.id,
-    unitIds,
-  });
-  const recentProblemIds = await loadRecentProblemIds(
-    session.id,
-    input.testDate,
-  );
+  // 두 조회는 서로를 전혀 참조하지 않는다(풀은 단원, 최근 출제는 날짜로만 좁힌다).
+  // 순차로 await 하면 그냥 두 왕복이 더해진다.
+  const [eligible, recentProblemIds] = await Promise.all([
+    findEligibleProblems({ userId: session.id, unitIds }),
+    loadRecentProblemIds(session.id, input.testDate),
+  ]);
 
   const selected = selectProblems({
     pool: eligible,
@@ -154,16 +163,16 @@ export async function generateDraftTest(
       },
     });
 
-    for (const [index, problem] of selected.problems.entries()) {
-      await tx.testProblem.create({
-        data: {
-          testId: test.id,
-          problemId: problem.id,
-          orderIndex: index + 1,
-          replaced: false,
-        },
-      });
-    }
+    // 🔴 문항 수만큼 INSERT 를 순차로 await 하던 자리다(25문항이면 25왕복).
+    //    한 INSERT 로 넣는다 — 같은 트랜잭션 안이라 원자성은 그대로다.
+    await tx.testProblem.createMany({
+      data: selected.problems.map((problem, index) => ({
+        testId: test.id,
+        problemId: problem.id,
+        orderIndex: index + 1,
+        replaced: false,
+      })),
+    });
 
     const items = await tx.testProblem.findMany({
       where: { testId: test.id },

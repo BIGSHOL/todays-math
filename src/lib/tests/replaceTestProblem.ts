@@ -45,21 +45,24 @@ export async function replaceTestProblemAtSeq(
     );
   }
 
-  const items = await db.testProblem.findMany({
-    where: { testId },
-    include: { problem: true },
-    orderBy: { orderIndex: "asc" },
-  });
+  // 두 조회는 독립이다 — 문항 목록은 testId 로, 최근 출제는 사용자·날짜로 좁힌다.
+  // 시험지 소유권(`requireOwnedTest`)은 이미 위에서 통과했다.
+  const today = owned.data.testDate.toISOString().slice(0, 10);
+  const [items, recentFromOtherTests] = await Promise.all([
+    db.testProblem.findMany({
+      where: { testId },
+      include: { problem: true },
+      orderBy: { orderIndex: "asc" },
+    }),
+    loadRecentProblemIds(session.id, today),
+  ]);
+
   const target = items.find((item) => item.orderIndex === seq);
   if (!target?.problem) return notFoundError("문항");
 
-  const today = owned.data.testDate.toISOString().slice(0, 10);
   const usedOnThisTest = items.map((item) => item.problemId);
   const recentProblemIds = [
-    ...new Set([
-      ...(await loadRecentProblemIds(session.id, today)),
-      ...usedOnThisTest,
-    ]),
+    ...new Set([...recentFromOtherTests, ...usedOnThisTest]),
   ];
 
   const difficulties: Difficulty[] = [

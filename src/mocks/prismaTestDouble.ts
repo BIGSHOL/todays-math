@@ -9,6 +9,8 @@
  */
 import { randomUUID } from "node:crypto";
 
+import { Prisma } from "@prisma/client";
+
 import type {
   ClassEntity,
   ProgressEntity,
@@ -453,6 +455,23 @@ export function resetPrismaTestDouble() {
 }
 resetPrismaTestDouble();
 
+/**
+ * 🔴 **진짜 Prisma 에러를 던져야 한다.** `isPrismaErrorCode` 는
+ *    `error instanceof Prisma.PrismaClientKnownRequestError` 로 좁힌다.
+ *    `Object.assign(new Error(...), { code })` 는 그 검사를 통과하지 못해서,
+ *    라우트의 코드별 분기(P2003 소단원 404, P2025 인쇄 충돌)가 **테스트에서만**
+ *    통째로 건너뛰어진다 — 프로덕션에서 맞는 가드가 여기서만 틀리게 동작한다.
+ */
+function prismaKnownError(
+  code: string,
+  message: string,
+): Prisma.PrismaClientKnownRequestError {
+  return new Prisma.PrismaClientKnownRequestError(message, {
+    code,
+    clientVersion: Prisma.prismaVersion.client,
+  });
+}
+
 function matchesWhere<T extends object>(
   row: T,
   where?: Record<string, unknown>,
@@ -507,28 +526,80 @@ function matchesWhere<T extends object>(
       !Array.isArray(cond) &&
       !(cond instanceof Date)
     ) {
-      const obj = cond as { in?: unknown[]; not?: unknown };
+      const obj = cond as {
+        in?: unknown[];
+        not?: unknown;
+        gt?: unknown;
+        gte?: unknown;
+        lt?: unknown;
+        lte?: unknown;
+      };
       if (Array.isArray(obj.in)) return obj.in.includes(value);
       if ("not" in obj) return value !== obj.not;
+
+      // 🔴 범위 연산자를 모르면 이 함수는 `value === {gte: ...}` 로 떨어져 **항상 false**
+      //    를 낸다. 날짜 창을 JS filter 에서 SQL where 로 옮기는 순간 조회가 조용히
+      //    빈 배열이 되는 자리다. 지원하는 것만 받고 나머지는 아래에서 던진다.
+      const RANGE_KEYS = ["gt", "gte", "lt", "lte"] as const;
+      const ranges = RANGE_KEYS.filter((k) => k in obj);
+      if (ranges.length > 0) {
+        const unknownKeys = Object.keys(obj).filter(
+          (k) => !RANGE_KEYS.includes(k as (typeof RANGE_KEYS)[number]),
+        );
+        if (unknownKeys.length > 0) {
+          throw new Error(
+            `prismaTestDouble: 범위 조건과 섞인 미지원 연산자 '${unknownKeys.join(",")}'`,
+          );
+        }
+        return ranges.every((k) => {
+          const bound = comparable(obj[k]);
+          const target = comparable(value);
+          if (bound === null || target === null) return false;
+          if (k === "gt") return target > bound;
+          if (k === "gte") return target >= bound;
+          if (k === "lt") return target < bound;
+          return target <= bound;
+        });
+      }
+
+      throw new Error(
+        `prismaTestDouble: 지원하지 않는 필드 조건 '${JSON.stringify(cond)}' — 조용히 통과시키지 않는다`,
+      );
     }
     return value === cond;
   });
 }
 
+/** 범위 비교용 정규화 — Date 는 epoch, 숫자/문자열은 그대로. 그 외는 비교 불가(null). */
+function comparable(value: unknown): number | string | null {
+  if (value instanceof Date) return value.getTime();
+  if (typeof value === "number" || typeof value === "string") return value;
+  return null;
+}
+
+/**
+ * `orderBy` 정렬.
+ *
+ * 🔴 **배열 형태를 지원해야 한다.** 예전에는 첫 키 하나만 보고 나머지를 버렸는데,
+ *    이 저장소가 실제로 쓰는 정렬은 대부분 동률 보조 키가 붙은 복합 정렬이다
+ *    (`[{recordedAt:desc},{createdAt:desc}]`, `[{createdAt:desc},{id:desc}]`).
+ *    보조 키를 버리면 "최신 1건"(take:1)이 동률에서 아무거나 골라 조용히 흔들린다.
+ *    문자열 비교도 필요하다 — 버리면 `id desc` 가 아무 일도 하지 않는다.
+ */
 function applyOrder<T extends object>(rows: T[], orderBy?: unknown): T[] {
   if (!orderBy || typeof orderBy !== "object") return rows;
-  const [key, dir] = Object.entries(orderBy as Record<string, string>)[0] ?? [];
-  if (!key) return rows;
+  const specs = (Array.isArray(orderBy) ? orderBy : [orderBy]).flatMap(
+    (entry) => Object.entries(entry as Record<string, string>),
+  );
+  if (specs.length === 0) return rows;
   return [...rows].sort((a, b) => {
-    const av = (a as Record<string, unknown>)[key];
-    const bv = (b as Record<string, unknown>)[key];
-    if (av instanceof Date && bv instanceof Date) {
-      return dir === "desc"
-        ? bv.getTime() - av.getTime()
-        : av.getTime() - bv.getTime();
-    }
-    if (typeof av === "number" && typeof bv === "number") {
-      return dir === "desc" ? bv - av : av - bv;
+    for (const [key, dir] of specs) {
+      const av = comparable((a as Record<string, unknown>)[key]);
+      const bv = comparable((b as Record<string, unknown>)[key]);
+      if (av === null || bv === null || typeof av !== typeof bv) continue;
+      if (av === bv) continue;
+      const asc = av < bv ? -1 : 1;
+      return dir === "desc" ? -asc : asc;
     }
     return 0;
   });
@@ -536,6 +607,44 @@ function applyOrder<T extends object>(rows: T[], orderBy?: unknown): T[] {
 
 function paginate<T>(rows: T[], skip = 0, take?: number): T[] {
   return take === undefined ? rows.slice(skip) : rows.slice(skip, skip + take);
+}
+
+/**
+ * `select` 투영 — 실제 Prisma 는 **고른 컬럼만** 돌려준다.
+ *
+ * 가짜가 행 전체를 돌려주면 "조회는 5컬럼으로 좁혔는데 테스트는 28컬럼을 보고 통과"
+ * 하는 침묵 회귀가 생긴다. 그래서 여기서도 실제로 잘라 낸다.
+ * 모르는 필드·지원하지 않는 관계는 조용히 넘기지 않고 **던진다**(matchesWhere 와 같은 원칙).
+ */
+function applySelect<T extends object>(
+  rows: T[],
+  select: Record<string, unknown> | undefined,
+  relations: Record<string, (row: T, spec: unknown) => unknown> = {},
+): unknown[] {
+  if (!select) return rows;
+  return rows.map((row) => {
+    const projected: Record<string, unknown> = {};
+    for (const [key, spec] of Object.entries(select)) {
+      if (spec === false || spec === undefined) continue;
+      if (spec === true) {
+        if (!(key in row)) {
+          throw new Error(
+            `prismaTestDouble: select 에 없는 필드 '${key}' — 조용히 undefined 를 내지 않는다`,
+          );
+        }
+        projected[key] = (row as Record<string, unknown>)[key];
+        continue;
+      }
+      const resolve = relations[key];
+      if (!resolve) {
+        throw new Error(
+          `prismaTestDouble: 지원하지 않는 관계 select '${key}' — 조용히 통과시키지 않는다`,
+        );
+      }
+      projected[key] = resolve(row, spec);
+    }
+    return projected;
+  });
 }
 
 function hydrateTestProblems(
@@ -656,22 +765,47 @@ const prismaModels = {
       where,
       skip = 0,
       take,
+      select,
     }: {
       where?: Record<string, unknown>;
       skip?: number;
       take?: number;
+      select?: Record<string, unknown>;
     } = {}) {
-      return paginate(
-        studentRows.filter((row) => matchesWhere(row, where)),
-        skip,
-        take,
+      return applySelect(
+        paginate(
+          studentRows.filter((row) => matchesWhere(row, where)),
+          skip,
+          take,
+        ),
+        select,
+        {
+          // 소유권은 Student 가 아니라 소속 반이 가진다. 조인해 한 번에 읽는 경로가 있다.
+          class: (row, spec) => {
+            const cls = classRows.find((c) => c.id === row.classId);
+            if (!cls) return null;
+            return applySelect(
+              [cls],
+              (spec as { select?: Record<string, unknown> }).select,
+            )[0];
+          },
+        },
       );
     },
     async count({ where }: { where?: Record<string, unknown> } = {}) {
       return studentRows.filter((row) => matchesWhere(row, where)).length;
     },
-    async findUnique({ where }: { where: { id: string } }) {
-      return studentRows.find((row) => row.id === where.id) ?? null;
+    async findUnique({
+      where,
+      include,
+    }: {
+      where: { id: string };
+      include?: { class?: boolean };
+    }) {
+      const row = studentRows.find((r) => r.id === where.id) ?? null;
+      if (!row || !include?.class) return row;
+      // 소유권은 소속 반이 가진다 — 조인해 한 번에 읽는 경로.
+      return { ...row, class: classRows.find((c) => c.id === row.classId) };
     },
     async update({
       where,
@@ -727,8 +861,28 @@ const prismaModels = {
       progressRows.push(row);
       return row;
     },
-    async findMany({ where }: { where?: Record<string, unknown> } = {}) {
-      return progressRows.filter((row) => matchesWhere(row, where));
+    async findMany({
+      where,
+      orderBy,
+      take,
+      select,
+    }: {
+      where?: Record<string, unknown>;
+      orderBy?: unknown;
+      take?: number;
+      select?: Record<string, unknown>;
+    } = {}) {
+      return applySelect(
+        paginate(
+          applyOrder(
+            progressRows.filter((row) => matchesWhere(row, where)),
+            orderBy,
+          ),
+          0,
+          take,
+        ),
+        select,
+      );
     },
   },
   problem: {
@@ -760,20 +914,62 @@ const prismaModels = {
       problemRows.push(row);
       return row;
     },
+    /**
+     * PostgreSQL 전용 — 한 INSERT 로 넣고 넣은 행을 그대로 돌려준다.
+     * 반환 순서는 입력 순서(INSERT ... RETURNING)다. 응답이 그 순서를 그대로 싣는다.
+     */
+    async createManyAndReturn({
+      data,
+    }: {
+      data: Array<
+        Omit<
+          ProblemRow,
+          "id" | "createdAt" | "updatedAt" | "pool" | "questionType"
+        > & {
+          originProblemId?: string | null;
+          reviewStatus?: ReviewStatus;
+          pool?: "shared" | "private";
+          questionType?: string | null;
+        }
+      >;
+    }) {
+      const now = new Date();
+      const rows = data.map((item) => {
+        const row: ProblemRow = {
+          id: randomUUID(),
+          ...item,
+          questionType: item.questionType ?? null,
+          originProblemId: item.originProblemId ?? null,
+          reviewStatus: item.reviewStatus ?? "pending",
+          directUseAllowed: item.directUseAllowed ?? true,
+          pool: item.pool ?? "shared",
+          createdAt: now,
+          updatedAt: now,
+        };
+        return row;
+      });
+      problemRows.push(...rows);
+      return rows;
+    },
     async findMany({
       where,
       skip = 0,
       take,
+      select,
     }: {
       where?: Record<string, unknown>;
       skip?: number;
       take?: number;
       orderBy?: unknown;
+      select?: Record<string, unknown>;
     } = {}) {
-      return paginate(
-        problemRows.filter((row) => matchesWhere(row, where)),
-        skip,
-        take,
+      return applySelect(
+        paginate(
+          problemRows.filter((row) => matchesWhere(row, where)),
+          skip,
+          take,
+        ),
+        select,
       );
     },
     async count({ where }: { where?: Record<string, unknown> } = {}) {
@@ -800,9 +996,7 @@ const prismaModels = {
       const index = problemRows.findIndex((r) => r.id === where.id);
       if (index === -1) throw new Error(`problem not found: ${where.id}`);
       if (testProblemRows.some((row) => row.problemId === where.id)) {
-        throw Object.assign(new Error("foreign key constraint failed"), {
-          code: "P2003",
-        });
+        throw prismaKnownError("P2003", "foreign key constraint failed");
       }
       const [removed] = problemRows.splice(index, 1);
       return removed!;
@@ -849,19 +1043,38 @@ const prismaModels = {
       skip = 0,
       take,
       orderBy,
+      select,
     }: {
       where?: Record<string, unknown>;
       skip?: number;
       take?: number;
       orderBy?: unknown;
+      select?: Record<string, unknown>;
     } = {}) {
-      return paginate(
-        applyOrder(
-          testRows.filter((row) => matchesWhere(row, where)),
-          orderBy,
+      return applySelect(
+        paginate(
+          applyOrder(
+            testRows.filter((row) => matchesWhere(row, where)),
+            orderBy,
+          ),
+          skip,
+          take,
         ),
-        skip,
-        take,
+        select,
+        {
+          // `loadRounds` 가 "이 시험지에 채점이 있는가"를 take:1 로 확인한다.
+          // 가짜가 이 관계를 안 채우면 `t.testResults.length` 가 그대로 터진다 —
+          // 예전에는 픽스처의 predictionRunId 가 전부 null 이라 우연히 빈 배열만 나와
+          // 이 경로가 한 번도 실행되지 않았다.
+          testResults: (row, spec) => {
+            const { take: relTake } = (spec ?? {}) as { take?: number };
+            const rows = testResultRows.filter((r) => r.testId === row.id);
+            return applySelect(
+              paginate(rows, 0, relTake),
+              (spec as { select?: Record<string, unknown> }).select,
+            );
+          },
+        },
       );
     },
     async count({ where }: { where?: Record<string, unknown> } = {}) {
@@ -870,15 +1083,26 @@ const prismaModels = {
     async findUnique({ where }: { where: { id: string } }) {
       return testRows.find((row) => row.id === where.id) ?? null;
     },
+    /**
+     * 🔴 `where` 는 id 말고 **추가 조건**도 받는다(Prisma 5+ extendedWhereUnique).
+     *    조건이 안 맞으면 실제 Prisma 는 P2025 를 던진다. 가짜가 id 만 보고 갱신하면
+     *    "확정된 시험지만 인쇄" 같은 원자적 가드가 테스트에서만 통과한다.
+     */
     async update({
       where,
       data,
     }: {
-      where: { id: string };
+      where: { id: string } & Record<string, unknown>;
       data: Partial<Omit<TestRow, "id" | "userId" | "createdAt">>;
     }) {
-      const row = testRows.find((r) => r.id === where.id);
-      if (!row) throw new Error(`test not found: ${where.id}`);
+      const { id, ...rest } = where;
+      const row = testRows.find((r) => r.id === id);
+      if (!row || !matchesWhere(row, rest)) {
+        throw prismaKnownError(
+          "P2025",
+          "An operation failed because it depends on one or more records that were required but not found.",
+        );
+      }
       Object.assign(row, data);
       return row;
     },
@@ -917,19 +1141,44 @@ const prismaModels = {
       testProblemRows.push(row);
       return row;
     },
+    async createMany({
+      data,
+    }: {
+      data: Array<{
+        testId: string;
+        problemId: string;
+        orderIndex: number;
+        replaced?: boolean;
+        score?: number | null;
+      }>;
+    }) {
+      const rows: TestProblemRow[] = data.map((item) => ({
+        id: randomUUID(),
+        testId: item.testId,
+        problemId: item.problemId,
+        orderIndex: item.orderIndex,
+        replaced: item.replaced ?? false,
+        score: item.score ?? null,
+      }));
+      testProblemRows.push(...rows);
+      return { count: rows.length };
+    },
     async findMany({
       where,
       include,
       orderBy,
+      select,
     }: {
       where?: Record<string, unknown>;
       include?: { problem?: boolean };
       orderBy?: unknown;
+      select?: Record<string, unknown>;
     } = {}) {
       const rows = applyOrder(
         testProblemRows.filter((row) => matchesWhere(row, where)),
         orderBy,
       );
+      if (select) return applySelect(rows, select);
       return hydrateTestProblems(rows, include);
     },
     async count({ where }: { where?: Record<string, unknown> } = {}) {
@@ -946,6 +1195,17 @@ const prismaModels = {
       if (!row) throw new Error(`testProblem not found: ${where.id}`);
       Object.assign(row, data);
       return row;
+    },
+    async updateMany({
+      where,
+      data,
+    }: {
+      where?: Record<string, unknown>;
+      data: Partial<Omit<TestProblemRow, "id" | "testId">>;
+    }) {
+      const rows = testProblemRows.filter((row) => matchesWhere(row, where));
+      rows.forEach((row) => Object.assign(row, data));
+      return { count: rows.length };
     },
   },
   testResult: {
@@ -1031,6 +1291,30 @@ const prismaModels = {
       };
       problemAnswerRows.push(row);
       return row;
+    },
+    async createMany({
+      data,
+    }: {
+      data: Array<{
+        testResultId: string;
+        problemId: string;
+        selectedChoice: number | null;
+        essayScore: number | null;
+        isCorrect: boolean;
+        sequence: number;
+      }>;
+    }) {
+      const rows: ProblemAnswerRow[] = data.map((item) => ({
+        id: randomUUID(),
+        testResultId: item.testResultId,
+        problemId: item.problemId,
+        selectedChoice: item.selectedChoice,
+        essayScore: item.essayScore,
+        isCorrect: item.isCorrect,
+        sequence: item.sequence,
+      }));
+      problemAnswerRows.push(...rows);
+      return { count: rows.length };
     },
     async findMany({ where }: { where?: Record<string, unknown> } = {}) {
       return problemAnswerRows.filter((row) => matchesWhere(row, where));
@@ -1139,14 +1423,36 @@ const prismaModels = {
     async findMany({
       where,
       orderBy,
-    }: { where?: Record<string, unknown>; orderBy?: unknown } = {}) {
-      return applyOrder(
-        predictionRunRows.filter((row) => matchesWhere(row, where)),
-        orderBy,
+      take,
+      select,
+    }: {
+      where?: Record<string, unknown>;
+      orderBy?: unknown;
+      take?: number;
+      select?: Record<string, unknown>;
+    } = {}) {
+      return applySelect(
+        paginate(
+          applyOrder(
+            predictionRunRows.filter((row) => matchesWhere(row, where)),
+            orderBy,
+          ),
+          0,
+          take,
+        ),
+        select,
       );
     },
-    async findUnique({ where }: { where: { id: string } }) {
-      return predictionRunRows.find((row) => row.id === where.id) ?? null;
+    async findUnique({
+      where,
+      select,
+    }: {
+      where: { id: string };
+      select?: Record<string, unknown>;
+    }) {
+      const row = predictionRunRows.find((r) => r.id === where.id) ?? null;
+      if (!row) return null;
+      return applySelect([row], select)[0];
     },
   },
   actualExamScore: {
@@ -1161,51 +1467,68 @@ const prismaModels = {
  * (아직 예측을 안 돌린 상태가 정상) 필요한 테스트만 직접 채운다.
  */
 export function seedPredictionRuns(rows: PredictionRunRow[]) {
-  predictionRunRows.push(...rows);
+  // 🔴 실제 컬럼은 NULL 이지 **부재**가 아니다. `exam_date` 는 스키마에 늘 있고
+  //    Prisma 는 select 하면 항상 값(또는 null)을 돌려준다. 픽스처가 생략한 것을 그대로
+  //    두면 select 투영에서 "없는 필드"가 된다. 여기서 DB 기본값(NULL)으로 정규화한다.
+  //    ⚠️ NOT NULL 컬럼(`user_id`)은 **채우지 않는다** — 없으면 그대로 터져야 픽스처
+  //    누락이 드러난다. 그럴듯한 기본값을 지어넣으면 소유권 테스트가 조용히 무의미해진다.
+  predictionRunRows.push(...rows.map((row) => ({ examDate: null, ...row })));
 }
 
 export function seedActualExamScores(rows: ActualExamScoreRow[]) {
   actualExamScoreRows.push(...rows);
 }
 
+function snapshotRows() {
+  return structuredClone({
+    classRows,
+    studentRows,
+    unitRows,
+    progressRows,
+    problemRows,
+    testRows,
+    testProblemRows,
+    testResultRows,
+    problemAnswerRows,
+    analysisReportRows,
+    examRows,
+    examQuestionRows,
+  });
+}
+
+function restoreRows(snapshot: ReturnType<typeof snapshotRows>) {
+  classRows = snapshot.classRows;
+  studentRows = snapshot.studentRows;
+  unitRows = snapshot.unitRows;
+  progressRows = snapshot.progressRows;
+  problemRows = snapshot.problemRows;
+  testRows = snapshot.testRows;
+  testProblemRows = snapshot.testProblemRows;
+  testResultRows = snapshot.testResultRows;
+  problemAnswerRows = snapshot.problemAnswerRows;
+  analysisReportRows = snapshot.analysisReportRows;
+  examRows = snapshot.examRows;
+  examQuestionRows = snapshot.examQuestionRows;
+}
+
 export const prismaTestDouble = {
   ...prismaModels,
+  /**
+   * 🔴 **배열 형태도 트랜잭션이다.** 예전에는 `Promise.all` 만 하고 롤백을 안 걸었다.
+   *    실제 Prisma 의 `$transaction([...])` 은 하나가 실패하면 전부 되돌린다 —
+   *    가짜가 반쯤 쓰인 상태를 남기면 "원자성 유지"를 확인하는 테스트가 무의미해진다.
+   */
   async $transaction<T>(
     arg: ((tx: typeof prismaModels) => Promise<T>) | Promise<unknown>[],
   ): Promise<T | unknown[]> {
-    if (typeof arg === "function") {
-      const snapshot = structuredClone({
-        classRows,
-        studentRows,
-        unitRows,
-        progressRows,
-        problemRows,
-        testRows,
-        testProblemRows,
-        testResultRows,
-        problemAnswerRows,
-        analysisReportRows,
-        examRows,
-        examQuestionRows,
-      });
-      try {
-        return await arg(prismaModels);
-      } catch (error) {
-        classRows = snapshot.classRows;
-        studentRows = snapshot.studentRows;
-        unitRows = snapshot.unitRows;
-        progressRows = snapshot.progressRows;
-        problemRows = snapshot.problemRows;
-        testRows = snapshot.testRows;
-        testProblemRows = snapshot.testProblemRows;
-        testResultRows = snapshot.testResultRows;
-        problemAnswerRows = snapshot.problemAnswerRows;
-        analysisReportRows = snapshot.analysisReportRows;
-        examRows = snapshot.examRows;
-        examQuestionRows = snapshot.examQuestionRows;
-        throw error;
-      }
+    const snapshot = snapshotRows();
+    try {
+      return typeof arg === "function"
+        ? await arg(prismaModels)
+        : await Promise.all(arg);
+    } catch (error) {
+      restoreRows(snapshot);
+      throw error;
     }
-    return Promise.all(arg);
   },
 };

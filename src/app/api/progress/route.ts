@@ -96,10 +96,31 @@ export async function GET(request: NextRequest) {
     useIndividualProgress = studentOwned.data.useIndividualProgress;
   }
 
+  // 🔴 PROGRESS 는 append-only 다 — 진도를 한 번 옮길 때마다 행이 하나씩 쌓인다.
+  //    예전에는 그 이력을 **전부** 읽어 와서 `findLatestProgress` 가 JS 로 최신 1건을
+  //    골랐다. 한 학기만 지나도 조회량이 계속 자란다. 정렬 키를 DB 로 내리고 1건만 읽는다.
+  //    ⚠️ 정렬은 `findLatestProgress` 와 **글자 그대로 같아야 한다** — recordedAt(날짜)
+  //    내림차순, 같은 날짜면 createdAt(기록 시각) 내림차순. 보조 키를 빠뜨리면 같은 날
+  //    두 번 기록한 진도에서 "최신"이 아무거나 나온다.
+  //    반/개별 구분은 그대로다 — 반 이력(studentId=null)과 개별 이력을 따로 읽어
+  //    `getCurrentProgress` 가 use_individual_progress 로 고른다. 개별 이력이 0건이면
+  //    take:1 이 빈 배열을 내므로 반 진도로 폴백하는 동작도 유지된다.
+  const latestFirst = [
+    { recordedAt: "desc" as const },
+    { createdAt: "desc" as const },
+  ];
   const [classProgress, studentProgress] = await Promise.all([
-    db.progress.findMany({ where: { classId, studentId: null } }),
+    db.progress.findMany({
+      where: { classId, studentId: null },
+      orderBy: latestFirst,
+      take: 1,
+    }),
     studentId
-      ? db.progress.findMany({ where: { classId, studentId } })
+      ? db.progress.findMany({
+          where: { classId, studentId },
+          orderBy: latestFirst,
+          take: 1,
+        })
       : Promise.resolve([]),
   ]);
 

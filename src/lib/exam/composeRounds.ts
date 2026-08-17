@@ -165,6 +165,30 @@ export function toRoundSummary(
   actuals: ActualScoreRow[],
   linkedTests: readonly LinkedTestRow[] = [],
 ): ExamRoundSummary | null {
+  return buildRoundSummary(
+    run,
+    actuals,
+    linkedTests,
+    parseBlueprint(run.predictedBlueprint),
+    parsePredictedScores(run.predictedScores),
+  );
+}
+
+/**
+ * 요약 조립 본체 — **이미 파싱된** 청사진·예측 배열을 받는다.
+ *
+ * 🔴 예전에는 상세 응답 한 건이 같은 Json 을 두 번씩 zod 로 돌렸다:
+ *    `toRoundDetail` 이 `toRoundSummary` 를 부르면서 청사진·예측을 파싱하고,
+ *    돌아와서 자기가 또 파싱했다. 청사진 스키마는 히스토그램·단원 배분까지 든 큰 객체라
+ *    회차당 2회는 그대로 두 배 비용이다. **검증을 없애지 않고** 파싱 결과를 나눠 쓴다.
+ */
+function buildRoundSummary(
+  run: PredictionRunRow,
+  actuals: ActualScoreRow[],
+  linkedTests: readonly LinkedTestRow[],
+  blueprint: Blueprint | null,
+  predictions: ScorePrediction[],
+): ExamRoundSummary | null {
   const series = examSeriesKeySchema.safeParse({
     school: run.school,
     level: run.level,
@@ -178,8 +202,9 @@ export function toRoundSummary(
   });
   if (!series.success || !period.success) return null;
 
-  const blueprint = parseBlueprint(run.predictedBlueprint);
-  const studentIds = runStudentIds(run);
+  const studentIds = predictions
+    .map((p) => p.studentId)
+    .filter((id): id is string => id !== null);
   const actualCount = actuals.filter((a) => a.runId === run.id).length;
 
   return {
@@ -213,11 +238,20 @@ export function toRoundDetail(
   ownedStudents: OwnedStudent[],
   linkedTests: readonly LinkedTestRow[] = [],
 ): ExamRoundDetail | null {
-  const summary = toRoundSummary(run, actuals, linkedTests);
+  // Json 파싱은 회차당 **한 번씩**이다. 결과를 요약 조립과 학생 행 조립이 나눠 쓴다.
+  const blueprint = parseBlueprint(run.predictedBlueprint);
+  const predictions = parsePredictedScores(run.predictedScores);
+
+  const summary = buildRoundSummary(
+    run,
+    actuals,
+    linkedTests,
+    blueprint,
+    predictions,
+  );
   if (!summary) return null;
 
   const nameById = new Map(ownedStudents.map((s) => [s.id, s.name]));
-  const predictions = parsePredictedScores(run.predictedScores);
   const actualByStudent = new Map(
     actuals
       .filter((a) => a.runId === run.id)
@@ -259,7 +293,7 @@ export function toRoundDetail(
   return {
     summary,
     engineVersion: run.engineVersion,
-    predictedBlueprint: parseBlueprint(run.predictedBlueprint),
+    predictedBlueprint: blueprint,
     // 🔴 실측 청사진을 담는 컬럼이 없다(T7.10 범위). 예측값을 실측인 척 복사하지 않는다.
     observedBlueprint: null,
     students,

@@ -45,6 +45,7 @@ import { findEligibleProblems } from "@/lib/findEligibleProblems";
 import { getSessionUser } from "@/lib/session";
 import {
   MOCK_PENDING_PROBLEM,
+  MOCK_PROBLEMS,
   MOCK_PROBLEM_OTHER_SHARED,
   MOCK_PROBLEM_OTHER_USER,
   MOCK_PROBLEM_WITH_FRACTION,
@@ -519,7 +520,16 @@ describe("[T3.1] findEligibleProblems — 출제 가능 풀 조회", () => {
       unitIds: [MOCK_PROBLEM_WITH_FRACTION.unitId],
     });
     expect(rows.length).toBeGreaterThan(0);
-    expect(rows.every((p) => p.reviewStatus === "approved")).toBe(true);
+    // 🔴 `rows[].reviewStatus` 를 보면 안 된다 — 이 조회는 엔진이 쓰는 5컬럼만 select 하므로
+    //    그 필드가 애초에 없다. 필드가 없는 것을 `undefined === "approved"` 로 세면 조용히
+    //    빨강이 되거나(다행) 조용히 초록이 된다(재앙). **픽스처 쪽에서** 규칙을 잠근다:
+    //    approved 가 아닌 문항의 id 는 결과에 하나도 없어야 한다.
+    const notApprovedIds = new Set(
+      MOCK_PROBLEMS.filter((p) => p.reviewStatus !== "approved").map(
+        (p) => p.id,
+      ),
+    );
+    expect(rows.some((p) => notApprovedIds.has(p.id))).toBe(false);
     expect(rows.some((p) => p.id === MOCK_PROBLEM_OTHER_USER.id)).toBe(false);
     expect(rows.some((p) => p.id === MOCK_PROBLEM_OTHER_SHARED.id)).toBe(true);
   });
@@ -533,7 +543,15 @@ describe("[T3.1] findEligibleProblems — 출제 가능 풀 조회", () => {
     expect(rows.some((p) => p.id === MOCK_PROBLEM_MISSING_ANSWER.id)).toBe(
       false,
     );
-    expect(rows.every((p) => p.answer !== "(정답 없음)")).toBe(true);
+    // `answer` 는 select 밖이라 결과 행에 없다. 제외 규칙은 **DB where 가** 계속 판정하고,
+    // 여기서는 픽스처의 "정답 없음" 문항 id 가 전부 빠졌는지로 확인한다.
+    const missingAnswerIds = new Set(
+      [...MOCK_PROBLEMS, MOCK_PROBLEM_MISSING_ANSWER]
+        .filter((p) => p.answer === "(정답 없음)")
+        .map((p) => p.id),
+    );
+    expect(missingAnswerIds.size).toBeGreaterThan(0);
+    expect(rows.some((p) => missingAnswerIds.has(p.id))).toBe(false);
   });
 
   it("difficulty를 주면 해당 난이도만 반환한다", async () => {

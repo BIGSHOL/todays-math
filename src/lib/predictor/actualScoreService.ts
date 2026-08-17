@@ -15,6 +15,8 @@
  *
  * ⚠️ 이 파일만 IO 를 한다. 계산은 전부 `calibration.ts`(순수 함수)에 있다.
  */
+import type { Prisma } from "@prisma/client";
+
 import type {
   ActualScoreEntry,
   ActualScoreRecord,
@@ -192,19 +194,25 @@ export async function attachActualScores(
     existingRows.map((row) => [row.studentId, row]),
   );
 
-  await db.$transaction(async (tx) => {
-    for (const entry of input.scores) {
-      const existing = existingByStudent.get(entry.studentId);
+  // 🔴 학생 수만큼 update/create 를 순차로 await 하던 자리다(30명이면 30왕복).
+  //    새 행은 한 INSERT 로 묶고, 갱신은 값이 학생마다 달라 묶을 수 없으므로 문장을
+  //    **배열 트랜잭션 하나**로 보낸다 — 왕복 1회, 원자성은 그대로(하나 실패 시 전부 롤백).
+  const operations: Prisma.PrismaPromise<unknown>[] = [];
+  const creates: Prisma.ActualExamScoreCreateManyInput[] = [];
 
-      if (existing) {
-        // 스냅샷(predictedScore·구간)은 덮지 않는다.
-        // 잔차와 적중 여부는 **저장된 스냅샷** 기준으로 다시 센다 — run 의 Json 을 보지 않는다.
-        // 점수 정정은 실제값이 움직인 것이므로 적중 여부도 다시 세는 것이 맞다(얼리지 않는다).
-        //
-        // 구간 스냅샷이 없는 행(예측 시점에 구간이 없었거나 이 컬럼 이전에 저장된 행)은
-        // 적중을 판정할 근거가 없다. 지어내지 않고 false 로 두되, 집계에서는
-        // `hasInterval` 이 false 라 **분모에서 빠진다**(summarizeResiduals 주석 참조).
-        await tx.actualExamScore.update({
+  for (const entry of input.scores) {
+    const existing = existingByStudent.get(entry.studentId);
+
+    if (existing) {
+      // 스냅샷(predictedScore·구간)은 덮지 않는다.
+      // 잔차와 적중 여부는 **저장된 스냅샷** 기준으로 다시 센다 — run 의 Json 을 보지 않는다.
+      // 점수 정정은 실제값이 움직인 것이므로 적중 여부도 다시 세는 것이 맞다(얼리지 않는다).
+      //
+      // 구간 스냅샷이 없는 행(예측 시점에 구간이 없었거나 이 컬럼 이전에 저장된 행)은
+      // 적중을 판정할 근거가 없다. 지어내지 않고 false 로 두되, 집계에서는
+      // `hasInterval` 이 false 라 **분모에서 빠진다**(summarizeResiduals 주석 참조).
+      operations.push(
+        db.actualExamScore.update({
           where: {
             runId_studentId: {
               runId: index.runId,
@@ -224,38 +232,39 @@ export async function attachActualScores(
                 })
               : false,
           },
-        });
-        continue;
-      }
-
-      // 예측이 없는 학생이면 스냅샷도 없다 — 없는 값을 0 이나 평균으로 지어내지 않는다.
-      const snapshot = index.byStudent.get(entry.studentId) ?? null;
-      const interval = snapshot?.interval ?? null;
-      await tx.actualExamScore.create({
-        data: {
-          runId: index.runId,
-          studentId: entry.studentId,
-          actualScore: entry.actualScore,
-          predictedScore: snapshot?.expectedScore ?? null,
-          residual:
-            snapshot === null
-              ? null
-              : computeResidual(entry.actualScore, snapshot.expectedScore),
-          intervalHit:
-            interval === null
-              ? false
-              : isIntervalHit(entry.actualScore, interval),
-          predictedLower: interval?.lower ?? null,
-          predictedUpper: interval?.upper ?? null,
-          predictedCoverage: interval?.coverage ?? null,
-        },
-      });
+        }),
+      );
+      continue;
     }
 
-    if (input.schoolMean !== undefined || input.schoolStdev !== undefined) {
-      // 🔴 undefined(미전송)와 null(명시 삭제)은 다르다. `?? null` 로 덮으면 평균만
-      //    정정해 보낸 원장의 표준편차가 조용히 사라진다(adv1 🟡). 보낸 필드만 바꾼다.
-      await tx.predictionRun.update({
+    // 예측이 없는 학생이면 스냅샷도 없다 — 없는 값을 0 이나 평균으로 지어내지 않는다.
+    const snapshot = index.byStudent.get(entry.studentId) ?? null;
+    const interval = snapshot?.interval ?? null;
+    creates.push({
+      runId: index.runId,
+      studentId: entry.studentId,
+      actualScore: entry.actualScore,
+      predictedScore: snapshot?.expectedScore ?? null,
+      residual:
+        snapshot === null
+          ? null
+          : computeResidual(entry.actualScore, snapshot.expectedScore),
+      intervalHit:
+        interval === null ? false : isIntervalHit(entry.actualScore, interval),
+      predictedLower: interval?.lower ?? null,
+      predictedUpper: interval?.upper ?? null,
+      predictedCoverage: interval?.coverage ?? null,
+    });
+  }
+
+  if (creates.length > 0) {
+    operations.push(db.actualExamScore.createMany({ data: creates }));
+  }
+  if (input.schoolMean !== undefined || input.schoolStdev !== undefined) {
+    // 🔴 undefined(미전송)와 null(명시 삭제)은 다르다. `?? null` 로 덮으면 평균만
+    //    정정해 보낸 원장의 표준편차가 조용히 사라진다(adv1 🟡). 보낸 필드만 바꾼다.
+    operations.push(
+      db.predictionRun.update({
         where: { id: index.runId },
         data: {
           ...(input.schoolMean !== undefined
@@ -266,9 +275,13 @@ export async function attachActualScores(
             : {}),
           actualRecordedAt: new Date(),
         },
-      });
-    }
-  });
+      }),
+    );
+  }
+
+  if (operations.length > 0) {
+    await db.$transaction(operations);
+  }
 
   return { ok: true, payload: await listActualScores(index.runId, userId) };
 }

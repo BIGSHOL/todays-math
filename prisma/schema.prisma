@@ -285,6 +285,18 @@ model Problem {
   @@index([userId, unitId])
   @@index([originProblemId])
   @@index([pool, unitId, reviewStatus, directUseAllowed])
+  // 문제은행 목록 정렬 인덱스 — GET /api/problems 는 `createdAt desc, id desc` 로 정렬하고
+  // 같은 where 로 count 까지 한 번 더 돈다. `created_at` 을 선두로 갖는 인덱스가 **하나도
+  // 없어서**(마이그레이션 전수 대조 2026-08-17) 무필터 기본 진입이 47,152행 Seq Scan +
+  // 정렬을 2회 유발했다. 정렬 키 순서(desc, desc)를 그대로 인덱스에 심어야 Sort 가 빠진다.
+  //
+  // ⚠️ `id desc` 를 빼면 안 된다 — 이관 배치는 createdAt 이 같은 행이 수천 건이라
+  //    보조 키 없이는 페이지가 겹친다(route.ts 주석 참조). 인덱스도 그 순서를 따라간다.
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  // 단원 필터가 걸린 목록(문제은행 화면의 기본 사용법)이 같은 정렬을 그대로 탄다.
+  @@index([unitId, createdAt(sort: Desc), id(sort: Desc)])
+  // 검수 대기 목록 — reviewStatus 로 좁힌 뒤 최신순.
+  @@index([reviewStatus, createdAt(sort: Desc)])
   @@map("problem")
 }
 
