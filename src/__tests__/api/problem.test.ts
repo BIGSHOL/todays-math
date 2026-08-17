@@ -233,6 +233,49 @@ describe("[T3.1] GET /api/problems — 단원/난이도/유형/출처/검수상�
     ]);
     spy.mockRestore();
   });
+
+  // 계단식 단원 필터(S-08) — 테스트 더블은 relation 필터를 실행하지 못하므로
+  // orderBy 테스트와 같은 spy 패턴으로 where 형태를 고정한다.
+  it("grade/chapterPrefix는 problem 컬럼이 아니라 unit relation 필터로 보낸다", async () => {
+    const spy = vi.spyOn(db.problem, "findMany");
+    const res = await listProblems(
+      jsonRequest(
+        `http://localhost/api/problems?grade=${encodeURIComponent("초1")}&chapterPrefix=${encodeURIComponent("1-")}`,
+        "GET",
+      ),
+    );
+    expect(res.status).toBe(200);
+    const where = spy.mock.calls.at(-1)![0]?.where as {
+      AND: Record<string, unknown>[];
+    };
+    expect(where.AND).toContainEqual({
+      unit: { grade: "초1", chapter: { startsWith: "1-" } },
+    });
+    // problem 컬럼 필터로 새면 Prisma가 알 수 없는 컬럼으로 죽는다.
+    for (const clause of where.AND) {
+      expect(clause).not.toHaveProperty("grade");
+      expect(clause).not.toHaveProperty("chapterPrefix");
+    }
+    spy.mockRestore();
+  });
+
+  it("chapter가 있으면 정확 일치를 쓰고 chapterPrefix는 무시한다", async () => {
+    const spy = vi.spyOn(db.problem, "findMany");
+    const res = await listProblems(
+      jsonRequest(
+        `http://localhost/api/problems?grade=${encodeURIComponent("중2")}&chapter=${encodeURIComponent("2. 부등식")}&chapterPrefix=${encodeURIComponent("1-")}`,
+        "GET",
+      ),
+    );
+    expect(res.status).toBe(200);
+    const where = spy.mock.calls.at(-1)![0]?.where as {
+      AND: Record<string, unknown>[];
+    };
+    expect(where.AND).toContainEqual({
+      unit: { grade: "중2", chapter: "2. 부등식" },
+    });
+    spy.mockRestore();
+  });
 });
 
 describe("[T3.1] GET /api/problems/{id} — LaTeX 본문 무손실 조회", () => {

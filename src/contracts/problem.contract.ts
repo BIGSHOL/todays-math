@@ -3,7 +3,7 @@
  *
  * 대응 API 경로:
  *   POST   /api/problems                    — 문제 등록 (수동 자작/기출 직접 입력)
- *   GET    /api/problems                     — 문제 목록 조회 (필터: unitId/difficulty/problemType/source/reviewStatus)
+ *   GET    /api/problems                     — 문제 목록 조회 (필터: unitId/grade/chapter/chapterPrefix/difficulty/problemType/source/reviewStatus)
  *   GET    /api/problems/{id}                — 문제 단건 조회
  *   PATCH  /api/problems/{id}                — 문제 수정 (본문/정답/풀이 등)
  *   DELETE /api/problems/{id}                — 문제 삭제
@@ -111,6 +111,14 @@ export const problemListResponseSchema = listResponseSchema(problemSchema);
 // ── 조회 필터 ────────────────────────────────────────────
 export const problemFilterQuerySchema = z.strictObject({
   unitId: uuidSchema.optional(),
+  /**
+   * 계단식 단원 필터(S-08) — Unit relation 기준으로 거른다.
+   * grade: 학년("초1"·"중2"·고등 과목명). chapter: 중단원 정확 일치.
+   * chapterPrefix: 중단원 접두 일치("1-" = 초등 1학기) — chapter가 있으면 무시.
+   */
+  grade: z.string().min(1).optional(),
+  chapter: z.string().min(1).optional(),
+  chapterPrefix: z.string().min(1).optional(),
   difficulty: difficultySchema.optional(),
   problemType: problemTypeSchema.optional(),
   source: problemSourceSchema.optional(),

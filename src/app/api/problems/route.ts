@@ -1,6 +1,7 @@
 /**
  * POST/GET /api/problems — 문제 등록(수동 자작/기출 직접 입력) · 공용 풀+본인 문제 목록
- * (필터: unitId/difficulty/problemType/source/reviewStatus/pool, 페이지네이션).
+ * (필터: unitId/grade/chapter/chapterPrefix/difficulty/problemType/source/reviewStatus/pool,
+ *  페이지네이션 — grade/chapter/chapterPrefix는 Unit relation 필터, S-08 계단식 단원 필터).
  * 대응 계약: src/contracts/problem.contract.ts
  *
  * ⚠️ reviewStatus는 등록 요청에 포함되지 않는다(계약이 strictObject로 거부) — 신규 문제는
@@ -82,9 +83,23 @@ export async function GET(request: NextRequest) {
   );
   if (!parsed.success) return validationError(parsed.error);
 
-  const { page, pageSize, ...filters } = parsed.data;
+  const { page, pageSize, grade, chapter, chapterPrefix, ...filters } =
+    parsed.data;
+  // 계단식 단원 필터(S-08) — problem 컬럼이 아니라 Unit relation으로 거른다.
+  // chapter(정확 일치)가 있으면 chapterPrefix(접두 일치)는 무시한다.
+  const unitWhere: {
+    grade?: string;
+    chapter?: string | { startsWith: string };
+  } = {};
+  if (grade) unitWhere.grade = grade;
+  if (chapter) unitWhere.chapter = chapter;
+  else if (chapterPrefix) unitWhere.chapter = { startsWith: chapterPrefix };
   const where = {
-    AND: [problemVisibleWhere(session.id), filters],
+    AND: [
+      problemVisibleWhere(session.id),
+      filters,
+      ...(Object.keys(unitWhere).length > 0 ? [{ unit: unitWhere }] : []),
+    ],
   };
 
   const [rows, total] = await Promise.all([
