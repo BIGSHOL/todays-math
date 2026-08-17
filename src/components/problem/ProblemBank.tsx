@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { PROBLEM_CARD_MIN_WIDTH } from "@/components/print/tokens";
 import { Button } from "@/components/ui/Button";
 import type { Difficulty, ReviewStatus } from "@/contracts/common.contract";
 import type { ProblemEntity, ProblemType } from "@/contracts/problem.contract";
@@ -26,6 +27,25 @@ type Panel = "register" | "generate" | "transform" | null;
 
 /** 초등 chapter는 "1-1 9까지의 수" 꼴 — 앞 숫자가 학기. 그 외 학년은 학기 개념이 없다. */
 const SEMESTER_CHAPTER_RE = /^[12]-/;
+
+/**
+ * 목록 다단 배치 (2026-08-17 원장님 지시 "기본 2단, 창 크기 따라 3단 혹은 1단").
+ *
+ * 카드 **본문**은 인쇄 문항 열과 같은 폭으로 고정돼 있어(`PaperProblemView`) 넓은
+ * 화면에서도 늘어나지 않는다 — 그래서 한 단으로 깔면 우측이 통째로 빈다. 폭을 늘리면
+ * 줄바꿈이 지면과 갈라지므로(2026-08-17 "인쇄시와 동일한 뷰"), 폭은 그대로 두고
+ * **카드를 여러 열로** 깐다.
+ *
+ * 창 크기 브레이크포인트를 박지 않고 `auto-fit` 을 쓰는 이유: 실제로 남는 폭에 반응해야
+ * 사이드 여백·확대 배율이 달라져도 맞는다. `min(100%, …)` 가 **너무 좁은 창 가드**다 —
+ * 남는 폭이 카드 한 장보다 좁아지면 열 하한이 100%로 내려가 1단이 된다(가로 스크롤 대신).
+ *
+ * `print:block` — 문제은행 화면을 그대로 인쇄할 때의 결과를 종전과 같게 둔다.
+ * 시험지 인쇄는 이 화면이 아니라 `TestPrint` 가 그린다.
+ */
+const PROBLEM_GRID_STYLE = {
+  gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, ${PROBLEM_CARD_MIN_WIDTH}), 1fr))`,
+} as const;
 
 function matchesFilters(
   problem: ProblemEntity,
@@ -402,7 +422,11 @@ export function ProblemBank() {
         />
       ) : null}
 
-      <section className="mt-4">
+      <section
+        className="mt-4 grid items-start gap-6 print:block"
+        style={PROBLEM_GRID_STYLE}
+        data-problem-grid
+      >
         {!loading && !error && problems.length === 0 ? (
           <p className="text-[12.5px] text-[#6A6A68]">등록된 문제가 없습니다</p>
         ) : !loading && !error ? (

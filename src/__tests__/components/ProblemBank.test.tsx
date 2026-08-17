@@ -13,6 +13,7 @@ import { http, HttpResponse } from "msw";
 import { describe, expect, it } from "vitest";
 
 import ProblemsPage from "@/app/(main)/problems/page";
+import { PROBLEM_CARD_MIN_WIDTH } from "@/components/print/tokens";
 import {
   MOCK_AI_GENERATED_PROBLEMS,
   MOCK_AI_TRANSFORMED_PROBLEMS,
@@ -571,5 +572,40 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
     await screen.findByText("1건 변형");
     expect(screen.getByText(/을 유한소수로 나타내어라/)).toBeInTheDocument();
     expect(MOCK_AI_TRANSFORMED_PROBLEMS[0]!.content).toContain("11");
+  });
+});
+
+/**
+ * 2026-08-17 원장님 지시 — "문제 보기 우측 공간 너무 많이 남아서 기본 2단에
+ * 창 크기에 따라서 3단 혹은 1단 자동화해야겠고 (너무 좁은 창 방지 필요하긴함)".
+ *
+ * jsdom 은 레이아웃을 계산하지 않으므로 **열 규칙 자체**를 잠근다. 실제 열 수는
+ * 실물 브라우저 실측으로 확인했다 (docs/planning/tracks/reports/render-a-layout.md).
+ */
+describe("[렌더 수리 A] 문제은행 — 목록 다단 배치", () => {
+  it("남는 폭에 반응하는 auto-fit 그리드로 깐다 (브레이크포인트 하드코딩 없음)", async () => {
+    const { container } = await renderBank();
+    const grid = container.querySelector<HTMLElement>("[data-problem-grid]");
+
+    expect(grid).not.toBeNull();
+    expect(grid!.className).toContain("grid");
+    expect(grid!.style.gridTemplateColumns).toContain("auto-fit");
+  });
+
+  it("열 하한은 카드 최소 폭 — 그보다 좁으면 100%로 떨어져 1단이 된다", async () => {
+    const { container } = await renderBank();
+    const grid = container.querySelector<HTMLElement>("[data-problem-grid]")!;
+
+    // min(100%, <카드 최소 폭>) — 너무 좁은 창에서 가로 스크롤 대신 1단으로.
+    expect(grid.style.gridTemplateColumns).toContain("min(100%,");
+    expect(grid.style.gridTemplateColumns).toContain(PROBLEM_CARD_MIN_WIDTH);
+  });
+
+  it("카드에 세로 여백을 겹쳐 주지 않는다 — 간격은 그리드 gap 하나만", async () => {
+    const { container } = await renderBank();
+    const card = container.querySelector("[data-problem-grid] article");
+
+    expect(card).not.toBeNull();
+    expect(card!.className).not.toMatch(/(^|\s)mb-6(\s|$)/);
   });
 });
