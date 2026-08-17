@@ -12,10 +12,6 @@ import {
 } from "@/components/auth/authErrors";
 import { AuthField } from "@/components/auth/AuthField";
 import { Button } from "@/components/ui/Button";
-import {
-  authLoginRequestSchema,
-  authSignupRequestSchema,
-} from "@/contracts/auth.contract";
 import { normalizeCallbackUrl } from "@/lib/callbackUrl";
 
 type AuthFormProps = {
@@ -46,6 +42,12 @@ export function AuthForm({ mode, callbackUrl }: AuthFormProps) {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setErrors({});
+
+    // 계약 스키마는 **제출 시점에** 불러온다 (성능 수리 C-1). 정적 import 면
+    // zod + 계약 모듈(279KB)이 로그인/가입 초기 번들에 실려 첫 페인트를 막는다.
+    // 검증 규칙·오류 문구는 그대로다 — 불러오는 시점만 옮겼다.
+    const { authLoginRequestSchema, authSignupRequestSchema } =
+      await import("@/contracts/auth.contract");
 
     if (isSignup) {
       const parsed = authSignupRequestSchema.safeParse({

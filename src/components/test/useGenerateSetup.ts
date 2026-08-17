@@ -3,23 +3,22 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import {
-  classListResponseSchema,
-  studentListResponseSchema,
-  type ClassEntity,
-  type StudentEntity,
-} from "@/contracts/class.contract";
+import type { ClassEntity, StudentEntity } from "@/contracts/class.contract";
 import type { TestType } from "@/contracts/common.contract";
-import { errorResponseSchema } from "@/contracts/common.contract";
-import { problemGenerateResponseSchema } from "@/contracts/problem.contract";
-import {
-  insufficientProblemsErrorResponseSchema,
-  testGenerateResponseSchema,
-} from "@/contracts/test.contract";
-import {
-  unitListResponseSchema,
-  type UnitEntity,
-} from "@/contracts/unit.contract";
+import type { UnitEntity } from "@/contracts/unit.contract";
+
+/**
+ * 계약 스키마는 **런타임 값으로 정적 import 하지 않는다** (성능 수리 C-1).
+ *
+ * 이 훅은 5개 계약 모듈에서 6개 스키마를 정적으로 끌어와 출제 설정 화면 초기
+ * 번들에 zod + 계약 모듈(279KB)을 얹고 있었다. 여기 검증은 전부 `fetch` 응답
+ * (또는 사용자 제출) 이후라 그 시점에 불러도 늦지 않다. 검증은 그대로 남는다.
+ */
+const classContract = () => import("@/contracts/class.contract");
+const commonContract = () => import("@/contracts/common.contract");
+const problemContract = () => import("@/contracts/problem.contract");
+const testContract = () => import("@/contracts/test.contract");
+const unitContract = () => import("@/contracts/unit.contract");
 
 export type InsufficientState = {
   unitId: string;
@@ -117,6 +116,8 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
         if (!classRes.ok || !unitRes.ok) {
           throw new Error("목록을 불러오지 못했습니다");
         }
+        const [{ classListResponseSchema }, { unitListResponseSchema }] =
+          await Promise.all([classContract(), unitContract()]);
         const classBody = classListResponseSchema.parse(await classRes.json());
         const unitBody = unitListResponseSchema.parse(await unitRes.json());
         if (cancelled) return;
@@ -149,6 +150,7 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
     fetch(`/api/students?classId=${classId}`)
       .then(async (res) => {
         if (!res.ok) throw new Error("fail");
+        const { studentListResponseSchema } = await classContract();
         return studentListResponseSchema.parse(await res.json());
       })
       .then((body) => {
@@ -230,6 +232,13 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
           }),
         });
         const json: unknown = await res.json();
+        const [
+          {
+            insufficientProblemsErrorResponseSchema,
+            testGenerateResponseSchema,
+          },
+          { errorResponseSchema },
+        ] = await Promise.all([testContract(), commonContract()]);
         if (res.status === 422) {
           const parsed =
             insufficientProblemsErrorResponseSchema.safeParse(json);
@@ -294,6 +303,7 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
         setSubmitError("AI 문제 생성에 실패했습니다");
         return;
       }
+      const { problemGenerateResponseSchema } = await problemContract();
       const created = problemGenerateResponseSchema.parse(await res.json());
       setGeneratedPendingCount(created.data.length);
     } catch {

@@ -1,0 +1,58 @@
+[
+  {
+    "route": "/tests/[id]/print",
+    "kb": 848.7
+  },
+  {
+    "route": "/exam/[id]",
+    "kb": 468.4
+  },
+  {
+    "route": "/",
+    "kb": 466.7
+  },
+  {
+    "route": "/problems",
+    "kb": 462.9
+  },
+  {
+    "route": "/exam",
+    "kb": 462.2
+  },
+  {
+    "route": "/tests/new",
+    "kb": 461.3
+  },
+  {
+    "route": "/classes",
+    "kb": 459.8
+  },
+  {
+    "route": "/tests/[id]",
+    "kb": 458.7
+  },
+  {
+    "route": "/login",
+    "kb": 458
+  },
+  {
+    "route": "/signup",
+    "kb": 458
+  },
+  {
+    "route": "/onboarding",
+    "kb": 447.7
+  },
+  {
+    "route": "/_not-found",
+    "kb": 441.1
+  },
+  {
+    "route": "/dev/katex",
+    "kb": 441.1
+  },
+  {
+    "route": "/dev/transfer-qa",
+    "kb": 441.1
+  }
+]

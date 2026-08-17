@@ -3,12 +3,16 @@
  *
  * 실 API(T7.7·T7.10)가 붙으면 **이 파일의 경로 상수만** 바뀐다. 화면은 계약 타입만 본다.
  */
-import {
-  examRoundDetailResponseSchema,
-  examRoundListResponseSchema,
-  type ExamRoundDetail,
-  type ExamRoundSummary,
-} from "./examScreen.contract";
+import type { ExamRoundDetail, ExamRoundSummary } from "./examScreen.contract";
+
+/**
+ * 계약 스키마는 **런타임 값으로 정적 import 하지 않는다** (성능 수리 C-1).
+ *
+ * `examScreen.contract` 는 zod 와 `predictor.contract`(blueprintSchema 등)를 끌어와
+ * 계기판 초기 번들에 279KB 를 얹고 있었다. 여기서 하는 검증은 전부 `fetch` 응답이
+ * 온 뒤라 그 시점에 불러도 늦지 않다. 검증 자체는 그대로 남는다.
+ */
+const examContract = () => import("./examScreen.contract");
 
 const ROUNDS_PATH = "/api/exam/rounds";
 
@@ -22,12 +26,14 @@ const ACTUAL_PATH = (runId: string) => `/api/predictions/${runId}/actual`;
 export async function loadExamRounds(): Promise<ExamRoundSummary[]> {
   const res = await fetch(ROUNDS_PATH);
   if (!res.ok) throw new Error("회차 목록을 불러오지 못했습니다");
+  const { examRoundListResponseSchema } = await examContract();
   return examRoundListResponseSchema.parse(await res.json()).data;
 }
 
 export async function loadExamRound(id: string): Promise<ExamRoundDetail> {
   const res = await fetch(`${ROUNDS_PATH}/${id}`);
   if (!res.ok) throw new Error("회차를 불러오지 못했습니다");
+  const { examRoundDetailResponseSchema } = await examContract();
   return examRoundDetailResponseSchema.parse(await res.json()).data;
 }
 

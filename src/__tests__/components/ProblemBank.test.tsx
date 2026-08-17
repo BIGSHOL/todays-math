@@ -115,7 +115,8 @@ describe("[T3.3 S-08] 문제은행 — 필터 (MSW)", () => {
     await user.selectOptions(screen.getByLabelText("소단원"), liveUnit.id);
     await user.click(screen.getByRole("button", { name: "등록" }));
 
-    const form = screen.getByRole("form", { name: "등록" });
+    // 패널은 지연 청크다(ProblemPanelsLazy) — 단언은 그대로 두고 대기만 붙인다.
+    const form = await screen.findByRole("form", { name: "등록" });
     expect(within(form).getByLabelText("단원")).toHaveValue(liveUnit.id);
   });
 
@@ -482,7 +483,8 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
     await screen.findByText(/밑변의 길이가/);
     await user.click(screen.getByRole("button", { name: "등록" }));
 
-    const form = screen.getByRole("form", { name: "등록" });
+    // 패널은 지연 청크다(ProblemPanelsLazy) — 단언은 그대로 두고 대기만 붙인다.
+    const form = await screen.findByRole("form", { name: "등록" });
     await user.selectOptions(within(form).getByLabelText("출처"), "manual");
     await user.selectOptions(within(form).getByLabelText("난이도"), "easy");
     await user.selectOptions(within(form).getByLabelText("유형"), "계산");
@@ -502,7 +504,8 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
     const { user } = await renderBank();
     await user.click(screen.getByRole("button", { name: "등록" }));
 
-    const form = screen.getByRole("form", { name: "등록" });
+    // 패널은 지연 청크다(ProblemPanelsLazy) — 단언은 그대로 두고 대기만 붙인다.
+    const form = await screen.findByRole("form", { name: "등록" });
     await user.selectOptions(
       within(form).getByLabelText("단원"),
       MOCK_PROBLEM_WITH_FRACTION.unitId,
