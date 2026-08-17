@@ -8,7 +8,13 @@
  * 교체: 1클릭, 확인 모달 없음. 인쇄 링크만 /tests/[id]/print
  */
 import { describe, expect, it } from "vitest";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 
@@ -65,6 +71,51 @@ describe("[T4.3 S-05] 검수 — 문제 카드", () => {
     expect(within(first).getAllByText("0.28").length).toBeGreaterThan(0);
     expect(within(first).getByText("해설")).toBeVisible();
     expect(within(first).queryByText("해설 없음")).not.toBeInTheDocument();
+  });
+
+  it("닫혀 있는 동안에는 답·해설 수식을 조판하지 않는다", async () => {
+    // `<details>` 가 닫혀 있어도 React 는 자식을 렌더한다 — 30문항이면 보이지도
+    // 않는 KaTeX 파이프라인 60개를 그대로 지불한다. 그 비용을 다시 들여오는
+    // 회귀를 막는다. (화면에 보이는 것은 전후가 같다 — 닫힘은 어차피 안 보인다.)
+    const user = userEvent.setup();
+    const problem = MOCK_PROBLEMS.find((item) => item.solution !== null)!;
+
+    render(<ReviewProblemCard orderIndex={1} problem={problem} />);
+    const card = screen.getByRole("article", { name: "문 1" });
+
+    // 접힌 상태: 제목("답"/"해설")은 그대로, 발췌 밖 수식은 조판되지 않았다.
+    expect(within(card).getByText("답")).toBeInTheDocument();
+    expect(within(card).getByText("해설")).toBeInTheDocument();
+    const closedFormulas = card.querySelectorAll(".katex").length;
+
+    await user.click(card.querySelector("summary")!);
+
+    // 펼치면 바로 보인다 — 한 박자 기다릴 필요가 없다.
+    expect(card.querySelectorAll(".katex").length).toBeGreaterThan(
+      closedFormulas,
+    );
+    expect(within(card).getByText("답")).toBeVisible();
+  });
+
+  it("summary 클릭을 거치지 않고 펼쳐져도 답과 해설이 나온다", async () => {
+    // 키보드(Enter/Space) 활성화는 브라우저가 summary 에 click 을 흘려 주지만
+    // jsdom 은 그 활성화 동작을 흉내 내지 않는다. 그래서 **어떤 경로로 열리든**
+    // 마지막에 반드시 일어나는 일(open 이 켜지고 toggle 이 뜬다)을 검증한다 —
+    // 페이지 내 찾기·코드로 여는 경우도 같은 경로다.
+    const problem = MOCK_PROBLEMS.find((item) => item.solution !== null)!;
+
+    render(<ReviewProblemCard orderIndex={1} problem={problem} />);
+    const card = screen.getByRole("article", { name: "문 1" });
+    const details = card.querySelector("details")!;
+    const closedFormulas = card.querySelectorAll(".katex").length;
+
+    details.open = true;
+    fireEvent(details, new Event("toggle"));
+
+    expect(card.querySelectorAll(".katex").length).toBeGreaterThan(
+      closedFormulas,
+    );
+    expect(within(card).getByText("답")).toBeVisible();
   });
 
   it("해설이 없으면 해설 없음이다", async () => {

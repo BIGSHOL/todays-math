@@ -30,6 +30,10 @@ export function PaperProblemView({
       content={content}
       figureUrls={figureUrls}
       className={styles.problemText}
+      // 인쇄 지면(framed=false)에서는 지연 로딩을 쓰지 않는다 — 인쇄 시점에
+      // 아직 안 그려진 그림이 빠지면 학생이 못 푸는 시험지가 나간다(절대 규칙 6).
+      // 화면 목록에서만 지연 로딩한다.
+      deferFigures={framed}
     />
   );
 

@@ -1,12 +1,61 @@
 "use client";
 
+import { memo } from "react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import type { UnitEntity } from "@/contracts/unit.contract";
 
 import { FIELD_CLASS } from "./labels";
 import { useGenerateSetup } from "./useGenerateSetup";
+
+const LABEL_CLASS =
+  "grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]";
+
+type UnitSelectProps = {
+  label: string;
+  value: string;
+  units: UnitEntity[];
+  onChange: (value: string) => void;
+};
+
+/**
+ * 소단원 목록은 실제로 1,472개다. 이 select 를 폼 안에 그대로 두면 **문항 수
+ * 칸에 글자 하나 칠 때마다** option 1,472개가 두 벌씩 다시 조정된다.
+ * memo 로 잘라 두면 값이 안 바뀐 select 는 React 가 아예 들어가지 않는다.
+ * (`setRangeStartUnitId` 는 useState 의 setter 라 참조가 고정이므로 memo 가 산다 —
+ *  여기에 화살표 함수를 새로 만들어 넘기면 이 수리가 통째로 죽는다.)
+ *
+ * 같은 저장소 ClassManage 의 AddClassForm 처럼 "입력 상태를 격리"하는 것과 목적은
+ * 같지만 방식이 다르다. 여기 값들은 훅과 **양방향**이다 — selectClass 가 반의
+ * 기본 문항 수·난이도를, reduceCount 가 줄인 문항 수를 되쓴다. 상태를 로컬로
+ * 내리면 그 되쓰기와 동기화가 필요해져 화면 동작이 달라질 위험이 있어,
+ * 대신 무거운 목록 쪽을 잘라 냈다. 그려지는 DOM 은 전과 같다.
+ */
+const UnitSelect = memo(function UnitSelect({
+  label,
+  value,
+  units,
+  onChange,
+}: UnitSelectProps) {
+  return (
+    <label className={LABEL_CLASS}>
+      {label}
+      <select
+        className={FIELD_CLASS}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+      >
+        {units.map((unit) => (
+          <option key={unit.id} value={unit.id}>
+            {unit.section}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+});
 
 type Props = {
   initialClassId?: string;
@@ -146,38 +195,18 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
 
           {form.testType === "review" ? (
             <div className="grid gap-4 sm:grid-cols-2">
-              <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]">
-                시작 소단원
-                <select
-                  className={FIELD_CLASS}
-                  value={form.rangeStartUnitId}
-                  onChange={(event) =>
-                    form.setRangeStartUnitId(event.target.value)
-                  }
-                >
-                  {form.units.map((unit) => (
-                    <option key={unit.id} value={unit.id}>
-                      {unit.section}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]">
-                끝 소단원
-                <select
-                  className={FIELD_CLASS}
-                  value={form.rangeEndUnitId}
-                  onChange={(event) =>
-                    form.setRangeEndUnitId(event.target.value)
-                  }
-                >
-                  {form.units.map((unit) => (
-                    <option key={unit.id} value={unit.id}>
-                      {unit.section}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <UnitSelect
+                label="시작 소단원"
+                value={form.rangeStartUnitId}
+                units={form.units}
+                onChange={form.setRangeStartUnitId}
+              />
+              <UnitSelect
+                label="끝 소단원"
+                value={form.rangeEndUnitId}
+                units={form.units}
+                onChange={form.setRangeEndUnitId}
+              />
             </div>
           ) : null}
 

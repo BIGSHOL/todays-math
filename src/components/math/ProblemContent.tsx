@@ -20,15 +20,30 @@ export interface ProblemContentProps {
    */
   figureUrls?: string[];
   className?: string;
+  /**
+   * 그림을 지연 로딩할지. 화면 목록(문제은행·검수)은 true —
+   * `public/figures` 는 12,129장에 최대 1.95MB 라 화면 밖 그림까지 원본 크기로
+   * 내려받아 디코딩하면 목록이 통째로 느려진다.
+   *
+   * **인쇄 지면은 false** 로 온다(`PaperProblemView`가 `framed`로 판단).
+   * 인쇄 시점에 아직 안 그려진 그림이 빠지면 학생이 못 푸는 시험지가 나간다
+   * (절대 규칙 6). false 면 `loading`/`decoding` 을 **아예 붙이지 않아**
+   * 인쇄 지면의 `<img>` 마크업이 수리 전과 한 글자도 다르지 않다.
+   */
+  deferFigures?: boolean;
 }
 
 export function ProblemContent({
   content,
   figureUrls,
   className = "",
+  deferFigures = true,
 }: ProblemContentProps) {
   const { question, choices } = parseProblemContent(content);
   const figures = figureUrls ?? [];
+  // undefined 면 React 가 속성 자체를 만들지 않는다 — 인쇄 지면은 종전 그대로.
+  const figureLoading = deferFigures ? "lazy" : undefined;
+  const figureDecoding = deferFigures ? "async" : undefined;
 
   return (
     <div className={className}>
@@ -48,6 +63,10 @@ export function ProblemContent({
               // 원본이 최대 1,423px 이라 자연 크기로 두면 본문을 압도한다(실측 표시폭 1,178px).
               // 작은 그림은 그대로 두고 큰 것만 줄인다.
               className="h-auto w-auto max-w-full sm:max-w-[360px] print:max-w-[70mm]"
+              // width/height 는 넣지 않는다 — 원본 치수를 모르는 채로 적으면
+              // 비율이 틀어져 지면이 어긋난다.
+              loading={figureLoading}
+              decoding={figureDecoding}
             />
           ))}
         </div>
