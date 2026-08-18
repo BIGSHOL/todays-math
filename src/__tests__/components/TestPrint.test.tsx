@@ -143,11 +143,63 @@ describe("TestPrint — 인쇄 사고 방지", () => {
     ],
   };
 
-  it("잘릴 만한 문항이 있으면 인쇄 전에 번호로 알린다", () => {
+  it("넘칠 만한 문항이 있으면 인쇄 전에 번호로 알린다", () => {
     render(<TestPrint data={longDoc} />);
     const warning = screen.getByRole("status");
     expect(warning).toHaveTextContent("2번");
     expect(warning).toHaveTextContent("본문이 길다");
+  });
+
+  /**
+   * 문구는 **실제로 일어나는 일**을 가리켜야 한다. 문항 칸(`.problemItem`)에는
+   * `overflow` 가 없어서 넘친 내용은 «잘리는» 게 아니라 옆 문항 위에 겹쳐 찍힌다
+   * (적대적 리뷰 ③ §3). 「잘린 문항」을 찾으라고 하면 원장은 못 찾는다.
+   */
+  it("경고가 «잘림»이 아니라 «겹침»을 가리킨다", () => {
+    render(<TestPrint data={longDoc} />);
+    const warning = screen.getByRole("status");
+    expect(warning).toHaveTextContent("겹쳐 인쇄");
+    expect(warning.textContent).not.toMatch(/잘리|잘린|잘림/);
+  });
+
+  /**
+   * 정답지는 **다른 지면**이다 — `.answerSolutions` 는 2단이고 클립이 걸려 있어
+   * 넘친 해설이 3번째 단으로 밀려 통째로 사라진다. 문제지 경고와 따로 알린다
+   * (적대적 리뷰 ③ §5, 실측 정답지 480장 중 134장에서 해설이 사라졌다).
+   */
+  it("해설이 정답지에서 빠질 만하면 쪽·번호로 따로 알린다", () => {
+    const longSolution = Array.from(
+      { length: 60 },
+      (_, i) => `${i}단계에서 양변을 정리하면 값이 나온다.`,
+    ).join(" ");
+    render(
+      <TestPrint
+        data={{
+          ...PRINT_DOCUMENT,
+          problems: PRINT_DOCUMENT.problems.map((p) => ({
+            ...p,
+            solution: longSolution,
+          })),
+        }}
+      />,
+    );
+    const answerKeyWarning = screen
+      .getAllByRole("status")
+      .find((el) => el.textContent?.includes("정답지"));
+    expect(answerKeyWarning).toBeDefined();
+    expect(answerKeyWarning).toHaveTextContent("1쪽");
+    expect(answerKeyWarning).toHaveTextContent(
+      "해설이 통째로 빠질 수 있습니다",
+    );
+  });
+
+  it("해설이 짧으면 정답지 경고는 안 뜬다", () => {
+    render(<TestPrint data={PRINT_DOCUMENT} />);
+    expect(
+      screen
+        .queryAllByRole("status")
+        .filter((el) => el.textContent?.includes("정답지")),
+    ).toHaveLength(0);
   });
 
   it("멀쩡한 시험지에는 경고를 띄우지 않는다 — 늘 켜져 있으면 아무도 안 본다", () => {
