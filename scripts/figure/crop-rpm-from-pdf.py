@@ -176,7 +176,8 @@ def largest_cluster(parts: list[fitz.Rect]) -> list[fitz.Rect]:
     return _largest_run(parts, "y")
 
 
-def figure_rect(page, box: fitz.Rect, stem_key: str = "") -> fitz.Rect | None:
+def figure_rect(page, box: fitz.Rect, stem_key: str = "",
+                min_overlap: float = 12.0) -> fitz.Rect | None:
     """문항 사각형 **안에서 그림만** 골라 낸다.
 
     `source_coords` 는 문항 블록 전체(발문 + 그림)다. 그대로 오리면 발문이 지면에
@@ -275,7 +276,11 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "") -> fitz.Rect | None:
         if is_page_furniture(r):
             continue
         inter = r & box
-        if inter.is_empty or inter.width < 12 or inter.height < 12:
+        # 겹친 부분이 «그림이라 할 만한 크기»인가를 본다 — 후보가 얼마나 들어왔나가
+        # 아니다(한 이미지가 두 문항에 걸치면 비율은 뜻을 잃는다).
+        # ⚠️ 상자가 **추정치**일 때는 이 문턱을 낮춰야 한다 — 발문으로 상자를 잡는
+        #    `crop-pdf-by-stem.py` 는 그림이 상자 끝에 5pt 만 걸치는 일이 흔하다.
+        if inter.is_empty or inter.width < min_overlap or inter.height < min_overlap:
             continue
         core.append(r & bleed)
         core_raw.append(r)

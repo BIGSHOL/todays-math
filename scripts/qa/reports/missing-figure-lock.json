@@ -2,7 +2,7 @@
  "적용": "그림 유실 문항 출제 제외 (directUseAllowed=false)",
  "기준시각": "2026-08-18T10:23:09.822Z",
  "되돌리기": "ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-missing-figure-lock.ts --revert",
- "잠근건수": 735,
+ "잠근건수": 726,
  "이전상태": [
   {
    "id": "000e5663-981d-49e0-9cf1-4eb948d979de",
@@ -27,11 +27,6 @@
   {
    "id": "016328a3-8fd5-4941-87e7-3227454c6f28",
    "externalId": "019fd1d8-1c6f-74b8-8039-6104f75ca3c5",
-   "directUseAllowed": true
-  },
-  {
-   "id": "019424bd-0131-4b25-8fb1-c8c811f8786f",
-   "externalId": "4177-17",
    "directUseAllowed": true
   },
   {
@@ -162,11 +157,6 @@
   {
    "id": "0b73cace-5855-4a2f-88c7-9d9dc77ca2f9",
    "externalId": "019fd1dc-f56a-74cf-be2b-f4e76b7eb6e2",
-   "directUseAllowed": true
-  },
-  {
-   "id": "0bb21d15-3f6c-492a-878e-1e018c972a9d",
-   "externalId": "3535-8",
    "directUseAllowed": true
   },
   {
@@ -747,11 +737,6 @@
   {
    "id": "347bc5cd-fb30-4b81-bd15-d8b34ebd156c",
    "externalId": "019fd1da-bdca-752a-872e-cc5f9240ec78",
-   "directUseAllowed": true
-  },
-  {
-   "id": "348a1545-72c9-4ac9-b624-ed81ea759666",
-   "externalId": "5724-17",
    "directUseAllowed": true
   },
   {
@@ -1365,11 +1350,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "641c4ec2-2f1f-4ab1-99bf-731893a3d8a9",
-   "externalId": "3523-13",
-   "directUseAllowed": true
-  },
-  {
    "id": "6448de99-dbd0-4ffd-a4ee-c484b629a16e",
    "externalId": "019fd1db-0870-73cf-9613-5648d00ff69a",
    "directUseAllowed": true
@@ -1960,11 +1940,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "90113f40-8241-4138-ae9c-4261b7662067",
-   "externalId": "5655-11",
-   "directUseAllowed": true
-  },
-  {
    "id": "9018c460-755b-4392-b633-051526fff264",
    "externalId": "019fd1db-208b-77da-9197-f5354b10335b",
    "directUseAllowed": true
@@ -2377,11 +2352,6 @@
   {
    "id": "b59e3469-7479-4d34-8804-e2b737bff0c8",
    "externalId": "019fd1de-5b46-7608-8c5f-86ea36d75096",
-   "directUseAllowed": true
-  },
-  {
-   "id": "b602234d-da90-4186-bc87-e50fc0c1881d",
-   "externalId": "5325-19",
    "directUseAllowed": true
   },
   {
@@ -3185,11 +3155,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "e7544d26-2dc5-4b16-8e4c-d377b11e25cb",
-   "externalId": "4214-12",
-   "directUseAllowed": true
-  },
-  {
    "id": "e78c9cc7-7fd0-47c7-8489-d5daed034d30",
    "externalId": "019fd1de-f63c-72ee-89cb-2a9365e781d7",
    "directUseAllowed": true
@@ -3307,11 +3272,6 @@
   {
    "id": "ed1b0b54-7e0b-4000-86f1-84ca42975810",
    "externalId": "019fd1dc-025d-7117-9bbc-d8208bf872e3",
-   "directUseAllowed": true
-  },
-  {
-   "id": "ed5133aa-a1fb-4d71-ba77-b2edbfca31ce",
-   "externalId": "4344-14",
    "directUseAllowed": true
   },
   {
@@ -3602,11 +3562,6 @@
   {
    "id": "3a837afd-d5a9-4466-816f-10bd26b3514c",
    "externalId": "5215-19",
-   "directUseAllowed": true
-  },
-  {
-   "id": "3da0993c-7831-4ad2-bbe7-3b8061a2503b",
-   "externalId": "4139-8",
    "directUseAllowed": true
   },
   {
