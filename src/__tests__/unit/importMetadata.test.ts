@@ -120,6 +120,7 @@ describe("[이관] externalId 기반 중복 차단", () => {
       score: null,
       figureUrls: [],
       figureSource: null,
+      figureDims: [],
     };
 
     const missing = selectMissingLoadRows(
@@ -153,6 +154,7 @@ describe("[이관] externalId 기반 중복 차단", () => {
       score: null,
       figureUrls: [],
       figureSource: null,
+      figureDims: [],
     };
     expect(selectMissingLoadRows([{ ...base, userId: "u" }], [])).toHaveLength(
       1,
