@@ -9,7 +9,7 @@ import type {
   TestPrintDocument,
 } from "@/components/print/types";
 import { paginateAnswerKey } from "@/lib/printLayout";
-import { assessOverflowRisk } from "@/lib/printOverflow";
+import { assessAnswerKeyRisk, assessOverflowRisk } from "@/lib/printOverflow";
 import { packProblems } from "@/lib/printPack";
 import { assignEssayLabels } from "@/lib/tests/essayLabels";
 
@@ -68,6 +68,12 @@ export function TestPrint({ data, initialMode = "questions" }: TestPrintProps) {
   const questionPages = useMemo(() => packProblems(problems), [problems]);
   // 지면 형태는 D-07 확정이라 바꾸지 않는다 — 잘릴 만하면 **알리기만** 한다.
   const overflowRisks = useMemo(() => assessOverflowRisk(problems), [problems]);
+  // 정답지는 다른 지면이라 따로 본다 — `.answerSolutions` 는 2단이고 클립이 걸려
+  // 있어서, 넘친 해설은 **3번째 단으로 밀려 통째로 사라진다**(부분 잘림이 아니다).
+  const answerKeyRisks = useMemo(
+    () => assessAnswerKeyRisk(problems),
+    [problems],
+  );
   const answerPages = useMemo(() => paginateAnswerKey(problems), [problems]);
   // 서술형 순번은 **시험지 전체**를 가로지르므로 장별로 셀 수 없다.
   // 여기서 한 번 만들어 넘긴다 — 매 렌더 새 Map 이면 JaseupTemplate 의 memo 가 죽는다.
@@ -149,13 +155,33 @@ export function TestPrint({ data, initialMode = "questions" }: TestPrintProps) {
             {printError}
           </p>
         ) : null}
+        {/*
+          문구는 **실제로 일어나는 일**을 가리켜야 한다. 문항 칸(`.problemItem`)에는
+          `overflow` 가 없어서 넘친 내용은 «잘리는» 게 아니라 **옆 문항 위에 겹쳐
+          찍히고**, 아래 칸에서 넘치면 보기·정답란이 지면 밖으로 밀려 사라진다
+          (적대적 리뷰 ③ §3). 「잘린 문항」을 찾으라고 하면 원장은 못 찾는다 —
+          눈에 들어오는 것은 «글자가 겹친 옆 문항»이다.
+        */}
         {overflowRisks.length ? (
           <p className={styles.printWarning} role="status">
-            지면을 넘길 수 있는 문항이 있습니다 —{" "}
+            지면을 넘겨 옆 문항과 겹쳐 인쇄될 수 있는 문항이 있습니다 —{" "}
             {overflowRisks
               .map((r) => `${r.number}번(${r.reasons.join(", ")})`)
               .join(" · ")}
-            . 인쇄 미리보기에서 잘리지 않았는지 확인하십시오.
+            . 인쇄 미리보기에서 글자가 겹치거나 보기·정답란이 빠지지 않았는지
+            확인하십시오.
+          </p>
+        ) : null}
+        {answerKeyRisks.length ? (
+          <p className={styles.printWarning} role="status">
+            정답지에서 해설이 통째로 빠질 수 있습니다 —{" "}
+            {answerKeyRisks
+              .map(
+                (r) =>
+                  `${r.page}쪽 ${r.numbers.map((n) => `${n}번`).join("·")}`,
+              )
+              .join(" · ")}
+            . 정답지 미리보기에서 해당 문항의 해설이 있는지 확인하십시오.
           </p>
         ) : null}
       </header>

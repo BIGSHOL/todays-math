@@ -14,6 +14,15 @@ export interface TestPrintProblem {
   questionType?: string | null;
   /** 원본 시험지에서 오려 온 그림 경로들. 없으면 빈 배열. */
   figureUrls?: string[];
+  /**
+   * `figureUrls` 와 **같은 순서**로 짝지은 원본 치수 `[w1,h1,w2,h2,…]`
+   * (`Problem.figureDims`). 넘침 판정이 그림 높이를 계산하는 유일한 근거다 —
+   * 브라우저는 판정 시점에 파일을 못 읽는다.
+   *
+   * ⚠️ 길이가 `figureUrls.length × 2` 가 아니면 **통째로 «모른다»로 받는다**
+   *    (`parseFigureDimensions`). 짝이 어긋난 값을 흘리면 판정이 안다고 착각한다.
+   */
+  figureDims?: number[];
 }
 
 export interface TestPrintDocument {

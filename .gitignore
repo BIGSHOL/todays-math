@@ -73,3 +73,6 @@ scripts/classify/reports/target.jsonl
 scripts/classify/reports/units-db.json
 scripts/classify/reports/db-labels.jsonl
 scripts/classify/reports/loaded-external-ids.json
+
+# 지면 실측 캐시 (scripts/qa/measure-*.tsx --json) — 재생성 가능, 수 MB
+.measure/
