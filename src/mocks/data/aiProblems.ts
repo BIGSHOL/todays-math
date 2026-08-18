@@ -23,17 +23,31 @@ import type { ProblemEntity } from "@/contracts/problem.contract";
 import {
   aiGeneratedProblemId,
   aiTransformedProblemId,
+  problemCodeSuffix,
   USER_TEACHER_ID,
 } from "./ids";
-import { MOCK_EMPTY_PROBLEM_UNIT } from "./units";
+import { MOCK_EMPTY_PROBLEM_UNIT, MOCK_UNITS } from "./units";
 import { MOCK_PROBLEMS } from "./problems";
 
 const GENERATED_UNIT_ID = MOCK_EMPTY_PROBLEM_UNIT.id; // 427 일차부등식의 활용(농도)
+
+/**
+ * 문항 코드(D-53) — AI 생성물도 **같은 체계**를 쓴다(부류가 코드에서 읽히면 그 자체가
+ * 출처 노출이다, id-scheme-review §5-5). 서버(DB 트리거)가 붙이는 값이라 픽스처도
+ * «서버가 준 값»의 자리에 있다.
+ */
+function mockCode(unitId: string, seq: number): string {
+  const prefix =
+    MOCK_UNITS.find((unit) => unit.id === unitId)?.problemCodePrefix ??
+    MOCK_UNITS[0]!.problemCodePrefix;
+  return `${prefix}-${problemCodeSuffix(seq)}`;
+}
 
 // ── AI 생성 (POST /api/problems/generate) — 5개 ──────────────
 export const MOCK_AI_GENERATED_PROBLEMS: ProblemEntity[] = [
   {
     id: aiGeneratedProblemId(1),
+    problemCode: mockCode(GENERATED_UNIT_ID, 2000 + 1),
     userId: USER_TEACHER_ID,
     unitId: GENERATED_UNIT_ID,
     source: "ai_generated",
@@ -54,6 +68,7 @@ export const MOCK_AI_GENERATED_PROBLEMS: ProblemEntity[] = [
   },
   {
     id: aiGeneratedProblemId(2),
+    problemCode: mockCode(GENERATED_UNIT_ID, 2000 + 2),
     userId: USER_TEACHER_ID,
     unitId: GENERATED_UNIT_ID,
     source: "ai_generated",
@@ -73,6 +88,7 @@ export const MOCK_AI_GENERATED_PROBLEMS: ProblemEntity[] = [
   },
   {
     id: aiGeneratedProblemId(3),
+    problemCode: mockCode(GENERATED_UNIT_ID, 2000 + 3),
     userId: USER_TEACHER_ID,
     unitId: GENERATED_UNIT_ID,
     source: "ai_generated",
@@ -93,6 +109,7 @@ export const MOCK_AI_GENERATED_PROBLEMS: ProblemEntity[] = [
   },
   {
     id: aiGeneratedProblemId(4),
+    problemCode: mockCode(GENERATED_UNIT_ID, 2000 + 4),
     userId: USER_TEACHER_ID,
     unitId: GENERATED_UNIT_ID,
     source: "ai_generated",
@@ -112,6 +129,7 @@ export const MOCK_AI_GENERATED_PROBLEMS: ProblemEntity[] = [
   },
   {
     id: aiGeneratedProblemId(5),
+    problemCode: mockCode(GENERATED_UNIT_ID, 2000 + 5),
     userId: USER_TEACHER_ID,
     unitId: GENERATED_UNIT_ID,
     source: "ai_generated",
@@ -135,6 +153,7 @@ export const MOCK_AI_GENERATED_PROBLEMS: ProblemEntity[] = [
 export const MOCK_AI_TRANSFORMED_PROBLEMS: ProblemEntity[] = [
   {
     id: aiTransformedProblemId(1),
+    problemCode: mockCode(MOCK_PROBLEMS[0]!.unitId, 3000 + 1),
     userId: USER_TEACHER_ID,
     unitId: MOCK_PROBLEMS[0]!.unitId, // 원본: 유리수와 소수(분수 문제) 변형
     source: "transformed",
@@ -153,6 +172,7 @@ export const MOCK_AI_TRANSFORMED_PROBLEMS: ProblemEntity[] = [
   },
   {
     id: aiTransformedProblemId(2),
+    problemCode: mockCode(MOCK_PROBLEMS[13]!.unitId, 3000 + 2),
     userId: USER_TEACHER_ID,
     unitId: MOCK_PROBLEMS[13]!.unitId, // 원본: 지수법칙 문제 변형
     source: "transformed",
@@ -171,6 +191,7 @@ export const MOCK_AI_TRANSFORMED_PROBLEMS: ProblemEntity[] = [
   },
   {
     id: aiTransformedProblemId(3),
+    problemCode: mockCode(MOCK_PROBLEMS[21]!.unitId, 3000 + 3),
     userId: USER_TEACHER_ID,
     unitId: MOCK_PROBLEMS[21]!.unitId, // 원본: 다항식의 곱셈 문제 변형
     source: "transformed",

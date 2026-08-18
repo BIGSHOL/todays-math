@@ -1,0 +1,18 @@
+-- 문항 코드 (D-53) — 「코드 없는 문항은 없다」를 컬럼 자체에 못 박는다.
+--
+-- 왜 마이그레이션이 둘인가: 앞 마이그레이션(20260818210000_problem_code)이 돌 때는
+-- 기존 47,152행에 아직 코드가 없다. 그래서 그때는 `CHECK (problem_code IS NOT NULL)
+-- NOT VALID` 로 **새 행만** 막아 두고(기존 행은 그대로 두고), 백필
+-- (`scripts/qa/backfill-problem-code.ts --apply`)이 끝난 뒤 여기서 확정한다.
+--
+-- ⚠️ **순서가 있다.** 코드가 빈 행이 하나라도 남아 있으면 이 마이그레이션은 **실패한다.**
+--    그게 맞다 — 조용히 지나가면 「코드 없는 문항」이 남은 채로 스키마만 그렇다고 말한다.
+--    실패하면 백필을 먼저 돌려라:
+--      ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/backfill-problem-code.ts --apply
+--
+-- 되돌리기: ALTER TABLE "problem" ALTER COLUMN "problem_code" DROP NOT NULL;
+--           (컬럼째 없애려면 앞 마이그레이션 머리의 DROP 문.)
+--
+-- `problem_problem_code_present` CHECK 는 **남겨 둔다.** 중복이지만, 누가 NOT NULL 을
+-- 풀더라도 그 제약이 여전히 새 행을 막는다.
+ALTER TABLE "problem" ALTER COLUMN "problem_code" SET NOT NULL;

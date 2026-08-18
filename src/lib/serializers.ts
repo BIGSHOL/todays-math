@@ -68,6 +68,9 @@ export function serializeProgress(row: ProgressRow): ProgressEntity {
 export function serializeProblem(row: ProblemRow): ProblemEntity {
   return {
     id: row.id,
+    // 컬럼을 **그대로** 내보낸다. 단원에서 다시 만들지 않는다 — 코드는 부여 당시의
+    // 스냅샷이고, 다시 계산하면 원장님이 적어 둔 코드가 다른 문항을 가리킨다(D-53).
+    problemCode: row.problemCode,
     userId: row.userId,
     unitId: row.unitId,
     source: row.source,

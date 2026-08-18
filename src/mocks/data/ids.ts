@@ -8,6 +8,10 @@
  *
  * 대응 API 경로: 없음 (전 계약 파일이 참조하는 테스트 전용 데이터 모듈).
  */
+import {
+  PROBLEM_CODE_ALPHABET,
+  PROBLEM_CODE_SUFFIX_LENGTH,
+} from "@/contracts/problemCode.contract";
 
 /**
  * 유효한 UUID(v4 형식) 문자열을 만든다.
@@ -42,6 +46,21 @@ export const STUDENT_IDS = [1, 2, 3, 4, 5].map((n) => makeId("3000", n));
 // ── 단원 (Unit) — 실제 값은 src/mocks/data/units.ts가 시드에서 발췌해 채운다.
 export function unitId(seq: number): string {
   return makeId("4000", seq);
+}
+
+/**
+ * 문항 코드(D-53)의 «무작위 4자» 자리 — 픽스처는 **결정적**이어야 하므로
+ * 일련번호를 코드 글자집합(32자) 기수로 편다. 실제 DB 는 트리거가 무작위로 뽑는다.
+ * 32^4 = 1,048,576 이라 픽스처 수백 개는 겹치지 않는다.
+ */
+export function problemCodeSuffix(seq: number): string {
+  let n = seq;
+  let out = "";
+  for (let i = 0; i < PROBLEM_CODE_SUFFIX_LENGTH; i += 1) {
+    out = PROBLEM_CODE_ALPHABET[n % PROBLEM_CODE_ALPHABET.length] + out;
+    n = Math.floor(n / PROBLEM_CODE_ALPHABET.length);
+  }
+  return out;
 }
 
 // ── 문제 (Problem) — 등록형(manual/past_exam) 30건.
