@@ -107,9 +107,16 @@ export function estimateProblemLines(content: string): number {
   let plain: string[] = [];
   let box: string[] | null = null;
 
+  /**
+   * ⚠️ 예전에는 평문 줄을 **한 덩어리로 이어 붙여** 셌다. 그때는 지문이 늘 한 줄
+   * (`collapseWhitespace` 가 개행을 다 녹인다)이라 같은 값이었다.
+   * 2026-08-18 부터 계산 과정 다단 등식이 **문단으로 갈린다** — 문단마다 제 줄을
+   * 차지하므로 따로 세지 않으면 늘어난 세로 공간을 한 줄도 못 본다.
+   * (문단 사이 여백 `prose-p:my-2` 는 위아래가 겹쳐 약 8px = 0.4줄이라 따로 세지 않는다.)
+   */
   const flushPlain = () => {
     if (plain.length === 0) return;
-    lines += linesFor(plain.join(" "));
+    for (const part of plain) lines += Math.max(1, linesFor(part));
     plain = [];
   };
   const flushBox = () => {
@@ -163,10 +170,9 @@ export function estimateProblemLines(content: string): number {
  * 즉 **엄격도를 그대로 두고 보는 것만 바꿨다.**
  *
  * 2026-08-18 재보정(연산자 여백을 세게 된 뒤) — 한계 14 는 그대로가 최선이다:
- *   폭 규칙 709건 · 줄 수 한계 14 → 593건 (13 은 926, 15 는 386 으로 더 멀다)
- *   둘 다 잡음   317
- *   줄 수만 잡음 276  ← 글자는 짧은데 **배치가 높은** 문항. 폭 총합은 이걸 못 본다
- *   폭만 잡음    392  ← 글자는 긴데 배치가 납작한 문항(긴 수식이 흐르는 경우 등)
+ *   폭 규칙 709건 · 줄 수 한계 14 → 600건 (13 은 930, 15 는 396 으로 더 멀다)
+ *   둘 다 잡음   319 · 줄 수만 잡음 281 · 폭만 잡음 390
+ * (600건은 계산 과정 다단 등식이 문단으로 갈리면서 593건에서 7건 늘어난 값이다.)
  *
  * ⚠️ 임계값을 바꿀 때는 `OVERFLOW_WIDTH_LIMIT` 주석과 같은 규칙을 지킬 것 —
  *    **같은 경고 건수로 맞춰** 비교한다. 분모가 다르면 "새 규칙이 더 잡는다"가
