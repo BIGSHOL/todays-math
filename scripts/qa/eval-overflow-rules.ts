@@ -25,6 +25,11 @@
  */
 import { readFileSync } from "node:fs";
 
+import {
+  assertHeightCacheFresh,
+  measuredRowsHash,
+} from "./heightCacheManifest";
+
 import { PrismaClient } from "@prisma/client";
 
 import type { TestPrintProblem } from "../../src/components/print/types";
@@ -119,6 +124,7 @@ interface Row {
   figureUrls: string[];
   figureDims: number[] | null;
   solution: string | null;
+  questionType: string | null;
 }
 
 function arg(name: string): string | undefined {
@@ -172,14 +178,16 @@ async function main() {
   const heights = JSON.parse(readFileSync(heightsPath, "utf8")) as Height[];
   const rows = (await prisma
     .$queryRawUnsafe(
-      `SELECT id, content, figure_urls AS "figureUrls", figure_dims AS "figureDims", solution
+      `SELECT id, content, figure_urls AS "figureUrls", figure_dims AS "figureDims", solution,
+              question_type AS "questionType"
        FROM problem ORDER BY id`,
     )
     .catch(
       async () =>
         // figure_dims 컬럼이 아직 없는 시점에도 돌아야 한다 (마이그레이션 전 측정).
         (await prisma.$queryRawUnsafe(
-          `SELECT id, content, figure_urls AS "figureUrls", NULL::int[] AS "figureDims", solution
+          `SELECT id, content, figure_urls AS "figureUrls", NULL::int[] AS "figureDims", solution,
+                question_type AS "questionType"
          FROM problem ORDER BY id`,
         )) as Row[],
     )) as Row[];
@@ -199,14 +207,48 @@ async function main() {
     throw new Error(
       `캐시에 있는 문항 ${missingRows}건이 DB 에 없다 — 캐시가 낡았다. 다시 재라.`,
     );
-  if (heights.length !== rows.length)
-    console.warn(
-      `⚠️ 캐시 ${heights.length}건 vs DB ${rows.length}건 — 캐시가 낡았을 수 있다.`,
-    );
 
-  const slot = firstPage
+  /**
+   * **«넘쳤는가»의 참은 캐시가 실측한 칸(`availPx`)이다.** 예전에는 제품 상수
+   * (`JASEUP_MEASURED_PX.continuationSlot`)로 갈랐는데, 그 상수는 한계값을
+   * 유도하는 바로 그 값이라 **참과 규칙이 같이 움직였다** — 484 를 600 으로
+   * 망가뜨리면 「실측 넘침 2,726 → 715 · 재현율 96.1% → 97.1%」로 **성적이 올랐다**
+   * (적대적 리뷰 ④ E). 지금은 상수가 지면과 어긋나면 아래에서 멈춘다.
+   */
+  const slots = [...new Set(heights.map((h) => h.availPx))];
+  if (slots.length !== 1)
+    throw new Error(
+      `캐시의 문항 칸이 ${slots.length}가지다(${slots.slice(0, 5).join(", ")}) — 캐시가 섞였다.`,
+    );
+  const slot = slots[0]!;
+  const constant = firstPage
     ? JASEUP_MEASURED_PX.firstPageSlot
     : JASEUP_MEASURED_PX.continuationSlot;
+  if (slot !== constant)
+    throw new Error(
+      `실측 문항 칸 ${slot}px 과 제품 상수 ${constant}px 이 다르다 — 한계값이 지면과 어긋난 값에서 유도되고 있다.
+` +
+        `캐시가 ${firstPage ? "첫 장" : "이어지는 장"} 것이 맞는지 먼저 보고, 맞다면 JASEUP_MEASURED_PX 를 고쳐라.`,
+    );
+
+  /**
+   * 캐시가 **지금 지면**을 보고 잰 것인지 지문으로 대조한다. 없거나 어긋나면 멈춘다 —
+   * 예전에는 문항 수만 보고 조용히 통과해서, `fitsTwoColumns` 를 바꾼 뒤에도
+   * 같은 캐시로 「재현율 95.2%」를 찍었다(적대적 리뷰 ④ F).
+   */
+  assertHeightCacheFresh(heightsPath, {
+    kind: firstPage ? "first" : "continuation",
+    rows: heights.length,
+    rowsHash: measuredRowsHash(
+      rows.map((r) => ({
+        id: r.id,
+        content: r.content,
+        figureUrls: r.figureUrls,
+        questionType: r.questionType,
+      })),
+    ),
+    slotPx: slot,
+  });
   const dimsSource = noDims
     ? "없음(전부 모른다)"
     : (dimsFile ?? "DB figure_dims");
@@ -295,12 +337,16 @@ async function main() {
       answer: "",
       solution: null,
     };
-    const placed = firstPage ? [problem] : [filler, filler, problem];
+    // 판정은 «그 장에 몇 개인가»로 칸을 고른다(혼자면 두 배). 캐시는 장마다 두
+    // 문항을 그려 잰 것이므로, 판정에도 **짝을 채워** 같은 칸을 보게 한다.
+    const placed = firstPage
+      ? [problem, filler]
+      : [filler, filler, problem, filler];
     const at = firstPage ? 1 : 3;
     return {
       pid: h.pid,
-      overflows: h.neededPx > slot,
-      excess: h.neededPx - slot,
+      overflows: h.neededPx > h.availPx,
+      excess: h.neededPx - h.availPx,
       width: displayWidth(content),
       lines: estimateProblemLines(content, dims),
       legacyLines: legacyLines(content),

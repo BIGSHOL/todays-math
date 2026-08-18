@@ -12,6 +12,7 @@
  */
 import { chromium } from "@playwright/test";
 
+import { JASEUP_MEASURED_PX } from "../../src/lib/printGeometry";
 import {
   estimateProblemPx,
   OVERFLOW_LINE_LIMIT,
@@ -49,6 +50,69 @@ const FIXTURES: Array<{ key: string; content: string; figureUrls?: string[] }> =
       content: `다음 중 옳은 것은?\n1. ${"가".repeat(5)}\n2. ${"나".repeat(5)}\n3. ${"다".repeat(5)}\n4. ${"라".repeat(5)}\n5. ${"마".repeat(5)}`,
     },
   ];
+
+/**
+ * **문항 칸 높이를 실제로 잴다.**
+ *
+ * 예전에는 이 스크립트가 칸 높이를 재지 않고 `paperProbe.MEASURED` 에 적힌 숫자를
+ * 그대로 **되읽어 찍었다.** 한계값(23·19)이 바로 그 칸에서 유도되는데, 정작 그
+ * 값만은 아무도 지면과 대조하지 않았다 — 「손으로 고치지 말 것, 이 스크립트가
+ * 뽑는다」는 주석이 그 값에는 거짓이었다(적대적 리뷰 ④, 10-handoff §8.5 「동어반복 측정」).
+ *
+ * 칸은 «그 장에 몇 개인가»로 갈린다(`flex: 1 1 0%`) — 그래서 넷을 다 잴다.
+ */
+async function measureSlots(): Promise<Record<string, number>> {
+  const slot = (kind: "first" | "continuation", count: number, page: number) =>
+    renderPage(
+      kind,
+      Array.from({ length: count }, (_, i) =>
+        renderSlot(
+          { id: `${kind}-${count}-${i}`, content: "짧은 발문." },
+          i + 1,
+        ),
+      ),
+      page,
+    );
+  const url = writeProbe(
+    "probe-slots.html",
+    await paperDocument([
+      slot("continuation", 2, 2),
+      slot("continuation", 1, 2),
+      slot("first", 2, 1),
+      slot("first", 1, 1),
+    ]),
+  );
+  const browser = await chromium.launch();
+  const page = await browser.newPage({
+    viewport: { width: 1000, height: 1200 },
+  });
+  await page.emulateMedia({ media: "print" });
+  try {
+    await page.goto(url, { waitUntil: "load" });
+    await page.evaluate(() => document.fonts.ready);
+    assertPaperSane(await page.evaluate(GUARD_SCRIPT));
+    return (await page.evaluate(() => {
+      const res: Record<string, number> = {};
+      const keys = [
+        "continuationSlot",
+        "soloContinuationSlot",
+        "firstPageSlot",
+        "soloFirstPageSlot",
+      ];
+      document.querySelectorAll(".a4Page").forEach((section, index) => {
+        const item = section.querySelector(".problemItem") as HTMLElement;
+        const style = getComputedStyle(item);
+        res[keys[index]!] =
+          item.clientHeight -
+          parseFloat(style.paddingTop) -
+          parseFloat(style.paddingBottom);
+      });
+      return res;
+    })) as Record<string, number>;
+  } finally {
+    await browser.close();
+  }
+}
 
 async function main() {
   const slots = FIXTURES.map((f, i) =>
@@ -204,9 +268,37 @@ async function main() {
     );
   }
 
+  /* ── 문항 칸 — **되읽지 말고 실제로 잴다** ─────────────────── */
+  const slotPx = await measureSlots();
+  console.log("\n문항 칸 (그 장의 문항 수로 갈린다 — `flex: 1 1 0%`)");
+  let slotMismatch = 0;
+  for (const [key, measured] of Object.entries(slotPx)) {
+    const constant = (JASEUP_MEASURED_PX as Record<string, number>)[key]!;
+    const ok = Math.abs(measured - constant) < 0.5;
+    if (!ok) slotMismatch += 1;
+    console.log(
+      `  ${key.padEnd(22)} 실측 ${measured.toFixed(1).padStart(7)}px  상수 ${String(constant).padStart(7)}  ${ok ? "" : "← 어긋남"}`,
+    );
+  }
+  if (slotMismatch > 0) {
+    console.error(
+      `\n칸 ${slotMismatch}개가 상수와 다르다 — 한계값이 지면과 어긋난 값에서 유도되고 있다.` +
+        `\nJASEUP_MEASURED_PX 와 paperProbe.MEASURED 를 **같이** 고칠 것.`,
+    );
+    process.exitCode = 1;
+  }
+  // paperProbe 쪽 사본도 같은 값이어야 한다 — 둘이 갈라지면 측정이 지면과 갈린다.
+  if (
+    MEASURED.slotContinuationPx !== JASEUP_MEASURED_PX.continuationSlot ||
+    MEASURED.slotFirstPagePx !== JASEUP_MEASURED_PX.firstPageSlot
+  ) {
+    console.error("paperProbe.MEASURED 와 JASEUP_MEASURED_PX 가 다르다.");
+    process.exitCode = 1;
+  }
+
   console.log(
-    `\n한계 ${OVERFLOW_LINE_LIMIT}줄 = ${(OVERFLOW_LINE_LIMIT * line).toFixed(1)}px — 문항 칸 ${MEASURED.slotContinuationPx}px 에서 유도` +
-      `\n첫 장 ${OVERFLOW_LINE_LIMIT_FIRST_PAGE}줄 = ${(OVERFLOW_LINE_LIMIT_FIRST_PAGE * line).toFixed(1)}px — 첫 장 칸 ${MEASURED.slotFirstPagePx}px 에서 유도`,
+    `\n한계 ${OVERFLOW_LINE_LIMIT}줄 = ${(OVERFLOW_LINE_LIMIT * line).toFixed(1)}px — 문항 칸 ${slotPx.continuationSlot!.toFixed(1)}px 에서 유도` +
+      `\n첫 장 ${OVERFLOW_LINE_LIMIT_FIRST_PAGE}줄 = ${(OVERFLOW_LINE_LIMIT_FIRST_PAGE * line).toFixed(1)}px — 첫 장 칸 ${slotPx.firstPageSlot!.toFixed(1)}px 에서 유도`,
   );
 }
 

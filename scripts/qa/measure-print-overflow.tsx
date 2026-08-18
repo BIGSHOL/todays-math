@@ -8,12 +8,20 @@
  *   npx tsx scripts/qa/measure-print-overflow.tsx --take 400      # 표본
  *   npx tsx scripts/qa/measure-print-overflow.tsx --screen        # 화면 미리보기 매체로
  *   npx tsx scripts/qa/measure-print-overflow.tsx --json out.json
+ *   npx tsx scripts/qa/measure-print-overflow.tsx --verify out.json --take 2000
+ *
+ * `--json` 은 높이 캐시와 함께 **지문**(`out.manifest.json`)을 남긴다. 지면 CSS·
+ * `displayWidth`·본문이 바뀌면 캐시는 거짓이 되는데, 채점기가 그걸 볼 방법이
+ * 그것뿐이다(적대적 리뷰 ④ F — 지문이 없을 때 실제로 조용히 통과했다).
+ *
+ * `--verify` 는 이미 있는 캐시를 **표본으로 다시 재서** 대조하고, 한 건도 다르지
+ * 않으면 지문을 새로 찍는다. 전수 30분을 다시 쓰지 않고 캐시를 되살리는 자리다.
  */
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import { PrismaClient } from "@prisma/client";
-import { chromium } from "@playwright/test";
+import { chromium, type Page } from "@playwright/test";
 
 import { displayWidth } from "../../src/lib/math/displayWidth";
 import {
@@ -21,6 +29,11 @@ import {
   estimateProblemLines,
 } from "../../src/lib/printOverflow";
 import type { TestPrintProblem } from "../../src/components/print/types";
+import {
+  buildHeightCacheManifest,
+  measuredRowsHash,
+  writeHeightCacheManifest,
+} from "./heightCacheManifest";
 import {
   MEASURED,
   assertPaperSane,
@@ -51,6 +64,101 @@ interface Measured {
   boxPx: number;
 }
 
+/**
+ * 지면을 그려 높이를 잰다. **장마다 두 문항**을 넣는다 — 칸은 `flex: 1 1 0%` 로
+ * 나뉘므로 한 장에 하나만 넣으면 칸이 두 배가 되어 다른 것을 재게 된다.
+ */
+async function measureRows(
+  page: Page,
+  rows: Row[],
+  kind: "first" | "continuation",
+  onProgress?: (done: number) => void,
+): Promise<Measured[]> {
+  const all: Measured[] = [];
+  const PAGES_PER_BATCH = 60;
+  for (let start = 0; start < rows.length; start += PAGES_PER_BATCH * 2) {
+    const chunk = rows.slice(start, start + PAGES_PER_BATCH * 2);
+    const pages: string[] = [];
+    for (let i = 0; i < chunk.length; i += 2) {
+      const slots = chunk.slice(i, i + 2).map((row, j) =>
+        renderSlot(
+          {
+            id: row.id,
+            content: row.content ?? "",
+            figureUrls: row.figureUrls,
+            essayNumber: row.questionType === "서술형" ? 1 : null,
+          },
+          i + j + 1,
+        ),
+      );
+      pages.push(renderPage(kind, slots, kind === "first" ? 1 : 2));
+    }
+    const url = writeProbe("probe-overflow.html", await paperDocument(pages));
+    await page.goto(url, { waitUntil: "load" });
+    await page.evaluate(() => document.fonts.ready);
+    assertPaperSane(await page.evaluate(GUARD_SCRIPT));
+
+    const measured = (await page.evaluate(() => {
+      const out: unknown[] = [];
+      document.querySelectorAll(".problemItem").forEach((node) => {
+        const item = node as HTMLElement;
+        const num = item.querySelector(".questionNumber") as HTMLElement;
+        const blank = item.querySelector(".answerBlank") as HTMLElement;
+        const view = item.querySelector("[data-paper-view]") as HTMLElement;
+        const style = getComputedStyle(item);
+        let boxPx = 0;
+        view.querySelectorAll("[data-box-card]").forEach((b) => {
+          boxPx += (b as HTMLElement).getBoundingClientRect().height;
+        });
+        const figures = view.querySelector(
+          "div[class*='mt-3']",
+        ) as HTMLElement | null;
+        const choices = view.querySelector(
+          "div[class*='mt-4']",
+        ) as HTMLElement | null;
+        out.push({
+          pid: item.dataset.pid,
+          // ⚠️ grid row 가 아니라 article 의 content box 로 잰다(paperProbe 주석 (4)).
+          availPx:
+            item.clientHeight -
+            parseFloat(style.paddingTop) -
+            parseFloat(style.paddingBottom),
+          neededPx:
+            blank.getBoundingClientRect().bottom -
+            num.getBoundingClientRect().top,
+          figurePx: figures ? figures.getBoundingClientRect().height : 0,
+          choicePx: choices ? choices.getBoundingClientRect().height : 0,
+          boxPx,
+        });
+      });
+      return out;
+    })) as Measured[];
+    all.push(...measured);
+    onProgress?.(all.length);
+  }
+  return all;
+}
+
+/**
+ * 실측 칸 높이를 하나로 모은다. 값이 갈리면 **지면이 우리가 아는 그 지면이 아니다** —
+ * 조용히 평균 내지 말고 멈춘다.
+ */
+function singleSlot(measured: Measured[]): number {
+  const distinct = [...new Set(measured.map((m) => m.availPx))];
+  if (distinct.length !== 1)
+    throw new Error(
+      `문항 칸 높이가 ${distinct.length}가지다(${distinct.slice(0, 5).join(", ")}) — 지면이 바뀌었다. 측정 중단.`,
+    );
+  return distinct[0]!;
+}
+
+async function fetchRows(take: number): Promise<Row[]> {
+  return (await prisma.$queryRawUnsafe(
+    `SELECT id, content, figure_urls AS "figureUrls", question_type AS "questionType"
+       FROM problem ORDER BY id ${take > 0 ? `LIMIT ${take}` : ""}`,
+  )) as Row[];
+}
+
 async function main() {
   const arg = (name: string) => {
     const i = process.argv.indexOf(name);
@@ -58,13 +166,13 @@ async function main() {
   };
   const take = Number(arg("--take") ?? 0);
   const outPath = arg("--json");
+  const verifyPath = arg("--verify");
   const media = process.argv.includes("--screen") ? "screen" : "print";
   const kind = process.argv.includes("--first-page") ? "first" : "continuation";
 
-  const rows = (await prisma.$queryRawUnsafe(
-    `SELECT id, content, figure_urls AS "figureUrls", question_type AS "questionType"
-       FROM problem ORDER BY id ${take > 0 ? `LIMIT ${take}` : ""}`,
-  )) as Row[];
+  if (verifyPath) return verify(verifyPath, take || 2000, kind, media);
+
+  const rows = await fetchRows(take);
   console.log(
     `문항 ${rows.length.toLocaleString()}건 · ${kind} 장 · ${media} 매체`,
   );
@@ -75,77 +183,25 @@ async function main() {
   });
   if (media === "print") await page.emulateMedia({ media: "print" });
 
-  const all: Measured[] = [];
-  const PAGES_PER_BATCH = 60;
+  let all: Measured[];
   try {
-    for (let start = 0; start < rows.length; start += PAGES_PER_BATCH * 2) {
-      const chunk = rows.slice(start, start + PAGES_PER_BATCH * 2);
-      const pages: string[] = [];
-      for (let i = 0; i < chunk.length; i += 2) {
-        const slots = chunk.slice(i, i + 2).map((row, j) =>
-          renderSlot(
-            {
-              id: row.id,
-              content: row.content ?? "",
-              figureUrls: row.figureUrls,
-              essayNumber: row.questionType === "서술형" ? 1 : null,
-            },
-            i + j + 1,
-          ),
-        );
-        pages.push(renderPage(kind, slots, kind === "first" ? 1 : 2));
-      }
-      const url = writeProbe("probe-overflow.html", await paperDocument(pages));
-      await page.goto(url, { waitUntil: "load" });
-      await page.evaluate(() => document.fonts.ready);
-      assertPaperSane(await page.evaluate(GUARD_SCRIPT));
-
-      const measured = (await page.evaluate(() => {
-        const out: unknown[] = [];
-        document.querySelectorAll(".problemItem").forEach((node) => {
-          const item = node as HTMLElement;
-          const num = item.querySelector(".questionNumber") as HTMLElement;
-          const blank = item.querySelector(".answerBlank") as HTMLElement;
-          const view = item.querySelector("[data-paper-view]") as HTMLElement;
-          const style = getComputedStyle(item);
-          let boxPx = 0;
-          view.querySelectorAll("[data-box-card]").forEach((b) => {
-            boxPx += (b as HTMLElement).getBoundingClientRect().height;
-          });
-          const figures = view.querySelector(
-            "div[class*='mt-3']",
-          ) as HTMLElement | null;
-          const choices = view.querySelector(
-            "div[class*='mt-4']",
-          ) as HTMLElement | null;
-          out.push({
-            pid: item.dataset.pid,
-            // ⚠️ grid row 가 아니라 article 의 content box 로 잰다(paperProbe 주석 (4)).
-            availPx:
-              item.clientHeight -
-              parseFloat(style.paddingTop) -
-              parseFloat(style.paddingBottom),
-            neededPx:
-              blank.getBoundingClientRect().bottom -
-              num.getBoundingClientRect().top,
-            figurePx: figures ? figures.getBoundingClientRect().height : 0,
-            choicePx: choices ? choices.getBoundingClientRect().height : 0,
-            boxPx,
-          });
-        });
-        return out;
-      })) as Measured[];
-      all.push(...measured);
-      process.stdout.write(`\r측정 ${all.length}/${rows.length}`);
-    }
+    all = await measureRows(page, rows, kind, (done) =>
+      process.stdout.write(`\r측정 ${done}/${rows.length}`),
+    );
   } finally {
     await browser.close();
   }
   console.log("");
 
   const byId = new Map(rows.map((r) => [r.id, r]));
-  const slot =
+  const slot = singleSlot(all);
+  const expected =
     kind === "first" ? MEASURED.slotFirstPagePx : MEASURED.slotContinuationPx;
+  if (slot !== expected)
+    console.warn(
+      `⚠️ 실측 문항 칸 ${slot}px 인데 상수는 ${expected}px 이다 — paperProbe.MEASURED 와 JASEUP_MEASURED_PX 를 같이 고칠 것.`,
+    );
+
   let over = 0;
   let missed = 0;
   let falseAlarm = 0;
@@ -160,21 +216,33 @@ async function main() {
       solution: null,
       figureUrls: row.figureUrls,
     };
-    const warned = assessOverflowRisk([problem]).length > 0;
-    const overflows = m.neededPx > slot;
+    // ⚠️ 판정은 «그 장에 몇 개인가»로 칸을 고른다. 지면은 두 문항으로 그렸으므로
+    //    판정에도 짝을 채워 넣어야 같은 칸을 본다(혼자면 칸이 두 배다).
+    const filler: TestPrintProblem = {
+      id: "filler",
+      orderIndex: 0,
+      content: "",
+      answer: "",
+      solution: null,
+    };
+    const placed =
+      kind === "first" ? [problem, filler] : [filler, filler, problem, filler];
+    const at = kind === "first" ? 1 : 3;
+    const warned = assessOverflowRisk(placed).some((r) => r.number === at);
+    const overflows = m.neededPx > m.availPx;
     if (overflows) over += 1;
     if (overflows && !warned) {
       missed += 1;
       missedRows.push({
         pid: m.pid,
-        excess: m.neededPx - slot,
+        excess: m.neededPx - m.availPx,
         lines: estimateProblemLines(row.content ?? ""),
       });
     }
     if (!overflows && warned) falseAlarm += 1;
   }
   const pct = (n: number) => `${((n * 100) / all.length).toFixed(2)}%`;
-  console.log(`문항 칸 ${slot}px`);
+  console.log(`문항 칸 ${slot}px (실측)`);
   console.log(`실측 넘침            ${over} (${pct(over)})`);
   console.log(`★ 넘치는데 경고 없음 ${missed} (${pct(missed)})`);
   console.log(`  경고인데 안 넘침   ${falseAlarm} (${pct(falseAlarm)})`);
@@ -194,8 +262,93 @@ async function main() {
   if (outPath) {
     mkdirSync(path.dirname(outPath), { recursive: true });
     writeFileSync(outPath, JSON.stringify(all), "utf8");
-    console.log(`\n→ ${outPath}`);
+    const manifest = writeHeightCacheManifest(
+      outPath,
+      buildHeightCacheManifest({
+        kind,
+        rows: all.length,
+        rowsHash: measuredRowsHash(rows),
+        slotPx: slot,
+        measuredAt: new Date().toISOString(),
+      }),
+    );
+    console.log(`\n→ ${outPath}\n→ ${manifest}`);
   }
+}
+
+/**
+ * 이미 있는 캐시를 **표본으로 다시 재서** 대조한다. 한 건도 다르지 않으면
+ * 지문을 새로 찍는다 — 「캐시가 아직 맞다」를 손이 아니라 도구가 말하게 한다.
+ */
+async function verify(
+  cachePath: string,
+  sample: number,
+  kind: "first" | "continuation",
+  media: string,
+) {
+  const cached = JSON.parse(readFileSync(cachePath, "utf8")) as Measured[];
+  const cachedById = new Map(cached.map((m) => [m.pid, m]));
+  const rows = await fetchRows(0);
+  if (rows.length !== cached.length)
+    throw new Error(
+      `캐시 ${cached.length}건 vs DB ${rows.length}건 — 표본으로 되살릴 수 없다. 전수로 다시 재라.`,
+    );
+  const missingRow = rows.find((r) => !cachedById.has(r.id));
+  if (missingRow)
+    throw new Error(`DB 문항 ${missingRow.id} 가 캐시에 없다 — 다시 재라.`);
+
+  // 무작위를 안 쓴다 — 같은 명령이 같은 표본을 고르게 해서 재실행이 재현되게.
+  const stride = Math.max(1, Math.floor(rows.length / Math.max(1, sample)));
+  const picked = rows.filter((_, i) => i % stride === 0).slice(0, sample);
+  console.log(
+    `대조 표본 ${picked.length.toLocaleString()}건 / 캐시 ${cached.length.toLocaleString()}건 · ${kind} 장 · ${media} 매체`,
+  );
+
+  const browser = await chromium.launch();
+  const page = await browser.newPage({
+    viewport: { width: 1000, height: 1200 },
+  });
+  if (media === "print") await page.emulateMedia({ media: "print" });
+  let fresh: Measured[];
+  try {
+    fresh = await measureRows(page, picked, kind, (done) =>
+      process.stdout.write(`\r측정 ${done}/${picked.length}`),
+    );
+  } finally {
+    await browser.close();
+  }
+  console.log("");
+
+  const diffs: string[] = [];
+  let maxDelta = 0;
+  for (const m of fresh) {
+    const old = cachedById.get(m.pid)!;
+    const delta = Math.abs(m.neededPx - old.neededPx);
+    maxDelta = Math.max(maxDelta, delta);
+    if (delta > 0.01 || m.availPx !== old.availPx)
+      diffs.push(
+        `${m.pid} 캐시 ${old.neededPx.toFixed(2)}/${old.availPx} → 지금 ${m.neededPx.toFixed(2)}/${m.availPx}`,
+      );
+  }
+  console.log(`다른 것 ${diffs.length}건 · 최대 차 ${maxDelta.toFixed(2)}px`);
+  for (const d of diffs.slice(0, 10)) console.log(`  · ${d}`);
+  if (diffs.length > 0) {
+    console.log("\n캐시가 낡았다 — 지문을 찍지 않는다. 전수로 다시 재라.");
+    process.exitCode = 1;
+    return;
+  }
+
+  const manifest = writeHeightCacheManifest(
+    cachePath,
+    buildHeightCacheManifest({
+      kind,
+      rows: cached.length,
+      rowsHash: measuredRowsHash(rows),
+      slotPx: singleSlot(fresh),
+      measuredAt: new Date().toISOString(),
+    }),
+  );
+  console.log(`캐시가 아직 맞다 — 지문을 찍었다.\n→ ${manifest}`);
 }
 
 main()
