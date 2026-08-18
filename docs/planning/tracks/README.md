@@ -14,6 +14,14 @@ A단계·B단계가 끝난 뒤 남은 것을 **파일 소유권과 DB 컬럼이 
 | [G](track-g-classify.md) | 소단원 분류 기준 | `src/lib/classify/**`, `scripts/classify/**` | **없음 — DB 를 쓰지 않는다.** 판정 파일만 낸다 |
 | **F2** | [G 판정 적재](track-f2-report.md) (2차) | `scripts/qa/load2-*` | **신규 행 INSERT 전용** (F 와 같은 규칙) |
 
+## 아직 글자를 안 붙인 브리프 (대기)
+
+| 브리프 | 주제 | 왜 급한가 |
+|---|---|---|
+| [색인 재구축](brief-index-rebuild.md) | `externalId` 앞자리(=testchanger 색인 rowid)가 재구축 때 밀린다 | 밀리면 이관이 **오류 없이** 중복 삽입·신규 유실·그림 디렉터리 오염을 낸다. **지금 어긋남은 0** — 막을 시간이 있다 |
+
+⚠️ 위 브리프에 **트랙 글자는 아직 붙이지 않았다.** 아래 규칙대로 원장님께 알린 뒤 정한다.
+
 ## 트랙 글자·문서 번호를 새로 붙일 때
 
 ⚠️ **먼저 `ls docs/planning/tracks/` 와 `ls docs/planning/` 을 확인하고, 원장님께 알린 뒤 정한다.**
