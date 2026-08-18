@@ -169,12 +169,18 @@ model Student {
 // ─────────────────────────────────────────────
 
 model Unit {
-  id         String @id @default(uuid()) @db.Uuid
-  grade      String @db.VarChar(10)
-  chapter    String @db.VarChar(100)
-  section    String @db.VarChar(100)
+  id                String @id @default(uuid()) @db.Uuid
+  grade             String @db.VarChar(10)
+  chapter           String @db.VarChar(100)
+  section           String @db.VarChar(100)
   /// 교육과정 순서 — 진도 "다음으로" 이동, 확인테스트 범위 계산의 기준
-  orderIndex Int    @map("order_index")
+  orderIndex        Int    @map("order_index")
+  /// 이 단원에서 만들어지는 문항 코드의 «뜻» 부분 (D-53). 예: `J30501` · `HC10201`.
+  /// 규칙은 `src/lib/problemCode.ts` 한 곳에만 있고, 이 컬럼은 그 산출물이다 —
+  /// DB 트리거는 `prefix || '-' || 무작위4` 만 한다(SQL 에 규칙을 두지 않으려고).
+  /// ⚠️ 이 값이 바뀌어도 **이미 부여된 문항 코드는 안 바뀐다**(스냅샷). 새로 들어오는
+  ///    문항만 새 앞부분을 받는다.
+  problemCodePrefix String @unique @map("problem_code_prefix") @db.VarChar(8)
 
   progresses     Progress[]
   problems       Problem[]
@@ -290,6 +296,15 @@ model Problem {
   directUseAllowed Boolean      @default(true) @map("direct_use_allowed")
   /// 공용 풀이 기본 (D-31). private는 소유자만 조회.
   pool             ProblemPool  @default(shared)
+  /// 문항 코드 — 원장님이 문항을 **지목**하는 값 (D-53). 예: `J31402-K7M2` · `HC10305-Q4XZ`.
+  ///
+  /// ⚠️ **파생이 아니라 저장이다.** 뜻 부분은 부여 당시의 스냅샷이고 진실은 `unitId` 다.
+  ///    단원이 재배정되면(관측 149건) 코드는 **그대로 두고** 화면이 현재 단원을 같이 보인다.
+  ///    다시 계산하는 코드를 만들지 말 것 — DB 트리거(`problem_code_freeze`)가 UPDATE 를 막는다.
+  ///
+  /// 부여: `problem_code_assign` BEFORE INSERT 트리거. 앱·스크립트·psql 어느 경로든
+  /// 자동으로 받는다(마이그레이션 `20260818210000_problem_code` 참조).
+  problemCode      String       @unique @default(dbgenerated()) @map("problem_code") @db.VarChar(16)
   createdAt        DateTime     @default(now()) @map("created_at")
   updatedAt        DateTime     @updatedAt @map("updated_at")
 

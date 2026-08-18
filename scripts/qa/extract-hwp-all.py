@@ -98,6 +98,11 @@ def main() -> None:
     ap.add_argument("--retry-failed", action="store_true")
     ap.add_argument("--tag", default="", help="진행 로그 구분용 라벨")
     ap.add_argument(
+        "--exams",
+        help="이 편들만 (쉼표로 구분한 examId). 그림 회수처럼 **특정 편만** 필요할 때 쓴다 — "
+        "전량 큐를 돌면 3천 편을 도는 데 몇 시간이 걸린다. `--offset` 은 무시된다.",
+    )
+    ap.add_argument(
         "--keep",
         default=HWPX_KEEP,
         help="`.hwpx` 중간산출물을 남길 디렉터리 (트랙 A 가 그림을 여기서 읽는다)",
@@ -112,7 +117,14 @@ def main() -> None:
     script, cwd = resolve_extractor()
     work = pathlib.Path(tempfile.mkdtemp(prefix="hwpall_"))
 
-    queue = build_queue()[a.offset : a.offset + a.limit]
+    if a.exams:
+        want = {e.strip() for e in a.exams.split(",") if e.strip()}
+        queue = [p for p in build_queue() if str(p["examId"]) in want]
+        missing = want - {str(p["examId"]) for p in queue}
+        if missing:
+            print(f"⚠️ 페어 목록에 없는 편 {len(missing)}: {sorted(missing)}", flush=True)
+    else:
+        queue = build_queue()[a.offset : a.offset + a.limit]
     tag = f"[{a.tag}] " if a.tag else ""
 
     ok = skip = fail = give_up = 0

@@ -1,0 +1,62 @@
+{
+  "coverage": {
+    "total": 47152,
+    "hasReadableRun": 38965,
+    "withoutReadableRun": 8187,
+    "koreanCharsMedian": 33,
+    "rowsWithMath": 45782
+  },
+  "snippetHits": {
+    "pick": "first",
+    "sample": 200,
+    "snippetChars": 16,
+    "buckets": {
+      "1 (바로 찾음)": 59,
+      "2–5": 58,
+      "6–20 (한 페이지)": 29,
+      "21–100": 33,
+      "101 이상": 21
+    },
+    "median": 4,
+    "p90": 105,
+    "worst": 473,
+    "withUnitFilter": {
+      "median": 2,
+      "p90": 20,
+      "unique": 94,
+      "uniquePct": "47.0%"
+    },
+    "examplesWorst": [
+      {
+        "id": "15ecb8e6-bf14-47a6-91bf-f2e0bc0ac467",
+        "snip": "오른쪽 그림과 같은",
+        "n": 473,
+        "inUnit": 14
+      },
+      {
+        "id": "8902005b-c1c3-4aa5-b5b6-28cfa4ee63aa",
+        "snip": "에서 옳은 것만을 있는 대로",
+        "n": 387,
+        "inUnit": 15
+      },
+      {
+        "id": "01349ce0-48a1-4851-82b7-bfd92b0ea7f4",
+        "snip": "에서 옳은 것만을 있는 대로",
+        "n": 387,
+        "inUnit": 7
+      },
+      {
+        "id": "29cb49f0-068b-426f-be20-f3f048ebd9ab",
+        "snip": "최고차항의 계수가",
+        "n": 366,
+        "inUnit": 43
+      },
+      {
+        "id": "928af98d-64c3-4c1e-88eb-724f7d119dce",
+        "snip": "의 길이를 구하시오",
+        "n": 355,
+        "inUnit": 18
+      }
+    ]
+  }
+}

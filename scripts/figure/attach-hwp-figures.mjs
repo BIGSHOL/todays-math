@@ -21,7 +21,11 @@ if (APPLY && process.env.ALLOW_SHARED_IMPORT !== "1") {
   process.exit(1);
 }
 
-const PLAN = "scripts/qa/reports/figure-recover-plan.json";
+// 회수 경로가 둘이다 — HWP 정본(`recover-hwp-figures.py`)과 PDF 발문 기준
+// (`crop-pdf-by-stem.py`). 산출 모양이 같으므로 붙이는 쪽은 하나만 둔다.
+const PLAN =
+  process.argv.find((a) => a.startsWith("--plan="))?.slice("--plan=".length) ??
+  "scripts/qa/reports/figure-recover-plan.json";
 const REPORT = "scripts/qa/reports/figure-attach-report.json";
 
 const plan = JSON.parse(await readFile(PLAN, "utf8")).계획;
