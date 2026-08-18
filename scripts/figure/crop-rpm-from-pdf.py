@@ -27,7 +27,9 @@ import argparse
 import importlib.util
 import json
 import pathlib
+import re
 import sys
+from difflib import SequenceMatcher
 
 import fitz
 
@@ -53,6 +55,42 @@ CLUSTER_GAP = 12
 # 으뜸 덩어리에서 이만큼(pt) 넘게 떨어진 덩어리는 그림이 아니라 쪽 장식으로 본다.
 # 한 그림의 조각 사이(액자 3장 등)보다는 크고, 장식까지의 거리(실측 39·90pt)보다는 작아야 한다.
 MAX_RUN_GAP = 30
+#: 오려낸 칸 안에 DB 발문이 이만큼(글자) 이어져 들어오면 **그림이 아니라 문항을 오린 것**이다.
+#: 2026-08-18 리뷰가 잡은 부류이고, 관문을 통과한 뒤에도 남아 있었다(실측 #34: 발문 전량).
+STEM_INTRUSION_CHARS = 10
+#: 오려낸 칸이 **다른 문항의 좌표 상자**를 이만큼 덮으면 옆 문항 그림이 딸려 온 것이다.
+#: (실측 #29: 정오각형 문항 칸에 앞 문항의 정사각형 배열이 통째로 들어왔다.)
+NEIGHBOR_OVERLAP = 0.2
+#: 칸 경계에 걸친 요소는 **절반 이상이 안쪽일 때만** 삼킨다 — 그 아래는 남의 것이다.
+CROSS_KEEP = 0.4
+#: 그림이 `source_coords` 밖으로 나가는 것을 이만큼(pt)까지 허용한다.
+#: `source_coords` 는 **발문 기준**이라 그림 전체를 감싸지 않는다 — 실측으로 정사각뿔
+#: 꼭대기가 28pt 위로, 원뿔 밑면 치수선이 48pt 오른쪽으로 나가 있었다.
+#: 그렇다고 무제한으로 두면 두 문항에 걸친 이미지가 옆 문항까지 끌고 온다 —
+#: 그쪽은 **발문 침입 검사**와 **옆 문항 상자 검사**가 막는다.
+BOX_BLEED = 60.0
+#: 한 줄의 글자가 DB 본문에 이만큼 이어서 들어 있으면 **발문 줄**이다 — 그림 라벨이 아니다.
+#: 라벨(`A` `16 cm` `x-y=a`)은 본문에 안 나오고, 발문 줄은 통째로 나온다.
+STEM_LINE_CHARS_SPAN = 3
+#: 라벨 되찾기를 몇 번 되풀이하나. 위 라벨이 들어와 띠가 커져야 옆 라벨이 닿는다.
+LABEL_ROUNDS = 4
+
+KEEP_KO = re.compile(r"[가-힣0-9]+")
+
+
+def content_key(text: str) -> str:
+    """관문(`gate-rpm-crop.py`)과 **같은 열쇠** — 한글+숫자만."""
+    return "".join(KEEP_KO.findall(text))
+
+
+def longest_common_run(a: str, b: str) -> int:
+    """두 문자열의 가장 긴 공통 부분열 길이. 발문이 통째로 딸려 왔는지 본다."""
+    if not a or not b:
+        return 0
+    return max(
+        (m.size for m in [SequenceMatcher(None, a, b).find_longest_match(0, len(a), 0, len(b))]),
+        default=0,
+    )
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -138,31 +176,44 @@ def largest_cluster(parts: list[fitz.Rect]) -> list[fitz.Rect]:
     return _largest_run(parts, "y")
 
 
-def figure_rect(page, box: fitz.Rect) -> fitz.Rect | None:
+def figure_rect(page, box: fitz.Rect, stem_key: str = "",
+                min_overlap: float = 12.0) -> fitz.Rect | None:
     """문항 사각형 **안에서 그림만** 골라 낸다.
 
     `source_coords` 는 문항 블록 전체(발문 + 그림)다. 그대로 오리면 발문이 지면에
     **두 번** 나온다 — 본문 글자로 한 번, 그림 안에 또 한 번. 실측으로 확인했다.
 
-    ## 왜 페이지 단위 검출기(`map-figures.py`)를 그대로 못 쓰나
+    ## 열쇠: **그림은 DB 본문에 없는 것**이다
 
-    그건 「이 그림은 몇 번 문항 것인가」를 푸는 도구라 판정 단위가 **페이지**다. 여기서는
-    문항 사각형을 **이미 알고 있으므로** 그 안만 보면 된다. 그대로 썼더니 둘이 걸렸다:
+    처음엔 「획 덩어리를 찾고, 거기 붙은 글자를 라벨로 되찾는다」였다. 간격·겹침
+    임계값을 다섯 번 고쳤는데 그때마다 다른 것이 깨졌다 — 꼭짓점 이름 `A P D` 를
+    넣으면 `16 cm` 가 빠지고, 그걸 넣으면 발문이 딸려 왔다. **간격은 그림과 발문을
+    가르는 성질이 아니기 때문**이다(실측: 라벨까지 0.4pt, 발문까지 9.3pt — 겹친다).
 
-    1. **분모가 틀렸다.** 한 이미지 블록이 두 문항에 걸쳐 있으면(실측 `019fd1d5-c472`,
-       겹침비 0.37) 「후보의 절반 이상이 이 문항 안」 규칙이 **진짜를 버린다.** 물어야 할
-       것은 후보가 얼마나 들어왔나가 아니라 **겹친 부분이 그림이라 할 만한 크기인가**다.
-    2. **수직선이 「긴 밑줄」로 걸러진다.** 페이지 검출기는 `height<2 and width>120` 을
-       밑줄로 버리는데, 수직선 그림의 축이 정확히 그 모양이다(실측 `019fd1d5-988a`).
+    가르는 성질은 따로 있다. **발문은 DB `content` 에 있고 그림 라벨은 없다.**
+    `A` `P` `16 cm` `20 cm` 는 본문 어디에도 안 나오고, 「오른쪽 그림과 같은
+    직사각형」은 그대로 나온다. 그래서 줄 단위로 본문에 있나 없나를 보고 가른다 —
+    본문과 **독립인 근거**가 아니라 본문 **그 자체**를 쓰는 것이고, 이게 가장
+    직접적이다(CLAUDE.md 2026-08-18 「판정 근거를 한 컬럼에서만 찾지 말 것」).
 
-    그래서 문항 안에서 **글자가 아닌 것**을 모은다. 분수 가로줄처럼 글자 블록 안에 있는
-    획은 뺀다 — 그건 수식이지 그림이 아니다.
+    ## 그래도 남는 두 가지
+
+    1. **쪽 전체가 이미지 블록 하나**다(실측 `Rect(0,0,589.5,807.8)`). 쪽을 덮는 것은
+       그림이 아니라 배경이다.
+    2. **수직선이 「긴 밑줄」로 걸러진다** — 페이지 검출기(`map-figures.py`)는
+       `height<2 and width>120` 을 밑줄로 버리는데 수직선 그림의 축이 그 모양이다
+       (실측 `019fd1d5-988a`). 그래서 그 규칙은 여기서 안 쓴다.
 
     하나도 없으면 **오려내지 않는다** — 발문 사진을 붙이느니 안 붙이는 게 낫다.
     """
     page_area = page.rect.get_area()
     raw = page.get_text("rawdict")
-    text_boxes = [
+
+    def is_page_furniture(r: fitz.Rect) -> bool:
+        """쪽 전체를 덮는 것은 그림이 아니다 — 배경 이미지·쪽 테두리다."""
+        return r.get_area() >= page_area * 0.7
+
+    text_blocks = [
         fitz.Rect(*b["bbox"])
         for b in raw.get("blocks", [])
         if b.get("type") == 0 and not fitz.Rect(*b["bbox"]).is_empty
@@ -170,21 +221,53 @@ def figure_rect(page, box: fitz.Rect) -> fitz.Rect | None:
 
     def is_inside_text(r: fitz.Rect) -> bool:
         """글자 블록에 거의 잠겨 있으면 수식 부속이다(분수 가로줄·근호 등)."""
-        for t in text_boxes:
+        for t in text_blocks:
             inter = r & t
             if not inter.is_empty and inter.get_area() >= r.get_area() * 0.8:
                 return True
         return False
 
-    def is_page_furniture(r: fitz.Rect) -> bool:
-        """쪽 전체를 덮는 것은 그림이 아니다 — 배경 이미지·쪽 테두리다.
+    # 그림이 발문 상자를 넘어가는 만큼만 허용하는 테두리.
+    # `source_coords` 는 발문 기준이라 그림 전체를 감싸지 않는다 — 실측으로 정사각뿔
+    # 꼭대기가 28pt 밖이었다. 그렇다고 무제한이면 두 문항에 걸친 이미지가 옆 문항을 끌고 온다.
+    bleed = fitz.Rect(box.x0 - BOX_BLEED, box.y0 - BOX_BLEED,
+                      box.x1 + BOX_BLEED, box.y1 + BOX_BLEED) & page.rect
 
-        RPM 교재는 **쪽 전체가 이미지 블록 하나**다(실측 `Rect(0,0,623.6,841.9)`).
-        그걸 후보로 받으면 문항 박스가 통째로 잡혀 발문이 딸려 온다.
-        """
-        return r.get_area() >= page_area * 0.7
+    # ── 발문 줄과 그림 라벨을 가른다 ────────────────────────────────────
+    # 줄 단위로 본다. span 단위는 너무 짧아(`의 `, `2`) 본문 어디에나 있고,
+    # 블록 단위는 너무 길어(폭 236pt) 라벨을 통째로 삼킨다.
+    label_rects: list[fitz.Rect] = []
+    span_rects: list[fitz.Rect] = []
+    for b in raw.get("blocks", []):
+        if b.get("type") != 0:
+            continue
+        for ln in b.get("lines", []):
+            for sp in ln.get("spans", []):
+                sr = fitz.Rect(*sp["bbox"])
+                # **`box` 가 아니라 `bleed` 로 거른다.** 라벨은 발문 상자 밖에 있을 때가
+                # 많다 — 실측 `019fd1da-460b` 의 `D` `C` 는 상자 오른쪽 5.4pt 밖이라
+                # 상자로 거르면 통째로 사라지고, 인쇄물에 꼭짓점 이름이 반만 나온다.
+                if sr.is_empty or (sr & bleed).is_empty:
+                    continue
+                span_rects.append(sr)
+                k = content_key(
+                    "".join(c["c"] for c in sp.get("chars", []) if "c" in c)
+                )
+                # 본문에 이만큼 이어서 들어 있으면 발문 조각이다.
+                # ⚠️ **줄 단위로 보면 안 된다.** RPM 은 발문 첫 줄과 그림 꼭짓점 이름이
+                #    같은 줄에 있다(실측 `019fd1da-460b`: `오른쪽 그림과 같은 직사각형`
+                #    과 `A P D` 가 한 줄). 줄로 가르면 라벨이 발문에 딸려 통째로 버려진다.
+                # 라틴 글자·기호만인 조각은 열쇠가 비어(한글+숫자만 남기므로) 라벨로 남는다 —
+                # `A` `P` `x-y=a` 가 그렇고, 이건 본문에 없는 것들이라 옳다.
+                if len(k) >= STEM_LINE_CHARS_SPAN and longest_common_run(k, stem_key) >= STEM_LINE_CHARS_SPAN:
+                    continue
+                label_rects.append(sr)
 
     core: list[fitz.Rect] = []
+    # 자르기 **전** 크기도 같이 든다. 잘라 놓은 것만 보면 「칸이 요소를 반으로 잘랐다」를
+    # 구조적으로 못 본다 — 이미 잘려 있으니 경계를 «가로지르지» 않는다(실측: 원뿔이
+    # 48pt 밖까지 뻗었는데 bleed 30 으로 잘려 있어 완비 검사가 초록이었다).
+    core_raw: list[fitz.Rect] = []
 
     for b in raw.get("blocks", []):
         if b.get("type") == 0:
@@ -193,27 +276,29 @@ def figure_rect(page, box: fitz.Rect) -> fitz.Rect | None:
         if is_page_furniture(r):
             continue
         inter = r & box
-        if inter.is_empty or inter.width < 12 or inter.height < 12:
+        # 겹친 부분이 «그림이라 할 만한 크기»인가를 본다 — 후보가 얼마나 들어왔나가
+        # 아니다(한 이미지가 두 문항에 걸치면 비율은 뜻을 잃는다).
+        # ⚠️ 상자가 **추정치**일 때는 이 문턱을 낮춰야 한다 — 발문으로 상자를 잡는
+        #    `crop-pdf-by-stem.py` 는 그림이 상자 끝에 5pt 만 걸치는 일이 흔하다.
+        if inter.is_empty or inter.width < min_overlap or inter.height < min_overlap:
             continue
-        core.append(inter)
+        core.append(r & bleed)
+        core_raw.append(r)
 
-    # 문항 박스에 **닿는** 획을 먼저 모은다. 박스 밖으로 나간 부분까지 통째로 쓴다
-    # (도형이 박스를 넘어갈 때가 있다 — 정사각뿔 꼭대기가 28pt 밖이었다).
-    # 다만 박스에 아예 안 닿는 조각은 여기서 못 줍는다 — 그건 아래 2차 수집이 맡는다.
     for d in page.get_drawings():
         r = fitz.Rect(d["rect"])
         if r.is_empty or r.is_infinite or is_page_furniture(r):
             continue
         if (r & box).is_empty or is_inside_text(r):
             continue
-        # **박스로 자르지 않는다.** 도형이 문항 좌표를 넘어갈 때가 있다 —
-        # 실측 `019fd1d9-5745` 정사각뿔은 박스 위로 28pt 삐져나와 있어 꼭대기가 잘렸다.
-        # `source_coords` 는 발문 기준이라 그림 전체를 감싸지 않는다.
-        core.append(r)
+        core.append(r & bleed)
+        core_raw.append(r)
 
     if not core:
         return None
 
+    # 획·이미지만으로 먼저 덩어리를 고른다. 라벨은 «어느 덩어리에 붙었나»로 정해지므로
+    # 여기서 같이 넣으면 발문 옆 라벨이 덩어리를 옆으로 늘려 버린다.
     core = largest_cluster(core)
     if not core:
         return None
@@ -221,35 +306,52 @@ def figure_rect(page, box: fitz.Rect) -> fitz.Rect | None:
     for r in core[1:]:
         out |= r
 
-    # ── 그림에 딸린 «글자 라벨»을 되찾는다 ──────────────────────────────
-    # 수직선의 눈금 숫자(`-4 -3 -2 …`)와 점 이름(`a b c d e`)은 **글자 블록**이다.
-    # 획만 오리면 숫자가 빠진 반쪽 그림이 나간다. 그렇다고 문항 안 글자를 다 넣으면
-    # 발문이 딸려 온다 — 그래서 **획 덩어리에 붙어 있는 것만** 넣는다.
-    #   · 세로로 `LABEL_GAP` 안에 있고
-    #   · 가로로 획 덩어리와 실제로 겹친다(오른쪽 그림 옆 발문을 배제한다)
-    # 한 번만 넓힌다. 되풀이하면 라벨 → 발문으로 기어올라간다(실측: 발문 마지막 줄까지 9.3pt).
-    band = fitz.Rect(out)
-    for t in text_boxes:
-        if (t & box).is_empty and (t & band).is_empty:
-            continue
-        vgap = max(band.y0 - t.y1, t.y0 - band.y1, 0)
-        hgap = max(band.x0 - t.x1, t.x0 - band.x1, 0)
-        vover = min(band.y1, t.y1) - max(band.y0, t.y0)
-        hover = min(band.x1, t.x1) - max(band.x0, t.x0)
-        # 위·아래로 붙었거나(가로가 겹치고 세로 간격이 좁다), 옆으로 붙었거나
-        # (세로가 겹치고 가로 간격이 좁다). 한 축만 보면 **옆에 붙은 라벨을 잃는다** —
-        # 실측 `019fd1da-6321` 은 그래프 오른쪽 `3x-2y+12=0` 이 잘려 `=0` 이 사라졌다.
-        # ⚠️ 예전엔 `min(t.width, band.width)` 로 쟀다. 그러면 **폭 237pt 짜리 발문 줄을
-        # 폭 66pt 짜리 그림 띠에 견주게 되어** 언제나 30%를 넘겼고, 발문이 통째로 딸려
-        # 들어왔다(적대적 리뷰 실측 3건). 재는 대상은 **글자 블록 자신**이어야 한다 —
-        # 진짜 라벨(`-4`, `O A`, `4x+3y=12`)은 좁아서 여전히 통과한다.
-        below = vgap <= LABEL_GAP and hover >= t.width * 0.3
-        beside = hgap <= LABEL_GAP and vover >= t.height * 0.3
-        if not (below or beside):
-            continue
-        out |= t
+    # ── 라벨을 되찾는다 — 그림 덩어리에 «닿는» 것만 ──────────────────────
+    # 발문 줄은 위에서 이미 뺐으므로, 여기서는 간격을 넉넉히 줘도 발문이 안 들어온다.
+    # 되풀이하는 이유: 위 라벨(`A P`)이 들어와 띠가 커져야 옆 라벨(`D` `C`)이 닿는다.
+    # 한 번만 하면 `A P` 는 들어오고 `D C` 는 잘린다(실측 `019fd1da-460b`).
+    for _ in range(LABEL_ROUNDS):
+        band = fitz.Rect(out)
+        grew = False
+        for t in label_rects:
+            if band.contains(t):
+                continue
+            vgap = max(band.y0 - t.y1, t.y0 - band.y1, 0)
+            hgap = max(band.x0 - t.x1, t.x0 - band.x1, 0)
+            if vgap <= LABEL_GAP and hgap <= LABEL_GAP:
+                out |= t
+                grew = True
+        if not grew:
+            break
 
-    # 쪽 밖으로는 못 나간다. 박스로는 자르지 않는다(위 주석 참조).
+    # ── 완비 검사 — **아무것도 반으로 자르지 않는다** ────────────────────
+    # 지금까지 간격·겹침 임계값을 여섯 번 고쳤고, 고칠 때마다 다른 쪽이 잘렸다
+    # (꼭짓점 이름 `D` `C`, 식 꼬리 `=0`, 치수 `16 cm`). 임계값을 더 만지는 대신
+    # **불변식**을 둔다: 오려낸 칸의 경계를 가로지르는 요소가 하나라도 있으면
+    # 넓혀서 삼키고, `bleed` 안에서 못 삼키면 **오려내지 않는다.**
+    # 잘린 그림을 붙이는 것보다 안 붙이는 게 낫다 — 잘린 것은 지면에서 티가 안 난다.
+    # **발문 조각까지 포함해서** 본다. 라벨로 분류된 것만 보면, 발문으로 잘못 분류된
+    # 그림 라벨이 잘려도 못 잡는다 — 실측 `019fd1da-6321` 의 `3x-2y+12=0` 은 본문에도
+    # 같은 식이 있어 발문으로 갈렸고, 그 바람에 꼬리 `0` 이 칸 밖에 남았다.
+    # 삼킨 뒤 정말로 발문이 들어왔다면 아래 **발문 침입 검사**가 그 문항을 버린다.
+    edges = span_rects + core_raw
+    for _ in range(LABEL_ROUNDS):
+        grew = False
+        for t in edges:
+            if out.contains(t) or (t & out).is_empty:
+                continue
+            merged = out | t
+            if not bleed.contains(merged):
+                continue
+            out = merged
+            grew = True
+        if not grew:
+            break
+    for t in edges:
+        if not out.contains(t) and not (t & out).is_empty:
+            return None
+
+    # 쪽 밖으로는 못 나간다. 발문 상자로는 자르지 않는다(bleed 참조).
     out = out & page.rect
     # 너무 작으면 그림이 아니라 잡티다(밑줄 한 토막·점 하나).
     if out.is_empty or out.width < 30 or out.height < 20:
@@ -261,15 +363,35 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dpi", type=int, default=DEFAULT_DPI)
     ap.add_argument("--limit", type=int)
+    # 기본 계획은 **관문을 안 거친 날 좌표**다. 2026-08-18 리뷰가 잡은 14/37 결함은
+    # 그 좌표가 책마다 어긋나 있어서였다 — 붙일 것을 오릴 때는 관문이 고른 계획을 쓴다.
+    ap.add_argument("--plan", default=str(PLAN),
+                    help="좌표 계획 (기본: 날 좌표. 붙일 때는 "
+                         "scripts/qa/reports/rpm-crop-plan-gated.json)")
+    ap.add_argument("--content", default="scripts/qa/reports/rpm-crop-content.json",
+                    help="DB 본문 — 오려낸 칸에 발문이 딸려 왔는지 보는 근거")
     a = ap.parse_args()
 
-    if not PLAN.exists():
+    plan_path = pathlib.Path(a.plan)
+    if not plan_path.exists():
         raise SystemExit(
-            f"계획이 없다: {PLAN}\n"
+            f"계획이 없다: {plan_path}\n"
             "먼저 돌려라 — npx tsx scripts/qa/recover-rpm-figures-from-pdf.ts"
         )
-    plan = json.loads(PLAN.read_text(encoding="utf-8"))
+    plan = json.loads(plan_path.read_text(encoding="utf-8"))
     items = plan["목록"][: a.limit] if a.limit else plan["목록"]
+    content = {}
+    cpath = pathlib.Path(a.content)
+    if cpath.exists():
+        content = json.loads(cpath.read_text(encoding="utf-8"))
+    else:
+        print(f"⚠️ 본문 파일이 없다({cpath}) — 발문 침입 검사를 못 한다.")
+    # 같은 쪽의 **다른 문항** 상자. 오려낸 칸이 이걸 덮으면 옆 문항 그림이 딸려 온 것이다.
+    # 계획 전량을 쓴다 — 이번에 오리는 것만 보면 옆 문항이 목록에 없을 때 눈이 먼다.
+    all_boxes = json.loads(PLAN.read_text(encoding="utf-8"))["목록"]
+    by_page: dict[tuple[str, int], list[dict]] = {}
+    for b in all_boxes:
+        by_page.setdefault((pathlib.Path(b["pdf"]).name, int(b["page"])), []).append(b)
 
     # 원본이 없으면 **그 사실을 먼저 말한다.** 0건 성공을 조용히 보고하지 않는다.
     missing_pdf = sorted(
@@ -320,7 +442,8 @@ def main() -> None:
                 )
                 continue
 
-            fig = figure_rect(page, box)
+            db_key = content_key(content.get(it["problemId"], ""))
+            fig = figure_rect(page, box, db_key)
             if fig is None:
                 fail.append(
                     {"externalId": it["externalId"], "이유": "문항 안에서 그림을 못 찾았다"}
@@ -329,6 +452,29 @@ def main() -> None:
             rect = fitz.Rect(
                 fig.x0 - PAD, fig.y0 - PAD, fig.x1 + PAD, fig.y1 + PAD
             ) & page.rect
+
+            # ── 관문 뒤에도 남는 두 부류를 여기서 막는다 (2026-08-18 육안 검수) ──
+            # ⑴ 발문 침입 — 그림이 아니라 문항을 통째로 오린 것.
+            box_key = content_key(page.get_text("text", clip=rect))
+            run = longest_common_run(box_key, db_key)
+            if run >= STEM_INTRUSION_CHARS:
+                fail.append({"externalId": it["externalId"],
+                             "이유": f"칸에 발문이 {run}자 들어왔다"})
+                continue
+            # ⑵ 옆 문항 침입 — 다른 문항의 좌표 상자를 덮었다.
+            clash = None
+            for b in by_page.get((pathlib.Path(pdf).name, int(it["page"])), []):
+                if b["problemId"] == it["problemId"]:
+                    continue
+                other = fitz.Rect(*b["rect"])
+                inter = other & rect
+                if not inter.is_empty and inter.get_area() > NEIGHBOR_OVERLAP * other.get_area():
+                    clash = b["externalId"]
+                    break
+            if clash is not None:
+                fail.append({"externalId": it["externalId"],
+                             "이유": f"옆 문항 상자를 덮었다 ({clash[:13]})"})
+                continue
 
             out.parent.mkdir(parents=True, exist_ok=True)
             pix = page.get_pixmap(clip=rect, dpi=a.dpi)

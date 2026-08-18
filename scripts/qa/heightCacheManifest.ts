@@ -56,6 +56,16 @@ export interface HeightCacheManifest {
   rowsHash: string;
   /** 그때 지면에서 **실측한** 문항 칸 높이. 제품 상수와 대조하는 근거다. */
   slotPx: number;
+  /**
+   * 탐침 지면에 **덧입힌 배치**(그림 폭 상한·문항번호 서식)의 지문.
+   *
+   * 왜 필요한가: `inputsHash` 는 **제품 원문**만 본다. 검토용 측정은 제품을 안 고치고
+   * 탐침 문서에 `<style>` 을 덧붙여 다른 지면을 그리는데(`d-affordable` 트랙),
+   * 그러면 「45mm 로 잰 캐시」와 「70mm 로 잰 캐시」가 지문이 **똑같다.** 조건을
+   * 바꿔 놓고 옛 캐시로 채점해도 아무 말이 없다 — 이 저장소가 여러 번 당한 자리다.
+   * 덧칠이 없는(제품 그대로) 측정은 `undefined` 라 기존 캐시와 그대로 호환된다.
+   */
+  overlay?: string;
   measuredAt: string;
   /**
    * 문항별 본문 지문(짧게 자른 것). **어느 문항이 바뀌었는지**를 집어내려고 둔다 —
@@ -186,6 +196,7 @@ export function buildHeightCacheManifest(input: {
   slotPx: number;
   measuredAt: string;
   rowDigests?: Record<string, string>;
+  overlay?: string;
 }): HeightCacheManifest {
   return {
     version: 1,
@@ -195,6 +206,7 @@ export function buildHeightCacheManifest(input: {
     rowsHash: input.rowsHash,
     slotPx: input.slotPx,
     measuredAt: input.measuredAt,
+    ...(input.overlay ? { overlay: input.overlay } : {}),
     ...(input.rowDigests ? { rowDigests: input.rowDigests } : {}),
   };
 }
@@ -238,6 +250,7 @@ export function heightCacheProblems(
     rows: number;
     rowsHash: string;
     slotPx: number;
+    overlay?: string;
   },
 ): FreshnessProblem[] {
   if (!manifest)
@@ -266,6 +279,8 @@ export function heightCacheProblems(
     now.rowsHash.slice(0, 12),
   );
   add("실측 문항 칸", manifest.slotPx, now.slotPx);
+  // 덧칠이 없으면 양쪽 다 `undefined` 라 «(없음)» 끼리 같다 — 기존 캐시와 호환된다.
+  add("덧입힌 배치", manifest.overlay ?? "(없음)", now.overlay ?? "(없음)");
   return problems;
 }
 
@@ -277,6 +292,7 @@ export function assertHeightCacheFresh(
     rows: number;
     rowsHash: string;
     slotPx: number;
+    overlay?: string;
   },
 ): void {
   const problems = heightCacheProblems(readHeightCacheManifest(cachePath), now);

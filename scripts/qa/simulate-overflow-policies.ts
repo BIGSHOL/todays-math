@@ -30,6 +30,29 @@
  *
  * ⚠️ **일일테스트는 단원 «하나»에서만 뽑는다**(`resolveRange`) — 가장 얇은 조건이다.
  *    ⑷ 의 위험(풀이 얇은 단원에서 출제가 막힘)이 거기 있으므로 그 조건으로 잰다.
+ *
+ * ## 검토용 조건 — `--cap` · `--layout` (`d-affordable` 트랙)
+ *
+ *   npx tsx scripts/qa/simulate-overflow-policies.ts --cap cap45 --layout d \
+ *     --heights .measure/cl-cap45-d.json --baseline-heights .measure/cl-cap45-base.json
+ *
+ * 「그림 폭 상한을 45mm 로 낮추고 문항번호를 D안으로 바꾸면 **원장님 화면의 경고가
+ * 어떻게 되는가**」를 재는 자리다. 안 주면 지금 제품 그대로 돈다.
+ *
+ * **제품 코드는 한 줄도 안 고친다.** 두 조건이 판정에 들어가는 길은 각각 하나뿐이라
+ * 그 길로만 넣는다.
+ *
+ *   · **그림 폭 상한** — `estimateFigureBlockPx` 는 `scale = min(1, figureMaxWidth/w)`
+ *     로 줄인다. 그러니 **미리 줄인 치수**(`w·s, h·s`)를 넘기면 제품의 `min` 이
+ *     1이 되어 그 값을 그대로 쓴다 — 상한을 낮춘 것과 **수학적으로 같다**.
+ *     규칙을 옮겨 적지 않으므로 갈라질 자리가 없다.
+ *   · **번호 서식** — 늘어난 세로는 `fixedChrome`(문항번호+정답란) 한 상수에만 들어간다.
+ *     그 값을 **실측 Δ 만큼** 올린다(아래 참조). 상수 하나를 바꾸는 것이므로
+ *     `selectProblems`·`assessSeat`·`assessOverflowRisk` 가 **전부 같은 값**을 본다.
+ *
+ * ⚠️ **Δ 를 손으로 적지 않는다.** 조건 캐시와 기준선 캐시의 차(중앙값)를 쓴다 —
+ *    채점의 «참»과 판정의 «가정»이 같은 실측에서 나오게 하려는 것이다. 그 차가
+ *    문항마다 제각각이면(=배치가 문항 내용을 건드린다는 뜻) **멈춘다.**
  */
 import { readFileSync } from "node:fs";
 
@@ -43,11 +66,17 @@ import {
   selectProblems,
 } from "../../src/lib/generator/selectProblems";
 import { JASEUP_MEASURED_PX } from "../../src/lib/printGeometry";
-import { assessOverflowRisk } from "../../src/lib/printOverflow";
+import {
+  assessOverflowRisk,
+  estimateProblemPx,
+  parseFigureDimensions,
+} from "../../src/lib/printOverflow";
+import { capByName } from "./capLayoutProbe";
 import {
   assertHeightCacheFresh,
   measuredRowsHash,
 } from "./heightCacheManifest";
+import { layoutByName } from "./idLayouts";
 
 const prisma = new PrismaClient();
 
@@ -155,6 +184,15 @@ async function main() {
     .split(",")
     .map((s) => Number(s.trim()))
     .filter((n) => Number.isFinite(n) && n > 0);
+  /**
+   * 검토용 조건(`d-affordable` 트랙). 안 주면 **지금 제품 그대로** 돈다 —
+   * 기존 호출은 한 글자도 안 바뀐다.
+   */
+  const capName = arg("--cap");
+  const layoutName = arg("--layout");
+  const baselineHeightsPath = arg("--baseline-heights");
+  const cap = capName ? capByName(capName) : null;
+  const layout = layoutName ? layoutByName(layoutName) : null;
 
   const heights = JSON.parse(readFileSync(heightsPath, "utf8")) as Height[];
 
@@ -207,19 +245,144 @@ async function main() {
    * 캐시가 **지금 지면·지금 본문·지금 그림 파일**을 보고 잰 것인지 지문으로 대조한다.
    * 지문이 없거나 어긋나면 멈춘다 — 그 숫자는 거짓이다(리뷰 §F, 검수 §L).
    */
+  const rowsHash = measuredRowsHash(
+    rows.map((r) => ({
+      id: r.id,
+      content: r.content,
+      figureUrls: r.figureUrls,
+      questionType: r.questionType,
+    })),
+  );
+  /**
+   * ⚠️ `overlay` 를 같이 본다. 안 보면 「45mm 로 잰 캐시」와 「70mm 로 잰 캐시」가
+   * 지문이 **똑같아서**, 조건을 바꿔 놓고 옛 캐시로 채점해도 아무 말이 없다.
+   */
+  const overlay =
+    cap || layout
+      ? `cap=${cap?.name ?? "cap70"};layout=${layout?.name ?? "base"}`
+      : undefined;
   assertHeightCacheFresh(heightsPath, {
     kind: "continuation",
     rows: heights.length,
-    rowsHash: measuredRowsHash(
-      rows.map((r) => ({
-        id: r.id,
-        content: r.content,
-        figureUrls: r.figureUrls,
-        questionType: r.questionType,
-      })),
-    ),
+    rowsHash,
     slotPx: slot,
+    overlay,
   });
+
+  /* ── 번호 서식의 세로 Δ — **실측에서 가져온다** ───────────────────────────
+     조건 캐시와 기준선 캐시의 차다. 손으로 적으면 채점의 «참»과 판정의 «가정»이
+     따로 놀고, 그러면 이 표는 제품이 틀릴수록 좋은 점수를 낼 수 있다(리뷰 §E). */
+  let chromeDelta = 0;
+  if (layout && layout.name !== "base") {
+    if (!baselineHeightsPath)
+      throw new Error(
+        `--layout ${layout.name} 을 쓰려면 --baseline-heights <같은 상한의 base 캐시> 가 필요하다 — Δ 를 실측에서 가져와야 한다.`,
+      );
+    const baseHeights = JSON.parse(
+      readFileSync(baselineHeightsPath, "utf8"),
+    ) as Height[];
+    assertHeightCacheFresh(baselineHeightsPath, {
+      kind: "continuation",
+      rows: baseHeights.length,
+      rowsHash,
+      slotPx: slot,
+      overlay: `cap=${cap?.name ?? "cap70"};layout=base`,
+    });
+    const baseById = new Map(baseHeights.map((h) => [h.pid, h.neededPx]));
+    const deltas: number[] = [];
+    for (const h of heights) {
+      const b = baseById.get(h.pid);
+      if (b !== undefined)
+        deltas.push(Math.round((h.neededPx - b) * 100) / 100);
+    }
+    const tally = new Map<number, number>();
+    for (const d of deltas) tally.set(d, (tally.get(d) ?? 0) + 1);
+    const ranked = [...tally.entries()].sort((a, b) => b[1] - a[1]);
+    chromeDelta = ranked[0]![0];
+    const share = ranked[0]![1] / deltas.length;
+    console.log(
+      `번호 서식 Δ (실측 ${deltas.length.toLocaleString()}건) — ` +
+        ranked
+          .slice(0, 4)
+          .map(
+            ([d, n]) =>
+              `${d >= 0 ? "+" : ""}${d}px ${((100 * n) / deltas.length).toFixed(1)}%`,
+          )
+          .join(" · "),
+    );
+    /**
+     * 배치는 문항 **위쪽 살**만 바꾼다. 그러니 Δ 는 문항마다 거의 같아야 한다.
+     * 판정은 상수 **하나**만 쓸 수 있으므로(=`fixedChrome`), 그 하나로 흉내 낼 수
+     * 있는지를 여기서 본다 — **최빈값의 몫이 아니라 «흩어진 정도»로** 본다.
+     * (몫으로 보면 서술형 비율 16.5% 같은 정상적인 쏠림에 문턱이 걸린다.
+     *  묻고 싶은 것은 「몇 %가 최빈값인가」가 아니라 「최빈값에서 얼마나 벗어나나」다.)
+     *
+     * 벗어나는 부류는 **서술형**이다 — 「서술형 n」 배지가 번호 줄에 참여해 2px 를 더
+     * 먹는다. 판정은 그 배지를 원래 모르므로(지금도 모른다) 그 2px 는 **덜 세는 쪽**
+     * 으로 남는다. 그 사실을 아래에 찍어 둔다 — 조용히 넘기면 「경고가 안 뜬다」의
+     * 일부가 이 2px 이 된다.
+     */
+    const off = deltas.filter((d) => Math.abs(d - chromeDelta) > 0.01);
+    const worst = off.length
+      ? Math.max(...off.map((d) => Math.abs(d - chromeDelta)))
+      : 0;
+    if (worst > 6)
+      throw new Error(
+        `번호 서식 Δ 가 최빈값에서 최대 ${worst.toFixed(1)}px 벗어난다 — 상수 하나로 판정에 넣을 수 없다.`,
+      );
+    if (off.length > 0)
+      console.log(
+        `  └ 최빈값에서 벗어나는 문항 ${off.length.toLocaleString()}건 (${((100 * off.length) / deltas.length).toFixed(1)}%) · 최대 ${worst.toFixed(1)}px — ` +
+          `판정은 이만큼 **덜 센다**(서술형 배지를 원래 안 본다).`,
+      );
+    void share;
+  }
+
+  /* ── 조건을 판정에 넣는다 ───────────────────────────────────────────────
+     `JASEUP_MEASURED_PX` 는 런타임에는 보통 객체다. 지면이 바뀌면 이 상수를 다시
+     재는 것이 제품의 정상 절차이므로(`measure-paper-units.tsx`), 「그 조건이 채택된
+     세상」을 흉내 내려면 상수를 그 값으로 두고 **제품 함수를 그대로** 부르면 된다.
+     규칙을 옮겨 적지 않는 것이 핵심이다. */
+  if (chromeDelta !== 0) {
+    const before = estimateProblemPx("", []);
+    if (Math.abs(before - JASEUP_MEASURED_PX.fixedChrome) > 0.01)
+      throw new Error(
+        `빈 문항의 추정이 ${before}px 인데 fixedChrome 은 ${JASEUP_MEASURED_PX.fixedChrome}px 이다 — 이 자리로 Δ 를 못 넣는다.`,
+      );
+    (JASEUP_MEASURED_PX as { fixedChrome: number }).fixedChrome =
+      before + chromeDelta;
+    const after = estimateProblemPx("", []);
+    if (Math.abs(after - (before + chromeDelta)) > 0.01)
+      throw new Error(
+        `Δ 를 넣었는데 추정이 ${after}px 다 — 판정이 이 상수를 안 본다. 이 표는 거짓이 된다.`,
+      );
+    console.log(
+      `판정에 넣은 값 · 문항번호+정답란 ${before}px → ${after}px (Δ ${chromeDelta >= 0 ? "+" : ""}${chromeDelta}px)`,
+    );
+  }
+  if (cap) console.log(`판정에 넣은 값 · 그림 폭 상한 — ${cap.label}`);
+
+  /**
+   * 그림 폭 상한을 **미리 줄인 치수**로 넘긴다(위 머리말 참조 — 제품의 `min` 이 1이
+   * 되어 이 값을 그대로 쓴다). 상한을 안 주면 원본 치수 그대로다.
+   */
+  let unknownDims = 0;
+  const capDims = (figureUrls: string[], flat: number[]): number[] => {
+    const parsed = parseFigureDimensions(figureUrls.length, flat);
+    if (parsed.some((f) => f === null)) unknownDims += 1;
+    if (!cap) return flat;
+    const capPx = cap.expectedMaxWidthPx(figureUrls.length);
+    const out: number[] = [];
+    parsed.forEach((f, i) => {
+      if (!f) {
+        out.push(flat[i * 2] ?? 0, flat[i * 2 + 1] ?? 0);
+        return;
+      }
+      const s = Math.min(1, capPx / f.width);
+      out.push(f.width * s, f.height * s);
+    });
+    return out;
+  };
 
   const neededById = new Map(heights.map((h) => [h.pid, h.neededPx]));
   const pool: Row[] = [];
@@ -243,7 +406,7 @@ async function main() {
       directUseAllowed: true,
       content: r.content,
       figureUrls: r.figureUrls,
-      figureDims: r.figureDims,
+      figureDims: capDims(r.figureUrls, r.figureDims),
       neededPx,
     });
   }
@@ -251,6 +414,21 @@ async function main() {
     console.log(
       `⚠️ 출제 자격은 있는데 **높이를 안 잰** 문항 ${unmeasured.toLocaleString()}건 — 캐시를 뜬 뒤 들어온 것이다. 이 시뮬레이션에서는 빠진다.`,
     );
+  /**
+   * **치수를 모르는 그림**은 「미리 줄인 치수」로 상한을 못 넣는다 — 판정이 그 자리를
+   * `UNKNOWN_FIGURE_HEIGHT_PX`(70mm 기준 중앙값)로 세기 때문이다. 지금 DB 에는 한 건도
+   * 없지만, 생기면 그 문항만 상한이 안 걸린 채로 채점된다. **조용히 넘기지 않는다.**
+   */
+  if (unknownDims > 0) {
+    if (cap)
+      throw new Error(
+        `그림 치수를 모르는 문항 ${unknownDims.toLocaleString()}건 — 상한을 «미리 줄인 치수»로 넣을 수 없다. ` +
+          `이 조건의 경고 숫자는 그만큼 거짓이 된다.`,
+      );
+    console.log(
+      `그림 치수를 모르는 문항 ${unknownDims.toLocaleString()}건 (상한을 안 걸었으므로 채점에는 영향 없음)`,
+    );
+  }
 
   /* ── 검산 — 출제의 후순위 판정 ↔ 인쇄 경고가 한 건도 다르지 않은가 ────────── */
   {
@@ -263,6 +441,14 @@ async function main() {
       answer: "",
       solution: null,
     };
+    /**
+     * **판정이 이 조건에서도 맞는가**를 같이 센다. 조건을 바꾸면 지면이 달라지고,
+     * 그러면 판정의 성적도 달라진다 — 「경고가 덜 뜬다」가 «지면이 좋아졌다»인지
+     * «판정이 눈이 멀었다»인지는 여기서만 갈린다. 참은 실측 높이다.
+     */
+    let warnCount = 0;
+    let realCount = 0;
+    let hitCount = 0;
     for (const p of pool) {
       // 3번 자리 = 이어지는 장의 반 칸(484px). 캐시가 잰 것과 같은 자리다.
       const placed = [filler, filler, ...toPrint([p]), filler];
@@ -271,6 +457,10 @@ async function main() {
         drift += 1;
         if (!example) example = p.id;
       }
+      const real = p.neededPx > JASEUP_MEASURED_PX.continuationSlot;
+      if (warned) warnCount += 1;
+      if (real) realCount += 1;
+      if (warned && real) hitCount += 1;
     }
     if (drift > 0)
       throw new Error(
@@ -278,6 +468,12 @@ async function main() {
       );
     console.log(
       `검산 · 출제 후순위 판정 ↔ 인쇄 경고 일치 (0건 불일치, ${pool.length.toLocaleString()}건 전수)`,
+    );
+    console.log(
+      `검산 · 이 조건에서 판정의 성적 (484px 칸, 출제 가능 풀 전수) — ` +
+        `실측 넘침 ${realCount.toLocaleString()} · 경고 ${warnCount.toLocaleString()} · 맞음 ${hitCount.toLocaleString()}` +
+        ` · 재현율 ${((100 * hitCount) / Math.max(1, realCount)).toFixed(1)}%` +
+        ` · 정밀도 ${((100 * hitCount) / Math.max(1, warnCount)).toFixed(1)}%`,
     );
   }
 
