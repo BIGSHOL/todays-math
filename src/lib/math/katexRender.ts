@@ -44,14 +44,39 @@ const aggressiveRepair = (s: string): string =>
 const escapeHtml = (s: string): string =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+/**
+ * **UI 렌더(rehype-katex)와 문자열 렌더가 공유해야 하는 KaTeX 옵션.**
+ *
+ * ── 왜 공유해야 하는가 (2026-08-18 실측 320행·수식 787곳) ────────────────────
+ * `preprocessMathText` 는 스스로 `\htmlClass{…}` 를 **만든다**:
+ *   · `repeatDotTex`         `0.\overline{3}` → `\htmlClass{repeat-dot}{3}`  (순환마디 점)
+ *   · `uprightGeometryLabels` `\widehat{AB}`  → `\htmlClass{geom-arc-wrap}{…}` (호 ⌒)
+ * 그런데 `MarkdownRenderer` 는 `rehypeKatex` 에 옵션을 **하나도 안 넘겼다.**
+ * KaTeX 는 `trust` 없이 HTML 확장을 거부하는데, **예외를 던지지 않는다** —
+ * `color:#cc0000` 붉은 날문자로 그린다. 원장님이 본 `0.\htmlClass\htmlClass이 되었고`
+ * 가 정확히 이것이다.
+ *
+ * ⚠️ 이 부류는 «렌더가 실패했는가»로는 안 잡힌다. KaTeX 는 성공했다고 보고한다
+ * (CLAUDE.md 2026-08-16 «KaTeX 가 초록이라고 지면이 멀쩡한 게 아니다»).
+ * 그래서 `renderParity.test.tsx` 에 «출력에 `#cc0000` 이 없다»는 검사를 따로 뒀다.
+ *
+ * ⚠️ `renderKatexSafe`(3단 방어) **전체를 UI 로 옮기면 안 된다.** 문자열 HTML 이라
+ * `dangerouslySetInnerHTML` 이 필요하고, 그러면 `<보기>` 상자·선택지 분해 같은
+ * 마크다운 레이어가 통째로 빠진다. 공유하는 것은 **옵션뿐**이다.
+ */
+export const UI_KATEX_OPTIONS = {
+  /** `\htmlClass` 만 허용 — 전처리가 만드는 두 클래스를 살리는 최소 허용이다. */
+  trust: (ctx: { command: string }) => ctx.command === "\\htmlClass",
+  /** 한글이 수식 안에 섞인 이관본이 많다 — 경고를 띄우되 렌더는 막지 않는다. */
+  strict: false as const,
+} as const;
+
 const tryRender = (input: string, displayMode: boolean): string =>
   katex.renderToString(input, {
+    ...UI_KATEX_OPTIONS,
     throwOnError: false,
-    strict: false,
     output: "html",
     displayMode,
-    // `\htmlClass` 만 허용 — uprightGeometryLabels 의 호(⌒) span 용.
-    trust: (ctx) => ctx.command === "\\htmlClass",
   });
 
 /** KaTeX 0.16 은 unknown command 를 .katex-error 대신 color:#cc0000 으로 그린다. */

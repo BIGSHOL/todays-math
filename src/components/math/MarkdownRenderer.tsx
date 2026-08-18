@@ -35,9 +35,11 @@ import {
   type ReactNode,
 } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
+import type { PluggableList } from "unified";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 
+import { UI_KATEX_OPTIONS } from "@/lib/math/katexRender";
 import {
   decodeHtmlEntities,
   preprocessMathText,
@@ -52,7 +54,14 @@ export interface MarkdownRendererProps {
 
 /** 렌더마다 새 배열을 넘기면 react-markdown 이 프로세서를 새로 조립한다. */
 const REMARK_PLUGINS = [remarkMath];
-const REHYPE_PLUGINS = [rehypeKatex];
+/**
+ * ⚠️ **옵션을 반드시 넘긴다.** 안 넘기면 `trust` 가 없어 KaTeX 가 `\htmlClass` 를
+ * 거부하는데, 예외가 아니라 **붉은 날문자**(`color:#cc0000`)로 그린다.
+ * 그런데 `\htmlClass` 는 **우리 전처리가 스스로 만든다**(순환마디 점·호 ⌒) —
+ * 즉 우리가 만든 글자를 우리 렌더가 거부하고 있었다. 실측 320행 · 수식 787곳.
+ * 근거와 옵션 내용은 `katexRender.ts` 의 `UI_KATEX_OPTIONS` 주석.
+ */
+const REHYPE_PLUGINS: PluggableList = [[rehypeKatex, UI_KATEX_OPTIONS]];
 
 /* ──────────────────────────────────────────────────────────────────────────
  * `<보기>` · `<조건>` 상자 카드 — mathgen MarkdownRenderer 1011~1028행 이식.
