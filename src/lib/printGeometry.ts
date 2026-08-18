@@ -40,4 +40,33 @@ export const JASEUP_MEASURED_PX = {
   figureBlockTop: 12,
   /** 그림 사이 간격 `gap-4` (가로·세로 모두). */
   figureGap: 16,
+
+  /* ── 정답지 (`.answerPage`) ─────────────────────────────────────────────── */
+
+  /** 「빠른 정답」 상자가 없는 쪽의 해설 칸(`.answerSolutions`) 높이. */
+  answerSolutionsFull: 964.8,
+  /** 해설은 2단이다 (`column-count: 2`) — 한 쪽에 담기는 세로는 칸 높이 × 2. */
+  solutionColumns: 2,
+  /** 해설 한 단의 폭. */
+  solutionColumnWidth: 331,
+  /** 해설 본문 행높이 — 11.5px × 1.55. */
+  solutionLine: 17.825,
+  /** 「빠른 정답」 상자의 제목 줄 + 안팎 여백 (행 수와 무관한 고정분). */
+  quickAnswerTitle: 49,
+  /** 그 상자의 행 사이 간격 (`gap: 6px`). */
+  quickAnswerRowGap: 6,
+  /** 그 상자의 열 수 (`repeat(4, minmax(0,1fr))`). */
+  quickAnswerColumns: 4,
+  /** 셀 한 칸의 글자 아닌 세로 (`padding: 8px 8px 6px`). */
+  quickAnswerCellBase: 14,
+  /** 셀 한 줄 높이 — 11px × `line-height: 2.1`. */
+  quickAnswerCellLine: 23.1,
+  /**
+   * 셀 한 줄에 들어가는 표시폭. 셀 안폭 약 153px 에서 「문 N」 라벨과 간격을 뺀
+   * 몫이라 좁다 — **정답이 조금만 길어도 두 줄이 된다**, 그게 상자가 커지는 이유다.
+   * (실측: 25문항 상자가 정답 내용에 따라 344~668px 로 갈린다.)
+   */
+  quickAnswerCellUnits: 16,
+  /** 상자와 해설 칸 사이 여백. */
+  quickAnswerGap: 16.5,
 } as const;

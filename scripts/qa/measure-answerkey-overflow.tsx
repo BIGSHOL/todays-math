@@ -8,8 +8,13 @@
  *
  *   npx tsx scripts/qa/measure-answerkey-overflow.tsx --tests 120 --count 25
  *   npx tsx scripts/qa/measure-answerkey-overflow.tsx --with-solution --shot out.png
+ *   npx tsx scripts/qa/measure-answerkey-overflow.tsx --with-solution --json .measure/ak.json
+ *
+ * ⚠️ 2026-08-18 추가: 장 단위 «잘렸다/아니다» 만으로는 **판정을 만들 수 없다.**
+ *    어느 문항이 사라졌는지가 있어야 «solution 으로 예측할 수 있는가»를 채점한다.
+ *    그래서 `.solutionItem` 하나하나가 2단 밖(3번째 단)으로 밀렸는지도 같이 낸다.
  */
-import { mkdirSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import { PrismaClient } from "@prisma/client";
@@ -46,7 +51,7 @@ function renderAnswerPage(
   const items = pageProblems
     .map(
       (p, i) =>
-        `<article class="solutionItem"><div class="solutionHeading">문 ${startingNumber + i} · ${renderToStaticMarkup(
+        `<article class="solutionItem" data-pid="${p.id}"><div class="solutionHeading">문 ${startingNumber + i} · ${renderToStaticMarkup(
           <MathText as="span" text={p.answer} />,
         )}</div><div class="solutionBody">${renderToStaticMarkup(
           <MathText
@@ -103,6 +108,16 @@ async function main() {
   let clipped = 0;
   let total = 0;
   const worst: Array<{ test: number; page: number; ratio: number }> = [];
+  /** 채점용 산출물 — 쪽마다 «어느 문항이 사라졌는가». */
+  const pageLog: Array<{
+    test: number;
+    page: number;
+    ids: string[];
+    lost: string[];
+    heights: number[];
+    quickCells: number[];
+    columnPx: number;
+  }> = [];
   const BATCH = 20;
   try {
     for (let t = 0; t < nTests; t += BATCH) {
@@ -135,14 +150,52 @@ async function main() {
           page: number;
           clientW: number;
           scrollW: number;
+          lost: string[];
+          heights: number[];
+          quickCells: number[];
+          columnPx: number;
         }> = [];
         document.querySelectorAll(".a4Page").forEach((section) => {
           const el = section.querySelector(".answerSolutions") as HTMLElement;
+          const box = el.getBoundingClientRect();
+          const lost: string[] = [];
+          const heights: number[] = [];
+          el.querySelectorAll(".solutionItem").forEach((node) => {
+            const item = node as HTMLElement;
+            // 다단에서 넘친 항목은 **3번째 단**, 즉 컨테이너 오른쪽 밖에 놓인다.
+            // (세로로 잘리는 게 아니라 가로로 밀려 지면에서 사라진다.)
+            if (item.getBoundingClientRect().left > box.right - 1)
+              lost.push(item.dataset.pid ?? "");
+            // 항목 높이는 **이 지면 안에서** 재야 한다 — 따로 떼어 재면 글꼴 문맥이
+            // 달라져 조용히 다른 값이 나온다(실제로 그래서 자가 20% 짧았다).
+            heights.push(
+              item.getBoundingClientRect().height +
+                parseFloat(getComputedStyle(item).marginBottom),
+            );
+          });
+          // 「빠른 정답」 상자는 1쪽에만 있고, 셀 높이가 **정답의 수식**에 달렸다
+          // (실측 25문항에서 상자 높이가 344~668px 로 갈린다).
+          const quickCells: number[] = [];
+          (section as HTMLElement)
+            .querySelectorAll(".quickAnswerCell")
+            .forEach((cell) => {
+              quickCells.push(
+                (cell as HTMLElement).getBoundingClientRect().height,
+              );
+            });
+          const style = getComputedStyle(el);
           out.push({
             tag: Number((section as HTMLElement).dataset.tag),
             page: Number((section as HTMLElement).dataset.page),
             clientW: el.clientWidth,
             scrollW: el.scrollWidth,
+            lost,
+            heights,
+            quickCells,
+            columnPx:
+              el.clientHeight -
+              parseFloat(style.paddingTop) -
+              parseFloat(style.paddingBottom),
           });
         });
         return out;
@@ -151,9 +204,24 @@ async function main() {
         page: number;
         clientW: number;
         scrollW: number;
+        lost: string[];
+        heights: number[];
+        quickCells: number[];
+        columnPx: number;
       }>;
       for (const r of res) {
         total += 1;
+        const picked = pick(r.tag);
+        const pages = paginateAnswerKey(picked);
+        pageLog.push({
+          test: r.tag,
+          page: r.page,
+          ids: pages[r.page - 1]!.problems.map((p) => p.id),
+          lost: r.lost,
+          heights: r.heights,
+          quickCells: r.quickCells,
+          columnPx: r.columnPx,
+        });
         // 다단에서 높이를 넘긴 내용은 **가로로** 단을 더 만들고 그게 잘린다.
         if (r.scrollW > r.clientW + 1) {
           clipped += 1;
@@ -192,6 +260,18 @@ async function main() {
   console.log(
     `  그중 1쪽(빠른 정답 상자가 얹힌 장) ${worst.filter((w) => w.page === 1).length}장 / 1쪽 총 ${nTests}장`,
   );
+  const lostItems = pageLog.reduce((n, p) => n + p.lost.length, 0);
+  const items = pageLog.reduce((n, p) => n + p.ids.length, 0);
+  console.log(
+    `해설 ${items.toLocaleString()}건 중 지면 밖으로 밀린 것 ${lostItems.toLocaleString()} (${((lostItems * 100) / Math.max(1, items)).toFixed(2)}%)`,
+  );
+
+  const jsonPath = arg("--json");
+  if (jsonPath) {
+    mkdirSync(path.dirname(jsonPath), { recursive: true });
+    writeFileSync(jsonPath, JSON.stringify(pageLog), "utf8");
+    console.log(`→ ${jsonPath}`);
+  }
 }
 
 main()

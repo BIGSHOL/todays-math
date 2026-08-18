@@ -32,11 +32,7 @@ import type { TestPrintProblem } from "@/components/print/types";
 import { JASEUP_GEOMETRY } from "@/lib/printGeometry";
 import { paginateAnswerKey } from "@/lib/printLayout";
 import { packProblems } from "@/lib/printPack";
-import {
-  assessOverflowRisk,
-  estimateProblemLines,
-  OVERFLOW_LINE_LIMIT,
-} from "@/lib/printOverflow";
+import { estimateProblemLines, OVERFLOW_LINE_LIMIT } from "@/lib/printOverflow";
 
 /* ── 실측 상수 (scratch 측정 도구 산출, 인쇄 매체) ────────────────────────── */
 const LINE_PX = 20.3125;
@@ -85,34 +81,30 @@ describe("[적대③-B] 첫 장이 좁다는 사실이 «분할» 에는 아직 
   });
 });
 
-describe("[적대③-C] 정답지는 판정 대상이 아니다", () => {
+/**
+ * ✅ `[적대③-C]` **판정**은 고쳤다 — `assessAnswerKeyRisk` 가 `solution` 을 읽고
+ * 「어느 쪽에서 어느 문항의 해설이 사라지는가」를 짚는다. 실측 재현율 **97.7%**
+ * (정밀도 75.5%, `scripts/qa/eval-answerkey-rules.ts`). 회귀 가드는
+ * `src/__tests__/unit/answerKeyOverflow.test.ts` 로 옮겼다.
+ *
+ * 🔴 **정원은 안 고쳤다** — 아래 한 건은 일부러 빨간 채로 둔다.
+ */
+describe("[적대③-C] 정답지 1쪽 정원이 「빠른 정답」 상자를 모른다", () => {
   /**
-   * `.answerSolutions` 에도 `overflow: hidden` 이 걸려 있다(다단이라 넘친 해설은
-   * **3번째 단**으로 밀려 지면 밖에서 잘린다). 그런데 `assessOverflowRisk` 는
-   * `problem.content` 만 읽고 `solution` 은 한 글자도 안 본다.
-   *
-   * 실측(시험지 120개 × 25문항, 해설이 있는 문항만): 정답지 480장 중 **134장(27.9%)**
-   * 에서 해설이 잘렸다. 해설이 섞인 일반 풀에서도 4.8%.
-   */
-  it("해설이 2,373자여도 경고가 없다 — 판정이 solution 을 안 읽는다", () => {
-    const risks = assessOverflowRisk([
-      problem({ content: "다음을 구하시오.", solution: "가".repeat(2373) }),
-    ]);
-    // 🔴 지금은 [] 다.
-    expect(risks).toHaveLength(1);
-  });
-
-  /**
-   * 정답지 1쪽에는 **빠른 정답 상자**가 얹힌다(문항 수에 비례해 커진다 —
-   * 25문항이면 7행). 그런데 `paginateAnswerKey` 는 1쪽에도 8건을 그대로 넣는다.
+   * 정답지 1쪽에는 **빠른 정답 상자**가 얹힌다(문항 수와 정답 길이에 비례해 커진다 —
+   * 실측 25문항에서 344~668px). 그런데 `paginateAnswerKey` 는 1쪽에도 8건을 넣는다.
    * 실측: 잘린 134장 중 **95장이 1쪽**이다(1쪽 120장 중 79%).
+   *
+   * ⚠️ **이건 판정이 아니라 지면 배치다.** 1쪽 정원을 줄이면 정답지 장 수가 늘고
+   *    문항이 놓이는 자리가 통째로 바뀐다 — 원장님 확정 사항(D-07, 절대 규칙 1·6).
+   *    제안은 `docs/planning/tracks/reports/fix-overflow.md` 에 적었다.
    */
   it("빠른 정답 상자가 얹히는 1쪽도 8건 고정이다", () => {
     const pages = paginateAnswerKey(
       Array.from({ length: 25 }, (_, i) => problem({ id: `p${i}` })),
     );
     expect(JASEUP_GEOMETRY.answerEntriesPerPage).toBe(8);
-    // 🔴 1쪽은 빠른 정답 상자만큼 좁으므로 8건일 수 없다.
+    // 🔴 1쪽은 빠른 정답 상자만큼 좁으므로 8건일 수 없다 — 원장님 확정 대기.
     expect(pages[0]!.problems.length).toBeLessThan(8);
   });
 });

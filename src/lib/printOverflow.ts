@@ -15,8 +15,12 @@
 import type { TestPrintProblem } from "@/components/print/types";
 import { displayWidth, fitsTwoColumns } from "@/lib/math/displayWidth";
 import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
+import { paginateAnswerKey } from "@/lib/printLayout";
 import { packProblems } from "@/lib/printPack";
-import { parseProblemContent } from "@/lib/problem/parseProblemContent";
+import {
+  normalizeOcrText,
+  parseProblemContent,
+} from "@/lib/problem/parseProblemContent";
 
 /**
  * 본문 **표시 폭** 한계. 원문 글자 수가 아니다 — 한글·전각은 2, 수식은 글리프 근사로 센다
@@ -396,6 +400,161 @@ export function assessOverflowRisk(
     if (reasons.length) {
       risks.push({ number: index + 1, problemId: problem.id, reasons });
     }
+  });
+
+  return risks;
+}
+
+/* ────────────────────────────────────────────────────────────────────────
+ * 정답지 — `solution` 도 판정한다 (적대적 리뷰 ③ §5)
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/**
+ * 해설 한 단에 들어가는 **표시폭**.
+ *
+ * 단 폭은 331px 이고 본문은 11.5px 다. 글자 폭만 따지면 55 단위쯤이어야 하는데
+ * 실측에 맞춘 값은 **50** 이다 — `displayWidth` 의 수식 글리프 근사가 해설(수식
+ * 밀도가 본문보다 훨씬 높다)에서 덜 세기 때문이다. 여기서 근사를 고치는 대신
+ * **자를 실측에 맞춘다** — 그게 이 저장소가 반복해서 배운 것이다(문턱이 아니라 자).
+ *
+ * 맞춤 근거: 해설 1,500건을 지면에 그려 높이를 재고 격자 탐색
+ * (`scripts/qa/measure-answerkey-units.tsx` + 채점). 50/52 조합에서
+ * 오차 |20px| 이내가 **81.7%** (중앙 +2px · p05 −33px · p95 +29px).
+ */
+const SOLUTION_UNITS_PER_LINE = 52;
+
+/**
+ * 해설 한 건이 글자 말고 더 먹는 세로 — 「문 N · 답」 제목 줄과 항목 아래 여백.
+ * 실측: 제목 줄 26.4px + 마진 4px + 패딩 약 4px + `margin-bottom: 14px` ≈ 52px.
+ */
+const SOLUTION_CHROME_PX = 48;
+
+/**
+ * **세로로 자리를 더 먹는 수식.** `displayWidth` 는 폭만 재므로 `rac` 를 «두 글자»로
+ * 보지만, 지면에서는 분자·분모가 위아래로 쌓여 한 줄로 안 끝난다. 해설은 본문보다
+ * 수식 밀도가 훨씬 높아 이 몫이 그대로 «놓침»이 된다.
+ *
+ * 실측 1,500건에서 이 항을 넣으면 오차 |20px| 이내가 80.7% → **86.1%** 로 오르고,
+ * 20px 넘게 **과소평가**하는 비율이 13.5% → **6.7%** 로 준다. 과소평가는 곧 놓침이라
+ * 정확도보다 이쪽이 중요하다.
+ */
+const TALL_MATH_RE =
+  /\\(?:d?frac|sum|int|prod|lim|binom|begin\{[a-z]*matrix\}|begin\{cases\}|sqrt\[)/g;
+const TALL_MATH_EXTRA_PX = 4;
+
+/**
+ * 「빠른 정답」 상자의 높이. 이 상자는 정답지 **1쪽에만** 얹히고, 그만큼 해설 칸이
+ * 좁아진다 — 실측으로 잘린 정답지 134장 중 **95장이 1쪽**인 이유가 이것이다.
+ *
+ * ⚠️ **문항 수만으로는 못 구한다.** 셀 안폭이 좁아(약 153px 에서 「문 N」 라벨을 뺀
+ *    몫) 정답이 조금만 길면 두 줄이 되고, 행 높이는 그 행에서 가장 높은 칸을 따른다.
+ *    실측 25문항 상자가 **344~668px** 로 갈린다 — 처음에 「1」 같은 합성 정답으로
+ *    재서 344 로 굳혔더니 1쪽 해설 칸을 139px 넓게 봤고, 그만큼 경고를 놓쳤다.
+ *    (지면 실측은 **실제 내용으로, 실제 지면 안에서** 해야 한다.)
+ */
+export function quickAnswerBoxPx(answers: readonly string[]): number {
+  if (answers.length === 0) return 0;
+  const {
+    quickAnswerTitle,
+    quickAnswerRowGap,
+    quickAnswerColumns,
+    quickAnswerCellBase,
+    quickAnswerCellLine,
+    quickAnswerCellUnits,
+  } = JASEUP_MEASURED_PX;
+
+  const cellPx = (answer: string) => {
+    const width = displayWidth(normalizeOcrText(answer ?? ""));
+    return (
+      quickAnswerCellBase +
+      Math.max(1, Math.ceil(width / quickAnswerCellUnits)) * quickAnswerCellLine
+    );
+  };
+
+  let total = quickAnswerTitle;
+  const rows = Math.ceil(answers.length / quickAnswerColumns);
+  for (let i = 0; i < answers.length; i += quickAnswerColumns) {
+    // 한 행의 높이는 그 행에서 **가장 높은 칸**이다 (grid 행).
+    total += Math.max(
+      ...answers.slice(i, i + quickAnswerColumns).map((a) => cellPx(a)),
+    );
+  }
+  return total + quickAnswerRowGap * (rows - 1);
+}
+
+/**
+ * 해설 한 건이 정답지에서 차지하는 **세로 픽셀**.
+ *
+ * ⚠️ 렌더러와 **같은 정규화**(`normalizeOcrText`)를 태운다. DB 해설에는 OCR 이
+ *    수식마다 빈 줄을 넣어 «문단»이 100개가 넘는 것이 있는데, 렌더러는 그 개행을
+ *    전부 공백으로 녹여 한 문단으로 흘린다. 문단으로 세면 실측 309px 짜리를
+ *    2,098px 로 본다 — 실제로 그렇게 틀렸다.
+ */
+export function estimateSolutionPx(solution: string | null): number {
+  // 해설이 없으면 지면에 「해설이 등록되지 않았습니다.」 한 줄이 나간다.
+  const text = normalizeOcrText(solution ?? "해설이 등록되지 않았습니다.");
+  const lines = Math.max(
+    1,
+    Math.ceil(displayWidth(text) / SOLUTION_UNITS_PER_LINE),
+  );
+  TALL_MATH_RE.lastIndex = 0;
+  const tall = text.match(TALL_MATH_RE)?.length ?? 0;
+  return (
+    SOLUTION_CHROME_PX +
+    lines * JASEUP_MEASURED_PX.solutionLine +
+    tall * TALL_MATH_EXTRA_PX
+  );
+}
+
+export interface AnswerKeyRisk {
+  /** 정답지 쪽 번호(1부터). */
+  page: number;
+  /** 그 쪽에서 해설이 **통째로 사라질** 수 있는 문항 번호. */
+  numbers: number[];
+}
+
+/**
+ * 정답지에서 해설이 지면 밖으로 밀릴 문항을 짚는다.
+ *
+ * `.answerSolutions` 는 `column-count: 2` + `overflow: hidden` 이다. 두 단을 다
+ * 채우고도 남은 해설은 **3번째 단**으로 밀려 지면 밖에서 사라진다 — 세로로 조금
+ * 잘리는 게 아니라 **한 문항의 해설이 통째로 없어진다.** 항목마다
+ * `break-inside: avoid` 라 단 경계에서 쪼개지지 않고 통으로 다음 단에 간다.
+ *
+ * ⚠️ **정원(`answerEntriesPerPage`)은 안 건드린다.** 줄이면 정답지 장 수와 배치가
+ *    바뀌므로 원장님 확정 대상이다(D-07). 여기서는 알리기만 한다.
+ */
+export function assessAnswerKeyRisk(
+  problems: TestPrintProblem[],
+): AnswerKeyRisk[] {
+  const { answerSolutionsFull, solutionColumns, quickAnswerGap } =
+    JASEUP_MEASURED_PX;
+  const risks: AnswerKeyRisk[] = [];
+
+  paginateAnswerKey(problems).forEach((page, pageIndex) => {
+    // 1쪽에만 「빠른 정답」 상자가 얹힌다 — 그만큼 해설 칸이 좁다.
+    const columnPx =
+      pageIndex === 0
+        ? answerSolutionsFull -
+          quickAnswerBoxPx(problems.map((p) => p.answer)) -
+          quickAnswerGap
+        : answerSolutionsFull;
+
+    let column = 0;
+    let used = 0;
+    const numbers: number[] = [];
+    page.problems.forEach((problem, index) => {
+      const height = estimateSolutionPx(problem.solution);
+      // 단이 남았는데 안 들어가면 통째로 다음 단으로 간다(`break-inside: avoid`).
+      if (used > 0 && used + height > columnPx) {
+        column += 1;
+        used = 0;
+      }
+      if (column >= solutionColumns) numbers.push(page.startingNumber + index);
+      used += height;
+    });
+
+    if (numbers.length) risks.push({ page: pageIndex + 1, numbers });
   });
 
   return risks;

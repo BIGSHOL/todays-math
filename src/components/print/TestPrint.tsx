@@ -9,7 +9,7 @@ import type {
   TestPrintDocument,
 } from "@/components/print/types";
 import { paginateAnswerKey } from "@/lib/printLayout";
-import { assessOverflowRisk } from "@/lib/printOverflow";
+import { assessAnswerKeyRisk, assessOverflowRisk } from "@/lib/printOverflow";
 import { packProblems } from "@/lib/printPack";
 import { assignEssayLabels } from "@/lib/tests/essayLabels";
 
@@ -68,6 +68,12 @@ export function TestPrint({ data, initialMode = "questions" }: TestPrintProps) {
   const questionPages = useMemo(() => packProblems(problems), [problems]);
   // 지면 형태는 D-07 확정이라 바꾸지 않는다 — 잘릴 만하면 **알리기만** 한다.
   const overflowRisks = useMemo(() => assessOverflowRisk(problems), [problems]);
+  // 정답지는 다른 지면이라 따로 본다 — `.answerSolutions` 는 2단이고 클립이 걸려
+  // 있어서, 넘친 해설은 **3번째 단으로 밀려 통째로 사라진다**(부분 잘림이 아니다).
+  const answerKeyRisks = useMemo(
+    () => assessAnswerKeyRisk(problems),
+    [problems],
+  );
   const answerPages = useMemo(() => paginateAnswerKey(problems), [problems]);
   // 서술형 순번은 **시험지 전체**를 가로지르므로 장별로 셀 수 없다.
   // 여기서 한 번 만들어 넘긴다 — 매 렌더 새 Map 이면 JaseupTemplate 의 memo 가 죽는다.
@@ -156,6 +162,18 @@ export function TestPrint({ data, initialMode = "questions" }: TestPrintProps) {
               .map((r) => `${r.number}번(${r.reasons.join(", ")})`)
               .join(" · ")}
             . 인쇄 미리보기에서 잘리지 않았는지 확인하십시오.
+          </p>
+        ) : null}
+        {answerKeyRisks.length ? (
+          <p className={styles.printWarning} role="status">
+            정답지에서 해설이 통째로 빠질 수 있습니다 —{" "}
+            {answerKeyRisks
+              .map(
+                (r) =>
+                  `${r.page}쪽 ${r.numbers.map((n) => `${n}번`).join("·")}`,
+              )
+              .join(" · ")}
+            . 정답지 미리보기에서 해당 문항의 해설이 있는지 확인하십시오.
           </p>
         ) : null}
       </header>
