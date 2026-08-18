@@ -7,6 +7,9 @@
  * 밖으로 밀려 통째로 사라진다(적대적 리뷰 ③ §3 — 스크린샷·A4 PDF 근거).
  * 지면 형태는 원장님 확정 사항(D-07)이라 바꾸지 않는다 — 대신 **인쇄 전에 알린다.**
  */
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import type { TestPrintProblem } from "@/components/print/types";
@@ -275,5 +278,54 @@ describe("[적대③-B] 장을 아는 판정", () => {
     expect(risks.map((r) => r.number)).toEqual(
       Array.from({ length: perPage }, (_, i) => i + 1),
     );
+  });
+});
+
+/**
+ * 🟢 회귀 가드 — 적대적 리뷰 ③ `[적대③-E]` 승격 (§3).
+ *
+ * **주석이 코드보다 오래 산다.** `.problemBox` 는 두 파일의 머리 주석에만 있었고
+ * CSS 에는 없었다. 그 한 줄 때문에 「잘림」이라는 틀린 그림이 테스트 이름과 경고
+ * 문구까지 퍼졌고, 원장은 지면에서 **없는 것**(잘린 문항)을 찾게 돼 있었다.
+ *
+ * 그래서 «모형이 지면과 같은가»를 CSS 원문으로 잠근다. 여기가 빨개지면
+ * `printOverflow.ts` 머리 주석과 `TestPrint.tsx` 경고 문구도 같이 고쳐야 한다.
+ */
+describe("[적대③-E] 넘침은 «잘림»이 아니라 «겹침»이다", () => {
+  const css = readFileSync(
+    path.join(process.cwd(), "src/components/print/TestPrint.module.css"),
+    "utf8",
+  );
+
+  it("`.problemBox` 라는 클래스는 존재하지 않는다", () => {
+    expect(css).not.toContain("problemBox");
+  });
+
+  it("문항 칸(.problemItem)에는 `overflow` 가 없다 — 그래서 옆 문항을 덮는다", () => {
+    const rule = /\.problemItem\s*\{([^}]*)\}/.exec(css)?.[1] ?? "";
+    expect(rule).toContain("flex: 1");
+    expect(rule).not.toMatch(/overflow/);
+  });
+
+  it("`overflow: hidden` 은 지면 전체와 정답지 해설단 둘뿐이다", () => {
+    const owners = [...css.matchAll(/\.([A-Za-z][\w-]*)\s*\{([^}]*)\}/g)]
+      .filter(([, , body]) => /overflow:\s*hidden/.test(body!))
+      .map(([, name]) => name!);
+    expect(new Set(owners)).toEqual(new Set(["a4Page", "answerSolutions"]));
+  });
+
+  /**
+   * 원장이 지면에서 찾을 것과 경고가 가리키는 것이 같아야 한다.
+   * 「잘리지 않았는지 확인하십시오」는 **없는 것을 찾으라는 말**이다.
+   */
+  it("경고 문구가 원장에게 «잘림»을 찾으라고 하지 않는다", () => {
+    const ui = readFileSync(
+      path.join(process.cwd(), "src/components/print/TestPrint.tsx"),
+      "utf8",
+    );
+    const warning = /지면을 넘겨[\s\S]{0,400}?확인하십시오/.exec(ui)?.[0] ?? "";
+    expect(warning).not.toBe("");
+    expect(warning).not.toMatch(/잘리|잘린|잘림/);
+    expect(warning).toContain("겹쳐");
   });
 });

@@ -23,9 +23,6 @@
  * ⚠️ 이 파일은 제품 코드를 **고치지 않는다.** 결함이 고쳐지면 이 파일을 지우고
  *    회귀 가드를 `src/__tests__/**` 로 옮긴다(vitest.adversarial.mts 주석 참조).
  */
-import { readFileSync } from "node:fs";
-import path from "node:path";
-
 import { describe, expect, it } from "vitest";
 
 import type { TestPrintProblem } from "@/components/print/types";
@@ -159,29 +156,9 @@ describe("[적대③-D] 줄 수 추정기의 «자»가 지면과 다르다", ()
   });
 });
 
-describe("[적대③-E] 넘침은 «잘림»이 아니라 «겹침»이다 — 모형이 틀렸다", () => {
-  const css = readFileSync(
-    path.join(process.cwd(), "src/components/print/TestPrint.module.css"),
-    "utf8",
-  );
-
-  /**
-   * `printOverflow.ts` 머리 주석과 `printOverflow.test.ts` 머리 주석이 모두
-   * 「`.problemBox` 에 `overflow: hidden` 이 걸려 있다」고 적었다.
-   * **그런 클래스는 없다.** `overflow: hidden` 은 `.a4Page` 하나에만 있다.
-   *
-   * 결과가 다르다. 문항 칸에 클립이 없으므로 1번 문항이 넘치면 **2번 문항 위에
-   * 겹쳐 찍히고**(스크린샷 §2), 2번이 넘치면 보기·정답란이 통째로 지면 밖으로
-   * 밀려 사라진다. 「그 문항만 조금 잘린다」가 아니다.
-   */
-  it("`.problemBox` 라는 클래스는 존재하지 않는다", () => {
-    expect(css).not.toContain("problemBox");
-  });
-
-  it("문항 칸(.problemItem)에는 overflow 가 없다 — 그래서 옆 문항을 덮는다", () => {
-    const rule = /\.problemItem\s*\{([^}]*)\}/.exec(css)?.[1] ?? "";
-    expect(rule).toContain("flex: 1");
-    // 🔴 넘침이 그 칸 안에서 끝나려면 여기에 overflow 가 있어야 한다.
-    expect(rule).toMatch(/overflow/);
-  });
-});
+/**
+ * ✅ `[적대③-E]` 모형과 문구 — **고쳤다.** `printOverflow.ts` 머리 주석,
+ * `printOverflow.test.ts`·`overflowLines.test.ts` 머리 주석, 인쇄 경고 문구를
+ * 전부 «겹침»으로 바로잡았다. 회귀 가드(CSS 원문 대조 + 경고 문구 대조)는
+ * `src/__tests__/unit/printOverflow.test.ts` 의 `[적대③-E]` 로 옮겼다.
+ */

@@ -155,13 +155,21 @@ export function TestPrint({ data, initialMode = "questions" }: TestPrintProps) {
             {printError}
           </p>
         ) : null}
+        {/*
+          문구는 **실제로 일어나는 일**을 가리켜야 한다. 문항 칸(`.problemItem`)에는
+          `overflow` 가 없어서 넘친 내용은 «잘리는» 게 아니라 **옆 문항 위에 겹쳐
+          찍히고**, 아래 칸에서 넘치면 보기·정답란이 지면 밖으로 밀려 사라진다
+          (적대적 리뷰 ③ §3). 「잘린 문항」을 찾으라고 하면 원장은 못 찾는다 —
+          눈에 들어오는 것은 «글자가 겹친 옆 문항»이다.
+        */}
         {overflowRisks.length ? (
           <p className={styles.printWarning} role="status">
-            지면을 넘길 수 있는 문항이 있습니다 —{" "}
+            지면을 넘겨 옆 문항과 겹쳐 인쇄될 수 있는 문항이 있습니다 —{" "}
             {overflowRisks
               .map((r) => `${r.number}번(${r.reasons.join(", ")})`)
               .join(" · ")}
-            . 인쇄 미리보기에서 잘리지 않았는지 확인하십시오.
+            . 인쇄 미리보기에서 글자가 겹치거나 보기·정답란이 빠지지 않았는지
+            확인하십시오.
           </p>
         ) : null}
         {answerKeyRisks.length ? (
