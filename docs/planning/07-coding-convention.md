@@ -117,6 +117,8 @@ todays-math/
 | 문제은행 | `problem` | 문제은행 | 문항DB |
 | 공용 풀 | `pool=shared` | 공용 | 개인은행 (지시 없으면 전부 공용, D-31) |
 | 출제 | `generate` | 출제 | 생성(문제 생성과 구분) |
+| RPM 교재본 | `source=transformed` **+ `originProblemId IS NULL`** | 교재 | 「변형」 (변형이 아니다 — D-51) |
+| AI 변형본 | `source=transformed` **+ `originProblemId` 있음** | 변형 | 「RPM」 |
 
 ---
 
@@ -371,3 +373,4 @@ feat(generator): 난이도 배분 알고리즘 구현
 | D-49 | 예측 문제지 재료 우선순위 | §L6 목록(①학교 재출제 → ④AI)은 **칸(단원·난이도·유형·배점)보다 앞서지 않는다.** 칸을 먼저 맞추고 그 안에서 ①→④ 로 고른다. 근거: 재출제 실측 **0.04%**(25,167문항 중 11개)이고, 그 드문 재출제의 **9/13 이 다른 회차**라 범위 밖 문항이 맞는 칸을 밀어낸다. 상세는 `11-score-predictor.md §13` | 2026-08-16 실측 확정 |
 | D-50 | 학원 '대비' 자료 분리 | 원장님이 만드신 '내신 대비' 자료(144편)는 **학교 출제 패턴 학습에서 뺀다**(`paperSource.ts`, 경로에 '대비'). 지우지는 않는다 — 시험 범위·라벨·예측 문제지 대조군으로 쓴다. 넣으면 엔진이 **원장님의 과거 추측을 학교 패턴으로** 배운다(문항수 +1.2문 부풀림). 출처 미상은 학습에 넣지 않는다. 근거는 `11-score-predictor.md §14` | 2026-08-16 원장님 확정 |
 | D-50 | 복수정답 지면 표기 | 학교가 두 답을 모두 정답 처리한 문항은 **`③, ④` 로 인쇄한다**(원문자 + 쉼표 + 한 칸). `③ 또는 ④`·`③·④` 안은 버렸다. **원장님 확정 2026-08-16.** 값은 `Problem.answer` 에 `③, ④` 로 그대로 들어 있고, 지면은 `PrintAnswerKeyPage` → `MathText` 가 원문자를 KaTeX 없이 평문으로 흘려 같은 모양으로 나온다 — **값도 표시 규칙도 바꾸지 않는다.** 표기를 바꿔야 하면 `answer` 가 아니라 `PrintAnswerKeyPage` 쪽을 손댄다(값에는 두 정답이 다 남아 있다). 대상 15건은 2026-08-16 적용 완료(`scripts/qa/applied/phase3-structural.json`). ⚠️ **인쇄 항목이므로 완료 조건은 실물 프린터 출력 검수다(CLAUDE.md 6번) — 현재 「원장님 실물 검수 대기」.** |
+| D-51 | `transformed` 는 두 가지다 | `source=transformed` 에는 **RPM 교재 이관본**(4,862건, 우리 DB 에 원본이 없어 `originProblemId` = NULL)과 **AI 변형본**(`ai/transformer.ts` 가 `originProblemId` 를 채운다)이 **함께** 들어온다. 둘을 가르는 것은 `originProblemId` 뿐이다 — 「비어 있는 컬럼」이 아니라 **판별자**다. 11 §3 L6 이 자작/RPM 을 ③, AI 변형을 ④ 로 나누므로 `source` 만 보는 코드는 그 순서를 지킬 수 없다(`composePredictedPaper.ts` 의 `sourceRank`). ⚠️ 프로덕션 AI 변형본이 **0건이라 지금은 증상이 없다** — 원장님이 변형 기능을 처음 쓰는 순간 드러난다. `where: {source:'transformed'}` 로 「RPM」을 뜻하는 스크립트가 14개 있으니 새로 쓸 때는 `originProblemId` 조건을 같이 걸 것. 2026-08-18 실측 확정 |

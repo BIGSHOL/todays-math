@@ -109,13 +109,28 @@ const RELAX_COST: Record<PaperRelaxation, number> = {
   유형: 1,
 };
 
-/** 같은 칸이면 기출을 먼저, AI 변형을 마지막에 (11 §3 L6 우선순위 ②~④). */
-const SOURCE_RANK: Record<PaperCandidate["source"], number> = {
-  past_exam: 0,
-  manual: 1,
-  transformed: 2,
-  ai_generated: 3,
-};
+/**
+ * 같은 칸이면 기출을 먼저, AI 변형을 마지막에 (11 §3 L6 우선순위 ②~④):
+ * `② 같은 단원·난이도 기출 → ③ 자작/RPM → ④ 부족분만 AI 변형`.
+ *
+ * ⚠️ **`source` 만으로는 이 순서를 지킬 수 없다.** RPM 교재 이관본과 AI 변형본이
+ * 둘 다 `transformed` 로 들어오기 때문이다(`convertRpm.ts` · `ai/transformer.ts:132`).
+ * 문서는 앞을 ③, 뒤를 ④ 로 나누므로 열거형 하나로는 표현이 안 된다.
+ * 가르는 것은 `originProblemId` — RPM 은 우리 DB 에 원본이 없어 NULL 이다.
+ *
+ * 문서가 자작과 RPM 을 **같은 ③** 에 두므로 둘의 등급도 같다. 예전에는 자작 1 · RPM 2 로
+ * 갈라 4,862건 전량이 한 등급 밀려 있었다.
+ */
+function sourceRank(
+  candidate: Pick<PaperCandidate, "source" | "originProblemId">,
+): number {
+  if (candidate.source === "past_exam") return 0;
+  if (candidate.source === "manual") return 1;
+  if (candidate.source === "transformed") {
+    return candidate.originProblemId === null ? 1 : 2;
+  }
+  return 2;
+}
 
 interface Slot {
   index: number;
@@ -290,7 +305,7 @@ export function composePredictedPaper(
       const key = [
         penalty,
         reusedIds.has(candidate.problemId) ? 0 : 1,
-        SOURCE_RANK[candidate.source],
+        sourceRank(candidate),
       ];
       if (
         chosen === null ||
