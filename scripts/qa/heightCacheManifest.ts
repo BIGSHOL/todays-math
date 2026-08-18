@@ -22,7 +22,7 @@
  * (이 저장소는 실제로 본문을 자주 고친다 — `apply-*` 스크립트들).
  */
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 const ROOT = process.cwd();
@@ -89,6 +89,35 @@ export function pageInputsHash(): string {
 }
 
 /** 잰 문항들의 지문 — 본문이 바뀌면 높이가 바뀐다. id 목록만으로는 못 본다. */
+/**
+ * 그림 **파일 자체**의 지문 — `존재 여부 + 바이트 수`.
+ *
+ * 왜 URL 문자열로는 모자라나 (검수 2026-08-18 이 실제로 당한 것):
+ * main 이 `public/figures/` 에 그림 3,365장을 새로 넣었다. `figureUrls` 는 원래부터
+ * 그 경로를 가리키고 있어서 **DB 는 한 글자도 안 바뀌었다.** 그런데 그림이 실제로
+ * 그려지기 시작해 지면이 최대 380.95px 높아졌다(표본 3,000건 중 33건). 지문은
+ * 조용히 통과했고, 낡은 캐시로 잰 재현율이 그대로 보고될 뻔했다.
+ *
+ * 높이를 바꾸는 것은 «URL 이 무엇인가»가 아니라 «그 URL 뒤에 무엇이 있는가»다.
+ * 바이트 수까지 세는 이유는 같은 경로의 그림이 **교체**될 수 있기 때문이다.
+ */
+function figureFilesFingerprint(urls: readonly string[]): string {
+  const parts: string[] = [];
+  for (const url of urls) {
+    // `/figures/4729/q03.png` → `public/figures/4729/q03.png`
+    const rel = url.replace(/^[\\/]+/, "");
+    const full = path.join(ROOT, "public", rel);
+    let stamp = "<없음>";
+    try {
+      stamp = String(statSync(full).size);
+    } catch {
+      // 파일이 없다 — 그 사실 자체가 지문의 일부다. 있다가 없어져도 높이가 바뀐다.
+    }
+    parts.push(`${url}:${stamp}`);
+  }
+  return parts.join(",");
+}
+
 export function measuredRowsHash(
   rows: ReadonlyArray<{
     id: string;
@@ -100,7 +129,7 @@ export function measuredRowsHash(
   const parts: string[] = [];
   for (const row of [...rows].sort((a, b) => (a.id < b.id ? -1 : 1))) {
     parts.push(
-      `${row.id}\u0000${row.content ?? ""}\u0000${row.figureUrls.join(",")}\u0000${row.questionType ?? ""}\u0001`,
+      `${row.id}\u0000${row.content ?? ""}\u0000${figureFilesFingerprint(row.figureUrls)}\u0000${row.questionType ?? ""}\u0001`,
     );
   }
   return sha256(parts);
@@ -113,7 +142,7 @@ export function rowDigest(row: {
   questionType?: string | null;
 }): string {
   return sha256([
-    `${row.content ?? ""} ${row.figureUrls.join(",")} ${row.questionType ?? ""}`,
+    `${row.content ?? ""} ${figureFilesFingerprint(row.figureUrls)} ${row.questionType ?? ""}`,
   ]).slice(0, 12);
 }
 

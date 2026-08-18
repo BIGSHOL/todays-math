@@ -16,7 +16,7 @@
  * 그래서 (1) 참은 캐시가 **실측한** 칸(`availPx`)에서 오고, (2) 캐시 옆에 지면
  * 입력의 지문을 남겨 어긋나면 멈춘다.
  */
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -148,5 +148,58 @@ describe("[적대④-E] 채점기의 참이 제품 상수에서 나오지 않는
   /** 전수 30분을 다시 안 쓰고 캐시를 되살리는 길 — 손이 아니라 도구가 말하게 한다. */
   it("표본으로 캐시를 대조해 지문을 다시 찍는 길이 있다", () => {
     expect(read("scripts/qa/measure-print-overflow.tsx")).toContain("--verify");
+  });
+});
+
+/**
+ * 검수(2026-08-18)가 찾은 구멍 — **지문이 DB 컬럼만 봤다.**
+ *
+ * main 이 그림 파일 3,365장을 `public/figures/` 에 새로 넣었다. `figureUrls` 는
+ * 한 글자도 안 바뀌었는데(원래부터 그 경로를 가리키고 있었다) **그림이 실제로
+ * 그려지기 시작해** 지면이 최대 380.95px 높아졌다. 표본 3,000건 중 33건.
+ *
+ * 그런데 `assertHeightCacheFresh` 는 **조용히 통과했다.** 낡은 캐시로 잰
+ * 재현율·정밀도가 그대로 보고될 뻔했다. 「캐시가 거짓이 되는 걸 캐시 자신이 모른다」는
+ * 결함을 한 층 위에서 다시 낸 것이다.
+ *
+ * 지문은 **높이를 바꾸는 모든 것**을 봐야 한다 — URL 문자열이 아니라 «그 URL 뒤에
+ * 파일이 있는가, 몇 바이트인가».
+ */
+describe("[검수] 지문이 그림 파일 자체를 본다", () => {
+  const row = {
+    id: "a",
+    content: "본문",
+    figureUrls: ["/figures/__fingerprint_probe__.png"],
+    questionType: null,
+  };
+
+  it("URL 이 같아도 파일이 생기면 지문이 달라진다", () => {
+    const dir = path.join(process.cwd(), "public/figures");
+    const file = path.join(dir, "__fingerprint_probe__.png");
+    mkdirSync(dir, { recursive: true });
+    rmSync(file, { force: true });
+
+    const before = measuredRowsHash([row]);
+    writeFileSync(file, Buffer.alloc(64, 7));
+    try {
+      // 🔴 파일만 생겼다 — DB 는 한 글자도 안 바뀌었다.
+      expect(measuredRowsHash([row])).not.toBe(before);
+    } finally {
+      rmSync(file, { force: true });
+    }
+  });
+
+  it("파일 크기가 바뀌어도 지문이 달라진다 — 그림이 바뀌면 높이가 바뀐다", () => {
+    const dir = path.join(process.cwd(), "public/figures");
+    const file = path.join(dir, "__fingerprint_probe__.png");
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(file, Buffer.alloc(64, 7));
+    const small = measuredRowsHash([row]);
+    writeFileSync(file, Buffer.alloc(4096, 7));
+    try {
+      expect(measuredRowsHash([row])).not.toBe(small);
+    } finally {
+      rmSync(file, { force: true });
+    }
   });
 });
