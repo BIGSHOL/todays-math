@@ -295,7 +295,13 @@ export interface RenderResidueResult {
   holds: string[];
 }
 
-/** 라벨·환경 인자 — 여기 안은 잔재가 아니라 내용이다. */
+/**
+ * 라벨·환경 인자 — 여기 안은 잔재가 아니라 **내용**이다.
+ *
+ * `\overline` 계열이 여기 있는 이유는 실제 사고 때문이다: `\overline{GE}`(선분 GE)의
+ * `GE` 를 부등호로 읽어 `\overline{\geq }` 로 만들었다(2026-08-18, 2행 적용 후 발견).
+ * 도형 오버레이의 인자는 **항상 점 라벨**이므로 통째로 가린다.
+ */
 const PROTECTED_ARG_COMMANDS = [
   "text",
   "mathrm",
@@ -313,10 +319,20 @@ const PROTECTED_ARG_COMMANDS = [
   "htmlClass",
   "htmlId",
   "htmlStyle",
+  "overline",
+  "underline",
+  "overrightarrow",
+  "overleftarrow",
+  "overleftrightarrow",
+  "widehat",
+  "widetilde",
+  "overarc",
 ];
 
+// ⚠️ 중괄호 **한 겹 중첩**까지 본다. `[^{}]*` 만 쓰면 `\mathrm{\overline{GE}}` 가
+//    매치되지 않아 보호가 통째로 새고, 그게 위 사고의 나머지 절반이었다.
 const PROTECTED_RE = new RegExp(
-  `\\\\(?:${PROTECTED_ARG_COMMANDS.join("|")})\\s*\\{[^{}]*\\}`,
+  `\\\\(?:${PROTECTED_ARG_COMMANDS.join("|")})\\s*\\{(?:[^{}]|\\{[^{}]*\\})*\\}`,
   "g",
 );
 
@@ -378,10 +394,64 @@ const APPLIED_TO_ARGUMENT = /^\s*(?:\(|\\left\s*\()/;
 const LEGE_DECOMPOSABLE = /^(?:[A-Za-z]{0,2}(?:le|ge))+[A-Za-z]{0,2}$/i;
 const LEGE_TOKEN = /le|ge/gi;
 
+/**
+ * 정본 이름 그대로인 `LEQ`/`GEQ`/`NEQ` — 이건 **덩어리 분해 없이** 옮긴다.
+ *
+ * `le`/`ge` 규칙은 이것들을 일부러 막는다(`blockingKeyword` 가 정본 토큰으로
+ * 잡는다) — 안 막으면 `leq` 가 `\leq q` 가 돼 뜻이 망가진다. 그래서 따로 둔다.
+ * 대소문자를 섞은 형태는 **일부러 뺐다** — base64 오염 행에 `ggEqVcWlX…` 같은
+ * 조각이 있어 섞으면 그게 걸린다.
+ */
+const LEQ_RE = /(?<![\\A-Za-z])(LEQ|leq)/g;
+const GEQ_RE = /(?<![\\A-Za-z])(GEQ|geq)/g;
+const NEQ_RE = /(?<![\\A-Za-z])(NEQ|neq)/g;
+
 /** 맨 곱셈 키워드. 앞뒤가 영문자면 낱말의 일부일 수 있어 건드리지 않는다. */
 const TIMES_RE = /(?<![\\A-Za-z])times(?![A-Za-z])/g;
-/** HWP `vert` — 정본이 왕복 때문에 일부러 안 되돌린다(`hwpeq_to_latex` 주석). */
-const VERT_RE = /(?<![\\A-Za-z])vert(?![A-Za-z])/g;
+/**
+ * HWP `vert` — 정본이 왕복 정합성 때문에 **일부러** 안 되돌린다
+ * (`hwpeq_to_latex` 주석: "VERT 도 제외 — … `|` 로 되돌리면 왕복이 어긋난다").
+ * 그 결정의 대가를 지면이 치르고 있었다: 집합기호 `{x vert x≥1}` 이 이탤릭
+ * "vert" 로 찍힌다.
+ *
+ * ⚠️ **앞뒤 어느 쪽에도 «영문자 금지» 를 걸지 말 것.** 절댓값은 원래 피연산자에
+ *    붙는다 — `vertf(x)vertdx` 는 `|f(x)|dx` 이고, `verta-bvert` 는 `|a-b|` 다.
+ *    뒤를 막았더니 44곳이, 앞을 막았더니 **닫는 쪽 `vert` 가** 통째로 빠져
+ *    `\vert avert` 같은 반쪽 수리가 나왔다. `over`·`DIVIDE` 때와 같은 함정이다.
+ *    막아야 하는 것은 영문자가 아니라 **LaTeX 명령**뿐이다 — 소문자 `vert` 를
+ *    품은 명령은 `\vert` · `\lvert` · `\rvert` 셋이고 그것만 lookbehind 로 막는다
+ *    (`\Vert`·`\lVert` 는 대문자라 애초에 안 걸린다).
+ *    영어 낱말(`vertex`·`convert`) 걱정은 실측으로 털었다 —
+ *    말뭉치의 `vert` 172곳(서로 다른 모양 158 + 붙은 것 14종) **전량**이 `|` 였다.
+ */
+const VERT_RE = /(?<!\\)(?<!\\[lr])vert/g;
+
+/**
+ * 맨 그리스 이름. **정확히 일치할 때만** 옮긴다.
+ *
+ * 짧은 이름(`xi`·`mu`·`nu`·`pi`·`eta`·`chi`)은 뺐다 — 실측 `z=(2xi+6)i-x(1+i)+12`
+ * 는 ξ 가 아니라 `2x·i` 였고, `mu0rtB13iPP…` 는 base64 오염 행이었다.
+ * 네 글자 이상만 남기면 그 부류가 통째로 빠진다.
+ */
+const GREEK_NAMES = [
+  "varepsilon",
+  "vartheta",
+  "epsilon",
+  "upsilon",
+  "lambda",
+  "varphi",
+  "alpha",
+  "delta",
+  "gamma",
+  "kappa",
+  "omega",
+  "sigma",
+  "theta",
+  "beta",
+  "iota",
+  "zeta",
+];
+const GREEK_RUN = new RegExp(`^(?:${GREEK_NAMES.join("|")})$`);
 /** 섭씨·화씨 — `10 CENTIGRADE`, `\left( FAHRENHEIT\right)`. 한 문항에 짝으로 나온다. */
 const CENTIGRADE_RE = /(?<![\\A-Za-z])CENTIGRADE(?![A-Za-z])/g;
 const FAHRENHEIT_RE = /(?<![\\A-Za-z])FAHRENHEIT(?![A-Za-z])/g;
@@ -456,7 +526,7 @@ export function fixRenderResidue(content: string): RenderResidueResult {
   const out = text.replace(/\$([^$]*)\$/g, (_whole, expr: string) => {
     // 라벨·환경 인자를 **가린 채로** 모든 규칙을 돌린다. 지우는 게 아니라 가리는 것이다 —
     // 경계를 확실히 못 자르는 것을 지우면 근거가 사라진다(2026-08-16 교훈).
-    const fixed = outsideProtected(expr, (bare) => {
+    let fixed = outsideProtected(expr, (bare) => {
       let e = bare;
       const swap = (
         name: string,
@@ -477,7 +547,7 @@ export function fixRenderResidue(content: string): RenderResidueResult {
       };
 
       // 1) 붉은 명령 — 옮길 자리가 하나로 정해지는 것만.
-      swap("overarc", OVERARC_RE, "\\overset{\\frown}");
+      //    (`\overarc` 는 인자가 보호 대상이라 **보호가 끝난 뒤** 아래에서 이름만 바꾼다.)
       swap("left/right-vert", LEFT_VERT_RE, "\\left\\vert");
       swap("left/right-vert", RIGHT_VERT_RE, "\\right\\vert");
       swap("cm", CM_RE, "\\mathrm{cm}");
@@ -518,11 +588,31 @@ export function fixRenderResidue(content: string): RenderResidueResult {
       if (GLUED_FUNCTION_RE.test(e)) holds.add("glued-function");
       GLUED_FUNCTION_RE.lastIndex = 0;
 
-      // 4) `le`/`ge` — 덩어리 단위로 본다. 두 겹으로 막는다(위 주석 참조).
+      // 3-1) 정본 이름 그대로인 `LEQ`/`GEQ`/`NEQ` — 아래 le/ge 규칙보다 **먼저**.
+      swap("leq/geq", LEQ_RE, "\\leq ");
+      swap("leq/geq", GEQ_RE, "\\geq ");
+      swap("leq/geq", NEQ_RE, "\\neq ");
+
+      // 4) 맨 그리스 이름 — 덩어리 전체가 이름과 **정확히** 같을 때만.
+      swap(
+        "greek",
+        /(?<![\\A-Za-z])[A-Za-z]{4,}(?![A-Za-z])/g,
+        (run: string) => (GREEK_RUN.test(run) ? `\\${run} ` : run),
+      );
+
+      // 5) `le`/`ge` — 덩어리 단위로 본다. 두 겹으로 막는다(위 주석 참조).
       e = e.replace(/(?<![\\A-Za-z])[A-Za-z]{2,}/g, (run) => {
         if (!/le|ge/i.test(run)) return run;
         if (!LEGE_DECOMPOSABLE.test(run)) {
           holds.add("lege-shape");
+          return run;
+        }
+        // **전부 대문자면 기하 라벨과 구분이 안 된다.** 실측(해설 컬럼):
+        // `\angle GEF` · `\angle CGE` · `GECF` · `AGE` · `BGE` — 전부 라벨이었다.
+        // 키워드 그 자체(`LE`·`GE`)일 때만 남기고 나머지는 손대지 않는다.
+        // 대소문자가 섞였으면(`LEmle`·`xGE`·`LExLE`) 라벨일 수 없어 통과시킨다.
+        if (run.length > 2 && run === run.toUpperCase()) {
+          holds.add("lege-upper-label");
           return run;
         }
         const blocked = blockingKeyword(run);
@@ -538,6 +628,14 @@ export function fixRenderResidue(content: string): RenderResidueResult {
 
       return e;
     });
+
+    // `\overarc{GE}` 의 `GE` 는 선분 라벨이라 보호 대상이다. 그래서 보호를 걷은
+    // **뒤에** 명령 이름만 바꾼다 — 인자는 이미 한 번도 안 건드려졌다.
+    const renamed = fixed.replace(OVERARC_RE, "\\overset{\\frown}");
+    if (renamed !== fixed) {
+      applied.add("overarc");
+      fixed = renamed;
+    }
 
     return `$${fixed}$`;
   });

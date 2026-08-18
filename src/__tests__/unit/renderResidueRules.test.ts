@@ -45,6 +45,28 @@ describe("[fixRenderResidue] 막아야 하는 것 — 이쪽이 먼저다", () =
     expect(fix("$\\mathrm{ABLE}$")).toBe("$\\mathrm{ABLE}$");
   });
 
+  it("`\\overline{GE}` 는 선분 GE 다 — 부등호로 읽지 않는다", () => {
+    // 실제로 두 행을 이렇게 망가뜨린 뒤 발견했다(`\overline{\geq }`).
+    expect(fix("$\\overline{GE}=2$")).toBe("$\\overline{GE}=2$");
+    // 중괄호 한 겹 중첩까지 보호해야 한다 — `[^{}]*` 만 쓰면 여기서 보호가 샌다.
+    expect(fix("$\\mathrm{\\overline{GE}}=2$")).toBe(
+      "$\\mathrm{\\overline{GE}}=2$",
+    );
+  });
+
+  it("전부 대문자인 덩어리는 기하 라벨과 구분이 안 되므로 손대지 않는다", () => {
+    // 해설 컬럼 실측: `\angle GEF` · `\angle CGE` · `GECF` · `AGE` · `BGE`.
+    for (const label of ["GEF", "FGE", "AGE", "CGE", "GECF", "BGE"]) {
+      expect(fix(`$\\angle ${label}=90\\degree$`)).toBe(
+        `$\\angle ${label}=90\\degree$`,
+      );
+    }
+    // 키워드 그 자체와, 대소문자가 섞인 것은 라벨일 수 없다.
+    expect(fix("$f(7)LE6$")).toBe("$f(7)\\leq 6$");
+    expect(fix("$a_{n}GE0$")).toBe("$a_{n}\\geq 0$");
+    expect(fix("$1LEmle4$")).toBe("$1\\leq m\\leq 4$");
+  });
+
   it("KaTeX 가 **아는** 대문자 명령은 백슬래시를 떼지 않는다", () => {
     // `\Delta`·`\Re`·`\S` 는 멀쩡한 명령이다. 목록이 아니라 렌더가 판정한다.
     expect(fix("$\\Delta ABC$")).toBe("$\\Delta ABC$");
@@ -133,6 +155,35 @@ describe("[fixRenderResidue] 조용히 틀리게 그려지는 글자", () => {
       "$\\left\\{ x\\,\\vert \\,x\\geq 1\\right\\}$",
     );
     expect(fix("$vert2x+3vert$")).toBe("$\\vert 2x+3\\vert $");
+  });
+
+  it("피연산자에 **붙은** `vert` 도 옮긴다 — 절댓값은 원래 붙는다", () => {
+    // `(?![A-Za-z])` 를 붙였더니 `vertZ`·`vertf(x)vertdx` 44곳이 통째로 빠졌다.
+    // 말뭉치의 `vert` 172곳 전량이 `|` 임을 확인하고 lookahead 를 뺐다.
+    expect(fix("$vertf(x)vertdx$")).toBe("$\\vert f(x)\\vert dx$");
+    expect(fix("$\\mathrm{P}(B\\,vertA)$")).toBe("$\\mathrm{P}(B\\,\\vert A)$");
+    // 닫는 쪽이 글자 뒤에 붙는다 — 앞을 막으면 `\vert avert` 반쪽 수리가 난다.
+    expect(fix("$verta-bvert$")).toBe("$\\vert a-b\\vert $");
+  });
+
+  it("`\\vert` · `\\lvert` · `\\rvert` 명령은 건드리지 않는다", () => {
+    const ok = "$\\lvert x\\rvert +\\vert y\\vert$";
+    expect(fix(ok)).toBe(ok);
+  });
+
+  it("정본 이름 그대로인 `LEQ`/`GEQ` 는 분해하지 않고 통째로 옮긴다", () => {
+    // le/ge 규칙에 맡기면 `leq` → `\leq q` 가 돼 뜻이 망가진다. 그래서 먼저 처리한다.
+    expect(fix("$-2 LEQx<3$")).toBe("$-2 \\leq x<3$");
+    expect(fix("$k leq -11$")).toBe("$k \\leq  -11$");
+    expect(fix("$x GEQ 4$")).toBe("$x \\geq  4$");
+    expect(fix("$a neq 0$")).toBe("$a \\neq  0$");
+  });
+
+  it("맨 그리스 이름을 옮긴다 — 정확히 일치할 때만", () => {
+    expect(fix("$\\cos theta<0$")).toBe("$\\cos \\theta <0$");
+    expect(fix("$\\tan alpha$")).toBe("$\\tan \\alpha $");
+    // `xi` 는 ξ 가 아니라 `x·i` 였다(실측 `z=(2xi+6)i-x(1+i)+12`). 짧은 이름은 뺀다.
+    expect(fix("$z=(2xi+6)i$")).toBe("$z=(2xi+6)i$");
   });
 
   it("`CENTIGRADE` 를 섭씨로 옮긴다", () => {
