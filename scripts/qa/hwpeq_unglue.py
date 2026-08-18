@@ -76,12 +76,31 @@ _RMIT = re.compile(
 #    `measure-hwp-latex-residue.py` 도 `DIV` 패턴이 뒤의 `I` 에 막혀 0을 가리켰다.
 #    영문자 lookaround 는 **정상 LaTeX 명령을 지키는 장치가 아니다** — 그건
 #    백슬래시 lookbehind 가 한다. 대문자 HWP 키워드는 영어 낱말일 리가 없다.
+#
+# ⚠️ **여기와 `renderPostfixRules.ts` 는 같은 어휘를 봐야 한다** (2026-08-18).
+#    2026-08-17 까지 이 목록에 `<=`·`>=` 는 있는데 짧은꼴 `le`·`ge` 규칙이 **아예
+#    없었다.** 세는 쪽(`measure-hwp-latex-residue.py`)도 같은 낱말을 안 세고 있어
+#    둘이 같이 눈이 멀었고, 지면에 `xle-7`·`age2` 가 그대로 나갔다(원장님 스크린샷).
+#    새 잔재를 찾으면 **양쪽에 같이** 넣어라. 어휘 정본은 `hwp-vocab.json` 이다.
 _POST = [
     (re.compile(r"(?<![\\A-Za-z])(?:BOX|box)(?![A-Za-z])"), r"\\square "),
     (re.compile(r"(?<!\\)DIVIDE"), r"\\div "),
     (re.compile(r"(?<!\\)divide"), r"\\div "),
     (re.compile(r"(?<!\\)TIMES"), r"\\times "),
+    # 소문자 `times` — 대문자만 보다가 `2^2 times 3times5^3` 을 놓쳤다.
+    # 앞뒤가 영문자면 낱말의 일부일 수 있어 그때만 비켜 간다.
+    (re.compile(r"(?<![\\A-Za-z])times(?![A-Za-z])"), r"\\times "),
     (re.compile(r"(?<![\\A-Za-z])ANGL(?![A-Za-z])"), r"\\angle "),
+    # `\overarc` 는 정본 ACCENT_MAP 의 `arch` 역매핑 결과인데 **KaTeX 에 없는 명령**이라
+    # 지면에 붉은 날 글자로 나간다. 뜻이 같은 KaTeX 표기로 바꿔 둔다.
+    (re.compile(r"\\overarc(?=\s*\{)"), r"\\overset{\\frown}"),
+    # HWP `vert` — 정본이 왕복 정합성 때문에 일부러 안 되돌린다. 지면에는 이탤릭
+    # "vert" 로 찍힌다. 소문자 `vert` 를 품은 LaTeX 명령은 `\vert`·`\lvert`·`\rvert`
+    # 셋뿐이라 그것만 피한다(앞뒤 영문자 금지는 걸면 안 된다 — 절댓값은 붙는다).
+    (re.compile(r"(?<!\\)(?<!\\[lr])vert"), r"\\vert "),
+    # 섭씨·화씨.
+    (re.compile(r"(?<![\\A-Za-z])CENTIGRADE(?![A-Za-z])"), r"^\\circ\\mathrm{C}"),
+    (re.compile(r"(?<![\\A-Za-z])FAHRENHEIT(?![A-Za-z])"), r"^\\circ\\mathrm{F}"),
     # `RM`/`IT` 가 구분자를 삼킨 잔여분 — `\mathit{LEFT}(t,~t\right)` 처럼 짝 없는
     # `\right` 를 남겨 KaTeX 를 깨뜨린다.
     (re.compile(r"\\mathit\{LEFT\}"), r"\\left"),
@@ -90,8 +109,72 @@ _POST = [
     (re.compile(r"!="), r"\\neq "),
     (re.compile(r"<="), r"\\leq "),
     (re.compile(r">="), r"\\geq "),
+    # 정본 이름 그대로 새어 나온 부등호. **짧은꼴 `le`/`ge` 규칙보다 먼저** 둔다 —
+    # 순서를 바꾸면 `leq` 가 `\leq q` 가 된다.
+    (re.compile(r"(?<![\\A-Za-z])(?:LEQ|leq)"), r"\\leq "),
+    (re.compile(r"(?<![\\A-Za-z])(?:GEQ|geq)"), r"\\geq "),
+    (re.compile(r"(?<![\\A-Za-z])(?:NEQ|neq)"), r"\\neq "),
     (re.compile(r"(?<![<>!=])==(?![=])"), "="),
 ]
+
+# 짧은꼴 `le`/`ge` — **덩어리 단위**로 봐야 해서 단순 치환 목록에 못 넣는다.
+#
+# HWP 수식편집기는 `le`·`ge` 를 ≤·≥ 로 읽지만 정본 `SYMBOL_MAP` 은 `\le`→`LEQ`
+# 한 방향뿐이라 역매핑 키가 `LEQ` 밖에 없다. 그래서 `le` 는 토큰째 흘러나간다.
+#
+# 두 겹으로 막는다 (DB 전수 표본을 눈으로 보고 정한 경계다):
+#   ① 덩어리 전체가 «한두 글자 + le/ge» 로 분해될 것 — `rpile`(r·p·i+le)·`ballet` 차단.
+#   ② 전부 대문자면 키워드 그 자체일 때만 — `\angle GEF`·`CGE`·`GECF` 는 기하 라벨이다.
+# `renderPostfixRules.ts` 의 같은 이름 규칙과 **판정이 같아야 한다.**
+_LEGE_RUN = re.compile(r"(?<![\\A-Za-z])[A-Za-z]{2,}")
+_LEGE_DECOMPOSABLE = re.compile(r"^(?:[A-Za-z]{0,2}(?:le|ge))+[A-Za-z]{0,2}$", re.I)
+_LEGE_TOKEN = re.compile(r"le|ge", re.I)
+# 덩어리 안에 이 낱말이 있으면 부등호가 아니다 (정본 구조 키워드 + 각/삼각형).
+_LEGE_BLOCK = ("pile", "left", "right", "angle", "triangle", "eqalign", "arch")
+
+# 인자가 **점 라벨**인 명령 — 여기 안의 글자는 잔재가 아니다.
+# `\overline{GE}`(선분 GE)의 `GE` 를 ≥ 로 바꿔 실제로 두 행을 망가뜨린 뒤 넣었다.
+# 중괄호 한 겹 중첩까지 본다 — `[^{}]*` 만 쓰면 `\mathrm{\overline{GE}}` 가 샌다.
+_PROTECTED = re.compile(
+    r"\\(?:text|mathrm|mathit|mathbf|mathbb|mathcal|mathfrak|mathsf|mathtt"
+    r"|operatorname|mbox|overline|underline|overrightarrow|overleftarrow"
+    r"|overleftrightarrow|widehat|widetilde)\s*\{(?:[^{}]|\{[^{}]*\})*\}"
+)
+_SENTINEL = ""
+
+
+def _outside_protected(latex: str, fn) -> str:
+    """보호 구간을 잠시 치우고 나머지에만 `fn` 을 적용한다."""
+    kept = []
+
+    def hide(m):
+        kept.append(m.group(0))
+        return _SENTINEL + str(len(kept) - 1) + _SENTINEL
+
+    masked = _PROTECTED.sub(hide, latex)
+    out = fn(masked)
+    return re.sub(
+        _SENTINEL + r"(\d+)" + _SENTINEL, lambda m: kept[int(m.group(1))], out
+    )
+
+
+def _fix_lege(latex: str) -> str:
+    def one(m: "re.Match[str]") -> str:
+        run = m.group(0)
+        if not _LEGE_TOKEN.search(run):
+            return run
+        if not _LEGE_DECOMPOSABLE.match(run):
+            return run
+        low = run.lower()
+        if any(kw in low for kw in _LEGE_BLOCK):
+            return run
+        if len(run) > 2 and run == run.upper():
+            return run
+        return _LEGE_TOKEN.sub(
+            lambda k: "\\leq " if k.group(0).lower() == "le" else "\\geq ", run
+        )
+
+    return _LEGE_RUN.sub(one, latex)
 
 
 def postfix_latex(latex: str) -> str:
@@ -101,6 +184,8 @@ def postfix_latex(latex: str) -> str:
     out = latex
     for pat, rep in _POST:
         out = pat.sub(rep, out)
+    # 점 라벨 인자를 가린 채로만 짧은꼴 부등호를 옮긴다.
+    out = _outside_protected(out, _fix_lege)
     return re.sub(r"[ \t]{2,}", " ", out)
 
 

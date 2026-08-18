@@ -44,14 +44,31 @@ const aggressiveRepair = (s: string): string =>
 const escapeHtml = (s: string): string =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+/**
+ * **KaTeX 를 부르는 모든 곳이 공유해야 하는 옵션.**
+ *
+ * `preprocessMathText` 는 호(⌒)와 순환마디 점을 `\htmlClass{…}` 로 내보낸다
+ * (`uprightGeometryLabels` · `repeatDotTex`). KaTeX 는 이 HTML 확장을
+ * **`trust` 없이는 거부**하고, 거부한 결과를 예외가 아니라 **붉은 글자**로 그린다.
+ * 그래서 이 옵션을 안 넘기는 렌더 경로는 조용히 붉은 `\htmlClass` 를 지면에 내보낸다.
+ *
+ * ⚠️ 실제로 그렇게 되고 있었다 (2026-08-18 실측): 화면은 `MarkdownRenderer` →
+ * `rehypeKatex()` 인데 옵션을 하나도 안 넘겨서, 문항 320행 · 수식 787곳이
+ * 붉은 `\htmlClass` 로 나갔다. **우리 전처리가 만든 글자를 우리 렌더가 거부한 것**이다.
+ * 고치는 방법은 `rehypeKatex(UI_KATEX_OPTIONS)` 한 줄이다.
+ * (`strict:false` 는 콘솔 경고만 없앤다 — 붉은 글자를 없애는 건 `trust` 다.)
+ */
+export const UI_KATEX_OPTIONS = {
+  strict: false as const,
+  trust: (ctx: { command: string }) => ctx.command === "\\htmlClass",
+};
+
 const tryRender = (input: string, displayMode: boolean): string =>
   katex.renderToString(input, {
+    ...UI_KATEX_OPTIONS,
     throwOnError: false,
-    strict: false,
     output: "html",
     displayMode,
-    // `\htmlClass` 만 허용 — uprightGeometryLabels 의 호(⌒) span 용.
-    trust: (ctx) => ctx.command === "\\htmlClass",
   });
 
 /** KaTeX 0.16 은 unknown command 를 .katex-error 대신 color:#cc0000 으로 그린다. */
