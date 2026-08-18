@@ -37,8 +37,12 @@ export function ProgressPanel({
   const lesson = unitSectionName(selectedUnitId, units);
   const { prevId, nextId } = adjacentUnitIds(selectedUnitId, units);
 
+  // 배경이 원색 화이트가 된 뒤(2026-08-18) 회색 면이 큰 덩어리로 남아 겉돌았다
+  // (원장님 지적 "여긴 여전히 회색톤인데"). 구역은 **3px 잉크 좌경계**가 이미 가르므로
+  // 면은 물러난다 — 팔레트 「계기판」 설계 노트가 예고한 그 자리다.
+  // 덤으로 패널 위 본문 대비가 5.11:1 → 6.21:1 로 올라간다.
   return (
-    <aside className="w-[250px] shrink-0 border-l-[3px] border-ink bg-side px-5 py-4">
+    <aside className="w-[250px] shrink-0 border-l-[3px] border-ink bg-surface px-5 py-4">
       <h2 className="mb-2 border-t-[3px] border-ink pt-1.5 text-[10.5px] font-black tracking-[2.5px]">
         진도 입력
       </h2>
@@ -100,7 +104,7 @@ export function ProgressPanel({
           type="button"
           disabled={!canRecord}
           onClick={onRecord}
-          className="mt-2 inline-flex min-h-11 w-full items-center justify-center bg-ink text-[12px] font-black text-canvas cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+          className="mt-2 inline-flex min-h-11 w-full items-center justify-center bg-ink text-[12px] font-black text-canvas cursor-pointer disabled:cursor-not-allowed disabled:bg-side disabled:text-text-3"
         >
           이 차시로 진도 기록
         </button>
