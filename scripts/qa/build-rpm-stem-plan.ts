@@ -6,20 +6,19 @@
  *
  * 출력: `scripts/qa/reports/pdf-figure-plan.json` (`crop-pdf-by-stem.py` 입력)
  *
- * ## 왜 이 길이 생겼나 — **판이 달라도 문항은 같다**
+ * ## 언제 쓰나 — **좌표가 못 미칠 때만**
  *
- * 문서 16 §4.1 은 「22개정 학생용 4권이 없으면 619건은 못 한다」로 막혀 있었다.
- * 근거는 `source_coords` 였다 — 좌표는 **그 판, 그 쪽**에만 유효하니까.
+ * 정본 6권이 `.rpm-src/` 에 있으면 `gate-rpm-crop.py` + `crop-rpm-from-pdf.py`
+ * (좌표 경로)가 훨씬 정확하다. **그쪽을 먼저 쓴다.**
  *
- * 그런데 좌표가 유일한 열쇠가 아니었다. N드라이브에 있는 **2015개정본**을 열어
- * 본문을 대 보니 같은 문항이 그대로 들어 있다(중2-2 표본 19개 중 15개가 20자 이상
- * 이어서 일치). 쪽수가 달라(160 vs 192) 좌표는 못 쓰지만, **글자를 따라가면 된다.**
- *
- * 그래서 기출에 쓰는 `crop-pdf-by-stem.py` 를 그대로 쓴다 — 그쪽도 좌표가 없어서
- * 발문으로 찾는다. 계획 모양만 맞춰 주면 된다.
+ * 이 길은 좌표가 없거나 안 맞을 때를 위한 것이다:
+ *  · 좌표 상자가 발문을 안 담은 소문항이라 관문을 못 지나는 행
+ *  · 판이 달라 쪽이 안 맞는 사본밖에 없을 때
+ *    (실측: 2015개정본에도 같은 문항이 들어 있다 — 중2-2 표본 19개 중 15개가
+ *     20자 이상 이어서 일치. 쪽수가 160 vs 192 라 좌표는 못 쓰지만 글자는 따라간다.)
  *
  * ⚠️ 판이 다르면 **같은 문항이 숫자만 바뀌어 있을 수 있다.** 그래서 오려낸 뒤
- *    반드시 눈으로 본다. 본문 유사도(`MIN_RUN`)가 1차 관문이고, 사람이 2차다.
+ *    반드시 눈으로 본다. 본문 유사도가 1차 관문이고, 사람이 2차다.
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -30,8 +29,8 @@ const CONTENT = "scripts/qa/reports/rpm-crop-content.json";
 const OUT = "scripts/qa/reports/pdf-figure-plan.json";
 
 /**
- * sumaek 이 적어 둔 책 이름 → N드라이브의 **2015개정본**.
- * 22개정 학생용은 1-1·2-1 만 있다(문서 16 §4.1 ⛔②). 나머지 넷은 이 판으로 시도한다.
+ * sumaek 이 적어 둔 책 이름 → 실제 파일. **앞에 적힌 것부터** 쓴다.
+ * 정본(`.rpm-src/`, 원장님 제공 22개정 6권)이 먼저고, 없으면 2015개정본으로 시도한다.
  */
 const BOOKS: Record<string, string[]> = {
   "RPM 중학 1-1 학생용.pdf": [
@@ -42,10 +41,22 @@ const BOOKS: Record<string, string[]> = {
     ".rpm-src/RPM 중학 2-1 학생용.pdf",
     "N:/개인/강아/교재자료/RPM/15/RPM 2-1.pdf",
   ],
-  "RPM 중학 1-2 학생용.pdf": ["N:/개인/강아/교재자료/RPM/15/RPM 1-2.pdf"],
-  "RPM 중학 2-2 학생용.pdf": ["N:/개인/강아/교재자료/RPM/15/RPM 2-2.pdf"],
-  "RPM 중학 3-1 학생용.pdf": ["N:/개인/강아/교재자료/RPM/15/RPM 3-1.pdf"],
-  "RPM 중학 3-2 학생용.pdf": ["N:/개인/강아/교재자료/RPM/15/RPM 3-2.pdf"],
+  "RPM 중학 1-2 학생용.pdf": [
+    ".rpm-src/RPM 중학 1-2 학생용.pdf",
+    "N:/개인/강아/교재자료/RPM/15/RPM 1-2.pdf",
+  ],
+  "RPM 중학 2-2 학생용.pdf": [
+    ".rpm-src/RPM 중학 2-2 학생용.pdf",
+    "N:/개인/강아/교재자료/RPM/15/RPM 2-2.pdf",
+  ],
+  "RPM 중학 3-1 학생용.pdf": [
+    ".rpm-src/RPM 중학 3-1 학생용.pdf",
+    "N:/개인/강아/교재자료/RPM/15/RPM 3-1.pdf",
+  ],
+  "RPM 중학 3-2 학생용.pdf": [
+    ".rpm-src/RPM 중학 3-2 학생용.pdf",
+    "N:/개인/강아/교재자료/RPM/15/RPM 3-2.pdf",
+  ],
 };
 
 function main(): void {
