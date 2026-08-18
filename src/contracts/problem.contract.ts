@@ -23,6 +23,7 @@
  */
 import { z } from "zod";
 
+import { problemCodeSchema } from "./problemCode.contract";
 import {
   dataResponseSchema,
   difficultySchema,
@@ -80,6 +81,15 @@ export type ProblemUpdateRequest = z.infer<typeof problemUpdateRequestSchema>;
 
 export const problemSchema = z.strictObject({
   id: uuidSchema,
+  /**
+   * 문항 코드 — 원장님이 문항을 지목하는 값 (D-53). 예: `J31402-K7M2`.
+   *
+   * ⚠️ **저장이지 파생이 아니다.** 뜻 부분(학교급·학년·대단원·소단원)은 **부여 당시의
+   *    스냅샷**이라 지금 `unitId` 와 다를 수 있다 — 단원 재배정이 실제로 149건 있었다.
+   *    그래서 화면은 코드 옆에 **현재 단원·출처를 항상 같이** 보여야 한다(D-53).
+   *    코드로 단원을 읽지 마라. 단원은 `unitId` 가 진실이다.
+   */
+  problemCode: problemCodeSchema,
   userId: uuidSchema,
   unitId: uuidSchema,
   source: problemSourceSchema,

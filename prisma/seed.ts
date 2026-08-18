@@ -24,6 +24,7 @@ import { PrismaClient } from "@prisma/client";
 
 // Node 네이티브 TS 실행(strip-types)은 상대 경로에 확장자 명시가 필수
 import { CURRICULUM_UNITS } from "./seed-data/units.ts";
+import { buildUnitCodePrefixes } from "../src/lib/problemCode.ts";
 
 const prisma = new PrismaClient();
 
@@ -36,8 +37,17 @@ async function seedUnits(): Promise<void> {
     return;
   }
 
+  // 문항 코드(D-53)의 «뜻» 부분을 같이 넣는다. 규칙은 `src/lib/problemCode.ts` 한 곳이고
+  // 여기서는 그 산출물만 싣는다 — 이 값이 없으면 그 단원의 문항은 코드를 못 받는다
+  // (DB 트리거가 조용히 넘어가지 않고 멈춘다).
   const result = await prisma.unit.createMany({
-    data: CURRICULUM_UNITS,
+    data: buildUnitCodePrefixes(CURRICULUM_UNITS).map((unit) => ({
+      grade: unit.grade,
+      chapter: unit.chapter,
+      section: unit.section,
+      orderIndex: unit.orderIndex,
+      problemCodePrefix: unit.prefix,
+    })),
   });
   console.log(
     `[seed:unit] ${result.count}건 적재 완료 (총 ${CURRICULUM_UNITS.length}건 중).`,

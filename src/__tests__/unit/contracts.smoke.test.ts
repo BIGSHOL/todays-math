@@ -157,6 +157,7 @@ describe("[T0.5.1] problem.contract", () => {
   it("problemSchema — pool 필드가 없으면 shared로 채운다", () => {
     const result = problemSchema.parse({
       id: UUID_1,
+      problemCode: "J20101-K7M2",
       userId: UUID_1,
       unitId: UUID_2,
       source: "manual",
