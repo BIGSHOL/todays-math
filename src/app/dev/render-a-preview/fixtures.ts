@@ -1,6 +1,8 @@
 import type { ProblemEntity } from "@/contracts/problem.contract";
 
 const base = {
+  // 시안 표본 — 문항 코드는 형식만 맞으면 된다(D-53, 중2 1단원 1소단원 자리).
+  problemCode: "J20101-K7M2",
   userId: "00000000-0000-4000-8000-000000000001",
   unitId: "00000000-0000-4000-8000-000000000002",
   source: "past_exam" as const,

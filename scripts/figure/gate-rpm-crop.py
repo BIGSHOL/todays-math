@@ -71,6 +71,12 @@ MIN_BOX_PT = 60.0
 FIT_ERODE_PT = 8.0
 #: 맞춘 오프셋이 (0,0) 보다 이만큼도 못 나으면 (0,0) 으로 본다.
 FIT_TIE_MARGIN = 0.03
+#: **쪽 오프셋**도 맞춘다. 같은 판이라도 표지 매수가 다르면 쪽이 통째로 밀린다 —
+#: 실측 `RPM 중학 3-2` 는 139쪽인데 좌표는 136쪽 기준이라 중앙값이 0.087 이었다.
+#: (dx, dy) 와 달리 이건 정수 쪽이고, 밀리면 «전혀 다른 쪽»이라 점수가 바닥을 친다.
+PAGE_SWEEP = 6
+#: 쪽 오프셋이 0 보다 이만큼은 나아야 «밀린 것»으로 본다.
+PAGE_TIE_MARGIN = 0.2
 
 
 def key(text: str) -> str:
@@ -84,20 +90,40 @@ class Book:
     def __init__(self, pdf: pathlib.Path, rows: list[dict], content: dict[str, str]):
         self.rows = rows
         self.content = content
+        self.page_off = 0
         doc = pymupdf.open(pdf)
         self.page_count = doc.page_count
         self.rect = doc[0].rect
         self.words: dict[int, list] = {}
         self.prect: dict[int, pymupdf.Rect] = {}
+        wanted = set()
         for r in rows:
-            pi = int(r["page"]) - 1
-            if 0 <= pi < doc.page_count and pi not in self.words:
-                self.words[pi] = doc[pi].get_text("words")
-                self.prect[pi] = doc[pi].rect
+            base = int(r["page"]) - 1
+            for off in range(-PAGE_SWEEP, PAGE_SWEEP + 1):
+                if 0 <= base + off < doc.page_count:
+                    wanted.add(base + off)
+        for pi in sorted(wanted):
+            self.words[pi] = doc[pi].get_text("words")
+            self.prect[pi] = doc[pi].rect
         doc.close()
 
+    def fit_page(self) -> int:
+        """쪽 오프셋을 맞춘다. **0 보다 뚜렷이 낫지 않으면 0 이다.**"""
+        sample = [r for r in self.rows if self.is_measurable(r)][:40] or self.rows[:40]
+        base = statistics.median(self.scores(0, 0, sample)) if sample else 0.0
+        best = (base, 0)
+        for off in range(-PAGE_SWEEP, PAGE_SWEEP + 1):
+            if off == 0:
+                continue
+            self.page_off = off
+            sc = self.scores(0, 0, sample)
+            if sc and (m := statistics.median(sc)) > best[0]:
+                best = (m, off)
+        self.page_off = 0
+        return best[1] if best[0] - base >= PAGE_TIE_MARGIN else 0
+
     def box_text(self, row: dict, dx: float, dy: float, erode: float = 0.0) -> str | None:
-        pi = int(row["page"]) - 1
+        pi = int(row["page"]) - 1 + self.page_off
         if pi not in self.words:
             return None
         x0, y0, x1, y1 = row["rect"]
@@ -163,6 +189,7 @@ def main() -> None:
     ap.add_argument("--list", action="store_true", help="행별 점수와 글자를 찍는다")
     ap.add_argument("--min-sim", type=float, default=0.85)
     ap.add_argument("--no-fit", action="store_true", help="(dx, dy) 를 맞추지 않는다")
+    ap.add_argument("--no-page-fit", action="store_true", help="쪽 오프셋을 맞추지 않는다")
     ap.add_argument("--emit", action="store_true",
                     help=f"통과분만 좌표를 고쳐 {GATED} 로 쓴다")
     a = ap.parse_args()
@@ -186,6 +213,7 @@ def main() -> None:
             summary.append({"책": name, "대상": len(rows), "상태": "원본 없음"})
             continue
         book = Book(pdf, rows, content)
+        book.page_off = 0 if a.no_page_fit else book.fit_page()
         dx, dy, fit_med = (0.0, 0.0, 0.0) if a.no_fit else book.fit()
         base = book.scores(0, 0)
         got = book.scores(dx, dy)
@@ -201,17 +229,20 @@ def main() -> None:
             if s is not None and s >= a.min_sim:
                 passed += 1
                 x0, y0, x1, y1 = r["rect"]
-                emitted.append({**r, "rect": [x0 + dx, y0 + dy, x1 + dx, y1 + dy],
-                                "sim": round(s, 3), "dx": dx, "dy": dy})
+                emitted.append({**r, "page": int(r["page"]) + book.page_off,
+                                "rect": [x0 + dx, y0 + dy, x1 + dx, y1 + dy],
+                                "sim": round(s, 3), "dx": dx, "dy": dy,
+                                "pageOff": book.page_off})
 
         print(f"\n── {name}  ({book.page_count}쪽 · {book.rect.width:.1f}×{book.rect.height:.1f})")
-        print(f"   맞춘 오프셋 dx={dx:g} dy={dy:g}"
+        print(f"   맞춘 오프셋 쪽{book.page_off:+d} dx={dx:g} dy={dy:g}"
               f"   (보정 없음 중앙값 {statistics.median(base):.3f}"
               f" → 보정 후 {statistics.median(got):.3f}"
               f" · {FIT_ERODE_PT:g}pt 깎아서 {fit_med:.3f})")
         print(f"   대상 {len(rows)}행 · 발문을 담은 상자 {len(measurable)}행"
               f" · {a.min_sim} 통과 {passed}행")
-        summary.append({"책": name, "대상": len(rows), "dx": dx, "dy": dy,
+        summary.append({"책": name, "대상": len(rows), "쪽오프셋": book.page_off,
+                        "dx": dx, "dy": dy,
                         "보정전중앙값": round(statistics.median(base), 3),
                         "보정후중앙값": round(statistics.median(got), 3),
                         "통과": passed})

@@ -61,6 +61,17 @@ STEM_INTRUSION_CHARS = 10
 #: 오려낸 칸이 **다른 문항의 좌표 상자**를 이만큼 덮으면 옆 문항 그림이 딸려 온 것이다.
 #: (실측 #29: 정오각형 문항 칸에 앞 문항의 정사각형 배열이 통째로 들어왔다.)
 NEIGHBOR_OVERLAP = 0.2
+#: 오려낸 칸의 **한 줄**에 한글이 이만큼 있으면 그림 라벨이 아니라 «문장»이다.
+#: 「내 발문이 들어왔나」만 보면 옆 문항 발문·소문항 꼬리는 구조적으로 안 보인다.
+SENTENCE_KO = 12
+#: 시험지 **자신의 서식**. 선택지 번호는 그림에 있을 수 없다 — 낱말 목록이 아니라 지면 문법이다.
+#: 실측: 「③ 7√3」 이 딸려 온 1건, 선택지가 그림인 문항 2건이 이 검사에 걸린다.
+EXAM_SYNTAX = re.compile(r"[①-⑤]")
+#: **사람이 보고 뺀 것.** 자동 검사가 다 잡지는 못한다 — 이유를 적어 둔다.
+REVIEWED_OUT = {
+    "019fd1db-46f3-75f0-8e0e-fd4781b53354":
+        "「보기」 글상자만 잡힌다 — 발문이 가리키는 사각형 ABCD 가 칸 밖이다",
+}
 #: 칸 경계에 걸친 요소는 **절반 이상이 안쪽일 때만** 삼킨다 — 그 아래는 남의 것이다.
 CROSS_KEEP = 0.4
 #: 그림이 `source_coords` 밖으로 나가는 것을 이만큼(pt)까지 허용한다.
@@ -410,6 +421,10 @@ def main() -> None:
 
     try:
         for it in items:
+            if it["externalId"] in REVIEWED_OUT:
+                fail.append({"externalId": it["externalId"],
+                             "이유": f"사람이 뺐다 — {REVIEWED_OUT[it['externalId']]}"})
+                continue
             out = pathlib.Path(it["out"])
             if out.exists() and out.stat().st_size > 0:
                 skipped += 1
@@ -461,7 +476,20 @@ def main() -> None:
                 fail.append({"externalId": it["externalId"],
                              "이유": f"칸에 발문이 {run}자 들어왔다"})
                 continue
-            # ⑵ 옆 문항 침입 — 다른 문항의 좌표 상자를 덮었다.
+            # ⑵ 문장·선택지 침입 — 그림이 아니라 지면을 오린 것이다.
+            box_text = page.get_text("text", clip=rect)
+            longest_ko = max(
+                (sum(1 for ch in ln if "가" <= ch <= "힣") for ln in box_text.splitlines()),
+                default=0,
+            )
+            if longest_ko >= SENTENCE_KO:
+                fail.append({"externalId": it["externalId"],
+                             "이유": f"칸에 문장이 들어왔다 (한 줄 한글 {longest_ko}자)"})
+                continue
+            if EXAM_SYNTAX.search(box_text):
+                fail.append({"externalId": it["externalId"], "이유": "칸에 선택지 번호가 들어왔다"})
+                continue
+            # ⑶ 옆 문항 침입 — 다른 문항의 좌표 상자를 덮었다.
             clash = None
             for b in by_page.get((pathlib.Path(pdf).name, int(it["page"])), []):
                 if b["problemId"] == it["problemId"]:

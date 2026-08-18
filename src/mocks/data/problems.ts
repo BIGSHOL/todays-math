@@ -27,6 +27,7 @@ import {
   PROBLEM_OTHER_ID,
   PROBLEM_OTHER_SHARED_ID,
   problemId,
+  problemCodeSuffix,
   USER_OTHER_ID,
   USER_TEACHER_ID,
 } from "./ids";
@@ -419,6 +420,8 @@ if (PROBLEM_SPECS.length !== 30) {
 export const MOCK_PROBLEMS: ProblemEntity[] = PROBLEM_SPECS.map(
   (spec, idx) => ({
     id: problemId(idx + 1),
+    // 코드의 뜻 부분은 **단원에서** 온다 — 실제 DB 트리거와 같은 조립이다.
+    problemCode: `${MOCK_UNITS[spec.unitIdx]!.problemCodePrefix}-${problemCodeSuffix(idx + 1)}`,
     userId: USER_TEACHER_ID,
     unitId: MOCK_UNITS[spec.unitIdx]!.id,
     source: spec.source,
@@ -461,6 +464,7 @@ export const MOCK_PENDING_PROBLEM = MOCK_PROBLEMS.find(
 /** USER_OTHER_ID 소유 private — MOCK_TEACHER가 접근 시 403 FORBIDDEN을 검증하는 픽스처. */
 export const MOCK_PROBLEM_OTHER_USER: ProblemEntity = {
   id: PROBLEM_OTHER_ID,
+  problemCode: `${MOCK_UNITS[0]!.problemCodePrefix}-${problemCodeSuffix(99)}`,
   userId: USER_OTHER_ID,
   unitId: MOCK_UNITS[0]!.id,
   source: "manual",
@@ -485,6 +489,7 @@ export const MOCK_PROBLEM_OTHER_USER: ProblemEntity = {
  */
 export const MOCK_PROBLEM_MISSING_ANSWER: ProblemEntity = {
   id: "33333333-3333-4333-8333-333333333333",
+  problemCode: `${MOCK_UNITS[0]!.problemCodePrefix}-${problemCodeSuffix(97)}`,
   userId: USER_TEACHER_ID,
   unitId: MOCK_UNITS[0]!.id,
   source: "transformed",
@@ -505,6 +510,7 @@ export const MOCK_PROBLEM_MISSING_ANSWER: ProblemEntity = {
 /** USER_OTHER_ID 소유 shared — 공용 풀은 다른 강사도 조회·출제한다 (D-31). */
 export const MOCK_PROBLEM_OTHER_SHARED: ProblemEntity = {
   id: PROBLEM_OTHER_SHARED_ID,
+  problemCode: `${MOCK_UNITS[0]!.problemCodePrefix}-${problemCodeSuffix(98)}`,
   userId: USER_OTHER_ID,
   unitId: MOCK_UNITS[0]!.id,
   source: "past_exam",

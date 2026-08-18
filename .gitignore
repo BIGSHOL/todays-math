@@ -57,6 +57,16 @@ scripts/qa/reports/*
 # 그림 유실 잠금 원장 — **공유 DB 를 되돌리는 유일한 근거다.**
 # 여기 없으면 다른 컴퓨터에서 790건을 되돌릴 방법이 없다(적대적 리뷰 지적).
 !scripts/qa/reports/missing-figure-lock.json
+# 문항 코드 원장(D-53) — 컬럼을 드롭했다 다시 만들 때 **같은 코드**를 되살리는 근거다.
+# 코드는 원장님이 종이·대화에 옮겨 적는 값이라 새로 뽑으면 다른 문항을 가리키게 된다.
+!scripts/qa/reports/problem-code-ledger.json.gz
+
+# 보기 그림 짝 적재 원장 — **공유 DB 를 되돌리는 유일한 근거다** (행마다 `before`).
+# 여기 없으면 다른 컴퓨터에서 97건을 되돌릴 방법이 없다.
+!scripts/qa/reports/choice-figure-index-apply.json
+# 보기 그림 짝을 못 찾아 **출제에서 뺀** 문항 원장 — 행마다 이전 상태와 사유.
+# 영구 삭제가 아니라 되살릴 수 있어야 하고, 그 근거가 이 파일뿐이다.
+!scripts/qa/reports/choice-figure-discard-lock.json
 # 정답과 보기가 안 맞는 문항 전량 목록 — 원장님이 «빼자»를 정하는 근거다.
 # DB 없는 컴퓨터에서도 바로 읽혀야 한다 (162KB).
 !scripts/qa/reports/unusable-problems.json

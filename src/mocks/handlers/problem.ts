@@ -33,6 +33,7 @@ import {
   MOCK_PROBLEM_OTHER_USER,
   MOCK_PROBLEMS,
   MOCK_UNITS,
+  problemCodeSuffix,
   PROBLEM_OTHER_ID,
   PROBLEM_OTHER_SHARED_ID,
   USER_TEACHER_ID,
@@ -87,6 +88,8 @@ export const problemHandlers: HttpHandler[] = [
       {
         data: {
           id: crypto.randomUUID(),
+          // 실제 DB 는 트리거가 붙인다 — mock 도 «서버가 준 값»으로 흉내 낸다.
+          problemCode: `${MOCK_UNITS.find((u) => u.id === parsed.data.unitId)?.problemCodePrefix ?? MOCK_UNITS[0]!.problemCodePrefix}-${problemCodeSuffix(Math.floor(Math.random() * 1_000_000))}`,
           userId: USER_TEACHER_ID,
           unitId: parsed.data.unitId,
           source: parsed.data.source,
