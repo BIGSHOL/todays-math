@@ -54,7 +54,15 @@ function examFields(paper: ExamPaper) {
   };
 }
 
-/** unitId·problemId 는 이 태스크의 범위 밖이다 — 매핑/연결은 별도 태스크가 한다. */
+/**
+ * ⚠️ `unitId`·`problemId` 를 **계약이 준 값 그대로** 싣는다.
+ *
+ * T7.3 때는 둘을 `null` 로 못박아 두었다(매핑·연결이 그 태스크 범위 밖이었다). 그런데
+ * `ExamQuestion.problemId` 는 「이 시험지 7번 문항이 우리 문제은행의 어느 행인가」를
+ * 잇는 **유일한 길**이다 — 못박아 두면 `Exam` 을 채워도 그 연결이 영영 안 생긴다.
+ * 이제 exam-metadata 적재가 그 값을 채워 넘기므로 여기서 버리지 않는다.
+ * 채울 값이 없으면 호출자가 `null` 을 넘기므로 예전 동작과 같다.
+ */
 function questionFields(examId: string, q: ExamPaper["questions"][number]) {
   return {
     examId,
@@ -63,10 +71,10 @@ function questionFields(examId: string, q: ExamPaper["questions"][number]) {
     qtype: q.qtype,
     difficultyLabel: q.difficultyLabel,
     topicRaw: q.topicRaw,
-    unitId: null,
+    unitId: q.unitId,
     answer: q.answer,
     hasFigure: q.hasFigure,
-    problemId: null,
+    problemId: q.problemId,
   };
 }
 
