@@ -252,6 +252,20 @@ model Problem {
   /// 길이가 `figureUrls.length × 2` 가 아니면 판정이 «모른다»로 받는다.
   /// 적재: `scripts/qa/backfill-figure-dimensions.ts`
   figureDims   Int[]      @default([]) @map("figure_dims")
+  /// `figureUrls` 와 **같은 순서·같은 길이**로 짝지은 «이 그림은 몇 번 보기인가».
+  ///   `0`      = 보기 그림이 아니다 (발문·자료 그림)
+  ///   `1`~`10` = 그 번호의 보기 그림 (오늘 데이터는 1~5 뿐)
+  ///
+  /// ⚠️ **빈 배열 = «짝을 모른다»** 이고, 그게 기본값이다. 모르면 지면은
+  /// **오늘 그대로** 그린다 — 그림을 한 덩어리로 놓고 보기 번호를 붙이지 않는다.
+  /// 아무 그림이나 ①에 붙이면 안 된다: 지금은 «못 푸는 문항»이 눈에 보이지만,
+  /// 틀린 짝은 **그럴듯해 보이면서 틀린다.** 그게 지금보다 나쁘다.
+  ///
+  /// 길이가 `figureUrls.length` 와 다르거나, 값이 범위를 벗어나거나, 0 이 아닌
+  /// 번호가 **겹치면** 판정이 통째로 «모른다»로 받는다 — 반쪽은 안 받는다
+  /// (`parseChoiceFigureIndex`, `figureDims` 와 같은 규약).
+  /// 적재: `scripts/qa/apply-choice-figure-index.ts` · 근거: docs/planning/tracks/reports/choice-figures.md
+  choiceFigureIndex Int[]  @default([]) @map("choice_figure_index")
 
   // ── 원본 역추적 메타데이터 (docs/planning/08-import-ledger.md) ──────────────
   // 추출기는 이 값들을 이미 갖고 있었는데 적재 단계가 버려서, 훼손·그림 문항을

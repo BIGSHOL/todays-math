@@ -457,6 +457,35 @@ def recover_one(item: dict, figroot: pathlib.Path) -> dict:
         out["pairs"] = key_order
         return out
 
+    # ── ⑥ 컬럼에 그대로 넣을 배열을 **여기서** 만든다 ─────────────────────
+    #
+    # 규칙이 두 곳에 있으면 갈라진다. 적용 스크립트가 「파일 이름의 첨자 → 보기 번호」를
+    # 다시 유도하게 두지 않고, 짝을 아는 이 자리에서 `figure_urls` 순서에 맞춰 낸다.
+    #   0        = 이 그림은 보기 그림이 아니다 (발문·자료 그림)
+    #   1..10    = 이 그림은 그 번호의 보기 그림
+    # 하나라도 못 채우면 **배열을 통째로 안 낸다** — 반쪽 배열은 «안다»는 착각을 만든다.
+    stem_set = {f["i"] for f in stem}
+    column: list[int] = []
+    for url in item["figureUrls"]:
+        m = re.match(r"^q\d+(?:_(\d+))?\.", url.split("/")[-1])
+        k = int(m.group(1) or 0) if m else None
+        if k is None:
+            column = []
+            break
+        if k in key_order:
+            column.append(key_order[k])
+        elif k in stem_set:
+            column.append(0)
+        else:
+            column = []
+            break
+    if len(column) != len(item["figureUrls"]):
+        out["verdict"] = "사람확인"
+        out["why"] = "짝은 나왔으나 figure_urls 순서로 배열을 못 만들었다"
+        out["pairs"] = key_order
+        return out
+    out["choiceFigureIndex"] = column
+
     out["verdict"] = "자동"
     out["why"] = "발문 %d장 + 보기 %d장" % (len(stem), len(choice_figs))
     out["pairs"] = key_order
