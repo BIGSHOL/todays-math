@@ -214,15 +214,21 @@ describe("[적대③-A] 그림 높이를 판정이 본다", () => {
  *    원장님 확정 대상(D-07)이다 — `[적대③-B]` 의 그 한 건은 빨간 채로 남겼다.
  */
 describe("[적대③-B] 장을 아는 판정", () => {
-  /** 첫 장 한계는 «칸 차이»에서 유도한다 — 손으로 고른 숫자가 아니다. */
-  it("첫 장 한계는 칸 79px 차이(3.9줄)만큼 낮다", () => {
-    const gap =
-      JASEUP_MEASURED_PX.continuationSlot - JASEUP_MEASURED_PX.firstPageSlot;
-    expect(gap).toBe(79);
-    expect(OVERFLOW_LINE_LIMIT - OVERFLOW_LINE_LIMIT_FIRST_PAGE).toBe(
-      Math.round(gap / JASEUP_MEASURED_PX.line),
+  /** 두 한계 모두 **칸 높이에서 유도한다** — 손으로 고른 숫자가 아니다. */
+  it("한계 둘 다 제 칸 높이에서 나온다", () => {
+    const { continuationSlot, firstPageSlot, line } = JASEUP_MEASURED_PX;
+    expect(continuationSlot - firstPageSlot).toBe(79);
+    expect(OVERFLOW_LINE_LIMIT).toBe(Math.floor(continuationSlot / line));
+    expect(OVERFLOW_LINE_LIMIT_FIRST_PAGE).toBe(
+      Math.floor(firstPageSlot / line),
     );
-    expect(OVERFLOW_LINE_LIMIT_FIRST_PAGE).toBe(14);
+    expect([OVERFLOW_LINE_LIMIT, OVERFLOW_LINE_LIMIT_FIRST_PAGE]).toEqual([
+      23, 19,
+    ]);
+    // 칸 차이(79px = 3.9줄)가 한계 차이로 그대로 나타난다.
+    expect(OVERFLOW_LINE_LIMIT - OVERFLOW_LINE_LIMIT_FIRST_PAGE).toBe(
+      Math.round(79 / line),
+    );
   });
 
   /**
@@ -233,8 +239,8 @@ describe("[적대③-B] 장을 아는 판정", () => {
     problem({
       content: "짧은 발문이다.",
       figureUrls: ["/f.png"],
-      // 15.5줄어치 그림 — 첫 장 한계(14)는 넘고 이어지는 장 한계(18)는 안 넘는다.
-      figureDims: [200, 303],
+      // 21줄짜리 문항 — 첫 장 한계(19)는 넘고 이어지는 장 한계(23)는 안 넘는다.
+      figureDims: [200, 330],
     });
 
   it("같은 문항이 첫 장에서는 경고, 이어지는 장에서는 무경고다", () => {
@@ -257,7 +263,7 @@ describe("[적대③-B] 장을 아는 판정", () => {
       problem({
         content: "짧은 발문이다.",
         figureUrls: ["/f.png"],
-        figureDims: [200, 900],
+        figureDims: [200, 1200],
       }),
     ]);
     expect(risks[0].reasons.join(" ")).not.toContain("첫 장");

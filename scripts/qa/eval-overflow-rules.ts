@@ -28,7 +28,8 @@ import { readFileSync } from "node:fs";
 import { PrismaClient } from "@prisma/client";
 
 import type { TestPrintProblem } from "../../src/components/print/types";
-import { displayWidth } from "../../src/lib/math/displayWidth";
+import { displayWidth, fitsTwoColumns } from "../../src/lib/math/displayWidth";
+import { parseProblemContent } from "../../src/lib/problem/parseProblemContent";
 import { JASEUP_MEASURED_PX } from "../../src/lib/printGeometry";
 import {
   OVERFLOW_FIGURE_LIMIT,
@@ -38,10 +39,70 @@ import {
   assessOverflowRisk,
   estimateFigureBlockPx,
   estimateProblemLines,
+  estimateProblemPx,
   parseFigureDimensions,
 } from "../../src/lib/printOverflow";
 
 const prisma = new PrismaClient();
+
+/**
+ * **수리 전 «자»를 얼려 둔 사본** (2026-08-18 이전 `estimateProblemLines`).
+ * 그림을 0줄로 세고, 문항 열·보기·상자를 전부 59단위로 보고, 문항번호·정답란·
+ * 보기 그리드 여백을 안 센다. 여기 손대지 말 것 — 전후 비교의 기준선이다.
+ */
+function legacyLines(content: string): number {
+  const LEGACY_UNITS = 59;
+  const LEGACY_BOX_CHROME = 2;
+  const lineOf = (text: string) => {
+    const width = displayWidth(text);
+    return width <= 0 ? 0 : Math.ceil(width / LEGACY_UNITS);
+  };
+  const { question, choices } = parseProblemContent(content);
+  let lines = 0;
+  let plain: string[] = [];
+  let box: string[] | null = null;
+  const flushPlain = () => {
+    for (const part of plain) lines += Math.max(1, lineOf(part));
+    plain = [];
+  };
+  const flushBox = () => {
+    if (box === null) return;
+    const paras = box
+      .join("\n")
+      .split(/\n\s*\n/)
+      .map((part) => part.trim())
+      .filter(Boolean);
+    const header = paras[0] ?? "";
+    const items = paras.slice(1);
+    const cols = Number(header.match(/(\d+)\s*[>〉】］\]]/)?.[1] ?? 1);
+    const headerless = header.startsWith("<나열");
+    lines += LEGACY_BOX_CHROME + (headerless ? 0 : 1);
+    if (headerless) items.unshift(header.replace(/^<나열\d?>\s*/, ""));
+    lines +=
+      cols >= 2
+        ? Math.ceil(items.length / cols)
+        : items.reduce((sum, item) => sum + Math.max(1, lineOf(item)), 0);
+    box = null;
+  };
+  for (const raw of question.split(/\r?\n/)) {
+    const trimmed = raw.trimStart();
+    if (trimmed.startsWith(">")) {
+      flushPlain();
+      if (box === null) box = [];
+      box.push(trimmed.replace(/^>\s?/, ""));
+      continue;
+    }
+    flushBox();
+    if (trimmed) plain.push(trimmed);
+  }
+  flushPlain();
+  flushBox();
+  if (choices.length > 0)
+    lines += fitsTwoColumns(choices)
+      ? Math.ceil(choices.length / 2)
+      : choices.reduce((sum, c) => sum + Math.max(1, lineOf(c)), 0);
+  return lines;
+}
 
 interface Height {
   pid: string;
@@ -181,6 +242,32 @@ async function main() {
     console.log("\n그림 모형 검산 — 치수가 적재되지 않았다(전부 «모른다»).");
   }
 
+  /* ── 자 검산 ③ 문항 전체 높이 모형이 실측과 얼마나 맞는가 ────────────────── */
+  {
+    const err = heights
+      .map((h) => {
+        const row = byId.get(h.pid)!;
+        const dims = parseFigureDimensions(
+          row.figureUrls.length,
+          flatDimsFor(row),
+        );
+        return estimateProblemPx(row.content ?? "", dims) - h.neededPx;
+      })
+      .sort((a, b) => a - b);
+    const q = (p: number) => err[Math.floor(err.length * p)]!;
+    const within = err.filter((e) => Math.abs(e) <= 20).length / err.length;
+    // 과소평가가 곧 «놓침»이다 — 정확도보다 이쪽을 본다.
+    const under = err.filter((e) => e < -20).length / err.length;
+    console.log(
+      `
+문항 높이 모형 검산 — 오차(모형−실측)
+` +
+        `  p05 ${q(0.05).toFixed(0)}px · 중앙 ${q(0.5).toFixed(0)}px · p95 ${q(0.95).toFixed(0)}px
+` +
+        `  |오차| <= 20px ${(within * 100).toFixed(1)}% · 20px 넘게 **과소** ${(under * 100).toFixed(1)}%`,
+    );
+  }
+
   /* ── 채점 ────────────────────────────────────────────────────────────────── */
   const graded = heights.map((h) => {
     const row = byId.get(h.pid)!;
@@ -216,8 +303,7 @@ async function main() {
       excess: h.neededPx - slot,
       width: displayWidth(content),
       lines: estimateProblemLines(content, dims),
-      // 수리 전의 자 — 그림을 0줄로 센다.
-      linesBefore: estimateProblemLines(content),
+      legacyLines: legacyLines(content),
       figures: row.figureUrls.length,
       // 장수 규칙은 **치수를 모를 때만** 켜진다 — 제품과 같은 조건이어야 한다.
       countRule:
@@ -265,8 +351,11 @@ async function main() {
 
   /**
    * 수리 **전** 규칙을 그대로 재현해 같은 캐시로 채점한다 — 전후를 추정하지 않으려고.
-   * 예전 규칙: `폭 > 530` · `줄 수(그림 0줄) > 14` · `그림 장수 >= 2`, 장 구분 없음.
-   * (`estimateProblemLines(content)` 를 그림 없이 부르면 그때의 자와 같다.)
+   * 예전 규칙: `폭 > 530` · `줄 수(그림 0줄·59단위·고정 chrome 0) > 14` ·
+   * `그림 장수 >= 2`, 장 구분 없음.
+   *
+   * ⚠️ 자는 **얼린 사본**(`legacyLines`)을 쓴다. 제품 함수를 그대로 부르면 자를
+   *    고칠 때마다 «수리 전» 숫자가 같이 움직여 전후 비교가 무의미해진다.
    */
   console.log("수리 전 규칙 (그림 0줄 · 한계 14 · 장 구분 없음)");
   report(
@@ -276,7 +365,7 @@ async function main() {
         overflows: g.overflows,
         warned:
           g.width > OVERFLOW_WIDTH_LIMIT ||
-          g.linesBefore > 14 ||
+          g.legacyLines > 14 ||
           g.figures >= 2,
       })),
     ),

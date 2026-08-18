@@ -23,7 +23,12 @@
  */
 import { describe, expect, it } from "vitest";
 
-import { estimateProblemLines } from "@/lib/printOverflow";
+import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
+import {
+  estimateProblemLines,
+  estimateProblemPx,
+  OVERFLOW_LINE_LIMIT,
+} from "@/lib/printOverflow";
 
 /** 보기 5개를 만든다. `width` 는 한 항목의 대략적인 표시폭(한글 1자 = 2). */
 function choices(count: number, width: number): string {
@@ -101,5 +106,85 @@ describe("[넘침] 판정과 렌더러가 같은 규칙을 쓴다", () => {
 
   it("빈 본문도 던지지 않고 0 이상을 낸다", () => {
     expect(estimateProblemLines("")).toBeGreaterThanOrEqual(0);
+  });
+});
+
+/**
+ * 🟢 회귀 가드 — 적대적 리뷰 ③ `[적대③-D]` 승격 (§6).
+ *
+ * 추정기의 «자»가 지면과 **한 방향으로** 어긋나 있었다(전부 덜 셌다):
+ *   · 문항번호 + 정답란 62.5px = 3.08줄 → **0줄**로 셈 (모든 문항)
+ *   · 상자 하나 98.0px(= `my-4` 포함) → 3줄(60.9px)로 셈
+ *   · 문항 열 58.2 · 1열 보기 55.2 · 상자 항목 52.7 단위 → **전부 59단위**로 셈
+ *   · 보기 그리드 `mt-4` 16px + 행 간격 8px×n → 0으로 셈
+ *
+ * 셋을 바로잡고 한계를 **칸 높이에서 다시 유도**했다(`484/20.3125 → 23`).
+ * 순서가 중요하다 — 자만 고치면 경고가 8,446건(정밀도 32.3%)으로 튀고,
+ * 한계만 올리면 덜 세던 몫이 되살아난다.
+ *
+ * 아래 수치는 `scripts/qa/measure-paper-units.tsx` 가 지면에서 잰 것이다.
+ * 여기가 빨개지면 지면 CSS 가 바뀐 것이니 **다시 재서** 상수를 고칠 것.
+ */
+describe("[적대③-D] 추정기의 «자»가 지면과 맞는가", () => {
+  const { line, fixedChrome, continuationSlot } = JASEUP_MEASURED_PX;
+  /** 실측 대 추정을 줄 단위로 견준다 (실측은 measure-paper-units.tsx 산출). */
+  const closeToLines = (actual: number, measured: number) =>
+    expect(Math.abs(actual - measured)).toBeLessThanOrEqual(1);
+
+  it("빈 본문도 문항번호·정답란만큼은 쓴다 — 실측 3.08줄", () => {
+    expect(estimateProblemPx("")).toBeCloseTo(fixedChrome, 5);
+    expect(fixedChrome / line).toBeCloseTo(3.08, 2);
+    expect(estimateProblemLines("")).toBeGreaterThanOrEqual(3);
+  });
+
+  it("한계는 문항 칸 높이에서 유도된다", () => {
+    expect(OVERFLOW_LINE_LIMIT).toBe(Math.floor(continuationSlot / line));
+    // 한계까지 채운 문항은 칸 안이고, 한 줄 더 가면 밖이다.
+    expect(OVERFLOW_LINE_LIMIT * line).toBeLessThanOrEqual(continuationSlot);
+    expect((OVERFLOW_LINE_LIMIT + 1) * line).toBeGreaterThan(continuationSlot);
+  });
+
+  /** 실측 8.36줄(본문) + 고정 chrome 3.08줄. 예전 추정은 본문 6줄이었다. */
+  it("1열 보기 다섯 개 — 실측 본문 8.36줄", () => {
+    const content = `다음 중 옳은 것은?
+1. ${"가".repeat(20)}
+2. ${"나".repeat(20)}
+3. ${"다".repeat(20)}
+4. ${"라".repeat(20)}
+5. ${"마".repeat(20)}`;
+    closeToLines((estimateProblemPx(content) - fixedChrome) / line, 8.36);
+  });
+
+  /** 실측 5.58줄. `mt-4`·행 간격을 안 세면 4줄로 보인다. */
+  it("2열 보기 다섯 개 — 실측 본문 5.58줄", () => {
+    const content = `다음 중 옳은 것은?
+1. ${"가".repeat(5)}
+2. ${"나".repeat(5)}
+3. ${"다".repeat(5)}
+4. ${"라".repeat(5)}
+5. ${"마".repeat(5)}`;
+    closeToLines((estimateProblemPx(content) - fixedChrome) / line, 5.58);
+  });
+
+  /** 실측 9.04줄. `my-4` 와 좁은 항목칸(52.7단위)을 안 보면 8줄로 보인다. */
+  it("<보기> 상자 — 실측 본문 9.04줄", () => {
+    const content = `다음 <보기> 에서 옳은 것을 고르시오.
+<보기>
+ㄱ. ${"가".repeat(30)}
+ㄴ. ${"나".repeat(30)}`;
+    closeToLines((estimateProblemPx(content) - fixedChrome) / line, 9.04);
+  });
+
+  /** 상자가 없는 같은 글자 — 실측 3.00줄. 상자 몫이 진짜 상자에서만 붙는지 본다. */
+  it("상자 없는 같은 글자 — 실측 본문 3.00줄", () => {
+    const content = `다음 보기 에서 옳은 것을 고르시오. ㄱ. ${"가".repeat(30)} ㄴ. ${"나".repeat(30)}`;
+    closeToLines((estimateProblemPx(content) - fixedChrome) / line, 3.0);
+  });
+
+  it("한 줄짜리 평문 — 실측 본문 1.00줄", () => {
+    closeToLines(
+      (estimateProblemPx("가".repeat(20)) - fixedChrome) / line,
+      1.0,
+    );
   });
 });

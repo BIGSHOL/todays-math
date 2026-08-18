@@ -180,23 +180,19 @@ export function estimateFigureBlockPx(
  * ──────────────────────────────────────────────────────────────────────── */
 
 /**
- * 문항 열 한 줄에 들어가는 **표시폭**.
+ * 문항 열 한 줄에 들어가는 **표시폭** — 셋이 다르다.
  *
- * 근거는 `displayWidth.ts` 의 `TWO_COLUMN_WIDTH_LIMIT` 와 같은 계산이다 —
- * 2열 한 칸(약 147px)이 표시폭 24 이므로 1 단위 ≈ 6.13px 이고,
- * 문항 열 폭 364px 는 약 59 단위다.
- *
- * ⚠️ `.paperParity` 폭 식이나 `JASEUP_GEOMETRY.problemColumns` 를 바꾸면 여기도
- *    같이 바꿔야 한다. 한쪽만 바꾸면 판정이 지면과 조용히 어긋난다.
+ * 예전에는 셋 다 `COLUMN_UNITS = 59` 하나로 봤다. 지면 실측은
+ * 문항 열 58.2 · 1열 보기 글자칸 55.2 · 상자 항목칸 52.7 단위다
+ * (`scripts/qa/measure-paper-units.tsx`). 보기는 마커(①)와 `gap-1.5` 만큼,
+ * 상자는 `p-4` 와 테두리만큼 좁다. 한 값으로 뭉개면 **좁은 쪽에서 덜 센다** —
+ * 폭 6.4%(보기)·10.7%(상자)를 안 보는 셈이라 접히는 줄이 통째로 빠진다.
  */
-const COLUMN_UNITS = 59;
-
-/**
- * 상자 하나가 글자 말고 더 먹는 세로 공간을, 줄 수로 환산한 값.
- * 테두리 1px×2 + 안쪽 여백 16px×2 ≈ 34px, 본문 행높이 20px(12.5px × 1.6) → 약 1.7줄.
- * 라벨 줄(`<보기>`)은 따로 센다.
- */
-const BOX_CHROME_LINES = 2;
+const COLUMN_UNITS = JASEUP_MEASURED_PX.problemColumn / JASEUP_MEASURED_PX.unit;
+const CHOICE_TEXT_UNITS =
+  JASEUP_MEASURED_PX.choiceTextColumn / JASEUP_MEASURED_PX.unit;
+const BOX_ITEM_UNITS =
+  JASEUP_MEASURED_PX.boxItemColumn / JASEUP_MEASURED_PX.unit;
 
 /** 표시폭을 열 폭으로 나눠 줄 수로. 빈 문자열은 0줄이다. */
 function linesFor(text: string, unitsPerLine = COLUMN_UNITS): number {
@@ -206,43 +202,54 @@ function linesFor(text: string, unitsPerLine = COLUMN_UNITS): number {
 }
 
 /**
- * 항목 목록이 차지하는 줄 수. **렌더러와 같은 함수로 열 수를 정한다**
+ * 보기 묶음이 차지하는 **세로 픽셀**. **렌더러와 같은 함수로 열 수를 정한다**
  * (`fitsTwoColumns`) — 둘이 갈라지면 "화면은 1열인데 판정은 2열로 셈"이 된다.
+ *
+ * 글자 줄 말고도 `mt-4`(16px)와 행 간격 `gap-y-2`(8px)를 먹는다. 예전에는 둘 다
+ * 0으로 봤다 — 1열 5보기면 그것만 1.8줄이다.
  */
-function linesForItems(items: readonly string[]): number {
+function choicesBlockPx(items: readonly string[]): number {
   if (items.length === 0) return 0;
-  if (fitsTwoColumns(items)) {
-    // 2열: 두 칸이 한 행. 각 항목이 한 칸에 들어가므로 행마다 1줄.
-    return Math.ceil(items.length / 2);
-  }
-  // 1열: 항목마다 제 폭만큼 줄을 먹는다.
-  return items.reduce((sum, item) => sum + Math.max(1, linesFor(item)), 0);
+  const { line, choiceGridTop, choiceRowGap } = JASEUP_MEASURED_PX;
+  // 2열은 항목이 전부 한 칸에 들어갈 때만 고른다 — 그래서 행마다 한 줄이다.
+  const rows = fitsTwoColumns(items)
+    ? Math.ceil(items.length / 2)
+    : items.length;
+  const textLines = fitsTwoColumns(items)
+    ? rows
+    : items.reduce(
+        (sum, item) => sum + Math.max(1, linesFor(item, CHOICE_TEXT_UNITS)),
+        0,
+      );
+  return choiceGridTop + textLines * line + choiceRowGap * (rows - 1);
 }
 
 /**
- * 문항 본문이 지면에서 차지하는 **줄 수**를 추정한다.
+ * 문항 하나가 지면에서 차지하는 **세로 픽셀**을 추정한다.
  *
- * 폭 총합(`displayWidth`)과 달리 이 값은 배치를 본다 — 보기가 1열로 내려가거나
- * 상자가 생기면 글자 수가 그대로여도 값이 늘어난다. 2026-08-17 상자·열 수
- * 수리로 실제 지면이 그렇게 바뀌었고, 총합 지표는 그 변화를 한 글자도 못 봤다.
+ * 문항번호 위부터 정답란 아래까지 — `measure-print-overflow.tsx` 가 재는 `needed`
+ * 와 같은 구간이다. 그래야 문항 칸(`JASEUP_MEASURED_PX.continuationSlot`)과
+ * 직접 견줄 수 있고, 한계를 **칸에서 유도**할 수 있다.
  *
  * `figures` 는 `parseFigureDimensions` 가 짝지은 **원본 치수**다. 넘기지 않으면
- * 그림을 0줄로 센다 — 그게 2026-08-18 이전의 동작이었고, 실측 넘침의 93.8%가
+ * 그림을 0으로 센다 — 그게 2026-08-18 이전의 동작이었고, 실측 넘침의 93.8%가
  * 거기로 빠져나갔다(적대적 리뷰 ③ §2). 판정 경로에서는 반드시 넘길 것.
- *
- * 확정이 아니라 **개연성**이다. 정확한 높이는 실제 렌더에서만 나온다.
  */
-export function estimateProblemLines(
+export function estimateProblemPx(
   content: string,
   figures: readonly (FigureDimension | null)[] = [],
 ): number {
   const { question, choices } = parseProblemContent(content);
+  const { line, boxChrome, fixedChrome } = JASEUP_MEASURED_PX;
+
+  // 문항번호와 정답란은 본문과 무관하게 늘 붙는다 — 실측 62.5px = 3.08줄.
+  // 예전에는 0으로 셌고, 그래서 «14줄» 이 칸 484px 과 아무 관계가 없었다.
+  let px = fixedChrome;
 
   // `parseProblemContent` 는 상자를 이미 **인용문 마크다운**으로 굳혀 준다
   //   `> <보기2>` / `>` / `> ㄱ. …`
   // 라벨 뒤 숫자가 렌더러가 정한 **열 수**다. 여기서 다시 판단하지 않고 그대로 읽는다 —
   // 판정이 스스로 열 수를 정하면 렌더러와 갈라져 조용히 어긋난다.
-  let lines = 0;
   let plain: string[] = [];
   let box: string[] | null = null;
 
@@ -251,11 +258,14 @@ export function estimateProblemLines(
    * (`collapseWhitespace` 가 개행을 다 녹인다)이라 같은 값이었다.
    * 2026-08-18 부터 계산 과정 다단 등식이 **문단으로 갈린다** — 문단마다 제 줄을
    * 차지하므로 따로 세지 않으면 늘어난 세로 공간을 한 줄도 못 본다.
-   * (문단 사이 여백 `prose-p:my-2` 는 위아래가 겹쳐 약 8px = 0.4줄이라 따로 세지 않는다.)
+   *
+   * 문단 사이 여백은 **0이다** — `@tailwindcss/typography` 가 설치돼 있지 않아
+   * `prose-p:my-2` 가 빌드 산출물에 한 줄도 없다(적대적 리뷰 ③ §8, 실측 0px/0px).
+   * 예전 주석은 「8px 이라 안 센다」고 적었는데 그 8px 은 존재하지 않는다.
    */
   const flushPlain = () => {
     if (plain.length === 0) return;
-    for (const part of plain) lines += Math.max(1, linesFor(part));
+    for (const part of plain) px += Math.max(1, linesFor(part)) * line;
     plain = [];
   };
   const flushBox = () => {
@@ -270,17 +280,17 @@ export function estimateProblemLines(
     const items = paras.slice(1);
     const cols = Number(header.match(/(\d+)\s*[>〉】］\]]/)?.[1] ?? 1);
 
-    // 테두리·여백 + 라벨 줄. `<나열>` 상자는 **라벨 줄을 안 그린다**(머리 없는 상자)
-    // — 첫 문단이 곧 내용이라 여기서도 라벨 줄을 세면 안 된다.
+    // `boxChrome` 은 테두리·안쪽 여백·`my-4` 바깥 마진에 **라벨 줄까지** 넣은 실측값이다.
+    // `<나열>` 상자는 라벨 줄을 안 그리므로(머리 없는 상자) 한 줄을 뺀다.
     const headerless = header.startsWith("<나열");
-    lines += BOX_CHROME_LINES + (headerless ? 0 : 1);
+    px += boxChrome - (headerless ? line : 0);
     if (headerless) items.unshift(header.replace(/^<나열\d?>\s*/, ""));
     if (cols >= 2) {
       // 2열은 항목이 전부 한 칸에 들어갈 때만 선택된다(`fitsTwoColumns`).
-      lines += Math.ceil(items.length / cols);
+      px += Math.ceil(items.length / cols) * line;
     } else {
-      lines += items.reduce(
-        (sum, item) => sum + Math.max(1, linesFor(item)),
+      px += items.reduce(
+        (sum, item) => sum + Math.max(1, linesFor(item, BOX_ITEM_UNITS)) * line,
         0,
       );
     }
@@ -288,53 +298,63 @@ export function estimateProblemLines(
   };
 
   for (const rawLine of question.split(/\r?\n/)) {
-    const line = rawLine.trimStart();
-    if (line.startsWith(">")) {
+    const trimmed = rawLine.trimStart();
+    if (trimmed.startsWith(">")) {
       flushPlain();
       if (box === null) box = [];
-      box.push(line.replace(/^>\s?/, ""));
+      box.push(trimmed.replace(/^>\s?/, ""));
       continue;
     }
     flushBox();
-    if (line) plain.push(line);
+    if (trimmed) plain.push(trimmed);
   }
   flushPlain();
   flushBox();
 
-  lines += linesForItems(choices);
-  // 그림은 글자가 아니라 **픽셀**로 재고 줄로 환산한다. 지금까지 인자에조차 없었다.
-  lines += Math.ceil(estimateFigureBlockPx(figures) / JASEUP_MEASURED_PX.line);
-  return lines;
+  px += estimateFigureBlockPx(figures);
+  px += choicesBlockPx(choices);
+  return px;
 }
 
 /**
- * 반 페이지 문항 칸에 들어가는 줄 수의 한계.
- *
- * ── 2026-08-18: **그림을 세게 된 뒤 다시 보정했다** (적대적 리뷰 ③ §2, §11-1) ──
- *
- * 예전 값 14 의 근거는 「폭 규칙(530)이 잡는 건수와 **같은 규모**가 되는 줄 수」였다.
- * 그건 **자가 없을 때 쓰던 임시방편**이다 — 지면 칸(484px)에서 유도한 값이 아니라
- * 다른 규칙의 경고량에 맞춘 값이라, 지면이 바뀌어도 판정은 몰랐다.
- *
- * 이제 `estimateProblemLines` 가 그림 높이를 본다. 같은 자로 실측 넘침(Chromium
- * 인쇄 매체 전수 47,152건, `scripts/qa/eval-overflow-rules.ts`)과 대조하면:
- *
- * ```
- * 한계 14  경고 7,161  맞음 2,725  헛것 4,436  재현율 100.0%  정밀도 38.1%
- * 한계 17  경고 4,530  맞음 2,693  헛것 1,837  재현율  98.8%  정밀도 59.4%
- * 한계 18  경고 3,781  맞음 2,624  헛것 1,157  재현율  96.3%  정밀도 69.4%   ← 여기
- * 한계 20  경고 2,514  맞음 2,000  헛것   514  재현율  73.4%  정밀도 79.6%
- * ```
- *
- * 18 을 고른 이유: 18 → 20 에서 재현율이 23%p 떨어지는데 정밀도는 10%p 만 오른다.
- * 반대로 18 → 14 는 헛것이 3.8배가 되고 재현율은 3.7%p 만 오른다. 무릎이 18 이다.
- * 25문항 시험지 기준 경고가 평균 2건이라 원장이 실제로 확인할 수 있는 양이다.
- *
- * ⚠️ **한계와 «자»는 같이 움직인다.** 지금 자는 고정 chrome(3.08줄)·상자 마진·
- *    열 폭을 아직 덜 센다(리뷰 §6). 그걸 고치면 이 값도 **칸 높이에서 다시 유도**해야
- *    한다 — 한쪽만 고치면 경고량이 통째로 튄다.
+ * 문항 하나가 차지하는 **줄 수**. `estimateProblemPx` 를 행높이로 나눈 값이다 —
+ * 한계값(`OVERFLOW_LINE_LIMIT`)과 같은 단위로 읽으라고 남긴다.
  */
-export const OVERFLOW_LINE_LIMIT = 18;
+export function estimateProblemLines(
+  content: string,
+  figures: readonly (FigureDimension | null)[] = [],
+): number {
+  return Math.ceil(
+    estimateProblemPx(content, figures) / JASEUP_MEASURED_PX.line,
+  );
+}
+
+/**
+ * 반 페이지 문항 칸(이어지는 장)에 들어가는 줄 수의 한계 — **칸 높이에서 유도한다.**
+ *
+ * ── 값의 내력 ────────────────────────────────────────────────────────────
+ *  · ~2026-08-17  **14** — 「폭 규칙(530)이 잡는 건수와 같은 규모가 되는 줄 수」.
+ *                 자가 없을 때 쓰던 임시방편이다. 칸(484px)과 아무 관계가 없어서
+ *                 지면이 바뀌어도 판정은 몰랐다.
+ *  · 2026-08-18a  **18** — 그림 높이를 세게 된 뒤 실측 곡선의 무릎으로 다시 잡았다.
+ *                 여전히 «맞춘» 값이다.
+ *  · 2026-08-18b  **지금** — 자가 지면 px 를 그대로 재게 됐으므로
+ *                 `floor(484 / 20.3125) = 23` 이다. **맞춘 값이 아니라 유도한 값.**
+ *
+ * 자와 한계는 **같이** 움직여야 한다. 자만 고치면 경고가 폭증하고(한계 18로 두면
+ * 8,446건 · 정밀도 32.3%), 한계만 올리면 덜 세던 몫이 되살아난다.
+ *
+ * 실측 검산 (전수 47,152건 · `scripts/qa/eval-overflow-rules.ts`):
+ * ```
+ * 한계 22  경고 4,229  맞음 2,710  헛것 1,519  재현율 99.4%  정밀도 64.1%
+ * 한계 23  경고 3,495  맞음 2,621  헛것   874  재현율 96.1%  정밀도 75.0%   ← 유도값
+ * 한계 24  경고 2,837  맞음 2,374  헛것   463  재현율 87.1%  정밀도 83.7%
+ * ```
+ * 유도값이 곡선의 무릎과 같은 자리다 — 자를 바로잡았으니 그래야 맞는다.
+ */
+export const OVERFLOW_LINE_LIMIT = Math.floor(
+  JASEUP_MEASURED_PX.continuationSlot / JASEUP_MEASURED_PX.line,
+);
 
 /**
  * **첫 장** 문항 칸의 줄 수 한계 — 이어지는 장보다 낮다.
@@ -354,12 +374,9 @@ export const OVERFLOW_LINE_LIMIT = 18;
  * 한계 18  경고 3,742  맞음 3,473  재현율 58.5%  정밀도 92.8%   ← 장을 모를 때
  * ```
  */
-export const OVERFLOW_LINE_LIMIT_FIRST_PAGE =
-  OVERFLOW_LINE_LIMIT -
-  Math.round(
-    (JASEUP_MEASURED_PX.continuationSlot - JASEUP_MEASURED_PX.firstPageSlot) /
-      JASEUP_MEASURED_PX.line,
-  );
+export const OVERFLOW_LINE_LIMIT_FIRST_PAGE = Math.floor(
+  JASEUP_MEASURED_PX.firstPageSlot / JASEUP_MEASURED_PX.line,
+);
 
 export interface OverflowRisk {
   /** 지면에 찍히는 문항 번호(1부터). 배열 위치가 아니다 — 원장이 지면에서 찾는 번호다. */
