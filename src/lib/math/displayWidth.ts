@@ -57,7 +57,67 @@ function mathGlyphs(inner: string): string {
     .replace(STRUCTURE_CHARS, "");
 }
 
-/** 문자열의 표시 폭. 수식은 글리프 근사, 한글·전각은 2, 반각은 1. */
+/* ────────────────────────────────────────────────────────────────────────
+ * 연산자 여백 — 글리프를 세는 것만으로는 못 보는 폭 (2026-08-18)
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/**
+ * **글리프 개수는 지면 폭이 아니다.** KaTeX 는 이항·관계 연산자 좌우에 여백을 넣는다.
+ * 브라우저 실측(12.5px 지면 글꼴, `scripts/qa/measure-choice-layout.tsx`):
+ *   `$ab$` 14.5px · `$a+b$` 33.0px  → `+` 하나가 **17px** (글자 하나가 7px 인데)
+ *   `$a=b$` 34.6px                  → `=` 하나가 18.6px
+ * 한글 한 글자가 12.1px = 표시폭 2 이므로 1 단위 ≈ 6.05px.
+ * 연산자는 글리프 1(≈6px)로 이미 세고 있으니 **모자란 몫이 약 11px ≈ 1.8 단위**다.
+ * 실측 맞춤(2,247 보기 조각)에서 **3 단위**가 가장 잘 갈랐다.
+ *
+ * ⚠️ 이 보정이 없으면 2열 판정이 «접히는 보기»를 못 본다. 원장님이 2026-08-18 에
+ * 지적한 "여전히 보기가 길어서 미리보기에서 줄바꿈 처리되는 문제"가 이것이다.
+ * 한계값(24)은 **그대로 두고 모델만 고쳤다** — 실측 2,247 조각에서 오판 35건 → 4건.
+ * 한계값을 옮겨 맞추려 했다면 최선이 17이었고 그래도 오판 29건이 남았다.
+ * 즉 문제는 문턱이 아니라 **자**였다 (CLAUDE.md 2026-08-17: 문턱이 안 갈라주면
+ * 문턱을 옮기지 말고 열쇠를 바꿔라).
+ */
+const OPERATOR_EXTRA = 3;
+
+/** 좌우 여백이 붙는 연산자. `\left`·`\int`·`\top` 에 걸리지 않게 낱말 경계를 둔다. */
+const SPACED_OPERATOR_RE =
+  /\\(?:times|div|pm|mp|cdot|le|ge|ne|neq|leq|geq|approx|equiv|sim|to|Rightarrow|rightarrow|in|subset|supset|cup|cap)\b|[+=<>×÷≤≥≠±∈⊂⊃∪∩⇨→]/g;
+
+/**
+ * **이항** 뺄셈만 센다 — 앞이 글자·숫자·닫는 괄호일 때.
+ * 부호(`$-3$`)는 여백이 안 붙으므로 빼야 한다. 둘을 안 가르면 음수 보기가
+ * 통째로 부풀어 멀쩡한 2열이 1열로 내려간다.
+ */
+const BINARY_MINUS_RE = /(?<=[A-Za-z0-9)\]}])\s*-/g;
+
+/**
+ * 순환소수 점 표기. 전처리(`textPreprocess`)가 `\dot`·숫자 `\overline` 을
+ * **CSS 점 span**으로 바꿔 그리므로 KaTeX 글리프 근사보다 훨씬 넓다.
+ * 실측 `$0.\dot{5}=0.555555555$` 185px · `$1.333\cdots =1.\dot{3}\dot{3}$` 233px —
+ * 근사로는 각각 97px·85px 로 봤다. 표기 하나에 **6 단위**를 얹어야 실측과 맞는다.
+ */
+const REPEAT_DOT_RE = /\\dot\s*\{|\\overline\s*\{\s*\d/g;
+const REPEAT_DOT_EXTRA = 6;
+
+function countMatches(text: string, pattern: RegExp): number {
+  pattern.lastIndex = 0;
+  return text.match(pattern)?.length ?? 0;
+}
+
+/** 수식 하나가 글리프 폭 말고 더 먹는 몫. */
+function mathSpacing(inner: string): number {
+  return (
+    OPERATOR_EXTRA *
+    (countMatches(inner, SPACED_OPERATOR_RE) +
+      countMatches(inner, BINARY_MINUS_RE))
+  );
+}
+
+/**
+ * 문자열의 표시 폭. 수식은 글리프 근사 + **연산자 여백**, 한글·전각은 2, 반각은 1.
+ *
+ * 연산자 여백은 **수식 안에서만** 더한다 — 평문의 `+`·`=` 는 그냥 한 글자다.
+ */
 export function displayWidth(text: string): number {
   let width = 0;
   let pos = 0;
@@ -68,12 +128,14 @@ export function displayWidth(text: string): number {
     match !== null;
     match = MATH_ATOM.exec(text)
   ) {
+    const inner = match[0].slice(1, -1);
     width += plainWidth(text.slice(pos, match.index));
-    width += plainWidth(mathGlyphs(match[0].slice(1, -1)));
+    width += plainWidth(mathGlyphs(inner)) + mathSpacing(inner);
     pos = match.index + match[0].length;
   }
 
-  return width + plainWidth(text.slice(pos));
+  width += plainWidth(text.slice(pos));
+  return width + REPEAT_DOT_EXTRA * countMatches(text, REPEAT_DOT_RE);
 }
 
 /**
@@ -90,8 +152,13 @@ export function displayWidth(text: string): number {
  * 그래서 **24** 를 넘으면 2열에서 반드시 접힌다. 상자 카드도 거의 같다
  * (안쪽 폭 ≈ 330px, 2열 한 칸 ≈ 153px → 표시폭 약 24.4).
  *
- * DB 전수(보기 있는 문항 34,411건) 분포: 최장 보기 표시폭이 24를 넘는 문항은 6.0%.
- * 즉 94%는 지금처럼 2열로 남고, 접히던 6%만 1열로 내려온다.
+ * DB 전수(보기 있는 문항 34,421건): 1열로 내려가는 문항 **8.0%**(2,770건).
+ *
+ * ⚠️ 2026-08-18 이전에는 6.0%(2,063건)였다. 한계값은 **한 자도 안 바뀌었고**
+ * `displayWidth` 가 연산자 여백을 세기 시작해서 늘었다. 브라우저 실측으로
+ * 「실제로 칸을 넘는 보기」를 세어 보니 5.3%였는데 예전 모델은 그중 34개를
+ * 「2열이어도 된다」고 봤다 — 그게 원장님이 본 접힘이다.
+ * 늘어난 707건은 **지면 세로 배분이 바뀐다**(절대 규칙 6 — 실물 출력 검수 대상).
  */
 export const TWO_COLUMN_WIDTH_LIMIT = 24;
 
