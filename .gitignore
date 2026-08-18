@@ -76,3 +76,6 @@ scripts/classify/reports/loaded-external-ids.json
 
 # 지면 실측 캐시 (scripts/qa/measure-*.tsx --json) — 재생성 가능, 수 MB
 .measure/
+
+# RPM 원본 교재 PDF (내려받은 것 — 저장소에 넣지 않는다)
+.rpm-src/

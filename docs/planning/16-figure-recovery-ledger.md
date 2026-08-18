@@ -148,20 +148,77 @@ ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-missing-figure-lock.ts --revert --reco
 
 ## 4. 남은 830건 — 왜 남았나, 무엇이 가능한가
 
-### 4.1 RPM 교재본 671건 — **회수 경로 고갈**
+### 4.1 RPM 교재본 671건 — **좌표는 다 있다. 원본 PDF 6권만 없다.**
 
-sumaek 원본의 `diagram_assets` 테이블은 `scripts/qa/recover-rpm-figures.ts` 가
-두 차례(`1e9e1fb1`, `b215515e`) 이미 훑어 1,182문항/1,239장을 가져왔다.
-남은 문항은 **원본에 `diagram_assets` 행 자체가 없다**(원본 6,151 중 그림 보유 1,531).
-`svg_path` 는 전부 NULL 이다. RPM 교재 PDF 는 이 컴퓨터에 없다.
+> 조사 완료 2026-08-18 (`scripts/qa/probe-rpm-figure-sources.ts`). **다시 조사하지 말 것.**
 
-남은 길 (**어느 것도 아직 검증 안 됨**):
-1. sumaek `questions.source_coords` + `source_pages.image_path` + `source_files.storage_path`
-   (버킷 `sources`) — 원본 페이지에서 다시 오려낸다. **읽기 전용 SELECT 한 번이면
-   가능 여부가 결정된다.** 아직 안 돌렸다.
-2. 도형 엔진으로 재작도(`F:\시험지변환기\core`) — 비용이 크고, 원본이 없으니
-   맞는지 검증할 방법이 없다.
-3. 폐기 — `12-discard-candidates.md` 에 이미 RPM 232건이 「그림 없음」으로 올라 있다.
+`diagram_assets` 경로는 `recover-rpm-figures.ts` 가 두 차례(`1e9e1fb1`, `b215515e`)
+훑어 1,182문항/1,239장을 가져왔고 **정말로 고갈됐다** — 남은 671건에 대해 직접 세어
+`diagram_assets` 행 **0**, `question_assets` **0**, `svg_path` 전부 NULL 을 확인했다.
+
+**그런데 「고갈」은 그 테이블 얘기였다.** 원본에는 다른 길이 있었다:
+
+| 원본에 있는 것 | 667건 중 |
+|---|---:|
+| `questions.source_file_id` | **667** |
+| `questions.source_page_id` | **667** |
+| `questions.source_coords` (crop bbox) | **667** |
+| `source_files.storage_path` | **667** |
+| `source_pages.image_path` (페이지 raster) | 0 |
+
+좌표는 이런 모양이다 — **어느 페이지 어느 사각형인지가 그대로 적혀 있다**:
+
+```json
+{"x0": 56.67, "x1": 296.48, "y0": 635.94, "y1": 713.39, "page": 42}
+```
+
+필요한 원본은 **교재 6권뿐**이다:
+
+| 원본 | 이 결함에 걸린 문항 |
+|---|---:|
+| RPM 중학 2-2 학생용.pdf | 262 |
+| RPM 중학 1-2 학생용.pdf | 208 |
+| RPM 중학 3-2 학생용.pdf | 106 |
+| RPM 중학 3-1 학생용.pdf | 43 |
+| RPM 중학 2-1 학생용.pdf | 39 |
+| RPM 중학 1-1 학생용.pdf | 9 |
+
+#### ⛔ 막힌 곳 — 그 6권이 어디에도 없다
+
+`source_files.storage_path` 값이 `local:RPM 중학 2-2 학생용.pdf` 다.
+**`local:` 접두사는 스토리지에 올라간 적이 없다는 뜻이다** — sumaek 이 로컬 파일에서
+읽어 넣었고 파일 자체는 보관되지 않았다(`byte_size` 도 0). 버킷 `sources` 로 받으면
+HTTP 400 이 난다(6/6 실패, 실측).
+
+찾아본 곳과 결과:
+
+| 찾은 곳 | 결과 |
+|---|---|
+| `C:\Creative` · `F:\` · `D:\` · 내려받기 · 문서 | 없음 |
+| `C:\Creative\sumaek` 전체 | PDF 는 e2e 픽스처 하나뿐 |
+| N드라이브 인벤토리 21,009행 | `rpm` 은 **1건뿐** — `개인/기출/교재 제작 시도/인재원 교재/rpm 중2-2 빈칸용수학 (원본).pdf` |
+
+마지막 것은 **「빈칸용」이라 판이 다르다.** 좌표는 그 6권의 쪽번호에 매여 있으므로
+다른 판을 대면 엉뚱한 자리를 오린다. 쓰면 안 된다.
+
+#### 원장님께 — 이 6권만 있으면 끝난다
+
+**`RPM 중학 1-1 ~ 3-2 학생용.pdf` 6권**을 어디서 구할 수 있는지만 알려주시면
+667건이 한 번에 붙는다. 좌표·페이지가 이미 다 있어서 사람이 판단할 일이 없다:
+
+```bash
+# 6권을 .rpm-src/ 에 두고
+npx tsx scripts/qa/recover-rpm-figures-from-pdf.ts           # 계획
+python scripts/figure/crop-rpm-from-pdf.py                   # 오려내기
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/recover-rpm-figures-from-pdf.ts --attach
+ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-missing-figure-lock.ts --revert --recovered
+```
+
+#### 그 6권을 못 구하면
+
+1. 도형 엔진 재작도(`F:\시험지변환기\core`) — 비용이 크고, 원본이 없으니 맞는지
+   검증할 방법이 없다.
+2. 폐기 — `12-discard-candidates.md` 에 이미 RPM 232건이 「그림 없음」으로 올라 있다.
 
 ### 4.2 기출 155건 (109편)
 
