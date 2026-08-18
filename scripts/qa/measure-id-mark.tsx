@@ -37,6 +37,7 @@ import { PrismaClient } from "@prisma/client";
 import { chromium, type Page } from "@playwright/test";
 
 import { JASEUP_MEASURED_PX } from "../../src/lib/printGeometry";
+import { D_LAYOUT, D_TIGHT_CANDIDATES, injectMark } from "./idLayouts";
 import {
   GUARD_SCRIPT,
   assertPaperSane,
@@ -333,6 +334,29 @@ const VARIANTS: Variant[] = [
     numberStyle: { fontSizePx: 18, marginBottomPx: 2 },
     css: `.questionNumber{margin-bottom:2px}`,
   },
+
+  /* ── 라. D-tight — D 의 선은 살리고 «선 둘레의 빈 자리»만 줄인다 ────────
+   *
+   * CSS 는 `scripts/qa/idLayouts.ts` 한 곳에서 온다. 전수 측정(`measure-cap-layout`)
+   * ·스크린샷(`shot-cap-layout`)이 **같은 문자열**을 쓴다 — 옮겨 적으면 재는 배치와
+   * 찍는 배치가 갈라져도 아무도 모른다.
+   *
+   * `d-shared` 는 **대조군**이다: 위 `num-26-rule-mark`(이 파일에 직접 쓴 D안)와
+   * 같은 Δ 가 나와야 공유 모듈이 D안을 옳게 옮긴 것이다. 다르면 둘 중 하나가 틀렸다.
+   */
+  ...[D_LAYOUT, ...D_TIGHT_CANDIDATES].map((layout) => ({
+    name: layout.name === "d" ? "d-shared" : layout.name,
+    label: layout.label,
+    css: layout.css,
+    injectsMark: layout.injectsMark,
+    numberStyle: layout.expect
+      ? {
+          fontSizePx: layout.expect.fontSizePx,
+          marginBottomPx: layout.expect.marginBottomPx,
+        }
+      : undefined,
+    slot: layout.injectsMark ? injectMark : undefined,
+  })),
 ];
 
 interface Row {

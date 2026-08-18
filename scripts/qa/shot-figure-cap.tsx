@@ -26,6 +26,7 @@ import path from "node:path";
 import { PrismaClient } from "@prisma/client";
 import { chromium } from "@playwright/test";
 
+import { markFigureRows, mmToPx } from "./capLayoutProbe";
 import {
   GUARD_SCRIPT,
   assertPaperSane,
@@ -36,11 +37,22 @@ import {
 } from "./paperProbe";
 
 const prisma = new PrismaClient();
-const OUT_DIR = "docs/planning/tracks/reports/oversize";
+const DEFAULT_OUT_DIR = "docs/planning/tracks/reports/oversize";
 
 async function main() {
   const capMm = Number(process.argv[2] ?? 70);
-  const ids = process.argv.slice(3).filter((a) => !a.startsWith("--"));
+  const flagAt = (name: string) => {
+    const i = process.argv.indexOf(name);
+    return i >= 0 ? process.argv[i + 1] : undefined;
+  };
+  const outDir = flagAt("--out") ?? DEFAULT_OUT_DIR;
+  const namePrefix = flagAt("--name") ?? "cap";
+  const flagValues = new Set(
+    [flagAt("--out"), flagAt("--name")].filter(Boolean) as string[],
+  );
+  const ids = process.argv
+    .slice(3)
+    .filter((a) => !a.startsWith("--") && !flagValues.has(a));
   const shot = process.argv.includes("--shot");
   if (ids.length === 0) {
     console.error(
@@ -74,12 +86,9 @@ async function main() {
       ),
     );
 
-  let html = await paperDocument(pages);
   // 그림 묶음 div 에 표식만 붙인다 — 제품 컴포넌트는 안 건드린다.
-  html = html.replace(
-    /<div class="mt-3 flex flex-wrap items-start gap-4/g,
-    '<div class="figureRow mt-3 flex flex-wrap items-start gap-4',
-  );
+  // 표식 문자열은 `capLayoutProbe` 한 곳에서 온다 (재는 쪽·찍는 쪽이 같은 것을 본다).
+  let html = markFigureRows(await paperDocument(pages));
   html = html
     .replace(
       "</head>",
@@ -98,6 +107,21 @@ async function main() {
     await page.goto(url, { waitUntil: "load" });
     await page.evaluate(() => document.fonts.ready);
     assertPaperSane(await page.evaluate(GUARD_SCRIPT));
+    /* ── 가드 — 상한이 **실제로** 걸렸는가 ─────────────────────────────────
+       덧칠이 안 먹으면 세 장이 다 70mm 로 찍히고, 「29mm 도 읽힌다」가 거짓이 된다.
+       (스크린샷은 눈으로 보는 것이라 안 걸린 것을 알아채기가 오히려 어렵다.) */
+    const seen = (await page.evaluate(() =>
+      [...document.querySelectorAll(".figureRow img")].map(
+        (img) => getComputedStyle(img).maxWidth,
+      ),
+    )) as string[];
+    if (seen.length === 0)
+      throw new Error("그림 묶음 표식이 하나도 없다 — 제품 마크업이 바뀌었다.");
+    for (const value of seen)
+      if (Math.abs(parseFloat(value) - mmToPx(capMm)) > 0.5)
+        throw new Error(
+          `그림 max-width 가 ${value} 다 — 의도한 ${mmToPx(capMm).toFixed(2)}px(${capMm}mm)이 아니다. 덧칠이 안 먹었다.`,
+        );
     const measured = (await page.evaluate(() => {
       const out: [string, number, number, number][] = [];
       document.querySelectorAll(".problemItem").forEach((node) => {
@@ -123,12 +147,12 @@ async function main() {
         `${pid.slice(0, 8)} 상한 ${capMm}mm · 그림 ${n}장 → 그림 블록 ${figure.toFixed(0)}px · 문항 ${needed.toFixed(0)}px`,
       );
     if (shot) {
-      mkdirSync(OUT_DIR, { recursive: true });
+      mkdirSync(outDir, { recursive: true });
       const a4 = page.locator(".a4Page");
       for (let i = 0; i < (await a4.count()); i += 1) {
         const file = path.join(
-          OUT_DIR,
-          `cap${capMm}mm${(await a4.count()) > 1 ? `-p${i + 1}` : ""}.png`,
+          outDir,
+          `${namePrefix}${capMm}mm${(await a4.count()) > 1 ? `-p${i + 1}` : ""}.png`,
         );
         await a4.nth(i).screenshot({ path: file });
         console.log(`-> ${file}`);
