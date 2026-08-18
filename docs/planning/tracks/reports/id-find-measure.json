@@ -1,0 +1,223 @@
+{
+  "bySource": [
+    {
+      "source": "past_exam",
+      "total": 41524,
+      "externalId": 40237,
+      "examId": 40237,
+      "questionNumber": 40237,
+      "school": 40237,
+      "sourceFile": 40237
+    },
+    {
+      "source": "transformed",
+      "total": 4862,
+      "externalId": 4843,
+      "examId": 0,
+      "questionNumber": 0,
+      "school": 0,
+      "sourceFile": 0
+    },
+    {
+      "source": "manual",
+      "total": 766,
+      "externalId": 0,
+      "examId": 0,
+      "questionNumber": 0,
+      "school": 0,
+      "sourceFile": 0
+    }
+  ],
+  "externalIdShapes": [
+    {
+      "shape": "…-<숫자> (기출 exam-문항번호)",
+      "n": 40237,
+      "sample": "1097-1"
+    },
+    {
+      "shape": "uuid 형태",
+      "n": 4843,
+      "sample": "019fd1d5-393a-70b4-953f-4db03bc0cbb9"
+    }
+  ],
+  "pageDepth": [
+    {
+      "scope": "소단원+난이도+유형+상태",
+      "p50": 2,
+      "p90": 12,
+      "p99": 27,
+      "worst": 35,
+      "overOnePage": 29662,
+      "rows": 47152
+    },
+    {
+      "scope": "소단원만",
+      "p50": 7,
+      "p90": 34,
+      "p99": 69,
+      "worst": 78,
+      "overOnePage": 41490,
+      "rows": 47152
+    },
+    {
+      "scope": "위 넷 + 그림유무",
+      "p50": 2,
+      "p90": 10,
+      "p99": 23,
+      "worst": 33,
+      "overOnePage": 26335,
+      "rows": 47152
+    },
+    {
+      "scope": "필터 없음",
+      "p50": 1179,
+      "p90": 2122,
+      "p99": 2335,
+      "worst": 2358,
+      "overOnePage": 47132,
+      "rows": 47152
+    }
+  ],
+  "perUnit": {
+    "units": 444,
+    "p50": 23,
+    "p90": 275,
+    "worst": 1546
+  },
+  "timings": [
+    {
+      "label": "기준선 (select 1) — 왕복 네트워크",
+      "ms": 119.5688,
+      "rows": 1
+    },
+    {
+      "label": "id(PK) 단건 조회",
+      "ms": 137.9663,
+      "rows": 0
+    },
+    {
+      "label": "externalId(UNIQUE) 단건 조회",
+      "ms": 122.7831,
+      "rows": 0
+    },
+    {
+      "label": "무필터 목록 1페이지 (화면 기본 진입)",
+      "ms": 194.1898,
+      "rows": 20
+    },
+    {
+      "label": "무필터 count (같은 요청이 함께 돈다)",
+      "ms": 169.6351,
+      "rows": 47152
+    },
+    {
+      "label": "본문 ILIKE «다음 그림과 같이» 1페이지",
+      "ms": 437.1642,
+      "rows": 20
+    },
+    {
+      "label": "본문 ILIKE «다음 그림과 같이» count",
+      "ms": 408.8523,
+      "rows": 1
+    },
+    {
+      "label": "본문 ILIKE «값을 구하시오» 1페이지",
+      "ms": 396.3803,
+      "rows": 20
+    },
+    {
+      "label": "본문 ILIKE «값을 구하시오» count",
+      "ms": 430.8771,
+      "rows": 1
+    },
+    {
+      "label": "본문 ILIKE «옳은 것을 모두 고른 것은» 1페이지",
+      "ms": 420.8723,
+      "rows": 20
+    },
+    {
+      "label": "본문 ILIKE «옳은 것을 모두 고른 것은» count",
+      "ms": 454.6607,
+      "rows": 1
+    },
+    {
+      "label": "본문 ILIKE «이차함수의 그래프가» 1페이지",
+      "ms": 442.0889,
+      "rows": 20
+    },
+    {
+      "label": "본문 ILIKE «이차함수의 그래프가» count",
+      "ms": 411.7604,
+      "rows": 1
+    },
+    {
+      "label": "본문 ILIKE «확률을 구하시오» 1페이지",
+      "ms": 393.9738,
+      "rows": 20
+    },
+    {
+      "label": "본문 ILIKE «확률을 구하시오» count",
+      "ms": 386.5939,
+      "rows": 1
+    }
+  ],
+  "searchHits": [
+    {
+      "phrase": "다음 그림과 같이",
+      "n": 442
+    },
+    {
+      "phrase": "값을 구하시오",
+      "n": 2257
+    },
+    {
+      "phrase": "옳은 것을 모두 고른 것은",
+      "n": 52
+    },
+    {
+      "phrase": "이차함수의 그래프가",
+      "n": 61
+    },
+    {
+      "phrase": "확률을 구하시오",
+      "n": 138
+    }
+  ],
+  "fullTextReadiness": {
+    "extensions": [
+      {
+        "name": "unaccent",
+        "installed": null,
+        "available": "1.1"
+      },
+      {
+        "name": "pg_trgm",
+        "installed": null,
+        "available": "1.6"
+      },
+      {
+        "name": "btree_gin",
+        "installed": null,
+        "available": "1.3"
+      }
+    ],
+    "contentBytes": 13049894,
+    "avgContentChars": 184,
+    "tableBytes": 51732480
+  },
+  "identity": {
+    "duplicates": [
+      {
+        "kind": "본문이 완전히 같은 행",
+        "groups": 503,
+        "rows": 1071
+      },
+      {
+        "kind": "(examId, 문항번호)가 같은 행",
+        "groups": 0,
+        "rows": 0
+      }
+    ],
+    "withoutExternalId": 2072
+  }
+}

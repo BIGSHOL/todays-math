@@ -1,0 +1,62 @@
+{
+  "coverage": {
+    "total": 47152,
+    "hasReadableRun": 38965,
+    "withoutReadableRun": 8187,
+    "koreanCharsMedian": 33,
+    "rowsWithMath": 45782
+  },
+  "snippetHits": {
+    "pick": "longest",
+    "sample": 200,
+    "snippetChars": 16,
+    "buckets": {
+      "1 (바로 찾음)": 66,
+      "2–5": 57,
+      "6–20 (한 페이지)": 30,
+      "21–100": 26,
+      "101 이상": 21
+    },
+    "median": 4,
+    "p90": 105,
+    "worst": 585,
+    "withUnitFilter": {
+      "median": 2,
+      "p90": 14,
+      "unique": 96,
+      "uniquePct": "48.0%"
+    },
+    "examplesWorst": [
+      {
+        "id": "3e0420ef-fd61-471b-aa9c-e54647f6a898",
+        "snip": "에서 있는 대로 고른 것은",
+        "n": 585,
+        "inUnit": 7
+      },
+      {
+        "id": "a62a0219-0150-406e-9593-b950c12169aa",
+        "snip": "에서 있는 대로 고른 것은",
+        "n": 585,
+        "inUnit": 10
+      },
+      {
+        "id": "ea8cd996-9901-4d53-b6f2-af58ec331aa1",
+        "snip": "의 값을 구하는 풀이 과정과",
+        "n": 552,
+        "inUnit": 7
+      },
+      {
+        "id": "15ecb8e6-bf14-47a6-91bf-f2e0bc0ac467",
+        "snip": "오른쪽 그림과 같은",
+        "n": 473,
+        "inUnit": 14
+      },
+      {
+        "id": "2b8d4df2-c818-423a-a4a1-fcfa3fcfe94a",
+        "snip": "에서 옳은 것만을 있는 대로",
+        "n": 387,
+        "inUnit": 10
+      }
+    ]
+  }
+}
