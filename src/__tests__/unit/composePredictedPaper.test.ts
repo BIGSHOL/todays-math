@@ -360,6 +360,10 @@ describe("예측 문제지 — 재료 우선순위(11 §3 L6)", () => {
   const AI_VARIANT = 11; // pid 가 더 작다 — 동점이면 이쪽이 뽑힌다
   const RPM = 12;
   const MANUAL = 13;
+  const PAST = 14;
+  // pid 가 **AI 변형본보다 작다.** 동점이면 이쪽이 뽑히므로, AI 변형본이 뽑혔다면
+  // 그건 오직 «등급이 갈렸기» 때문이다 — 동점 순서에 기대어 통과하는 것을 막는다.
+  const AI_GEN = 3;
 
   /** UNIT_A·easy·객관식 칸 하나를 두 후보가 다투게 만든다. */
   function contested(...extras: PaperCandidate[]): PaperCandidate[] {
@@ -390,6 +394,50 @@ describe("예측 문제지 — 재료 우선순위(11 §3 L6)", () => {
     const ids = paper.questions.map((q) => q.problemId);
     expect(ids).toContain(pid(RPM));
     expect(ids).not.toContain(pid(AI_VARIANT));
+  });
+
+  it("기출이 RPM 보다 먼저다 (② before ③)", () => {
+    // 적대적 리뷰가 잡은 구멍: 「RPM 이 기출보다 앞」으로 뒤집어도 시험이 전부 초록이었다.
+    // 우선순위의 **맨 위**를 못 박지 않으면 아래만 맞춰도 통과한다.
+    const paper = composePredictedPaper({
+      blueprint: blueprint(),
+      candidates: contested(
+        candidate(RPM, UNIT_A, "easy", "객관식", {
+          source: "transformed",
+          originProblemId: null,
+        }),
+        candidate(PAST, UNIT_A, "easy", "객관식", { source: "past_exam" }),
+      ),
+    });
+    expect(paper.ok).toBe(true);
+    if (!paper.ok) return;
+    const ids = paper.questions.map((q) => q.problemId);
+    // pid 는 RPM(12) 이 기출(14) 보다 작다 — 그런데도 기출이 뽑혀야 등급이 이긴 것이다.
+    expect(ids).toContain(pid(PAST));
+    expect(ids).not.toContain(pid(RPM));
+  });
+
+  it("AI 생성물은 맨 뒤다 — AI 변형본보다도 뒤", () => {
+    // `ai_generated` 가 리팩터 중에 3 → 2 로 조용히 올라가 AI 변형본과 같아졌었다.
+    const paper = composePredictedPaper({
+      blueprint: blueprint(),
+      candidates: contested(
+        candidate(AI_GEN, UNIT_A, "easy", "객관식", {
+          source: "ai_generated",
+          originProblemId: null,
+        }),
+        candidate(AI_VARIANT, UNIT_A, "easy", "객관식", {
+          source: "transformed",
+          originProblemId: pid(1),
+        }),
+      ),
+    });
+    expect(paper.ok).toBe(true);
+    if (!paper.ok) return;
+    const ids = paper.questions.map((q) => q.problemId);
+    // AI_GEN(3) 이 AI_VARIANT(11) 보다 **작은데도** 변형본이 뽑혀야 한다.
+    expect(ids).toContain(pid(AI_VARIANT));
+    expect(ids).not.toContain(pid(AI_GEN));
   });
 
   it("자작과 RPM 은 같은 등급이다 — 출처로 갈리지 않는다 (③)", () => {

@@ -114,7 +114,7 @@ function pickTypeBalanced<T extends SelectableProblem>(
     for (let i = 1; i < remaining.length; i++) {
       const rank = seatRank(remaining[i]!);
       const usage = typeUsage.get(remaining[i]!.problemType) ?? 0;
-      if (rank < bestRank || (rank === bestRank && usage < bestUsage)) {
+      if (usage < bestUsage || (usage === bestUsage && rank < bestRank)) {
         bestRank = rank;
         bestUsage = usage;
         bestIndex = i;
