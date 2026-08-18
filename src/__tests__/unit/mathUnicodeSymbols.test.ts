@@ -13,7 +13,11 @@
  */
 import { describe, expect, it } from "vitest";
 
-import { applyMathInnerNormalization } from "@/lib/math/textPreprocess";
+import {
+  applyMathInnerNormalization,
+  collapseBlankBoxPadding,
+  preprocessMathText,
+} from "@/lib/math/textPreprocess";
 
 /** 정규화 결과에 날문자가 남지 않았는지 */
 const clean = (s: string) => applyMathInnerNormalization(s);
@@ -123,5 +127,54 @@ describe("[수식] 정규화 결과는 KaTeX 로 실제 렌더된다", () => {
     });
     expect(html).not.toContain("katex-error");
     expect(html).not.toContain("#cc0000");
+  });
+});
+
+/**
+ * ── 빈칸 네모(□) 뒤 공백 (2026-08-18 원장님) ────────────────────────────────
+ * "네모 표현은 좋았는데 네모 뒤에 공백이 너무 많아보여. 공백 해결 방안 없는지 확인"
+ *
+ * 원인은 CSS 가 아니라 **LaTeX 에 남은 HWP 채움**이다. HWP 수식의 `{BOX{~~ 1. ~~}}`
+ * 에서 `~` 는 한 칸 공백인데, 변환기가 `BOX` 만 `\square` 로 바꾸고 채움은 그대로
+ * 흘려보냈다. LaTeX 의 `~` 는 비줄바꿈 공백이라 **개수만큼 쌓인다.**
+ *
+ * 브라우저 실측(12.5px 지면 글꼴): `$\square$` 11.8px · `$\square ~~~$` **23.1px**
+ * — 채움이 네모 자신만큼 넓다. 전수 실측: 네모 바로 뒤 `~` 뭉치 699개 / 114문항.
+ */
+describe("빈칸 네모 뒤 HWP 채움 정리", () => {
+  it("수식 끝에 붙은 채움은 지운다 (실측 0515aa41)", () => {
+    expect(preprocessMathText("다음 $\\square ~~~$ 안에")).not.toMatch(/~/);
+  });
+
+  it("네모와 라벨 사이 채움은 한 칸만 남긴다 (실측 0a5cd178)", () => {
+    const out = preprocessMathText("다음 $\\square ~~㈎~~$ 안에");
+    expect(out).toContain("㈎");
+    expect(out.match(/~/g) ?? []).toHaveLength(1);
+  });
+
+  it("`\\,` 채움도 같은 규칙 (실측 0e342d30)", () => {
+    // 여기는 **수식 안** 규칙이라 inner 단계에서 본다 — 전체 파이프라인은
+    // 한글 `가` 를 수식 밖으로 빼내므로(`splitMathInnerByHangul`) 결과가 섞인다.
+    const out = collapseBlankBoxPadding(
+      "\\square \\,\\,\\,\\,(가)\\,\\,\\,\\,\\,",
+    );
+    expect(out).toContain("(가)");
+    expect(out.match(/\\,/g) ?? []).toHaveLength(1);
+  });
+
+  it("**네모가 없는 수식의 채움은 건드리지 않는다** — 목록 구분자다", () => {
+    // `$1,~2,~3$` 의 `~` 는 항목 사이 간격이다. 지우면 숫자가 붙는다.
+    const out = preprocessMathText("$1,~2,~3,~4$");
+    expect(out.match(/~/g) ?? []).toHaveLength(3);
+  });
+
+  it("네모가 있어도 **멀리 떨어진** 채움은 그대로 둔다", () => {
+    // 네모에 붙지 않은 채움까지 지우면 목록 간격이 무너진다.
+    const out = preprocessMathText("$\\square = 1,~2,~3$");
+    expect(out.match(/~/g) ?? []).toHaveLength(2);
+  });
+
+  it("채움이 하나뿐이면 그대로 둔다 — 이미 한 칸이다", () => {
+    expect(preprocessMathText("$\\square ~a$")).toContain("~");
   });
 });

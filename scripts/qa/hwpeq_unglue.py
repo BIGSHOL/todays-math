@@ -78,6 +78,17 @@ _RMIT = re.compile(
 #    백슬래시 lookbehind 가 한다. 대문자 HWP 키워드는 영어 낱말일 리가 없다.
 _POST = [
     (re.compile(r"(?<![\\A-Za-z])(?:BOX|box)(?![A-Za-z])"), r"\\square "),
+    # ⚠️ **네모 뒤 채움을 여기서 줄인다** (2026-08-18 원장님 "네모 뒤에 공백이 너무
+    #    많아보여"). HWP 원본은 `{BOX{~~ 1. ~~}}` 처럼 빈칸 폭을 `~`(한 칸 공백)로
+    #    맞춰 놓는다. `BOX` 만 `\square` 로 바꾸고 채움을 흘려보내면 LaTeX 의 `~`
+    #    (비줄바꿈 공백)가 **개수만큼 그대로 쌓인다.**
+    #    브라우저 실측: `$\square$` 11.8px vs `$\square ~~~$` 23.1px — 채움이
+    #    네모 자신만큼 넓다. DB 전수로는 네모 뒤 `~` 뭉치 699개 / 114문항.
+    #    여기서 줄이는 것은 **앞으로 변환할 것**을 위한 것이고, 이미 DB 에 들어간
+    #    본문은 렌더 전처리(`textPreprocess.collapseBlankBoxPadding`)가 같은
+    #    규칙으로 정리한다. 둘이 갈라지면 조용히 어긋나므로 규칙을 같게 둘 것.
+    (re.compile(r"(\\square\s*)(?:~|\\,){2,}"), r"\1~"),
+    (re.compile(r"(\\square\s*)(?:~|\\,)+\s*$"), r"\1"),
     (re.compile(r"(?<!\\)DIVIDE"), r"\\div "),
     (re.compile(r"(?<!\\)divide"), r"\\div "),
     (re.compile(r"(?<!\\)TIMES"), r"\\times "),
