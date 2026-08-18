@@ -153,6 +153,41 @@ describe("[⑷] 출제가 «칸에 안 들어가는 문항»을 후순위로 돌
     expect(substitutions).toEqual([]);
   });
 
+  /**
+   * 🔒 **순서를 가르는 픽스처** — 지면이 유형 빈도보다 **앞**이라는 것을 잠근다.
+   *
+   * ⚠️ 이 테스트가 왜 따로 있나: 위의 다른 픽스처는 `problemType` 이 **한 종류**라
+   *    유형 빈도가 지면과 겨루는 상황이 아예 안 만들어진다. 실제로 `pickTypeBalanced`
+   *    의 비교 한 줄을 뒤집어(유형 우선으로) 봤더니 **테스트 28건이 전부 초록**이었다 —
+   *    가드가 아니라 장식이었다(적대적 리뷰 ④ §H 의 「픽스처가 안 가른다」와 같은 자리).
+   *
+   * 여기서는 «들어가는 것»과 «아직 안 쓴 유형»이 **다른 문항**에 걸리게 둔다.
+   *   · 지면 우선 → 계산(들어감) 둘을 고른다.
+   *   · 유형 우선 → 두 번째 자리에서 «아직 안 쓴 유형» 활용(안 들어감)을 집는다.
+   * 그래서 순서를 뒤집으면 이 테스트만 빨개진다.
+   *
+   * 실측 근거(시험지 13,920장 · 25문항 기준): 지면 우선은 경고가 뜨는 시험지를
+   * 5.9% 로 낮추고 유형 3연속을 2.091 → 2.354(+12.6%) 만든다. 유형 우선은
+   * 유형 3연속이 2.113(+1.1%)로 거의 그대로인 대신 경고가 **20.9%** 로 3.5배다.
+   * 원장님이 2026-08-18 지면 우선으로 확정했다(D-52 · 보고서 §5).
+   */
+  it("«아직 안 쓴 유형»보다 «칸에 들어가는 것»을 먼저 고른다", () => {
+    const pool = [
+      small("ok-1", { problemType: "계산" }),
+      small("ok-2", { problemType: "계산" }),
+      small("ok-3", { problemType: "계산" }),
+      tall("big-1", { problemType: "활용" }),
+      tall("big-2", { problemType: "활용" }),
+      tall("big-3", { problemType: "활용" }),
+    ];
+    const { problems } = pick(pool, 2);
+
+    expect(problems).toHaveLength(2);
+    // 유형 우선이면 여기서 «활용»(안 들어감)이 한 자리를 가져간다.
+    expect(problems.every((p) => p.id.startsWith("ok-"))).toBe(true);
+    expect(assessOverflowRisk(asPrint(problems))).toEqual([]);
+  });
+
   it("같은 난이도 안에서는 들어가는 것을 먼저 고른다", () => {
     const pool = [
       tall("h-big", { difficulty: "hard" }),
