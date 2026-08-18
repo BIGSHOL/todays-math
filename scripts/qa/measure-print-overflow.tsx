@@ -341,10 +341,38 @@ async function verify(
       `본문이 바뀐 문항 ${changed.length.toLocaleString()}건 — 전부 다시 잰다.`,
     );
   const mustCheck = new Set(changed ?? []);
+
+  /**
+   * **캐시 자신이 어긋난 자리**도 반드시 다시 잰다. 칸 높이는 이 캐시 안에서 하나여야
+   * 하는데(장마다 두 문항), 다른 값이 섞여 있으면 그 줄은 다른 지면을 잰 것이다.
+   * (이 도구가 표본을 홀수로 골라 마지막 장을 한 문항으로 그린 적이 있다 — 그 한 줄이
+   *  997px 로 들어갔다. 도구가 낸 흠은 도구가 스스로 알아채고 고쳐야 한다.)
+   */
+  const cacheSlot =
+    kind === "first" ? MEASURED.slotFirstPagePx : MEASURED.slotContinuationPx;
+  const odd = cached.filter((m) => m.availPx !== cacheSlot);
+  if (odd.length > 0) {
+    console.log(
+      `캐시 안에서 칸이 어긋난 줄 ${odd.length}건 (${cacheSlot}px 이 아니다) — 같이 다시 잰다.`,
+    );
+    for (const m of odd) mustCheck.add(m.pid);
+  }
   const picked = [
     ...spread,
     ...rows.filter((r) => mustCheck.has(r.id) && !spread.includes(r)),
   ];
+  /**
+   * ⚠️ **짝수로 맞춘다.** 장마다 두 문항을 넣으므로 홀수면 마지막 장이 한 문항이 되고,
+   *    그 칸은 997px 이라 캐시(484px)와 다른 것을 잰다(적대적 리뷰 ④ B 와 같은 이유).
+   *    **버리지 말고 채운다** — 버리면 하필 «반드시 봐야 할» 그 줄이 빠질 수 있다
+   *    (실제로 그랬다). 표본에서 안 쓰인 문항 하나를 끝에 덧대 짝을 맞춘다.
+   */
+  if (picked.length % 2 === 1) {
+    const inPicked = new Set(picked.map((r) => r.id));
+    const filler = rows.find((r) => !inPicked.has(r.id));
+    if (filler) picked.push(filler);
+    else picked.pop();
+  }
   console.log(
     `대조 ${picked.length.toLocaleString()}건 (고른 표본 ${spread.length.toLocaleString()} + 바뀐 문항 ${(picked.length - spread.length).toLocaleString()}) / 캐시 ${cached.length.toLocaleString()}건 · ${kind} 장 · ${media} 매체`,
   );
