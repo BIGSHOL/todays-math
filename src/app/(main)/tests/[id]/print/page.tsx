@@ -53,6 +53,9 @@ export default async function TestPrintPage({ params }: TestPrintPageProps) {
           questionType: item.problem.questionType,
           // 원본에서 오려 온 그림 — 인쇄물에도 같이 나가야 문제가 성립한다.
           figureUrls: item.problem.figureUrls,
+          // 그림 원본 치수 — 넘침 판정이 그림 높이를 계산하는 유일한 근거다.
+          // 판정은 브라우저에서 돌아 이미지 파일을 읽을 수 없다(printOverflow.ts).
+          figureDims: item.problem.figureDims,
         })),
       }}
     />

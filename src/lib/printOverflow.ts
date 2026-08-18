@@ -14,6 +14,7 @@
  */
 import type { TestPrintProblem } from "@/components/print/types";
 import { displayWidth, fitsTwoColumns } from "@/lib/math/displayWidth";
+import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
 import { parseProblemContent } from "@/lib/problem/parseProblemContent";
 
 /**
@@ -40,8 +41,112 @@ import { parseProblemContent } from "@/lib/problem/parseProblemContent";
  */
 export const OVERFLOW_WIDTH_LIMIT = 530;
 
-/** 그림이 이 장수 이상이면 세로 공간을 넘길 개연성이 크다. */
+/**
+ * 그림이 이 장수 이상이면 세로 공간을 넘길 개연성이 크다.
+ *
+ * ⚠️ 이 규칙은 **장수**만 본다. 실데이터의 그림 문항은 94%가 1장짜리라
+ * 여기에 걸리는 것은 512건뿐인데, 실제로 넘치는 그림 문항은 2,557건이다.
+ * 그림이 지면을 얼마나 먹는지는 장수가 아니라 **치수**로 갈린다 —
+ * 그건 `estimateFigureBlockPx` 가 본다. 이 상수는 「치수를 모르는데 여러 장」인
+ * 경우를 남겨 두는 안전망일 뿐이다(적대적 리뷰 ③ §2).
+ */
 export const OVERFLOW_FIGURE_LIMIT = 2;
+
+/* ────────────────────────────────────────────────────────────────────────
+ * 그림 높이 — 인자에 없던 것 (적대적 리뷰 ③ §2)
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/** 그림 한 장의 **원본** 치수. 인쇄 폭 상한을 적용하기 전 값이다. */
+export interface FigureDimension {
+  width: number;
+  height: number;
+}
+
+/**
+ * 치수를 모르는 그림 한 장이 먹는다고 **가정**하는 높이.
+ *
+ * 근거: 실데이터 9,587장을 인쇄 폭 상한(70mm)으로 환산한 높이의 **중앙값 207px**
+ * (90분위 305px · 99분위 1,145px). 중앙값을 쓰는 이유는 이 값이 「모르는 것」에만
+ * 붙기 때문이다 — 적재된 치수가 있으면 실제 값을 쓴다. 0으로 세면
+ * **그림 문항일수록 조용해진다**(리뷰 §2 — 인자에 없는 것은 안 잡힌다).
+ */
+export const UNKNOWN_FIGURE_HEIGHT_PX = 207;
+
+/** 치수를 모르는 그림의 가정 폭. 상한(70mm)에 붙여 «한 줄에 한 장»으로 본다. */
+const UNKNOWN_FIGURE_WIDTH_PX = JASEUP_MEASURED_PX.figureMaxWidth;
+
+/**
+ * DB 의 평탄 배열(`problem.figure_dims` = `[w1,h1,w2,h2,…]`)을 그림 수에 맞춰 짝짓는다.
+ *
+ * ⚠️ **손상된 입력은 «작은 그림»이 아니라 «모른다»로 받는다.** 길이가 안 맞으면
+ *    어느 그림에 붙는 값인지 알 수 없으므로 전부 `null` 이다. 짝은 맞는데 값이
+ *    0·음수·NaN 이면 그 자리만 `null` 이다. 여기서 0을 그대로 흘리면 넘치는
+ *    문항이 «높이 0» 으로 읽힌다(CLAUDE.md 2026-08-16).
+ */
+export function parseFigureDimensions(
+  figureCount: number,
+  flat: readonly number[] | null | undefined,
+): (FigureDimension | null)[] {
+  if (figureCount <= 0) return [];
+  const unknown = (): (FigureDimension | null)[] =>
+    Array.from({ length: figureCount }, () => null);
+  if (!flat || flat.length !== figureCount * 2) return unknown();
+
+  return Array.from({ length: figureCount }, (_, index) => {
+    const width = flat[index * 2]!;
+    const height = flat[index * 2 + 1]!;
+    if (!Number.isFinite(width) || !Number.isFinite(height)) return null;
+    if (width <= 0 || height <= 0) return null;
+    return { width, height };
+  });
+}
+
+/**
+ * 그림 묶음이 문항 칸에서 먹는 **세로 픽셀**.
+ *
+ * 지면 그대로의 모형이다(`ProblemContent`):
+ *   `<div class="mt-3 flex flex-wrap items-start gap-4">` 안에
+ *   `<img class="… print:max-w-[70mm]">` 이 늘어선다.
+ * 그래서 (1) 폭이 상한을 넘으면 **비율대로** 줄고, (2) 가로로 늘어놓다 문항 열을
+ * 넘으면 다음 줄로 접히며, (3) 한 줄의 높이는 그 줄에서 **가장 높은 장**이다
+ * (`items-start` 라 늘어나지 않는다).
+ *
+ * 폭 상한(264.57px)이 문항 열(363.5px)보다 좁으므로 한 장이 혼자 넘쳐 줄어드는
+ * 일은 없다 — flex 축소를 따로 세지 않는 근거다.
+ */
+export function estimateFigureBlockPx(
+  figures: readonly (FigureDimension | null)[],
+): number {
+  if (figures.length === 0) return 0;
+  const { problemColumn, figureMaxWidth, figureGap, figureBlockTop } =
+    JASEUP_MEASURED_PX;
+
+  let total = figureBlockTop;
+  let rowWidth = 0;
+  let rowHeight = 0;
+  let rows = 0;
+
+  for (const figure of figures) {
+    const scale = figure ? Math.min(1, figureMaxWidth / figure.width) : 1;
+    const width = figure ? figure.width * scale : UNKNOWN_FIGURE_WIDTH_PX;
+    const height = figure ? figure.height * scale : UNKNOWN_FIGURE_HEIGHT_PX;
+
+    const wouldBe = rowWidth === 0 ? width : rowWidth + figureGap + width;
+    if (rowWidth > 0 && wouldBe > problemColumn) {
+      total += rowHeight;
+      rows += 1;
+      rowWidth = width;
+      rowHeight = height;
+      continue;
+    }
+    rowWidth = wouldBe;
+    rowHeight = Math.max(rowHeight, height);
+  }
+  total += rowHeight;
+  rows += 1;
+  // 줄 사이 간격 — `gap-4` 는 가로·세로 모두에 붙는다.
+  return total + figureGap * (rows - 1);
+}
 
 /* ────────────────────────────────────────────────────────────────────────
  * 줄 수 추정 — 폭 총합이 못 보는 것을 본다
@@ -94,9 +199,16 @@ function linesForItems(items: readonly string[]): number {
  * 상자가 생기면 글자 수가 그대로여도 값이 늘어난다. 2026-08-17 상자·열 수
  * 수리로 실제 지면이 그렇게 바뀌었고, 총합 지표는 그 변화를 한 글자도 못 봤다.
  *
+ * `figures` 는 `parseFigureDimensions` 가 짝지은 **원본 치수**다. 넘기지 않으면
+ * 그림을 0줄로 센다 — 그게 2026-08-18 이전의 동작이었고, 실측 넘침의 93.8%가
+ * 거기로 빠져나갔다(적대적 리뷰 ③ §2). 판정 경로에서는 반드시 넘길 것.
+ *
  * 확정이 아니라 **개연성**이다. 정확한 높이는 실제 렌더에서만 나온다.
  */
-export function estimateProblemLines(content: string): number {
+export function estimateProblemLines(
+  content: string,
+  figures: readonly (FigureDimension | null)[] = [],
+): number {
   const { question, choices } = parseProblemContent(content);
 
   // `parseProblemContent` 는 상자를 이미 **인용문 마크다운**으로 굳혀 준다
@@ -163,27 +275,39 @@ export function estimateProblemLines(content: string): number {
   flushBox();
 
   lines += linesForItems(choices);
+  // 그림은 글자가 아니라 **픽셀**로 재고 줄로 환산한다. 지금까지 인자에조차 없었다.
+  lines += Math.ceil(estimateFigureBlockPx(figures) / JASEUP_MEASURED_PX.line);
   return lines;
 }
 
 /**
  * 반 페이지 문항 칸에 들어가는 줄 수의 한계.
  *
- * 값의 근거 (실데이터 47,152건, `scripts/qa/calibrate-overflow-lines.ts`):
- * 폭 규칙(530)이 잡는 건수와 **같은 규모**가 되는 줄 수 한계가 **14** 다.
- * 즉 **엄격도를 그대로 두고 보는 것만 바꿨다.**
+ * ── 2026-08-18: **그림을 세게 된 뒤 다시 보정했다** (적대적 리뷰 ③ §2, §11-1) ──
  *
- * 2026-08-18 재보정(연산자 여백을 세게 된 뒤) — 한계 14 는 그대로가 최선이다:
- *   폭 규칙 709건 · 줄 수 한계 14 → 623건 (13 은 949, 15 는 415 로 더 멀다)
- *   줄 수 경고가 늘어난 내역: 593(기준) → 600 계산 과정 문단 분리
- *  *   → 601 마커 없는 조건 상자 52개 → 623 세부 문항 줄바꿈 1,783문항.
- *   셋 다 **지면이 실제로 세로로 길어진** 것이라 경고가 느는 게 맞다.
+ * 예전 값 14 의 근거는 「폭 규칙(530)이 잡는 건수와 **같은 규모**가 되는 줄 수」였다.
+ * 그건 **자가 없을 때 쓰던 임시방편**이다 — 지면 칸(484px)에서 유도한 값이 아니라
+ * 다른 규칙의 경고량에 맞춘 값이라, 지면이 바뀌어도 판정은 몰랐다.
  *
- * ⚠️ 임계값을 바꿀 때는 `OVERFLOW_WIDTH_LIMIT` 주석과 같은 규칙을 지킬 것 —
- *    **같은 경고 건수로 맞춰** 비교한다. 분모가 다르면 "새 규칙이 더 잡는다"가
- *    임계값을 낮춰서 생긴 착시인지 배치가 실제로 높아져서인지 갈리지 않는다.
+ * 이제 `estimateProblemLines` 가 그림 높이를 본다. 같은 자로 실측 넘침(Chromium
+ * 인쇄 매체 전수 47,152건, `scripts/qa/eval-overflow-rules.ts`)과 대조하면:
+ *
+ * ```
+ * 한계 14  경고 7,161  맞음 2,725  헛것 4,436  재현율 100.0%  정밀도 38.1%
+ * 한계 17  경고 4,530  맞음 2,693  헛것 1,837  재현율  98.8%  정밀도 59.4%
+ * 한계 18  경고 3,781  맞음 2,624  헛것 1,157  재현율  96.3%  정밀도 69.4%   ← 여기
+ * 한계 20  경고 2,514  맞음 2,000  헛것   514  재현율  73.4%  정밀도 79.6%
+ * ```
+ *
+ * 18 을 고른 이유: 18 → 20 에서 재현율이 23%p 떨어지는데 정밀도는 10%p 만 오른다.
+ * 반대로 18 → 14 는 헛것이 3.8배가 되고 재현율은 3.7%p 만 오른다. 무릎이 18 이다.
+ * 25문항 시험지 기준 경고가 평균 2건이라 원장이 실제로 확인할 수 있는 양이다.
+ *
+ * ⚠️ **한계와 «자»는 같이 움직인다.** 지금 자는 고정 chrome(3.08줄)·상자 마진·
+ *    열 폭을 아직 덜 센다(리뷰 §6). 그걸 고치면 이 값도 **칸 높이에서 다시 유도**해야
+ *    한다 — 한쪽만 고치면 경고량이 통째로 튄다.
  */
-export const OVERFLOW_LINE_LIMIT = 14;
+export const OVERFLOW_LINE_LIMIT = 18;
 
 export interface OverflowRisk {
   /** 지면에 찍히는 문항 번호(1부터). 배열 위치가 아니다 — 원장이 지면에서 찾는 번호다. */
@@ -199,16 +323,26 @@ export function assessOverflowRisk(
 
   problems.forEach((problem, index) => {
     const reasons: string[] = [];
+    const figureCount = problem.figureUrls?.length ?? 0;
+    const figures = parseFigureDimensions(figureCount, problem.figureDims);
+    const figurePx = estimateFigureBlockPx(figures);
+
     if (displayWidth(problem.content) > OVERFLOW_WIDTH_LIMIT)
       reasons.push("본문이 길다");
-    // 폭 총합이 못 보는 배치(상자·보기 1열)를 줄 수로 따로 본다.
+    // 폭 총합이 못 보는 배치(그림·상자·보기 1열)를 줄 수로 따로 본다.
     // 같은 문항이 둘 다에 걸리면 사유를 겹쳐 적지 않는다 — 원장이 읽을 문장이다.
-    if (
-      !reasons.length &&
-      estimateProblemLines(problem.content) > OVERFLOW_LINE_LIMIT
-    )
-      reasons.push("배치가 높다(상자·보기 1열)");
-    if ((problem.figureUrls?.length ?? 0) >= OVERFLOW_FIGURE_LIMIT)
+    const lines = estimateProblemLines(problem.content, figures);
+    if (!reasons.length && lines > OVERFLOW_LINE_LIMIT) {
+      // 높이의 절반 넘게가 그림이면 원장이 지면에서 찾을 것도 그림이다.
+      // 사유가 가리키는 곳이 틀리면 경고가 있어도 지나친다(리뷰 §3).
+      const figureLines = figurePx / JASEUP_MEASURED_PX.line;
+      reasons.push(
+        figureLines * 2 >= lines ? "그림이 크다" : "배치가 높다(상자·보기 1열)",
+      );
+    }
+    // 장수 규칙은 **치수를 모를 때만** 쓰는 안전망이다. 치수를 알면 높이 규칙이
+    // 같은 문항을 이미 본다 — 실측으로 「장수만 걸리는」 39건은 **한 건도 안 넘쳤다.**
+    if (figureCount >= OVERFLOW_FIGURE_LIMIT && figures.some((f) => f === null))
       reasons.push("그림이 여러 장이다");
 
     if (reasons.length) {

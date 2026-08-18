@@ -35,7 +35,6 @@ import { packProblems } from "@/lib/printPack";
 import {
   assessOverflowRisk,
   estimateProblemLines,
-  OVERFLOW_FIGURE_LIMIT,
   OVERFLOW_LINE_LIMIT,
 } from "@/lib/printOverflow";
 
@@ -67,50 +66,12 @@ const ONE_FIGURE_CONTENT = `그림과 같이 두 직선 $y=2x$와 $y=x$가 이�
 3. $\\frac{\\sqrt{10}}{5}$
 4. $\\frac{\\sqrt{10}}{4}$
 5. $3\\sqrt{10}\\frac{}{10}$`;
-const ONE_FIGURE_MEASURED_PX = 550.5;
 
-describe("[적대③-A] 그림이 경고의 사각지대다 — 넘침의 93%", () => {
-  /**
-   * 전수 실측(47,152건, 인쇄 매체): 넘치는 문항 2,725건 중 **2,557건이 그림 문항**이다.
-   * 그림 없는 38,710건은 넘침이 168건(0.43%)뿐이고 그중 167건은 지금 규칙이 잡는다.
-   * 즉 **결함은 그림 하나에 몰려 있다.**
-   */
-  it("그림 1장짜리 문항은 칸을 66px 넘겨도 경고가 없다", () => {
-    const risks = assessOverflowRisk([
-      problem({
-        content: ONE_FIGURE_CONTENT,
-        figureUrls: ["/figures/4729/hwp-q03.png"],
-      }),
-    ]);
-    expect(ONE_FIGURE_MEASURED_PX).toBeGreaterThan(SLOT_CONTINUATION_PX);
-    // 🔴 지금은 [] 다.
-    expect(risks).toHaveLength(1);
-  });
-
-  /**
-   * `estimateProblemLines(content)` 는 **본문 문자열만** 받는다. 그림은 인자에 없다.
-   * 같은 본문에 그림을 붙이면 지면은 15.6줄이 늘어나는데(실측 8.45줄 → 24.03줄)
-   * 추정값은 한 줄도 안 변한다 — 구조적으로 못 본다.
-   */
-  it("줄 수 추정기는 그림을 0줄로 센다 — 그림이 들어갈 자리가 인자에 없다", () => {
-    const withoutFigure = estimateProblemLines(ONE_FIGURE_CONTENT);
-    expect(withoutFigure).toBe(5);
-    // 실측: 그림 없이 8.45줄 · 그림 붙이면 24.03줄.
-    const measuredWithFigure = 24.03;
-    // 🔴 추정기가 그림을 볼 방법이 없으므로 이 기대는 지금 통과할 수 없다.
-    expect(withoutFigure).toBeGreaterThanOrEqual(measuredWithFigure - 1);
-  });
-
-  /**
-   * 그림 장수 규칙은 **2장부터** 본다. 실데이터에서 그림 1장 문항은 7,930건이고
-   * 그중 2,109건(26.6%)이 실측 넘침이다. 2장 이상은 512건뿐이다.
-   * 즉 한계 2는 **모집단의 94%를 처음부터 제외**한다.
-   */
-  it("그림 장수 한계 2는 그림 문항의 94%를 아예 안 본다", () => {
-    // 🔴 지금은 2 다.
-    expect(OVERFLOW_FIGURE_LIMIT).toBeLessThanOrEqual(1);
-  });
-});
+/**
+ * ✅ `[적대③-A]` 그림 사각지대 — **고쳤다.** 회귀 가드는
+ * `src/__tests__/unit/printOverflow.test.ts` 와 `printFigureHeight.test.ts` 로 옮겼다.
+ * 재현율 30.4% → 96.3% (`scripts/qa/eval-overflow-rules.ts`, 전수 47,152건).
+ */
 
 describe("[적대③-B] 첫 장은 칸이 79px 좁은데 판정도 분할도 그걸 모른다", () => {
   /**
@@ -198,12 +159,13 @@ describe("[적대③-D] 줄 수 추정기의 «자»가 지면과 다르다", ()
   });
 
   /**
-   * 한계 14줄에 고정 chrome 을 더해도 284 + 62.5 = 346.5px 로 칸 484px 과 안 맞는다.
-   * 어느 쪽으로 틀렸는지가 아니라 **칸에서 유도된 숫자가 아니라는 것**이 요점이다.
+   * 한계에 고정 chrome 을 더해도 칸 484px 과 안 맞는다. 어느 쪽으로 틀렸는지가
+   * 아니라 **칸에서 유도된 숫자가 아니라는 것**이 요점이다.
+   * (2026-08-18 그림 수리로 한계가 14 → 18 이 됐지만 성질은 그대로다 —
+   *  둘 다 실측 넘침에 맞춘 값이지 칸 높이에서 나온 값이 아니다.)
    */
-  it("한계 14줄은 문항 칸 484px 에서 유도된 값이 아니다", () => {
+  it("줄 수 한계는 문항 칸 484px 에서 유도된 값이 아니다", () => {
     const impliedPx = OVERFLOW_LINE_LIMIT * LINE_PX + FIXED_CHROME_PX;
-    expect(impliedPx).toBeCloseTo(346.9, 0);
     // 🔴 칸에서 유도했다면 484px 근처여야 한다.
     expect(impliedPx).toBeGreaterThan(SLOT_CONTINUATION_PX - LINE_PX);
   });

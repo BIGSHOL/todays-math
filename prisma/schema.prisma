@@ -246,6 +246,12 @@ model Problem {
   /// 배열인 이유: 선택지마다 그림인 문항이 있다(실측 한 문항 최대 6장).
   /// 순서는 지면에 나온 순서다. 참조: docs/planning/09-figure-engine-guide.md
   figureUrls   String[]   @default([]) @map("figure_urls")
+  /// `figureUrls` 와 **같은 순서**로 짝지은 원본 치수 `[w1,h1,w2,h2,…]` 평탄 배열.
+  /// 인쇄 넘침 판정이 그림 높이를 계산하는 유일한 근거다 — 판정은 브라우저에서
+  /// 돌아 이미지 파일을 읽을 수 없다(`src/lib/printOverflow.ts`).
+  /// 길이가 `figureUrls.length × 2` 가 아니면 판정이 «모른다»로 받는다.
+  /// 적재: `scripts/qa/backfill-figure-dimensions.ts`
+  figureDims   Int[]      @default([]) @map("figure_dims")
 
   // ── 원본 역추적 메타데이터 (docs/planning/08-import-ledger.md) ──────────────
   // 추출기는 이 값들을 이미 갖고 있었는데 적재 단계가 버려서, 훼손·그림 문항을
