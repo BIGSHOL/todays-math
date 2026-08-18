@@ -31,7 +31,10 @@ import {
 import type { TestPrintProblem } from "../../src/components/print/types";
 import {
   buildHeightCacheManifest,
+  changedRowIds,
   measuredRowsHash,
+  readHeightCacheManifest,
+  rowDigests,
   writeHeightCacheManifest,
 } from "./heightCacheManifest";
 import {
@@ -270,6 +273,7 @@ async function main() {
         rowsHash: measuredRowsHash(rows),
         slotPx: slot,
         measuredAt: new Date().toISOString(),
+        rowDigests: rowDigests(rows),
       }),
     );
     console.log(`\n→ ${outPath}\n→ ${manifest}`);
@@ -299,9 +303,29 @@ async function verify(
 
   // 무작위를 안 쓴다 — 같은 명령이 같은 표본을 고르게 해서 재실행이 재현되게.
   const stride = Math.max(1, Math.floor(rows.length / Math.max(1, sample)));
-  const picked = rows.filter((_, i) => i % stride === 0).slice(0, sample);
+  const spread = rows.filter((_, i) => i % stride === 0).slice(0, sample);
+
+  /**
+   * ⚠️ **본문이 바뀐 문항은 표본이 아니라 «반드시»다.** 공유 DB(D-31)는 다른 트랙이
+   *    `apply-*` 로 본문을 고친다 — 실제로 이 도구를 만드는 동안에도 한 행이 바뀌었다.
+   *    고루 뽑은 표본이 하필 그 문항을 안 뽑으면 «확인»이 아니라 요행이 된다.
+   */
+  const changed = changedRowIds(readHeightCacheManifest(cachePath), rows);
+  if (changed === null)
+    console.log(
+      "이전 지문에 문항별 지문이 없다 — 바뀐 문항을 집어낼 수 없어 표본만 본다.",
+    );
+  else if (changed.length > 0)
+    console.log(
+      `본문이 바뀐 문항 ${changed.length.toLocaleString()}건 — 전부 다시 잰다.`,
+    );
+  const mustCheck = new Set(changed ?? []);
+  const picked = [
+    ...spread,
+    ...rows.filter((r) => mustCheck.has(r.id) && !spread.includes(r)),
+  ];
   console.log(
-    `대조 표본 ${picked.length.toLocaleString()}건 / 캐시 ${cached.length.toLocaleString()}건 · ${kind} 장 · ${media} 매체`,
+    `대조 ${picked.length.toLocaleString()}건 (고른 표본 ${spread.length.toLocaleString()} + 바뀐 문항 ${(picked.length - spread.length).toLocaleString()}) / 캐시 ${cached.length.toLocaleString()}건 · ${kind} 장 · ${media} 매체`,
   );
 
   const browser = await chromium.launch();
@@ -346,6 +370,7 @@ async function verify(
       rowsHash: measuredRowsHash(rows),
       slotPx: singleSlot(fresh),
       measuredAt: new Date().toISOString(),
+      rowDigests: rowDigests(rows),
     }),
   );
   console.log(`캐시가 아직 맞다 — 지문을 찍었다.\n→ ${manifest}`);
