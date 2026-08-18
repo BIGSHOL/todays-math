@@ -20,7 +20,7 @@ type Props = {
   replacing?: boolean;
 };
 
-const MICRO = "text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]";
+const MICRO = "text-[10px] font-extrabold tracking-[1.2px] text-text-2";
 
 /**
  * `memo` 인 이유: 검수는 한 화면에 최대 30카드이고 카드마다 본문 KaTeX 조판이
@@ -56,10 +56,10 @@ export const ReviewProblemCard = memo(function ReviewProblemCard({
   return (
     <article
       aria-label={`문 ${orderIndex}`}
-      className="grid grid-cols-[auto_1px_minmax(0,1fr)_auto] items-stretch gap-x-4 border-b border-[#C2C2C0] bg-white px-6 py-4"
+      className="grid grid-cols-[auto_1px_minmax(0,1fr)_auto] items-stretch gap-x-4 border-b border-divider bg-white px-6 py-4"
     >
       <div className="self-start">
-        <p className="text-[24px] font-black tabular-nums text-[#161616]">
+        <p className="text-[24px] font-black tabular-nums text-ink">
           문 {orderIndex}
         </p>
         <p className={`mt-1 ${MICRO}`}>
@@ -84,7 +84,7 @@ export const ReviewProblemCard = memo(function ReviewProblemCard({
         >
           <ProblemExcerpt problem={problem} className="leading-relaxed" />
         </summary>
-        <div className="mt-3 border-t border-[#C2C2C0] pt-3">
+        <div className="mt-3 border-t border-divider pt-3">
           <section>
             <h3 className={MICRO}>답</h3>
             {revealed ? (
@@ -106,7 +106,7 @@ export const ReviewProblemCard = memo(function ReviewProblemCard({
                 />
               ) : null
             ) : (
-              <p className="mt-1 text-[12.5px] text-[#6A6A68]">해설 없음</p>
+              <p className="mt-1 text-[12.5px] text-text-2">해설 없음</p>
             )}
           </section>
         </div>

@@ -81,3 +81,47 @@ describe("[T3.3 S-08] ProblemCard — 대표 수식 4종 (MathText)", () => {
     ).not.toBeInTheDocument();
   });
 });
+
+/**
+ * 🔴 RED → 🟢 GREEN — 팔레트 「계기판」 확정에 따른 카드 정리 (원장님 확정 2026-08-18).
+ *
+ * 결정 셋: (1) 팔레트 B, (2) 검수 상태에 기능색 사용, (3) 난이도·유형 칩 → 마이크로 라벨.
+ * 05 §8.6 이 원래 "난이도·유형은 마이크로 라벨"로 확정해 둔 것을 카드가 안 따르고 있었다.
+ */
+describe("[S-08] ProblemCard — 팔레트 정리", () => {
+  it("테일윈드 기본 팔레트(indigo·slate)를 쓰지 않는다", () => {
+    const { container } = render(
+      <ProblemCard problem={MOCK_PROBLEM_WITH_FRACTION} />,
+    );
+    // 토큰 밖 색이 남아 있으면 팔레트를 바꿔도 카드만 겉돈다.
+    expect(container.innerHTML).not.toMatch(/indigo-\d|slate-\d/);
+  });
+
+  it("난이도·유형은 알약 칩이 아니라 마이크로 라벨이다", () => {
+    render(<ProblemCard problem={MOCK_PROBLEM_WITH_FRACTION} />);
+    const level = screen.getByText("쉬움");
+    const type = screen.getByText("계산");
+    for (const el of [level, type]) {
+      // 알약이 아니다 — 둥근 테두리도 면색도 없다.
+      expect(el.className).not.toMatch(/rounded|bg-/);
+    }
+    // 마이크로 라벨 규격(10px·굵게·자간)은 묶는 부모가 준다.
+    expect(level.parentElement?.className).toMatch(/text-\[10px\].*tracking-/);
+    expect(level.parentElement).toBe(type.parentElement);
+  });
+
+  it("검수 상태는 상태마다 다른 색으로 구분한다", () => {
+    const statuses = ["approved", "pending", "rejected"] as const;
+    const classes = statuses.map((reviewStatus) => {
+      const { container } = render(
+        <ProblemCard
+          problem={{ ...MOCK_PROBLEM_WITH_FRACTION, reviewStatus }}
+        />,
+      );
+      const label = container.querySelector("[data-review-status]");
+      expect(label).not.toBeNull();
+      return label!.className;
+    });
+    expect(new Set(classes).size).toBe(3);
+  });
+});

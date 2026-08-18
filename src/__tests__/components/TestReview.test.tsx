@@ -183,7 +183,7 @@ describe("[T4.3 S-05] 검수 — 하단 확정·인쇄", () => {
     expect(screen.getByText(/교체 0/)).toBeInTheDocument();
 
     const confirm = screen.getByRole("button", { name: "확정" });
-    expect(confirm.className).toContain("bg-[#161616]");
+    expect(confirm.className).toContain("bg-ink");
 
     expect(screen.getByRole("button", { name: "인쇄" })).toBeDisabled();
     expect(

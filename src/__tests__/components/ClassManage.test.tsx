@@ -183,7 +183,7 @@ describe("[T2.3 S-07] 진도 — 다음 소단원 1클릭 · 트리 보조", () 
       name: MOCK_CURRENT_PROGRESS_UNIT.section,
     });
     expect(current).toHaveAttribute("aria-current", "true");
-    expect(current).toHaveClass("bg-[#1A73E8]");
+    expect(current).toHaveClass("bg-g-blue");
   });
 
   it("주 버튼 다음 소단원은 POST /api/progress/advance 를 보낸다", async () => {
@@ -209,7 +209,7 @@ describe("[T2.3 S-07] 진도 — 다음 소단원 1클릭 · 트리 보조", () 
 
     const { user } = await readyManage();
     const advance = screen.getByRole("button", { name: "다음 소단원" });
-    expect(advance).toHaveClass("bg-[#1A73E8]");
+    expect(advance).toHaveClass("bg-g-blue");
     expect(advance.className).toMatch(/cursor-pointer/);
     expect(advance.className).toMatch(/disabled:cursor-not-allowed/);
 
@@ -264,6 +264,6 @@ describe("[T2.3 S-07] 진도 — 다음 소단원 1클릭 · 트리 보조", () 
     await waitFor(() => {
       expect(current).toHaveAttribute("aria-current", "true");
     });
-    expect(current).toHaveClass("bg-[#1A73E8]");
+    expect(current).toHaveClass("bg-g-blue");
   });
 });

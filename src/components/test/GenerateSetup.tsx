@@ -11,7 +11,7 @@ import { FIELD_CLASS } from "./labels";
 import { useGenerateSetup } from "./useGenerateSetup";
 
 const LABEL_CLASS =
-  "grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]";
+  "grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-text-2";
 
 type UnitSelectProps = {
   label: string;
@@ -69,10 +69,10 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
     <main className="px-8 py-6">
       <h1 className="text-[15px] font-black">출제 설정</h1>
       {form.loadError ? (
-        <p className="mt-4 text-[12.5px] text-[#C5221F]">{form.loadError}</p>
+        <p className="mt-4 text-[12.5px] text-g-red-text">{form.loadError}</p>
       ) : null}
       {!form.ready && !form.loadError ? (
-        <p className="mt-4 text-[12.5px] text-[#6A6A68]">불러오는 중</p>
+        <p className="mt-4 text-[12.5px] text-text-2">불러오는 중</p>
       ) : null}
       {form.ready ? (
         <form
@@ -82,7 +82,7 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
             void form.generate();
           }}
         >
-          <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]">
+          <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-text-2">
             반
             <select
               className={FIELD_CLASS}
@@ -97,7 +97,7 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
             </select>
           </label>
 
-          <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]">
+          <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-text-2">
             학생
             <select
               className={FIELD_CLASS}
@@ -114,7 +114,7 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
           </label>
 
           <fieldset className="grid gap-2">
-            <legend className="text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]">
+            <legend className="text-[10px] font-extrabold tracking-[1.2px] text-text-2">
               유형
             </legend>
             <div className="flex gap-4 text-[12.5px] font-bold">
@@ -141,7 +141,7 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
             </div>
           </fieldset>
 
-          <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]">
+          <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-text-2">
             시행일
             <Input
               type="date"
@@ -150,7 +150,7 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
             />
           </label>
 
-          <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]">
+          <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-text-2">
             문항 수
             <Input
               type="number"
@@ -164,7 +164,7 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
           </label>
 
           <div className="grid grid-cols-3 gap-3">
-            <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]">
+            <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-text-2">
               하
               <Input
                 type="number"
@@ -173,7 +173,7 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
                 onChange={(event) => form.setEasy(Number(event.target.value))}
               />
             </label>
-            <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]">
+            <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-text-2">
               중
               <Input
                 type="number"
@@ -182,7 +182,7 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
                 onChange={(event) => form.setMid(Number(event.target.value))}
               />
             </label>
-            <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-[#6A6A68]">
+            <label className="grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-text-2">
               상
               <Input
                 type="number"
@@ -213,10 +213,10 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
           {form.insufficient ? (
             <div
               role="alert"
-              className="border border-[#EA4335] bg-white px-4 py-3 text-[12.5px]"
+              className="border border-g-red bg-white px-4 py-3 text-[12.5px]"
             >
               <p>{form.insufficient.message}</p>
-              <p className="mt-1 font-bold text-[#C5221F]">
+              <p className="mt-1 font-bold text-g-red-text">
                 가용 {form.insufficient.available} / 필요{" "}
                 {form.insufficient.required}
               </p>
@@ -252,7 +252,7 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
 
           {form.submitError ? (
             // role 이 없으면 화면을 못 보는 사용자에겐 실패가 일어나지 않은 것과 같다.
-            <p className="text-[12.5px] text-[#C5221F]" role="alert">
+            <p className="text-[12.5px] text-g-red-text" role="alert">
               {form.submitError}
             </p>
           ) : null}

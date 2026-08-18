@@ -51,7 +51,7 @@ export function ProblemGenerateForm({
   return (
     <form
       aria-label="생성"
-      className="mt-4 border border-[#C2C2C0] bg-white p-4"
+      className="mt-4 border border-divider bg-white p-4"
       onSubmit={handleSubmit}
     >
       <div className="flex flex-wrap gap-3">

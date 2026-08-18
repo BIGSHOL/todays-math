@@ -40,13 +40,13 @@ export function AppChrome({
   const date = dateLabel ?? formatMastheadDate();
 
   return (
-    <div className="min-h-full bg-canvas text-[#161616]">
-      <header className="flex items-baseline gap-6 border-b-[3px] border-[#161616] px-[26px] pt-[19px] pb-[15px]">
+    <div className="min-h-full bg-canvas text-ink">
+      <header className="flex items-baseline gap-6 border-b-[3px] border-ink px-[26px] pt-[19px] pb-[15px]">
         <span className="flex items-baseline">
           <Link
             href="/"
             aria-current={tab === "math" ? "page" : undefined}
-            className={`${WORDMARK} ${tab === "math" ? "text-[#161616]" : "text-[#A9A9A7]"}`}
+            className={`${WORDMARK} ${tab === "math" ? "text-ink" : "text-text-3"}`}
           >
             오늘의수학
           </Link>
@@ -59,18 +59,16 @@ export function AppChrome({
           <Link
             href="/exam"
             aria-current={tab === "exam" ? "page" : undefined}
-            className={`${WORDMARK} ${tab === "exam" ? "text-[#161616]" : "text-[#A9A9A7]"}`}
+            className={`${WORDMARK} ${tab === "exam" ? "text-ink" : "text-text-3"}`}
           >
             오늘의시험
           </Link>
         </span>
-        <span className="text-[16.5px] text-[#6A6A68] tabular-nums">
-          {date}
-        </span>
+        <span className="text-[16.5px] text-text-2 tabular-nums">{date}</span>
         {remaining !== undefined ? (
           <span
             className={`text-[17.25px] font-black ${
-              remaining > 0 ? "text-[#C5221F]" : "text-[#161616]"
+              remaining > 0 ? "text-g-red-text" : "text-ink"
             }`}
           >
             {remaining > 0 ? `남은 작업 ${remaining}` : "오늘 완료"}

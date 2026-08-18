@@ -58,8 +58,8 @@ export default async function KatexDevPage() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-10 text-[#161616]">
-      <p className="text-[11px] font-extrabold tracking-[0.16em] text-[#6a6a68]">
+    <main className="mx-auto max-w-3xl px-6 py-10 text-ink">
+      <p className="text-[11px] font-extrabold tracking-[0.16em] text-text-2">
         DEV · KATEX
       </p>
       <h1 className="mt-2 text-xl font-black">수식 렌더 검수</h1>
@@ -70,7 +70,7 @@ export default async function KatexDevPage() {
       <ul className="mt-8 space-y-6">
         {CASES.map((c) => (
           <li key={c.title} className="border-b border-[#c2c2c0] pb-5">
-            <div className="mb-2 text-[11px] font-extrabold tracking-wide text-[#6a6a68]">
+            <div className="mb-2 text-[11px] font-extrabold tracking-wide text-text-2">
               {c.title}
             </div>
             <div className="text-[15px] leading-8">

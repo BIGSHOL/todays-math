@@ -10,7 +10,7 @@ import type { StageView } from "./viewModel";
 const DOT: Record<StageView["state"], string> = {
   done: "bg-g-green",
   current: "bg-g-blue",
-  waiting: "bg-[#c6c6c4]",
+  waiting: "bg-seg-empty",
 };
 
 const TEXT: Record<StageView["state"], string> = {
@@ -23,7 +23,10 @@ export function PipelineDots({ stages }: { stages: StageView[] }) {
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[12.5px] tabular-nums">
       {stages.map((s) => (
-        <span key={s.key} className={`inline-flex items-center ${TEXT[s.state]}`}>
+        <span
+          key={s.key}
+          className={`inline-flex items-center ${TEXT[s.state]}`}
+        >
           <i
             aria-hidden="true"
             className={`mr-[5px] inline-block h-[7px] w-[7px] ${DOT[s.state]}`}

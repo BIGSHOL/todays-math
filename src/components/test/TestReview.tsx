@@ -33,7 +33,7 @@ export function TestReview({ testId }: Props) {
   if (state.status === "loading") {
     return (
       <main className="px-8 py-6">
-        <p className="text-[12.5px] text-[#6A6A68]">불러오는 중</p>
+        <p className="text-[12.5px] text-text-2">불러오는 중</p>
       </main>
     );
   }
@@ -49,7 +49,7 @@ export function TestReview({ testId }: Props) {
   if (state.status === "error") {
     return (
       <main className="px-8 py-6">
-        <p className="text-[12.5px] text-[#C5221F]">{state.message}</p>
+        <p className="text-[12.5px] text-g-red-text">{state.message}</p>
       </main>
     );
   }
@@ -61,7 +61,7 @@ export function TestReview({ testId }: Props) {
       <main className="flex-1 pb-20">
         <div className="flex items-baseline justify-between px-8 py-4">
           <h1 className="text-[15px] font-black">검수</h1>
-          <p className="text-[11.5px] text-[#6A6A68] tabular-nums">
+          <p className="text-[11.5px] text-text-2 tabular-nums">
             {state.problems.length}문항
           </p>
         </div>
@@ -77,12 +77,12 @@ export function TestReview({ testId }: Props) {
           ))}
         </div>
       </main>
-      <footer className="sticky bottom-0 flex items-center gap-4 border-t border-[#C2C2C0] bg-[#ECECEA] px-8 py-3">
-        <span className="text-[11.5px] text-[#6A6A68] tabular-nums">
+      <footer className="sticky bottom-0 flex items-center gap-4 border-t border-divider bg-side px-8 py-3">
+        <span className="text-[11.5px] text-text-2 tabular-nums">
           교체 {replacedCount}
         </span>
         {actionError ? (
-          <p role="alert" className="text-[11.5px] font-bold text-[#C5221F]">
+          <p role="alert" className="text-[11.5px] font-bold text-g-red-text">
             {actionError}
           </p>
         ) : null}
@@ -101,7 +101,7 @@ export function TestReview({ testId }: Props) {
           ) : (
             <Link
               href={`/tests/${testId}/print`}
-              className="inline-flex min-h-11 min-w-[44px] items-center justify-center px-3 text-[12.5px] font-bold text-[#161616] underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A73E8]"
+              className="inline-flex min-h-11 min-w-[44px] items-center justify-center px-3 text-[12.5px] font-bold text-ink underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-g-blue"
             >
               인쇄
             </Link>

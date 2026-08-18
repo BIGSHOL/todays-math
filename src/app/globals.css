@@ -1,56 +1,83 @@
 @import "tailwindcss";
 
-/* H5×G2 tokens — 05-design-system.md §2, §8.4 */
+/**
+ * H5×G2 tokens — 05-design-system.md §2, §8.4
+ *
+ * 팔레트 「계기판」 — 원장님 확정 2026-08-18 (시안 4종 중 B 선택).
+ *
+ * 설계 원칙: 게이지를 **잉크가 차오르는 관**으로 본다. 끝난 단계가 가장 진하고
+ * (10.5:1) 지금 할 일이 그 다음(5.9:1), 입력 대기가 중간(2.2:1), 빈 칸이 거의 흰색
+ * (1.3:1)이라, 어떤 반이든 왼쪽에서 오른쪽으로 **명도가 단조롭게 밝아지는 계단**이 된다.
+ * 흑백으로 복사해도 「어디까지 왔나」가 읽힌다 — 색상이 아니라 명도가 정보를 나른다.
+ *
+ * 종전 구글 4색은 흰 배경에서 자체 기준(§6.1)을 6개 값에서 어기고 있었다:
+ *   yellow 1.71 · ghost 2.53 · yellow-text 2.81 · green 3.06 · text-3 3.46 · divider(컨트롤) 1.78
+ * 적록색약에서 green↔red 대비가 1.83:1 까지 붙는 것도 함께 해소했다(명도 차 2.93:1).
+ */
 :root {
   --ink: #161616;
   /* 배경은 **원색 화이트**다 (원장님 지시 2026-08-18 — "애매한 회색이 아니라 원색의 화이트로").
      흰 바탕에서는 흰 카드가 사라지므로 카드에는 반드시 테두리(--divider)를 준다. */
   --bg: #ffffff;
   --surface: #ffffff;
-  --side: #e0e0de;
-  --divider: #c2c2c0;
-  --text-2: #6a6a68;
-  --text-3: #8a8a88;
-  --seg-empty: #cfcfcd;
-  --blue: #1a73e8;
-  --green: #34a853;
-  --yellow: #fbbc05;
-  --yellow-text: #c79102;
-  --red: #ea4335;
-  --red-text: #c5221f;
+  --side: #e9e9e6;
+  /* 카드·행을 가르는 1px 선 전용. **컨트롤 테두리로는 쓰지 말 것** — 1.97:1 이라
+     WCAG 1.4.11(비텍스트 3:1)에 미달한다. 컨트롤은 아래 --control 을 쓴다. */
+  --divider: #b9b9b6;
+  /* 입력칸·보조 버튼 등 **조작 가능한 것의 경계**. 3.29:1 로 1.4.11 충족. */
+  --control: #8e8e8b;
+  --text-2: #61615e;
+  --text-3: #767673;
+  --seg-empty: #e1e1de;
+  --blue: #2064b3;
+  --green: #08492e;
+  --yellow: #d1a847;
+  --yellow-text: #996b11;
+  --red: #d96447;
+  --red-text: #a62d1b;
   --background: var(--bg);
   --foreground: var(--ink);
 }
 
+/**
+ * ⚠️ **여기서 색을 두 번 정의하지 말 것.**
+ *
+ * 예전에는 이 블록 뒤쪽에 `--color-g-blue: #1a73e8` 처럼 **리터럴이 한 벌 더** 있었고,
+ * 계기판·카드가 쓰는 클래스(`bg-g-blue`·`text-muted`·`text-ghost`…)는 전부 그 리터럴 쪽을
+ * 참조했다. 그래서 `:root` 토큰만 바꾸면 **화면이 하나도 안 바뀌는데 에러도 안 났다.**
+ * 팔레트 시안을 실제 화면에 입혀 보다가 발견했다(2026-08-18).
+ *
+ * 이름이 두 벌인 것(`--color-muted` / `--color-text-2`)은 기존 클래스명을 살리기 위한
+ * 별칭일 뿐이고, **값의 출처는 언제나 위 `:root` 하나다.**
+ */
 @theme inline {
   --color-ink: var(--ink);
   --color-bg: var(--bg);
+  --color-canvas: var(--bg);
   --color-surface: var(--surface);
   --color-side: var(--side);
   --color-divider: var(--divider);
+  --color-control: var(--control);
   --color-text-2: var(--text-2);
   --color-text-3: var(--text-3);
+  --color-muted: var(--text-2);
+  --color-faint: var(--text-3);
+  /* `ghost`(구 #a3a3a1, 2.53:1)는 폐지하고 faint 로 흡수했다 — 미래 단계 라벨이
+     9px 굵은 글씨인데 대비가 모자랐다. 클래스명은 살려 둔다. */
+  --color-ghost: var(--text-3);
   --color-seg-empty: var(--seg-empty);
   --color-blue: var(--blue);
   --color-green: var(--green);
   --color-yellow: var(--yellow);
   --color-red: var(--red);
+  --color-g-blue: var(--blue);
+  --color-g-green: var(--green);
+  --color-g-yellow: var(--yellow);
+  --color-g-yellow-text: var(--yellow-text);
+  --color-g-red: var(--red);
+  --color-g-red-text: var(--red-text);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-ink: #161616;
-  --color-canvas: #ffffff;
-  --color-side: #e0e0de;
-  --color-divider: #c2c2c0;
-  --color-muted: #6a6a68;
-  --color-faint: #8a8a88;
-  --color-ghost: #a3a3a1;
-  --color-seg-empty: #cfcfcd;
-  --color-g-blue: #1a73e8;
-  --color-g-green: #34a853;
-  --color-g-yellow: #fbbc05;
-  --color-g-yellow-text: #c79102;
-  --color-g-red: #ea4335;
-  --color-g-red-text: #c5221f;
 }
 
 body {

@@ -158,15 +158,21 @@ describe("[T4.3 S-03] 메인 — MSW 기본 데이터 (스택)", () => {
     );
   });
 
-  it("카드·완료 줄이 44 | 1fr | 232 | 112 그리드이고 hot 카드는 흰 배경이다", async () => {
+  // 배경이 원색 화이트가 되면서(2026-08-18) 「hot = 흰 표면」은 아무 것도 표시하지
+  // 못하게 됐다 — 이 테스트가 그 죽은 신호를 지키고 있었다. 지금 처리 중인 반은
+  // **왼쪽 잉크 바 + 굵은 밑선**으로 표시한다.
+  it("카드 줄이 44 | 1fr | 232 | 112 그리드이고 hot 카드는 선으로 표시된다", async () => {
     await renderMain();
 
     const hot = screen.getByRole("article", { name: "중2 심화반" });
     expect(hot.className).toContain(CARD_GRID);
-    expect(hot.className).toContain("bg-white");
+    expect(hot.className).toContain("border-ink");
+    expect(hot.className).toMatch(/inset_5px/);
+    expect(hot.className).not.toContain("bg-white");
 
     const printCard = screen.getByRole("article", { name: "중2 기초반" });
     expect(printCard.className).toContain(CARD_GRID);
+    expect(printCard.className).toContain("border-divider");
   });
 
   it("심화반은 검수 단계 메타를, 기초반은 검수 완료 메타를 보여 준다", async () => {
@@ -290,7 +296,9 @@ describe("[T4.3 S-03] 메인 — 수동 전환·진도 1클릭", () => {
     // 차시이동(열람) — 진도는 절대 기록되지 않는다(예전 버그: 클릭마다 기록)
     await user.click(screen.getByRole("button", { name: "다음 차시" }));
     await waitFor(() => {
-      expect(screen.getByLabelText("현재 소단원")).toHaveTextContent("지수법칙");
+      expect(screen.getByLabelText("현재 소단원")).toHaveTextContent(
+        "지수법칙",
+      );
     });
     expect(postCount).toBe(0);
     expect(recordBtn).toBeEnabled();

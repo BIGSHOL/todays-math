@@ -15,10 +15,10 @@ export function ClassTable({
     <table className="w-full border-collapse text-[12.5px] tabular-nums">
       <thead>
         <tr>
-          <th className="border-b-[2.5px] border-[#161616] px-2.5 py-2 text-left text-[10px] font-black tracking-[1.5px] text-[#6A6A68]">
+          <th className="border-b-[2.5px] border-ink px-2.5 py-2 text-left text-[10px] font-black tracking-[1.5px] text-text-2">
             반
           </th>
-          <th className="border-b-[2.5px] border-[#161616] px-2.5 py-2 text-left text-[10px] font-black tracking-[1.5px] text-[#6A6A68]">
+          <th className="border-b-[2.5px] border-ink px-2.5 py-2 text-left text-[10px] font-black tracking-[1.5px] text-text-2">
             학년
           </th>
         </tr>
@@ -28,7 +28,7 @@ export function ClassTable({
           const selected = cls.id === selectedClassId;
           return (
             <tr key={cls.id} className={selected ? "bg-white" : undefined}>
-              <td className="border-b border-[#C2C2C0] px-2.5 py-2">
+              <td className="border-b border-divider px-2.5 py-2">
                 <button
                   type="button"
                   aria-pressed={selected}
@@ -38,7 +38,7 @@ export function ClassTable({
                   {cls.name}
                 </button>
               </td>
-              <td className="border-b border-[#C2C2C0] px-2.5 py-2 text-[#6A6A68]">
+              <td className="border-b border-divider px-2.5 py-2 text-text-2">
                 {cls.grade}
               </td>
             </tr>

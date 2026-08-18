@@ -4,12 +4,12 @@ type Variant = "primary" | "ink" | "secondary" | "ghost";
 
 const VARIANT_CLASS: Record<Variant, string> = {
   primary:
-    "bg-[#1A73E8] text-white hover:enabled:bg-[#1558b0] disabled:opacity-40",
-  ink: "bg-[#161616] text-white hover:enabled:bg-black disabled:opacity-40",
+    "bg-g-blue text-white hover:enabled:bg-[#1558b0] disabled:opacity-40",
+  ink: "bg-ink text-white hover:enabled:bg-black disabled:opacity-40",
   secondary:
-    "border border-[#C2C2C0] bg-transparent text-[#161616] hover:enabled:bg-white disabled:opacity-40",
+    "border border-control bg-transparent text-ink hover:enabled:bg-white disabled:opacity-40",
   ghost:
-    "bg-transparent text-[#161616] underline-offset-2 hover:enabled:underline disabled:opacity-40",
+    "bg-transparent text-ink underline-offset-2 hover:enabled:underline disabled:opacity-40",
 };
 
 export function Button({
@@ -21,7 +21,7 @@ export function Button({
   return (
     <button
       type={type}
-      className={`inline-flex min-h-11 min-w-[44px] shrink-0 cursor-pointer items-center justify-center whitespace-nowrap px-3 text-[12.5px] font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A73E8] disabled:cursor-not-allowed ${VARIANT_CLASS[variant]} ${className}`}
+      className={`inline-flex min-h-11 min-w-[44px] shrink-0 cursor-pointer items-center justify-center whitespace-nowrap px-3 text-[12.5px] font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-g-blue disabled:cursor-not-allowed ${VARIANT_CLASS[variant]} ${className}`}
       {...props}
     />
   );

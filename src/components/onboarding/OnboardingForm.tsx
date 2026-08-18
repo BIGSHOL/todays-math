@@ -15,13 +15,12 @@ export type OnboardingUnitOption = {
 };
 
 const FIELD_LABEL =
-  "mb-1 block text-[10.5px] font-extrabold tracking-[1.2px] text-[#6A6A68]";
-const STEP_INDEX =
-  "text-[10.5px] font-extrabold tracking-[1.2px] text-[#8A8A88]";
+  "mb-1 block text-[10.5px] font-extrabold tracking-[1.2px] text-text-2";
+const STEP_INDEX = "text-[10.5px] font-extrabold tracking-[1.2px] text-text-3";
 const STEP_TITLE = "mt-1 text-[15px] font-black tracking-[-0.3px]";
-const ERROR_TEXT = "text-[11.5px] text-[#C5221F]";
+const ERROR_TEXT = "text-[11.5px] text-g-red-text";
 const SELECT_CLASS =
-  "h-11 w-full cursor-pointer border border-[#C2C2C0] bg-white px-3 text-[12.5px] text-[#161616] focus:border-[#1A73E8] focus:outline focus:outline-2 focus:outline-offset-0 focus:outline-[#1A73E8] disabled:cursor-not-allowed disabled:bg-[#E0E0DE]";
+  "h-11 w-full cursor-pointer border border-control bg-white px-3 text-[12.5px] text-ink focus:border-g-blue focus:outline focus:outline-2 focus:outline-offset-0 focus:outline-g-blue disabled:cursor-not-allowed disabled:bg-[#E0E0DE]";
 
 function unitLabel(unit: OnboardingUnitOption) {
   return `${unit.grade} · ${unit.section}`;
@@ -159,7 +158,7 @@ export function OnboardingForm({ units }: { units: OnboardingUnitOption[] }) {
                   onChange={(event) => setClassName(event.target.value)}
                   maxLength={100}
                   aria-invalid={classError ? true : undefined}
-                  className={classError ? "border-[#EA4335]" : ""}
+                  className={classError ? "border-g-red" : ""}
                 />
               </label>
               <label className="block">
@@ -169,7 +168,7 @@ export function OnboardingForm({ units }: { units: OnboardingUnitOption[] }) {
                   onChange={(event) => setGrade(event.target.value)}
                   maxLength={10}
                   aria-invalid={classError ? true : undefined}
-                  className={classError ? "border-[#EA4335]" : ""}
+                  className={classError ? "border-g-red" : ""}
                 />
               </label>
               {classError ? <p className={ERROR_TEXT}>{classError}</p> : null}
@@ -197,7 +196,7 @@ export function OnboardingForm({ units }: { units: OnboardingUnitOption[] }) {
                   onChange={(event) => setStudentName(event.target.value)}
                   maxLength={50}
                   aria-invalid={studentError ? true : undefined}
-                  className={studentError ? "border-[#EA4335]" : ""}
+                  className={studentError ? "border-g-red" : ""}
                 />
               </label>
               {studentError ? (

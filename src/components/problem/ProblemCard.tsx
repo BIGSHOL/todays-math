@@ -8,6 +8,20 @@ import type { ProblemEntity } from "@/contracts/problem.contract";
 
 import { DIFFICULTY_LABEL, REVIEW_STATUS_LABEL } from "./labels";
 
+/** 마이크로 라벨 — 검수 카드(`ReviewProblemCard`)와 같은 규격을 쓴다. */
+const MICRO = "text-[10px] font-extrabold tracking-[1.2px]";
+
+/**
+ * 검수 상태에 기능색을 쓴다 (원장님 확정 2026-08-18 "검수 상태에도 색을 써서 더 명확하게").
+ * G2 네 의미에 그대로 대응한다 — 승인=끝난 단계, 대기=입력 대기, 반려=경고.
+ * 면색이 아니라 **글자색**이라 색 쓰는 자리가 늘지 않는다.
+ */
+const REVIEW_STATUS_TONE: Record<string, string> = {
+  approved: "text-g-green",
+  pending: "text-g-yellow-text",
+  rejected: "text-g-red-text",
+};
+
 type ProblemCardProps = {
   problem: ProblemEntity;
 };
@@ -33,22 +47,27 @@ export const ProblemCard = memo(function ProblemCard({
     // 같이 걸면 세로 간격만 두 배가 된다. 인쇄는 그리드를 쓰지 않으므로 `print:mb-4` 유지.
     // 배경이 원색 화이트로 바뀌어(2026-08-18) 흰 카드가 바탕에 묻힌다. 카드 경계는
     // 이제 그림자가 아니라 **테두리**가 만든다 — 원장님 지시 "문제마다 테두리 주면 구분될듯".
-    // 색은 앱의 다른 경계선과 같은 토큰(--divider #C2C2C0)을 쓴다. slate-200(#e2e8f0)은
+    // 색은 앱의 다른 경계선과 같은 토큰(--divider)을 쓴다. slate-200(#e2e8f0)은
     // 흰 바탕에서 거의 안 보였다.
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-divider bg-white shadow-sm print:mb-4 print:block print:h-auto print:rounded-none print:border-none print:shadow-none">
-      <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 bg-slate-50 px-6 py-4 print:bg-transparent print:px-0">
-        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-lg font-bold text-white print:bg-black">
+    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-divider bg-surface print:mb-4 print:block print:h-auto print:rounded-none print:border-none print:shadow-none">
+      {/* 머리 띠는 면색이 아니라 1px 룰로 가른다 — 흰 바탕에서 옅은 회색 띠는
+          구조가 아니라 얼룩으로 읽힌다. Q 배지는 잉크라 화면과 인쇄가 같아진다. */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-divider px-6 py-4 print:px-0">
+        <span className="flex h-8 w-8 items-center justify-center bg-ink text-lg font-bold text-bg print:bg-black">
           Q
         </span>
-        <span className="font-semibold text-slate-700">문제</span>
-        <span className="ml-auto flex flex-wrap gap-2">
-          <span className="rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold tracking-wide text-indigo-700">
+        <span className="font-semibold text-text-2">문제</span>
+        {/* 난이도·유형·상태는 **마이크로 라벨**이다 (05 §8.6 확정, 원장님 재확인 2026-08-18).
+            알약 칩은 면색을 세 개 더 만들어 팔레트를 흐린다. 위계는 글자 명도로 낸다. */}
+        <span className={`ml-auto flex flex-wrap items-center gap-3 ${MICRO}`}>
+          <span className="text-ink">
             {DIFFICULTY_LABEL[problem.difficulty]}
           </span>
-          <span className="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">
-            {problem.problemType}
-          </span>
-          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
+          <span className="text-text-2">{problem.problemType}</span>
+          <span
+            data-review-status={problem.reviewStatus}
+            className={REVIEW_STATUS_TONE[problem.reviewStatus]}
+          >
             {REVIEW_STATUS_LABEL[problem.reviewStatus]}
           </span>
         </span>
@@ -65,7 +84,7 @@ export const ProblemCard = memo(function ProblemCard({
             type="button"
             aria-expanded={showSolution}
             onClick={() => setShowSolution((current) => !current)}
-            className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50"
+            className="inline-flex min-h-11 cursor-pointer items-center gap-2 border border-control bg-surface px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-side"
           >
             {showSolution ? "정답 및 해설 숨기기" : "정답 및 해설 확인"}
           </button>
@@ -73,20 +92,22 @@ export const ProblemCard = memo(function ProblemCard({
 
         {showSolution ? (
           <div className="mt-4 space-y-4">
-            <div className="rounded-xl border border-green-100 bg-green-50 p-6">
-              <h4 className="mb-2 font-bold text-green-800">정답</h4>
+            {/* 「정답」은 G2 네 의미가 아니다 — 초록을 쓰면 게이지의 「끝난 단계」와 뜻이 충돌한다.
+                지면의 핵심 개념 박스처럼 **왼쪽 굵은 바**로 표시한다. */}
+            <div className="border-l-[3px] border-ink bg-side p-6">
+              <h4 className={`mb-2 ${MICRO}`}>정답</h4>
               <MathText
                 as="div"
-                className="text-lg font-medium text-green-900"
+                className="text-lg font-medium text-ink"
                 text={problem.answer}
               />
             </div>
             {problem.solution ? (
-              <div className="rounded-2xl border border-slate-200 bg-white p-6">
-                <h4 className="mb-2 font-semibold text-slate-700">상세 풀이</h4>
+              <div className="border border-divider p-6">
+                <h4 className={`mb-2 ${MICRO}`}>상세 풀이</h4>
                 <MathText
                   as="div"
-                  className="text-base leading-relaxed text-slate-700"
+                  className="text-base leading-relaxed text-text-2"
                   text={problem.solution}
                 />
               </div>

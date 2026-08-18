@@ -29,7 +29,7 @@ const BAR_CLASS: Record<ConfidenceBarColor, string> = {
   green: "bg-g-green",
   yellow: "bg-g-yellow",
   red: "bg-g-red",
-  none: "bg-[#c6c6c4]",
+  none: "bg-seg-empty",
 };
 
 const CONF_TEXT_CLASS: Record<ConfidenceBarColor, string> = {

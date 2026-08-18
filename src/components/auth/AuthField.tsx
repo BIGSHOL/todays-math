@@ -20,7 +20,7 @@ export function AuthField({
     <div>
       <label
         htmlFor={id}
-        className="mb-1 block text-[10.5px] font-bold tracking-[1.2px] text-[#6A6A68]"
+        className="mb-1 block text-[10.5px] font-bold tracking-[1.2px] text-text-2"
       >
         {label}
       </label>
@@ -28,11 +28,11 @@ export function AuthField({
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={errorId}
-        className={error ? `border-[#EA4335] ${className}` : className}
+        className={error ? `border-g-red ${className}` : className}
         {...props}
       />
       {error ? (
-        <p id={errorId} className="mt-1 text-[11.5px] text-[#C5221F]">
+        <p id={errorId} className="mt-1 text-[11.5px] text-g-red-text">
           {error}
         </p>
       ) : null}

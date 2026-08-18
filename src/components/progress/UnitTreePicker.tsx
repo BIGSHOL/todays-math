@@ -22,7 +22,7 @@ export function UnitTreePicker({
     <div
       role="group"
       aria-label="단원 선택"
-      className="grid grid-cols-3 border border-[#C2C2C0]"
+      className="grid grid-cols-3 border border-divider"
     >
       <PickerColumn title="학년">
         {tree.grades.map((grade) => (
@@ -72,8 +72,8 @@ function PickerColumn({
   children: ReactNode;
 }) {
   return (
-    <section className="min-w-0 border-r border-[#C2C2C0] last:border-r-0">
-      <h2 className="border-b border-[#C2C2C0] px-2 py-2 text-[10.5px] font-extrabold tracking-[1.2px] text-[#6A6A68]">
+    <section className="min-w-0 border-r border-divider last:border-r-0">
+      <h2 className="border-b border-divider px-2 py-2 text-[10.5px] font-extrabold tracking-[1.2px] text-text-2">
         {title}
       </h2>
       <div className="flex flex-col">{children}</div>
@@ -93,10 +93,10 @@ function PickButton({
   onClick: () => void;
 }) {
   const tone = current
-    ? "bg-[#1A73E8] text-white"
+    ? "bg-g-blue text-white"
     : selected
-      ? "bg-white text-[#161616]"
-      : "bg-transparent text-[#161616]";
+      ? "bg-white text-ink"
+      : "bg-transparent text-ink";
 
   return (
     <button

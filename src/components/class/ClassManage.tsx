@@ -24,7 +24,7 @@ export function ClassManage({ units }: ClassManageProps) {
 
   if (manage.status === "error") {
     return (
-      <p className="px-[26px] py-6 text-[12.5px] text-[#C5221F]">
+      <p className="px-[26px] py-6 text-[12.5px] text-g-red-text">
         {manage.error}
       </p>
     );
@@ -52,14 +52,14 @@ export function ClassManage({ units }: ClassManageProps) {
       <section className="mt-8">
         <div className="mb-3 flex flex-wrap items-center gap-3">
           <Button onClick={() => void manage.advance()}>다음 소단원</Button>
-          <p className="text-[12.5px] text-[#6A6A68]">
+          <p className="text-[12.5px] text-text-2">
             현재{" "}
-            <span className="font-black text-[#161616]">
+            <span className="font-black text-ink">
               {current?.section ?? "없음"}
             </span>
           </p>
           {manage.error ? (
-            <p className="text-[12.5px] text-[#C5221F]">{manage.error}</p>
+            <p className="text-[12.5px] text-g-red-text">{manage.error}</p>
           ) : null}
         </div>
         <UnitTreePicker

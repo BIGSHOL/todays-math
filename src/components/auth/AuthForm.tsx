@@ -153,7 +153,7 @@ export function AuthForm({ mode, callbackUrl }: AuthFormProps) {
       </Button>
       <Link
         href={isSignup ? "/login" : "/signup"}
-        className="inline-flex min-h-11 items-center justify-center text-[12.5px] font-bold underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1A73E8]"
+        className="inline-flex min-h-11 items-center justify-center text-[12.5px] font-bold underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-g-blue"
       >
         {isSignup ? "로그인" : "가입"}
       </Link>

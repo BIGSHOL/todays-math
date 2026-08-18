@@ -66,9 +66,9 @@ describe("[T2.3] UnitTreePicker", () => {
     expect(grade).toHaveAttribute("aria-current", "true");
     expect(chapter).toHaveAttribute("aria-current", "true");
     expect(section).toHaveAttribute("aria-current", "true");
-    expect(grade).toHaveClass("bg-[#1A73E8]");
-    expect(chapter).toHaveClass("bg-[#1A73E8]");
-    expect(section).toHaveClass("bg-[#1A73E8]");
+    expect(grade).toHaveClass("bg-g-blue");
+    expect(chapter).toHaveClass("bg-g-blue");
+    expect(section).toHaveClass("bg-g-blue");
   });
 
   it("학년을 고르면 해당 학년의 대단원만 보여 준다", async () => {

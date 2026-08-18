@@ -62,7 +62,7 @@ export function ProblemRegisterForm({
   return (
     <form
       aria-label="등록"
-      className="mt-4 border border-[#C2C2C0] bg-white p-4"
+      className="mt-4 border border-divider bg-white p-4"
       onSubmit={handleSubmit}
     >
       <div className="flex flex-wrap gap-3">
@@ -105,16 +105,16 @@ export function ProblemRegisterForm({
           ))}
         </FieldSelect>
       </div>
-      <label className="mt-3 flex flex-col gap-1 text-[10.5px] font-black tracking-[1.5px] text-[#6A6A68]">
+      <label className="mt-3 flex flex-col gap-1 text-[10.5px] font-black tracking-[1.5px] text-text-2">
         본문
         <textarea
           name="content"
           required
           rows={3}
-          className="border border-[#C2C2C0] bg-white px-3 py-2 text-[12.5px] text-[#161616] focus:border-[#1A73E8] focus:outline focus:outline-2 focus:outline-[#1A73E8]"
+          className="border border-divider bg-white px-3 py-2 text-[12.5px] text-ink focus:border-g-blue focus:outline focus:outline-2 focus:outline-g-blue"
         />
       </label>
-      <label className="mt-3 flex flex-col gap-1 text-[10.5px] font-black tracking-[1.5px] text-[#6A6A68]">
+      <label className="mt-3 flex flex-col gap-1 text-[10.5px] font-black tracking-[1.5px] text-text-2">
         정답
         <Input name="answer" required />
       </label>

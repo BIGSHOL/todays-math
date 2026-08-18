@@ -68,7 +68,7 @@ export function PreviewClient() {
         </div>
 
         <div className="mt-4 flex flex-wrap items-center gap-2 border border-dashed border-[#C2C2C0] p-3">
-          <span className="text-[10.5px] font-black tracking-[1.5px] text-[#6A6A68]">
+          <span className="text-[10.5px] font-black tracking-[1.5px] text-text-2">
             시안 · 지면 톤
           </span>
           {TONES.map((item) => (

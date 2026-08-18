@@ -41,7 +41,7 @@ export function ProblemTransformForm({ problems, onCreated, onError }: Props) {
   return (
     <form
       aria-label="변형"
-      className="mt-4 border border-[#C2C2C0] bg-white p-4"
+      className="mt-4 border border-divider bg-white p-4"
       onSubmit={handleSubmit}
     >
       <FieldSelect

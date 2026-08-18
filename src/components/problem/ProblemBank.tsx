@@ -415,11 +415,11 @@ export function ProblemBank() {
         <div className="flex min-w-0 flex-col gap-1">
           <span
             aria-hidden
-            className="text-[10.5px] font-black tracking-[1.5px] text-[#6A6A68]"
+            className="text-[10.5px] font-black tracking-[1.5px] text-text-2"
           >
             그림
           </span>
-          <label className="flex h-11 cursor-pointer items-center gap-2 border border-[#C2C2C0] bg-white px-3">
+          <label className="flex h-11 cursor-pointer items-center gap-2 border border-control bg-white px-3">
             <input
               type="checkbox"
               checked={hasFigure}
@@ -427,9 +427,9 @@ export function ProblemBank() {
                 resetToFirstPage();
                 setHasFigure(event.target.checked);
               }}
-              className="h-4 w-4 cursor-pointer accent-[#1A73E8]"
+              className="h-4 w-4 cursor-pointer accent-[var(--blue)]"
             />
-            <span className="whitespace-nowrap text-[12.5px] text-[#161616]">
+            <span className="whitespace-nowrap text-[12.5px] text-ink">
               그림 있는 문제만
             </span>
           </label>
@@ -461,18 +461,18 @@ export function ProblemBank() {
       ) : null}
 
       {notice ? (
-        <p className="mt-4 text-[12.5px] font-bold text-[#161616]">{notice}</p>
+        <p className="mt-4 text-[12.5px] font-bold text-ink">{notice}</p>
       ) : null}
       {error ? (
-        <p className="mt-4 text-[12.5px] font-bold text-[#C5221F]">{error}</p>
+        <p className="mt-4 text-[12.5px] font-bold text-g-red-text">{error}</p>
       ) : null}
       {unitsError ? (
-        <p className="mt-4 text-[12.5px] font-bold text-[#C5221F]">
+        <p className="mt-4 text-[12.5px] font-bold text-g-red-text">
           {unitsError}
         </p>
       ) : null}
       {loading ? (
-        <p className="mt-4 text-[12.5px] text-[#6A6A68]">불러오는 중</p>
+        <p className="mt-4 text-[12.5px] text-text-2">불러오는 중</p>
       ) : null}
 
       {!loading && !error ? (
@@ -490,7 +490,7 @@ export function ProblemBank() {
         data-problem-grid
       >
         {!loading && !error && problems.length === 0 ? (
-          <p className="text-[12.5px] text-[#6A6A68]">등록된 문제가 없습니다</p>
+          <p className="text-[12.5px] text-text-2">등록된 문제가 없습니다</p>
         ) : !loading && !error ? (
           problems.map((problem) => (
             <ProblemCard key={problem.id} problem={problem} />
@@ -528,7 +528,7 @@ function PaginationRow({
       aria-label="페이지"
       className="mt-4 flex flex-wrap items-center justify-between gap-3"
     >
-      <span className="text-[12.5px] text-[#6A6A68]">
+      <span className="text-[12.5px] text-text-2">
         {`총 ${total.toLocaleString("ko-KR")}문제`}
       </span>
       <span className="flex items-center gap-3">
@@ -539,7 +539,7 @@ function PaginationRow({
         >
           이전
         </Button>
-        <span className="text-[12.5px] font-bold text-[#161616]">
+        <span className="text-[12.5px] font-bold text-ink">
           {`${page} / ${totalPages} 페이지`}
         </span>
         <Button
