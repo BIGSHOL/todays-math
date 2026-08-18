@@ -124,3 +124,68 @@ describe("[parseProblemContent] <보기>·<조건> 상자", () => {
     expect(question).toContain("> 1\\. 소인수분해를 이용할 것.");
   });
 });
+
+/**
+ * ── 세부 문항 줄바꿈 (2026-08-18 원장님) ────────────────────────────────────
+ * "이런경우는 세부 문항이 줄바꿈 처리되어야할텐데?"
+ *  `… 다음 물음에 답하여라. [총 6점] (1) 어떤 수를 구하시오. (2) 바르게 계산한
+ *   결과를 구하시오.` 가 한 덩어리로 이어진다.
+ *
+ * 판정은 `subQuestion.ts` 가 한다(오탐 근거는 그 파일 주석). 여기서는 **개행을
+ * 어디에 넣는가**만 잠근다. `collapseWhitespace` 가 개행을 전부 녹이므로
+ * **녹이기 전에** 자리를 표시해 두었다가 녹인 뒤 문단으로 되살린다.
+ */
+describe("[parseProblemContent] 세부 문항 줄바꿈", () => {
+  it("`(1)` `(2)` 앞에서 문단을 나눈다 (원장님 지적 모양)", () => {
+    const raw =
+      "어떤 수에 $3$을 더해야 할 것을 잘못하여 곱했더니 $21$이 되었다. 다음 물음에 답하여라. [총 $6$점]\n(1) 어떤 수를 구하시오.\n(2) 바르게 계산한 결과를 구하시오.";
+    const { question } = parseProblemContent(raw);
+    const paras = question.split(/\n\s*\n/);
+    expect(paras).toHaveLength(3);
+    expect(paras[0]).toContain("다음 물음에 답하여라");
+    expect(paras[1]!.startsWith("(1)")).toBe(true);
+    expect(paras[2]!.startsWith("(2)")).toBe(true);
+  });
+
+  it("수식에 갇힌 `$(1)~$` 도 문단을 나눈다 (실측 dba88a32)", () => {
+    const raw =
+      "다음 물음에 답하시오.\n$(1)~$가장 작은 값을 구하시오.\n$(2)~$절댓값이 가장 큰 값을 구하시오.";
+    const paras = parseProblemContent(raw).question.split(/\n\s*\n/);
+    expect(paras).toHaveLength(3);
+    expect(paras[1]).toContain("가장 작은 값");
+  });
+
+  it("괄호원문자 `⑴` 도 나눈다", () => {
+    const raw =
+      "물음에 답하시오. ⑴ $a$ 를 구하시오. ⑵ $b$ 를 구하시오. ⑶ $c$ 를 구하시오.";
+    expect(parseProblemContent(raw).question.split(/\n\s*\n/)).toHaveLength(4);
+  });
+
+  it("함수값 `f(1)` 은 나누지 않는다 — 수식이 깨진다", () => {
+    const raw =
+      "이차함수 $f(x)=2x^{2}-3x+1$ 에 대하여 $f(0)+f(1)$ 의 값은?\n1. $a$\n2. $b$";
+    expect(parseProblemContent(raw).question).not.toContain("\n\n");
+  });
+
+  it("구간 `(0,4)` · 인수분해 `(x+2)(x-3)` 도 나누지 않는다", () => {
+    const raw =
+      "열린구간 $(0,4)$ 에서 $(x+2)(x-3)(x+1)$ 을 전개하면?\n1. $a$\n2. $b$";
+    expect(parseProblemContent(raw).question).not.toContain("\n\n");
+  });
+
+  it("하위 문항이 하나뿐이면 나누지 않는다", () => {
+    const raw = "다음 그림 $(1)$ 을 보고 답하시오.";
+    expect(parseProblemContent(raw).question).not.toContain("\n\n");
+  });
+
+  it("상자 **안**의 항목 번호는 상자 안에 그대로 둔다", () => {
+    // 상자 항목의 `⑴⑵⑶` 은 조건 번호다 — 문단으로 흩으면 상자가 깨진다.
+    const raw =
+      "<조건>을 모두 만족시키는 두 다항식 A, B 는? <조건>⑴ 다항식 A는 일차식이다.⑵ 다항식 B는 상수항이 $1$이다.⑶ A $-$ B $=x$";
+    const { question } = parseProblemContent(raw);
+    const boxLines = question
+      .split(/\r?\n/)
+      .filter((l) => l.trimStart().startsWith(">"));
+    expect(boxLines.join(" ")).toContain("다항식 B는 상수항이");
+  });
+});

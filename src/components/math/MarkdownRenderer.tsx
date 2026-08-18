@@ -35,9 +35,11 @@ import {
   type ReactNode,
 } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
+import type { PluggableList } from "unified";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 
+import { UI_KATEX_OPTIONS } from "@/lib/math/katexRender";
 import {
   decodeHtmlEntities,
   preprocessMathText,
@@ -52,7 +54,14 @@ export interface MarkdownRendererProps {
 
 /** 렌더마다 새 배열을 넘기면 react-markdown 이 프로세서를 새로 조립한다. */
 const REMARK_PLUGINS = [remarkMath];
-const REHYPE_PLUGINS = [rehypeKatex];
+/**
+ * ⚠️ **옵션을 반드시 넘긴다.** 안 넘기면 `trust` 가 없어 KaTeX 가 `\htmlClass` 를
+ * 거부하는데, 예외가 아니라 **붉은 날문자**(`color:#cc0000`)로 그린다.
+ * 그런데 `\htmlClass` 는 **우리 전처리가 스스로 만든다**(순환마디 점·호 ⌒) —
+ * 즉 우리가 만든 글자를 우리 렌더가 거부하고 있었다. 실측 320행 · 수식 787곳.
+ * 근거와 옵션 내용은 `katexRender.ts` 의 `UI_KATEX_OPTIONS` 주석.
+ */
+const REHYPE_PLUGINS: PluggableList = [[rehypeKatex, UI_KATEX_OPTIONS]];
 
 /* ──────────────────────────────────────────────────────────────────────────
  * `<보기>` · `<조건>` 상자 카드 — mathgen MarkdownRenderer 1011~1028행 이식.
@@ -73,7 +82,14 @@ const REHYPE_PLUGINS = [rehypeKatex];
  * ────────────────────────────────────────────────────────────────────────── */
 
 /** 인용문 첫 문단이 이 모양이면 상자다. 숫자는 열 수(1~3), 없으면 1열. */
-const BOX_HEADER_RE = /^<(보기|조건|상자)([1-3])?>/;
+const BOX_HEADER_RE = /^<(보기|조건|상자|나열)([1-3])?>/;
+
+/**
+ * 라벨 머리를 그리지 않는 상자. 원장님(2026-08-18) "다음 작은 수를 네모 박스 안에
+ * 넣으면 더 깔끔할텐데" — 발문 뒤 **나열 대상**은 «보기»도 «조건»도 아니라서
+ * 머리에 라벨을 얹으면 없던 이름이 생긴다. 테두리만 두른다.
+ */
+const HEADERLESS_LABEL = "나열";
 
 const QUOTE_CLASS =
   "my-4 border border-[#8A8A88] bg-white p-4 not-italic print:border-black";
@@ -129,7 +145,11 @@ function BoxQuote({ children }: { children?: ReactNode }) {
   if (!header) return <div className={QUOTE_CLASS}>{children}</div>;
 
   const label = header[1]!;
+  const headerless = label === HEADERLESS_LABEL;
   const columns = header[2] === "2" ? 2 : header[2] === "3" ? 3 : 1;
+  // 첫 문단은 **언제나 마커 줄**이다(`renderBoxSegment` 가 그렇게 싣는다).
+  // 머리 없는 상자는 그 줄을 **그리지 않을** 뿐, 항목에서 빼는 건 똑같다 —
+  // 안 빼면 `<나열1>` 이 날문자로 지면에 찍힌다(스크린샷으로 잡았다).
   const items = blocks.slice(1);
   const gridClass =
     columns === 3
@@ -140,9 +160,11 @@ function BoxQuote({ children }: { children?: ReactNode }) {
 
   return (
     <div data-box-card className={BOX_CARD_CLASS}>
-      <div data-box-header className="mb-2 font-semibold [&>p]:my-0">
-        {stripColumnHint(childrenOf(blocks[0]), label)}
-      </div>
+      {headerless ? null : (
+        <div data-box-header className="mb-2 font-semibold [&>p]:my-0">
+          {stripColumnHint(childrenOf(blocks[0]), label)}
+        </div>
+      )}
       {items.length > 0 ? (
         <div className={gridClass}>
           {items.map((item, index) => (

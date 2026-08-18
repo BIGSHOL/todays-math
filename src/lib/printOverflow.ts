@@ -27,6 +27,16 @@ import { parseProblemContent } from "@/lib/problem/parseProblemContent";
  *
  * ⚠️ 임계값을 바꿀 때는 **같은 경고 건수로 맞춰** 비교할 것. 분모가 다르면
  *    "새 규칙이 놓치는 게 없다"는 착시가 생긴다(이번 이식에서 실제로 그랬다).
+ *
+ * ── 2026-08-18: 임계값은 그대로인데 **자가 바뀌었다** ────────────────────────
+ * `displayWidth` 가 연산자 여백을 세기 시작해 같은 문항의 폭이 커졌다
+ * (원장님 "보기가 접힌다" 회귀 수리). 그래서 **530 이라는 숫자의 뜻이 바뀌었다**:
+ *   경고 건수 605건(1.28%) → **709건(1.50%)**
+ * 예전과 **같은 건수**로 맞추려면 한계를 546 으로 올려야 한다.
+ * 그런데 올리지 않았다 — 새로 걸린 104건을 눈으로 보니 원문 350~630자짜리
+ * **진짜로 긴 문항**이었다(폭 531 표본 전량). 숫자를 다시 맞추면 그 사실이
+ * 가려질 뿐이라 그대로 두고, 늘어난 건수를 보고서에 적는다.
+ * (CLAUDE.md 2026-08-17: 임계값을 물려받을 때는 분모가 같은지부터 볼 것.)
  */
 export const OVERFLOW_WIDTH_LIMIT = 530;
 
@@ -97,9 +107,16 @@ export function estimateProblemLines(content: string): number {
   let plain: string[] = [];
   let box: string[] | null = null;
 
+  /**
+   * ⚠️ 예전에는 평문 줄을 **한 덩어리로 이어 붙여** 셌다. 그때는 지문이 늘 한 줄
+   * (`collapseWhitespace` 가 개행을 다 녹인다)이라 같은 값이었다.
+   * 2026-08-18 부터 계산 과정 다단 등식이 **문단으로 갈린다** — 문단마다 제 줄을
+   * 차지하므로 따로 세지 않으면 늘어난 세로 공간을 한 줄도 못 본다.
+   * (문단 사이 여백 `prose-p:my-2` 는 위아래가 겹쳐 약 8px = 0.4줄이라 따로 세지 않는다.)
+   */
   const flushPlain = () => {
     if (plain.length === 0) return;
-    lines += linesFor(plain.join(" "));
+    for (const part of plain) lines += Math.max(1, linesFor(part));
     plain = [];
   };
   const flushBox = () => {
@@ -114,7 +131,11 @@ export function estimateProblemLines(content: string): number {
     const items = paras.slice(1);
     const cols = Number(header.match(/(\d+)\s*[>〉】］\]]/)?.[1] ?? 1);
 
-    lines += BOX_CHROME_LINES + 1; // 테두리·여백 + 라벨 줄
+    // 테두리·여백 + 라벨 줄. `<나열>` 상자는 **라벨 줄을 안 그린다**(머리 없는 상자)
+    // — 첫 문단이 곧 내용이라 여기서도 라벨 줄을 세면 안 된다.
+    const headerless = header.startsWith("<나열");
+    lines += BOX_CHROME_LINES + (headerless ? 0 : 1);
+    if (headerless) items.unshift(header.replace(/^<나열\d?>\s*/, ""));
     if (cols >= 2) {
       // 2열은 항목이 전부 한 칸에 들어갈 때만 선택된다(`fitsTwoColumns`).
       lines += Math.ceil(items.length / cols);
@@ -149,12 +170,14 @@ export function estimateProblemLines(content: string): number {
  * 반 페이지 문항 칸에 들어가는 줄 수의 한계.
  *
  * 값의 근거 (실데이터 47,152건, `scripts/qa/calibrate-overflow-lines.ts`):
- * 폭 규칙(530)이 605건을 잡는데, 줄 수 한계 **14** 가 477건으로 그 규모에 가장
- * 가깝다. 즉 **엄격도를 그대로 두고 보는 것만 바꿨다.**
+ * 폭 규칙(530)이 잡는 건수와 **같은 규모**가 되는 줄 수 한계가 **14** 다.
+ * 즉 **엄격도를 그대로 두고 보는 것만 바꿨다.**
  *
- *   둘 다 잡음   259
- *   줄 수만 잡음 218  ← 글자는 짧은데 **배치가 높은** 문항. 폭 총합은 이걸 못 본다
- *   폭만 잡음    346  ← 글자는 긴데 배치가 납작한 문항(긴 수식이 흐르는 경우 등)
+ * 2026-08-18 재보정(연산자 여백을 세게 된 뒤) — 한계 14 는 그대로가 최선이다:
+ *   폭 규칙 709건 · 줄 수 한계 14 → 623건 (13 은 949, 15 는 415 로 더 멀다)
+ *   줄 수 경고가 늘어난 내역: 593(기준) → 600 계산 과정 문단 분리
+ *  *   → 601 마커 없는 조건 상자 52개 → 623 세부 문항 줄바꿈 1,783문항.
+ *   셋 다 **지면이 실제로 세로로 길어진** 것이라 경고가 느는 게 맞다.
  *
  * ⚠️ 임계값을 바꿀 때는 `OVERFLOW_WIDTH_LIMIT` 주석과 같은 규칙을 지킬 것 —
  *    **같은 경고 건수로 맞춰** 비교한다. 분모가 다르면 "새 규칙이 더 잡는다"가

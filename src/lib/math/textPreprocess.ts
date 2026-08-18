@@ -474,6 +474,52 @@ export const cleanMalformedLatex = (s: string): string =>
  *  7) injectDisplayStyle (보조 안전망 — `\sum`, `\int`, `\lim` 같은 큰
  *     연산자가 있는 식 + dfrac 안 쓰이는 외부 식에도 displaystyle 보장)
  */
+/* ────────────────────────────────────────────────────────────────────────
+ * 빈칸 네모(□) 뒤 HWP 채움 정리 (2026-08-18)
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/**
+ * 원장님: "네모 표현은 좋았는데 네모 뒤에 공백이 너무 많아보여."
+ *
+ * 원인은 CSS 가 아니라 **LaTeX 에 남은 HWP 채움**이다. HWP 수식의
+ * `{BOX{~~ 1. ~~}}` 에서 `~` 는 한 칸 공백인데, 변환기(`hwpeq_unglue.py`)가
+ * `BOX` 만 `\square` 로 바꾸고 채움은 그대로 흘려보냈다. LaTeX 의 `~` 는
+ * 비줄바꿈 공백이라 **개수만큼 그대로 쌓인다.**
+ *
+ * 브라우저 실측(12.5px 지면 글꼴, `scripts/qa/_square-gap.tsx` 방식):
+ *   `$\square$` 11.8px · `$\square ~$` 15.5px · `$\square ~~~$` **23.1px**
+ * — 채움이 네모 자신만큼 넓다. 전수 실측(`measure-tilde-space.ts`):
+ *   네모 바로 뒤 `~` 뭉치 **699개 / 114문항**.
+ *
+ * ⚠️ **네모에 붙은 채움만** 건드린다. `$1,~2,~3$` 의 `~` 는 항목 사이 간격이라
+ * 지우면 숫자가 붙는다 — 전체 `~` 15,363개 중 13,792개가 쉼표 뒤다.
+ * 손상 신호(채움이 많다)로 정상(목록 간격)까지 쓸어버리면 안 된다.
+ *
+ * 규칙: 네모에 잇닿은 채움 뭉치가
+ *   · 수식 **끝**이면 통째로 지운다 (`$\square ~~~$` → `$\square$`)
+ *   · 뒤에 내용이 있으면 **한 칸만** 남긴다 (`$\square ~~㈎~~$` → `$\square ~㈎$`)
+ */
+const BLANK_BOX_PADDING = /(\\square\s*)((?:~|\\,)+)/g;
+/** 빈칸 수식 **끝**에 매달린 채움. 뒤에 아무것도 없으므로 순전히 여백이다. */
+const TRAILING_PADDING = /(?:~|\\,)+\s*$/;
+
+export const collapseBlankBoxPadding = (inner: string): string => {
+  if (!/\\square/.test(inner)) return inner;
+  const collapsed = inner.replace(
+    BLANK_BOX_PADDING,
+    (_m, box: string, pad: string, offset: number) => {
+      const rest = inner.slice(offset + box.length + pad.length);
+      // 뒤에 아무 내용도 없으면 채움은 순전히 여백이다 — 지운다.
+      if (rest.trim().length === 0) return box.trimEnd();
+      // 하나뿐이면 이미 한 칸이다.
+      if (pad === "~" || pad === "\\,") return box + pad;
+      return box + (pad.startsWith("~") ? "~" : "\\,");
+    },
+  );
+  // `$\square ~~㈎~~$` 의 **끝** 채움은 네모에 붙어 있지 않아 위 규칙이 못 본다.
+  return collapsed.replace(TRAILING_PADDING, "");
+};
+
 export const applyMathInnerNormalization = (inner: string): string => {
   let s = cleanMalformedLatex(inner);
   // 중첩 delimiter 방어 (사용자 보고 2026-06-02): 모델이 `$$...$$` 안에 `$...$`
@@ -492,6 +538,9 @@ export const applyMathInnerNormalization = (inner: string): string => {
   // 인접 박스 행 안전망 — `\boxed{ABCD}` → `\boxed{A}\boxed{B}\boxed{C}\boxed{D}`.
   // uprightGeometryLabels *이전* 에 호출 — \mathrm{} wrap 후엔 매치 안 됨.
   s = splitMultiLetterBoxed(s);
+  // 빈칸 네모의 HWP 채움 정리 — `uprightGeometryLabels` 가 `\square` 뒤 라벨을
+  // `\mathrm{}` 로 감싸기 **전**에 해야 채움이 라벨 안으로 딸려 들어가지 않는다.
+  s = collapseBlankBoxPadding(s);
   s = uprightGeometryLabels(s);
   s = autoSizeBrackets(s);
   // 6) `\frac` → `\dfrac` 강제 업그레이드.
