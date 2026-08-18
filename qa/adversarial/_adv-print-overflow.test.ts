@@ -41,7 +41,6 @@ import {
 /* ── 실측 상수 (scratch 측정 도구 산출, 인쇄 매체) ────────────────────────── */
 const LINE_PX = 20.3125;
 const SLOT_CONTINUATION_PX = 484;
-const SLOT_FIRST_PAGE_PX = 405;
 const FIXED_CHROME_PX = 62.5;
 
 const problem = (over: Partial<TestPrintProblem> = {}): TestPrintProblem => ({
@@ -54,61 +53,34 @@ const problem = (over: Partial<TestPrintProblem> = {}): TestPrintProblem => ({
 });
 
 /**
- * 실데이터 `0129fdcd-8f19-42e3-99a1-5e3137ebf721`.
- * 그림 1장(`/figures/4729/hwp-q03.png`, 원본 419×482 → 인쇄 폭 70mm 로 264.6×304.3).
- * 실측 지면 높이 **550.5px** — 이어지는 장 칸 484px 을 66px(3.3줄) 넘긴다.
- * 그런데 폭 171(<530) · 추정 5줄(<14) · 그림 1장(<2) 이라 **어떤 규칙에도 안 걸린다.**
- */
-const ONE_FIGURE_CONTENT = `그림과 같이 두 직선 $y=2x$와 $y=x$가 이루는 예각의 크기를 $\\theta$라 할 때, $\\cos \\theta$의 값은?
-
-1. $\\frac{\\sqrt{10}}{10}$
-2. $\\frac{\\sqrt{10}}{6}$
-3. $\\frac{\\sqrt{10}}{5}$
-4. $\\frac{\\sqrt{10}}{4}$
-5. $3\\sqrt{10}\\frac{}{10}$`;
-
-/**
  * ✅ `[적대③-A]` 그림 사각지대 — **고쳤다.** 회귀 가드는
  * `src/__tests__/unit/printOverflow.test.ts` 와 `printFigureHeight.test.ts` 로 옮겼다.
  * 재현율 30.4% → 96.3% (`scripts/qa/eval-overflow-rules.ts`, 전수 47,152건).
  */
 
-describe("[적대③-B] 첫 장은 칸이 79px 좁은데 판정도 분할도 그걸 모른다", () => {
+/**
+ * ✅ `[적대③-B]` **판정**은 고쳤다 — 첫 장 한계를 칸 차이(79px = 3.9줄)에서 유도해
+ * 따로 쓴다. 첫 장 기준 재현율 19.4% → **93.9%**. 회귀 가드는
+ * `src/__tests__/unit/printOverflow.test.ts` 의 `[적대③-B]` 로 옮겼다.
+ *
+ * 🔴 **분할은 안 고쳤다** — 아래 한 건은 일부러 빨간 채로 둔다.
+ */
+describe("[적대③-B] 첫 장이 좁다는 사실이 «분할» 에는 아직 없다", () => {
   /**
-   * 첫 장에는 머리글 + 「핵심 개념 정리」 상자가 얹혀 문항 칸이 405px 이다.
-   * 이어지는 장은 484px. 같은 문항이 **1·2번이면 잘리고 3번이면 멀쩡**하다.
-   * 전수 실측: 첫 장에서만 넘치는 문항 3,216건(6.82%), 그중 경고 없는 것 2,892건.
-   */
-  it("첫 장 칸과 이어지는 장 칸이 다르다 — 79px, 3.9줄", () => {
-    expect(SLOT_CONTINUATION_PX - SLOT_FIRST_PAGE_PX).toBe(79);
-  });
-
-  /**
-   * 실데이터 `000083c0-48ae-4cf2-829b-0f38b29b4c54` 는 실측 439px 이다.
-   * 이어지는 장(484)에는 들어가고 첫 장(405)에서는 34px 잘린다.
-   * 판정은 «몇 번 문항인지»를 알면서도(`index`) 장을 나누지 않는다.
-   */
-  it("첫 장에 놓이는 1·2번만 더 엄격하게 봐야 하는데 한계가 하나뿐이다", () => {
-    const p = problem({ content: ONE_FIGURE_CONTENT, id: "x" });
-    const risks = assessOverflowRisk([
-      { ...p, id: "a" },
-      { ...p, id: "b" },
-      { ...p, id: "c" },
-    ]);
-    // 🔴 지금은 셋 다 무경고이고, 설령 걸려도 셋이 똑같이 걸린다.
-    expect(risks.map((r) => r.number)).toEqual([1, 2]);
-  });
-
-  /**
-   * `packProblems` 는 장을 **문항 수로만** 자른다. 첫 장이 좁다는 사실이
+   * `packProblems` 는 장을 **문항 수로만** 자른다. 첫 장이 79px 좁다는 사실이
    * 분할에 한 글자도 들어가 있지 않다.
+   *
+   * ⚠️ **이건 판정이 아니라 지면 배치다.** 첫 장 정원을 1문항으로 줄이면 시험지
+   *    장 수가 늘고 문항이 놓이는 자리가 통째로 바뀐다 — 원장님 확정 사항(D-07,
+   *    절대 규칙 1·6)이라 여기서 고칠 수 없다. 제안은
+   *    `docs/planning/tracks/reports/fix-overflow.md` 에 적었다.
    */
   it("지면 분할은 첫 장에도 그냥 두 문항을 넣는다", () => {
     const pages = packProblems(
       Array.from({ length: 6 }, (_, i) => problem({ id: `p${i}` })),
     );
     expect(JASEUP_GEOMETRY.questionsPerPage).toBe(2);
-    // 🔴 첫 장이 79px 좁으므로 «장별 정원»이 같을 수 없다.
+    // 🔴 첫 장이 79px 좁으므로 «장별 정원»이 같을 수 없다 — 원장님 확정 대기.
     expect(pages[0]!.problems.length).toBeLessThan(pages[1]!.problems.length);
   });
 });

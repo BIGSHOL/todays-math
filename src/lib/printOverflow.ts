@@ -15,6 +15,7 @@
 import type { TestPrintProblem } from "@/components/print/types";
 import { displayWidth, fitsTwoColumns } from "@/lib/math/displayWidth";
 import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
+import { packProblems } from "@/lib/printPack";
 import { parseProblemContent } from "@/lib/problem/parseProblemContent";
 
 /**
@@ -309,6 +310,31 @@ export function estimateProblemLines(
  */
 export const OVERFLOW_LINE_LIMIT = 18;
 
+/**
+ * **첫 장** 문항 칸의 줄 수 한계 — 이어지는 장보다 낮다.
+ *
+ * 첫 장에는 머리글과 「◆ 핵심 개념 정리」 상자가 얹혀 문항 칸이 79px 좁다
+ * (405px vs 484px = 3.9줄 = 칸의 16.3%). 그런데 판정은 한계를 하나만 써서
+ * **같은 문항이 1·2번이면 겹치고 3번이면 멀쩡**했다 — 첫 장에서만 넘치는 문항이
+ * 실측 3,216건, 그중 경고도 없던 것이 2,892건이다(적대적 리뷰 ③ §4).
+ *
+ * 값은 **칸 차이에서 유도한다.** 손으로 고르면 두 상수가 따로 놀아, 지면을 다시
+ * 재도 한쪽만 따라온다. 실측으로도 이 값이 맞다 — 첫 장 기준 전수 채점:
+ *
+ * ```
+ * 한계 13  경고 8,017  맞음 5,775  재현율 97.2%  정밀도 72.0%
+ * 한계 14  경고 7,148  맞음 5,578  재현율 93.9%  정밀도 78.0%   ← 유도값
+ * 한계 16  경고 5,302  맞음 4,845  재현율 81.6%  정밀도 91.4%
+ * 한계 18  경고 3,742  맞음 3,473  재현율 58.5%  정밀도 92.8%   ← 장을 모를 때
+ * ```
+ */
+export const OVERFLOW_LINE_LIMIT_FIRST_PAGE =
+  OVERFLOW_LINE_LIMIT -
+  Math.round(
+    (JASEUP_MEASURED_PX.continuationSlot - JASEUP_MEASURED_PX.firstPageSlot) /
+      JASEUP_MEASURED_PX.line,
+  );
+
 export interface OverflowRisk {
   /** 지면에 찍히는 문항 번호(1부터). 배열 위치가 아니다 — 원장이 지면에서 찾는 번호다. */
   number: number;
@@ -321,6 +347,17 @@ export function assessOverflowRisk(
 ): OverflowRisk[] {
   const risks: OverflowRisk[] = [];
 
+  /**
+   * 문항이 **몇 째 장**에 놓이는지는 `packProblems` 가 정한다. 판정이 스스로
+   * 「인덱스 2까지가 첫 장」이라고 굳히면 분할이 바뀔 때 조용히 어긋난다 —
+   * 렌더러와 열 수를 나눠 갖던 `fitsTwoColumns` 와 같은 자리다.
+   */
+  const pageOfIndex: number[] = [];
+  packProblems(problems).forEach((page, pageIndex) => {
+    for (let i = 0; i < page.problems.length; i += 1)
+      pageOfIndex.push(pageIndex + 1);
+  });
+
   problems.forEach((problem, index) => {
     const reasons: string[] = [];
     const figureCount = problem.figureUrls?.length ?? 0;
@@ -332,12 +369,23 @@ export function assessOverflowRisk(
     // 폭 총합이 못 보는 배치(그림·상자·보기 1열)를 줄 수로 따로 본다.
     // 같은 문항이 둘 다에 걸리면 사유를 겹쳐 적지 않는다 — 원장이 읽을 문장이다.
     const lines = estimateProblemLines(problem.content, figures);
-    if (!reasons.length && lines > OVERFLOW_LINE_LIMIT) {
+    // 첫 장은 칸이 3.9줄 좁다 — 같은 문항이라도 앞자리면 더 엄격하게 본다.
+    const onFirstPage = pageOfIndex[index] === 1;
+    const limit = onFirstPage
+      ? OVERFLOW_LINE_LIMIT_FIRST_PAGE
+      : OVERFLOW_LINE_LIMIT;
+    if (!reasons.length && lines > limit) {
       // 높이의 절반 넘게가 그림이면 원장이 지면에서 찾을 것도 그림이다.
       // 사유가 가리키는 곳이 틀리면 경고가 있어도 지나친다(리뷰 §3).
       const figureLines = figurePx / JASEUP_MEASURED_PX.line;
+      const what =
+        figureLines * 2 >= lines ? "그림이 크다" : "배치가 높다(상자·보기 1열)";
+      // 첫 장에서만 걸리는 문항은 **뒤로 옮기면 해결된다.** 그게 원장이 할 일이라
+      // 사유에 적는다 — 사유가 가리키는 곳이 곧 손볼 곳이어야 한다.
       reasons.push(
-        figureLines * 2 >= lines ? "그림이 크다" : "배치가 높다(상자·보기 1열)",
+        onFirstPage && lines <= OVERFLOW_LINE_LIMIT
+          ? `${what} · 첫 장은 칸이 좁다`
+          : what,
       );
     }
     // 장수 규칙은 **치수를 모를 때만** 쓰는 안전망이다. 치수를 알면 높이 규칙이

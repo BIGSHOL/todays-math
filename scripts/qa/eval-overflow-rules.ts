@@ -33,6 +33,7 @@ import { JASEUP_MEASURED_PX } from "../../src/lib/printGeometry";
 import {
   OVERFLOW_FIGURE_LIMIT,
   OVERFLOW_LINE_LIMIT,
+  OVERFLOW_LINE_LIMIT_FIRST_PAGE,
   OVERFLOW_WIDTH_LIMIT,
   assessOverflowRisk,
   estimateFigureBlockPx,
@@ -195,28 +196,47 @@ async function main() {
       figureUrls: row.figureUrls,
       figureDims: flat,
     };
+    /**
+     * 판정이 **장을 보게 된 뒤로**(리뷰 §11-2) 문항 하나만 넘기면 늘 «첫 장 1번»이
+     * 된다. 이어지는 장을 채점할 때는 앞에 채움 문항을 두어 3번 자리에 놓는다 —
+     * 안 그러면 캐시(484px)와 판정(405px 한계)이 **다른 장을 본다.**
+     */
+    const filler: TestPrintProblem = {
+      id: "filler",
+      orderIndex: 0,
+      content: "",
+      answer: "",
+      solution: null,
+    };
+    const placed = firstPage ? [problem] : [filler, filler, problem];
+    const at = firstPage ? 1 : 3;
     return {
       pid: h.pid,
       overflows: h.neededPx > slot,
       excess: h.neededPx - slot,
       width: displayWidth(content),
       lines: estimateProblemLines(content, dims),
+      // 수리 전의 자 — 그림을 0줄로 센다.
+      linesBefore: estimateProblemLines(content),
       figures: row.figureUrls.length,
       // 장수 규칙은 **치수를 모를 때만** 켜진다 — 제품과 같은 조건이어야 한다.
       countRule:
         row.figureUrls.length >= OVERFLOW_FIGURE_LIMIT &&
         dims.some((d) => d === null),
-      product: assessOverflowRisk([problem]).length > 0,
+      product: assessOverflowRisk(placed).some((r) => r.number === at),
     };
   });
 
   const warnedAt = (limit: number) => (g: (typeof graded)[number]) =>
     g.width > OVERFLOW_WIDTH_LIMIT || g.lines > limit || g.countRule;
 
+  /** 제품이 이 장에서 실제로 쓰는 한계. 채점기가 다른 값을 쓰면 검산에서 걸린다. */
+  const productLimit = firstPage
+    ? OVERFLOW_LINE_LIMIT_FIRST_PAGE
+    : OVERFLOW_LINE_LIMIT;
+
   /* ── 자 검산 ② 채점기가 제품과 한 건도 다르지 않은가 ─────────────────────── */
-  const drift = graded.filter(
-    (g) => warnedAt(OVERFLOW_LINE_LIMIT)(g) !== g.product,
-  );
+  const drift = graded.filter((g) => warnedAt(productLimit)(g) !== g.product);
   if (drift.length > 0)
     throw new Error(
       `채점기가 제품과 ${drift.length}건 다르다 — 규칙을 옮겨 적었다는 뜻이다. 예: ${drift[0]!.pid}`,
@@ -239,8 +259,27 @@ async function main() {
   );
   console.log("현행 제품 규칙");
   report(
-    `한계 ${OVERFLOW_LINE_LIMIT}`,
+    `한계 ${productLimit}`,
     score(graded.map((g) => ({ overflows: g.overflows, warned: g.product }))),
+  );
+
+  /**
+   * 수리 **전** 규칙을 그대로 재현해 같은 캐시로 채점한다 — 전후를 추정하지 않으려고.
+   * 예전 규칙: `폭 > 530` · `줄 수(그림 0줄) > 14` · `그림 장수 >= 2`, 장 구분 없음.
+   * (`estimateProblemLines(content)` 를 그림 없이 부르면 그때의 자와 같다.)
+   */
+  console.log("수리 전 규칙 (그림 0줄 · 한계 14 · 장 구분 없음)");
+  report(
+    "한계 14",
+    score(
+      graded.map((g) => ({
+        overflows: g.overflows,
+        warned:
+          g.width > OVERFLOW_WIDTH_LIMIT ||
+          g.linesBefore > 14 ||
+          g.figures >= 2,
+      })),
+    ),
   );
 
   if (sweep.length > 0) {
@@ -255,7 +294,7 @@ async function main() {
   }
 
   /* ── 규칙별 기여 — «이 규칙이 없으면 무엇을 놓치나» ─────────────────────── */
-  const limit = Number(arg("--at") ?? OVERFLOW_LINE_LIMIT);
+  const limit = Number(arg("--at") ?? productLimit);
   const byRule = (g: (typeof graded)[number]) => ({
     width: g.width > OVERFLOW_WIDTH_LIMIT,
     lines: g.lines > limit,
