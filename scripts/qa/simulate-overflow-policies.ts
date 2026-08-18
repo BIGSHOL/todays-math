@@ -334,6 +334,14 @@ async function main() {
     let sheets = 0;
     // 「들어가는 문항」만으로 정원을 못 채우는 단원 — ⑷ 의 위험이 여기 있다.
     let thinUnits = 0;
+    /**
+     * 정원을 못 채운 시험지 — **조용히 버리지 않고 센다.**
+     * 원인은 ⑷ 가 아니라 난이도 구성이다(hard 의 인접은 mid 뿐이라, 문항이 한
+     * 난이도에 몰린 단원은 hard 자리를 못 채운다 — D-20 `INSUFFICIENT_PROBLEMS`).
+     * 옛 엔진으로 같은 것을 재면 **건수가 같다**. 그래도 세어 두지 않으면 이 표가
+     * 「전부 만들어 봤다」로 읽힌다.
+     */
+    let shortSheets = 0;
 
     for (const [unitId, list] of units) {
       if (list.filter((p) => p.neededPx <= continuationSlot).length < count)
@@ -356,7 +364,10 @@ async function main() {
             seed,
           }),
         ];
-        if (runs.some((r) => r.problems.length < count)) continue;
+        if (runs.some((r) => r.problems.length < count)) {
+          shortSheets += 1;
+          continue;
+        }
         sheets += 1;
 
         runs.forEach((run, index) => {
@@ -387,7 +398,12 @@ async function main() {
         ? "   —  "
         : `${(((base.overflow - n) * 100) / base.overflow).toFixed(1)}%`;
 
-    console.log(`  시험지 ${sheets.toLocaleString()}장 (단원마다 ${trials}회)`);
+    console.log(
+      `  시험지 ${sheets.toLocaleString()}장 (단원마다 ${trials}회)` +
+        (shortSheets > 0
+          ? ` · 정원을 못 채워 뺀 시험지 ${shortSheets.toLocaleString()}장 (난이도 구성 탓 — 두 팔 모두 같다)`
+          : ""),
+    );
     console.log(
       `  ┌ 정책 ───────────────── 실제로 넘치는 문항 ── 줄어든 몫 ── 경고 ── 경고가 뜨는 시험지`,
     );
