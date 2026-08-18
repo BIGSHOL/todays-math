@@ -82,7 +82,14 @@ const REHYPE_PLUGINS: PluggableList = [[rehypeKatex, UI_KATEX_OPTIONS]];
  * ────────────────────────────────────────────────────────────────────────── */
 
 /** 인용문 첫 문단이 이 모양이면 상자다. 숫자는 열 수(1~3), 없으면 1열. */
-const BOX_HEADER_RE = /^<(보기|조건|상자)([1-3])?>/;
+const BOX_HEADER_RE = /^<(보기|조건|상자|나열)([1-3])?>/;
+
+/**
+ * 라벨 머리를 그리지 않는 상자. 원장님(2026-08-18) "다음 작은 수를 네모 박스 안에
+ * 넣으면 더 깔끔할텐데" — 발문 뒤 **나열 대상**은 «보기»도 «조건»도 아니라서
+ * 머리에 라벨을 얹으면 없던 이름이 생긴다. 테두리만 두른다.
+ */
+const HEADERLESS_LABEL = "나열";
 
 const QUOTE_CLASS =
   "my-4 border border-[#8A8A88] bg-white p-4 not-italic print:border-black";
@@ -138,8 +145,10 @@ function BoxQuote({ children }: { children?: ReactNode }) {
   if (!header) return <div className={QUOTE_CLASS}>{children}</div>;
 
   const label = header[1]!;
+  const headerless = label === HEADERLESS_LABEL;
   const columns = header[2] === "2" ? 2 : header[2] === "3" ? 3 : 1;
-  const items = blocks.slice(1);
+  // 머리 없는 상자는 첫 문단이 **내용**이다 — 잘라내면 안 된다.
+  const items = headerless ? blocks : blocks.slice(1);
   const gridClass =
     columns === 3
       ? "grid grid-cols-1 gap-x-6 gap-y-1 md:grid-cols-3 print:grid-cols-3"
@@ -149,9 +158,11 @@ function BoxQuote({ children }: { children?: ReactNode }) {
 
   return (
     <div data-box-card className={BOX_CARD_CLASS}>
-      <div data-box-header className="mb-2 font-semibold [&>p]:my-0">
-        {stripColumnHint(childrenOf(blocks[0]), label)}
-      </div>
+      {headerless ? null : (
+        <div data-box-header className="mb-2 font-semibold [&>p]:my-0">
+          {stripColumnHint(childrenOf(blocks[0]), label)}
+        </div>
+      )}
       {items.length > 0 ? (
         <div className={gridClass}>
           {items.map((item, index) => (

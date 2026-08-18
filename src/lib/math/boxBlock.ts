@@ -35,6 +35,14 @@ export type BoxLabel = "보기" | "조건" | "상자";
 export interface BoxSegment {
   kind: "box";
   label: BoxLabel;
+  /**
+   * 라벨 머리를 **그리지 않는** 상자.
+   *
+   * 원장님(2026-08-18): "다음 작은 수를 네모 박스 안에 넣으면 더 깔끔할텐데".
+   * 발문 뒤에 마커 없이 늘어선 **나열 대상**이 그렇다 — 그건 «보기»도 «조건»도
+   * 아니라서 머리에 라벨을 얹으면 없던 이름이 생긴다. 테두리만 두른다.
+   */
+  headerless?: boolean;
   /** 헤더와 첫 항목 사이에 낀 줄(대개 OCR 잔재). 없으면 빈 문자열. */
   lead: string;
   /** 항목 본문. 마커(`ㄱ.`, `∘`)를 **포함한** 원문 — 임의로 지우지 않는다. */
@@ -763,6 +771,55 @@ function findBareConditionBox(text: string, probe: string): FoundBox | null {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
+ * 4-C. 나열 대상 상자 (2026-08-18)
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/**
+ * 발문이 「나열」을 말하는가. 이것이 유일한 근거다.
+ *
+ * 정본 `F:\시험지변환기` 를 봤지만 **거기에도 이 규칙은 없다** —
+ * `core/content_parser.py` 의 박스 판정도 우리와 같은 **마커 기반**이라
+ * 베낄 규칙이 없었다. 대신 그 저장소의 박스 **모양**(5×5 병합표, 내용 셀 양옆에
+ * 스페이서 셀, `vertAlign="CENTER"`)을 참고했다 — 가운데 정렬 시안의 근거다.
+ */
+const ENUMERATION_TRIGGER =
+  /나열한\s*것은|나열했을\s*때|나열하시오|나열하면|나열할\s*때|차례대로|순서대로|작은\s*(?:수|것)부터|큰\s*(?:수|것)부터|크기순/;
+
+/** 쉼표로 늘어선 수식 나열. 항목이 **넷 이상**이라야 «나열»이다. */
+const ENUMERATION_LIST =
+  /^\s*(?:\$[^$\n]+\$\s*[,，]\s*){3,}\$[^$\n]+\$\s*$|^\s*\$[^$\n]*?(?:[,，][^$\n,，]+){3,}[^$\n]*\$\s*$/;
+
+/**
+ * 발문 **뒤**에 마커 없이 늘어선 나열 대상을 상자로 만든다. 없으면 null.
+ *
+ * ⚠️ **발문 물음표 뒤**여야 한다. 실측 478건 중 나열이 발문 **안**에 박힌 것이
+ * 122건인데(`세 수 $a=…$, $b=…$, $c=…$ 의 대소관계는?`), 그건 상자로 빼면
+ * **문장이 끊긴다.** 뒤에 오는 33건만 대상이다.
+ */
+function findEnumerationBox(text: string, probe: string): FoundBox | null {
+  if (!ENUMERATION_TRIGGER.test(probe)) return null;
+  const mark = probe.search(/[?？]/);
+  if (mark < 0) return null;
+  const start = mark + 1;
+  const tail = text.slice(start);
+  if (!ENUMERATION_LIST.test(tail)) return null;
+  const body = tail.trim();
+  if (!hasMeaningfulContent(body)) return null;
+
+  return {
+    start: start + (tail.length - tail.trimStart().length),
+    end: text.length,
+    segment: {
+      kind: "box",
+      label: "상자",
+      headerless: true,
+      lead: "",
+      items: [body],
+    },
+  };
+}
+
+/* ────────────────────────────────────────────────────────────────────────
  * 5. 공개 API
  * ──────────────────────────────────────────────────────────────────────── */
 
@@ -775,14 +832,18 @@ function findBareConditionBox(text: string, probe: string): FoundBox | null {
 export function splitBoxSegments(raw: string): ContentSegment[] {
   if (!raw) return [{ kind: "text", text: raw }];
   // 「다음을 모두 만족」처럼 낱말 «조건»이 없는 발문도 있으므로 여기서 같이 본다.
-  if (!/보\s*기|조\s*건|상\s*자|만\s*족/.test(raw))
+  if (
+    !/보\s*기|조\s*건|상\s*자|만\s*족|나\s*열|차례|순서|크기순|부터/.test(raw)
+  )
     return [{ kind: "text", text: raw }];
 
   const text = normalizeBoxMarkers(raw);
   const markers = findMarkers(text);
   if (markers.length === 0) {
-    // 마커가 없어도 발문이 조건을 예고하고 불릿 항목이 있으면 상자로 그린다.
-    const bare = findBareConditionBox(text, maskMathInPlace(text));
+    // 마커가 없어도 발문이 조건·나열을 예고하고 항목이 있으면 상자로 그린다.
+    const blank = maskMathInPlace(text);
+    const bare =
+      findBareConditionBox(text, blank) ?? findEnumerationBox(text, blank);
     return bare ? assemble(text, [bare]) : [{ kind: "text", text: raw }];
   }
 
@@ -811,8 +872,9 @@ export function splitBoxSegments(raw: string): ContentSegment[] {
   }
 
   if (found.length === 0) {
-    // 마커는 있는데 상자를 못 세웠다 — 「다음 조건 + 불릿」 경로를 한 번 더 본다.
-    const bare = findBareConditionBox(text, probe);
+    // 마커는 있는데 상자를 못 세웠다 — 마커 없는 두 경로를 한 번 더 본다.
+    const bare =
+      findBareConditionBox(text, probe) ?? findEnumerationBox(text, probe);
     return bare ? assemble(text, [bare]) : [{ kind: "text", text }];
   }
 

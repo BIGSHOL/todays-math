@@ -131,7 +131,11 @@ export function estimateProblemLines(content: string): number {
     const items = paras.slice(1);
     const cols = Number(header.match(/(\d+)\s*[>〉】］\]]/)?.[1] ?? 1);
 
-    lines += BOX_CHROME_LINES + 1; // 테두리·여백 + 라벨 줄
+    // 테두리·여백 + 라벨 줄. `<나열>` 상자는 **라벨 줄을 안 그린다**(머리 없는 상자)
+    // — 첫 문단이 곧 내용이라 여기서도 라벨 줄을 세면 안 된다.
+    const headerless = header.startsWith("<나열");
+    lines += BOX_CHROME_LINES + (headerless ? 0 : 1);
+    if (headerless) items.unshift(header.replace(/^<나열\d?>\s*/, ""));
     if (cols >= 2) {
       // 2열은 항목이 전부 한 칸에 들어갈 때만 선택된다(`fitsTwoColumns`).
       lines += Math.ceil(items.length / cols);
