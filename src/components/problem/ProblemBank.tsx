@@ -444,7 +444,7 @@ export function ProblemBank() {
       ) : null}
 
       <section
-        className="mt-4 grid items-start gap-6 print:block"
+        className="mt-4 grid gap-6 print:block"
         style={PROBLEM_GRID_STYLE}
         data-problem-grid
       >

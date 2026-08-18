@@ -31,7 +31,7 @@ export const ProblemCard = memo(function ProblemCard({
   return (
     // 카드 사이 간격은 목록 그리드의 gap 이 준다(`ProblemBank`). 화면에서 `mb-6` 을
     // 같이 걸면 세로 간격만 두 배가 된다. 인쇄는 그리드를 쓰지 않으므로 `print:mb-4` 유지.
-    <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm print:mb-4 print:rounded-none print:border-none print:shadow-none">
+    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm print:mb-4 print:block print:h-auto print:rounded-none print:border-none print:shadow-none">
       <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 bg-slate-50 px-6 py-4 print:bg-transparent print:px-0">
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-lg font-bold text-white print:bg-black">
           Q
@@ -50,13 +50,13 @@ export const ProblemCard = memo(function ProblemCard({
         </span>
       </div>
 
-      <div className="overflow-x-auto p-6 print:px-0">
+      <div className="flex flex-1 flex-col overflow-x-auto p-6 print:block print:px-0">
         <PaperProblemView
           content={problem.content}
           figureUrls={problem.figureUrls}
         />
 
-        <div className="mt-6 flex justify-end print:hidden">
+        <div className="mt-auto flex justify-end pt-6 print:hidden">
           <button
             type="button"
             aria-expanded={showSolution}
