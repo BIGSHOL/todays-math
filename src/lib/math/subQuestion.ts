@@ -105,6 +105,28 @@ function charBefore(text: string, index: number): string {
   return text[i]!;
 }
 
+/**
+ * `index` 의 `$` 가 수식을 **여는** 것인가.
+ *
+ * 🔴 이 확인이 없으면 `$…$ ⑵ $…$` 에서 **앞 수식의 닫는 `$` 부터** 매칭이 시작된다.
+ *    `SPAN_PAREN_DIGIT` 는 「`$` · 번호 · `$`」 모양만 보므로 그 둘이 각각 앞 수식의
+ *    끝과 뒤 수식의 시작이어도 통과한다. 그러면 마커 인덱스가 **닫는 `$` 위에** 앉고,
+ *    그 앞에서 문단을 나누는 순간 `$` 짝이 밀린다 —
+ *    앞 수식은 닫는 `$` 를 잃어 통째로 평문이 되고, 뒤 수식은 `\dfrac…` 가 **날 글자**로
+ *    지면에 찍힌다. 실측 93문항이 그렇게 됐다(적대적 리뷰 ① §1).
+ *
+ * ⚠️ 이 부류는 **렌더 실패로 안 잡힌다.** KaTeX 는 밀린 짝으로도 «성공»한다
+ *    (CLAUDE.md 2026-08-16 «KaTeX 가 초록이라고 지면이 멀쩡한 게 아니다»).
+ *    그래서 짝이 맞는지를 **세어서** 판정한다.
+ *
+ * 앞에 있는 `$` 의 개수가 짝수면 이 `$` 가 여는 것이다.
+ */
+function opensSpan(text: string, index: number): boolean {
+  let count = 0;
+  for (let i = 0; i < index; i += 1) if (text[i] === "$") count += 1;
+  return count % 2 === 0;
+}
+
 interface Candidate extends SubQuestionMarker {
   /** 같은 자리를 두 규칙이 잡으면 긴 쪽(수식 span 통째)을 남긴다. */
   readonly priority: number;
@@ -136,10 +158,14 @@ function collect(text: string): Candidate[] {
     found.push({ index, length, number: num, priority });
   };
 
-  for (const m of text.matchAll(SPAN_ARABIC))
+  for (const m of text.matchAll(SPAN_ARABIC)) {
+    if (!opensSpan(text, m.index)) continue;
     push(m.index, m[0].length, Number(m[1]), 2, true);
-  for (const m of text.matchAll(SPAN_PAREN_DIGIT))
+  }
+  for (const m of text.matchAll(SPAN_PAREN_DIGIT)) {
+    if (!opensSpan(text, m.index)) continue;
     push(m.index, m[0].length, parenDigitNumber(m[1]!) ?? 0, 2, false);
+  }
   for (const m of text.matchAll(LINE_START_ARABIC)) {
     const token = `(${m[2]})`;
     push(
