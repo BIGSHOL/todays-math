@@ -144,7 +144,7 @@ const FAMILIES: readonly Family[] = [
  * `①②③`·`⑴⑵⑶`도 뺐다: 앞은 **선택지 마커**이고 뒤는 **소문항 번호**라
  * 상자 항목으로 읽으면 상자가 선택지·소문항까지 삼킨다(프로토타입에서 실제로 났다).
  */
-const BULLET_CHARS = [..."∘•◦○⦁∙⚪⚬◯⸰◎✽Ÿ॰"];
+const BULLET_CHARS = [..."∘•◦○⦁∙⚪⚬◯⸰◎✽Ÿ●॰"];
 
 /**
  * 상자를 끊는 신호 ① 서술형 라벨. 이건 수식에 갇히는 일이 없어 probe 에서 본다.
@@ -678,6 +678,91 @@ function nearestLabel(markers: MarkerHit[], position: number): BoxLabel {
 }
 
 /* ────────────────────────────────────────────────────────────────────────
+ * 4-B. 마커 없는 «다음 조건» 상자 (2026-08-18)
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/**
+ * 발문이 「뒤에 조건이 온다」고 말하는 문구. **이것이 유일한 근거다.**
+ *
+ * 마커(`<조건>`)가 아예 없는 문항이라 항목만 보고 상자를 세울 수는 없다 —
+ * 그러면 아무 불릿 나열이나 상자가 된다. 발문이 스스로 조건을 예고할 때만 연다.
+ * 전수 실측: 이 문구가 있는 문항 1,936건(4.11%), 그중 이미 상자인 513건을 빼고
+ * **마커 없이 불릿만 있는 것 61건**.
+ */
+const BARE_CONDITION_TRIGGER =
+  /(?:다음|아래)\s*(?:의\s*)?(?:세\s*|네\s*|두\s*)?조건|조건을\s*(?:모두\s*)?만족|(?:다음|아래)을?\s*(?:모두\s*)?만족/g;
+
+/**
+ * 그 자리가 **수식과 수식 사이**인가. 양쪽이 `$` 면 항목 기호가 아니라 연산자다.
+ *
+ * ⚠️ 수식을 가리는 것만으로는 부족하다. OCR 이 합성함수를 `$(f$ ∘ $g)(3)$` 처럼
+ * **수식 밖으로** 쪼개 놓기 때문에 `∘` 가 평문 자리에 남는다(실측 1ed8fb78).
+ * 그대로 두면 발문이 통째로 조건 상자가 된다.
+ */
+function isBetweenMathSpans(text: string, at: number): boolean {
+  let left = at - 1;
+  while (left >= 0 && /\s/.test(text[left]!)) left -= 1;
+  let right = at + 1;
+  while (right < text.length && /\s/.test(text[right]!)) right += 1;
+  return text[left] === "$" && text[right] === "$";
+}
+
+/**
+ * 마커 없이 불릿로만 나열된 조건을 상자로 만든다. 없으면 null.
+ *
+ * 항목 찾기는 반드시 **probe(수식 가림)** 에서 한다. 안 가리면 합성함수
+ * `$(f$ ∘ $g)(3)$` 의 `∘` 셋이 불릿으로 보여 발문이 통째로 상자가 된다
+ * (실측 1ed8fb78). `□` 를 불릿 목록에 넣지 않는 이유도 같다 — `□ABCD` 는
+ * 도형 표기이지 항목이 아니다(실측 11830247).
+ */
+function findBareConditionBox(text: string, probe: string): FoundBox | null {
+  BARE_CONDITION_TRIGGER.lastIndex = 0;
+  const trigger = BARE_CONDITION_TRIGGER.exec(probe);
+  if (!trigger) return null;
+  const after = trigger.index + trigger[0].length;
+
+  const region = probe.slice(after);
+  const hits = findBulletItems(region);
+  if (hits.length < 2) return null;
+  /*
+   * **첫 항목만** 자리를 따진다. 목록의 첫 기호가 수식과 수식 사이에 끼어 있으면
+   * 그건 항목 기호가 아니라 연산자다(합성함수 `$(f$ ∘ $g)$`, 실측 1ed8fb78).
+   * 뒤 항목까지 같은 잣대를 대면 안 된다 — `∘ $A=…$ ∘ $B=…$` 처럼 **항목이 통째로
+   * 수식인** 조건 목록이 실제로 있고(004e03ea), 그건 둘째 기호부터 양옆이 수식이다.
+   */
+  if (isBetweenMathSpans(text, after + hits[0]!.start)) return null;
+
+  const start = after + hits[0]!.start;
+  const content = text.slice(start);
+  const contentProbe = probe.slice(start);
+
+  // 조건 뒤에 발문이 붙어 오면 되돌린다 (`<조건> … 의 값은?`).
+  const tail = findQuestionTail(
+    content,
+    contentProbe,
+    hits[hits.length - 1]!.start - hits[0]!.start,
+  );
+  const limit = tail >= 0 ? tail : content.length;
+  if (endsWithQuestion(content.slice(0, limit))) return null;
+
+  const items: string[] = [];
+  for (let i = 0; i < hits.length; i += 1) {
+    const from = hits[i]!.start - hits[0]!.start;
+    const to =
+      i + 1 < hits.length ? hits[i + 1]!.start - hits[0]!.start : limit;
+    const body = content.slice(from, to).trim();
+    if (body.length > 0) items.push(body);
+  }
+  if (items.length < 2) return null;
+
+  return {
+    start,
+    end: start + limit,
+    segment: { kind: "box", label: "조건", lead: "", items },
+  };
+}
+
+/* ────────────────────────────────────────────────────────────────────────
  * 5. 공개 API
  * ──────────────────────────────────────────────────────────────────────── */
 
@@ -689,12 +774,17 @@ function nearestLabel(markers: MarkerHit[], position: number): BoxLabel {
  */
 export function splitBoxSegments(raw: string): ContentSegment[] {
   if (!raw) return [{ kind: "text", text: raw }];
-  if (!/보\s*기|조\s*건|상\s*자/.test(raw))
+  // 「다음을 모두 만족」처럼 낱말 «조건»이 없는 발문도 있으므로 여기서 같이 본다.
+  if (!/보\s*기|조\s*건|상\s*자|만\s*족/.test(raw))
     return [{ kind: "text", text: raw }];
 
   const text = normalizeBoxMarkers(raw);
   const markers = findMarkers(text);
-  if (markers.length === 0) return [{ kind: "text", text: raw }];
+  if (markers.length === 0) {
+    // 마커가 없어도 발문이 조건을 예고하고 불릿 항목이 있으면 상자로 그린다.
+    const bare = findBareConditionBox(text, maskMathInPlace(text));
+    return bare ? assemble(text, [bare]) : [{ kind: "text", text: raw }];
+  }
 
   const probe = maskMathInPlace(text);
   // 하위 문항 판정은 **문항 전체**를 봐야 한다(오름차순 근거가 상자 밖에도 있다).
@@ -720,8 +810,17 @@ export function splitBoxSegments(raw: string): ContentSegment[] {
     cursor = next;
   }
 
-  if (found.length === 0) return [{ kind: "text", text }];
+  if (found.length === 0) {
+    // 마커는 있는데 상자를 못 세웠다 — 「다음 조건 + 불릿」 경로를 한 번 더 본다.
+    const bare = findBareConditionBox(text, probe);
+    return bare ? assemble(text, [bare]) : [{ kind: "text", text }];
+  }
 
+  return assemble(text, found);
+}
+
+/** 찾은 상자들을 «평문 · 상자» 조각으로 엮는다. */
+function assemble(text: string, found: readonly FoundBox[]): ContentSegment[] {
   const segments: ContentSegment[] = [];
   let position = 0;
   for (const box of found) {
