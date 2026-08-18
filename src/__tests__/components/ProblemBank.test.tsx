@@ -664,3 +664,64 @@ describe("[렌더 수리 A] 문제은행 — 필터 폭 고정", () => {
     });
   });
 });
+
+/**
+ * 🔴 RED → 🟢 GREEN — 「그림 있는 문제만」 필터 (원장님 지시 2026-08-18).
+ *
+ * 실측 근거: DB 47,152건 중 그림(`figureUrls`)이 있는 문항은 8,442건(17.9%)뿐이라
+ * 그림 문항을 찾으려면 은행을 통째로 넘겨야 했다. `figureSvg` 는 아직 0건이지만
+ * 스키마상 그림의 다른 갈래라 서버 조건에 함께 넣는다.
+ */
+describe("[S-08] 문제은행 — 그림 있는 문제만 (MSW)", () => {
+  const EMPTY_LIST = { data: [], meta: { page: 1, pageSize: 20, total: 0 } };
+
+  function captureQueries() {
+    const captured: URLSearchParams[] = [];
+    server.use(
+      http.get("/api/problems", ({ request }) => {
+        captured.push(new URL(request.url).searchParams);
+        return HttpResponse.json(EMPTY_LIST);
+      }),
+    );
+    return captured;
+  }
+
+  it("체크박스를 보여 주고 기본은 꺼져 있다", async () => {
+    await renderBank();
+
+    const box = screen.getByRole("checkbox", { name: "그림 있는 문제만" });
+    expect(box).toBeInTheDocument();
+    expect(box).not.toBeChecked();
+  });
+
+  it("켜면 hasFigure=true 로 조회하고, 끄면 다시 빠진다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+
+    await user.click(
+      screen.getByRole("checkbox", { name: "그림 있는 문제만" }),
+    );
+    await waitFor(() => {
+      expect(captured.at(-1)?.get("hasFigure")).toBe("true");
+    });
+
+    await user.click(
+      screen.getByRole("checkbox", { name: "그림 있는 문제만" }),
+    );
+    await waitFor(() => {
+      expect(captured.at(-1)?.has("hasFigure")).toBe(false);
+    });
+  });
+
+  it("켜면 1페이지부터 다시 본다 — 켠 채로 옛 페이지에 남으면 빈 화면이 된다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+
+    await user.click(
+      screen.getByRole("checkbox", { name: "그림 있는 문제만" }),
+    );
+    await waitFor(() => {
+      expect(captured.at(-1)?.get("page")).toBe("1");
+    });
+  });
+});

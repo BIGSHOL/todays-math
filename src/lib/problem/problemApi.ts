@@ -22,6 +22,8 @@ export type ProblemListFilters = {
   grade?: string;
   chapter?: string;
   chapterPrefix?: string;
+  /** 그림(이미지 경로 또는 엔진 SVG)이 있는 문항만. 켤 때만 붙인다. */
+  hasFigure?: boolean;
   difficulty?: Difficulty;
   problemType?: ProblemType;
   reviewStatus?: ReviewStatus;
@@ -39,6 +41,8 @@ function listQuery(filters: ProblemListFilters, page: number) {
   if (filters.grade) params.set("grade", filters.grade);
   if (filters.chapter) params.set("chapter", filters.chapter);
   if (filters.chapterPrefix) params.set("chapterPrefix", filters.chapterPrefix);
+  // 계약이 `"true"` 리터럴만 받는다 — 끌 때는 아예 안 붙인다("false" 를 보내면 안 된다).
+  if (filters.hasFigure) params.set("hasFigure", "true");
   if (filters.difficulty) params.set("difficulty", filters.difficulty);
   if (filters.problemType) params.set("problemType", filters.problemType);
   if (filters.reviewStatus) params.set("reviewStatus", filters.reviewStatus);

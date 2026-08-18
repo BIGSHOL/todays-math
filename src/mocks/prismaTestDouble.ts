@@ -551,6 +551,7 @@ function matchesWhere<T extends object>(
         in?: unknown[];
         not?: unknown;
         startsWith?: unknown;
+        isEmpty?: unknown;
         gt?: unknown;
         gte?: unknown;
         lt?: unknown;
@@ -558,6 +559,10 @@ function matchesWhere<T extends object>(
       };
       if (Array.isArray(obj.in)) return obj.in.includes(value);
       if ("not" in obj) return value !== obj.not;
+      // 스칼라 리스트 전용(Prisma `String[]`). 「그림 있는 문제만」 필터가 쓴다.
+      if (typeof obj.isEmpty === "boolean") {
+        return Array.isArray(value) && (value.length === 0) === obj.isEmpty;
+      }
       if (typeof obj.startsWith === "string") {
         return typeof value === "string" && value.startsWith(obj.startsWith);
       }

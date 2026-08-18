@@ -124,6 +124,13 @@ export const problemFilterQuerySchema = z.strictObject({
   source: problemSourceSchema.optional(),
   reviewStatus: reviewStatusSchema.optional(),
   pool: problemPoolSchema.optional(),
+  /**
+   * 그림이 있는 문항만 보기(S-08). 켤 때만 `"true"` 를 보낸다 — 끄면 아예 안 붙인다.
+   *
+   * ⚠️ `z.coerce.boolean()` 을 쓰면 `"false"` 도 **참**이 된다(빈 문자열만 거짓).
+   * 쿼리스트링은 전부 문자열이라 그 함정에 그대로 걸린다. 그래서 리터럴로 받는다.
+   */
+  hasFigure: z.literal("true").optional(),
   page: paginationParamsSchema.shape.page,
   pageSize: paginationParamsSchema.shape.pageSize,
 });

@@ -40,7 +40,7 @@ export function AppChrome({
   const date = dateLabel ?? formatMastheadDate();
 
   return (
-    <div className="min-h-full bg-[#ECECEA] text-[#161616]">
+    <div className="min-h-full bg-canvas text-[#161616]">
       <header className="flex items-baseline gap-6 border-b-[3px] border-[#161616] px-[26px] pt-[19px] pb-[15px]">
         <span className="flex items-baseline">
           <Link

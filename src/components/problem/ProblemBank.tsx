@@ -99,6 +99,7 @@ export function ProblemBank() {
   const [difficulty, setDifficulty] = useState("");
   const [problemType, setProblemType] = useState("");
   const [reviewStatus, setReviewStatus] = useState("");
+  const [hasFigure, setHasFigure] = useState(false);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [problems, setProblems] = useState<ProblemEntity[]>([]);
@@ -126,8 +127,18 @@ export function ProblemBank() {
       difficulty: (difficulty || undefined) as Difficulty | undefined,
       problemType: (problemType || undefined) as ProblemType | undefined,
       reviewStatus: (reviewStatus || undefined) as ReviewStatus | undefined,
+      hasFigure: hasFigure || undefined,
     };
-  }, [unitId, chapter, semester, grade, difficulty, problemType, reviewStatus]);
+  }, [
+    unitId,
+    chapter,
+    semester,
+    grade,
+    difficulty,
+    problemType,
+    reviewStatus,
+    hasFigure,
+  ]);
 
   useEffect(() => {
     let cancelled = false;
@@ -393,6 +404,36 @@ export function ProblemBank() {
           <option value="approved">승인</option>
           <option value="rejected">반려</option>
         </FieldSelect>
+        {/*
+          그림 있는 문항은 실측 8,442건(전체의 17.9%)뿐이라, 켜지 않으면 은행을 통째로
+          넘겨야 찾을 수 있었다(원장님 지시 2026-08-18).
+
+          ⚠️ 칸 제목 「그림」을 `<label>` 안에 같이 넣으면 체크박스의 **접근 가능한 이름**이
+          「그림그림 있는 문제만」이 돼 이름으로 찾을 수 없다. 제목은 label 밖에 두고
+          label 은 체크박스와 그 글자만 감싼다. 밑선은 select 들과 같은 구조로 맞춘다.
+        */}
+        <div className="flex min-w-0 flex-col gap-1">
+          <span
+            aria-hidden
+            className="text-[10.5px] font-black tracking-[1.5px] text-[#6A6A68]"
+          >
+            그림
+          </span>
+          <label className="flex h-11 cursor-pointer items-center gap-2 border border-[#C2C2C0] bg-white px-3">
+            <input
+              type="checkbox"
+              checked={hasFigure}
+              onChange={(event) => {
+                resetToFirstPage();
+                setHasFigure(event.target.checked);
+              }}
+              className="h-4 w-4 cursor-pointer accent-[#1A73E8]"
+            />
+            <span className="whitespace-nowrap text-[12.5px] text-[#161616]">
+              그림 있는 문제만
+            </span>
+          </label>
+        </div>
       </div>
 
       {panel === "register" ? (

@@ -141,6 +141,14 @@ export const problemHandlers: HttpHandler[] = [
       if (filters.reviewStatus && p.reviewStatus !== filters.reviewStatus)
         return false;
       if (filters.pool && p.pool !== filters.pool) return false;
+      // 서버(route.ts)와 같은 규칙 — 그림은 이미지 경로와 엔진 SVG 두 갈래다.
+      if (
+        filters.hasFigure &&
+        (p.figureUrls?.length ?? 0) === 0 &&
+        !("figureSvg" in p && p.figureSvg)
+      ) {
+        return false;
+      }
       return true;
     });
     return jsonOk(

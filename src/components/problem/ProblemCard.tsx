@@ -31,7 +31,11 @@ export const ProblemCard = memo(function ProblemCard({
   return (
     // 카드 사이 간격은 목록 그리드의 gap 이 준다(`ProblemBank`). 화면에서 `mb-6` 을
     // 같이 걸면 세로 간격만 두 배가 된다. 인쇄는 그리드를 쓰지 않으므로 `print:mb-4` 유지.
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm print:mb-4 print:block print:h-auto print:rounded-none print:border-none print:shadow-none">
+    // 배경이 원색 화이트로 바뀌어(2026-08-18) 흰 카드가 바탕에 묻힌다. 카드 경계는
+    // 이제 그림자가 아니라 **테두리**가 만든다 — 원장님 지시 "문제마다 테두리 주면 구분될듯".
+    // 색은 앱의 다른 경계선과 같은 토큰(--divider #C2C2C0)을 쓴다. slate-200(#e2e8f0)은
+    // 흰 바탕에서 거의 안 보였다.
+    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-divider bg-white shadow-sm print:mb-4 print:block print:h-auto print:rounded-none print:border-none print:shadow-none">
       <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 bg-slate-50 px-6 py-4 print:bg-transparent print:px-0">
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-lg font-bold text-white print:bg-black">
           Q

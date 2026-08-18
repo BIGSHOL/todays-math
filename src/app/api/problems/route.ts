@@ -83,8 +83,15 @@ export async function GET(request: NextRequest) {
   );
   if (!parsed.success) return validationError(parsed.error);
 
-  const { page, pageSize, grade, chapter, chapterPrefix, ...filters } =
-    parsed.data;
+  const {
+    page,
+    pageSize,
+    grade,
+    chapter,
+    chapterPrefix,
+    hasFigure,
+    ...filters
+  } = parsed.data;
   // 계단식 단원 필터(S-08) — problem 컬럼이 아니라 Unit relation으로 거른다.
   // chapter(정확 일치)가 있으면 chapterPrefix(접두 일치)는 무시한다.
   const unitWhere: {
@@ -94,11 +101,25 @@ export async function GET(request: NextRequest) {
   if (grade) unitWhere.grade = grade;
   if (chapter) unitWhere.chapter = chapter;
   else if (chapterPrefix) unitWhere.chapter = { startsWith: chapterPrefix };
+  // 「그림 있는 문제만」(S-08) — 그림은 두 갈래다. 원본 시험지에서 오려 온 이미지 경로
+  // (`figureUrls`, 실측 8,442건)와 엔진이 그린 SVG(`figureSvg`, 현재 0건). 지금 0건이라고
+  // 한쪽만 보면 SVG 가 채워지는 날 조용히 빠지므로 처음부터 둘 다 본다.
+  const figureWhere = hasFigure
+    ? [
+        {
+          OR: [
+            { NOT: { figureUrls: { isEmpty: true } } },
+            { figureSvg: { not: null } },
+          ],
+        },
+      ]
+    : [];
   const where = {
     AND: [
       problemVisibleWhere(session.id),
       filters,
       ...(Object.keys(unitWhere).length > 0 ? [{ unit: unitWhere }] : []),
+      ...figureWhere,
     ],
   };
 
