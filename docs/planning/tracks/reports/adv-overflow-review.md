@@ -542,7 +542,7 @@ figureBlockTop 12→0    figureGap 16→0              quickAnswerGap 16.5→0
 | `npm run lint:affordance` | 통과 |
 | `npm run test:adv` | `_adv-overflow-impl` **1건 빨강** (§G, D-07) · `_adv-print-overflow` 2건 빨강(앞 트랙, D-07) |
 | 상수 변이 시험 | **31개 전부 빨강** (리뷰 전 29개 중 **9개 초록**) |
-| 커밋 | 소견마다 분리 (11개) |
+| 커밋 | 소견마다 분리 (12개) |
 | main 병합 | **안 함** |
 | 인쇄물 출력 결과 | **변화 없음** (지면 CSS·분할·정원 모두 그대로) |
 
