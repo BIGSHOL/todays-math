@@ -203,3 +203,48 @@ describe("[검수] 지문이 그림 파일 자체를 본다", () => {
     }
   });
 });
+
+/**
+ * 🟢 `[d-affordable]` — **덧입힌 배치**(그림 폭 상한·문항번호 서식)도 지문에 들어간다.
+ *
+ * 왜: 검토용 측정은 제품을 안 고치고 탐침 문서에 `<style>` 을 덧붙여 **다른 지면**을
+ * 그린다. 그러면 「45mm 로 잰 캐시」와 「70mm 로 잰 캐시」가 `inputsHash` 도 `rowsHash` 도
+ * **똑같다** — 조건을 바꿔 놓고 옛 캐시로 채점해도 아무 말이 없다.
+ * 이 저장소가 여러 번 당한 자리(「지표가 그 실패를 셀 수 없는 형태」)라 지문에 넣는다.
+ */
+describe("[d-affordable] 덧입힌 배치도 지문이 본다", () => {
+  const overlaid = () =>
+    buildHeightCacheManifest({
+      ...NOW,
+      measuredAt: "2026-08-18T00:00:00.000Z",
+      overlay: "cap=cap45;layout=base",
+    });
+
+  it("덧칠이 없으면 지문에 그 항목을 안 남긴다 — 기존 캐시와 그대로 호환된다", () => {
+    expect(manifest().overlay).toBeUndefined();
+    expect(heightCacheProblems(manifest(), NOW)).toEqual([]);
+  });
+
+  it("다른 조건으로 잰 캐시로 채점하면 멈춘다", () => {
+    const problems = heightCacheProblems(overlaid(), {
+      ...NOW,
+      overlay: "cap=cap29;layout=base",
+    });
+    expect(problems.map((p) => p.what)).toEqual(["덧입힌 배치"]);
+  });
+
+  it("덧칠로 잰 캐시를 «제품 그대로»에 쓰면 멈춘다 — 반대 방향도 막는다", () => {
+    expect(heightCacheProblems(overlaid(), NOW).map((p) => p.what)).toEqual([
+      "덧입힌 배치",
+    ]);
+  });
+
+  it("같은 조건이면 아무 문제도 없다", () => {
+    expect(
+      heightCacheProblems(overlaid(), {
+        ...NOW,
+        overlay: "cap=cap45;layout=base",
+      }),
+    ).toEqual([]);
+  });
+});
