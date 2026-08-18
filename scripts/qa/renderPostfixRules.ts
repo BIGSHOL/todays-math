@@ -21,6 +21,9 @@
  * **지표가 실패를 셀 수 있는 형태인지부터 보라.**
  */
 
+import { isUnknownCommand } from "./mathTokenCensus";
+import { blockingKeyword } from "./hwpVocab";
+
 /** 시험지가 쓰는 문항 유형 낱말. `서답형` 은 학교에 따라 단답형·서술형을 함께 가리킨다. */
 export const LABEL_KINDS = [
   "서술형",
@@ -256,4 +259,288 @@ export function fixStrayDollar(content: string): StrayDollarResult {
     return { content: unique[0], applied: "trailing-dollar", hold: null };
 
   return { content: text, applied: null, hold: "unresolved" };
+}
+/* ══════════════════════════════════════════════════════════════════════════
+ * 지면에 **날 글자로 나가는 수식** 후보정 (트랙 수식잔재, 2026-08-18)
+ *
+ * 원장님이 화면에서 직접 찾은 것들 — 전부 스크린샷 근거:
+ *   `\htmlClass` · `\overarc` 가 붉은 글씨 · `2^2 × 3times5^3` · `xle-7` · `age2`
+ *
+ * ## 왜 지금까지 안 잡혔나
+ *
+ * 1. **세는 쪽과 고치는 쪽이 둘 다 손 목록이었다.** `measure-hwp-latex-residue.py`
+ *    도 `hwpeq_unglue.py` 도 키워드를 사람이 적었다. 그래서 `DIVIDE` 를 같이 놓쳤고
+ *    (2026-08-17), 이번엔 `le`·`ge`·소문자 `times` 를 같이 놓쳤다.
+ *    → 이제 어휘는 `hwpVocab`(정본에서 추출) 하나를 둘이 함께 읽고,
+ *      **정본에 없는 잔재는 `census-math-tokens.ts` 가 실측으로 찾는다.**
+ * 2. **붉은 글씨는 실패율로 안 잡힌다.** KaTeX 0.16 은 모르는 명령을
+ *    `.katex-error` 가 아니라 `color:#cc0000` 으로 그린다. 그래서 이 규칙들은
+ *    명령 목록이 아니라 **실제 렌더**(`isUnknownCommand`)로 판정한다.
+ *
+ * ## 설계 — 못 자르는 것은 지우지 말고 막는다
+ *
+ * 모든 규칙이 **보류를 먼저** 본다. 특히 `le`/`ge` 는 영어 낱말과 HWP 구조
+ * 키워드(`rpile`·`left`)에 그대로 들어 있어 두 겹으로 막는다 —
+ *   ① 덩어리 전체가 «한두 글자 + le/ge» 로 **분해되는가**
+ *   ② 분해되더라도 정본 키워드(`pile`·`angle`…)를 품고 있지 않은가
+ * 실측으로 분해되는 87종을 **전량** 눈으로 봤다. 전부 부등호였다.
+ * 분해에 실패한 것 중 `rpilea`·`ballet` 은 부등호가 아니었다 — 검사가 일했다.
+ * ══════════════════════════════════════════════════════════════════════════ */
+
+export interface RenderResidueResult {
+  content: string;
+  /** 적용한 규칙 이름들 (중복 없음, 정렬 안 됨). */
+  applied: string[];
+  /** 손대지 않고 남긴 사유들. 보고서가 이 목록으로 후속 과제를 만든다. */
+  holds: string[];
+}
+
+/** 라벨·환경 인자 — 여기 안은 잔재가 아니라 내용이다. */
+const PROTECTED_ARG_COMMANDS = [
+  "text",
+  "mathrm",
+  "mathit",
+  "mathbf",
+  "mathbb",
+  "mathcal",
+  "mathfrak",
+  "mathsf",
+  "mathtt",
+  "operatorname",
+  "mbox",
+  "begin",
+  "end",
+  "htmlClass",
+  "htmlId",
+  "htmlStyle",
+];
+
+const PROTECTED_RE = new RegExp(
+  `\\\\(?:${PROTECTED_ARG_COMMANDS.join("|")})\\s*\\{[^{}]*\\}`,
+  "g",
+);
+
+const SENTINEL = "\u{E010}";
+
+/**
+ * 보호 구간(`\text{…}` 등)을 잠시 치우고 나머지에만 `fn` 을 적용한다.
+ *
+ * 지우는 게 아니라 **가리는** 것이다 — 경계를 확실히 못 자르는 것을 지우면
+ * 근거가 사라진다(2026-08-16 교훈).
+ */
+function outsideProtected(expr: string, fn: (s: string) => string): string {
+  const kept: string[] = [];
+  const masked = expr.replace(PROTECTED_RE, (whole) => {
+    kept.push(whole);
+    return `${SENTINEL}${kept.length - 1}${SENTINEL}`;
+  });
+  return fn(masked).replace(
+    new RegExp(`${SENTINEL}(\\d+)${SENTINEL}`, "g"),
+    (_m, i: string) => kept[Number(i)]!,
+  );
+}
+
+/* ── 붉은 글씨: KaTeX 가 못 그리는 명령 ───────────────────────────────── */
+
+/** `\overarc{AB}` — 정본이 `\overarc ↔ arch` 로 맵을 둬 역변환이 내놓지만 KaTeX 엔 없다. */
+const OVERARC_RE = /\\overarc(?=\s*\{)/g;
+/** `\leftvert x \rightvert` — `LEFT vert` 가 한 낱말로 붙은 잔재. */
+const LEFT_VERT_RE = /\\leftvert(?![A-Za-z])/g;
+const RIGHT_VERT_RE = /\\rightvert(?![A-Za-z])/g;
+/** `120\,\cm` — 단위가 명령이 돼 버린 것. */
+const CM_RE = /\\cm(?![A-Za-z])/g;
+/** `\A` `\ABCD` — 대문자 라벨에 백슬래시가 붙었다. **아는 명령은 건드리면 안 된다.** */
+const UPPER_COMMAND_RE = /\\([A-Z]+)(?![A-Za-z])/g;
+
+/**
+ * KaTeX 가 **아는데 뜻이 다른** 명령 — 붉지 않아 렌더 판정이 못 잡는다.
+ *
+ * `\P` 는 ¶(문단기호), `\S` 는 §(절기호)로 그려진다. 그런데 이 말뭉치에서
+ * `\P` 23곳은 **전량이 확률 P(…) 아니면 점 라벨 P** 였다(전수 확인).
+ * 지면에는 `¶(1≤Y≤4)=3/8` 이 찍히고 있다 — 붉지 않으니 아무 지표도 안 울렸다.
+ *
+ * ⚠️ 그래도 무턱대고 바꾸지 않는다. **본문과 독립인 근거**를 하나 요구한다 —
+ *    ① 바로 뒤가 `(` · `\left(` (¶ 는 함수 적용을 못 한다), 또는
+ *    ② 같은 행에 백슬래시가 붙은 **모르는** 대문자 라벨이 이미 있다(`\A`·`\O`).
+ *    둘 다 아니면 손대지 않고 목록에 남긴다.
+ */
+const TEXT_SYMBOL_COMMAND_RE = /\\([PS])(?![A-Za-z])/g;
+const APPLIED_TO_ARGUMENT = /^\s*(?:\(|\\left\s*\()/;
+
+/* ── 조용히 틀리게 그려지는 글자 ──────────────────────────────────────── */
+
+/**
+ * 덩어리 전체가 «한두 글자 + le/ge» 로 분해되는가.
+ *
+ * 두 글자까지 허용하는 이유는 `xyle0`(xy≤0)·`acge0`(ac≥0) 같은 실측 때문이고,
+ * 세 글자를 막는 이유는 `rpile`(r·p·i + le) 때문이다. 실측 87종 전량 확인.
+ */
+const LEGE_DECOMPOSABLE = /^(?:[A-Za-z]{0,2}(?:le|ge))+[A-Za-z]{0,2}$/i;
+const LEGE_TOKEN = /le|ge/gi;
+
+/** 맨 곱셈 키워드. 앞뒤가 영문자면 낱말의 일부일 수 있어 건드리지 않는다. */
+const TIMES_RE = /(?<![\\A-Za-z])times(?![A-Za-z])/g;
+/** HWP `vert` — 정본이 왕복 때문에 일부러 안 되돌린다(`hwpeq_to_latex` 주석). */
+const VERT_RE = /(?<![\\A-Za-z])vert(?![A-Za-z])/g;
+/** 섭씨·화씨 — `10 CENTIGRADE`, `\left( FAHRENHEIT\right)`. 한 문항에 짝으로 나온다. */
+const CENTIGRADE_RE = /(?<![\\A-Za-z])CENTIGRADE(?![A-Za-z])/g;
+const FAHRENHEIT_RE = /(?<![\\A-Za-z])FAHRENHEIT(?![A-Za-z])/g;
+
+/**
+ * 맨 함수 이름. 정본 `FUNC_MAP` 이 아는 것 중 **글자만으로 이루어지고
+ * 변수로 오해될 수 없는** 것만 고른다.
+ *
+ * 뒤는 제한하지 않는다 — 실측에 `sinx`(붙음) · `cos 30^\circ`(띄움) ·
+ * `sin^{2}a`(첨자) · `\dfrac{7}{sin}`(끊김)이 다 있고, **뒤가 영숫자가 아닌 82곳을
+ * 전량 눈으로 봤는데 `ln` 을 뺀 전부가 삼각비였다.** 긴 이름을 먼저 둬야
+ * `sinh` 가 `sin` 에 먼저 먹히지 않는다.
+ */
+const FUNCTIONS = [
+  "arcsin",
+  "arccos",
+  "arctan",
+  "sinh",
+  "cosh",
+  "tanh",
+  "sin",
+  "cos",
+  "tan",
+  "sec",
+  "csc",
+  "cot",
+  "log",
+];
+const FUNCTION_RE = new RegExp(
+  `(?<![\\\\A-Za-z])(${FUNCTIONS.join("|")})`,
+  "g",
+);
+
+/**
+ * `ln` 만 **뒤에 영숫자가 올 때만** 옮긴다 — `l` 은 흔한 변수라 `l_n` 과 부딪친다.
+ *
+ * 실측 145곳 중 3곳이 자연로그가 **아니었다**: `n(ln)2` · `y=ln` ·
+ * `\dfrac{ln+1}{l_{n}}` — 전부 수열 `l_n` 이다. 반대로 `ln2`·`lnx`·`lnt` 142곳은
+ * 전부 자연로그였다(서로 다른 모양 28종 전량 확인). 그래서 경계를 여기에 둔다.
+ * ⚠️ 이 lookahead 를 «다른 함수와 통일하려고» 떼지 말 것 — 뜻이 바뀐다.
+ */
+const LN_RE = /(?<![\\A-Za-z])ln(?=[A-Za-z0-9])/g;
+/** 앞 글자에 **붙은** 함수 이름 — 계수인지 변수 이름의 일부인지 못 가른다. */
+const GLUED_FUNCTION_RE = new RegExp(
+  `(?<![\\\\])[A-Za-z](${FUNCTIONS.join("|")})(?![A-Za-z])`,
+  "g",
+);
+
+/**
+ * 지면에 날 글자로 나가는 수식을 후보정한다. **수식 구간(`$…$`) 안에서만.**
+ *
+ * 문항의 뜻을 바꾸지 않는다 — 옮기는 자리가 하나로 정해지는 것만 옮기고,
+ * 애매하면 `holds` 에 사유를 남기고 그대로 둔다.
+ */
+export function fixRenderResidue(content: string): RenderResidueResult {
+  const text = content ?? "";
+  const applied = new Set<string>();
+  const holds = new Set<string>();
+
+  if (isWholesaleHwpScript(text)) {
+    holds.add("wholesale");
+    return { content: text, applied: [], holds: [...holds] };
+  }
+
+  // 행 단위 근거 — 이 행에 «백슬래시 붙은 모르는 대문자 라벨»이 하나라도 있으면
+  // 같은 행의 `\P`·`\S` 도 같은 이관 사고의 결과로 본다(위 주석 ②).
+  UPPER_COMMAND_RE.lastIndex = 0;
+  const rowHasLostLabel = [...text.matchAll(UPPER_COMMAND_RE)].some((m) =>
+    isUnknownCommand(m[1]!),
+  );
+
+  const out = text.replace(/\$([^$]*)\$/g, (_whole, expr: string) => {
+    // 라벨·환경 인자를 **가린 채로** 모든 규칙을 돌린다. 지우는 게 아니라 가리는 것이다 —
+    // 경계를 확실히 못 자르는 것을 지우면 근거가 사라진다(2026-08-16 교훈).
+    const fixed = outsideProtected(expr, (bare) => {
+      let e = bare;
+      const swap = (
+        name: string,
+        pattern: RegExp,
+        replacement: string | ((...args: string[]) => string),
+      ) => {
+        const next = e.replace(
+          pattern,
+          replacement as unknown as (
+            substring: string,
+            ...args: unknown[]
+          ) => string,
+        );
+        if (next !== e) {
+          applied.add(name);
+          e = next;
+        }
+      };
+
+      // 1) 붉은 명령 — 옮길 자리가 하나로 정해지는 것만.
+      swap("overarc", OVERARC_RE, "\\overset{\\frown}");
+      swap("left/right-vert", LEFT_VERT_RE, "\\left\\vert");
+      swap("left/right-vert", RIGHT_VERT_RE, "\\right\\vert");
+      swap("cm", CM_RE, "\\mathrm{cm}");
+
+      // 2) 대문자 라벨에 붙은 백슬래시 — **렌더가 모르는 것만** 뗀다.
+      //    손 목록을 쓰면 `\Delta`·`\Re`·`\S` 처럼 멀쩡한 명령까지 떼어 더 망친다.
+      swap("upper-label", UPPER_COMMAND_RE, (whole: string, name: string) =>
+        isUnknownCommand(name) ? name : whole,
+      );
+
+      // 2-1) KaTeX 가 아는데 뜻이 다른 `\P`(¶) · `\S`(§) — 근거가 있을 때만.
+      {
+        const source = e;
+        const next = source.replace(
+          TEXT_SYMBOL_COMMAND_RE,
+          (whole: string, name: string, offset: number) => {
+            const after = source.slice(offset + whole.length);
+            if (rowHasLostLabel || APPLIED_TO_ARGUMENT.test(after)) return name;
+            holds.add("text-symbol-command");
+            return whole;
+          },
+        );
+        if (next !== e) {
+          applied.add("upper-label");
+          e = next;
+        }
+      }
+
+      // 3) 맨 키워드.
+      swap("times", TIMES_RE, "\\times ");
+      swap("vert", VERT_RE, "\\vert ");
+      swap("centigrade", CENTIGRADE_RE, "^\\circ\\mathrm{C}");
+      swap("centigrade", FAHRENHEIT_RE, "^\\circ\\mathrm{F}");
+      swap("function", FUNCTION_RE, (_m: string, fn: string) => `\\${fn} `);
+      swap("function", LN_RE, "\\ln ");
+
+      GLUED_FUNCTION_RE.lastIndex = 0;
+      if (GLUED_FUNCTION_RE.test(e)) holds.add("glued-function");
+      GLUED_FUNCTION_RE.lastIndex = 0;
+
+      // 4) `le`/`ge` — 덩어리 단위로 본다. 두 겹으로 막는다(위 주석 참조).
+      e = e.replace(/(?<![\\A-Za-z])[A-Za-z]{2,}/g, (run) => {
+        if (!/le|ge/i.test(run)) return run;
+        if (!LEGE_DECOMPOSABLE.test(run)) {
+          holds.add("lege-shape");
+          return run;
+        }
+        const blocked = blockingKeyword(run);
+        if (blocked) {
+          holds.add(`lege-keyword:${blocked}`);
+          return run;
+        }
+        applied.add("le/ge");
+        return run.replace(LEGE_TOKEN, (kw) =>
+          kw.toLowerCase() === "le" ? "\\leq " : "\\geq ",
+        );
+      });
+
+      return e;
+    });
+
+    return `$${fixed}$`;
+  });
+
+  return { content: out, applied: [...applied], holds: [...holds] };
 }
