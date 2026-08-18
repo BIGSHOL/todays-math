@@ -168,6 +168,13 @@ export const paperCandidateSchema = z.strictObject({
   /** `Problem.questionType`. T7.6 백필 전이면 null 이라 유형 일치를 확인할 수 없다. */
   questionType: questionTypeSchema.nullable(),
   source: problemSourceSchema,
+  /**
+   * `Problem.originProblemId`. **재료 우선순위(§L6)를 가르는 유일한 판별자다.**
+   * `source = "transformed"` 에는 두 종류가 섞여 있다 — RPM 교재 이관본(우리 DB 에
+   * 원본이 없어 NULL, 전량 4,862건)과 AI 변형본(원본 id 를 가진다).
+   * 문서는 앞을 ③, 뒤를 ④ 로 두는데 `source` 만으로는 갈리지 않는다.
+   */
+  originProblemId: uuidSchema.nullable(),
   /** 원본 기출 배점(`Problem.score`). **읽기만 한다.** */
   score: z.number().positive().max(100).nullable(),
 });

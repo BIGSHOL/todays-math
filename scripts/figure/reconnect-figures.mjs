@@ -18,6 +18,9 @@
  * - `source='past_exam'` 만 손댄다. `externalId` 형식(`<examId>-<번호>`)은 출처마다
  *   다르므로 형식을 가정하지 않고 역추적 컬럼(`examId`,`questionNumber`)만 쓴다.
  * - `public/figures/` 에 **파일이 실제로 있을 때만** 붙인다. 깨진 이미지는 그림 없음보다 나쁘다.
+ * - **장수가 `MAX_SHEETS` 를 넘으면 조각으로 보고 막는다**(2026-08-18 추가). 벡터로 그려진
+ *   도형은 추출기가 획 뭉치별로 쪼갤 때가 있다 — 실측 2065-4 는 15장인데 첫 장이
+ *   「y축과 빗금 하나」였다. 막은 것은 리포트의 `장수과다_조각의심` 에 남는다.
  * - 쓰는 컬럼은 `figure_urls`, `figure_source` 뿐이다(트랙 A 소관).
  */
 import { access, readFile, writeFile } from "node:fs/promises";
@@ -48,6 +51,12 @@ const REPORT = "scripts/qa/reports/figure-reconnect.json";
 const FIGURE_WORD =
   /그림과\s*같|그림에서|그림은|아래\s*그림|다음\s*그림|위\s*그림|\[그림|그림처럼|그림의/;
 
+/**
+ * 한 문항에 붙일 수 있는 최대 장수. 스키마 `figureUrls` 주석의 실측치(선택지마다
+ * 그림인 문항 최대 6장)를 그대로 쓴다. 이보다 많으면 그림이 아니라 **조각**이다.
+ */
+const MAX_SHEETS = 6;
+
 const { PrismaClient } = await import("@prisma/client");
 const db = new PrismaClient();
 
@@ -67,11 +76,13 @@ try {
     이미_그림있음: 0,
     대장에_없음: 0,
     "제외:그림언급없음": 0,
+    "제외:장수과다": 0,
     "제외:파일없음": 0,
     붙일_대상: 0,
   };
   const todo = [];
   const missingFiles = new Set();
+  const tooMany = [];
 
   for (const r of rows) {
     if ((r.figure_urls ?? []).length > 0) {
@@ -86,6 +97,16 @@ try {
     const mentioned = FIGURE_WORD.test(r.content ?? "");
     if (!mentioned && !ALL) {
       stat["제외:그림언급없음"] += 1;
+      continue;
+    }
+    // 장수가 너무 많으면 **한 그림이 조각난 것**이다. 벡터로 그려진 도형은 추출기가
+    // 획 뭉치별로 쪼개 놓을 때가 있다 — 실측 2065-4 는 15장인데 첫 장이 「y축과 빗금
+    // 하나」였다. 붙이면 지면에 파편 15개가 나간다. 선택지마다 그림인 문항이 최대
+    // 6장이므로(스키마 `figureUrls` 주석) 그 위는 조각으로 보고 막는다.
+    // 조용히 자르지 않는다 — 아래 리포트의 `장수과다` 목록에 남는다.
+    if (paths.length > MAX_SHEETS) {
+      stat["제외:장수과다"] += 1;
+      tooMany.push({ examId: r.exam_id, questionNumber: r.question_number, 장수: paths.length });
       continue;
     }
     // 파일이 하나라도 없으면 그 문항 전체를 건너뛴다 — 반쪽 그림은 오독을 부른다.
@@ -143,6 +164,7 @@ try {
         집계: stat,
         장수분포: byCount,
         파일없어_건너뛴_경로: [...missingFiles].slice(0, 50),
+        장수과다_조각의심: tooMany,
         대상: todo.map(({ id, examId, questionNumber, paths }) => ({
           id,
           examId,

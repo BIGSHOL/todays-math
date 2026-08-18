@@ -203,6 +203,7 @@ function toCandidate(row: {
   difficulty: Difficulty;
   questionType: string | null;
   source: PaperCandidate["source"];
+  originProblemId: string | null;
   score: number | null;
 }): PaperCandidate {
   const qtype = row.questionType
@@ -215,6 +216,8 @@ function toCandidate(row: {
     // 백필 전이면 NULL 이다. 모르는 것을 안다고 하지 않는다.
     questionType: qtype?.success ? qtype.data : null,
     source: row.source,
+    // RPM 교재본과 AI 변형본을 가르는 유일한 값 — 재료 우선순위(11 §3 L6)가 이걸로 선다.
+    originProblemId: row.originProblemId,
     score: row.score ?? null,
   };
 }

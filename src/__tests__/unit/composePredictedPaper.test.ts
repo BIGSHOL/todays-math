@@ -45,19 +45,20 @@ function pid(n: number): string {
  * 여기서 뽑은 실측 청사진이 예측 문제지의 설계도가 된다.
  */
 function pastPaper(overrides: Partial<ExamPaper> = {}): ExamPaper {
-  const rows: Array<[number, number, "객관식" | "서술형", "하" | "중" | "상", string]> =
-    [
-      [1, 8, "객관식", "하", UNIT_A],
-      [2, 8, "객관식", "하", UNIT_A],
-      [3, 8, "객관식", "하", UNIT_A],
-      [4, 8, "객관식", "하", UNIT_A],
-      [5, 10, "객관식", "중", UNIT_A],
-      [6, 10, "객관식", "중", UNIT_B],
-      [7, 10, "객관식", "중", UNIT_B],
-      [8, 10, "객관식", "중", UNIT_B],
-      [9, 12, "서술형", "상", UNIT_B],
-      [10, 12, "서술형", "상", UNIT_B],
-    ];
+  const rows: Array<
+    [number, number, "객관식" | "서술형", "하" | "중" | "상", string]
+  > = [
+    [1, 8, "객관식", "하", UNIT_A],
+    [2, 8, "객관식", "하", UNIT_A],
+    [3, 8, "객관식", "하", UNIT_A],
+    [4, 8, "객관식", "하", UNIT_A],
+    [5, 10, "객관식", "중", UNIT_A],
+    [6, 10, "객관식", "중", UNIT_B],
+    [7, 10, "객관식", "중", UNIT_B],
+    [8, 10, "객관식", "중", UNIT_B],
+    [9, 12, "서술형", "상", UNIT_B],
+    [10, 12, "서술형", "상", UNIT_B],
+  ];
   return {
     externalExamId: "past-1",
     series: SERIES,
@@ -81,7 +82,11 @@ function pastPaper(overrides: Partial<ExamPaper> = {}): ExamPaper {
 }
 
 function blueprint(): Blueprint {
-  return { ...observeBlueprint(pastPaper()), kind: "predicted", period: PERIOD };
+  return {
+    ...observeBlueprint(pastPaper()),
+    kind: "predicted",
+    period: PERIOD,
+  };
 }
 
 function candidate(
@@ -97,6 +102,7 @@ function candidate(
     difficulty,
     questionType,
     source: "past_exam" as const,
+    originProblemId: null,
     score: null,
     ...extra,
   });
@@ -187,7 +193,9 @@ describe("[T7.9] 예측 문제지 생성기 (11 §3 L6 + §10)", () => {
 
     for (const q of paper.questions) expect(q.relaxed).toEqual([]);
     expect(paper.questions.filter((q) => q.qtype === "서술형")).toHaveLength(2);
-    expect(paper.questions.filter((q) => q.difficulty === "easy")).toHaveLength(4);
+    expect(paper.questions.filter((q) => q.difficulty === "easy")).toHaveLength(
+      4,
+    );
   });
 
   it("그 학교가 과거에 낸 문항을 먼저 고른다 (11 §3 L6 우선순위 ①)", () => {
@@ -331,5 +339,75 @@ describe("[T7.9] 예측 문제지 생성기 (11 §3 L6 + §10)", () => {
       candidates: exactCandidates(),
     });
     expect(() => predictedPaperSchema.parse(paper)).not.toThrow();
+  });
+});
+
+/**
+ * 왜 이 묶음이 따로 있는가 — **`source` 하나로는 11 §3 L6 의 순서를 지킬 수 없다.**
+ *
+ * 문서의 재료 우선순위는 `③ 자작/RPM → ④ 부족분만 AI 변형` 이다. 그런데 RPM 교재 이관본과
+ * AI 변형본이 **둘 다 `source = "transformed"`** 로 들어온다
+ * (`src/lib/import/convertRpm.ts` 와 `src/lib/ai/transformer.ts:132`).
+ * 즉 열거형만 보면 ③과 ④가 같은 값이라 갈리지 않는다.
+ *
+ * 둘을 가르는 것은 `originProblemId` 다 — RPM 은 우리 DB 에 원본이 없어 NULL 이고(전량 4,862),
+ * AI 변형은 원본 id 를 갖는다. 「비어 있는 컬럼」이 아니라 **유일한 판별자**다.
+ *
+ * 지금은 AI 변형이 프로덕션에 0건이라 이 결함이 보이지 않는다. 원장님이 변형 기능을 처음
+ * 쓰는 순간 조용히 드러난다 — 그래서 그 순간을 기다리지 않고 여기서 고정한다.
+ */
+describe("예측 문제지 — 재료 우선순위(11 §3 L6)", () => {
+  const AI_VARIANT = 11; // pid 가 더 작다 — 동점이면 이쪽이 뽑힌다
+  const RPM = 12;
+  const MANUAL = 13;
+
+  /** UNIT_A·easy·객관식 칸 하나를 두 후보가 다투게 만든다. */
+  function contested(...extras: PaperCandidate[]): PaperCandidate[] {
+    return [
+      ...exactCandidates().filter((c) => c.problemId !== pid(3)),
+      ...extras,
+    ];
+  }
+
+  it("RPM 교재본을 AI 변형본보다 먼저 쓴다 (③ before ④)", () => {
+    const paper = composePredictedPaper({
+      blueprint: blueprint(),
+      candidates: contested(
+        candidate(AI_VARIANT, UNIT_A, "easy", "객관식", {
+          source: "transformed",
+          originProblemId: pid(1),
+        }),
+        candidate(RPM, UNIT_A, "easy", "객관식", {
+          source: "transformed",
+          originProblemId: null,
+        }),
+      ),
+    });
+
+    expect(paper.ok).toBe(true);
+    if (!paper.ok) return;
+
+    const ids = paper.questions.map((q) => q.problemId);
+    expect(ids).toContain(pid(RPM));
+    expect(ids).not.toContain(pid(AI_VARIANT));
+  });
+
+  it("자작과 RPM 은 같은 등급이다 — 출처로 갈리지 않는다 (③)", () => {
+    const paper = composePredictedPaper({
+      blueprint: blueprint(),
+      candidates: contested(
+        candidate(RPM, UNIT_A, "easy", "객관식", {
+          source: "transformed",
+          originProblemId: null,
+        }),
+        candidate(MANUAL, UNIT_A, "easy", "객관식", { source: "manual" }),
+      ),
+    });
+
+    expect(paper.ok).toBe(true);
+    if (!paper.ok) return;
+
+    // 등급이 같으면 problemId 로 결정된다 — RPM(12) 이 자작(13) 보다 작다.
+    expect(paper.questions.map((q) => q.problemId)).toContain(pid(RPM));
   });
 });

@@ -1,0 +1,18 @@
+{
+ "적용": "판정 보류 2건 종결 — 1건 이동+출제 복귀, 1건 그림 유실로 제외 유지",
+ "되돌리기": "ALLOW_UNIT_FIX=1 npx tsx scripts/classify/apply-unit-audit-hold-resolve.ts --revert",
+ "이동": [
+  {
+   "id": "c0c866d0-c1da-4249-9af0-af88a64a2709",
+   "fromUnitId": "ce589a6a-3d4c-4e26-84c7-9ac273cef767",
+   "toUnitId": "0bf7d13f-6e7a-490d-bf0c-ba54a76e2e54",
+   "directUseAllowed": false
+  }
+ ],
+ "출제제외유지": [
+  {
+   "problemId": "c0c130e1-6d7d-4227-ae83-4ce7376c30fa",
+   "사유": "그림 유실 — 본문이 그림을 지목하는데 figureUrls·figureSvg 가 모두 비었다"
+  }
+ ]
+}
