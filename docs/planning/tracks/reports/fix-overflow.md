@@ -387,12 +387,12 @@ npx tsx scripts/qa/analyze-choice-width-bias.ts
 
 | 항목                      | 결과                                                                       |
 | ------------------------- | -------------------------------------------------------------------------- |
-| `npm run test`            | **1,413 통과** · 1 skip · 0 실패                                           |
+| `npm run test`            | **1,416 통과** · 1 skip · 0 실패                                           |
 | `npx tsc --noEmit`        | **0**                                                                      |
 | `npm run lint`            | **0 error** (경고 1 — 기존 `import/no-anonymous-default-export`)           |
 | `npm run lint:affordance` | 통과                                                                       |
 | `npm run test:adv`        | `_adv-print-overflow` **2건 빨강** — 둘 다 §7 의 지면 배치 항목이라 의도적 |
-| 커밋                      | 수리마다 분리 (7개)                                                        |
+| 커밋                      | 수리마다 분리 (9개)                                                        |
 | main 병합                 | **안 함**                                                                  |
 | 인쇄물 출력 결과          | **변화 없음** (지면 CSS·분할·정원 모두 그대로)                             |
 
