@@ -286,6 +286,12 @@ function findBulletItems(probe: string): ItemHit[] {
  * (실측 2aa85246 `<조건>⑴ 다항식 A는 …⑵ …⑶ …`). 그때는 하나도 끊지 않는다 —
  * 첫 번호만 봐주고 `⑵` 에서 끊으면 조건 셋 중 둘이 상자 밖으로 튀어나간다.
  */
+/**
+ * 번호 바로 뒤에 붙어 «가리킴»을 만드는 조사. 띄어쓰기 없이 붙는 것만 본다 —
+ * `⑴의 풀이` 는 참조, `⑴ 다항식 A는` 은 항목 번호다.
+ */
+const REFERENCE_PARTICLE_RE = /^(?:의|에|은|는|을|를|과|와|이|가)/;
+
 const CONTENT_HEAD_RE = new RegExp(
   `^(?:\\s|[${BULLET_CHARS.join("")}]|ㅇ|○|\\$\\s*\\\\(?:circ|bullet)\\s*\\$)*`,
 );
@@ -318,8 +324,28 @@ function findBoxStop(
   numbering.sort((a, b) => a - b);
 
   const cuts: number[] = [];
-  // 머리에서 시작하는 번호 매김은 이 상자의 항목 번호다 — 하나도 끊지 않는다.
-  if (numbering.length > 0 && numbering[0]! > head) cuts.push(numbering[0]!);
+  /*
+   * 머리에서 시작하는 번호 매김은 이 상자의 항목 번호다 — 하나도 끊지 않는다.
+   *
+   * 🔴 다만 머리의 번호가 **가리키기만** 할 때는 면제하면 안 된다(적대적 리뷰 ① §3).
+   *    `<조건>∘⑴의 풀이 과정에 …` 은 조건이 하위 문항 ⑴ 을 **참조**하는 것이지
+   *    상자 자기 항목 번호가 아니다. 그런데 면제가 켜지면 뒤에 오는 **진짜 ⑴⑵ 발문**
+   *    까지 통째로 삼킨다(실측 2fd487f4 · 0cedea03).
+   *
+   *    가르는 신호: 항목 번호는 뒤에 **띄어쓰기나 내용**이 오고(`⑴ 다항식 A는 …`,
+   *    실측 2aa85246), 참조는 조사가 **바로 붙는다**(`⑴의`, `⑵에서`).
+   *    「전부 아니면 전무」를 쓰면 손상된 쪽에 유리하게 기운다.
+   */
+  const headIsReference =
+    numbering.length > 0 &&
+    numbering[0]! <= head &&
+    REFERENCE_PARTICLE_RE.test(
+      text.slice(numbering[0]! + 1, numbering[0]! + 3),
+    );
+  if (numbering.length > 0 && (numbering[0]! > head || headIsReference))
+    cuts.push(
+      headIsReference ? (numbering[1] ?? numbering[0]!) : numbering[0]!,
+    );
 
   const header = EXAM_HEADER_RE.exec(content);
   if (header) cuts.push(contentStart + header.index);
@@ -723,7 +749,11 @@ function isBetweenMathSpans(text: string, at: number): boolean {
  * (실측 1ed8fb78). `□` 를 불릿 목록에 넣지 않는 이유도 같다 — `□ABCD` 는
  * 도형 표기이지 항목이 아니다(실측 11830247).
  */
-function findBareConditionBox(text: string, probe: string): FoundBox | null {
+function findBareConditionBox(
+  text: string,
+  probe: string,
+  subQuestions: readonly number[] = [],
+): FoundBox | null {
   BARE_CONDITION_TRIGGER.lastIndex = 0;
   const trigger = BARE_CONDITION_TRIGGER.exec(probe);
   if (!trigger) return null;
@@ -750,15 +780,27 @@ function findBareConditionBox(text: string, probe: string): FoundBox | null {
     contentProbe,
     hits[hits.length - 1]!.start - hits[0]!.start,
   );
-  const limit = tail >= 0 ? tail : content.length;
+  let limit = tail >= 0 ? tail : content.length;
   if (endsWithQuestion(content.slice(0, limit))) return null;
+
+  /*
+   * 🔴 회귀 ① 의 수리(`findBoxStop`)가 **이 경로에는 안 걸려 있었다.**
+   *    마커 있는 상자만 하위 문항·시험지 머리말에서 끊고, 마커 없는 조건 상자는
+   *    문단 끝까지 먹었다 — 고쳤다던 결함이 옆문으로 돌아왔다(적대적 리뷰 ① §3).
+   *    실측 e7ae0c15 · 42736426.
+   */
+  const stopAt = findBoxStop(text, start, start + limit, subQuestions);
+  if (stopAt > start) limit = Math.min(limit, stopAt - start);
 
   const items: string[] = [];
   for (let i = 0; i < hits.length; i += 1) {
-    const from = hits[i]!.start - hits[0]!.start;
-    const to =
-      i + 1 < hits.length ? hits[i + 1]!.start - hits[0]!.start : limit;
-    const body = content.slice(from, to).trim();
+    const from0 = hits[i]!.start - hits[0]!.start;
+    if (from0 >= limit) break; // 끊긴 자리 뒤의 항목은 상자 것이 아니다
+    const to = Math.min(
+      i + 1 < hits.length ? hits[i + 1]!.start - hits[0]!.start : limit,
+      limit,
+    );
+    const body = content.slice(from0, to).trim();
     if (body.length > 0) items.push(body);
   }
   if (items.length < 2) return null;
@@ -842,8 +884,10 @@ export function splitBoxSegments(raw: string): ContentSegment[] {
   if (markers.length === 0) {
     // 마커가 없어도 발문이 조건·나열을 예고하고 항목이 있으면 상자로 그린다.
     const blank = maskMathInPlace(text);
+    const bareSubQuestions = findSubQuestionMarkers(text).map((m) => m.index);
     const bare =
-      findBareConditionBox(text, blank) ?? findEnumerationBox(text, blank);
+      findBareConditionBox(text, blank, bareSubQuestions) ??
+      findEnumerationBox(text, blank);
     return bare ? assemble(text, [bare]) : [{ kind: "text", text: raw }];
   }
 
@@ -874,7 +918,8 @@ export function splitBoxSegments(raw: string): ContentSegment[] {
   if (found.length === 0) {
     // 마커는 있는데 상자를 못 세웠다 — 마커 없는 두 경로를 한 번 더 본다.
     const bare =
-      findBareConditionBox(text, probe) ?? findEnumerationBox(text, probe);
+      findBareConditionBox(text, probe, subQuestions) ??
+      findEnumerationBox(text, probe);
     return bare ? assemble(text, [bare]) : [{ kind: "text", text }];
   }
 
