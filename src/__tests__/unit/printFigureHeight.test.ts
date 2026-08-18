@@ -28,9 +28,29 @@ import {
   parseFigureDimensions,
 } from "@/lib/printOverflow";
 
-const { figureMaxWidth, figureGap, figureBlockTop } = JASEUP_MEASURED_PX;
+/**
+ * ⚠️ 기대값을 **상수에서 만들지 않는다.** 예전에는 `figureMaxWidth` 등을 그대로
+ *    읽어 기대값을 세워서, 상수를 264.567 → 363.5 로 망가뜨려도 **전부 초록**이었다
+ *    (적대적 리뷰 ④ — 상수 29개 전수 변이 시험). 채점기가 제품 상수를 읽어
+ *    동어반복이 되는 것과 같은 자리다. 여기서는 지면 실측 px 를 **리터럴**로 쓴다.
+ */
+/** `print:max-w-[70mm]` = 70mm × 96dpi / 25.4 (`printGeometryPin.test.ts` 가 잠근다). */
+const FIGURE_MAX_WIDTH_PX = 264.5669291338583;
+/** `gap-4` = 1rem. */
+const FIGURE_GAP_PX = 16;
+/** `mt-3` = 0.75rem. */
+const FIGURE_BLOCK_TOP_PX = 12;
 
 describe("[적대③-A] 그림 묶음의 지면 높이", () => {
+  it("모형이 쓰는 상수가 이 리터럴과 같다 — 둘이 갈라지면 가드가 죽는다", () => {
+    expect(JASEUP_MEASURED_PX.figureMaxWidth).toBeCloseTo(
+      FIGURE_MAX_WIDTH_PX,
+      3,
+    );
+    expect(JASEUP_MEASURED_PX.figureGap).toBe(FIGURE_GAP_PX);
+    expect(JASEUP_MEASURED_PX.figureBlockTop).toBe(FIGURE_BLOCK_TOP_PX);
+  });
+
   it("그림이 없으면 0px 이다 — 여백도 안 생긴다", () => {
     expect(estimateFigureBlockPx([])).toBe(0);
   });
@@ -38,12 +58,15 @@ describe("[적대③-A] 그림 묶음의 지면 높이", () => {
   it("폭 상한(70mm)을 넘는 그림은 비율대로 줄어든다", () => {
     // 실데이터 `/figures/4729/hwp-q03.png` 598×688 → 인쇄 264.57×304.4
     const px = estimateFigureBlockPx([{ width: 598, height: 688 }]);
-    expect(px).toBeCloseTo(figureBlockTop + (688 * figureMaxWidth) / 598, 1);
+    expect(px).toBeCloseTo(
+      FIGURE_BLOCK_TOP_PX + (688 * FIGURE_MAX_WIDTH_PX) / 598,
+      1,
+    );
   });
 
   it("상한보다 작은 그림은 **늘리지 않는다**", () => {
     const px = estimateFigureBlockPx([{ width: 100, height: 60 }]);
-    expect(px).toBeCloseTo(figureBlockTop + 60, 5);
+    expect(px).toBeCloseTo(FIGURE_BLOCK_TOP_PX + 60, 5);
   });
 
   it("나란히 놓이는 두 장은 **높은 쪽**만큼만 먹는다", () => {
@@ -52,20 +75,20 @@ describe("[적대③-A] 그림 묶음의 지면 높이", () => {
       { width: 100, height: 60 },
       { width: 120, height: 90 },
     ]);
-    expect(px).toBeCloseTo(figureBlockTop + 90, 5);
+    expect(px).toBeCloseTo(FIGURE_BLOCK_TOP_PX + 90, 5);
   });
 
   it("한 줄에 안 들어가면 줄바꿈하고 **행 간격까지** 먹는다", () => {
     // 264.57 × 2 + 16 = 545px > 363.5px → 두 줄
     const tall = { width: 400, height: 400 }; // → 264.57 × 264.57
-    const scaled = (400 * figureMaxWidth) / 400;
+    const scaled = (400 * FIGURE_MAX_WIDTH_PX) / 400;
     const px = estimateFigureBlockPx([tall, tall]);
-    expect(px).toBeCloseTo(figureBlockTop + scaled * 2 + figureGap, 1);
+    expect(px).toBeCloseTo(FIGURE_BLOCK_TOP_PX + scaled * 2 + FIGURE_GAP_PX, 1);
   });
 
   it("치수를 모르는 그림은 보수적 상수로 센다 — **0이 아니다**", () => {
     expect(estimateFigureBlockPx([null])).toBeCloseTo(
-      figureBlockTop + UNKNOWN_FIGURE_HEIGHT_PX,
+      FIGURE_BLOCK_TOP_PX + UNKNOWN_FIGURE_HEIGHT_PX,
       5,
     );
   });

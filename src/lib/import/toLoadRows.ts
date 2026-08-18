@@ -28,6 +28,18 @@ export interface ImportLoadRow {
   /** 원본에서 오려 온 그림 경로. 그림 없는 문항은 빈 배열. */
   figureUrls: string[];
   figureSource: string | null;
+  /**
+   * `figureUrls` 와 **같은 순서**로 짝지은 원본 치수 `[w1,h1,w2,h2,…]`.
+   *
+   * 인쇄 넘침 판정이 그림 높이를 계산하는 **유일한 근거**다 — 판정은 브라우저에서
+   * 돌아 이미지 파일을 못 읽는다(`src/lib/printOverflow.ts`). 적재 때 안 채우면
+   * 그 문항은 영원히 «모른다»가 되고, 실측으로 재현율이 96.1% → **60.4%** 로
+   * 떨어진다(적대적 리뷰 ④ C · `eval-overflow-rules.ts --no-dims`).
+   *
+   * ⚠️ **한 장이라도 못 읽으면 통째로 빈 배열이다.** 반쪽 배열은 짝이 어긋나
+   *    판정이 어차피 «모른다»로 받는데, 넣어 두면 «안다»고 착각할 여지만 남는다.
+   */
+  figureDims: number[];
 }
 
 export interface LoadRowSkip {
@@ -37,9 +49,21 @@ export interface LoadRowSkip {
 
 export const IMPORT_TEXT_MAX = 10_000;
 
+export interface ToLoadRowsOptions {
+  /**
+   * 그림 한 장의 원본 치수를 돌려준다. 못 읽으면 `null`.
+   *
+   * 파일 읽기를 주입으로 받는 이유: 이 함수는 순수해야 테스트가 쉽고, 적재
+   * 스크립트만 `public/figures` 를 볼 수 있기 때문이다
+   * (`scripts/import/load-classified.ts` 가 `readFigureDimensions` 를 넘긴다).
+   */
+  resolveDimensions?: (figureUrl: string) => [number, number] | null;
+}
+
 export function toLoadRows(
   classified: Array<ImportDraft & { unitId: string }>,
   userId: string,
+  options: ToLoadRowsOptions = {},
 ): { rows: ImportLoadRow[]; skipped: LoadRowSkip[] } {
   const rows: ImportLoadRow[] = [];
   const skipped: LoadRowSkip[] = [];
@@ -101,8 +125,23 @@ export function toLoadRows(
       score: draft.score ?? null,
       figureUrls: draft.figureUrls ?? [],
       figureSource: draft.figureSource ?? null,
+      figureDims: figureDimensions(draft.figureUrls ?? [], options),
     });
   }
 
   return { rows, skipped };
+}
+
+/**
+ * 그림 경로들의 치수를 짝지어 평탄 배열로. **한 장이라도 못 읽으면 빈 배열**이다 —
+ * 짝이 어긋난 값을 흘리면 판정이 안다고 착각한다(`parseFigureDimensions`).
+ */
+function figureDimensions(
+  figureUrls: readonly string[],
+  options: ToLoadRowsOptions,
+): number[] {
+  if (figureUrls.length === 0 || !options.resolveDimensions) return [];
+  const pairs = figureUrls.map((url) => options.resolveDimensions!(url));
+  if (pairs.some((pair) => !pair)) return [];
+  return pairs.flatMap((pair) => pair!);
 }

@@ -184,9 +184,18 @@ export function assertPaperSane(guard: {
     throw new Error(`본문 글꼴이 지면과 다르다: ${guard.fontSize}`);
 }
 
+/**
+ * 탐침 HTML 을 써서 `file://` URL 로 돌려준다.
+ *
+ * ⚠️ **이름에 프로세스 번호를 넣는다.** 측정이 둘 이상 동시에 돌면 같은 파일을
+ *    서로 덮어써서, Windows 에서는 `EBUSY` 로 죽고 (실제로 죽었다) 다른 OS 에서는
+ *    **한쪽이 남의 지면을 재고도 조용히 성공한다.** 이 저장소는 오르카 다중 세션이
+ *    기본이라(절대 규칙 9) 언제든 겹칠 수 있다.
+ */
 export function writeProbe(name: string, html: string): string {
   mkdirSync(CACHE_DIR, { recursive: true });
-  const file = path.join(CACHE_DIR, name);
+  const unique = name.replace(/(\.[^.]+)?$/, `-${process.pid}$1`);
+  const file = path.join(CACHE_DIR, unique);
   writeFileSync(file, html, "utf8");
   return pathToFileURL(file).href;
 }

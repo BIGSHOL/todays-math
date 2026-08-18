@@ -7,10 +7,12 @@
  *
  *   npx tsx scripts/qa/backfill-figure-dimensions.ts             # 드라이런 (기본)
  *   npx tsx scripts/qa/backfill-figure-dimensions.ts --apply     # 실제 적재
- *   npx tsx scripts/qa/backfill-figure-dimensions.ts --revert    # 전량 되돌리기
+ *   npx tsx scripts/qa/backfill-figure-dimensions.ts --revert    # 전량 되돌리기(드라이런)
+ *   npx tsx scripts/qa/backfill-figure-dimensions.ts --check     # 치수가 빈 문항 세기
  *
  * ⚠️ 공유 DB(D-31)다. 기본은 **드라이런**이고, `--apply` 는 `ALLOW_SHARED_IMPORT=1`
- *    이 있어야만 연다(2026-08-14 적재 사고 뒤 굳은 규칙).
+ *    이 있어야만 연다(2026-08-14 적재 사고 뒤 굳은 규칙). **`--revert --apply` 도 같다** —
+ *    예전에는 되돌리기가 그 검사보다 위에 있어 게이트를 건너뛰었다(적대적 리뷰 ④ D).
  *
  * ⚠️ **모르는 것은 안 쓴다.** 파일이 없거나 머리를 못 읽으면 그 문항은 건너뛴다 —
  *    빈 배열이 곧 「모른다」이고, 판정은 그때 보수적 상수를 쓴다. 추측한 치수를
@@ -20,16 +22,11 @@
  *    없애려면 `ALTER TABLE "problem" DROP COLUMN "figure_dims";`.
  *    **이 컬럼은 순수 추가라 기존 데이터를 한 바이트도 안 건드린다.**
  */
-import { readFileSync } from "node:fs";
-import path from "node:path";
-
 import { PrismaClient } from "@prisma/client";
 
-import { readImageDimensions } from "../../src/lib/printImageDimensions";
+import { readFigureDimensions } from "../../src/lib/import/figureDimensionsFromPublic";
 
 const prisma = new PrismaClient();
-const PUBLIC_ROOT = path.join(process.cwd(), "public");
-const HEAD_BYTES = 256 * 1024;
 
 interface Row {
   id: string;
@@ -37,26 +34,29 @@ interface Row {
   figureDims: number[];
 }
 
-const dimensionCache = new Map<string, [number, number] | null>();
+/**
+ * 치수 읽기는 **적재 파이프라인과 같은 함수**를 쓴다. 예전에는 스크립트마다 제
+ * 사본이 있었고, 정작 문항이 들어오는 길(`toLoadRows`)에는 아무것도 없었다
+ * (적대적 리뷰 ④ C). 한 곳만 둔다.
+ */
+const dimensionsFor = readFigureDimensions;
 
-function dimensionsFor(url: string): [number, number] | null {
-  const cached = dimensionCache.get(url);
-  if (cached !== undefined) return cached;
-  let result: [number, number] | null = null;
-  if (url.startsWith("/")) {
-    try {
-      const head = readFileSync(path.join(PUBLIC_ROOT, url)).subarray(
-        0,
-        HEAD_BYTES,
-      );
-      const measured = readImageDimensions(head);
-      if (measured) result = [measured.width, measured.height];
-    } catch {
-      result = null;
-    }
-  }
-  dimensionCache.set(url, result);
-  return result;
+/** 그림은 있는데 치수가 빈 문항을 센다 — 적재가 새는지 보는 자리다. */
+async function check() {
+  const [{ missing, total }] = (await prisma.$queryRawUnsafe(
+    `SELECT count(*)::int AS total,
+            count(*) FILTER (WHERE cardinality(figure_dims) <> cardinality(figure_urls) * 2)::int AS missing
+       FROM problem WHERE cardinality(figure_urls) > 0`,
+  )) as Array<{ missing: number; total: number }>;
+  console.log(
+    `그림 있는 문항 ${total.toLocaleString()} · 치수가 짝을 못 이루는 것 ${missing.toLocaleString()}`,
+  );
+  if (missing > 0)
+    console.log(
+      "→ 이 문항들은 넘침 판정이 «모른다»로 받는다(보수적 상수 207px).\n" +
+        "  적재 경로가 채우는지 먼저 보고(`toLoadRows` 의 resolveDimensions),\n" +
+        "  옛 문항이면 ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/backfill-figure-dimensions.ts --apply",
+    );
 }
 
 async function revert(apply: boolean) {
@@ -76,12 +76,20 @@ async function revert(apply: boolean) {
 
 async function main() {
   const apply = process.argv.includes("--apply");
-  if (process.argv.includes("--revert")) return revert(apply);
 
+  /**
+   * ⚠️ **게이트가 먼저다.** 예전에는 `--revert` 분기가 이 검사보다 위에 있어서
+   *    `--revert --apply` 한 줄이 환경변수 없이 공유 DB 전량을 지웠다
+   *    (적대적 리뷰 ④ D). 지워지는 것은 넘침 판정의 유일한 근거이고,
+   *    조용히 재현율 96.1% → 60.4% 가 된다 — 에러 없이 숫자만 나빠진다.
+   */
   if (apply && process.env.ALLOW_SHARED_IMPORT !== "1")
     throw new Error(
-      "공유 DB 쓰기는 ALLOW_SHARED_IMPORT=1 없이는 열지 않는다 (D-31).",
+      "공유 DB 쓰기는 ALLOW_SHARED_IMPORT=1 없이는 열지 않는다 (D-31). --revert 도 쓰기다.",
     );
+
+  if (process.argv.includes("--revert")) return revert(apply);
+  if (process.argv.includes("--check")) return check();
 
   const rows = (await prisma.$queryRawUnsafe(
     `SELECT id, figure_urls AS "figureUrls", figure_dims AS "figureDims"

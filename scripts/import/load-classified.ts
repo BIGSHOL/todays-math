@@ -9,6 +9,7 @@ import path from "node:path";
 import type { PrismaClient } from "@prisma/client";
 
 import { allowSharedImport } from "../../src/lib/import/classifyDatabaseUrl";
+import { readFigureDimensions } from "../../src/lib/import/figureDimensionsFromPublic";
 import {
   toLoadRows,
   type ImportLoadRow,
@@ -164,7 +165,11 @@ export async function loadClassifiedAtomically(
         remapped.push({ ...draft, unitId });
       }
 
-      const { rows, skipped } = toLoadRows(remapped, user.id);
+      // 그림 치수를 **적재 때** 채운다. 판정은 브라우저에서 돌아 파일을 못 읽으므로
+      // 여기서 안 채우면 그 문항은 영원히 «모른다»가 된다(적대적 리뷰 ④ C).
+      const { rows, skipped } = toLoadRows(remapped, user.id, {
+        resolveDimensions: readFigureDimensions,
+      });
       const existing = await tx.problem.findMany({
         where: { userId: user.id },
         select: {

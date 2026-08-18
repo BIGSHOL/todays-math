@@ -180,6 +180,37 @@ export function estimateFigureBlockPx(
  * ──────────────────────────────────────────────────────────────────────── */
 
 /**
+ * **세로로 자리를 더 먹는 수식.** `displayWidth` 는 폭만 재므로 `\frac` 를 «두 글자»로
+ * 보지만, 지면에서는 분자·분모가 위아래로 쌓여 한 줄로 안 끝난다.
+ *
+ * ⚠️ **문제지와 정답지가 같은 항을 쓴다.** 2026-08-18 수리는 이 항을 해설 자에만
+ *    배선하고 문제지 자에는 안 넣었다. 그래서 문제지 쪽 높이 모형이 «한 방향으로»
+ *    짧았다 — 전수 47,152건에서 20px 넘게 과소평가한 8,462건(17.9%)의 **97.4%가
+ *    세로 수식이 있는 문항**이다(오차 20px 이내인 쪽은 32.7%). 세로 수식 개수별
+ *    평균 오차: 0개 **+4.0px** · 3~5개 **−22.0px** · 6~10개 **−36.3px**.
+ *    과소평가는 곧 «놓침»이고, 놓침은 학생 손에 겹쳐 찍힌 시험지로 간다.
+ *
+ * 실측 효과 (`scripts/qa/eval-overflow-rules.ts`, 같은 캐시로 전후 채점)
+ * ```
+ * 해설  1,500건   |오차|<=20px  80.7% → 86.1%   과소 13.5% → 6.7%
+ * 문제지 47,152건 |오차|<=20px  71.8% → 83.7%   과소 17.9% → 5.3%
+ *                 놓침 105 → 21 (이어지는 장) · 99 → 18 (첫 장)
+ * ```
+ *
+ * ⚠️ 값을 옮기려면 **양쪽을 같이** 재라. 6px 이면 놓침이 3까지 내려가지만 헛것이
+ *    141건 늘어(정밀도 74.1% → 72.8%) 경고 부담이 커진다. 4px 은 해설에서 이미
+ *    검증된 값이고 문제지에서도 무릎이다 — **한 숫자를 두 곳이 쓴다.**
+ */
+const TALL_MATH_RE =
+  /\\(?:d?frac|sum|int|prod|lim|binom|begin\{[a-z]*matrix\}|begin\{cases\}|begin\{array\}|sqrt\[)/g;
+const TALL_MATH_EXTRA_PX = 4;
+
+/** 세로로 쌓이는 수식의 개수. `String.match` 는 전역 정규식의 lastIndex 를 안 남긴다. */
+function countTallMath(text: string): number {
+  return text.match(TALL_MATH_RE)?.length ?? 0;
+}
+
+/**
  * 문항 열 한 줄에 들어가는 **표시폭** — 셋이 다르다.
  *
  * 예전에는 셋 다 `COLUMN_UNITS = 59` 하나로 봤다. 지면 실측은
@@ -313,6 +344,12 @@ export function estimateProblemPx(
 
   px += estimateFigureBlockPx(figures);
   px += choicesBlockPx(choices);
+  /**
+   * **세로로 쌓이는 수식**은 폭이 아니라 높이를 먹는다. 해설 자에만 있던 항을
+   * 여기에도 건다(적대적 리뷰 ④ A). 원문 전체에서 세는 이유는 발문·상자·보기 어디에
+   * 있든 그 줄이 높아지기 때문이다 — 자리를 가리지 않는다.
+   */
+  px += countTallMath(content) * TALL_MATH_EXTRA_PX;
   return px;
 }
 
@@ -378,6 +415,25 @@ export const OVERFLOW_LINE_LIMIT_FIRST_PAGE = Math.floor(
   JASEUP_MEASURED_PX.firstPageSlot / JASEUP_MEASURED_PX.line,
 );
 
+/**
+ * 그 장에 문항이 **하나뿐**일 때의 한계 — 칸을 통째로 쓰므로 두 배가 넘는다.
+ *
+ * `.problemItem` 은 `flex: 1 1 0%` 다. 칸은 «몇째 장인가»가 아니라
+ * **«그 장에 몇 개인가»**로 갈린다. 문항 수가 홀수면 마지막 장에 하나가 남고,
+ * 그 문항은 실측 997px(첫 장이면 838px)을 혼자 쓴다. 판정이 484/405 로 재면
+ * 그 자리는 **늘 헛경고**다 — 25문항 시험지의 25번이 그 자리다(적대적 리뷰 ④ B).
+ *
+ * 한계도 다른 둘과 같이 **칸에서 유도한다.** 손으로 고르면 지면을 다시 재도
+ * 한쪽만 따라온다.
+ */
+export const OVERFLOW_LINE_LIMIT_SOLO = Math.floor(
+  JASEUP_MEASURED_PX.soloContinuationSlot / JASEUP_MEASURED_PX.line,
+);
+
+export const OVERFLOW_LINE_LIMIT_SOLO_FIRST_PAGE = Math.floor(
+  JASEUP_MEASURED_PX.soloFirstPageSlot / JASEUP_MEASURED_PX.line,
+);
+
 export interface OverflowRisk {
   /** 지면에 찍히는 문항 번호(1부터). 배열 위치가 아니다 — 원장이 지면에서 찾는 번호다. */
   number: number;
@@ -396,9 +452,16 @@ export function assessOverflowRisk(
    * 렌더러와 열 수를 나눠 갖던 `fitsTwoColumns` 와 같은 자리다.
    */
   const pageOfIndex: number[] = [];
+  /**
+   * 그 장에 **몇 개**가 놓이는지도 같이 받는다. 칸은 `flex: 1 1 0%` 로 나뉘므로
+   * 문항 수가 곧 칸 크기다 — 하나뿐이면 두 배가 넘는다(적대적 리뷰 ④ B).
+   */
+  const countOnPage: number[] = [];
   packProblems(problems).forEach((page, pageIndex) => {
-    for (let i = 0; i < page.problems.length; i += 1)
+    for (let i = 0; i < page.problems.length; i += 1) {
       pageOfIndex.push(pageIndex + 1);
+      countOnPage.push(page.problems.length);
+    }
   });
 
   problems.forEach((problem, index) => {
@@ -413,10 +476,16 @@ export function assessOverflowRisk(
     // 같은 문항이 둘 다에 걸리면 사유를 겹쳐 적지 않는다 — 원장이 읽을 문장이다.
     const lines = estimateProblemLines(problem.content, figures);
     // 첫 장은 칸이 3.9줄 좁다 — 같은 문항이라도 앞자리면 더 엄격하게 본다.
+    // 그리고 그 장에 문항이 하나뿐이면 칸을 통째로 쓴다 — 두 배가 넘는다.
     const onFirstPage = pageOfIndex[index] === 1;
-    const limit = onFirstPage
-      ? OVERFLOW_LINE_LIMIT_FIRST_PAGE
-      : OVERFLOW_LINE_LIMIT;
+    const alone = countOnPage[index] === 1;
+    const limit = alone
+      ? onFirstPage
+        ? OVERFLOW_LINE_LIMIT_SOLO_FIRST_PAGE
+        : OVERFLOW_LINE_LIMIT_SOLO
+      : onFirstPage
+        ? OVERFLOW_LINE_LIMIT_FIRST_PAGE
+        : OVERFLOW_LINE_LIMIT;
     if (!reasons.length && lines > limit) {
       // 높이의 절반 넘게가 그림이면 원장이 지면에서 찾을 것도 그림이다.
       // 사유가 가리키는 곳이 틀리면 경고가 있어도 지나친다(리뷰 §3).
@@ -425,8 +494,13 @@ export function assessOverflowRisk(
         figureLines * 2 >= lines ? "그림이 크다" : "배치가 높다(상자·보기 1열)";
       // 첫 장에서만 걸리는 문항은 **뒤로 옮기면 해결된다.** 그게 원장이 할 일이라
       // 사유에 적는다 — 사유가 가리키는 곳이 곧 손볼 곳이어야 한다.
+      // 같은 자리 수(혼자냐 둘이냐)로 이어지는 장에 놓았을 때의 한계와 견준다 —
+      // 「뒤로 옮기면 된다」가 참일 때만 그렇게 적어야 한다.
+      const continuationLimit = alone
+        ? OVERFLOW_LINE_LIMIT_SOLO
+        : OVERFLOW_LINE_LIMIT;
       reasons.push(
-        onFirstPage && lines <= OVERFLOW_LINE_LIMIT
+        onFirstPage && lines <= continuationLimit
           ? `${what} · 첫 장은 칸이 좁다`
           : what,
       );
@@ -452,13 +526,16 @@ export function assessOverflowRisk(
  * 해설 한 단에 들어가는 **표시폭**.
  *
  * 단 폭은 331px 이고 본문은 11.5px 다. 글자 폭만 따지면 55 단위쯤이어야 하는데
- * 실측에 맞춘 값은 **50** 이다 — `displayWidth` 의 수식 글리프 근사가 해설(수식
+ * 실측에 맞춘 값은 **52** 다 — `displayWidth` 의 수식 글리프 근사가 해설(수식
  * 밀도가 본문보다 훨씬 높다)에서 덜 세기 때문이다. 여기서 근사를 고치는 대신
  * **자를 실측에 맞춘다** — 그게 이 저장소가 반복해서 배운 것이다(문턱이 아니라 자).
  *
  * 맞춤 근거: 해설 1,500건을 지면에 그려 높이를 재고 격자 탐색
- * (`scripts/qa/measure-answerkey-units.tsx` + 채점). 50/52 조합에서
+ * (`scripts/qa/measure-answerkey-units.tsx` + 채점). 50~52 구간에서
  * 오차 |20px| 이내가 **81.7%** (중앙 +2px · p05 −33px · p95 +29px).
+ *
+ * ⚠️ 2026-08-18 적대적 리뷰 ④: 이 주석이 「값은 50」이라고 적고 코드는 52 였다.
+ *    **주석이 코드보다 오래 산다** — 앞 트랙이 `.problemBox` 로 데인 그 자리다.
  */
 const SOLUTION_UNITS_PER_LINE = 52;
 
@@ -467,19 +544,6 @@ const SOLUTION_UNITS_PER_LINE = 52;
  * 실측: 제목 줄 26.4px + 마진 4px + 패딩 약 4px + `margin-bottom: 14px` ≈ 52px.
  */
 const SOLUTION_CHROME_PX = 48;
-
-/**
- * **세로로 자리를 더 먹는 수식.** `displayWidth` 는 폭만 재므로 `rac` 를 «두 글자»로
- * 보지만, 지면에서는 분자·분모가 위아래로 쌓여 한 줄로 안 끝난다. 해설은 본문보다
- * 수식 밀도가 훨씬 높아 이 몫이 그대로 «놓침»이 된다.
- *
- * 실측 1,500건에서 이 항을 넣으면 오차 |20px| 이내가 80.7% → **86.1%** 로 오르고,
- * 20px 넘게 **과소평가**하는 비율이 13.5% → **6.7%** 로 준다. 과소평가는 곧 놓침이라
- * 정확도보다 이쪽이 중요하다.
- */
-const TALL_MATH_RE =
-  /\\(?:d?frac|sum|int|prod|lim|binom|begin\{[a-z]*matrix\}|begin\{cases\}|sqrt\[)/g;
-const TALL_MATH_EXTRA_PX = 4;
 
 /**
  * 「빠른 정답」 상자의 높이. 이 상자는 정답지 **1쪽에만** 얹히고, 그만큼 해설 칸이
@@ -536,8 +600,7 @@ export function estimateSolutionPx(solution: string | null): number {
     1,
     Math.ceil(displayWidth(text) / SOLUTION_UNITS_PER_LINE),
   );
-  TALL_MATH_RE.lastIndex = 0;
-  const tall = text.match(TALL_MATH_RE)?.length ?? 0;
+  const tall = countTallMath(text);
   return (
     SOLUTION_CHROME_PX +
     lines * JASEUP_MEASURED_PX.solutionLine +

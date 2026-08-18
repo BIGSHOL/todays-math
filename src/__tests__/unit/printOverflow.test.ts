@@ -19,6 +19,8 @@ import {
   assessOverflowRisk,
   OVERFLOW_LINE_LIMIT,
   OVERFLOW_LINE_LIMIT_FIRST_PAGE,
+  OVERFLOW_LINE_LIMIT_SOLO,
+  OVERFLOW_LINE_LIMIT_SOLO_FIRST_PAGE,
   OVERFLOW_WIDTH_LIMIT,
   OVERFLOW_FIGURE_LIMIT,
 } from "@/lib/printOverflow";
@@ -31,6 +33,16 @@ const problem = (over: Partial<TestPrintProblem> = {}): TestPrintProblem => ({
   solution: null,
   ...over,
 });
+
+/**
+ * 문항 칸은 «그 장에 몇 개인가»로 갈린다 — 혼자면 두 배다(`flex: 1 1 0%`).
+ * 그래서 «보통 자리»(장에 두 문항)를 보려면 **짝을 채워야** 한다.
+ * 혼자 놓이는 자리는 아래 [적대④-B] 에서 따로 잠근다.
+ */
+const paired = (target: TestPrintProblem): TestPrintProblem[] => [
+  target,
+  problem({ id: "짝", content: "" }),
+];
 
 describe("[T2] 인쇄 넘침 위험 판정", () => {
   it("보통 문항은 경고하지 않는다", () => {
@@ -146,37 +158,44 @@ describe("[적대③-A] 그림 높이를 판정이 본다", () => {
 5. $3\sqrt{10}\frac{}{10}$`;
 
   it("그림 1장짜리도 칸을 넘기면 경고한다", () => {
-    const risks = assessOverflowRisk([
-      problem({
-        content: ONE_FIGURE_CONTENT,
-        figureUrls: ["/figures/4729/hwp-q03.png"],
-        figureDims: [598, 688],
-      }),
-    ]);
+    const risks = assessOverflowRisk(
+      paired(
+        problem({
+          content: ONE_FIGURE_CONTENT,
+          figureUrls: ["/figures/4729/hwp-q03.png"],
+          figureDims: [598, 688],
+        }),
+      ),
+    );
     expect(risks).toHaveLength(1);
     expect(risks[0].reasons).toContain("그림이 크다");
   });
 
   it("같은 본문에 작은 그림이면 경고하지 않는다 — 장수가 아니라 높이다", () => {
     expect(
-      assessOverflowRisk([
-        problem({
-          content: ONE_FIGURE_CONTENT,
-          figureUrls: ["/figures/4729/hwp-q03.png"],
-          figureDims: [598, 60],
-        }),
-      ]),
+      assessOverflowRisk(
+        paired(
+          problem({
+            content: ONE_FIGURE_CONTENT,
+            figureUrls: ["/figures/4729/hwp-q03.png"],
+            figureDims: [598, 60],
+          }),
+        ),
+      ),
     ).toEqual([]);
   });
 
   it("사유는 **그림**을 가리킨다 — 원장이 지면에서 찾을 것과 같아야 한다", () => {
-    const risks = assessOverflowRisk([
-      problem({
-        content: "짧은 발문이다.",
-        figureUrls: ["/f.png"],
-        figureDims: [300, 900],
-      }),
-    ]);
+    // 이어지는 장 한계(23줄)도 넘는 크기라 «첫 장» 단서가 안 붙는다.
+    const risks = assessOverflowRisk(
+      paired(
+        problem({
+          content: "짧은 발문이다.",
+          figureUrls: ["/f.png"],
+          figureDims: [300, 1400],
+        }),
+      ),
+    );
     expect(risks[0].reasons).toEqual(["그림이 크다"]);
   });
 
@@ -254,18 +273,20 @@ describe("[적대③-B] 장을 아는 판정", () => {
   });
 
   it("첫 장에서만 걸리면 **첫 장 때문**이라고 적는다 — 뒤로 옮기면 되니까", () => {
-    const risks = assessOverflowRisk([borderline()]);
+    const risks = assessOverflowRisk(paired(borderline()));
     expect(risks[0].reasons.join(" ")).toContain("첫 장");
   });
 
   it("이어지는 장 한계까지 넘는 문항은 첫 장 사유를 덧붙이지 않는다", () => {
-    const risks = assessOverflowRisk([
-      problem({
-        content: "짧은 발문이다.",
-        figureUrls: ["/f.png"],
-        figureDims: [200, 1200],
-      }),
-    ]);
+    const risks = assessOverflowRisk(
+      paired(
+        problem({
+          content: "짧은 발문이다.",
+          figureUrls: ["/f.png"],
+          figureDims: [200, 1200],
+        }),
+      ),
+    );
     expect(risks[0].reasons.join(" ")).not.toContain("첫 장");
   });
 
@@ -333,5 +354,74 @@ describe("[적대③-E] 넘침은 «잘림»이 아니라 «겹침»이다", () 
     expect(warning).not.toBe("");
     expect(warning).not.toMatch(/잘리|잘린|잘림/);
     expect(warning).toContain("겹쳐");
+  });
+});
+
+/**
+ * 🟢 회귀 가드 — 적대적 리뷰 ④ `[적대④-B]` 승격.
+ *
+ * `.problemItem` 은 `flex: 1 1 0%` 다. 그래서 칸은 «몇째 장인가»가 아니라
+ * **«그 장에 몇 개인가»**로 갈린다. 지면 실측:
+ *   이어지는 장 2문항 484px · **1문항 997px** / 첫 장 2문항 405px · **1문항 838px**
+ *
+ * 판정은 장만 알고 문항 수를 몰라서, 문항 수가 홀수인 시험지의 **마지막 문항**을
+ * 늘 실제 칸의 절반으로 쟀다 — 25문항 시험지의 25번이 그 자리다.
+ */
+describe("[적대④-B] 칸은 «그 장에 몇 개인가»로 갈린다", () => {
+  /** 그림 200×500 → 묶음 512px. 본문까지 594.8px — 484 는 넘고 997 은 안 넘는다. */
+  const tall = (id: string) =>
+    problem({
+      id,
+      content: "짧은 발문이다.",
+      figureUrls: ["/f.png"],
+      figureDims: [200, 500],
+    });
+
+  it("한계 넷 모두 제 칸 높이에서 나온다", () => {
+    const { line, soloContinuationSlot, soloFirstPageSlot } =
+      JASEUP_MEASURED_PX;
+    expect(OVERFLOW_LINE_LIMIT_SOLO).toBe(
+      Math.floor(soloContinuationSlot / line),
+    );
+    expect(OVERFLOW_LINE_LIMIT_SOLO_FIRST_PAGE).toBe(
+      Math.floor(soloFirstPageSlot / line),
+    );
+    // 혼자 쓰는 칸은 둘이 나눠 쓰는 칸의 두 배가 넘는다.
+    expect(OVERFLOW_LINE_LIMIT_SOLO).toBeGreaterThan(2 * OVERFLOW_LINE_LIMIT);
+    expect(OVERFLOW_LINE_LIMIT_SOLO_FIRST_PAGE).toBeGreaterThan(
+      2 * OVERFLOW_LINE_LIMIT_FIRST_PAGE,
+    );
+  });
+
+  it("홀수 시험지의 마지막 문항은 혼자 쓰는 칸으로 잰다", () => {
+    const risks = assessOverflowRisk([tall("a"), tall("b"), tall("c")]);
+    // 1·2번은 첫 장을 나눠 쓰므로 진짜 경고, 3번은 997px 을 혼자 쓴다.
+    expect(risks.map((r) => r.number)).toEqual([1, 2]);
+  });
+
+  it("짝수면 마지막 문항도 반씩 쓴다 — 같은 문항이 경고가 된다", () => {
+    const risks = assessOverflowRisk([
+      tall("a"),
+      tall("b"),
+      tall("c"),
+      tall("d"),
+    ]);
+    expect(risks.map((r) => r.number)).toEqual([1, 2, 3, 4]);
+  });
+
+  it("문항이 하나뿐인 시험지는 첫 장을 통째로 쓴다", () => {
+    expect(assessOverflowRisk([tall("solo")])).toEqual([]);
+  });
+
+  it("혼자 써도 안 들어가는 크기는 여전히 경고한다", () => {
+    const risks = assessOverflowRisk([
+      problem({
+        id: "huge",
+        content: "짧은 발문이다.",
+        figureUrls: ["/f.png"],
+        figureDims: [200, 1234],
+      }),
+    ]);
+    expect(risks).toHaveLength(1);
   });
 });
