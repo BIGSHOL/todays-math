@@ -188,3 +188,46 @@ describe("[적대③-D] 추정기의 «자»가 지면과 맞는가", () => {
     );
   });
 });
+
+/**
+ * 🟢 회귀 가드 — 적대적 리뷰 ④.
+ *
+ * 위 `[적대③-D]` 픽스처는 **세 열 폭을 가르지 못했다.** 보기 항목 폭 40·상자 항목
+ * 폭 60 은 문항 열(58.2단위)·보기 글자칸(55.2)·상자 항목칸(52.7) 어디서도 한 줄이라,
+ * 셋을 **한 값으로 뭉개도 전부 초록**이었다(상수 변이 시험으로 확인).
+ * 그래서 «셋이 갈리는 자리»의 폭으로 다시 잠근다.
+ */
+describe("[적대④] 세 열 폭이 실제로 갈린다", () => {
+  const stem = "다음 중 옳은 것은?";
+  /** 한글 한 글자 = 표시폭 2. */
+  const wide = "가".repeat(28); // 56단위 — 보기 글자칸(55.2)은 넘고 문항 열(58.2)은 안 넘는다
+  const narrow = "가".repeat(20); // 40단위 — 어느 열에서도 한 줄
+
+  it("1열 보기는 **보기 글자칸**으로 접는다 — 문항 열로 재면 한 줄로 보인다", () => {
+    const list = (body: string) =>
+      `${stem}\n1. ${body}\n2. ${body}\n3. ${body}\n4. ${body}\n5. ${body}`;
+    const grown =
+      (estimateProblemPx(list(wide)) - estimateProblemPx(list(narrow))) /
+      JASEUP_MEASURED_PX.line;
+    // 다섯 항목이 각각 한 줄씩 늘어야 한다. 문항 열로 재면 0줄이다.
+    expect(grown).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("상자 항목은 **상자 항목칸**으로 접는다 — 더 좁다", () => {
+    // 54단위 — 상자 항목칸(52.7)은 넘고 보기 글자칸(55.2)·문항 열은 안 넘는다.
+    const boxed = (body: string) =>
+      `다음 <보기>\n<보기>\nㄱ. ${body}\nㄴ. ${body}`;
+    const grown =
+      (estimateProblemPx(boxed("가".repeat(27))) -
+        estimateProblemPx(boxed("가".repeat(20)))) /
+      JASEUP_MEASURED_PX.line;
+    expect(grown).toBeGreaterThanOrEqual(1.5);
+  });
+
+  it("셋이 서로 다르다 — 상자가 가장 좁고 문항 열이 가장 넓다", () => {
+    const { boxItemColumn, choiceTextColumn, problemColumn } =
+      JASEUP_MEASURED_PX;
+    expect(boxItemColumn).toBeLessThan(choiceTextColumn);
+    expect(choiceTextColumn).toBeLessThan(problemColumn);
+  });
+});
