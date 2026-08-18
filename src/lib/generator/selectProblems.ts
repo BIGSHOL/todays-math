@@ -85,6 +85,12 @@ export interface SelectProblemsResult<
 /** 이 값을 넘겨 배치되면(3연속) 같은 유형이 반복 배치된 것으로 본다. */
 const MAX_CONSECUTIVE_SAME_TYPE = 2;
 
+/**
+ * 첫 장에서 칸이 좁은 자리의 수 — 장당 문항 수(`packProblems`)와 같다.
+ * `seatCapacities` 가 자리별 칸을 내주므로 여기서는 «어디까지가 첫 장인가»만 쓴다.
+ */
+const TIGHT_SEATS = seatCapacities(2).length;
+
 export function selectProblems<T extends SelectableProblem>(
   args: SelectProblemsArgs<T>,
 ): SelectProblemsResult<T> {
@@ -124,10 +130,52 @@ export function selectProblems<T extends SelectableProblem>(
   );
 
   return {
-    problems: arrangeByType(selected),
+    // ⑸-c 는 `arrangeByType` **뒤에** 온다 — 먼저 하면 유형 재배치가 도로 흩뜨린다.
+    problems: avoidTightFirstSeats(arrangeByType(selected)),
     substitutions,
     shortfall,
   };
+}
+
+/**
+ * ⑸-c — **큰 문항을 첫 장 1·2번에 안 놓는다. 최소 개입.**
+ *
+ * 첫 장 칸은 405px 로 이어지는 장(484px)보다 79px 좁다(머리글 + 「◆ 핵심 개념 정리」
+ * 상자가 얹힌다). 그래서 405~484px 짜리는 **앞자리에 앉을 때만** 넘친다 — ⑷ 로
+ * 걸러도 남는 몫이 정확히 그것이다(§11: ⑷ 만으로 8문항 0.105 · 25문항 0.123).
+ *
+ * 하는 일: 1·2번 자리에 그 칸을 넘는 문항이 오면 뒤쪽에서 **«서로 바꿔도 둘 다
+ * 들어가는»** 짝을 찾아 한 번 맞바꾼다. 최대 두 번 바뀐다.
+ *
+ * ⚠️ **완전 재배열(⑸-a·⑸-b)은 하지 않는다 — 원장님 확정.** 실측으로 같은 효과를
+ *    내면서 「같은 유형 3연속」을 33~56% 더 만든다. `arrangeByType` 가 막으려는
+ *    바로 그것이라, 순서를 거의 안 흔드는 이 형태만 쓴다(실측 +1% 안쪽).
+ *
+ * ⚠️ **맞바꿀 상대가 없으면 그냥 둔다.** 억지로 섞으면 유형 배치만 깨지고 경고는
+ *    그대로다 — 뒤가 전부 큰 문항이면 어디로 옮겨도 그 자리가 넘친다.
+ *
+ * 「모른다」는 여기서도 **위험한 쪽**이다(`risksTightSeat`). 그래서 본문을 안 실은
+ * 풀에서는 앞자리도 뒷자리도 «위험»이라 짝이 안 잡히고 — 한 번도 안 바뀐다.
+ */
+export function avoidTightFirstSeats<T extends SelectableProblem>(
+  items: T[],
+): T[] {
+  const seats = seatCapacities(items.length);
+  const out = [...items];
+  // 좁은 자리는 첫 장의 둘뿐이다. 그 뒤 자리는 손대지 않는다(최소 개입).
+  for (let i = 0; i < Math.min(TIGHT_SEATS, out.length); i += 1) {
+    if (!risksTightSeat(out[i]!, seats[i]!)) continue;
+    for (let j = out.length - 1; j >= TIGHT_SEATS; j -= 1) {
+      // 서로 바꿔서 **둘 다** 제 자리에 들어갈 때만 바꾼다.
+      if (risksTightSeat(out[j]!, seats[i]!)) continue;
+      if (risksTightSeat(out[i]!, seats[j]!)) continue;
+      const moved = out[i]!;
+      out[i] = out[j]!;
+      out[j] = moved;
+      break;
+    }
+  }
+  return out;
 }
 
 /**

@@ -23,6 +23,7 @@ import { describe, expect, it } from "vitest";
 import type { TestPrintProblem } from "@/components/print/types";
 import type { SelectableProblem } from "@/lib/generator/balanceDifficulty";
 import {
+  avoidTightFirstSeats,
   risksTightSeat,
   seatCapacitiesFor,
   selectProblems,
@@ -286,5 +287,95 @@ describe("[⑷] 출제의 후순위 판정 = 인쇄 판정의 경고", () => {
         asPrint([small("a"), small("b"), midsize("c"), midsize("d")]),
       ),
     ).toEqual([]);
+  });
+});
+
+/**
+ * **⑸-c 큰 문항을 첫 장 1·2번에 안 놓는다 — 최소 개입.**
+ *
+ * 첫 장 칸은 405px 로 이어지는 장(484px)보다 79px 좁다(머리글 + 「◆ 핵심 개념 정리」).
+ * 그래서 405~484px 짜리는 **1·2번에 앉을 때만** 넘친다 — ⑷ 로 걸러도 남는 몫이
+ * 정확히 그것이다(§11: ⑷ 만으로 8문항 0.105 · 25문항 0.123 이 남는다).
+ *
+ * ⚠️ **완전 재배열(⑸-a·⑸-b)은 하지 않는다.** 원장님이 그렇게 확정했다 — 실측으로
+ *    같은 효과를 내면서 「같은 유형 3연속」을 33~56% 더 만든다(`arrangeByType` 가
+ *    막으려는 바로 그것). ⑸-c 는 +1% 안쪽이다.
+ */
+describe("[⑸-c] 큰 문항을 첫 장 앞자리에 안 놓는다 (최대 두 번 맞바꿈)", () => {
+  const ids = (items: SelectableProblem[]) => items.map((p) => p.id);
+
+  it("1·2번에 첫 장 칸을 넘는 문항이 오면 뒤 문항과 맞바꾼다", () => {
+    const before = [
+      midsize("m-1"),
+      midsize("m-2"),
+      small("s-1"),
+      small("s-2"),
+      small("s-3"),
+      small("s-4"),
+      small("s-5"),
+      small("s-6"),
+    ];
+    const after = avoidTightFirstSeats(before);
+
+    expect(after).toHaveLength(before.length);
+    expect(ids(after).sort()).toEqual(ids(before).sort()); // 문항 구성은 그대로
+    expect(after[0]!.id).toMatch(/^s-/);
+    expect(after[1]!.id).toMatch(/^s-/);
+    expect(assessOverflowRisk(asPrint(after))).toEqual([]);
+  });
+
+  it("맞바꿀 상대가 없으면 그냥 둔다 — 억지로 섞지 않는다", () => {
+    // 전부 첫 장 칸을 넘는다. 어디로 옮겨도 앞자리가 나아지지 않는다.
+    const before = Array.from({ length: 8 }, (_, i) => midsize(`m-${i}`));
+    expect(ids(avoidTightFirstSeats(before))).toEqual(ids(before));
+  });
+
+  it("«서로 바꿔도 둘 다 들어가는» 짝만 고른다", () => {
+    // s-* 는 405px 에 들어가지만, t-1(594.8px)은 484px 자리로 가도 여전히 넘친다.
+    // 그런 맞바꿈은 경고를 옮길 뿐이므로 하지 않는다.
+    const before = [
+      tall("t-1"),
+      small("s-1"),
+      small("s-2"),
+      small("s-3"),
+      small("s-4"),
+      small("s-5"),
+    ];
+    expect(ids(avoidTightFirstSeats(before))).toEqual(ids(before));
+  });
+
+  it("홀수 시험지의 마지막 자리는 칸을 통째로 쓰므로 큰 문항이 갈 수 있다", () => {
+    // 자리 25개 = 2×405 · 22×484 · 1×997. t-1(594.8px)은 997px 자리에 들어간다.
+    const before = [
+      tall("t-1"),
+      ...Array.from({ length: 24 }, (_, i) => small(`s-${i}`)),
+    ];
+    const after = avoidTightFirstSeats(before);
+    expect(after[0]!.id).toMatch(/^s-/);
+    expect(after.at(-1)!.id).toBe("t-1");
+    expect(assessOverflowRisk(asPrint(after))).toEqual([]);
+  });
+
+  it("3번 이후 자리는 건드리지 않는다 — 최소 개입이다", () => {
+    const before = [
+      small("s-1"),
+      small("s-2"),
+      tall("t-1"),
+      small("s-3"),
+      small("s-4"),
+      small("s-5"),
+    ];
+    expect(ids(avoidTightFirstSeats(before))).toEqual(ids(before));
+  });
+
+  it("출제 결과에 그대로 걸린다 — 고른 문항을 지면에 올리면 경고가 없다", () => {
+    const pool = [
+      midsize("m-1"),
+      midsize("m-2"),
+      ...Array.from({ length: 6 }, (_, i) => small(`s-${i}`)),
+    ];
+    const { problems } = pick(pool, 8);
+    expect(problems).toHaveLength(8);
+    expect(assessOverflowRisk(asPrint(problems))).toEqual([]);
   });
 });
