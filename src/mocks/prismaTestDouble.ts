@@ -91,6 +91,13 @@ interface ProblemRow {
   content: string;
   answer: string;
   solution: string | null;
+  /** 원본 시험지에서 오려 온 그림 경로들 (`ProblemEntity` 에도 있다). */
+  figureUrls: string[];
+  /**
+   * `figureUrls` 와 같은 순서로 짝지은 원본 치수 `[w1,h1,…]`.
+   * 계약(`ProblemEntity`)엔 없고 DB 컬럼에만 있다 — 출제 ⑷ 와 넘침 판정이 읽는다.
+   */
+  figureDims: number[];
   reviewStatus: ReviewStatus;
   directUseAllowed: boolean;
   pool: "shared" | "private";
@@ -314,6 +321,8 @@ function toProblemRow(entity: ProblemEntity): ProblemRow {
     // MOCK_TEST_RESULT_PROBLEMS(score 직접 지정)로 별도 커버한다.
     score: null,
     questionType: null,
+    // 계약엔 없는 DB 컬럼 — 빈 배열이 실제 기본값이다(`@default([])`).
+    figureDims: [],
     createdAt: new Date(entity.createdAt),
     updatedAt: new Date(entity.updatedAt),
   };
@@ -326,6 +335,9 @@ function toFixtureProblemRow(
   return {
     ...fixture,
     questionType: null,
+    // 이 픽스처는 배점 채점용이라 그림 컬럼이 없다 — DB 기본값(`@default([])`)으로 채운다.
+    figureUrls: [],
+    figureDims: [],
     createdAt: new Date(fixture.createdAt),
     updatedAt: new Date(fixture.updatedAt),
   };
