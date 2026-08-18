@@ -16,6 +16,8 @@
  *   ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-math-residue.ts --apply
  *   ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-math-residue.ts --revert
  */
+import { gunzipSync } from "node:zlib";
+
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 import { PrismaClient } from "@prisma/client";
@@ -267,20 +269,28 @@ async function main(): Promise<void> {
   }
 }
 
+/** `.gz` 도 읽는다 — 추적 경로의 사본은 본문이 통째로 들어가 커서 압축해 둔다. */
+async function readLog(path: string): Promise<string> {
+  const bytes = await readFile(path);
+  if (path.endsWith(".gz")) return gunzipSync(bytes).toString("utf-8");
+  return bytes.toString("utf-8");
+}
+
 /**
  * `--log` 로 다른 경로를 줄 수 있다. `scripts/qa/reports/` 는 gitignore 라
  * 워크트리를 지우면 사라지므로, **적용한 로그는 추적되는 경로에 복사해 둔다**
- * (`docs/planning/tracks/reports/`). 그 복사본으로도 되돌릴 수 있어야
- * 되돌리기 경로가 진짜로 있는 것이다.
+ * (`docs/planning/tracks/reports/h-*.json.gz`). 그 복사본으로도 되돌릴 수 있어야
+ * 되돌리기 경로가 진짜로 있는 것이다 — 그래서 `.gz` 를 여기서 직접 푼다.
+ *
+ *   ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-math-residue.ts --revert \
+ *     --log docs/planning/tracks/reports/h-content-applied-pass1.json.gz
  */
 async function runRevert(
   prisma: PrismaClient,
   column: Column,
   logFile?: string,
 ): Promise<void> {
-  const log = JSON.parse(
-    await readFile(logFile ?? logPath(column), "utf-8"),
-  ) as {
+  const log = JSON.parse(await readLog(logFile ?? logPath(column))) as {
     column?: Column;
     items: Array<{ id: string; before: string; after: string }>;
   };
