@@ -17,12 +17,17 @@ import type { ProblemEntity } from "@/contracts/problem.contract";
 import type { ShortfallItem } from "@/contracts/test.contract";
 
 /**
- * 출제 엔진이 문항에 대해 **실제로 읽는 것 전부**. 딱 5개다.
+ * 출제 엔진이 문항에 대해 **실제로 읽는 것 전부**.
  *
- * `ProblemEntity` 를 그대로 받던 시절에는 조회가 본문·정답·풀이·도형 SVG(TEXT 4개 포함
- * 28컬럼)를 통째로 끌어왔다. 엔진은 그 중 아무것도 보지 않는다 — 구조적 타입이라
- * `ProblemEntity` 는 여기에 그대로 들어맞고(기존 테스트·호출부 무변경), 조회는
- * `findEligibleProblems` 가 select 로 5컬럼만 읽게 좁힐 수 있다.
+ * 앞의 다섯은 배분·자격이 읽고, 뒤의 셋은 **지면**이 읽는다(⑷, 2026-08-18 원장님 확정).
+ * 예전에는 뒤의 셋이 아예 없어서 출제 엔진이 「이 문항이 칸에 안 들어간다」를
+ * **구조적으로 알 수가 없었다** — 25문항 시험지의 89%에 넘침 경고가 떴다
+ * (적대적 리뷰 ④ §8 G). 판정은 아는데 고르는 쪽이 못 보던 자리다.
+ *
+ * 뒤의 셋이 **선택(optional)인 이유**: 이 셋 없이 부르는 호출부(단위 테스트·
+ * 지면과 무관한 조합)를 그대로 두기 위해서다. 없으면 엔진은 그 문항의 높이를
+ * 「모른다」로 받고 **후순위**로 돌린다 — 「모른다」를 «들어간다»로 세면 정책이
+ * 조용히 꺼지기 때문이다(`selectProblems` 의 `risksTightSeat` 주석 참조).
  */
 export interface SelectableProblem {
   id: string;
@@ -32,6 +37,12 @@ export interface SelectableProblem {
   problemType: string;
   /** false 면 변형 원본 전용 — 직접 출제하지 않는다(D-26). */
   directUseAllowed: boolean;
+  /** 본문 — 지면에서 몇 줄을 먹는지 재는 근거(`estimateProblemPx`). */
+  content?: string;
+  /** 그림 경로들. 개수가 곧 `figureDims` 의 짝 수다. */
+  figureUrls?: string[];
+  /** `figureUrls` 와 같은 순서로 짝지은 원본 치수 `[w1,h1,…]`. 짝이 어긋나면 «모른다». */
+  figureDims?: number[];
 }
 
 export interface SubstitutionRecord {
@@ -72,23 +83,39 @@ function groupByDifficulty<T extends SelectableProblem>(
 }
 
 /**
- * 후보 목록에서 유형 사용 빈도가 가장 낮은 문제부터 최대 `target`개를 뽑는다.
- * 동률이면 후보 목록 순서(호출자가 이미 시드로 셔플해 넘긴 순서)를 그대로 지킨다.
+ * 후보 목록에서 **⑴ 지면 칸에 들어가는 것 → ⑵ 유형 사용 빈도가 낮은 것** 순으로
+ * 최대 `target`개를 뽑는다. 동률이면 후보 목록 순서(호출자가 이미 시드로 셔플해
+ * 넘긴 순서)를 그대로 지킨다.
+ *
+ * ## 왜 지면이 유형보다 앞인가 (⑷)
+ *
+ * 「같은 유형 3연속 금지」의 **보장 자체**는 `arrangeByType` 이 나중에 따로 한다.
+ * 여기서 유형 빈도를 보는 것은 그 보장이 가능하도록 **구성을 미리 고르게 만드는**
+ * 보조 규칙일 뿐이라, 앞에 지면을 두어도 그 보장은 그대로다.
+ * 반대로 지면을 뒤에 두면 정책이 거의 안 듣는다 — 「아직 안 쓴 유형」 하나만 있으면
+ * 안 들어가는 문항이 그대로 뽑힌다.
+ *
+ * ⚠️ **제외가 아니라 후순위다.** 들어가는 후보가 떨어지면 안 들어가는 것도 그대로
+ *    뽑는다. 얇은 단원에서 출제가 막히면 안 된다(D-20 · `INSUFFICIENT_PROBLEMS`).
  */
 function pickTypeBalanced<T extends SelectableProblem>(
   candidates: T[],
   target: number,
   typeUsage: Map<string, number>,
+  seatRank: (problem: T) => number,
 ): T[] {
   const remaining = [...candidates];
   const picked: T[] = [];
 
   while (picked.length < target && remaining.length > 0) {
     let bestIndex = 0;
+    let bestRank = seatRank(remaining[0]!);
     let bestUsage = typeUsage.get(remaining[0]!.problemType) ?? 0;
     for (let i = 1; i < remaining.length; i++) {
+      const rank = seatRank(remaining[i]!);
       const usage = typeUsage.get(remaining[i]!.problemType) ?? 0;
-      if (usage < bestUsage) {
+      if (rank < bestRank || (rank === bestRank && usage < bestUsage)) {
+        bestRank = rank;
         bestUsage = usage;
         bestIndex = i;
       }
@@ -108,6 +135,13 @@ export function balanceDifficulty<T extends SelectableProblem>(
   pool: T[],
   ratio: DifficultyRatio,
   count: number,
+  /**
+   * 「이 문항이 지면 칸에 안 들어가는가」 — 0이 먼저, 1이 나중이다(⑷).
+   * 규칙은 `selectProblems` 가 넘긴다. 이 모듈은 **판정을 스스로 만들지 않는다** —
+   * 만들면 인쇄 판정과 두 벌이 되고, 한쪽만 고쳐도 아무도 모른다(리뷰 §A).
+   * 생략하면 전부 0이라 예전과 한 글자도 다르지 않다.
+   */
+  seatRank: (problem: T) => number = () => 0,
 ): BalanceDifficultyResult<T> {
   const grouped = groupByDifficulty(pool);
   const selectedIds = new Set<string>();
@@ -127,7 +161,12 @@ export function balanceDifficulty<T extends SelectableProblem>(
     const primaryCandidates = grouped[difficulty].filter(
       (p) => !selectedIds.has(p.id),
     );
-    const picked = pickTypeBalanced(primaryCandidates, target, typeUsage);
+    const picked = pickTypeBalanced(
+      primaryCandidates,
+      target,
+      typeUsage,
+      seatRank,
+    );
     for (const p of picked) {
       selected.push(p);
       selectedIds.add(p.id);
@@ -139,7 +178,12 @@ export function balanceDifficulty<T extends SelectableProblem>(
       const altCandidates = grouped[altDifficulty].filter(
         (p) => !selectedIds.has(p.id),
       );
-      const altPicked = pickTypeBalanced(altCandidates, stillNeeded, typeUsage);
+      const altPicked = pickTypeBalanced(
+        altCandidates,
+        stillNeeded,
+        typeUsage,
+        seatRank,
+      );
       for (const p of altPicked) {
         selected.push(p);
         selectedIds.add(p.id);

@@ -607,4 +607,23 @@ describe("[T3.1] findEligibleProblems — 출제 가능 풀 조회", () => {
     });
     expect(rows.every((p) => p.difficulty === "easy")).toBe(true);
   });
+
+  /**
+   * ⑷ — 출제 엔진이 「이 문항이 지면 칸에 들어가는가」를 보려면 **본문과 그림**이
+   * 후보 행에 실려 있어야 한다. 규칙만 넣고 이 조회를 안 고치면 정책이 실운영에서
+   * **조용히 꺼진다** — 「규칙이 옳아도 배선이 한쪽만 되면 그쪽 지표만 좋아진다」
+   * (CLAUDE.md 2026-08-18)가 정확히 그 자리다.
+   */
+  it("지면 판정에 필요한 본문·그림을 같이 읽는다 (⑷ 배선)", async () => {
+    const rows = await findEligibleProblems({
+      userId: USER_TEACHER_ID,
+      unitIds: [MOCK_PROBLEM_WITH_FRACTION.unitId],
+    });
+    expect(rows.length).toBeGreaterThan(0);
+    for (const row of rows) {
+      expect(typeof row.content).toBe("string");
+      expect(Array.isArray(row.figureUrls)).toBe(true);
+      expect(Array.isArray(row.figureDims)).toBe(true);
+    }
+  });
 });

@@ -367,6 +367,15 @@ export function estimateProblemLines(
 }
 
 /**
+ * 칸 높이(px)에서 줄 수 한계를 뽑는다. 아래 네 상수가 **전부 이 한 함수**로 유도되고,
+ * 출제(⑷·⑸-c)가 자리마다 다른 칸을 볼 때도 같은 함수를 쓴다 — 「한 숫자를 두 곳이
+ * 쓰게 한다」(리뷰 §A). 손으로 고른 숫자가 하나라도 끼면 지면을 다시 재도 한쪽만 따라온다.
+ */
+export function lineLimitFor(slotPx: number): number {
+  return Math.floor(slotPx / JASEUP_MEASURED_PX.line);
+}
+
+/**
  * 반 페이지 문항 칸(이어지는 장)에 들어가는 줄 수의 한계 — **칸 높이에서 유도한다.**
  *
  * ── 값의 내력 ────────────────────────────────────────────────────────────
@@ -389,8 +398,8 @@ export function estimateProblemLines(
  * ```
  * 유도값이 곡선의 무릎과 같은 자리다 — 자를 바로잡았으니 그래야 맞는다.
  */
-export const OVERFLOW_LINE_LIMIT = Math.floor(
-  JASEUP_MEASURED_PX.continuationSlot / JASEUP_MEASURED_PX.line,
+export const OVERFLOW_LINE_LIMIT = lineLimitFor(
+  JASEUP_MEASURED_PX.continuationSlot,
 );
 
 /**
@@ -411,8 +420,8 @@ export const OVERFLOW_LINE_LIMIT = Math.floor(
  * 한계 18  경고 3,742  맞음 3,473  재현율 58.5%  정밀도 92.8%   ← 장을 모를 때
  * ```
  */
-export const OVERFLOW_LINE_LIMIT_FIRST_PAGE = Math.floor(
-  JASEUP_MEASURED_PX.firstPageSlot / JASEUP_MEASURED_PX.line,
+export const OVERFLOW_LINE_LIMIT_FIRST_PAGE = lineLimitFor(
+  JASEUP_MEASURED_PX.firstPageSlot,
 );
 
 /**
@@ -426,13 +435,99 @@ export const OVERFLOW_LINE_LIMIT_FIRST_PAGE = Math.floor(
  * 한계도 다른 둘과 같이 **칸에서 유도한다.** 손으로 고르면 지면을 다시 재도
  * 한쪽만 따라온다.
  */
-export const OVERFLOW_LINE_LIMIT_SOLO = Math.floor(
-  JASEUP_MEASURED_PX.soloContinuationSlot / JASEUP_MEASURED_PX.line,
+export const OVERFLOW_LINE_LIMIT_SOLO = lineLimitFor(
+  JASEUP_MEASURED_PX.soloContinuationSlot,
 );
 
-export const OVERFLOW_LINE_LIMIT_SOLO_FIRST_PAGE = Math.floor(
-  JASEUP_MEASURED_PX.soloFirstPageSlot / JASEUP_MEASURED_PX.line,
+export const OVERFLOW_LINE_LIMIT_SOLO_FIRST_PAGE = lineLimitFor(
+  JASEUP_MEASURED_PX.soloFirstPageSlot,
 );
+
+/**
+ * 문항 수 N 짜리 시험지의 **자리별 문항 칸 높이**(px).
+ *
+ * 분할은 `packProblems` 가 정하고(판정이 스스로 「인덱스 2까지가 첫 장」이라고 굳히면
+ * 분할이 바뀔 때 조용히 어긋난다), 칸은 `.problemItem { flex: 1 1 0% }` 라
+ * **«그 장에 몇 개인가»**로 나뉜다 — 홀수면 마지막 하나가 통째로 쓴다(리뷰 ④ B).
+ *
+ * ⚠️ 판정(`assessOverflowRisk`)과 출제(⑸-c)가 **이 한 함수**를 같이 본다.
+ *    자리 계산을 두 곳이 각자 가지면 한쪽만 움직여도 아무도 모른다(리뷰 §A).
+ */
+export function seatCapacities(problemCount: number): number[] {
+  const stub: TestPrintProblem = {
+    id: "",
+    orderIndex: 0,
+    content: "",
+    answer: "",
+    solution: null,
+  };
+  const capacities: number[] = [];
+  packProblems(Array.from({ length: problemCount }, () => stub)).forEach(
+    (page, pageIndex) => {
+      const alone = page.problems.length === 1;
+      const first = pageIndex === 0;
+      const px = alone
+        ? first
+          ? JASEUP_MEASURED_PX.soloFirstPageSlot
+          : JASEUP_MEASURED_PX.soloContinuationSlot
+        : first
+          ? JASEUP_MEASURED_PX.firstPageSlot
+          : JASEUP_MEASURED_PX.continuationSlot;
+      for (let i = 0; i < page.problems.length; i += 1) capacities.push(px);
+    },
+  );
+  return capacities;
+}
+
+/** 판정이 문항 하나에서 보는 것 전부. 출제도 **이것을** 본다. */
+export interface SeatAssessment {
+  /** 본문 표시폭이 한계를 넘는가 (`OVERFLOW_WIDTH_LIMIT`). */
+  wide: boolean;
+  /** 추정 줄 수와 그 자리의 한계. */
+  lines: number;
+  limit: number;
+  /** 그림 묶음이 먹는 세로 — 사유가 «그림»을 가리킬지 가른다. */
+  figurePx: number;
+  /** 치수를 모르는데 그림이 여러 장 — 안전망 규칙. */
+  manyFigures: boolean;
+  /** 셋 중 하나라도 걸리면 참. 지면에서 겹칠 위험이 있다는 뜻이다. */
+  risky: boolean;
+}
+
+/** 판정이 읽는 것 — 문항 전체가 아니라 이 셋뿐이다. */
+export type SeatProblem = Pick<TestPrintProblem, "content"> &
+  Partial<Pick<TestPrintProblem, "figureUrls" | "figureDims">>;
+
+/**
+ * 문항 하나를 **높이 `slotPx` 인 칸**에 놓았을 때의 판정.
+ *
+ * 이 함수가 넘침 규칙의 **유일한 자리**다. `assessOverflowRisk`(인쇄 미리보기)와
+ * `selectProblems`(출제 ⑷·⑸-c)가 둘 다 여기를 부른다 — 규칙을 옮겨 적으면
+ * 「출제는 골랐는데 판정은 경고하는」 문항이 생긴다. 그게 이 저장소가 여러 번 낸
+ * 결함(세는 쪽과 고치는 쪽이 다른 것을 본다)이라 한 곳으로 모은다.
+ */
+export function assessSeat(
+  problem: SeatProblem,
+  slotPx: number,
+): SeatAssessment {
+  const figureCount = problem.figureUrls?.length ?? 0;
+  const figures = parseFigureDimensions(figureCount, problem.figureDims);
+  const lines = estimateProblemLines(problem.content, figures);
+  const limit = lineLimitFor(slotPx);
+  const wide = displayWidth(problem.content) > OVERFLOW_WIDTH_LIMIT;
+  // 장수 규칙은 **치수를 모를 때만** 쓰는 안전망이다. 치수를 알면 높이 규칙이
+  // 같은 문항을 이미 본다 — 실측으로 「장수만 걸리는」 39건은 한 건도 안 넘쳤다.
+  const manyFigures =
+    figureCount >= OVERFLOW_FIGURE_LIMIT && figures.some((f) => f === null);
+  return {
+    wide,
+    lines,
+    limit,
+    figurePx: estimateFigureBlockPx(figures),
+    manyFigures,
+    risky: wide || lines > limit || manyFigures,
+  };
+}
 
 export interface OverflowRisk {
   /** 지면에 찍히는 문항 번호(1부터). 배열 위치가 아니다 — 원장이 지면에서 찾는 번호다. */
@@ -445,70 +540,52 @@ export function assessOverflowRisk(
   problems: TestPrintProblem[],
 ): OverflowRisk[] {
   const risks: OverflowRisk[] = [];
-
   /**
-   * 문항이 **몇 째 장**에 놓이는지는 `packProblems` 가 정한다. 판정이 스스로
-   * 「인덱스 2까지가 첫 장」이라고 굳히면 분할이 바뀔 때 조용히 어긋난다 —
-   * 렌더러와 열 수를 나눠 갖던 `fitsTwoColumns` 와 같은 자리다.
+   * 자리마다 칸이 다르다 — 첫 장은 79px 좁고, 그 장에 문항이 하나뿐이면 두 배가 넘는다.
+   * 그 계산은 `seatCapacities` 한 곳에 있다(출제도 같은 것을 본다).
    */
-  const pageOfIndex: number[] = [];
-  /**
-   * 그 장에 **몇 개**가 놓이는지도 같이 받는다. 칸은 `flex: 1 1 0%` 로 나뉘므로
-   * 문항 수가 곧 칸 크기다 — 하나뿐이면 두 배가 넘는다(적대적 리뷰 ④ B).
-   */
-  const countOnPage: number[] = [];
-  packProblems(problems).forEach((page, pageIndex) => {
-    for (let i = 0; i < page.problems.length; i += 1) {
-      pageOfIndex.push(pageIndex + 1);
-      countOnPage.push(page.problems.length);
-    }
-  });
+  const capacities = seatCapacities(problems.length);
 
   problems.forEach((problem, index) => {
     const reasons: string[] = [];
-    const figureCount = problem.figureUrls?.length ?? 0;
-    const figures = parseFigureDimensions(figureCount, problem.figureDims);
-    const figurePx = estimateFigureBlockPx(figures);
+    const capacity = capacities[index]!;
+    const seat = assessSeat(problem, capacity);
 
-    if (displayWidth(problem.content) > OVERFLOW_WIDTH_LIMIT)
-      reasons.push("본문이 길다");
+    if (seat.wide) reasons.push("본문이 길다");
     // 폭 총합이 못 보는 배치(그림·상자·보기 1열)를 줄 수로 따로 본다.
     // 같은 문항이 둘 다에 걸리면 사유를 겹쳐 적지 않는다 — 원장이 읽을 문장이다.
-    const lines = estimateProblemLines(problem.content, figures);
-    // 첫 장은 칸이 3.9줄 좁다 — 같은 문항이라도 앞자리면 더 엄격하게 본다.
-    // 그리고 그 장에 문항이 하나뿐이면 칸을 통째로 쓴다 — 두 배가 넘는다.
-    const onFirstPage = pageOfIndex[index] === 1;
-    const alone = countOnPage[index] === 1;
-    const limit = alone
-      ? onFirstPage
-        ? OVERFLOW_LINE_LIMIT_SOLO_FIRST_PAGE
-        : OVERFLOW_LINE_LIMIT_SOLO
-      : onFirstPage
-        ? OVERFLOW_LINE_LIMIT_FIRST_PAGE
-        : OVERFLOW_LINE_LIMIT;
-    if (!reasons.length && lines > limit) {
+    if (!reasons.length && seat.lines > seat.limit) {
       // 높이의 절반 넘게가 그림이면 원장이 지면에서 찾을 것도 그림이다.
       // 사유가 가리키는 곳이 틀리면 경고가 있어도 지나친다(리뷰 §3).
-      const figureLines = figurePx / JASEUP_MEASURED_PX.line;
+      const figureLines = seat.figurePx / JASEUP_MEASURED_PX.line;
       const what =
-        figureLines * 2 >= lines ? "그림이 크다" : "배치가 높다(상자·보기 1열)";
+        figureLines * 2 >= seat.lines
+          ? "그림이 크다"
+          : "배치가 높다(상자·보기 1열)";
       // 첫 장에서만 걸리는 문항은 **뒤로 옮기면 해결된다.** 그게 원장이 할 일이라
       // 사유에 적는다 — 사유가 가리키는 곳이 곧 손볼 곳이어야 한다.
       // 같은 자리 수(혼자냐 둘이냐)로 이어지는 장에 놓았을 때의 한계와 견준다 —
       // 「뒤로 옮기면 된다」가 참일 때만 그렇게 적어야 한다.
-      const continuationLimit = alone
-        ? OVERFLOW_LINE_LIMIT_SOLO
-        : OVERFLOW_LINE_LIMIT;
+      // 「첫 장인가·혼자인가」도 **칸에서 읽는다.** 인덱스로 다시 세면 `packProblems`
+      // 가 분할을 바꿀 때 이 자리만 옛 분할을 믿는다.
+      const alone =
+        capacity === JASEUP_MEASURED_PX.soloFirstPageSlot ||
+        capacity === JASEUP_MEASURED_PX.soloContinuationSlot;
+      const onFirstPage =
+        capacity === JASEUP_MEASURED_PX.firstPageSlot ||
+        capacity === JASEUP_MEASURED_PX.soloFirstPageSlot;
+      const continuationLimit = lineLimitFor(
+        alone
+          ? JASEUP_MEASURED_PX.soloContinuationSlot
+          : JASEUP_MEASURED_PX.continuationSlot,
+      );
       reasons.push(
-        onFirstPage && lines <= continuationLimit
+        onFirstPage && seat.lines <= continuationLimit
           ? `${what} · 첫 장은 칸이 좁다`
           : what,
       );
     }
-    // 장수 규칙은 **치수를 모를 때만** 쓰는 안전망이다. 치수를 알면 높이 규칙이
-    // 같은 문항을 이미 본다 — 실측으로 「장수만 걸리는」 39건은 **한 건도 안 넘쳤다.**
-    if (figureCount >= OVERFLOW_FIGURE_LIMIT && figures.some((f) => f === null))
-      reasons.push("그림이 여러 장이다");
+    if (seat.manyFigures) reasons.push("그림이 여러 장이다");
 
     if (reasons.length) {
       risks.push({ number: index + 1, problemId: problem.id, reasons });

@@ -6,15 +6,22 @@
  * 자동 출제 규칙: review_status='approved' 이고 directUseAllowed=true 이고 정답이 있으며
  * 공용 풀이거나 본인 private인 문제만 대상으로 한다(D-22, D-26, D-31).
  *
- * ## 왜 select 로 5컬럼만 읽는가
+ * ## 왜 select 로 컬럼을 좁혀 읽는가 (그리고 2026-08-18 에 셋이 늘었다)
  *
- * 이 조회의 유일한 소비자는 `selectProblems` 이고, 그 엔진이 문항에서 읽는 것은
- * `id · unitId · difficulty · problemType · directUseAllowed` **다섯 개뿐**이다
- * (`SelectableProblem`). 예전에는 `findMany` 가 기본 동작대로 28컬럼 전체를 읽어
- * `content` · `answer` · `solution` · `figureSvg` 네 개의 TEXT 를 후보 수만큼 끌어왔다.
- * 한 단원 범위의 후보가 수백~수천 건이면 그 전송량이 조회 비용을 지배한다.
- * 문항 **본문**이 필요한 곳은 출제가 끝난 뒤의 `testProblem.findMany({include:{problem}})`
- * 이지, 후보 풀 조회가 아니다.
+ * 이 조회의 유일한 소비자는 `selectProblems` 다. 예전에는 `findMany` 가 기본 동작대로
+ * 28컬럼 전체를 읽어 `content` · `answer` · `solution` · `figureSvg` 네 개의 TEXT 를
+ * 후보 수만큼 끌어왔고, 엔진은 그 중 **다섯 개**(`id · unitId · difficulty ·
+ * problemType · directUseAllowed`)만 봤다. 한 단원 범위의 후보가 수백~수천 건이면
+ * 그 전송량이 조회 비용을 지배하므로 다섯 개로 좁혔다.
+ *
+ * ⚠️ **2026-08-18(⑷ 확정) 부터 `content` · `figureUrls` · `figureDims` 를 같이 읽는다.**
+ *    「엔진은 본문을 안 본다」는 그 최적화의 근거가 **정책과 함께 사라졌다** — 출제가
+ *    「이 문항이 지면 칸에 들어가는가」를 보려면 본문과 그림이 있어야 한다
+ *    (적대적 리뷰 ④ §8 G · §11 ⑷). 읽는 것을 늘린 대신 그대로 둔 것:
+ *      · `answer` · `solution` · `figureSvg` — 세 TEXT 는 여전히 안 읽는다.
+ *        이 중 `solution`·`figureSvg` 가 본문보다 훨씬 크다.
+ *      · 출제가 끝난 뒤 지면이 쓰는 값은 `testProblem.findMany({include:{problem}})`
+ *        가 따로 읽는다. 여기서 읽는 것은 **고르기 위한** 것뿐이다.
  *
  * 🔴 where 절은 손대지 않았다 — `answer` 를 select 하지 않아도 "정답 없음" 제외는
  *    **DB 가 계속 판정한다**. 읽는 컬럼을 줄인 것이지 자격 규칙을 줄인 것이 아니다.
@@ -26,10 +33,19 @@ import type { SelectableProblem } from "@/lib/generator/selectProblems";
 import { MISSING_ANSWER } from "@/lib/missingAnswer";
 import { problemVisibleWhere } from "@/lib/problemPool";
 
-/** 출제 후보 1건 — 엔진이 읽는 필드만. `ProblemEntity` 의 진부분집합이다. */
+/**
+ * 출제 후보 1건 — 엔진이 읽는 필드만.
+ *
+ * 지면 셋(`content`·`figureUrls`·`figureDims`)은 `SelectableProblem` 에서는 선택이지만
+ * **여기서는 필수로 좁힌다.** 이 조회의 결과는 곧바로 출제 엔진의 풀이 되므로, select
+ * 에서 하나라도 빠지면 정책이 조용히 꺼진다 — 그 배선을 타입이 붙잡게 한다.
+ */
 export interface EligibleProblem extends SelectableProblem {
   difficulty: Difficulty;
   problemType: ProblemType;
+  content: string;
+  figureUrls: string[];
+  figureDims: number[];
 }
 
 export interface FindEligibleProblemsParams {
@@ -68,6 +84,10 @@ export async function findEligibleProblems(
       difficulty: true,
       problemType: true,
       directUseAllowed: true,
+      // ── 지면을 보기 위한 셋 (⑷) ────────────────────────────────────────
+      content: true,
+      figureUrls: true,
+      figureDims: true,
     },
   });
 
@@ -79,5 +99,8 @@ export async function findEligibleProblems(
     // (07-coding-convention.md §2.3, serializeProblem 과 같은 규칙).
     problemType: row.problemType as ProblemType,
     directUseAllowed: row.directUseAllowed,
+    content: row.content,
+    figureUrls: row.figureUrls,
+    figureDims: row.figureDims,
   }));
 }
