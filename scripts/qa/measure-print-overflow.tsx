@@ -9,6 +9,7 @@
  *   npx tsx scripts/qa/measure-print-overflow.tsx --screen        # 화면 미리보기 매체로
  *   npx tsx scripts/qa/measure-print-overflow.tsx --json out.json
  *   npx tsx scripts/qa/measure-print-overflow.tsx --verify out.json --take 2000
+ *   npx tsx scripts/qa/measure-print-overflow.tsx --verify out.json --repair
  *
  * `--json` 은 높이 캐시와 함께 **지문**(`out.manifest.json`)을 남긴다. 지면 CSS·
  * `displayWidth`·본문이 바뀌면 캐시는 거짓이 되는데, 채점기가 그걸 볼 방법이
@@ -27,6 +28,7 @@ import { displayWidth } from "../../src/lib/math/displayWidth";
 import {
   assessOverflowRisk,
   estimateProblemLines,
+  parseFigureDimensions,
 } from "../../src/lib/printOverflow";
 import type { TestPrintProblem } from "../../src/components/print/types";
 import {
@@ -53,6 +55,7 @@ interface Row {
   id: string;
   content: string;
   figureUrls: string[];
+  figureDims: number[] | null;
   questionType: string | null;
 }
 
@@ -157,7 +160,8 @@ function singleSlot(measured: Measured[]): number {
 
 async function fetchRows(take: number): Promise<Row[]> {
   return (await prisma.$queryRawUnsafe(
-    `SELECT id, content, figure_urls AS "figureUrls", question_type AS "questionType"
+    `SELECT id, content, figure_urls AS "figureUrls", figure_dims AS "figureDims",
+            question_type AS "questionType"
        FROM problem ORDER BY id ${take > 0 ? `LIMIT ${take}` : ""}`,
   )) as Row[];
 }
@@ -173,7 +177,14 @@ async function main() {
   const media = process.argv.includes("--screen") ? "screen" : "print";
   const kind = process.argv.includes("--first-page") ? "first" : "continuation";
 
-  if (verifyPath) return verify(verifyPath, take || 2000, kind, media);
+  if (verifyPath)
+    return verify(
+      verifyPath,
+      take || 2000,
+      kind,
+      media,
+      process.argv.includes("--repair"),
+    );
 
   const rows = await fetchRows(take);
   console.log(
@@ -218,6 +229,9 @@ async function main() {
       answer: "",
       solution: null,
       figureUrls: row.figureUrls,
+      // ⚠️ 치수를 안 넘기면 이 요약만 «전부 모른다»로 채점된다 — 판정이 실제로 보는
+      //    것과 달라져 「놓침」이 부풀려 보인다(적대적 리뷰 ④에서 실제로 그랬다).
+      figureDims: row.figureDims ?? undefined,
     };
     // ⚠️ 판정은 «그 장에 몇 개인가»로 칸을 고른다. 지면은 두 문항으로 그렸으므로
     //    판정에도 짝을 채워 넣어야 같은 칸을 본다(혼자면 칸이 두 배다).
@@ -239,7 +253,13 @@ async function main() {
       missedRows.push({
         pid: m.pid,
         excess: m.neededPx - m.availPx,
-        lines: estimateProblemLines(row.content ?? ""),
+        lines: estimateProblemLines(
+          row.content ?? "",
+          parseFigureDimensions(
+            row.figureUrls.length,
+            row.figureDims ?? undefined,
+          ),
+        ),
       });
     }
     if (!overflows && warned) falseAlarm += 1;
@@ -289,6 +309,7 @@ async function verify(
   sample: number,
   kind: "first" | "continuation",
   media: string,
+  repair: boolean,
 ) {
   const cached = JSON.parse(readFileSync(cachePath, "utf8")) as Measured[];
   const cachedById = new Map(cached.map((m) => [m.pid, m]));
@@ -343,23 +364,50 @@ async function verify(
   }
   console.log("");
 
-  const diffs: string[] = [];
+  /**
+   * 다른 것을 **두 갈래로** 가른다.
+   *   · 본문이 바뀐 문항 → **당연히 다르다.** 그 자리만 캐시를 깁는다(`--repair`).
+   *   · 본문이 그대로인데 다르다 → **지면이 바뀐 것**이다. 전수로 다시 재야 한다.
+   * 한 갈래로 뭉개면 「공유 DB 가 한 행 고쳤다」와 「지면 CSS 가 바뀌었다」가 같아 보인다.
+   */
+  const expected: Measured[] = [];
+  const unexpected: string[] = [];
   let maxDelta = 0;
   for (const m of fresh) {
     const old = cachedById.get(m.pid)!;
     const delta = Math.abs(m.neededPx - old.neededPx);
+    if (delta <= 0.01 && m.availPx === old.availPx) continue;
+    if (mustCheck.has(m.pid)) {
+      expected.push(m);
+      continue;
+    }
     maxDelta = Math.max(maxDelta, delta);
-    if (delta > 0.01 || m.availPx !== old.availPx)
-      diffs.push(
-        `${m.pid} 캐시 ${old.neededPx.toFixed(2)}/${old.availPx} → 지금 ${m.neededPx.toFixed(2)}/${m.availPx}`,
-      );
+    unexpected.push(
+      `${m.pid} 캐시 ${old.neededPx.toFixed(2)}/${old.availPx} → 지금 ${m.neededPx.toFixed(2)}/${m.availPx}`,
+    );
   }
-  console.log(`다른 것 ${diffs.length}건 · 최대 차 ${maxDelta.toFixed(2)}px`);
-  for (const d of diffs.slice(0, 10)) console.log(`  · ${d}`);
-  if (diffs.length > 0) {
-    console.log("\n캐시가 낡았다 — 지문을 찍지 않는다. 전수로 다시 재라.");
+  console.log(
+    `본문이 그대로인데 다른 것 ${unexpected.length}건 (최대 차 ${maxDelta.toFixed(2)}px)` +
+      ` · 본문이 바뀌어 다른 것 ${expected.length}건`,
+  );
+  for (const d of unexpected.slice(0, 10)) console.log(`  · ${d}`);
+  if (unexpected.length > 0) {
+    console.log("지면이 바뀌었다 — 지문을 찍지 않는다. 전수로 다시 재라.");
     process.exitCode = 1;
     return;
+  }
+
+  if (expected.length > 0) {
+    if (!repair) {
+      console.log(
+        `본문이 바뀐 ${expected.length}건이 캐시와 다르다. --repair 를 붙이면 그 자리만 깁는다.`,
+      );
+      process.exitCode = 1;
+      return;
+    }
+    for (const m of expected) Object.assign(cachedById.get(m.pid)!, m);
+    writeFileSync(cachePath, JSON.stringify(cached), "utf8");
+    console.log(`캐시를 ${expected.length}건 기웠다 → ${cachePath}`);
   }
 
   const manifest = writeHeightCacheManifest(
