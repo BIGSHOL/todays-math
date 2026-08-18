@@ -50,8 +50,9 @@ LABEL_GAP = 4.0
 # 조각이 이만큼(pt) 넘게 떨어져 있으면 다른 덩어리로 본다. 그림 조각 사이 간격보다는
 # 크고, 쪽 장식과 그림 사이(실측 39pt)보다는 작아야 한다.
 CLUSTER_GAP = 12
-# 떨어져 있는 덩어리 중 으뜸의 이 비율보다 작으면 그림이 아니라 쪽 장식으로 본다.
-MINOR_RATIO = 0.25
+# 으뜸 덩어리에서 이만큼(pt) 넘게 떨어진 덩어리는 그림이 아니라 쪽 장식으로 본다.
+# 한 그림의 조각 사이(액자 3장 등)보다는 크고, 장식까지의 거리(실측 39·90pt)보다는 작아야 한다.
+MAX_RUN_GAP = 30
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -109,12 +110,18 @@ def _largest_run(parts: list[fitz.Rect], axis: str) -> list[fitz.Rect]:
             max(r.get_area(), 1.0) for r in parts if run[0] <= center(r) <= run[1]
         )
 
-    # **거리로 가르고 크기로 남긴다.** 「가장 큰 덩어리만」으로 했더니 두 줄짜리 그림의
-    # 아랫줄을 잃었다(실측 `019fd1d6-871b` 액자 [3장]). 떨어져 있다고 남이 아니다 —
-    # 남인 것은 쪽 장식처럼 **작은** 것이다. 그래서 으뜸 덩어리에 견줘 너무 작은 것만 버린다.
+    # **거리로 가른다.** 「가장 큰 덩어리만」으로 했더니 두 줄짜리 그림의 아랫줄을 잃었고
+    # (실측 `019fd1d6-871b` 액자 [3장]), 「크기로 남긴다」로 바꿨더니 이번엔 **쪽 장식
+    # 동그라미가 으뜸의 65%나 되어** 그대로 남았다(적대적 리뷰 실측 `019fd1da-41ef`).
+    # 크기는 장식과 그림을 못 가른다 — 가르는 것은 **떨어진 거리**다.
+    # 한 그림의 조각들은 서로 붙어 있고, 쪽 장식은 멀리 있다(실측 39pt · 90pt).
     areas = {run: area_in(run) for run in runs}
-    top = max(areas.values())
-    keep = [run for run in runs if areas[run] >= top * MINOR_RATIO]
+    main = max(runs, key=lambda r: areas[r])
+    keep = [
+        run
+        for run in runs
+        if max(main[0] - run[1], run[0] - main[1], 0) <= MAX_RUN_GAP
+    ]
     return [r for r in parts if any(run[0] <= center(r) <= run[1] for run in keep)]
 
 
@@ -190,6 +197,9 @@ def figure_rect(page, box: fitz.Rect) -> fitz.Rect | None:
             continue
         core.append(inter)
 
+    # 문항 박스에 **닿는** 획을 먼저 모은다. 박스 밖으로 나간 부분까지 통째로 쓴다
+    # (도형이 박스를 넘어갈 때가 있다 — 정사각뿔 꼭대기가 28pt 밖이었다).
+    # 다만 박스에 아예 안 닿는 조각은 여기서 못 줍는다 — 그건 아래 2차 수집이 맡는다.
     for d in page.get_drawings():
         r = fitz.Rect(d["rect"])
         if r.is_empty or r.is_infinite or is_page_furniture(r):
@@ -203,6 +213,7 @@ def figure_rect(page, box: fitz.Rect) -> fitz.Rect | None:
 
     if not core:
         return None
+
     core = largest_cluster(core)
     if not core:
         return None
@@ -228,8 +239,12 @@ def figure_rect(page, box: fitz.Rect) -> fitz.Rect | None:
         # 위·아래로 붙었거나(가로가 겹치고 세로 간격이 좁다), 옆으로 붙었거나
         # (세로가 겹치고 가로 간격이 좁다). 한 축만 보면 **옆에 붙은 라벨을 잃는다** —
         # 실측 `019fd1da-6321` 은 그래프 오른쪽 `3x-2y+12=0` 이 잘려 `=0` 이 사라졌다.
-        below = vgap <= LABEL_GAP and hover >= min(t.width, band.width) * 0.3
-        beside = hgap <= LABEL_GAP and vover >= min(t.height, band.height) * 0.3
+        # ⚠️ 예전엔 `min(t.width, band.width)` 로 쟀다. 그러면 **폭 237pt 짜리 발문 줄을
+        # 폭 66pt 짜리 그림 띠에 견주게 되어** 언제나 30%를 넘겼고, 발문이 통째로 딸려
+        # 들어왔다(적대적 리뷰 실측 3건). 재는 대상은 **글자 블록 자신**이어야 한다 —
+        # 진짜 라벨(`-4`, `O A`, `4x+3y=12`)은 좁아서 여전히 통과한다.
+        below = vgap <= LABEL_GAP and hover >= t.width * 0.3
+        beside = hgap <= LABEL_GAP and vover >= t.height * 0.3
         if not (below or beside):
             continue
         out |= t

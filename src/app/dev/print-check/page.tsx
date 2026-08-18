@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 
 import { ITEMS, PRINT_ROUTE, SAMPLING_PLAN } from "./items";
 import { PrintCheckList } from "./PrintCheckList";
@@ -11,12 +12,19 @@ import { PrintCheckList } from "./PrintCheckList";
  * 이 화면은 그 잔고를 한 장에 모은다. 목록의 SSOT 는 `items.ts` 다.
  *
  * 다른 `/dev` 화면과 같은 가드를 쓴다 — 프로덕션에서는 기본으로 없다.
+ *
+ * ⚠️ **`force-static` 을 쓰면 안 된다.** 그러면 빌드 시점에 한 번 판정한 뒤 HTML 이
+ * 구워져, 나중에 `ENABLE_RENDER_QA` 를 꺼도 이미 구워진 쪽이 나간다. 적대적 리뷰가
+ * 실제 빌드로 확인했다 — 플래그를 켜고 빌드하면 `print-check.html` 50KB 가 만들어지고
+ * 15건이 통째로 들어간다. `/dev/` 는 `src/proxy.ts` 에서 인증 없이 열려 있다.
+ * `dev/katex` 주석에 같은 사고가 이미 한 번 기록돼 있다.
+ * 그래서 형제 화면들처럼 `connection()` 으로 **정적 생성을 옵트아웃**한다.
  */
-export const dynamic = "force-static";
 
 const MICRO = "text-[10px] font-extrabold tracking-[1.2px]";
 
-export default function PrintCheckPage() {
+export default async function PrintCheckPage() {
+  await connection();
   if (
     process.env.NODE_ENV === "production" &&
     process.env.ENABLE_RENDER_QA !== "1"

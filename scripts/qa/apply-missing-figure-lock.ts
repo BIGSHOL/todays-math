@@ -4,6 +4,8 @@
  *   npx tsx scripts/qa/apply-missing-figure-lock.ts                 # 드라이런(기본)
  *   ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-missing-figure-lock.ts
  *   ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-missing-figure-lock.ts --revert
+ *   ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-missing-figure-lock.ts --revert --recovered
+ *   ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-missing-figure-lock.ts --revert --reclassified
  *
  * ## 왜 잠그나
  *
@@ -40,6 +42,13 @@ const APPLY = process.env.ALLOW_UNIT_FIX === "1";
 const REVERT = process.argv.includes("--revert");
 /** 원장에 있던 것 중 **이제 그림이 붙은** 문항만 푼다. 회수 직후에 쓴다. */
 const RECOVERED_ONLY = process.argv.includes("--recovered");
+/**
+ * 원장에 있던 것 중 **판정 규칙이 바뀌어 더는 「유실」이 아닌** 문항을 푼다.
+ * 오탐을 잠근 채 두면 멀쩡한 문항이 조용히 출제에서 빠진다 —
+ * 실측: 「상자그림에서 상자 내부의 선은 무엇을 나타내는가」 2건이 그랬다.
+ * 규칙을 고쳤으면 잠금도 같이 풀어야 한다.
+ */
+const RECLASSIFIED_ONLY = process.argv.includes("--reclassified");
 
 type Ledger = {
   적용: string;
@@ -96,11 +105,6 @@ async function lock() {
       })),
   ];
 
-  const { count } = await prisma.problem.updateMany({
-    where: { id: { in: todo.map((r) => r.id) } },
-    data: { directUseAllowed: false },
-  });
-
   const ledger: Ledger = {
     적용: "그림 유실 문항 출제 제외 (directUseAllowed=false)",
     기준시각: new Date().toISOString(),
@@ -109,7 +113,15 @@ async function lock() {
     잠근건수: merged.length,
     이전상태: merged,
   };
+  // **원장을 먼저 쓴다.** 반대 순서로 두면 쓰기와 기록 사이에서 죽었을 때 되돌릴 근거가
+  // 사라진다 — 공유 DB 를 바꿔 놓고 undo 가 없는 상태다(적대적 리뷰 지적).
+  // 원장이 앞서 있으면 최악이라도 «안 잠긴 것이 원장에 있다» 뿐이고, 그건 무해하다.
   writeFileSync(LEDGER, JSON.stringify(ledger, null, 1), "utf8");
+
+  const { count } = await prisma.problem.updateMany({
+    where: { id: { in: todo.map((r) => r.id) } },
+    data: { directUseAllowed: false },
+  });
   console.log(`\n잠갔다: ${count}건 (누적 ${merged.length}). 원장 → ${LEDGER}`);
 }
 
@@ -118,7 +130,31 @@ async function revert() {
   const ledger = JSON.parse(readFileSync(LEDGER, "utf8")) as Ledger;
 
   let targets = ledger.이전상태;
-  if (RECOVERED_ONLY) {
+  if (RECLASSIFIED_ONLY) {
+    // ⚠️ 본문만 보고 풀면 안 된다. `content` 는 다른 트랙이 고칠 수 있고, 예외 낱말이
+    // 하나 섞여 들어오는 것만으로 **그림이 여전히 없는 문항이 풀린다**(적대적 리뷰 지적).
+    // 그래서 그림이 실제로 없으면서 유실 판정인 행은 무조건 잠근 채로 둔다.
+    const rows = await prisma.problem.findMany({
+      where: { id: { in: targets.map((t) => t.id) } },
+      select: { id: true, content: true, figureUrls: true, figureSvg: true },
+    });
+    const keepLocked = new Set(
+      rows
+        .filter(
+          (r) =>
+            r.figureUrls.length === 0 &&
+            r.figureSvg === null &&
+            classifyFigureNeed(r.content) === "유실",
+        )
+        .map((r) => r.id),
+    );
+    // DB 에서 사라진 행은 원장에 남긴다 — 조용히 지우면 기록이 없어진다.
+    const alive = new Set(rows.map((r) => r.id));
+    targets = targets.filter((t) => alive.has(t.id) && !keepLocked.has(t.id));
+    console.log(
+      `원장 ${ledger.이전상태.length}건 중 규칙 변경으로 유실이 아니게 된 것 ${targets.length}건`,
+    );
+  } else if (RECOVERED_ONLY) {
     // 이제 그림이 붙은 것만 고른다 — 아직 없는 것을 풀면 다시 그림 없이 인쇄된다.
     const withFigure = await prisma.problem.findMany({
       where: {

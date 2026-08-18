@@ -121,15 +121,28 @@ const RELAX_COST: Record<PaperRelaxation, number> = {
  * 문서가 자작과 RPM 을 **같은 ③** 에 두므로 둘의 등급도 같다. 예전에는 자작 1 · RPM 2 로
  * 갈라 4,862건 전량이 한 등급 밀려 있었다.
  */
+const BASE_RANK: Record<PaperCandidate["source"], number> = {
+  past_exam: 0,
+  manual: 1,
+  // RPM 교재본이면 1(자작과 같은 ③), AI 변형본이면 2(④). 아래에서 가른다.
+  transformed: 2,
+  ai_generated: 3,
+};
+
 function sourceRank(
   candidate: Pick<PaperCandidate, "source" | "originProblemId">,
 ): number {
-  if (candidate.source === "past_exam") return 0;
-  if (candidate.source === "manual") return 1;
-  if (candidate.source === "transformed") {
-    return candidate.originProblemId === null ? 1 : 2;
+  // 표를 남겨 둔 이유: `ProblemSource` 에 값이 하나 늘면 **컴파일이 깨져** 여기를 보게 된다.
+  // `if` 사슬 + 기본값으로 바꿨더니 새 값이 조용히 어느 등급에 끼는지 아무도 모르게 됐다
+  // (적대적 리뷰 지적 — 그때 `ai_generated` 가 3 → 2 로 소리 없이 올라갔다).
+  const base = BASE_RANK[candidate.source];
+  if (
+    candidate.source === "transformed" &&
+    candidate.originProblemId === null
+  ) {
+    return BASE_RANK.manual;
   }
-  return 2;
+  return base;
 }
 
 interface Slot {

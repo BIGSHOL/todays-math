@@ -56,9 +56,15 @@ const MICRO = "text-[10px] font-extrabold tracking-[1.2px]";
 
 export function PrintCheckList({ items }: { items: PrintCheckItem[] }) {
   const raw = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  // `JSON.parse("null")` 은 **예외를 안 던지고 null 을 준다** — catch 가 안 걸리고
+  // 다음 줄에서 `checked[id]` 가 터져 화면 전체가 죽는다(적대적 리뷰 실증).
+  // 배열·문자열도 마찬가지로 통과하므로 «객체인지»까지 확인한다.
   let checked: Record<string, boolean> = {};
   try {
-    checked = JSON.parse(raw) as Record<string, boolean>;
+    const parsed: unknown = JSON.parse(raw);
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      checked = parsed as Record<string, boolean>;
+    }
   } catch {
     checked = {};
   }

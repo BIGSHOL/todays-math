@@ -48,7 +48,7 @@ export const ITEMS: PrintCheckItem[] = [
     id: "figures-multi",
     title: "그림 회수 590건 — 다장 문항의 지면 배치",
     changed:
-      "그림이 없던 1,420문항 중 590건에 그림을 되붙였다(기출 745 → 155). 매퍼가 그림을 「바로 앞 문항」에 붙이므로 옆 문항 그림이 딸려 온 경우가 있다.",
+      "그림이 없던 1,420문항에서 기출 그림을 되붙였다(기출 745 → 174). 매퍼가 그림을 「바로 앞 문항」에 붙이므로 옆 문항 그림이 딸려 온 경우가 있다. **현재 수치는 문서 16 §2 를 볼 것** — 여기 적힌 숫자는 낡는다.",
     look: "한 문항에 그림이 2장 이상 붙은 문항이 칸을 넘겨 다음 문항을 밀거나 겹치는지, 남의 그림이 섞여 있지 않은지. 그림 폭은 인쇄 70mm 고정이다.",
     lookFromSource: true,
     evidence: [
@@ -71,7 +71,7 @@ export const ITEMS: PrintCheckItem[] = [
       "docs/planning/tracks/reports/body-typeset.md:42",
       "커밋 1faea81b (1,783문항) 외 6건",
     ],
-    scale: "1,988문항",
+    scale: "1,988문항 (합산치 — 근거 문서에 이 숫자가 그대로 적혀 있지는 않다)",
     status: "대기",
     changedOn: "2026-08-18",
   },
@@ -111,7 +111,7 @@ export const ITEMS: PrintCheckItem[] = [
     lookFromSource: false,
     evidence: [
       "docs/planning/tracks/reports/render-b-box.md:196",
-      "src/components/math/ProblemContent.tsx:50",
+      "src/components/math/ProblemContent.tsx (2열 판정 주석)",
     ],
     scale: "상자 3,573 + 1열 2,065",
     status: "대기",
@@ -119,14 +119,14 @@ export const ITEMS: PrintCheckItem[] = [
   },
   {
     id: "essay-badge",
-    title: "서술형 배지 — 10px 금색 테두리",
+    title: "서술형 배지 — 1px 금색 테두리 + 10px 글자",
     changed:
       "본문에 박혀 있던 `[서술형 3]` 을 DB 에서 8,436행 걷어내고 그 자리를 조판이 배지로 채운다.",
-    look: "배지 10px 금색 테두리가 실제 인쇄에서 뭉개지지 않는지. 그리고 배지가 붙은 문항이 정말 서술형인지 — 단답형↔서술형 275행이 뒤바뀌어 있던 것을 고친 뒤 종이 확인이 없다.",
+    look: "배지 테두리가 **1px 금색 실선**이고 글자가 10px 다(`TestPrint.module.css:301`). 근거 문서는 「10px 테두리」라 적었지만 실물은 1px 이다 — 흑백 레이저에서 그 얇은 선이 아예 안 나오거나 회색으로 뭉개지지 않는지. 그리고 배지가 붙은 문항이 정말 서술형인지 — 단답형↔서술형 275행이 뒤바뀌어 있던 것을 고친 뒤 종이 확인이 없다.",
     lookFromSource: true,
     evidence: [
       "docs/planning/tracks/reports/render-c-body-postfix.md:185",
-      "src/components/print/TestPrint.module.css:297",
+      "src/components/print/TestPrint.module.css:301",
     ],
     scale: "8,436행",
     needs: "서술형 문항이 포함돼야 배지가 찍힌다",
@@ -193,7 +193,8 @@ export const ITEMS: PrintCheckItem[] = [
     changed:
       "넘침 판정 트랙이 경고만 고치고 지면은 안 바꿨다. 다만 고치면 지면이 바뀌는 현상 두 가지를 제안으로 남겼다 — 첫 장 칸이 79px 좁은데도 2문항을 넣고(첫 장에서만 넘치는 것 3,216건), 정답지 1쪽은 「빠른 정답」 상자가 자리를 먹는다(잘린 134장 중 95장이 1쪽).",
     look: "① 문제지 첫 장의 2번 문항이 하단 「오늘의 메모」를 뚫고 나가는지 ② 정답지 1쪽 마지막 문항 해설이 통째로 사라지는지.",
-    lookFromSource: true,
+    // 근거 문서는 «현상»과 «고칠 방법»만 적었고 종이에서 무엇을 보라는 지시는 없다.
+    lookFromSource: false,
     evidence: ["docs/planning/tracks/reports/fix-overflow.md §7"],
     needs: "정답지 1쪽 정원은 25문항짜리로 뽑아야 드러난다",
     status: "대기",
@@ -217,7 +218,7 @@ export const ITEMS: PrintCheckItem[] = [
       "상자 라벨을 왼쪽 위 굵게 둘지 가운데 둘지 등 3건이 확정 전 시안 상태다.",
     look: "검수가 아니라 **선택**이다.",
     lookFromSource: true,
-    evidence: ["docs/planning/tracks/reports/render-b-box.md:207"],
+    evidence: ["docs/planning/tracks/reports/render-b-box.md:215"],
     status: "형태미확정",
     changedOn: "2026-08-17",
   },

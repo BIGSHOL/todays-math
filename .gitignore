@@ -48,9 +48,15 @@ scripts/import/reports/*.json
 # QA 감사 상세 리포트(대용량, 재생성 가능) — 통과 원장(ocr-audit-clean.txt)만 커밋한다
 # 재생성 가능한 산출물 — 하위 디렉터리(index-batch/, final-batch/)까지 전부.
 # `*.json` 한 겹만 무시하면 배치 산출물 수백 개가 추적되지 않은 채 남아 리베이스를 막는다.
-scripts/qa/reports/
+scripts/qa/reports/*
+# ⚠️ 디렉터리 자체(`reports/`)를 무시하면 **아래 `!` 예외가 먹지 않는다** — git 은 제외된
+# 디렉터리 안의 파일을 되살리지 못한다. 그래서 `/*` 로 내용물만 무시한다.
+# (2026-08-18 적대적 리뷰: 잠금 원장이 커밋되지 않아 다른 컴퓨터에서 되돌릴 수 없었다.)
 # 조사 산출물은 예외 — 다시 뽑으려면 수 분이 걸리고 다른 컴퓨터가 바로 읽어야 한다.
 !scripts/qa/reports/topic-coverage.json
+# 그림 유실 잠금 원장 — **공유 DB 를 되돌리는 유일한 근거다.**
+# 여기 없으면 다른 컴퓨터에서 790건을 되돌릴 방법이 없다(적대적 리뷰 지적).
+!scripts/qa/reports/missing-figure-lock.json
 __pycache__/
 
 # 본문 백업(대용량, 되돌리기용)

@@ -6,6 +6,8 @@
  * 사실상 사라진다 — 검수 잔고가 실제보다 적어 보인다. 그게 이 프로젝트가 반복해서 낸
  * 결함이라(CLAUDE.md 「지표가 실패를 셀 수 있는 형태인지 먼저 확인하라」) 데이터부터 막는다.
  */
+import { existsSync } from "node:fs";
+
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
@@ -14,6 +16,29 @@ import { ITEMS } from "@/app/dev/print-check/items";
 import { PrintCheckList } from "@/app/dev/print-check/PrintCheckList";
 
 describe("실물 출력 검수 목록 — 데이터", () => {
+  /**
+   * 적대적 리뷰가 실증했다 — 항목을 **통째로 지워도** 모든 시험이 초록이었다.
+   * 「덮이는」 경로만 막고 「사라지는」 경로를 열어 뒀던 것이다. 검수 잔고가 조용히 줄면
+   * 아무도 모른다. 항목을 늘리거나 줄이면 이 숫자도 같이 고쳐야 한다 — 그게 의도다.
+   */
+  it("항목 수가 바뀌면 알아차린다", () => {
+    expect(ITEMS.length).toBe(15);
+  });
+
+  /**
+   * 근거가 썩는 것도 조용하다 — 없는 파일을 가리켜도 초록이었다.
+   * 커밋 해시·줄 번호는 못 보지만 **파일이 있는지**는 볼 수 있다.
+   */
+  it("근거가 가리키는 파일은 실재한다", () => {
+    for (const item of ITEMS) {
+      for (const ev of item.evidence) {
+        const path = ev.split(/[\s:(]/)[0];
+        if (!path.includes("/") || path.startsWith("커밋")) continue;
+        expect(existsSync(path), `${item.id}: ${path}`).toBe(true);
+      }
+    }
+  });
+
   it("id 가 겹치지 않는다 — 겹치면 한 항목이 조용히 덮인다", () => {
     const ids = ITEMS.map((i) => i.id);
     expect(new Set(ids).size).toBe(ids.length);
