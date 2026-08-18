@@ -27,6 +27,7 @@
  *
  * 규칙별 근거와 실측치는 `docs/planning/tracks/reports/render-b-box.md`.
  */
+import { findSubQuestionMarkers } from "@/lib/math/subQuestion";
 
 /** 상자 라벨 — 정본 `blocksToMarkdown.ts` 32행 BOX_MARKERS 와 같은 셋. */
 export type BoxLabel = "보기" | "조건" | "상자";
@@ -145,8 +146,30 @@ const FAMILIES: readonly Family[] = [
  */
 const BULLET_CHARS = [..."∘•◦○⦁∙⚪⚬◯⸰◎✽Ÿ॰"];
 
-/** 상자를 끊는 신호 — 소문항 번호와 서술형 라벨은 상자 밖이다. */
-const BOX_STOP_RE = /[⑴⑵⑶⑷⑸⑹]|\[\s*서[술답]형/;
+/**
+ * 상자를 끊는 신호 ① 서술형 라벨. 이건 수식에 갇히는 일이 없어 probe 에서 본다.
+ *
+ * ⚠️ 소문항 번호는 **여기서 빼냈다** (2026-08-18 회귀). 예전 규칙은
+ * `[⑴⑵⑶⑷⑸⑹]` 여섯 글자만 알았고 그마저 **수식이 가려진 probe** 에서 찾았다.
+ * 실데이터의 소문항은 `$(1)~$` 처럼 수식 span 통째로 실려 있어(가려진다)
+ * 반각 괄호이며 ⑺ 이상으로도 이어진다 — 셋 다 못 봤다. 그래서 상자가 하위 문항과
+ * 시험지 머리말까지 삼켰다(원장님 스크린샷, id dba88a32).
+ * 이제 판정은 `subQuestion.ts` 한 군데가 한다.
+ */
+const ESSAY_LABEL_RE = /\[\s*서[술답]형/;
+
+/**
+ * 상자를 끊는 신호 ② 시험지 머리말. **연도·학기·고사 이름이 함께** 있어야 한다.
+ *
+ * `\d{4}년` 하나로 판정하면 «(사) **2024년에** 대건고에 입학한 고등학생의 모임»
+ * 같은 **멀쩡한 항목**을 자른다(실측 65152d84). `기말고사` 하나로 판정하면
+ * 성적표 항목(«• 기말고사 • 수행평가 • 1차», 66b6d751)을 자른다.
+ * 셋이 같이 있는 자리는 시험지 머리말뿐이었다.
+ */
+const EXAM_HEADER_RE = /\d{4}\s*년\s*\d\s*학기\s*(?:중간|기말)\s*고사/;
+
+/** 괄호원문자 `⑴`(U+2474) ~ `⒇`(U+2487) — 소문항 번호로만 쓰이는 전용 글자. */
+const PAREN_DIGIT_RE = /[⑴-⒇]/g;
 
 /** 발문 안 참조(`<보기>에서`, `<조건>을`)를 상자 머리와 가른다. */
 const PARTICLE_AFTER_MARKER =
@@ -244,6 +267,58 @@ function findBulletItems(probe: string): ItemHit[] {
   return thin * 2 > best.length ? [] : best;
 }
 
+/* ────────────────────────────────────────────────────────────────────────
+ * 2-B. 상자를 끊는 자리 — 하위 문항·시험지 머리말 (2026-08-18 회귀)
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/**
+ * 상자 내용의 **머리** — 항목 기호(불릿·`$\circ$`·`ㅇ`)를 걷어낸 뒤의 위치.
+ *
+ * 소문항 번호가 이 자리에서 시작하면 그것은 **상자 자기 항목의 번호**다
+ * (실측 2aa85246 `<조건>⑴ 다항식 A는 …⑵ …⑶ …`). 그때는 하나도 끊지 않는다 —
+ * 첫 번호만 봐주고 `⑵` 에서 끊으면 조건 셋 중 둘이 상자 밖으로 튀어나간다.
+ */
+const CONTENT_HEAD_RE = new RegExp(
+  `^(?:\\s|[${BULLET_CHARS.join("")}]|ㅇ|○|\\$\\s*\\\\(?:circ|bullet)\\s*\\$)*`,
+);
+
+/**
+ * 상자가 끝나야 하는 자리(원문 절대 위치). 없으면 -1.
+ *
+ * 신호 셋을 모아 **가장 이른 것**을 쓴다:
+ *  ① 하위 문항 번호 — `subQuestion.ts` 의 판정(1부터 잇따르는 번호 2개 이상)
+ *  ② 괄호원문자 `⑴`~`⒇` — 수식에 쓰이지 않는 전용 글자라 하나만 있어도 믿는다
+ *  ③ 시험지 머리말 — 연도·학기·고사 이름이 함께 있을 때만
+ *
+ * ①②는 **머리에서 시작하면 통째로 무시한다**(상자 자기 번호다).
+ */
+function findBoxStop(
+  text: string,
+  contentStart: number,
+  contentEnd: number,
+  subQuestions: readonly number[],
+): number {
+  const content = text.slice(contentStart, contentEnd);
+  const head = contentStart + (CONTENT_HEAD_RE.exec(content)?.[0].length ?? 0);
+
+  const numbering: number[] = [];
+  for (const at of subQuestions)
+    if (at >= contentStart && at < contentEnd) numbering.push(at);
+  PAREN_DIGIT_RE.lastIndex = 0;
+  for (const m of content.matchAll(PAREN_DIGIT_RE))
+    numbering.push(contentStart + m.index);
+  numbering.sort((a, b) => a - b);
+
+  const cuts: number[] = [];
+  // 머리에서 시작하는 번호 매김은 이 상자의 항목 번호다 — 하나도 끊지 않는다.
+  if (numbering.length > 0 && numbering[0]! > head) cuts.push(numbering[0]!);
+
+  const header = EXAM_HEADER_RE.exec(content);
+  if (header) cuts.push(contentStart + header.index);
+
+  return cuts.length > 0 ? Math.min(...cuts) : -1;
+}
+
 /** 가장 많은 항목을 내는 계열을 고른다. 동수면 위 우선순위. */
 function findItemRun(probe: string): ItemHit[] {
   let best: ItemHit[] = [];
@@ -335,9 +410,62 @@ function hasMeaningfulContent(content: string): boolean {
  * `~시오`·`~하여라` 까지 신호로 넣으면 「풀이 과정을 서술하시오」 같은 **진짜 조건**을
  * 상자 밖으로 밀어낸다.
  */
-/** 발문은 물음표로 끝난다. 보기·조건 항목은 끝나지 않는다 — 실측 38건 전부 그랬다. */
+/**
+ * 발문 뒤에 붙는 **꼬리말** — 물음표 다음에 오는 단서·배점.
+ * `…의 값은? (단, $a>0$이다.)` · `…의 값은? [ $4$ 점]` · `…길이는? $($ 단, … $)$`
+ *
+ * 이걸 안 걷어내면 `endsWithQuestion` 이 거짓이 되어 **발문을 상자가 삼킨 채로 남는다**
+ * — 전수 감사에서 물음표를 품은 상자 52개가 전부 이 모양이었다(2026-08-18).
+ */
+/**
+ * ⚠️ 꼬리말을 «`단,` 부터 끝까지 지운다»로 짜면 안 된다. 실제로 그렇게 했다가
+ * 멀쩡한 상자 19개를 잃었다 — `…고른 것은? (단, $a$는 $0$이 아닌 수) ㄱ. …ㄴ. …`
+ * 처럼 단서가 **발문과 항목 사이**에 오는 문항이 흔해서, 탐욕적으로 지우면
+ * **항목까지 통째로** 사라지고 「발문만 남았으니 상자가 아니다」가 된다(3648061c).
+ * 그래서 지우지 않고, 물음표 **뒤에 남은 것이 꼬리말뿐인지**를 본다.
+ */
+/**
+ * 꼬리말 뒤에 **항목이 더 있는가**.
+ *
+ * ⚠️ 가나다 항목은 반드시 **줄머리**로 묶는다. `[가-차]\s*[.)]` 로 느슨하게 쓰면
+ * 꼬리말 자신의 `…정수이다.` 가 「다.」 항목으로 읽혀 꼬리말이 영영 안 잘린다
+ * (이 파일 머리주석 안전원칙 3 과 같은 함정 — 실제로 한 번 밟았다).
+ * 자모 `ㄱ.`·괄호원문자·상자 마커는 평문에 안 나오므로 자리를 묻지 않는다.
+ */
+const ITEM_AHEAD_RE =
+  /[ㄱ-ㅎ]\s*[.)]|[⑴-⒇]|[㉠-㉩㈎-㈓]|(?:^|\n)\s*[가-차]\s*[.)]|<(?:보기|조건|상자)>/;
+const NOTE_OPENERS = /^[[(（$\\]/;
+const NOTE_BODY = /단\s*[,，\s]|\d\s*\$?\s*점/;
+/** 실측 꼬리말 최장 110자(014df295). 넉넉히 잡되 문단 하나를 넘지 않게 묶는다. */
+const NOTE_MAX = 160;
+
+/** 물음표 뒤에 남은 토막이 «단서·배점» 꼬리말뿐인가. */
+function isQuestionNote(tail: string): boolean {
+  const body = tail.trim();
+  if (body.length === 0) return true;
+  if (body.length > NOTE_MAX) return false;
+  /*
+   * ⚠️ 「빈 줄이 있으면 문단이 더 있는 것이다」는 여기서 **쓸 수 없다.**
+   * 이 말뭉치는 PDF 텍스트 레이어 추출본이라 수식마다 `\n\n` 이 들어가 빈 줄이
+   * 사방에 있다. 그 가드를 걸었더니 `…값은?` ⏎⏎ `(단, …)` 형태의 꼬리말을
+   * 전부 놓쳐 발문을 삼킨 상자 10개가 그대로 남았다(2006a011 등).
+   * 경계는 빈 줄이 아니라 **항목이 이어지는가**로 가른다.
+   */
+  if (ITEM_AHEAD_RE.test(tail)) return false;
+  return NOTE_OPENERS.test(body) && NOTE_BODY.test(body);
+}
+
+/**
+ * 발문은 물음표로 끝난다. 보기·조건 항목은 끝나지 않는다 — 실측 38건 전부 그랬다.
+ * 단서·배점 꼬리말(`(단, …)` · `[ $4$ 점]`)은 물음표 **뒤**에 오므로 함께 본다 —
+ * 이걸 안 보면 발문을 삼킨 상자 52개가 그대로 남는다(2026-08-18 전수 감사).
+ */
 function endsWithQuestion(text: string): boolean {
-  return /[?？]\s*$/.test(text);
+  const trimmed = text.trimEnd();
+  if (/[?？]\s*$/.test(trimmed)) return true;
+  const last = Math.max(trimmed.lastIndexOf("?"), trimmed.lastIndexOf("？"));
+  if (last < 0) return false;
+  return isQuestionNote(trimmed.slice(last + 1));
 }
 
 function findQuestionTail(
@@ -355,17 +483,35 @@ function findQuestionTail(
    * 줄바꿈이 사방에 있고, 그중 마지막을 집으면 발문이 「의 값은?」처럼 토막 난다(실측).
    * 또 경계는 **마지막 항목이 시작한 뒤**여야 한다 — 앞이면 멀쩡한 항목을 상자 밖으로 밀어낸다.
    */
+  /*
+   * 경계 뒤에는 **물음표가 있어야** 한다. 없으면 그 경계는 발문의 시작이 아니라
+   * 발문 **뒤**다 — 자르면 발문이 상자에 남고 단서만 밖으로 나간다.
+   * 단서가 제 줄에 오는 문항(`…최솟값은?` ⏎ `(단, $p,~q$는 상수이다.)`, 8c0f354d)에서
+   * 마지막 줄바꿈을 집어 상자를 통째로 잃었다. 실측으로 드러난 조건이다.
+   */
+  const hasQuestionAfter = (at: number) => /[?？]/.test(content.slice(at));
+
   let sentenceCut = -1;
   for (const match of probe.matchAll(/다\s*\./g)) {
     const at = match.index + match[0].length;
-    if (at > minCut && content.slice(at).trim().length >= 4) sentenceCut = at;
+    if (
+      at > minCut &&
+      content.slice(at).trim().length >= 4 &&
+      hasQuestionAfter(at)
+    )
+      sentenceCut = at;
   }
   if (sentenceCut >= 0) return sentenceCut;
 
   let lineCut = -1;
   for (const match of probe.matchAll(/\n/g)) {
     const at = match.index + 1;
-    if (at > minCut && content.slice(at).trim().length >= 8) lineCut = at;
+    if (
+      at > minCut &&
+      content.slice(at).trim().length >= 8 &&
+      hasQuestionAfter(at)
+    )
+      lineCut = at;
   }
   return lineCut;
 }
@@ -394,6 +540,7 @@ function findBoxFrom(
   probe: string,
   markers: MarkerHit[],
   from: number,
+  subQuestions: readonly number[],
 ): ScanResult {
   const ahead = markers.filter((m) => m.index >= from);
   if (ahead.length === 0) return { box: null, next: text.length };
@@ -434,10 +581,16 @@ function findBoxFrom(
     atEnd && !hasMeaningfulContent(afterAtEnd) ? atEnd : undefined;
   let boxEnd = trailing ? trailing.index + trailing.length : regionEnd;
 
-  // 소문항 번호·서술형 라벨에서 끊는다.
-  const stopAt = probe.slice(contentStart, contentEnd).search(BOX_STOP_RE);
-  if (stopAt > 0) {
-    contentEnd = contentStart + stopAt;
+  // 서술형 라벨에서 끊는다 (수식에 갇히지 않으므로 probe 에서 본다).
+  const essayAt = probe.slice(contentStart, contentEnd).search(ESSAY_LABEL_RE);
+  if (essayAt > 0) {
+    contentEnd = contentStart + essayAt;
+    boxEnd = contentEnd;
+  }
+  // 하위 문항·시험지 머리말에서 끊는다 — 원문에서 본다(마커가 수식 안에 있다).
+  const stopAt = findBoxStop(text, contentStart, contentEnd, subQuestions);
+  if (stopAt > contentStart) {
+    contentEnd = stopAt;
     boxEnd = contentEnd;
   }
 
@@ -544,6 +697,9 @@ export function splitBoxSegments(raw: string): ContentSegment[] {
   if (markers.length === 0) return [{ kind: "text", text: raw }];
 
   const probe = maskMathInPlace(text);
+  // 하위 문항 판정은 **문항 전체**를 봐야 한다(오름차순 근거가 상자 밖에도 있다).
+  // 한 번만 계산해 구역마다 물려준다.
+  const subQuestions = findSubQuestionMarkers(text).map((m) => m.index);
   const found: FoundBox[] = [];
   let cursor = 0;
   // 마커 수만큼만 돈다 — 진행이 없으면 즉시 멈춘다(무한 루프 방지).
@@ -552,7 +708,13 @@ export function splitBoxSegments(raw: string): ContentSegment[] {
     guard <= markers.length + 1 && cursor < text.length;
     guard += 1
   ) {
-    const { box, next } = findBoxFrom(text, probe, markers, cursor);
+    const { box, next } = findBoxFrom(
+      text,
+      probe,
+      markers,
+      cursor,
+      subQuestions,
+    );
     if (box) found.push(box);
     if (next <= cursor) break;
     cursor = next;
