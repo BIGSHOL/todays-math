@@ -147,8 +147,10 @@ function BoxQuote({ children }: { children?: ReactNode }) {
   const label = header[1]!;
   const headerless = label === HEADERLESS_LABEL;
   const columns = header[2] === "2" ? 2 : header[2] === "3" ? 3 : 1;
-  // 머리 없는 상자는 첫 문단이 **내용**이다 — 잘라내면 안 된다.
-  const items = headerless ? blocks : blocks.slice(1);
+  // 첫 문단은 **언제나 마커 줄**이다(`renderBoxSegment` 가 그렇게 싣는다).
+  // 머리 없는 상자는 그 줄을 **그리지 않을** 뿐, 항목에서 빼는 건 똑같다 —
+  // 안 빼면 `<나열1>` 이 날문자로 지면에 찍힌다(스크린샷으로 잡았다).
+  const items = blocks.slice(1);
   const gridClass =
     columns === 3
       ? "grid grid-cols-1 gap-x-6 gap-y-1 md:grid-cols-3 print:grid-cols-3"
