@@ -13,7 +13,14 @@
  * 같은 글꼴 문맥 안에 nowrap 사본을 만들어 **폭**으로 가른다.
  *
  *   npx tsx scripts/qa/measure-choice-columns.tsx --take 1200
+ *   npx tsx scripts/qa/measure-choice-columns.tsx --take 1200 --json .measure/choices.json
+ *
+ * `--json` 은 보기 조각마다 «지면에서 잰 nowrap 폭»과 원문을 낸다 — `displayWidth` 가
+ * 어디서 부풀리는지 찾으려면 그 대응쌍이 있어야 한다(2026-08-18 과잉 1열 수리).
  */
+import { mkdirSync, writeFileSync } from "node:fs";
+import path from "node:path";
+
 import { PrismaClient } from "@prisma/client";
 import { chromium } from "@playwright/test";
 
@@ -50,6 +57,12 @@ async function main() {
   });
   await page.emulateMedia({ media: "print" });
 
+  const pieces: Array<{
+    pid: string;
+    index: number;
+    px: number;
+    twoCol: boolean;
+  }> = [];
   const stat = {
     twoColProblems: 0,
     twoColCells: 0,
@@ -89,6 +102,12 @@ async function main() {
           oneColProblems: 0,
           oneColButFits: 0,
           cellWidths: [] as number[],
+          pieces: [] as Array<{
+            pid: string;
+            index: number;
+            px: number;
+            twoCol: boolean;
+          }>,
         };
         // ⚠️ 이름 붙은 함수를 만들면 esbuild `__name` 때문에 죽는다 — 배열에 담는다.
         const helpers = [
@@ -103,6 +122,9 @@ async function main() {
           },
         ];
         document.querySelectorAll("[data-paper-view]").forEach((view) => {
+          const pid =
+            (view.closest(".problemItem") as HTMLElement | null)?.dataset.pid ??
+            "";
           const root = view.firstElementChild as HTMLElement;
           const grid = Array.from(root.children).find((c) =>
             (c as HTMLElement).className.includes("mt-4"),
@@ -112,19 +134,23 @@ async function main() {
             getComputedStyle(grid).gridTemplateColumns.split(" ").length === 2;
           if (twoCol) {
             out.twoColProblems += 1;
-            Array.from(grid.children).forEach((cell) => {
+            Array.from(grid.children).forEach((cell, index) => {
               const text = cell.lastElementChild as HTMLElement;
               const avail = text.getBoundingClientRect().width;
               out.cellWidths.push(Math.round(avail));
               out.twoColCells += 1;
-              if (helpers[0]!(text) > avail + 0.5) out.twoColFolded += 1;
+              const nowrap = helpers[0]!(text);
+              if (nowrap > avail + 0.5) out.twoColFolded += 1;
+              out.pieces.push({ pid, index, px: nowrap, twoCol: true });
             });
           } else {
             out.oneColProblems += 1;
             let fitsAll = true;
-            Array.from(grid.children).forEach((cell) => {
+            Array.from(grid.children).forEach((cell, index) => {
               const text = cell.lastElementChild as HTMLElement;
-              if (helpers[0]!(text) > cellPx) fitsAll = false;
+              const nowrap = helpers[0]!(text);
+              if (nowrap > cellPx) fitsAll = false;
+              out.pieces.push({ pid, index, px: nowrap, twoCol: false });
             });
             if (fitsAll) out.oneColButFits += 1;
           }
@@ -137,6 +163,12 @@ async function main() {
         oneColProblems: number;
         oneColButFits: number;
         cellWidths: number[];
+        pieces: Array<{
+          pid: string;
+          index: number;
+          px: number;
+          twoCol: boolean;
+        }>;
       };
       stat.twoColProblems += res.twoColProblems;
       stat.twoColCells += res.twoColCells;
@@ -144,6 +176,7 @@ async function main() {
       stat.oneColProblems += res.oneColProblems;
       stat.oneColButFits += res.oneColButFits;
       for (const w of res.cellWidths) stat.cellWidths.add(w);
+      pieces.push(...res.pieces);
       process.stdout.write(
         `\r측정 ${Math.min(s + BATCH * 2, picked.length)}/${picked.length}`,
       );
@@ -162,6 +195,14 @@ async function main() {
   console.log(
     `  (보기 있는 문항 ${stat.twoColProblems + stat.oneColProblems}건 중 1열 ${((stat.oneColProblems * 100) / (stat.twoColProblems + stat.oneColProblems)).toFixed(1)}%)`,
   );
+
+  const jsonIndex = process.argv.indexOf("--json");
+  if (jsonIndex >= 0) {
+    const outPath = process.argv[jsonIndex + 1]!;
+    mkdirSync(path.dirname(outPath), { recursive: true });
+    writeFileSync(outPath, JSON.stringify(pieces), "utf8");
+    console.log(`→ ${outPath} (보기 조각 ${pieces.length}개)`);
+  }
 }
 
 main()
