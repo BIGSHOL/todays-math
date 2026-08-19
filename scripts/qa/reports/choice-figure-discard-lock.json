@@ -1,9 +1,9 @@
 {
  "적용": "보기 그림 짝을 되찾지 못한 문항 출제 제외 (directUseAllowed=false) — 원장님 확정 2026-08-18",
- "기준시각": "2026-08-19T00:54:21.302Z",
+ "기준시각": "2026-08-19T02:12:47.620Z",
  "되돌리기": "ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-choice-figure-discard.ts --revert",
  "영구삭제아님": "행마다 사유·부류를 남겼다. 원본을 다시 구하거나 사람이 확인해 살릴 수 있다.",
- "적용됨": false,
+ "적용됨": true,
  "잠근건수": 29,
  "이번계획": 29,
  "이어받음": 0,
@@ -220,7 +220,7 @@
    "externalId": "019fd1db-ae9f-7508-9d3c-16ee9915585f",
    "directUseAllowed": true,
    "school": null,
-   "questionNumber": null,
+   "questionNumber": 550,
    "사유": "원본 메타 없음",
    "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
   },
@@ -265,7 +265,7 @@
    "externalId": "019fd1de-b050-71df-8f1c-b716f6b9b627",
    "directUseAllowed": true,
    "school": null,
-   "questionNumber": null,
+   "questionNumber": 452,
    "사유": "원본 메타 없음",
    "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
   }

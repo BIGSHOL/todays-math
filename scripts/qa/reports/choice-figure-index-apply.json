@@ -1,10 +1,11 @@
 {
  "note": "되돌리기 자료. `before` 가 적용 전 DB 값이다. 되돌리려면: ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-choice-figure-index.ts --revert",
  "generatedFrom": "scripts/qa/reports/choice-figure-pairs.json",
- "applied": false,
- "beforeIsInferred": true,
- "beforeNote": "⚠️ 컬럼이 없어 before 를 읽지 못했다. 전부 [] 로 적었으나 이는 추론이다 — 적용 전에 컬럼이 있는 상태로 다시 돌릴 것.",
+ "applied": true,
+ "beforeIsInferred": false,
+ "beforeNote": "before 는 DB 에서 읽은 값이다.",
  "planned": 97,
+ "carriedOver": 0,
  "skipped": [],
  "rows": [
   {
