@@ -49,7 +49,9 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 HERE = pathlib.Path(__file__).parent
-ROWS = pathlib.Path("scripts/qa/reports/rpm-square-rows.json")
+#: ⚠️ **지금 DB 값**을 봐야 한다. 옛 스냅숏을 보면 이미 고친 행을 다시 계획에
+#:    올리고, 적용기는 「값이 달라졌다」로 전부 건너뛴다 — 아무것도 안 고쳐진다.
+CENSUS = pathlib.Path("scripts/qa/reports/rpm-damage-census.json")
 ORIGIN = pathlib.Path("scripts/qa/reports/rpm-origin.json")
 OUT = pathlib.Path("scripts/qa/reports/rpm-square-repair.json")
 SRC = pathlib.Path(".rpm-src")
@@ -95,7 +97,19 @@ def main() -> None:
     auditsol = load("auditsol", "audit-rpm-solutions.py")
     rpmlatex = load("rpmlatex", "rpm_book_latex.py")
 
-    rows = json.loads(ROWS.read_text(encoding="utf-8"))["목록"]
+    census = json.loads(CENSUS.read_text(encoding="utf-8"))
+    hurt: dict[str, dict[str, int]] = {}
+    for g in census["갈래"]:
+        field = g["갈래"].split(":")[0]
+        if field not in ("solution", "answer"):
+            continue
+        for pid in g["id"]:
+            hurt.setdefault(pid, {})[field] = 1
+    rows = [
+        {"id": pid, "sq": sq, **{f: (census["지금"][pid] or {}).get(f) for f in ("content", "answer", "solution")}}
+        for pid, sq in hurt.items()
+        if pid in census["지금"]
+    ]
     origin = {
         o["problemId"]: o
         for o in json.loads(ORIGIN.read_text(encoding="utf-8"))["목록"]
