@@ -27,6 +27,7 @@ import {
   unauthorizedError,
   validationError,
 } from "@/lib/apiResponse";
+import { figureFabricationReason } from "@/lib/figure/figureMatchesContent";
 import { renderFigureSpec } from "@/lib/figure/renderFigureSpec";
 import {
   FIGURE_MISSING_REASON,
@@ -65,6 +66,8 @@ export async function POST(request: NextRequest) {
     figureSvgs = await Promise.all(
       parsed.data.items.map(async (item) => {
         if (!item.figureSpec) return null;
+        // 화면도 막지만, 화면만 막으면 문지기가 브라우저에 있는 것이다.
+        if (figureFabricationReason(item.figureSpec, item.content)) return null;
         const result = await renderFigureSpec(item.figureSpec);
         return result.ok ? result.svg : null;
       }),

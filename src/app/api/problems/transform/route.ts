@@ -25,6 +25,7 @@ import {
   unauthorizedError,
   validationError,
 } from "@/lib/apiResponse";
+import { figureFabricationReason } from "@/lib/figure/figureMatchesContent";
 import { renderFigureSpec } from "@/lib/figure/renderFigureSpec";
 import { originNeedsFigure } from "@/lib/figure/transformFigureBlock";
 import { requireAccessibleProblem } from "@/lib/ownership";
@@ -77,6 +78,15 @@ export async function POST(request: NextRequest) {
                 ...candidate,
                 figureError: "AI 가 본문만으로는 도형을 확정하지 못했습니다.",
               };
+            }
+            // ⚠️ **그리기 전에** 지어냈는지부터 본다. 지어낸 스펙도 엔진을 성공적으로
+            //    통과한다(실측) — 그럴듯하게 그려진 오답이 제일 위험하다.
+            const fabricated = figureFabricationReason(
+              candidate.figureSpec,
+              candidate.content,
+            );
+            if (fabricated) {
+              return { ...candidate, figureSvg: null, figureError: fabricated };
             }
             const result = await renderFigureSpec(candidate.figureSpec);
             return result.ok

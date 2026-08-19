@@ -372,6 +372,58 @@ describe("그림에 기대는 원본은 변형본을 채택할 수 없다 (2026-
     expect(body.data[0]?.figureError).toContain("도형");
   });
 
+  it("본문에 없는 값을 넣은 도형은 **그리기 전에** 잡아 사유를 남긴다", async () => {
+    const seeded = await seedFigureProblem(
+      ["/figures/3391/q12.png"],
+      "오른쪽 그림과 같이 반지름의 길이가 $9cm$ 인 원에서 색칠한 부분의 넓이를 구하시오.",
+    );
+    mockTransformProblem.mockResolvedValueOnce([
+      {
+        ...passing("반지름 $12cm$ 인 원에서 색칠한 부분의 넓이를 구하시오."),
+        // 2026-08-19 실제로 AI 가 낸 모양 — 본문에 없는 각도를 넣었고 엔진은 통과시켰다.
+        figureSpec: {
+          ...DRAWABLE_SPEC,
+          angles: { a1: { vertex: "A", points: ["B", "C"], label: "35°" } },
+        },
+      },
+    ]);
+
+    const res = await transformRoute(
+      jsonRequest("http://localhost/api/problems/transform", {
+        originProblemId: seeded.id,
+        count: 1,
+      }),
+    );
+
+    const body = problemTransformResponseSchema.parse(await res.json());
+    expect(body.data[0]?.figureSvg).toBeNull();
+    expect(body.data[0]?.figureError).toContain("35");
+  });
+
+  it("지어낸 도형으로 채택을 시도하면 **서버가** 거부한다", async () => {
+    const seeded = await seedFigureProblem(
+      ["/figures/3391/q12.png"],
+      "오른쪽 그림과 같이 반지름의 길이가 $9cm$ 인 원에서 색칠한 부분의 넓이를 구하시오.",
+    );
+
+    const res = await adoptRoute(
+      jsonRequest("http://localhost/api/problems/transform/adopt", {
+        originProblemId: seeded.id,
+        items: [
+          {
+            ...adoptItem("반지름 $12cm$ 인 원의 넓이"),
+            figureSpec: {
+              ...DRAWABLE_SPEC,
+              angles: { a1: { vertex: "A", points: ["B", "C"], label: "35°" } },
+            },
+          },
+        ],
+      }),
+    );
+
+    expect(res.status).toBe(409);
+  });
+
   it("도형 스펙이 있으면 채택이 되고, **서버가 다시 그려** 저장한다", async () => {
     const seeded = await seedFigureProblem(
       ["/figures/3391/q12.png"],

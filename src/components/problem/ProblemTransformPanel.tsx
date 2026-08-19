@@ -206,8 +206,10 @@ export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
             <Button variant="ghost" onClick={onClose} disabled={pending}>
               취소
             </Button>
+            {/* 실측(2026-08-19): 추론형 모델이라 한 문항에 수 분이 걸리고, 그림 문항은
+                도형 스펙까지 받아 더 걸린다. 「변형하는 중」만 두면 멈춘 것으로 읽힌다. */}
             <Button variant="ink" onClick={runTransform} disabled={pending}>
-              {pending ? "변형하는 중" : "변형하기"}
+              {pending ? "변형하는 중 (수 분 걸립니다)" : "변형하기"}
             </Button>
           </div>
         </>
