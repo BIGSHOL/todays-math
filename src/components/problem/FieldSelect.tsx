@@ -1,5 +1,5 @@
 import { Children, isValidElement, type ReactNode } from "react";
-import type { SelectHTMLAttributes } from "react";
+import type { InputHTMLAttributes, SelectHTMLAttributes } from "react";
 
 /**
  * 필터 칸 폭 — **고정**이다 (2026-08-17 원장님 "필터 선택할때마다 크기 제각각인데
@@ -66,6 +66,29 @@ export function FieldSelect({
       >
         {children}
       </select>
+    </label>
+  );
+}
+
+/**
+ * 필터 줄의 **글자 입력칸** — `FieldSelect` 와 같은 제목·높이·테두리를 쓴다.
+ *
+ * ⚠️ 줄맞춤은 «같은 클래스»가 아니라 **같은 구조**에서 나온다. 제목이 `<label>` 의
+ * 첫 줄로 서고 그 아래 `h-11` 상자가 오는 흐름을 그대로 지켜야 다른 칸과 밑선이 맞는다.
+ */
+export function FieldText({
+  label,
+  className = "",
+  ...props
+}: InputHTMLAttributes<HTMLInputElement> & { label: string }) {
+  return (
+    <label className="flex min-w-0 flex-col gap-1 text-[10.5px] font-black tracking-[1.5px] text-text-2">
+      {label}
+      <input
+        className={`h-11 w-full border border-control bg-white px-3 text-[12.5px] font-normal text-ink focus:border-g-blue focus:outline focus:outline-2 focus:outline-g-blue ${className}`}
+        type="search"
+        {...props}
+      />
     </label>
   );
 }

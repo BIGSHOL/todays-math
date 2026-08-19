@@ -720,3 +720,65 @@ describe("[S-08] GET /api/problems — 자료 토글(그림·해설·정답) 서
     expect(res.status).toBe(400);
   });
 });
+
+/**
+ * 본문 검색 — **서버가 실제로 거르는지** 잠근다 (원장님 지시 2026-08-19).
+ * 화면 검사는 `q` 가 붙는지만 본다.
+ */
+describe("[S-08] GET /api/problems — 본문 검색", () => {
+  it("q 로 본문을 거른다 — 안 맞는 문항은 안 온다", async () => {
+    const all = problemListResponseSchema.parse(
+      await (
+        await listProblems(
+          jsonRequest("http://localhost/api/problems?pageSize=100", "GET"),
+        )
+      ).json(),
+    );
+    // 픽스처에서 실제로 갈리는 낱말을 고른다 — 안 갈리면 이 검사는 아무것도 안 잠근다.
+    const needle = all.data[0]!.content.slice(0, 4);
+    expect(all.data.some((p) => !p.content.includes(needle))).toBe(true);
+
+    const res = await listProblems(
+      jsonRequest(
+        `http://localhost/api/problems?q=${encodeURIComponent(needle)}&pageSize=100`,
+        "GET",
+      ),
+    );
+    expect(res.status).toBe(200);
+    const body = problemListResponseSchema.parse(await res.json());
+    expect(body.data.length).toBeGreaterThan(0);
+    expect(body.data.length).toBeLessThan(all.data.length);
+    for (const p of body.data) {
+      expect(p.content.toLowerCase()).toContain(needle.toLowerCase());
+    }
+  });
+
+  it("q 는 자료 토글과 **같이** 걸린다 — 서로를 지우지 않는다", async () => {
+    const all = problemListResponseSchema.parse(
+      await (
+        await listProblems(
+          jsonRequest("http://localhost/api/problems?pageSize=100", "GET"),
+        )
+      ).json(),
+    );
+    const needle = all.data[0]!.content.slice(0, 3);
+    const res = await listProblems(
+      jsonRequest(
+        `http://localhost/api/problems?q=${encodeURIComponent(needle)}&hasAnswer=true&pageSize=100`,
+        "GET",
+      ),
+    );
+    const body = problemListResponseSchema.parse(await res.json());
+    for (const p of body.data) {
+      expect(p.content.toLowerCase()).toContain(needle.toLowerCase());
+      expect(p.answer).not.toBe(MISSING_ANSWER);
+    }
+  });
+
+  it("빈 q 는 계약이 거절한다 — 붙이면 전량이 통과해 뜻이 없다", async () => {
+    const res = await listProblems(
+      jsonRequest("http://localhost/api/problems?q=", "GET"),
+    );
+    expect(res.status).toBe(400);
+  });
+});

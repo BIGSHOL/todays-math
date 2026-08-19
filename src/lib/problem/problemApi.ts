@@ -23,6 +23,8 @@ export type ProblemListFilters = {
   chapter?: string;
   chapterPrefix?: string;
   /** 그림(이미지 경로 또는 엔진 SVG)이 있는 문항만. 켤 때만 붙인다. */
+  /** 본문 검색어. 비면 안 붙인다. */
+  q?: string;
   hasFigure?: boolean;
   /** 해설(`solution`)이 있는 문항만. 켤 때만 붙인다. */
   hasSolution?: boolean;
@@ -48,6 +50,7 @@ function listQuery(filters: ProblemListFilters, page: number) {
   if (filters.grade) params.set("grade", filters.grade);
   if (filters.chapter) params.set("chapter", filters.chapter);
   if (filters.chapterPrefix) params.set("chapterPrefix", filters.chapterPrefix);
+  if (filters.q) params.set("q", filters.q);
   // 계약이 `"true"` 리터럴만 받는다 — 끌 때는 아예 안 붙인다("false" 를 보내면 안 된다).
   //
   // ⚠️ 켬/끔 토글은 **여기 한 곳에서** 이름을 세어 붙인다. 예전에는 줄마다 손으로

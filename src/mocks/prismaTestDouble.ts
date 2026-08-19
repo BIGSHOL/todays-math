@@ -614,6 +614,8 @@ function matchesWhere<T extends object>(
         in?: unknown[];
         not?: unknown;
         startsWith?: unknown;
+        contains?: unknown;
+        mode?: unknown;
         isEmpty?: unknown;
         gt?: unknown;
         gte?: unknown;
@@ -628,6 +630,24 @@ function matchesWhere<T extends object>(
       }
       if (typeof obj.startsWith === "string") {
         return typeof value === "string" && value.startsWith(obj.startsWith);
+      }
+
+      // `contains` — 본문 검색(S-08). `mode: "insensitive"` 는 Prisma 가 PostgreSQL 에서
+      // `ILIKE` 로 바꾸는 값이라 **대소문자를 접어서** 견준다. 모드를 무시하고 그냥
+      // `includes` 로 하면 제품이 못 찾는 것을 가짜가 찾아 주는 거짓 초록이 된다.
+      if ("contains" in obj && typeof obj.contains === "string") {
+        const unknown = Object.keys(obj).filter(
+          (k) => k !== "contains" && k !== "mode",
+        );
+        if (unknown.length > 0) {
+          throw new Error(
+            `prismaTestDouble: contains 와 섞인 미지원 연산자 '${unknown.join(",")}'`,
+          );
+        }
+        if (typeof value !== "string") return false;
+        return obj.mode === "insensitive"
+          ? value.toLowerCase().includes(obj.contains.toLowerCase())
+          : value.includes(obj.contains);
       }
 
       // 🔴 범위 연산자를 모르면 이 함수는 `value === {gte: ...}` 로 떨어져 **항상 false**

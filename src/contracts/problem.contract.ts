@@ -140,6 +140,14 @@ export const problemFilterQuerySchema = z.strictObject({
    * ⚠️ `z.coerce.boolean()` 을 쓰면 `"false"` 도 **참**이 된다(빈 문자열만 거짓).
    * 쿼리스트링은 전부 문자열이라 그 함정에 그대로 걸린다. 그래서 리터럴로 받는다.
    */
+  /**
+   * 본문 검색어(2026-08-19). 대소문자 구분 없이 `content` 안을 찾는다.
+   *
+   * ⚠️ 서버 실측 277~289ms(Seq Scan)다. 화면은 **디바운스**로 타자 중 조회를 막는다
+   * (`useDebounced`). 여기서 길이를 막는 것은 그 다음 방어다.
+   * 빈 검색어는 **아예 안 붙인다** — 붙이면 전량이 통과해 뜻이 없다.
+   */
+  q: z.string().trim().min(1).max(100).optional(),
   hasFigure: z.literal("true").optional(),
   /**
    * 해설이 있는 문항만(2026-08-19). 실측 13,909건(29.5%).

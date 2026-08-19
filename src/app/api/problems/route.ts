@@ -93,6 +93,7 @@ export async function GET(request: NextRequest) {
     grade,
     chapter,
     chapterPrefix,
+    q,
     hasFigure,
     hasSolution,
     hasAnswer,
@@ -136,6 +137,11 @@ export async function GET(request: NextRequest) {
   const answerWhere = hasAnswer
     ? [{ AND: [{ answer: { not: MISSING_ANSWER } }, { answer: { not: "" } }] }]
     : [];
+  // 본문 검색(2026-08-19) — `contains` + `insensitive`.
+  // ⚠️ 검색어가 비면 **아예 안 붙인다.** 빈 문자열로 붙이면 전량이 통과해 뜻이 없다.
+  const searchWhere = q
+    ? [{ content: { contains: q, mode: "insensitive" as const } }]
+    : [];
   const where = {
     AND: [
       problemVisibleWhere(session.id),
@@ -144,6 +150,7 @@ export async function GET(request: NextRequest) {
       ...figureWhere,
       ...solutionWhere,
       ...answerWhere,
+      ...searchWhere,
     ],
   };
 

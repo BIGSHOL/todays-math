@@ -820,3 +820,166 @@ describe("[S-08] 문제은행 — 해설·정답 토글 (MSW)", () => {
     });
   });
 });
+
+/**
+ * 🔴 RED → 🟢 GREEN — 문항 본문 검색 (원장님 지시 2026-08-19).
+ *
+ * ## 실측 근거 (`id-find-review.md`, DB 47,152건)
+ *
+ * 소단원까지 좁혀도 목표 문항이 **중앙 7페이지째 · p90 34페이지째**에 있고,
+ * 이동은 「이전/다음」뿐이라 건너뛸 수 없다. 본문 한 구절로 **유일 특정은
+ * 29.5~33.0%** 뿐이지만 **소단원 필터와 겹치면 중앙 2행** — 한 페이지 안이다.
+ * 그래서 검색은 **필터를 대체하지 않고 겹쳐 쓰는** 물건이다.
+ *
+ * ⚠️ 17.4%(8,187행)는 **옮겨 적을 한글 구절이 아예 없어** 구조적으로 못 찾는다.
+ *    검색이 만능이 아니라는 뜻이고, 그래서 자료 토글·단원 필터가 계속 필요하다.
+ *
+ * ⚠️ 서버 실측 277~289ms(Seq Scan)이다. 글자마다 조회하면 안 된다 — **디바운스**가
+ *    있어야 한다. 그 사실을 테스트가 잠근다(타자 중에는 안 나가고, 멎으면 한 번 나간다).
+ */
+describe("[S-08] 문제은행 — 본문 검색 (MSW)", () => {
+  const EMPTY_LIST = { data: [], meta: { page: 1, pageSize: 20, total: 0 } };
+
+  function captureQueries() {
+    const captured: URLSearchParams[] = [];
+    server.use(
+      http.get("/api/problems", ({ request }) => {
+        captured.push(new URL(request.url).searchParams);
+        return HttpResponse.json(EMPTY_LIST);
+      }),
+    );
+    return captured;
+  }
+
+  it("검색칸을 보여 주고 기본은 비어 있다", async () => {
+    await renderBank();
+    const box = screen.getByRole("searchbox", { name: "본문 검색" });
+    expect(box).toBeInTheDocument();
+    expect(box).toHaveValue("");
+  });
+
+  it("타자가 멎으면 q 로 조회한다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+
+    await user.type(
+      screen.getByRole("searchbox", { name: "본문 검색" }),
+      "이차함수",
+    );
+    await waitFor(
+      () => {
+        expect(captured.at(-1)?.get("q")).toBe("이차함수");
+      },
+      { timeout: 3000 },
+    );
+  });
+
+  /**
+   * 서버가 한 번 조회에 277~289ms 를 쓴다. 글자마다 나가면 네 글자에 네 번이고,
+   * 늦게 온 옛 응답이 새 응답을 덮는 경합도 생긴다.
+   */
+  it("글자마다 조회하지 않는다 — 네 글자를 쳐도 조회는 한 번뿐", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+
+    await user.type(
+      screen.getByRole("searchbox", { name: "본문 검색" }),
+      "이차함수",
+    );
+    await waitFor(
+      () => {
+        expect(captured.at(-1)?.get("q")).toBe("이차함수");
+      },
+      { timeout: 3000 },
+    );
+    const withQ = captured.filter((c) => c.get("q"));
+    expect(withQ.length).toBe(1);
+  });
+
+  it("지우면 q 가 빠진다 — 빈 검색어를 서버로 보내지 않는다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+    const box = screen.getByRole("searchbox", { name: "본문 검색" });
+
+    // ⚠️ 지우기 전에 **검색이 실제로 나간 것을 먼저 확인**해야 한다. 디바운스가
+    //    아직 안 터진 상태에서 지우면 `q` 가 처음부터 빈 채라 상태가 안 바뀌고,
+    //    조회가 한 번도 안 나가 「빠졌다」를 확인할 수 없다(거짓 초록/거짓 빨강).
+    await user.type(box, "이차");
+    await waitFor(
+      () => {
+        expect(captured.at(-1)?.get("q")).toBe("이차");
+      },
+      { timeout: 3000 },
+    );
+
+    await user.clear(box);
+    await waitFor(
+      () => {
+        expect(captured.at(-1)?.has("q")).toBe(false);
+      },
+      { timeout: 3000 },
+    );
+  });
+
+  it("검색하면 1페이지부터 다시 본다 — 옛 페이지에 남으면 빈 화면이 된다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+
+    await user.type(
+      screen.getByRole("searchbox", { name: "본문 검색" }),
+      "이차",
+    );
+    await waitFor(
+      () => {
+        expect(captured.at(-1)?.get("page")).toBe("1");
+      },
+      { timeout: 3000 },
+    );
+  });
+
+  it("검색은 필터를 **대체하지 않는다** — 자료 토글과 같이 붙는다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+
+    await user.click(screen.getByRole("checkbox", { name: "해설" }));
+    await user.type(
+      screen.getByRole("searchbox", { name: "본문 검색" }),
+      "이차",
+    );
+    await waitFor(
+      () => {
+        const q = captured.at(-1)!;
+        expect(q.get("q")).toBe("이차");
+        expect(q.get("hasSolution")).toBe("true");
+      },
+      { timeout: 3000 },
+    );
+  });
+});
+
+/**
+ * 🔴 RED → 🟢 GREEN — 필터 줄 줄맞춤 (원장님 지시 2026-08-19, 스크린샷).
+ *
+ * 「자료」 묶음만 제목 높이와 상자 위치가 다른 자리에 있었다. 원인은 `fieldset`/`legend`
+ * 다 — `legend` 는 브라우저가 **테두리 위에 얹어 그리는 특별한 상자**라
+ * `border-0 p-0` 을 줘도 다른 칸의 `<label>` 첫 줄과 **같은 흐름에 서지 않는다.**
+ *
+ * 그래서 묶음 의미(`role="group"` + `aria-labelledby`)는 지키되 **마크업 구조는
+ * 다른 칸과 똑같이** 맞춘다 — `flex flex-col gap-1` + 제목 span + `h-11` 상자.
+ */
+describe("[S-08] 문제은행 — 필터 줄맞춤", () => {
+  it("「자료」 묶음이 `fieldset` 이 아니라 다른 칸과 같은 구조다", async () => {
+    await renderBank();
+    const group = screen.getByRole("group", { name: "자료" });
+    // `legend` 는 다른 칸의 제목과 다른 흐름에 서므로 쓰지 않는다.
+    expect(group.tagName).not.toBe("FIELDSET");
+    expect(group.querySelector("legend")).toBeNull();
+  });
+
+  it("「자료」 상자와 select 가 같은 높이 클래스를 쓴다", async () => {
+    await renderBank();
+    const group = screen.getByRole("group", { name: "자료" });
+    const box = group.querySelector("div");
+    expect(box?.className).toContain("h-11");
+  });
+});
