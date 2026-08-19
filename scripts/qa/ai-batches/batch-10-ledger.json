@@ -1,0 +1,33 @@
+{
+ "적용": "AI 대체 문항 적재 (pending) — 원장님 확정 2026-08-19 「AI로 새로 내자」",
+ "기준시각": "2026-08-19T09:36:16.773Z",
+ "배치": "scripts/qa/ai-batches/batch-10.json",
+ "되돌리기": "ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/load-ai-replacements.ts --revert scripts/qa/ai-batches/batch-10-ledger.json",
+ "넣은id": [
+  "903455c0-b3a1-499c-85f3-2c1ecb28cffc",
+  "c47084c0-1e30-473f-85fe-b972f5f4919c",
+  "cfad78e5-1873-4b0b-99d7-9466280a73d8",
+  "e33284bc-0038-4dd1-9efb-2cc792143a63",
+  "27a87ee4-1dc1-4b66-8aeb-7dd2f375ff36",
+  "d89863d0-77d8-444b-a565-f014ba565fd4",
+  "2f4f1b58-ce8f-4ad5-8971-612de2748a44",
+  "58ce178e-267b-4de7-bb65-a5696745dcec",
+  "dddb701f-0c76-4c08-9b4e-e40edce4f1b6",
+  "0f1322f5-dac8-4974-be65-661936a2628a",
+  "8a2fcb49-3242-438e-874f-0502b1c73ec7",
+  "f5231377-03eb-4885-b1c6-b0f978899c7f",
+  "d71186e7-50b0-4d6f-a7db-9e644be2cb06",
+  "450ef0fb-489e-4a93-9fe2-65241d691e6d",
+  "a2f904ae-8c67-4eba-ab09-39734ef5c016",
+  "474fe8bb-0e6b-4a18-97d6-6cf3821bc4c7",
+  "92daac0f-a582-4d53-956c-1e39444dd709",
+  "09af88c5-03df-45ff-99a2-a2b70077d7c1",
+  "e1ab2735-ce02-48b1-b53e-50c6e3236b51",
+  "a8fcbc59-4a4f-4d78-8eae-ffab42c8aa3d",
+  "53ede4b4-bfd2-42e5-8df7-db490382eeb9",
+  "759af0ae-983d-4ba4-b471-fdb3578f361c",
+  "8af36dbe-a7ac-4cd1-b7bd-b01211a56c00",
+  "bed47167-0cca-4718-833e-01561601aa91",
+  "ef3388b5-c347-46fd-9411-651e0d094f52"
+ ]
+}
