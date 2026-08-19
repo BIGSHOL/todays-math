@@ -30,6 +30,10 @@ const eslintConfig = defineConfig([
     // 오르카가 만드는 중첩 워크트리 — 저장소 안에 있지만 git 추적 대상이 아니다
     // (.git/info/exclude). 이걸 안 빼면 `npm run lint`가 남의 사본 오류로 항상 빨갛다.
     ".claude/worktrees/**",
+    // 임시 조사용 스크래치 (.gitignore "임시 조사용"). 커밋되지 않는 남의 조사
+    // 파일 때문에 `npm run lint` 가 빨개지면 **게이트가 병합을 못 가른다** —
+    // 실제로 병합 검수에서 `.probe/peek.ts` 의 any 3건으로 빨갛게 떴다.
+    ".probe/**",
   ]),
 ]);
 
