@@ -20,11 +20,14 @@ import {
   problemTransformAdoptResponseSchema,
   shiftDifficulty,
 } from "@/contracts/problem.contract";
+import { verifiesOriginalReproduction } from "@/lib/ai/originalReproduction";
 import {
+  jsonError,
   jsonOk,
   unauthorizedError,
   validationError,
 } from "@/lib/apiResponse";
+import { transformFigureBlockReason } from "@/lib/figure/transformFigureBlock";
 import { db } from "@/lib/db";
 import { requireAccessibleProblem } from "@/lib/ownership";
 import { serializeProblem } from "@/lib/serializers";
@@ -45,6 +48,27 @@ export async function POST(request: NextRequest) {
   if (!accessible.ok) return accessible.response;
 
   const origin = accessible.data;
+
+  // ⚠️ 두 문지기를 **여기서 다시** 세운다. 화면도 막지만 화면만 막으면 문지기가
+  //    브라우저에 있는 것이고, 그건 없는 것과 같다(적대적 리뷰 2026-08-19).
+  const figureBlocked = transformFigureBlockReason(origin);
+  if (figureBlocked) {
+    return jsonError("CONFLICT", figureBlocked, 409);
+  }
+
+  // 원본 재현 검사 — 종전에는 변형기가 탈락 후보를 걸러 서버가 저장을 거부했다.
+  // 미리보기로 갈라지며 그 자리가 비었으므로 저장 직전에 되살린다.
+  const failed = parsed.data.items.filter(
+    (item) => !verifiesOriginalReproduction(origin, item),
+  );
+  if (failed.length > 0) {
+    return jsonError(
+      "VALIDATION_ERROR",
+      `원본 재현 검사를 통과하지 못한 변형 ${failed.length}건은 저장할 수 없습니다.`,
+      400,
+    );
+  }
+
   const difficulty = shiftDifficulty(
     origin.difficulty as Difficulty,
     parsed.data.difficultyShift,

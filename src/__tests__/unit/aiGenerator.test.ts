@@ -28,8 +28,8 @@ vi.mock("openai", () => ({
 import { generateProblems } from "@/lib/ai/generator";
 import {
   transformProblem,
-  verifiesOriginalReproduction,
 } from "@/lib/ai/transformer";
+import { verifiesOriginalReproduction } from "@/lib/ai/originalReproduction";
 import { AiGenerationError } from "@/lib/ai/errors";
 import {
   normalizeLatex,

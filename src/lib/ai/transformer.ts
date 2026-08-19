@@ -23,6 +23,7 @@ import { z } from "zod";
 import { callAi } from "./client";
 import { AiGenerationError } from "./errors";
 import { normalizeLatex, parseAiJsonArray } from "./jsonRepair";
+import { verifiesOriginalReproduction } from "./originalReproduction";
 import {
   buildTransformSystemPrompt,
   buildTransformUserPrompt,
@@ -39,7 +40,6 @@ const transformedItemSchema = z.strictObject({
   solution: z.string().nullable().optional(),
   originalAnswerRecomputed: z.string().min(1),
 });
-type TransformedItem = z.infer<typeof transformedItemSchema>;
 
 /** 변형 대상 원본 — 라우트가 DB에서 조회한 ProblemEntity 중 변형에 필요한 필드만 받는다. */
 export interface TransformProblemOrigin {
@@ -59,31 +59,6 @@ export interface TransformProblemInput {
   mode?: TransformMode;
   /** 원장님이 화면에서 고른 난이도 조정. 생략 시 원본 유지. */
   difficultyShift?: DifficultyShift;
-}
-
-/** 답 비교 전 공백/개행을 제거하고 \dfrac→\frac을 정규화해 표기 차이로 인한 오탐을 줄인다. */
-function normalizeForComparison(text: string): string {
-  return normalizeLatex(text).replace(/\s+/g, "");
-}
-
-/**
- * 원본 재현 검사(sumaek `packages/core/src/variants/` 설계의 MVP 골격 — 읽기 전용 참조).
- * AI가 자신이 세운 변형 규칙을 원본 문제의 숫자에 되돌려 적용했을 때
- * (`candidate.originalAnswerRecomputed`) 원본의 실제 정답(`origin.answer`)을 재현하는지
- * 확인한다. 새 문제의 답(`candidate.answer`)은 이 검사를 통과했을 때만 신뢰한다 — AI가
- * 정답 사슬에 단독으로 끼지 않도록 하는 최소 방어선이다.
- *
- * ⚠️ MVP 골격: 완전한 기호 연산 solve()(sumaek parse/solve/render/vary/check 4단 분리)는
- * v2 범위 — 지금은 AI 자기 일관성 검사(self-consistency check)로 대체한다.
- */
-export function verifiesOriginalReproduction(
-  origin: Pick<TransformProblemOrigin, "answer">,
-  candidate: Pick<TransformedItem, "originalAnswerRecomputed">,
-): boolean {
-  return (
-    normalizeForComparison(candidate.originalAnswerRecomputed) ===
-    normalizeForComparison(origin.answer)
-  );
 }
 
 /**

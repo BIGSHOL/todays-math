@@ -64,6 +64,14 @@ function passing(content = "변형된 문제") {
   };
 }
 
+/**
+ * 채택 한 건 — `originalAnswerRecomputed` 는 **원본 정답과 같아야** 서버 검사를 통과한다.
+ * 검사가 브라우저에만 있으면 없는 것과 같아서, 저장 직전에 서버가 다시 댄다.
+ */
+function adoptItem(content: string, recomputed = MOCK_PROBLEMS[0]!.answer) {
+  return { content, answer: "2", solution: null, originalAnswerRecomputed: recomputed };
+}
+
 beforeEach(() => {
   mockTransformProblem.mockReset();
 });
@@ -217,6 +225,106 @@ describe("POST /api/problems/transform — 후보만 만든다", () => {
   });
 });
 
+describe("그림에 기대는 원본은 변형본을 채택할 수 없다 (2026-08-19)", () => {
+  /**
+   * 변형은 본문 글자만 오가고 **그림은 따라가지 않는다.** 그대로 두면 「본문은 그림을
+   * 가리키는데 그림이 없는」 문항이 새로 태어난다 — 이 저장소가 856건 잠근 그 부류다.
+   * 실측: 출제 가능 46,681건 중 9,419건(20.2%)이 이 통로였다.
+   *
+   * ⚠️ mock 문항에는 그림이 **하나도 없었다.** 그래서 이 결함을 테스트 1,794건이 전부
+   *    놓쳤다(적대적 리뷰 2026-08-19). 없는 축은 변이시킬 수 없다 — 축을 만들어 둔다.
+   */
+  async function seedFigureProblem(figureUrls: string[], content: string) {
+    // 이미 시드된 **DB 행**을 그대로 펼쳐 쓴다. 계약 형태(MOCK_PROBLEMS)는 DB 행보다
+    // 필드가 적어서, 손으로 나열하면 스키마가 자랄 때마다 이 헬퍼가 먼저 깨진다.
+    const seed = await prismaTestDouble.problem.findUnique({
+      where: { id: MOCK_PROBLEMS[0]!.id },
+    });
+    const rest = { ...seed! } as Record<string, unknown>;
+    delete rest.id;
+    delete rest.createdAt;
+    delete rest.updatedAt;
+    return prismaTestDouble.problem.create({
+      data: {
+        ...(rest as Parameters<
+          typeof prismaTestDouble.problem.create
+        >[0]["data"]),
+        userId: USER_TEACHER_ID,
+        content,
+        figureUrls,
+      },
+    });
+  }
+
+  it("원본에 그림이 붙어 있으면 후보는 주되 채택 사유를 같이 보낸다", async () => {
+    const seeded = await seedFigureProblem(
+      ["/figures/3391/q12.png"],
+      "다음 그림과 같이 $AC=4$, $BC=8$ 인 삼각형 ABC 의 넓이는?",
+    );
+    mockTransformProblem.mockResolvedValueOnce([passing()]);
+
+    const res = await transformRoute(
+      jsonRequest("http://localhost/api/problems/transform", {
+        originProblemId: seeded.id,
+        count: 1,
+      }),
+    );
+
+    const body = problemTransformResponseSchema.parse(await res.json());
+    expect(body.data).toHaveLength(1); // 후보는 보여 준다
+    expect(body.meta.figureBlockedReason).toContain("그림");
+  });
+
+  it("그림 없는 평범한 원본은 막지 않는다 (반대쪽)", async () => {
+    mockTransformProblem.mockResolvedValueOnce([passing()]);
+
+    const res = await transformRoute(
+      jsonRequest("http://localhost/api/problems/transform", {
+        originProblemId: MOCK_PROBLEMS[0]!.id,
+        count: 1,
+      }),
+    );
+
+    const body = problemTransformResponseSchema.parse(await res.json());
+    expect(body.meta.figureBlockedReason).toBeNull();
+  });
+
+  it("막힌 원본으로 채택을 시도하면 **서버가** 409로 거부한다", async () => {
+    const seeded = await seedFigureProblem(
+      ["/figures/3391/q12.png"],
+      "다음 그림과 같이 $AC=4$, $BC=8$ 인 삼각형 ABC 의 넓이는?",
+    );
+
+    const res = await adoptRoute(
+      jsonRequest("http://localhost/api/problems/transform/adopt", {
+        originProblemId: seeded.id,
+        items: [adoptItem("그림 잃은 변형")],
+      }),
+    );
+
+    // 화면도 막지만, 화면만 막으면 문지기가 브라우저에 있는 것이고 그건 없는 것과 같다.
+    expect(res.status).toBe(409);
+    expect(errorResponseSchema.parse(await res.json()).error.code).toBe(
+      "CONFLICT",
+    );
+  });
+
+  it("그림이 없어도 본문이 그림을 지목하면 막는다 (이미 깨진 원본)", async () => {
+    const seeded = await seedFigureProblem(
+      [],
+      "다음 그림과 같이 $AC=4$ 인 삼각형 ABC 의 넓이는?",
+    );
+
+    const res = await adoptRoute(
+      jsonRequest("http://localhost/api/problems/transform/adopt", {
+        originProblemId: seeded.id,
+        items: [adoptItem("깨진 원본의 변형")],
+      }),
+    );
+    expect(res.status).toBe(409);
+  });
+});
+
 describe("POST /api/problems/transform/adopt — 채택분만 넣는다", () => {
   it("201과 함께 transformed/pending 으로 저장하고, 분류는 원본에서 물려받는다", async () => {
     const origin = MOCK_PROBLEMS[0]!;
@@ -224,7 +332,7 @@ describe("POST /api/problems/transform/adopt — 채택분만 넣는다", () => 
     const res = await adoptRoute(
       jsonRequest("http://localhost/api/problems/transform/adopt", {
         originProblemId: origin.id,
-        items: [{ content: "채택된 변형", answer: "2", solution: null }],
+        items: [adoptItem("채택된 변형")],
       }),
     );
 
@@ -246,7 +354,7 @@ describe("POST /api/problems/transform/adopt — 채택분만 넣는다", () => 
       jsonRequest("http://localhost/api/problems/transform/adopt", {
         originProblemId: origin.id,
         difficultyShift: "up",
-        items: [{ content: "한 단계 올린 변형", answer: "3", solution: null }],
+        items: [adoptItem("한 단계 올린 변형")],
       }),
     );
 
@@ -264,9 +372,7 @@ describe("POST /api/problems/transform/adopt — 채택분만 넣는다", () => 
         originProblemId: origin.id,
         items: [
           {
-            content: "위조 시도",
-            answer: "2",
-            solution: null,
+            ...adoptItem("위조 시도"),
             source: "manual",
           },
         ],
@@ -285,10 +391,24 @@ describe("POST /api/problems/transform/adopt — 채택분만 넣는다", () => 
     const res = await adoptRoute(
       jsonRequest("http://localhost/api/problems/transform/adopt", {
         originProblemId: MOCK_PROBLEM_OTHER_USER.id,
-        items: [{ content: "남의 원본", answer: "2", solution: null }],
+        items: [adoptItem("남의 원본")],
       }),
     );
     expect(res.status).toBe(403);
+  });
+
+  it("원본 재현 검사를 통과 못 한 값을 보내면 **서버가** 400으로 거부한다", async () => {
+    const res = await adoptRoute(
+      jsonRequest("http://localhost/api/problems/transform/adopt", {
+        originProblemId: MOCK_PROBLEMS[0]!.id,
+        // 원본 정답과 다른 재현값 — 미리보기에서 「폐기」로 뜬 후보를 우회 저장하려는 꼴.
+        items: [adoptItem("탈락 후보 우회", "전혀 다른 값")],
+      }),
+    );
+    expect(res.status).toBe(400);
+    expect(errorResponseSchema.parse(await res.json()).error.code).toBe(
+      "VALIDATION_ERROR",
+    );
   });
 
   it("빈 채택 목록은 400 이다", async () => {
@@ -317,8 +437,8 @@ describe("POST /api/problems/transform/adopt — 채택분만 넣는다", () => 
           jsonRequest("http://localhost/api/problems/transform/adopt", {
             originProblemId: origin.id,
             items: [
-              { content: "첫 번째", answer: "2", solution: null },
-              { content: "두 번째", answer: "3", solution: null },
+              adoptItem("첫 번째"),
+              adoptItem("두 번째"),
             ],
           }),
         ),

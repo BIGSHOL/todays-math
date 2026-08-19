@@ -13,6 +13,8 @@
 import { http, type HttpHandler } from "msw";
 
 import { deleteResponseSchema } from "@/contracts/common.contract";
+import { verifiesOriginalReproduction } from "@/lib/ai/originalReproduction";
+import { transformFigureBlockReason } from "@/lib/figure/transformFigureBlock";
 import {
   problemCreateRequestSchema,
   problemFilterQuerySchema,
@@ -34,6 +36,7 @@ import {
   MOCK_AI_TRANSFORMED_PROBLEMS,
   MOCK_PROBLEM_OTHER_SHARED,
   MOCK_PROBLEM_OTHER_USER,
+  MOCK_PROBLEM_WITH_FIGURE,
   MOCK_PROBLEMS,
   MOCK_UNITS,
   problemCodeSuffix,
@@ -51,11 +54,12 @@ import {
 } from "./_helpers";
 
 /** 채택 저장이 만들어 내는 mock id 앞자리 — 실서버가 부여하는 UUID 자리를 흉내 낸다. */
-const MOCK_TRANSFORM_ADOPT_ID_PREFIX = "aa000000-0000-4000-8000-00000000000";
+const MOCK_TRANSFORM_ADOPT_ID_PREFIX = "aa000000-0000-4000-8000-0000000000";
 
 /** 등록형(30개) + AI 생성/변형(8개) 전체 — GET 목록/단건 조회가 참조하는 전체 풀. */
 const ALL_PROBLEMS = [
   ...MOCK_PROBLEMS,
+  MOCK_PROBLEM_WITH_FIGURE,
   MOCK_PROBLEM_OTHER_SHARED,
   ...MOCK_AI_GENERATED_PROBLEMS,
   ...MOCK_AI_TRANSFORMED_PROBLEMS,
@@ -285,7 +289,17 @@ export const problemHandlers: HttpHandler[] = [
       };
     });
 
-    return jsonOk(problemTransformResponseSchema, { data: candidates });
+    // 실서버와 **같은 함수**로 막는다 — mock 이 제 손으로 규칙을 적으면 둘이 갈라진다.
+    return jsonOk(problemTransformResponseSchema, {
+      data: candidates,
+      meta: {
+        figureBlockedReason: transformFigureBlockReason({
+          content: origin.content,
+          figureUrls: origin.figureUrls ?? [],
+          figureSvg: null,
+        }),
+      },
+    });
   }),
 
   // POST /api/problems/transform/adopt — 채택분만 적재.
@@ -300,6 +314,24 @@ export const problemHandlers: HttpHandler[] = [
     );
     if (!origin) return notFoundError("원본 문제");
 
+    // 실서버와 같은 두 문지기 — 없으면 mock 만 통과하는 경로가 생긴다.
+    const figureBlocked = transformFigureBlockReason({
+      content: origin.content,
+      figureUrls: origin.figureUrls ?? [],
+      figureSvg: null,
+    });
+    if (figureBlocked) return jsonError("CONFLICT", figureBlocked, 409);
+    const failed = parsed.data.items.filter(
+      (item) => !verifiesOriginalReproduction(origin, item),
+    );
+    if (failed.length > 0) {
+      return jsonError(
+        "VALIDATION_ERROR",
+        `원본 재현 검사를 통과하지 못한 변형 ${failed.length}건은 저장할 수 없습니다.`,
+        400,
+      );
+    }
+
     // 실제 라우트와 같이 분류는 원본에서 물려받고 난이도만 조정한다.
     const difficulty = shiftDifficulty(
       origin.difficulty,
@@ -307,7 +339,7 @@ export const problemHandlers: HttpHandler[] = [
     );
     const created = parsed.data.items.map((item, at) => ({
       ...MOCK_AI_TRANSFORMED_PROBLEMS[at % MOCK_AI_TRANSFORMED_PROBLEMS.length]!,
-      id: `${MOCK_TRANSFORM_ADOPT_ID_PREFIX}${at}`,
+      id: `${MOCK_TRANSFORM_ADOPT_ID_PREFIX}${String(at).padStart(2, "0")}`,
       content: item.content,
       answer: item.answer,
       solution: item.solution,

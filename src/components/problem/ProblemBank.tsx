@@ -271,35 +271,44 @@ export function ProblemBank() {
     setPanel((current) => (current === next ? null : next));
   }
 
-  function prepend(count: number, created: ProblemEntity[], label: string) {
-    const matching = created.filter((problem) =>
-      matchesFilters(problem, filters, unitById),
-    );
-    setProblems((current) => [...matching, ...current]);
-    setTotal((current) => current + matching.length);
-    setNotice(`${count}건 ${label}`);
-    setPanel(null);
-    setError(null);
-  }
-
   /**
-   * 카드에서 변형 채택분이 저장되면 목록에 얹는다.
+   * 새로 만들어진 문항을 목록에 얹고 안내를 띄운다 — **등록·생성·변형이 이 함수 하나**를 쓴다.
    *
-   * ⚠️ `useCallback` 이어야 한다 — `ProblemCard` 는 `memo` 라, 인라인 화살표로 넘기면
-   * 카드 20장이 렌더마다 전부 다시 그려진다(카드마다 KaTeX 조판이 붙는다).
-   * 의존이 `filters`/`unitById` 뿐이라 필터가 그대로면 참조도 그대로다.
+   * ⚠️ 안내는 「몇 건 만들었나」가 아니라 「그중 몇 건이 지금 화면에 보이나」까지 말한다.
+   *    적대적 리뷰 2026-08-19 실측: 난이도 「한 단계 아래」로 변형하면 결과가 현재 난이도
+   *    필터를 벗어나는데, 화면은 "1건 변형"이라 하고 목록에도 총계에도 아무 변화가 없었다.
+   *    성공했는데 사라진 것처럼 보이면 그건 실패로 읽힌다.
    */
-  const handleTransformAdopted = useCallback(
-    (created: ProblemEntity[]) => {
+  const prepend = useCallback(
+    (created: ProblemEntity[], label: string) => {
       const matching = created.filter((problem) =>
         matchesFilters(problem, filters, unitById),
       );
       setProblems((current) => [...matching, ...current]);
       setTotal((current) => current + matching.length);
-      setNotice(`${created.length}건 변형`);
+      setNotice(
+        matching.length === created.length
+          ? `${created.length}건 ${label}`
+          : `${created.length}건 ${label} — 현재 필터에 ${matching.length}건만 보입니다`,
+      );
+      setPanel(null);
       setError(null);
     },
     [filters, unitById],
+  );
+
+  /**
+   * 카드에서 변형 채택분이 저장되면 목록에 얹는다 — 등록·생성과 **같은 `prepend`** 를 쓴다.
+   *
+   * ⚠️ `useCallback` 이어야 한다 — `ProblemCard` 는 `memo` 라, 인라인 화살표로 넘기면
+   * 카드 20장이 렌더마다 전부 다시 그려진다(카드마다 KaTeX 조판이 붙는다).
+   *
+   * 그래서 `prepend` 도 `useCallback` 이다 — 그것이 렌더마다 새로 만들어지면
+   * 이 콜백도 같이 새로 만들어져 memo 가 죽는다.
+   */
+  const handleTransformAdopted = useCallback(
+    (created: ProblemEntity[]) => prepend(created, "변형"),
+    [prepend],
   );
 
   return (
@@ -458,7 +467,7 @@ export function ProblemBank() {
         <ProblemRegisterForm
           units={units}
           defaultUnitId={defaultUnitId}
-          onCreated={(count, created) => prepend(count, created, "등록")}
+          onCreated={(_count, created) => prepend(created, "등록")}
           onError={setError}
         />
       ) : null}
@@ -466,7 +475,7 @@ export function ProblemBank() {
         <ProblemGenerateForm
           units={units}
           defaultUnitId={defaultUnitId}
-          onCreated={(count, created) => prepend(count, created, "생성")}
+          onCreated={(_count, created) => prepend(created, "생성")}
           onError={setError}
         />
       ) : null}

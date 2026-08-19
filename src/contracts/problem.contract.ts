@@ -247,9 +247,23 @@ export const transformCandidateSchema = z.strictObject({
 });
 export type TransformCandidate = z.infer<typeof transformCandidateSchema>;
 
-export const problemTransformResponseSchema = dataResponseSchema(
-  z.array(transformCandidateSchema),
-);
+/**
+ * 변형 응답 — 후보와 **이 원본을 채택할 수 있는가**를 같이 싣는다.
+ *
+ * `figureBlockedReason` 이 문자열이면 화면은 후보를 보여 주되 **저장을 막는다**
+ * (원장님 확정 2026-08-19). 변형은 본문 글자만 오가고 그림은 따라가지 않아서,
+ * 그림에 기대는 문항을 변형하면 「본문은 그림을 가리키는데 그림이 없는」 문항이
+ * 태어난다 — 이 저장소가 856건 잠그며 정리한 그 부류다.
+ *
+ * 사유를 **문구 그대로** 싣는 이유: 화면이 사유를 다시 짓지 않게 하려는 것이다.
+ * 「막혔다」는 사실만 보내면 왜인지가 화면에서 사라진다.
+ */
+export const problemTransformResponseSchema = z.strictObject({
+  data: z.array(transformCandidateSchema),
+  meta: z.strictObject({
+    figureBlockedReason: z.string().nullable(),
+  }),
+});
 
 /**
  * 채택 저장 — 미리보기에서 고른 후보만 DB 에 넣는다.
@@ -268,6 +282,15 @@ export const problemTransformAdoptRequestSchema = z.strictObject({
         content: z.string().min(1),
         answer: z.string().min(1),
         solution: z.string().nullable(),
+        /**
+         * 원본 재현 검사값을 **되돌려 보낸다.** 서버가 원본 정답과 다시 대 본다.
+         *
+         * 없으면 검사가 브라우저에만 남는다 — 종전 구현은 변형기가 탈락 후보를 걸러
+         * **서버가** 저장을 거부했는데, 미리보기로 갈라지며 그 문지기가 사라졌다.
+         * (적대적 리뷰 2026-08-19). 클라이언트가 값을 지어낼 수는 있지만, **정상 흐름에서
+         * 탈락 후보가 저장되는 경로**는 이것으로 서버에서 닫힌다.
+         */
+        originalAnswerRecomputed: z.string().min(1),
       }),
     )
     .min(1, { error: "채택할 변형을 하나 이상 골라주세요." })

@@ -39,7 +39,15 @@ type Props = {
 
 type Stage =
   | { name: "설정" }
-  | { name: "결과"; candidates: TransformCandidate[] };
+  | {
+      name: "결과";
+      candidates: TransformCandidate[];
+      /**
+       * 서버가 「이 원본은 채택하면 안 된다」고 한 사유. null 이면 채택 가능.
+       * 화면이 사유를 다시 짓지 않는다 — 서버 문구를 그대로 보여 준다.
+       */
+      figureBlockedReason: string | null;
+    };
 
 export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
   const [count, setCount] = useState("1");
@@ -62,12 +70,21 @@ export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
         mode,
         difficultyShift,
       });
-      setStage({ name: "결과", candidates: body.data });
+      setStage({
+        name: "결과",
+        candidates: body.data,
+        figureBlockedReason: body.meta.figureBlockedReason,
+      });
       // 통과한 후보는 기본으로 채택 표시 — 떨어진 것은 애초에 고를 수 없다.
+      // 그림 때문에 막힌 경우는 하나도 고르지 않는다.
       setAdopted(
-        new Set(
-          body.data.flatMap((candidate, at) => (candidate.verified ? [at] : [])),
-        ),
+        body.meta.figureBlockedReason
+          ? new Set()
+          : new Set(
+              body.data.flatMap((candidate, at) =>
+                candidate.verified ? [at] : [],
+              ),
+            ),
       );
     } catch (caught) {
       // 서버가 보낸 사유를 그대로 보여 준다(problemApi.failWithServerReason).
@@ -85,6 +102,8 @@ export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
         content: candidate.content,
         answer: candidate.answer,
         solution: candidate.solution,
+        // 서버가 원본 정답과 다시 대 본다 — 검사를 브라우저에만 두지 않는다.
+        originalAnswerRecomputed: candidate.originalAnswerRecomputed,
       }));
     if (items.length === 0) return;
 
@@ -112,8 +131,10 @@ export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
     });
   }
 
+  const figureBlockedReason =
+    stage.name === "결과" ? stage.figureBlockedReason : null;
   const adoptedCount =
-    stage.name === "결과"
+    stage.name === "결과" && !figureBlockedReason
       ? stage.candidates.filter((c, at) => c.verified && adopted.has(at)).length
       : 0;
 
@@ -181,6 +202,15 @@ export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
           <h3 className={`mt-4 ${MICRO} text-ink`}>
             {`변형 결과 ${stage.candidates.length}건`}
           </h3>
+          {/* 막혔으면 **왜인지**를 먼저 말한다. 「저장이 안 된다」만 보이면 고장으로 읽힌다. */}
+          {figureBlockedReason ? (
+            <p
+              role="alert"
+              className="mt-2 border-l-[3px] border-g-red-text bg-surface p-3 text-[12.5px] font-bold text-g-red-text"
+            >
+              {figureBlockedReason}
+            </p>
+          ) : null}
           <ol className="mt-2 space-y-2">
             {stage.candidates.map((candidate, at) => (
               <li
@@ -190,7 +220,11 @@ export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
               >
                 <div className="flex flex-wrap items-baseline gap-2">
                   <span className={`${MICRO} text-text-2`}>{at + 1}</span>
-                  {candidate.verified ? (
+                  {figureBlockedReason ? (
+                    <span className={`ml-auto ${MICRO} text-g-red-text`}>
+                      채택 불가
+                    </span>
+                  ) : candidate.verified ? (
                     <label className="ml-auto flex cursor-pointer items-center gap-2">
                       <input
                         type="checkbox"

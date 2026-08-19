@@ -21,6 +21,7 @@ import {
   unauthorizedError,
   validationError,
 } from "@/lib/apiResponse";
+import { transformFigureBlockReason } from "@/lib/figure/transformFigureBlock";
 import { requireAccessibleProblem } from "@/lib/ownership";
 import { getSessionUser } from "@/lib/session";
 import type { ProblemType } from "@/contracts/problem.contract";
@@ -58,7 +59,11 @@ export async function POST(request: NextRequest) {
     });
 
     // 201 이 아니라 **200** 이다 — 만든 것이 없다(created nothing). 아직 자원이 아니다.
-    return jsonOk(problemTransformResponseSchema, { data: candidates });
+    // 그림에 기대는 원본이면 후보는 보여 주되 채택을 막는다 — 사유를 문구째 싣는다.
+    return jsonOk(problemTransformResponseSchema, {
+      data: candidates,
+      meta: { figureBlockedReason: transformFigureBlockReason(origin) },
+    });
   } catch (error) {
     // ⚠️ `AiConfigError` 는 `AiGenerationError` 의 하위 타입이다 — **이 검사가 먼저** 와야
     //    한다. 순서를 뒤집으면 설정 누락이 다시 일반 실패로 뭉개져 화면에서 원인을 못 본다.

@@ -26,6 +26,7 @@ import type { ProblemEntity, ProblemType } from "@/contracts/problem.contract";
 import {
   PROBLEM_OTHER_ID,
   PROBLEM_OTHER_SHARED_ID,
+  PROBLEM_WITH_FIGURE_ID,
   problemId,
   problemCodeSuffix,
   USER_OTHER_ID,
@@ -503,6 +504,36 @@ export const MOCK_PROBLEM_MISSING_ANSWER: ProblemEntity = {
   directUseAllowed: true,
   pool: "shared",
   figureUrls: [],
+  createdAt: "2026-05-01T09:00:00Z",
+  updatedAt: "2026-05-01T09:00:00Z",
+};
+
+/**
+ * **그림이 붙은 문항** — 코퍼스에 하나도 없어서 그림 관련 경로가 통째로 안 밟히고 있었다.
+ *
+ * 적대적 리뷰 2026-08-19: 「변형본이 그림을 잃는다」는 실측 9,419건(출제 가능의 20.2%)짜리
+ * 결함이었는데 테스트 1,794건이 전부 놓쳤다 — mock 문항에 `figureUrls` 가 없어서
+ * **변이시킬 축 자체가 없었다.** 없는 축은 초록으로 보인다.
+ *
+ * 본문이 그림을 말로 가리키는 것도 일부러 그렇게 뒀다 — 차단 규칙의 두 갈래
+ * (㉠ 그림이 붙어 있다 · ㉡ 본문이 그림을 지목한다)를 한 문항으로 같이 밟는다.
+ */
+export const MOCK_PROBLEM_WITH_FIGURE: ProblemEntity = {
+  id: PROBLEM_WITH_FIGURE_ID,
+  problemCode: `${MOCK_UNITS[0]!.problemCodePrefix}-${problemCodeSuffix(97)}`,
+  userId: USER_TEACHER_ID,
+  unitId: MOCK_UNITS[0]!.id,
+  source: "past_exam",
+  originProblemId: null,
+  difficulty: "mid",
+  problemType: "활용",
+  content: "다음 그림과 같이 $AC=4$, $BC=8$ 인 직각삼각형 ABC 의 넓이를 구하여라.",
+  answer: "16",
+  solution: null,
+  reviewStatus: "approved",
+  directUseAllowed: true,
+  pool: "shared",
+  figureUrls: ["/figures/3391/q12.png"],
   createdAt: "2026-05-01T09:00:00Z",
   updatedAt: "2026-05-01T09:00:00Z",
 };

@@ -45,6 +45,7 @@ import {
   CLASS_OTHER_ID,
   CLASS_STARVED_ID,
   MOCK_EXISTING_SIGNUP_EMAIL,
+  MOCK_PROBLEM_WITH_FIGURE,
   MOCK_PROBLEMS,
   MOCK_STUDENT_1,
   NOT_FOUND_ID,
@@ -294,10 +295,60 @@ describe("[T0.5.2] MSW ↔ 계약 — problem/AI 생성·변형", () => {
     expect(body.data.some((candidate) => !candidate.verified)).toBe(true);
   });
 
+  it("POST /api/problems/transform 그림 붙은 원본은 채택 차단 사유를 싣는다", async () => {
+    const res = await postJson("/api/problems/transform", {
+      originProblemId: MOCK_PROBLEM_WITH_FIGURE.id,
+      count: 1,
+    });
+    const body = problemTransformResponseSchema.parse(await res.json());
+    expect(body.meta.figureBlockedReason).toContain("그림");
+  });
+
+  it("POST /api/problems/transform/adopt 그림 붙은 원본은 409로 거부한다", async () => {
+    // 실서버와 **같은 문지기**가 mock 에도 서 있어야 한다. 화면은 저장 버튼을 막아
+    // 여기까지 오지 않으므로, 그 가드는 이 자리에서만 살아 있을 수 있다.
+    const res = await postJson("/api/problems/transform/adopt", {
+      originProblemId: MOCK_PROBLEM_WITH_FIGURE.id,
+      items: [
+        {
+          content: "그림 잃은 변형",
+          answer: "16",
+          solution: null,
+          originalAnswerRecomputed: MOCK_PROBLEM_WITH_FIGURE.answer,
+        },
+      ],
+    });
+    expect(res.status).toBe(409);
+    expect((await errorBody(res)).error.code).toBe("CONFLICT");
+  });
+
+  it("POST /api/problems/transform/adopt 재현 검사 실패값은 400으로 거부한다", async () => {
+    const res = await postJson("/api/problems/transform/adopt", {
+      originProblemId: MOCK_PROBLEMS[0]!.id,
+      items: [
+        {
+          content: "탈락 후보 우회",
+          answer: "0.275",
+          solution: null,
+          originalAnswerRecomputed: "전혀 다른 값",
+        },
+      ],
+    });
+    expect(res.status).toBe(400);
+    expect((await errorBody(res)).error.code).toBe("VALIDATION_ERROR");
+  });
+
   it("POST /api/problems/transform/adopt 성공 응답은 채택 계약을 통과하고 201 이다", async () => {
     const res = await postJson("/api/problems/transform/adopt", {
       originProblemId: MOCK_PROBLEMS[0]!.id,
-      items: [{ content: "채택된 변형", answer: "0.275", solution: null }],
+      items: [
+        {
+          content: "채택된 변형",
+          answer: "0.275",
+          solution: null,
+          originalAnswerRecomputed: MOCK_PROBLEMS[0]!.answer,
+        },
+      ],
     });
     expect(res.status).toBe(201);
     const body = problemTransformAdoptResponseSchema.parse(await res.json());

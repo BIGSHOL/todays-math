@@ -16,7 +16,7 @@ import {
   hasStemLeafTable,
   NOT_A_FIGURE,
   STRONG_DEICTIC,
-} from "../../../scripts/qa/missingFigureRule";
+} from "@/lib/figure/missingFigureRule";
 
 /** 그림이 없으면 못 푸는 문항 — 지면이 그림을 가리킨다. */
 const 유실: Array<[string, string]> = [

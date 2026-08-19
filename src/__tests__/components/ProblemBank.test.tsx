@@ -19,6 +19,7 @@ import {
   MOCK_AI_GENERATED_PROBLEMS,
   MOCK_AI_TRANSFORMED_PROBLEMS,
   MOCK_PROBLEM_WITH_FRACTION,
+  MOCK_PROBLEM_WITH_FIGURE,
   MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL,
   MOCK_PROBLEMS,
   MOCK_UNITS,
@@ -391,7 +392,9 @@ describe("[S-08] 문제은행 — 계단식 단원 필터 (MSW)", () => {
     await user.type(within(form).getByLabelText("정답"), "2");
     await user.click(within(form).getByRole("button", { name: "등록하기" }));
 
-    await screen.findByText("1건 등록");
+    // 안내는 「만들었다」에서 멈추지 않고 **화면에 몇 건 보이는지**까지 말한다.
+    // 종전에는 "1건 등록"이라 해 놓고 목록에도 총계에도 변화가 없어 실패로 읽혔다.
+    await screen.findByText("1건 등록 — 현재 필터에 0건만 보입니다");
     expect(screen.queryByText(/다른 중단원의 문제/)).not.toBeInTheDocument();
   });
 
@@ -426,10 +429,10 @@ describe("[S-08] 문제은행 — 계단식 단원 필터 (MSW)", () => {
 });
 
 describe("[T3.3 S-08] 문제은행 — 페이지네이션", () => {
-  // MSW 전체 풀 = 등록형 30 + 타 사용자 shared 1 + AI 생성/변형 픽스처
+  // MSW 전체 풀 = 등록형 30 + 그림 문항 1 + 타 사용자 shared 1 + AI 생성/변형 픽스처
   const TOTAL =
     MOCK_PROBLEMS.length +
-    1 +
+    2 +
     MOCK_AI_GENERATED_PROBLEMS.length +
     MOCK_AI_TRANSFORMED_PROBLEMS.length;
 
@@ -501,7 +504,7 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
     await user.type(within(form).getByLabelText("정답"), "2");
     await user.click(within(form).getByRole("button", { name: "등록하기" }));
 
-    await screen.findByText("1건 등록");
+    await screen.findByText("1건 등록 — 현재 필터에 0건만 보입니다");
     expect(screen.queryByText(/필터에서 제외할 문제/)).not.toBeInTheDocument();
     expect(screen.getByText(/밑변의 길이가/)).toBeInTheDocument();
   });
@@ -580,6 +583,32 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
     await screen.findByText("1건 변형");
     expect(screen.getByText(/을 유한소수로 나타내어라/)).toBeInTheDocument();
     expect(MOCK_AI_TRANSFORMED_PROBLEMS[0]!.content).toContain("11");
+  });
+
+  it("그림이 붙은 문항은 후보를 보여 주되 저장을 막고 사유를 말한다", async () => {
+    const { user } = await renderBank();
+    await user.selectOptions(
+      screen.getByLabelText("소단원"),
+      MOCK_PROBLEM_WITH_FIGURE.unitId,
+    );
+    await waitFor(() => {
+      expect(screen.getByText(/직각삼각형 ABC 의 넓이/)).toBeInTheDocument();
+    });
+
+    const card = screen
+      .getByText(/직각삼각형 ABC 의 넓이/)
+      .closest("article") as HTMLElement;
+    await user.click(within(card).getByRole("button", { name: "변형" }));
+    const panel = within(card).getByRole("region", { name: "변형" });
+    await user.click(within(panel).getByRole("button", { name: "변형하기" }));
+
+    await within(panel).findByText(/변형 결과/);
+    // 「저장이 안 된다」만 보이면 고장으로 읽힌다 — 왜인지를 먼저 말해야 한다.
+    expect(within(panel).getByRole("alert")).toHaveTextContent(/그림/);
+    expect(within(panel).queryAllByRole("checkbox")).toHaveLength(0);
+    expect(
+      within(panel).getByRole("button", { name: "채택분 저장" }),
+    ).toBeDisabled();
   });
 
   it("원본 재현 검사에 떨어진 후보는 사유와 함께 「폐기」로 보이고 채택할 수 없다", async () => {
