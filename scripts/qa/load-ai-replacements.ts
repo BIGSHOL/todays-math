@@ -34,6 +34,10 @@ import { PrismaClient } from "@prisma/client";
 
 import { judgeAnswerChoice, isFatal, type Verdict } from "./answerChoiceRules";
 import { renderMathHtml } from "../../src/lib/math/renderMathHtml";
+import { fitsTwoColumns } from "../../src/lib/math/displayWidth";
+import { parseProblemContent } from "../../src/lib/problem/parseProblemContent";
+import { estimateProblemPx } from "../../src/lib/printOverflow";
+import { JASEUP_MEASURED_PX } from "../../src/lib/printGeometry";
 
 const prisma = new PrismaClient();
 
@@ -115,20 +119,27 @@ export function checkDraft(d: Draft, index: number): Reject | null {
 
   // ② 객관식이면 보기가 **정확히 다섯 칸**이어야 한다.
   //    출제 가능 객관식 33,794건 중 99.10% 가 다섯 칸이다 — 문턱이 아니라 분포에서 나온 값.
+  //    ⚠️ 보기는 **제품 파서로 센다**(`parseProblemContent`). 여기서 정규식으로 다시
+  //       세면 마커 규약이 두 벌이 된다 — 말뭉치는 `1.` 이 99.97%, 우리는 원문자를
+  //       썼는데 **둘 다 같은 화면**으로 그려진다(파서가 마커를 떼고 렌더러가 붙인다).
+  //       세는 쪽이 한 형식만 알면, 다른 형식으로 쓴 순간 「보기 0칸」이 된다.
+  const { choices } = parseProblemContent(d.content);
   if (d.questionType === "객관식") {
-    const n = (d.content.match(/\n\s*[①②③④⑤⑥⑦⑧⑨⑩]/g) ?? []).length;
-    if (n !== 5)
+    if (choices.length !== 5)
       return {
         index,
-        reason: `객관식인데 보기가 ${n}칸이다 (다섯이어야 한다)`,
+        reason: `객관식인데 보기가 ${choices.length}칸이다 (다섯이어야 한다)`,
       };
     if (!/^\s*[①②③④⑤]\s*$/u.test(d.answer.trim()))
       return {
         index,
         reason: `객관식인데 정답이 «${d.answer}» 다 (원문자 하나여야 한다)`,
       };
-  } else if (/\n\s*[①②③④⑤]/.test(d.content)) {
-    return { index, reason: `${d.questionType} 인데 본문에 보기 마커가 있다` };
+  } else if (choices.length > 0) {
+    return {
+      index,
+      reason: `${d.questionType} 인데 본문에 보기가 ${choices.length}칸 있다`,
+    };
   }
 
   // ③ 지면에서 실제로 그려지는가.
@@ -140,8 +151,44 @@ export function checkDraft(d: Draft, index: number): Reject | null {
     const bad = renderFails(v);
     if (bad) return { index, reason: `${k} 이 지면에서 깨진다 — ${bad}` };
   }
+
+  // ④ **지면에 앉는 모양**이 기존과 비슷한가 (원장님 지시 2026-08-19
+  //    「뷰가 현재 문제와 아주 유사한 수준으로 보여야함」).
+  //
+  //    표기 차이(`1.`↔`①`, `\dfrac`↔`\frac`)는 **화면을 안 바꾼다** — 파서가 마커를
+  //    떼고 렌더러가 다시 붙이며 `textPreprocess` 가 `\dfrac` 을 고친다
+  //    (`scripts/qa/diff-view.ts` 가 실제 렌더를 대조해 확인한다). 그러니 그것으로는
+  //    막지 않는다 — 안 보이는 차이를 세면 숫자가 좋아져도 아무것도 안 고친다.
+  //
+  //    실제로 보이는 것은 **높이**다. 실측(기존 객관식 2,000건):
+  //      2열로 앉는 비율 93.3% · 문항 칸(484px) 초과 0.8% · 높이 중앙 216px
+  //    보기가 길어 1열로 떨어지면 문항이 세로로 두 배가 된다.
+  const seat = seatShape(d.content);
+  if (seat.px > JASEUP_MEASURED_PX.continuationSlot)
+    return {
+      index,
+      reason: `문항 칸을 넘는다 — ${Math.round(seat.px)}px > ${JASEUP_MEASURED_PX.continuationSlot}px`,
+      detail: "발문이나 보기를 줄여라",
+    };
   return null;
 }
+
+/** 지면에 앉는 모양 — **제품 함수를 그대로** 부른다. */
+export function seatShape(content: string): {
+  twoCol: boolean;
+  px: number;
+  maxChoice: number;
+} {
+  const { choices } = parseProblemContent(content);
+  return {
+    twoCol: choices.length > 0 && fitsTwoColumns(choices),
+    px: estimateProblemPx(content),
+    maxChoice: choices.reduce((m, c) => Math.max(m, c.length), 0),
+  };
+}
+
+/** 기존 객관식 2,000건 실측 — 2열로 앉는 비율. 배치가 이보다 많이 낮으면 알린다. */
+export const CORPUS_TWO_COLUMN_RATE = 0.933;
 
 /* ── 실행 ────────────────────────────────────────────────────────────── */
 
@@ -200,7 +247,25 @@ async function main(): Promise<void> {
     });
   const pass = ok.filter((d) => found.has(d.unitId));
 
+  const seats = pass.map((d) => seatShape(d.content));
+  const 객관식 = pass.filter((d) => d.questionType === "객관식").length;
+  const twoCol = seats.filter((s) => s.twoCol).length;
   console.log(`  통과 ${pass.length}건 · 막힘 ${rejects.length}건`);
+  if (객관식 > 0) {
+    const rate = twoCol / 객관식;
+    console.log(
+      `  보기 2열 ${twoCol}/${객관식} (${(100 * rate).toFixed(1)}%)` +
+        ` · 기존 ${(100 * CORPUS_TWO_COLUMN_RATE).toFixed(1)}%` +
+        (rate < CORPUS_TWO_COLUMN_RATE - 0.1
+          ? "  ⚠ 보기가 길다 — 1열이면 문항이 세로로 두 배가 된다"
+          : ""),
+    );
+    for (const [i, d] of pass.entries())
+      if (d.questionType === "객관식" && !seats[i]!.twoCol)
+        console.log(
+          `   · #${drafts.indexOf(d)} 1열 (보기 최대 ${seats[i]!.maxChoice}자, ${Math.round(seats[i]!.px)}px)`,
+        );
+  }
   for (const r of rejects)
     console.log(
       `   ✕ #${r.index}  ${r.reason}${r.detail ? ` (${r.detail})` : ""}`,

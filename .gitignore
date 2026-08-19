@@ -57,6 +57,8 @@ scripts/qa/reports/*
 # 그림 유실 잠금 원장 — **공유 DB 를 되돌리는 유일한 근거다.**
 # 여기 없으면 다른 컴퓨터에서 790건을 되돌릴 방법이 없다(적대적 리뷰 지적).
 !scripts/qa/reports/missing-figure-lock.json
+# AI 생성 문항 보기 표기 정규화 — 되돌리기 원장(공유 DB 를 바꾼다)
+!scripts/qa/reports/view-normalize-ledger.json
 # RPM 출처 스냅샷 — **sumaek 을 대신하는 정본이다.** 이게 없으면 다른 컴퓨터에서
 # RPM 의 책·쪽·문항번호를 알 길이 없다(원본 접속은 저장소 밖 두 파일에 의존한다).
 !scripts/qa/reports/rpm-origin.json
