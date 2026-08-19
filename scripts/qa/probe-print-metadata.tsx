@@ -30,7 +30,9 @@
  * 없다 — 잉크만 있다. 이 스크립트가 초록이어도 그 사실은 바뀌지 않는다.
  */
 import { execFileSync } from "node:child_process";
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
+// ⚠️ `rmSync` 를 쓰지 마라 — 경로에 한글이 있으면 노드가 죽는다(아래 주석).
+import { rm } from "node:fs/promises";
 import path from "node:path";
 
 import { PrismaClient } from "@prisma/client";
@@ -216,7 +218,11 @@ async function main() {
       `  fileUrlPath     = 인쇄한 문서의 URL (꼬리글 통로)\n`,
   );
 
-  if (!keep) rmSync(OUT_DIR, { recursive: true, force: true });
+  // 🔴 `rmSync` 는 경로에 한글이 있으면 노드를 **메시지 없이** 죽인다
+  //    (Node v24.13.0 · Windows · 0xC0000409). 오르카 워크트리 이름이 한글이라
+  //    이 스크립트가 거기서는 통째로 사라진다. 비동기 `rm` 은 멀쩡하다.
+  //    재현: `node scripts/qa/probe-rmsync-crash.mjs`
+  if (!keep) await rm(OUT_DIR, { recursive: true, force: true });
   else console.log(`PDF 를 남겼다: ${OUT_DIR}`);
 }
 
