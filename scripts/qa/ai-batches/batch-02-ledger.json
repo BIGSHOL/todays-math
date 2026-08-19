@@ -1,0 +1,18 @@
+{
+  "적용": "AI 대체 문항 적재 (pending) — 원장님 확정 2026-08-19 「AI로 새로 내자」",
+  "기준시각": "2026-08-19T07:44:19.197Z",
+  "배치": "scripts/qa/ai-batches/batch-02.json",
+  "되돌리기": "ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/load-ai-replacements.ts --revert scripts/qa/ai-batches/batch-02-ledger.json",
+  "넣은id": [
+    "572eb7bf-371d-41c4-b186-644ffd6034d5",
+    "027348bf-e241-432a-b74e-2395242bf784",
+    "c0115adb-aeac-40ec-b53a-856b2330cff4",
+    "0e6d9566-fb88-429b-9ae9-e5ca678f7b74",
+    "682521d6-0030-4c8e-a03d-e7b7da4f9918",
+    "0d602d9c-c953-4b14-8a3a-4443fbe51626",
+    "50027421-5689-474e-850c-471f75420309",
+    "6e26bc2e-8d24-4302-bb28-832695782d93",
+    "f9c9f6bd-0977-4e9b-820a-2e229e521051",
+    "0ac170d5-5eb7-433e-9053-2cc3e0c59f59"
+  ]
+}

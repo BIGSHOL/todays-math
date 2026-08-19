@@ -16,7 +16,8 @@ import { access, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const APPLY = process.argv.includes("--apply");
-if (APPLY && process.env.ALLOW_SHARED_IMPORT !== "1") {
+const REVERT = process.argv.includes("--revert");
+if ((APPLY || REVERT) && process.env.ALLOW_SHARED_IMPORT !== "1") {
   console.error("공유 DB 쓰기가 막혀 있다. ALLOW_SHARED_IMPORT=1 과 --apply 가 둘 다 필요하다.");
   process.exit(1);
 }
@@ -27,10 +28,41 @@ const PLAN =
   process.argv.find((a) => a.startsWith("--plan="))?.slice("--plan=".length) ??
   "scripts/qa/reports/figure-recover-plan.json";
 const REPORT = "scripts/qa/reports/figure-attach-report.json";
+/**
+ * **되돌리기 원장.** 행마다 `before`(붙이기 **전** `figure_urls`)를 담는다.
+ *
+ * ⚠️ 예전에는 `figure-attach-report.json` 만 썼는데 그건 (1) `.gitignore` 에 걸려
+ * **커밋이 안 되고** (2) DB 를 **다 쓴 뒤에** 기록됐다. 둘 다 「되돌릴 근거」로는
+ * 못 쓴다 — 이 컴퓨터에만 남으면 다른 컴퓨터에서 되돌릴 길이 없고, 중간에 죽으면
+ * 무엇을 썼는지조차 모른다(2026-08-18 적대적 리뷰가 지적한 그 자리).
+ * 그래서 **DB 보다 먼저** 쓰고, `.gitignore` 예외로 커밋되게 한다.
+ */
+const LEDGER = "scripts/qa/reports/figure-attach-ledger.json";
 
-const plan = JSON.parse(await readFile(PLAN, "utf8")).계획;
 const { PrismaClient } = await import("@prisma/client");
 const db = new PrismaClient();
+
+if (REVERT) {
+  // **지금 값이 우리가 쓴 값일 때만** 되돌린다 — 남의 변경을 덮지 않는다.
+  const ledger = JSON.parse(await readFile(LEDGER, "utf8"));
+  let back = 0, skip = 0;
+  for (const r of ledger.rows) {
+    const [now] = await db.$queryRawUnsafe(
+      `select figure_urls from problem where id = $1::uuid`, r.id,
+    );
+    if (!now || JSON.stringify(now.figure_urls ?? []) !== JSON.stringify(r.after)) { skip += 1; continue; }
+    await db.$executeRawUnsafe(
+      `update "problem" set "figure_urls" = $1::text[] where id = $2::uuid`,
+      r.before, r.id,
+    );
+    back += 1;
+  }
+  console.log(`되돌림 ${back}행 · 값이 달라 건드리지 않음 ${skip}행`);
+  await db.$disconnect();
+  process.exit(0);
+}
+
+const plan = JSON.parse(await readFile(PLAN, "utf8")).계획;
 
 try {
   const rows = await db.$queryRawUnsafe(
@@ -56,6 +88,21 @@ try {
   }
 
   if (APPLY) {
+    // ── 되돌리기 자료를 **DB 보다 먼저** 쓴다. 순서가 반대면 중간에 죽었을 때 근거가 없다.
+    let ledger = { note: "되돌리기 자료. `before` 가 붙이기 전 값이다.", rows: [] };
+    try { ledger = JSON.parse(await readFile(LEDGER, "utf8")); } catch { /* 처음이면 새로 만든다 */ }
+    const seen = new Set(ledger.rows.map((r) => r.id));
+    for (const t of todo) {
+      if (seen.has(t.id)) continue;   // 여러 번 돌려도 **최초 상태**를 잃지 않는다
+      ledger.rows.push({ id: t.id, e: t.e, q: t.q, before: cur.get(t.id) ?? [], after: t.urls, plan: PLAN });
+    }
+    ledger.기준시각 = new Date().toISOString();
+    ledger.적용됨 = true;
+    ledger.되돌리기 =
+      "ALLOW_SHARED_IMPORT=1 node scripts/figure/attach-hwp-figures.mjs --revert";
+    await writeFile(LEDGER, JSON.stringify(ledger, null, 1), "utf8");
+    console.log(`  되돌리기 원장 → ${LEDGER} (누적 ${ledger.rows.length}행)`);
+
     let done = 0;
     for (const t of todo) {
       await db.$executeRawUnsafe(

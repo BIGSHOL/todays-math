@@ -722,6 +722,26 @@ describe("[S-08] GET /api/problems — 자료 토글(그림·해설·정답) 서
 });
 
 /**
+ * 검색어가 닿는 칸 — 원장님 지시 2026-08-19 「문항번호도 같이 검색.
+ * 검색가능한건 모두 검색」. 그 전에는 `content` 한 칸만 봤다.
+ *
+ * ⚠️ 이 목록은 **라우트가 실제로 거는 칸과 같아야 한다.** 한쪽만 늘리면
+ *    「화면에서는 찾아지는데 검사는 통과」하거나 그 반대가 된다.
+ */
+const 어딘가에있다 = (
+  p: {
+    content: string;
+    answer: string;
+    solution: string | null;
+    problemCode: string;
+  },
+  needle: string,
+): boolean =>
+  [p.content, p.answer, p.solution ?? "", p.problemCode].some((v) =>
+    v.toLowerCase().includes(needle.toLowerCase()),
+  );
+
+/**
  * 본문 검색 — **서버가 실제로 거르는지** 잠근다 (원장님 지시 2026-08-19).
  * 화면 검사는 `q` 가 붙는지만 본다.
  */
@@ -749,7 +769,7 @@ describe("[S-08] GET /api/problems — 본문 검색", () => {
     expect(body.data.length).toBeGreaterThan(0);
     expect(body.data.length).toBeLessThan(all.data.length);
     for (const p of body.data) {
-      expect(p.content.toLowerCase()).toContain(needle.toLowerCase());
+      expect(어딘가에있다(p, needle)).toBe(true);
     }
   });
 
@@ -770,7 +790,7 @@ describe("[S-08] GET /api/problems — 본문 검색", () => {
     );
     const body = problemListResponseSchema.parse(await res.json());
     for (const p of body.data) {
-      expect(p.content.toLowerCase()).toContain(needle.toLowerCase());
+      expect(어딘가에있다(p, needle)).toBe(true);
       expect(p.answer).not.toBe(MISSING_ANSWER);
     }
   });
@@ -780,5 +800,90 @@ describe("[S-08] GET /api/problems — 본문 검색", () => {
       jsonRequest("http://localhost/api/problems?q=", "GET"),
     );
     expect(res.status).toBe(400);
+  });
+});
+
+/**
+ * 검색이 닿는 칸 — 원장님 지시 2026-08-19 「문항번호도 같이 검색.
+ * 검색가능한건 모두 검색」.
+ *
+ * 🔴 이 검사들은 **본문만 보면 전부 빨개진다.** 늘린 칸마다 하나씩 있으니,
+ *    나중에 누가 `searchWhere` 를 본문 하나로 되돌리면 그 자리가 드러난다.
+ */
+describe("[S-08] GET /api/problems — 검색이 닿는 칸", () => {
+  const 전부 = async () =>
+    problemListResponseSchema.parse(
+      await (
+        await listProblems(
+          jsonRequest("http://localhost/api/problems?pageSize=100", "GET"),
+        )
+      ).json(),
+    );
+  const 찾기 = async (q: string) =>
+    problemListResponseSchema.parse(
+      await (
+        await listProblems(
+          jsonRequest(
+            `http://localhost/api/problems?q=${encodeURIComponent(q)}&pageSize=100`,
+            "GET",
+          ),
+        )
+      ).json(),
+    );
+
+  it("문항 코드로 찾는다 — 코드는 본문 어디에도 없다", async () => {
+    const all = await 전부();
+    const target = all.data[0]!;
+    // 전제: 코드가 본문에 없어야 이 검사가 «본문 말고 코드를 봤다»를 잠근다.
+    expect(target.content).not.toContain(target.problemCode);
+
+    const body = await 찾기(target.problemCode);
+    expect(body.data.map((p) => p.id)).toContain(target.id);
+  });
+
+  it("문항 코드는 대소문자를 가리지 않는다", async () => {
+    const all = await 전부();
+    const target = all.data[0]!;
+    const body = await 찾기(target.problemCode.toLowerCase());
+    expect(body.data.map((p) => p.id)).toContain(target.id);
+  });
+
+  it("해설로 찾는다 — 본문에 없는 낱말이어도", async () => {
+    const created = problemResponseSchema.parse(
+      await (
+        await createProblem(
+          jsonRequest("http://localhost/api/problems", "POST", {
+            unitId: MOCK_PROBLEM_WITH_FRACTION.unitId,
+            source: "past_exam",
+            difficulty: "mid",
+            problemType: "개념",
+            content: "본문에는 그 낱말이 없다 $1+1$",
+            answer: "2",
+            solution: "해설에만 있는 낱말: 카르다노공식",
+          }),
+        )
+      ).json(),
+    );
+    const body = await 찾기("카르다노공식");
+    expect(body.data.map((p) => p.id)).toContain(created.data.id);
+  });
+
+  it("정답으로 찾는다", async () => {
+    const created = problemResponseSchema.parse(
+      await (
+        await createProblem(
+          jsonRequest("http://localhost/api/problems", "POST", {
+            unitId: MOCK_PROBLEM_WITH_FRACTION.unitId,
+            source: "past_exam",
+            difficulty: "mid",
+            problemType: "개념",
+            content: "정답에만 있는 값을 묻는다",
+            answer: "정답에만있는값",
+          }),
+        )
+      ).json(),
+    );
+    const body = await 찾기("정답에만있는값");
+    expect(body.data.map((p) => p.id)).toContain(created.data.id);
   });
 });

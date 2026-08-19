@@ -59,8 +59,7 @@ import io,sys,os
 p,old,new=sys.argv[1],sys.argv[2],sys.argv[3]
 s=io.open(p,encoding="utf-8",newline="").read()
 if old not in s:
-    sys.stderr.write("표적 없음: " + old[:70] + "
-")
+    sys.stderr.write("표적 없음: %s" % old[:70])
     raise SystemExit(3)
 out=s.replace(old,new,1)
 tmp=p+".tmp"

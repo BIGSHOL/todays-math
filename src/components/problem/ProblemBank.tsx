@@ -4,7 +4,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { PROBLEM_CARD_MIN_WIDTH } from "@/components/print/tokens";
 import { Button } from "@/components/ui/Button";
-import type { Difficulty, ReviewStatus } from "@/contracts/common.contract";
+import type {
+  Difficulty,
+  ProblemSource,
+  ReviewStatus,
+} from "@/contracts/common.contract";
 import type { ProblemEntity, ProblemType } from "@/contracts/problem.contract";
 import type { UnitEntity } from "@/contracts/unit.contract";
 import {
@@ -17,7 +21,7 @@ import { loadUnits } from "@/lib/units/unitApi";
 import { useDebounced } from "@/hooks/useDebounced";
 
 import { FieldSelect, FieldText, FIELD_SELECT_WIDTH } from "./FieldSelect";
-import { PROBLEM_TYPES } from "./labels";
+import { PROBLEM_TYPES, SOURCE_LABEL, SOURCE_OPTIONS } from "./labels";
 import { ProblemCard } from "./ProblemCardLazy";
 import { ProblemGenerateForm, ProblemRegisterForm } from "./ProblemPanelsLazy";
 
@@ -90,7 +94,8 @@ function matchesFilters(
   return (
     (!filters.difficulty || problem.difficulty === filters.difficulty) &&
     (!filters.problemType || problem.problemType === filters.problemType) &&
-    (!filters.reviewStatus || problem.reviewStatus === filters.reviewStatus)
+    (!filters.reviewStatus || problem.reviewStatus === filters.reviewStatus) &&
+    (!filters.source || problem.source === filters.source)
   );
 }
 
@@ -102,6 +107,9 @@ export function ProblemBank() {
   const [difficulty, setDifficulty] = useState("");
   const [problemType, setProblemType] = useState("");
   const [reviewStatus, setReviewStatus] = useState("");
+  // 출처 필터(2026-08-19 원장님 지시) — AI 생성물만 골라 검수하려면 이 칸이 필요하다.
+  // 그 전에는 대기 271건(기출 144 · 변형 107 · AI 20)이 한 덩어리로 섞여 나왔다.
+  const [source, setSource] = useState("");
   // 본문 검색 — 타자 중에는 안 나간다(서버 실측 277~289ms · Seq Scan).
   // `query` 는 화면이 보는 값, `q` 는 서버로 나가는 값이다.
   const [query, setQuery] = useState("");
@@ -136,6 +144,7 @@ export function ProblemBank() {
       difficulty: (difficulty || undefined) as Difficulty | undefined,
       problemType: (problemType || undefined) as ProblemType | undefined,
       reviewStatus: (reviewStatus || undefined) as ReviewStatus | undefined,
+      source: (source || undefined) as ProblemSource | undefined,
       q: q.trim() || undefined,
       hasFigure: hasFigure || undefined,
       hasSolution: hasSolution || undefined,
@@ -149,6 +158,7 @@ export function ProblemBank() {
     difficulty,
     problemType,
     reviewStatus,
+    source,
     q,
     hasFigure,
     hasSolution,
@@ -358,13 +368,13 @@ export function ProblemBank() {
           17.4%(8,187행)는 옮겨 적을 한글 구절이 아예 없어 구조적으로 못 찾는다.
         */}
         <FieldText
-          aria-label="본문 검색"
+          aria-label="검색 — 본문·문항번호·정답·해설·학교"
           label="검색"
           onChange={(event) => {
             resetToFirstPage();
             setQuery(event.target.value);
           }}
-          placeholder="본문에서 찾기"
+          placeholder="본문·문항번호·정답·해설"
           style={{ gridColumn: "span 2" }}
           value={query}
         />
@@ -461,6 +471,25 @@ export function ProblemBank() {
           <option value="pending">대기</option>
           <option value="approved">승인</option>
           <option value="rejected">반려</option>
+        </FieldSelect>
+        {/*
+          출처 — 원장님 지시 2026-08-19. AI 생성물만 골라 검수하려면 이 칸이 있어야
+          한다. 이름표는 `SOURCE_LABEL` 한 곳에서 온다(카드와 갈리지 않게).
+        */}
+        <FieldSelect
+          label="출처"
+          onChange={(event) => {
+            resetToFirstPage();
+            setSource(event.target.value);
+          }}
+          value={source}
+        >
+          <option value="">전체</option>
+          {SOURCE_OPTIONS.map((value) => (
+            <option key={value} value={value}>
+              {SOURCE_LABEL[value]}
+            </option>
+          ))}
         </FieldSelect>
         {/*
           「자료」 토글 셋 — 그림 · 해설 · 정답 (원장님 지시 2026-08-19).

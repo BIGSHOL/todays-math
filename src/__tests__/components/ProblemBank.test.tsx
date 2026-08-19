@@ -934,6 +934,12 @@ describe("[S-08] 문제은행 — 해설·정답 토글 (MSW)", () => {
  * ⚠️ 서버 실측 277~289ms(Seq Scan)이다. 글자마다 조회하면 안 된다 — **디바운스**가
  *    있어야 한다. 그 사실을 테스트가 잠근다(타자 중에는 안 나가고, 멎으면 한 번 나간다).
  */
+/**
+ * 검색칸의 접근성 이름 — **무엇을 찾는지**가 이름에 있어야 한다.
+ * 2026-08-19 원장님 지시로 본문 말고도 찾게 되었다(문항번호·정답·해설·학교).
+ */
+const 검색칸이름 = "검색 — 본문·문항번호·정답·해설·학교";
+
 describe("[S-08] 문제은행 — 본문 검색 (MSW)", () => {
   const EMPTY_LIST = { data: [], meta: { page: 1, pageSize: 20, total: 0 } };
 
@@ -950,7 +956,7 @@ describe("[S-08] 문제은행 — 본문 검색 (MSW)", () => {
 
   it("검색칸을 보여 주고 기본은 비어 있다", async () => {
     await renderBank();
-    const box = screen.getByRole("searchbox", { name: "본문 검색" });
+    const box = screen.getByRole("searchbox", { name: 검색칸이름 });
     expect(box).toBeInTheDocument();
     expect(box).toHaveValue("");
   });
@@ -960,7 +966,7 @@ describe("[S-08] 문제은행 — 본문 검색 (MSW)", () => {
     const captured = captureQueries();
 
     await user.type(
-      screen.getByRole("searchbox", { name: "본문 검색" }),
+      screen.getByRole("searchbox", { name: 검색칸이름 }),
       "이차함수",
     );
     await waitFor(
@@ -980,7 +986,7 @@ describe("[S-08] 문제은행 — 본문 검색 (MSW)", () => {
     const captured = captureQueries();
 
     await user.type(
-      screen.getByRole("searchbox", { name: "본문 검색" }),
+      screen.getByRole("searchbox", { name: 검색칸이름 }),
       "이차함수",
     );
     await waitFor(
@@ -996,7 +1002,7 @@ describe("[S-08] 문제은행 — 본문 검색 (MSW)", () => {
   it("지우면 q 가 빠진다 — 빈 검색어를 서버로 보내지 않는다", async () => {
     const { user } = await renderBank();
     const captured = captureQueries();
-    const box = screen.getByRole("searchbox", { name: "본문 검색" });
+    const box = screen.getByRole("searchbox", { name: 검색칸이름 });
 
     // ⚠️ 지우기 전에 **검색이 실제로 나간 것을 먼저 확인**해야 한다. 디바운스가
     //    아직 안 터진 상태에서 지우면 `q` 가 처음부터 빈 채라 상태가 안 바뀌고,
@@ -1023,7 +1029,7 @@ describe("[S-08] 문제은행 — 본문 검색 (MSW)", () => {
     const captured = captureQueries();
 
     await user.type(
-      screen.getByRole("searchbox", { name: "본문 검색" }),
+      screen.getByRole("searchbox", { name: 검색칸이름 }),
       "이차",
     );
     await waitFor(
@@ -1040,7 +1046,7 @@ describe("[S-08] 문제은행 — 본문 검색 (MSW)", () => {
 
     await user.click(screen.getByRole("checkbox", { name: "해설" }));
     await user.type(
-      screen.getByRole("searchbox", { name: "본문 검색" }),
+      screen.getByRole("searchbox", { name: 검색칸이름 }),
       "이차",
     );
     await waitFor(
@@ -1078,5 +1084,62 @@ describe("[S-08] 문제은행 — 필터 줄맞춤", () => {
     const group = screen.getByRole("group", { name: "자료" });
     const box = group.querySelector("div");
     expect(box?.className).toContain("h-11");
+  });
+});
+
+/**
+ * 출처 필터 — 원장님 지시 2026-08-19 「AI 필터도 임시로 만들던가」.
+ *
+ * 그 전에는 대기 상태가 한 덩어리였다(실측 271건 = 기출 144 · 변형 107 · AI 20).
+ * AI 생성물만 검수하려면 단원으로 우회해야 했다.
+ *
+ * 🔴 이 검사는 **배선 세 층이 다 이어져야** 초록이다 — 화면 상태 → `ProblemListFilters`
+ *    → `listQuery`. 가운데 층(`problemApi.ts`)을 빠뜨리면 타입 검사는 통과하고
+ *    필터만 조용히 안 붙는다. 2026-08-19 에 자료 토글에서 실제로 그랬다.
+ */
+describe("[S-08] 문제은행 — 출처 필터 (MSW)", () => {
+  const EMPTY_LIST = { data: [], meta: { page: 1, pageSize: 20, total: 0 } };
+
+  function captureQueries() {
+    const captured: URLSearchParams[] = [];
+    server.use(
+      http.get("/api/problems", ({ request }) => {
+        captured.push(new URL(request.url).searchParams);
+        return HttpResponse.json(EMPTY_LIST);
+      }),
+    );
+    return captured;
+  }
+
+  it("네 출처를 모두 고를 수 있다 — 하나라도 빠지면 그 문항은 못 찾는다", async () => {
+    await renderBank();
+    const box = screen.getByLabelText("출처");
+    const names = [...box.querySelectorAll("option")].map((o) => o.textContent);
+    expect(names).toEqual(["전체", "기출", "변형", "자작", "AI 생성"]);
+  });
+
+  it("AI 생성을 고르면 source=ai_generated 로 조회하고, 되돌리면 빠진다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+
+    await user.selectOptions(screen.getByLabelText("출처"), "ai_generated");
+    await waitFor(() => {
+      expect(captured.at(-1)?.get("source")).toBe("ai_generated");
+    });
+
+    await user.selectOptions(screen.getByLabelText("출처"), "");
+    await waitFor(() => {
+      expect(captured.at(-1)?.has("source")).toBe(false);
+    });
+  });
+
+  it("고르면 1페이지부터 다시 본다 — 옛 페이지에 남으면 빈 화면이 된다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+
+    await user.selectOptions(screen.getByLabelText("출처"), "ai_generated");
+    await waitFor(() => {
+      expect(captured.at(-1)?.get("page")).toBe("1");
+    });
   });
 });

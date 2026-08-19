@@ -23,6 +23,7 @@ import {
   validationError,
 } from "@/lib/apiResponse";
 import { db } from "@/lib/db";
+import { PROBLEM_CODE_PATTERN } from "@/contracts/problemCode.contract";
 import { MISSING_ANSWER } from "@/lib/missingAnswer";
 import { DEFAULT_PROBLEM_POOL, problemVisibleWhere } from "@/lib/problemPool";
 import { isPrismaErrorCode } from "@/lib/prismaErrors";
@@ -137,11 +138,49 @@ export async function GET(request: NextRequest) {
   const answerWhere = hasAnswer
     ? [{ AND: [{ answer: { not: MISSING_ANSWER } }, { answer: { not: "" } }] }]
     : [];
-  // 본문 검색(2026-08-19) — `contains` + `insensitive`.
+  // 검색(2026-08-19) — `contains` + `insensitive`.
   // ⚠️ 검색어가 비면 **아예 안 붙인다.** 빈 문자열로 붙이면 전량이 통과해 뜻이 없다.
-  const searchWhere = q
-    ? [{ content: { contains: q, mode: "insensitive" as const } }]
-    : [];
+  //
+  // 원장님 지시 2026-08-19: 「문항번호도 같이 검색. 검색가능한건 모두 검색」.
+  // 그 전에는 `content` 한 칸만 봤다 — 그래서 보고서에 적힌 문항 코드
+  // (`HAL0309-Z7E2`)를 그대로 붙여 넣어도 **아무것도 안 나왔다.**
+  //
+  // 무엇을 넣고 무엇을 뺐나 (실측 47,172행 기준 채워진 정도):
+  //   넣음  content 47,172 · problemCode 47,172 · answer 47,172
+  //         solution 13,946 · school 40,237 · questionNumber 45,080
+  //   뺌    sourceFile·examId·externalId — 사람이 읽는 값이 아니라 **내부 경로·식별자**다.
+  //         figureSvg — SVG 소스라 검색어가 우연히 좌표에 걸린다.
+  //
+  // ⚠️ `questionNumber` 는 Int 라 `contains` 가 없다. 검색어가 **숫자일 때만** 같은
+  //    값을 찾는다. 「12」로 찾으면 원본 시험지 12번들이 같이 나오는데, 그게 이
+  //    칸을 넣은 이유다 — 학교·단원 필터와 겹쳐 쓰라고 있는 물건이다.
+  //
+  // 실측: 본문만 355ms → 넓혀서 581ms(같은 Seq Scan 한 번, 행마다 비교가 늘 뿐).
+  // 화면은 `useDebounced` 로 타자 중 조회를 막는다.
+  //
+  // 🟢 빠른 길 — 검색어가 **문항 코드 그 자체**면 그 칸만 본다(유니크 인덱스).
+  //    원장님이 보고서의 코드를 붙여 넣는 것이 실제 쓰임이다. 실측 700ms → 1ms.
+  //    형식은 계약(`PROBLEM_CODE_PATTERN`)에서 가져온다 — 여기에 옮겨 적으면
+  //    코드 규칙이 바뀔 때 한쪽만 고쳐도 아무도 모른다(D-53).
+  const qCode = q?.trim().toUpperCase();
+  const isWholeCode = !!qCode && new RegExp(PROBLEM_CODE_PATTERN).test(qCode);
+  const qNumber = q && /^\d{1,7}$/.test(q) ? Number(q) : null;
+  const searchWhere = isWholeCode
+    ? [{ problemCode: qCode }]
+    : q
+      ? [
+          {
+            OR: [
+              { content: { contains: q, mode: "insensitive" as const } },
+              { problemCode: { contains: q, mode: "insensitive" as const } },
+              { answer: { contains: q, mode: "insensitive" as const } },
+              { solution: { contains: q, mode: "insensitive" as const } },
+              { school: { contains: q, mode: "insensitive" as const } },
+              ...(qNumber === null ? [] : [{ questionNumber: qNumber }]),
+            ],
+          },
+        ]
+      : [];
   const where = {
     AND: [
       problemVisibleWhere(session.id),

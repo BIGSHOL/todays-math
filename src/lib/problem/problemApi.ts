@@ -1,4 +1,8 @@
-import type { Difficulty, ReviewStatus } from "@/contracts/common.contract";
+import type {
+  Difficulty,
+  ProblemSource,
+  ReviewStatus,
+} from "@/contracts/common.contract";
 import type {
   ProblemCreateRequest,
   ProblemGenerateRequest,
@@ -37,6 +41,8 @@ export type ProblemListFilters = {
   difficulty?: Difficulty;
   problemType?: ProblemType;
   reviewStatus?: ReviewStatus;
+  /** 출처(2026-08-19 원장님 지시) — AI 생성물만 골라 검수할 수 있어야 한다. */
+  source?: ProblemSource;
 };
 
 /** 문제은행 목록 페이지 크기 — 계약 기본값(paginationParamsSchema)과 동일. */
@@ -64,6 +70,7 @@ function listQuery(filters: ProblemListFilters, page: number) {
   if (filters.difficulty) params.set("difficulty", filters.difficulty);
   if (filters.problemType) params.set("problemType", filters.problemType);
   if (filters.reviewStatus) params.set("reviewStatus", filters.reviewStatus);
+  if (filters.source) params.set("source", filters.source);
   return params.toString();
 }
 
