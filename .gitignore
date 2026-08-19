@@ -98,3 +98,6 @@ scripts/classify/reports/loaded-external-ids.json
 
 # RPM 원본 교재 PDF (내려받은 것 — 저장소에 넣지 않는다)
 .rpm-src/
+
+# HWP → PDF 변환 산출물 (재생성 가능, 저장소에 넣지 않는다)
+.hwp-pdf/
