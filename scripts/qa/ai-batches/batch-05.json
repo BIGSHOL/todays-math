@@ -1,0 +1,252 @@
+[
+  {
+    "unitId": "74103a7e-ab11-4103-a171-3cb2bbabbbeb",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "일차부등식 $\\frac{x}{2}+1 > \\frac{x-1}{3}$ 의 해는?\n\n1. $x>-8$\n2. $x<-8$\n3. $x>8$\n4. $x<8$\n5. $x>-4$",
+    "answer": "①",
+    "solution": "양변에 $6$ 을 곱하면 $3x+6>2(x-1)$ 이다. 우변을 전개하면 $3x+6>2x-2$ 이고, $3x-2x>-2-6$ 에서 $x>-8$ 이다. 따라서 답은 ①이다.",
+    "메모": "중2 일차부등식의 풀이 · 분수 계수"
+  },
+  {
+    "unitId": "5ede1a10-d145-449f-bcce-43cec8217640",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "점 $(-2,\\,5)$ 를 $y$ 축에 대하여 대칭이동한 점의 좌표는?\n\n1. $(2,\\,5)$\n2. $(-2,\\,-5)$\n3. $(2,\\,-5)$\n4. $(5,\\,-2)$\n5. $(-5,\\,2)$",
+    "answer": "①",
+    "solution": "$y$ 축에 대한 대칭이동은 $x$ 좌표의 부호만 바꾼다. 따라서 $(-2,\\,5)$ 는 $(2,\\,5)$ 로 옮겨지므로 답은 ①이다.",
+    "메모": "공통수학2 대칭이동 · y축 대칭"
+  },
+  {
+    "unitId": "cf8a556f-7921-444f-b694-33b54857fe55",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "평행사변형 $\\mathrm{ABCD}$ 에서 $\\angle A=70^{\\circ}$ 일 때, $\\angle C$ 의 크기는?\n\n1. $20^{\\circ}$\n2. $70^{\\circ}$\n3. $110^{\\circ}$\n4. $140^{\\circ}$\n5. $180^{\\circ}$",
+    "answer": "②",
+    "solution": "평행사변형에서 두 쌍의 대각의 크기는 각각 같다. $\\angle A$ 와 $\\angle C$ 는 대각이므로 $\\angle C=\\angle A=70^{\\circ}$ 이다. 따라서 답은 ②이다.",
+    "메모": "중2 평행사변형 · 대각의 크기"
+  },
+  {
+    "unitId": "cf8a556f-7921-444f-b694-33b54857fe55",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "평행사변형 $\\mathrm{ABCD}$ 의 둘레의 길이가 $30$ 이고 $\\overline{\\mathrm{AB}}=8$ 일 때, $\\overline{\\mathrm{BC}}$ 의 길이는?\n\n1. $5$\n2. $6$\n3. $7$\n4. $8$\n5. $9$",
+    "answer": "③",
+    "solution": "평행사변형은 두 쌍의 대변의 길이가 각각 같으므로 둘레의 길이는 $2(\\overline{\\mathrm{AB}}+\\overline{\\mathrm{BC}})$ 이다. $2(8+\\overline{\\mathrm{BC}})=30$ 에서 $8+\\overline{\\mathrm{BC}}=15$ 이므로 $\\overline{\\mathrm{BC}}=7$ 이다. 따라서 답은 ③이다.",
+    "메모": "중2 평행사변형 · 둘레"
+  },
+  {
+    "unitId": "cf8a556f-7921-444f-b694-33b54857fe55",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "사각형 $\\mathrm{ABCD}$ 에서 $\\overline{\\mathrm{AB}}$ 와 $\\overline{\\mathrm{DC}}$ 가 평행하다. 이 사각형이 평행사변형이 되기 위해 더 필요한 조건은?\n\n1. $\\overline{\\mathrm{AB}}=\\overline{\\mathrm{DC}}$\n2. $\\overline{\\mathrm{AB}}=\\overline{\\mathrm{BC}}$\n3. $\\angle A=\\angle B$\n4. $\\overline{\\mathrm{AC}}=\\overline{\\mathrm{BD}}$\n5. $\\angle A=90^{\\circ}$",
+    "answer": "①",
+    "solution": "한 쌍의 대변이 평행하고 그 길이가 같으면 그 사각형은 평행사변형이다. $\\overline{\\mathrm{AB}}$ 와 $\\overline{\\mathrm{DC}}$ 는 이미 평행하므로 두 변의 길이가 같다는 조건이 더해지면 된다. 나머지는 평행사변형을 보장하지 못한다. 따라서 답은 ①이다.",
+    "메모": "중2 평행사변형이 되는 조건"
+  },
+  {
+    "unitId": "31631fad-5ef1-4a52-bec8-a0bd50178454",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "가로의 길이가 $6$, 세로의 길이가 $8$ 인 직사각형의 대각선의 길이는?\n\n1. $7$\n2. $9$\n3. $10$\n4. $12$\n5. $14$",
+    "answer": "③",
+    "solution": "직사각형의 대각선은 가로와 세로를 두 변으로 하는 직각삼각형의 빗변이다. 피타고라스 정리에 의하여 대각선의 길이는 $\\sqrt{6^{2}+8^{2}}=\\sqrt{36+64}=\\sqrt{100}=10$ 이다. 따라서 답은 ③이다.",
+    "메모": "중2 피타고라스 정리의 활용 · 직사각형의 대각선"
+  },
+  {
+    "unitId": "da7a052e-597d-4a48-a7c8-295c17e0c911",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "분수 $\\frac{7}{25}$ 을 소수로 나타내면?\n\n1. $0.28$\n2. $0.35$\n3. $0.4$\n4. $2.8$\n5. $3.57$",
+    "answer": "①",
+    "solution": "분모 $25$ 를 $100$ 으로 만들기 위해 분모와 분자에 $4$ 를 곱하면 $\\frac{7}{25}=\\frac{28}{100}=0.28$ 이다. 따라서 답은 ①이다.",
+    "메모": "중2 유리수와 소수 · 분수를 소수로"
+  },
+  {
+    "unitId": "da7a052e-597d-4a48-a7c8-295c17e0c911",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "다음 분수 중 유한소수로 나타낼 수 있는 것은?\n\n1. $\\frac{1}{3}$\n2. $\\frac{1}{6}$\n3. $\\frac{1}{7}$\n4. $\\frac{1}{8}$\n5. $\\frac{1}{9}$",
+    "answer": "④",
+    "solution": "기약분수를 유한소수로 나타낼 수 있으려면 분모의 소인수가 $2$ 와 $5$ 뿐이어야 한다. $8=2^{3}$ 이므로 $\\frac{1}{8}=0.125$ 로 유한소수이다. $3$, $6=2 \\times 3$, $7$, $9=3^{2}$ 은 모두 $2$ 나 $5$ 가 아닌 소인수를 가지므로 순환소수가 된다. 따라서 답은 ④이다.",
+    "메모": "중2 유리수와 소수 · 유한소수의 조건"
+  },
+  {
+    "unitId": "da7a052e-597d-4a48-a7c8-295c17e0c911",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "분수 $\\frac{3}{40}$ 을 소수로 나타내면?\n\n1. $0.05$\n2. $0.075$\n3. $0.75$\n4. $0.12$\n5. $1.33$",
+    "answer": "②",
+    "solution": "$40=2^{3} \\times 5$ 이므로 분모와 분자에 $25$ 를 곱하면 $\\frac{3}{40}=\\frac{75}{1000}=0.075$ 이다. 따라서 답은 ②이다.",
+    "메모": "중2 유리수와 소수 · 분모를 10의 거듭제곱으로"
+  },
+  {
+    "unitId": "b6d4dc2e-0db8-44fe-a763-7214284d9bea",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "원 $\\mathrm{O}$ 에서 호 $\\mathrm{AB}$ 에 대한 중심각의 크기가 $80^{\\circ}$ 일 때, 호 $\\mathrm{AB}$ 에 대한 원주각의 크기는?\n\n1. $20^{\\circ}$\n2. $40^{\\circ}$\n3. $80^{\\circ}$\n4. $100^{\\circ}$\n5. $160^{\\circ}$",
+    "answer": "②",
+    "solution": "한 호에 대한 원주각의 크기는 그 호에 대한 중심각의 크기의 절반이다. 따라서 원주각의 크기는 $\\frac{80^{\\circ}}{2}=40^{\\circ}$ 이므로 답은 ②이다.",
+    "메모": "중3 원주각의 활용 · 원주각과 중심각 — 원래 형식이 빈 값"
+  },
+  {
+    "unitId": "b6d4dc2e-0db8-44fe-a763-7214284d9bea",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "원에 내접하는 사각형 $\\mathrm{ABCD}$ 에서 $\\angle A=95^{\\circ}$ 일 때, $\\angle C$ 의 크기는?\n\n1. $75^{\\circ}$\n2. $85^{\\circ}$\n3. $95^{\\circ}$\n4. $105^{\\circ}$\n5. $115^{\\circ}$",
+    "answer": "②",
+    "solution": "원에 내접하는 사각형에서 마주 보는 두 각의 크기의 합은 $180^{\\circ}$ 이다. 따라서 $\\angle C=180^{\\circ}-95^{\\circ}=85^{\\circ}$ 이므로 답은 ②이다.",
+    "메모": "중3 원주각의 활용 · 내접사각형 — 원래 형식이 빈 값"
+  },
+  {
+    "unitId": "b6d4dc2e-0db8-44fe-a763-7214284d9bea",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "반원에서 지름에 대한 원주각의 크기는?\n\n1. $30^{\\circ}$\n2. $45^{\\circ}$\n3. $60^{\\circ}$\n4. $90^{\\circ}$\n5. $180^{\\circ}$",
+    "answer": "④",
+    "solution": "지름에 대한 중심각의 크기는 $180^{\\circ}$ 이고 원주각의 크기는 그 절반이므로 $90^{\\circ}$ 이다. 즉 반원에 대한 원주각은 항상 직각이다. 따라서 답은 ④이다.",
+    "메모": "중3 원주각의 활용 · 지름에 대한 원주각"
+  },
+  {
+    "unitId": "99a10c98-c7bc-41c2-966a-47bf5c0bad13",
+    "difficulty": "easy",
+    "questionType": "단답형",
+    "problemType": "계산",
+    "content": "$(1+x)^{6}$ 의 전개식에서 $x^{2}$ 의 계수를 구하시오.",
+    "answer": "15",
+    "solution": "이항정리에 의하여 $(1+x)^{6}$ 의 전개식에서 $x^{2}$ 의 계수는 $_{6}\\mathrm{C}_{2}$ 이다. $_{6}\\mathrm{C}_{2}=\\frac{6 \\times 5}{2 \\times 1}=15$ 이므로 답은 $15$ 이다.",
+    "메모": "확률과 통계 이항정리 · 단답형(계산) — 지면에 [단답형] 배지가 붙는다"
+  },
+  {
+    "unitId": "66a8e481-7219-435a-ba14-1183cb18a8f0",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "정사각형 $\\mathrm{ABCD}$ 의 두 대각선의 교점을 $\\mathrm{O}$ 라 할 때, $\\angle \\mathrm{AOB}$ 의 크기는?\n\n1. $45^{\\circ}$\n2. $60^{\\circ}$\n3. $90^{\\circ}$\n4. $120^{\\circ}$\n5. $135^{\\circ}$",
+    "answer": "③",
+    "solution": "정사각형은 마름모이기도 하므로 두 대각선이 서로 수직으로 만난다. 따라서 $\\angle \\mathrm{AOB}=90^{\\circ}$ 이므로 답은 ③이다.",
+    "메모": "중2 여러 가지 사각형 · 정사각형의 대각선"
+  },
+  {
+    "unitId": "66a8e481-7219-435a-ba14-1183cb18a8f0",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "직사각형이면서 동시에 마름모인 사각형은?\n\n1. 평행사변형\n2. 사다리꼴\n3. 정사각형\n4. 등변사다리꼴\n5. 마름모\n",
+    "answer": "③",
+    "solution": "직사각형은 네 각이 모두 직각인 사각형이고 마름모는 네 변의 길이가 모두 같은 사각형이다. 두 조건을 동시에 만족하는 사각형은 네 각이 직각이고 네 변의 길이가 같은 정사각형이다. 따라서 답은 ③이다.",
+    "메모": "중2 여러 가지 사각형 · 포함 관계"
+  },
+  {
+    "unitId": "66a8e481-7219-435a-ba14-1183cb18a8f0",
+    "difficulty": "mid",
+    "questionType": "서술형",
+    "problemType": "서술형",
+    "content": "등변사다리꼴 $\\mathrm{ABCD}$ 에서 $\\overline{\\mathrm{AD}}$ 와 $\\overline{\\mathrm{BC}}$ 가 평행하고 $\\angle B=70^{\\circ}$ 일 때, $\\angle A$ 의 크기를 구하는 과정을 쓰고 답을 구하시오.",
+    "answer": "$110^{\\circ}$",
+    "solution": "$\\overline{\\mathrm{AD}}$ 와 $\\overline{\\mathrm{BC}}$ 가 평행하므로 $\\angle A$ 와 $\\angle B$ 는 같은 쪽에 있는 두 각으로 그 합이 $180^{\\circ}$ 이다. 따라서 $\\angle A=180^{\\circ}-70^{\\circ}=110^{\\circ}$ 이다.",
+    "메모": "중2 등변사다리꼴 · 서술형"
+  },
+  {
+    "unitId": "66a8e481-7219-435a-ba14-1183cb18a8f0",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "마름모의 성질로 옳은 것은?\n\n1. 네 각이 모두 같다\n2. 두 대각선이 수직이다\n3. 두 대각선의 길이가 같다\n4. 한 쌍의 대변만 평행하다\n5. 네 각이 모두 직각이다",
+    "answer": "②",
+    "solution": "마름모는 네 변의 길이가 모두 같은 사각형이고, 두 대각선은 서로 다른 것을 수직이등분한다. 네 각이 모두 같거나 직각인 것은 직사각형의 성질이고, 두 대각선의 길이가 같은 것도 직사각형의 성질이다. 따라서 답은 ②이다.",
+    "메모": "중2 여러 가지 사각형 · 마름모의 대각선"
+  },
+  {
+    "unitId": "6468d681-ffe3-48c9-b271-d2fd8c54ed94",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "유리함수 $y=\\frac{1}{x-2}+3$ 의 그래프의 점근선의 방정식은?\n\n1. $x=2,\\,y=3$\n2. $x=-2,\\,y=3$\n3. $x=2,\\,y=-3$\n4. $x=3,\\,y=2$\n5. $x=0,\\,y=0$",
+    "answer": "①",
+    "solution": "$y=\\frac{1}{x}$ 의 점근선은 $x=0$, $y=0$ 이다. 주어진 함수는 이 그래프를 $x$ 축의 방향으로 $2$ 만큼, $y$ 축의 방향으로 $3$ 만큼 평행이동한 것이므로 점근선도 같은 만큼 옮겨져 $x=2$, $y=3$ 이 된다. 따라서 답은 ①이다.",
+    "메모": "공통수학2 유리함수(1) · 점근선"
+  },
+  {
+    "unitId": "6468d681-ffe3-48c9-b271-d2fd8c54ed94",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "유리함수 $y=\\frac{2}{x}$ 의 그래프가 지나는 사분면은?\n\n1. 제1, 2사분면\n2. 제1, 3사분면\n3. 제2, 4사분면\n4. 제3, 4사분면\n5. 모든 사분면",
+    "answer": "②",
+    "solution": "$y=\\frac{2}{x}$ 에서 $x>0$ 이면 $y>0$ 이므로 제1사분면을, $x<0$ 이면 $y<0$ 이므로 제3사분면을 지난다. 일반적으로 $y=\\frac{k}{x}$ 는 $k>0$ 일 때 제1, 3사분면을 지난다. 따라서 답은 ②이다.",
+    "메모": "공통수학2 유리함수(1) · 원래 형식이 빈 값"
+  },
+  {
+    "unitId": "6468d681-ffe3-48c9-b271-d2fd8c54ed94",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "유리함수 $y=\\frac{2x+1}{x-1}$ 의 그래프의 점근선의 방정식은?\n\n1. $x=1,\\,y=2$\n2. $x=2,\\,y=1$\n3. $x=-1,\\,y=2$\n4. $x=1,\\,y=-2$\n5. $x=1,\\,y=3$",
+    "answer": "①",
+    "solution": "$\\frac{2x+1}{x-1}=\\frac{2(x-1)+3}{x-1}=2+\\frac{3}{x-1}$ 이다. 즉 $y=\\frac{3}{x}$ 의 그래프를 $x$ 축의 방향으로 $1$ 만큼, $y$ 축의 방향으로 $2$ 만큼 평행이동한 것이므로 점근선은 $x=1$, $y=2$ 이다. 따라서 답은 ①이다.",
+    "메모": "공통수학2 유리함수(1) · 대분수꼴로 고치기"
+  },
+  {
+    "unitId": "8454ebb1-e405-4c44-8b29-5b18852255ba",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "$\\overline{\\mathrm{AB}}=\\overline{\\mathrm{AC}}$ 인 이등변삼각형 $\\mathrm{ABC}$ 에서 $\\angle A=40^{\\circ}$ 일 때, $\\angle B$ 의 크기는?\n\n1. $40^{\\circ}$\n2. $50^{\\circ}$\n3. $60^{\\circ}$\n4. $70^{\\circ}$\n5. $80^{\\circ}$",
+    "answer": "④",
+    "solution": "이등변삼각형에서 두 밑각의 크기는 같으므로 $\\angle B=\\angle C$ 이다. 삼각형의 내각의 합은 $180^{\\circ}$ 이므로 $40^{\\circ}+2\\angle B=180^{\\circ}$ 에서 $\\angle B=70^{\\circ}$ 이다. 따라서 답은 ④이다.",
+    "메모": "중2 이등변삼각형의 성질 · 밑각"
+  },
+  {
+    "unitId": "8454ebb1-e405-4c44-8b29-5b18852255ba",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "$\\overline{\\mathrm{AB}}=\\overline{\\mathrm{AC}}$ 인 이등변삼각형 $\\mathrm{ABC}$ 에서 $\\angle B=65^{\\circ}$ 일 때, $\\angle A$ 의 크기는?\n\n1. $40^{\\circ}$\n2. $50^{\\circ}$\n3. $60^{\\circ}$\n4. $65^{\\circ}$\n5. $70^{\\circ}$",
+    "answer": "②",
+    "solution": "이등변삼각형에서 두 밑각의 크기는 같으므로 $\\angle C=\\angle B=65^{\\circ}$ 이다. 삼각형의 내각의 합은 $180^{\\circ}$ 이므로 $\\angle A=180^{\\circ}-65^{\\circ}-65^{\\circ}=50^{\\circ}$ 이다. 따라서 답은 ②이다.",
+    "메모": "중2 이등변삼각형의 성질 · 꼭지각"
+  },
+  {
+    "unitId": "8454ebb1-e405-4c44-8b29-5b18852255ba",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "이등변삼각형의 꼭지각의 이등분선에 대한 설명으로 옳은 것은?\n\n1. 밑변을 수직이등분한다\n2. 밑변과 평행하다\n3. 밑변의 길이와 같다\n4. 한 밑각을 이등분한다\n5. 넓이를 삼등분한다",
+    "answer": "①",
+    "solution": "이등변삼각형의 꼭지각의 이등분선은 밑변을 수직이등분한다. 즉 밑변과 직각으로 만나고 그 만나는 점이 밑변의 중점이다. 따라서 답은 ①이다.",
+    "메모": "중2 이등변삼각형의 성질 · 꼭지각의 이등분선"
+  },
+  {
+    "unitId": "e128c4d4-a36a-4888-a877-997bf69c116b",
+    "difficulty": "hard",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "무리함수 $y=-\\sqrt{4-2x}+3$ 의 치역은?\n\n1. $\\{y|y \\ge 3\\}$\n2. $\\{y|y \\le 3\\}$\n3. $\\{y|y \\ge -3\\}$\n4. $\\{y|y \\le -3\\}$\n5. $\\{y|y \\ge 0\\}$",
+    "answer": "②",
+    "solution": "근호 안이 $0$ 이상이어야 하므로 $4-2x \\ge 0$ 에서 $x \\le 2$ 이다. 이때 $\\sqrt{4-2x} \\ge 0$ 이므로 $-\\sqrt{4-2x} \\le 0$ 이고, 양변에 $3$ 을 더하면 $y \\le 3$ 이다. $x=2$ 일 때 $y=3$ 으로 최댓값을 가지므로 치역은 $\\{y|y \\le 3\\}$ 이다. 따라서 답은 ②이다.",
+    "메모": "공통수학2 무리함수(1) · 치역 — hard"
+  },
+  {
+    "unitId": "3d972797-8d7b-48c1-b0a1-feb325f2b6e4",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "$1$ 부터 $5$ 까지의 숫자가 하나씩 적힌 $5$ 장의 카드에서 $2$ 장을 동시에 뽑을 때, 두 수의 합이 짝수일 확률은?\n\n1. $\\frac{1}{5}$\n2. $\\frac{2}{5}$\n3. $\\frac{1}{2}$\n4. $\\frac{3}{5}$\n5. $\\frac{7}{10}$",
+    "answer": "②",
+    "solution": "$2$ 장을 뽑는 모든 경우의 수는 $_{5}\\mathrm{C}_{2}=10$ 이다. 두 수의 합이 짝수이려면 둘 다 홀수이거나 둘 다 짝수여야 한다. 홀수는 $1,\\,3,\\,5$ 의 $3$ 개이므로 $_{3}\\mathrm{C}_{2}=3$ 가지, 짝수는 $2,\\,4$ 의 $2$ 개이므로 $_{2}\\mathrm{C}_{2}=1$ 가지이다. 따라서 확률은 $\\frac{3+1}{10}=\\frac{2}{5}$ 이므로 답은 ②이다.",
+    "메모": "확률과 통계 확률의 뜻 · 원래 형식이 빈 값"
+  }
+]

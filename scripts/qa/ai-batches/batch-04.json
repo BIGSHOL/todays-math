@@ -1,0 +1,252 @@
+[
+  {
+    "unitId": "61192dff-7731-4dd8-8f60-d1e1c50c36bd",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "삼차방정식 $x^{3}-3x^{2}+2x=0$ 의 서로 다른 실근의 개수는?\n\n1. $0$\n2. $1$\n3. $2$\n4. $3$\n5. $4$",
+    "answer": "④",
+    "solution": "좌변을 인수분해하면 $x^{3}-3x^{2}+2x=x(x^{2}-3x+2)=x(x-1)(x-2)$ 이다. 따라서 근은 $x=0$, $x=1$, $x=2$ 로 서로 다른 실근이 $3$ 개이므로 답은 ④이다.",
+    "메모": "공통수학1 삼차방정식과 사차방정식(1) · 원래 형식이 빈 값"
+  },
+  {
+    "unitId": "61192dff-7731-4dd8-8f60-d1e1c50c36bd",
+    "difficulty": "mid",
+    "questionType": "서술형",
+    "problemType": "개념",
+    "content": "삼차방정식 $x^{3}-2x^{2}-5x+6=0$ 의 세 근을 구하는 과정을 쓰고 답을 구하시오.",
+    "answer": "$x=-2$ 또는 $x=1$ 또는 $x=3$",
+    "solution": "$f(x)=x^{3}-2x^{2}-5x+6$ 이라 하면 $f(1)=1-2-5+6=0$ 이므로 $x-1$ 은 $f(x)$ 의 인수이다. 조립제법이나 나눗셈으로 $f(x)=(x-1)(x^{2}-x-6)$ 을 얻고, $x^{2}-x-6=(x-3)(x+2)$ 이므로 $f(x)=(x-1)(x-3)(x+2)$ 이다. 따라서 세 근은 $x=-2$, $x=1$, $x=3$ 이다.",
+    "메모": "공통수학1 삼차방정식 · 서술형(인수정리)"
+  },
+  {
+    "unitId": "61192dff-7731-4dd8-8f60-d1e1c50c36bd",
+    "difficulty": "easy",
+    "questionType": "서술형",
+    "problemType": "개념",
+    "content": "삼차방정식 $x^{3}-1=0$ 의 근을 모두 구하시오.",
+    "answer": "$x=1$ 또는 $x=\\frac{-1 \\pm \\sqrt{3}i}{2}$",
+    "solution": "$x^{3}-1=(x-1)(x^{2}+x+1)$ 이므로 $x=1$ 이거나 $x^{2}+x+1=0$ 이다. 뒤 이차방정식을 근의 공식으로 풀면 $x=\\frac{-1 \\pm \\sqrt{1-4}}{2}=\\frac{-1 \\pm \\sqrt{3}i}{2}$ 이다. 따라서 근은 $x=1$ 과 두 허근 $x=\\frac{-1 \\pm \\sqrt{3}i}{2}$ 이다.",
+    "메모": "공통수학1 삼차방정식 · 서술형(허근)"
+  },
+  {
+    "unitId": "3f385ffa-0050-4491-8914-11945199f1ea",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "한 개의 주사위를 $4$ 번 던질 때, $3$ 의 배수의 눈이 정확히 $2$ 번 나올 확률은?\n\n1. $\\frac{4}{27}$\n2. $\\frac{8}{27}$\n3. $\\frac{2}{9}$\n4. $\\frac{1}{3}$\n5. $\\frac{4}{9}$",
+    "answer": "②",
+    "solution": "주사위 한 번에 $3$ 의 배수의 눈($3$ 또는 $6$)이 나올 확률은 $\\frac{2}{6}=\\frac{1}{3}$ 이다. 독립시행이므로 구하는 확률은 $_{4}\\mathrm{C}_{2}\\left(\\frac{1}{3}\\right)^{2}\\left(\\frac{2}{3}\\right)^{2}=6 \\times \\frac{1}{9} \\times \\frac{4}{9}=\\frac{24}{81}=\\frac{8}{27}$ 이다. 따라서 답은 ②이다.",
+    "메모": "확률과 통계 독립시행의 확률"
+  },
+  {
+    "unitId": "07acacdd-6cef-4d88-b26f-d29fb677cd58",
+    "difficulty": "easy",
+    "questionType": "서술형",
+    "problemType": "개념",
+    "content": "연립방정식 $x+y=5$, $x^{2}+y^{2}=13$ 을 만족시키는 두 실수 $x$, $y$ 를 구하는 과정을 쓰고 답을 구하시오.",
+    "answer": "$x=2,\\,y=3$ 또는 $x=3,\\,y=2$",
+    "solution": "$(x+y)^{2}=x^{2}+y^{2}+2xy$ 이므로 $25=13+2xy$ 에서 $xy=6$ 이다. 따라서 $x$ 와 $y$ 는 이차방정식 $t^{2}-5t+6=0$ 의 두 근이고, $t^{2}-5t+6=(t-2)(t-3)$ 이므로 $t=2$ 또는 $t=3$ 이다. 즉 $x=2,\\,y=3$ 또는 $x=3,\\,y=2$ 이다.",
+    "메모": "공통수학1 미지수가 2개인 연립이차방정식(1) · 서술형"
+  },
+  {
+    "unitId": "74103a7e-ab11-4103-a171-3cb2bbabbbeb",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "일차부등식 $2x-1 < x+4$ 를 만족시키는 자연수 $x$ 의 개수는?\n\n1. $3$\n2. $4$\n3. $5$\n4. $6$\n5. $7$",
+    "answer": "②",
+    "solution": "$2x-1<x+4$ 에서 $2x-x<4+1$, 즉 $x<5$ 이다. 이를 만족시키는 자연수는 $1,\\,2,\\,3,\\,4$ 의 $4$ 개이다. 따라서 답은 ②이다.",
+    "메모": "중2 일차부등식의 풀이 · 원래 형식이 빈 값"
+  },
+  {
+    "unitId": "74103a7e-ab11-4103-a171-3cb2bbabbbeb",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "일차부등식 $-3x+2 \\ge 8$ 의 해는?\n\n1. $x \\ge -2$\n2. $x \\le -2$\n3. $x \\ge 2$\n4. $x \\le 2$\n5. $x \\ge -6$",
+    "answer": "②",
+    "solution": "$-3x+2 \\ge 8$ 에서 $-3x \\ge 6$ 이다. 양변을 음수 $-3$ 으로 나누면 부등호의 방향이 바뀌므로 $x \\le -2$ 이다. 따라서 답은 ②이다.",
+    "메모": "중2 일차부등식의 풀이 · 음수로 나눌 때 부등호 방향"
+  },
+  {
+    "unitId": "097f7812-d185-46c3-8579-a4942a1962f3",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "$\\angle A=90^{\\circ}$ 인 직각삼각형 $\\mathrm{ABC}$ 에서 $\\overline{\\mathrm{BC}}=10$ 일 때, 삼각형 $\\mathrm{ABC}$ 의 외접원의 반지름의 길이는?\n\n1. $4$\n2. $5$\n3. $6$\n4. $8$\n5. $10$",
+    "answer": "②",
+    "solution": "직각삼각형의 외심은 빗변의 중점이다. 빗변 $\\overline{\\mathrm{BC}}=10$ 이므로 외접원의 반지름은 $\\frac{10}{2}=5$ 이다. 따라서 답은 ②이다.",
+    "메모": "중2 삼각형의 외심 · 직각삼각형의 외심은 빗변의 중점"
+  },
+  {
+    "unitId": "2bd2f2b2-112d-4bf4-aa0b-dc8144c3b59e",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "$x \\ne 2$ 일 때 $f(x)=\\frac{x^{2}-4}{x-2}$ 이고 $f(2)=a$ 인 함수 $f$ 가 $x=2$ 에서 연속일 때, 상수 $a$ 의 값은?\n\n1. $0$\n2. $2$\n3. $4$\n4. $6$\n5. $8$",
+    "answer": "③",
+    "solution": "$x \\ne 2$ 일 때 $\\frac{x^{2}-4}{x-2}=\\frac{(x+2)(x-2)}{x-2}=x+2$ 이므로 $\\lim_{x \\to 2} f(x)=4$ 이다. $x=2$ 에서 연속이려면 $f(2)=\\lim_{x \\to 2} f(x)$ 이어야 하므로 $a=4$ 이다. 따라서 답은 ③이다.",
+    "메모": "미적분1 연속함수의 성질 · 연속의 정의"
+  },
+  {
+    "unitId": "2c1eba8f-737c-4940-a006-159c1dacd68b",
+    "difficulty": "easy",
+    "questionType": "서술형",
+    "problemType": "서술형",
+    "content": "수직선 위를 움직이는 점 $\\mathrm{P}$ 의 시각 $t$ 에서의 위치가 $x=t^{3}-3t^{2}+2$ 일 때, $t=2$ 에서의 점 $\\mathrm{P}$ 의 속도를 구하는 과정을 쓰고 답을 구하시오.",
+    "answer": "$0$",
+    "solution": "속도는 위치를 시각으로 미분한 것이므로 $v=\\frac{dx}{dt}=3t^{2}-6t$ 이다. $t=2$ 를 대입하면 $v=3 \\times 4-6 \\times 2=12-12=0$ 이다. 따라서 $t=2$ 에서의 속도는 $0$ 이다.",
+    "메모": "미적분1 속도와 가속도 · 서술형"
+  },
+  {
+    "unitId": "1a299917-12e1-4bba-9d43-ad91fa8b4dfb",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "$\\log_{2}8+\\log_{2}4$ 의 값은?\n\n1. $3$\n2. $4$\n3. $5$\n4. $6$\n5. $32$",
+    "answer": "③",
+    "solution": "$\\log_{2}8=3$ 이고 $\\log_{2}4=2$ 이므로 그 합은 $5$ 이다. 또는 $\\log_{2}8+\\log_{2}4=\\log_{2}(8 \\times 4)=\\log_{2}32=5$ 로 구해도 같다. 따라서 답은 ③이다.",
+    "메모": "대수 로그의 성질(1)"
+  },
+  {
+    "unitId": "214359b2-6062-4e63-8401-defbc76d9278",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "행렬 $A=\\begin{pmatrix} 1 & 2 \\\\ 0 & 1 \\end{pmatrix}$ 에 대하여 $A^{2}$ 의 $(1,\\,2)$ 성분은?\n\n1. $1$\n2. $2$\n3. $3$\n4. $4$\n5. $5$",
+    "answer": "④",
+    "solution": "$A^{2}=\\begin{pmatrix} 1 & 2 \\\\ 0 & 1 \\end{pmatrix}\\begin{pmatrix} 1 & 2 \\\\ 0 & 1 \\end{pmatrix}=\\begin{pmatrix} 1 & 4 \\\\ 0 & 1 \\end{pmatrix}$ 이다. 따라서 $(1,\\,2)$ 성분은 $4$ 이므로 답은 ④이다.",
+    "메모": "공통수학1 행렬의 곱셈의 성질"
+  },
+  {
+    "unitId": "5ede1a10-d145-449f-bcce-43cec8217640",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "점 $(3,\\,-2)$ 를 직선 $y=x$ 에 대하여 대칭이동한 점의 좌표는?\n\n1. $(-3,\\,2)$\n2. $(-2,\\,3)$\n3. $(2,\\,-3)$\n4. $(3,\\,2)$\n5. $(-3,\\,-2)$",
+    "answer": "②",
+    "solution": "직선 $y=x$ 에 대한 대칭이동은 $x$ 좌표와 $y$ 좌표를 맞바꾼다. 따라서 $(3,\\,-2)$ 는 $(-2,\\,3)$ 으로 옮겨지므로 답은 ②이다.",
+    "메모": "공통수학2 대칭이동 · y=x 대칭"
+  },
+  {
+    "unitId": "5ede1a10-d145-449f-bcce-43cec8217640",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "점 $(1,\\,4)$ 를 원점에 대하여 대칭이동한 점의 좌표는?\n\n1. $(1,\\,-4)$\n2. $(-1,\\,4)$\n3. $(-1,\\,-4)$\n4. $(4,\\,1)$\n5. $(-4,\\,-1)$",
+    "answer": "③",
+    "solution": "원점에 대한 대칭이동은 $x$ 좌표와 $y$ 좌표의 부호를 모두 바꾼다. 따라서 $(1,\\,4)$ 는 $(-1,\\,-4)$ 로 옮겨지므로 답은 ③이다.",
+    "메모": "공통수학2 대칭이동 · 원점 대칭"
+  },
+  {
+    "unitId": "5ede1a10-d145-449f-bcce-43cec8217640",
+    "difficulty": "hard",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "원 $x^{2}+y^{2}-4x+2y+1=0$ 을 직선 $y=x$ 에 대하여 대칭이동한 원의 중심의 좌표는?\n\n1. $(-1,\\,2)$\n2. $(1,\\,-2)$\n3. $(2,\\,-1)$\n4. $(-2,\\,1)$\n5. $(1,\\,2)$",
+    "answer": "①",
+    "solution": "주어진 식을 완전제곱꼴로 고치면 $(x-2)^{2}+(y+1)^{2}=4$ 이므로 중심은 $(2,\\,-1)$ 이다. 직선 $y=x$ 에 대한 대칭이동은 두 좌표를 맞바꾸므로 중심은 $(-1,\\,2)$ 로 옮겨진다. 따라서 답은 ①이다.",
+    "메모": "공통수학2 대칭이동 · 원의 중심 — 원래 형식이 빈 값"
+  },
+  {
+    "unitId": "5ede1a10-d145-449f-bcce-43cec8217640",
+    "difficulty": "hard",
+    "questionType": "서술형",
+    "problemType": "개념",
+    "content": "직선 $y=2x+3$ 을 $x$ 축에 대하여 대칭이동한 직선의 방정식을 구하는 과정을 쓰고 답을 구하시오.",
+    "answer": "$y=-2x-3$",
+    "solution": "$x$ 축에 대한 대칭이동은 $y$ 대신 $-y$ 를 대입하는 것과 같다. 주어진 식에 대입하면 $-y=2x+3$ 이고, 양변에 $-1$ 을 곱하면 $y=-2x-3$ 이다. 따라서 구하는 직선의 방정식은 $y=-2x-3$ 이다.",
+    "메모": "공통수학2 대칭이동 · 서술형(도형의 대칭)"
+  },
+  {
+    "unitId": "e321e4db-e3ac-44e5-b909-6a42c06a80ad",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "순환소수 $0.\\overline{45}$ 를 기약분수로 나타내면?\n\n1. $\\frac{5}{11}$\n2. $\\frac{45}{100}$\n3. $\\frac{9}{20}$\n4. $\\frac{4}{9}$\n5. $\\frac{5}{9}$",
+    "answer": "①",
+    "solution": "$x=0.\\overline{45}$ 라 하면 $100x=45.\\overline{45}$ 이다. 두 식을 변끼리 빼면 $99x=45$ 이므로 $x=\\frac{45}{99}=\\frac{5}{11}$ 이다. 따라서 답은 ①이다.",
+    "메모": "중2 순환소수 · 원래 형식이 빈 값"
+  },
+  {
+    "unitId": "4b7cd7c9-6e4d-48f5-8da3-f6ef948ea4ed",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "모평균이 $50$, 모표준편차가 $8$ 인 모집단에서 크기 $16$ 인 표본을 임의추출할 때, 표본평균 $\\overline{X}$ 의 표준편차는?\n\n1. $1$\n2. $2$\n3. $4$\n4. $8$\n5. $16$",
+    "answer": "②",
+    "solution": "크기 $n$ 인 표본의 표본평균 $\\overline{X}$ 의 표준편차는 $\\frac{\\sigma}{\\sqrt{n}}$ 이다. 따라서 $\\frac{8}{\\sqrt{16}}=\\frac{8}{4}=2$ 이므로 답은 ②이다.",
+    "메모": "확률과 통계 모평균과 표본평균"
+  },
+  {
+    "unitId": "0acbc409-9301-40fe-a511-4c87e4c2983f",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "삼각형 $\\mathrm{ABC}$ 에서 변 $\\mathrm{AB}$ 위의 점 $\\mathrm{D}$ 와 변 $\\mathrm{AC}$ 위의 점 $\\mathrm{E}$ 에 대하여 $\\overline{\\mathrm{DE}}$ 와 $\\overline{\\mathrm{BC}}$ 가 평행하다. $\\overline{\\mathrm{AD}}=4$, $\\overline{\\mathrm{DB}}=2$, $\\overline{\\mathrm{BC}}=9$ 일 때, $\\overline{\\mathrm{DE}}$ 의 길이는?\n\n1. $4$\n2. $5$\n3. $6$\n4. $7$\n5. $8$",
+    "answer": "③",
+    "solution": "$\\overline{\\mathrm{DE}}$ 와 $\\overline{\\mathrm{BC}}$ 가 평행하므로 삼각형 $\\mathrm{ADE}$ 와 삼각형 $\\mathrm{ABC}$ 는 닮음이다. $\\overline{\\mathrm{AB}}=4+2=6$ 이므로 닮음비는 $\\overline{\\mathrm{AD}}:\\overline{\\mathrm{AB}}=4:6=2:3$ 이다. 따라서 $\\overline{\\mathrm{DE}}=9 \\times \\frac{2}{3}=6$ 이므로 답은 ③이다.",
+    "메모": "중2 평행선 사이의 선분의 길이의 비 · 글로만 정해지는 삼각형(그림 불필요)"
+  },
+  {
+    "unitId": "0acbc409-9301-40fe-a511-4c87e4c2983f",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "평행한 세 직선이 두 직선과 각각 만난다. 한 직선 위에 생긴 두 선분의 길이가 차례로 $4$, $6$ 이고 다른 직선 위에 생긴 대응하는 두 선분 중 첫 번째의 길이가 $6$ 일 때, 두 번째 선분의 길이는?\n\n1. $7$\n2. $8$\n3. $9$\n4. $10$\n5. $12$",
+    "answer": "③",
+    "solution": "평행선 사이의 선분의 길이의 비는 같으므로 $4:6=6:x$ 이다. 따라서 $4x=36$ 에서 $x=9$ 이므로 답은 ③이다.",
+    "메모": "중2 평행선 사이의 선분의 길이의 비 · 비례식"
+  },
+  {
+    "unitId": "0acbc409-9301-40fe-a511-4c87e4c2983f",
+    "difficulty": "easy",
+    "questionType": "서술형",
+    "problemType": "서술형",
+    "content": "삼각형 $\\mathrm{ABC}$ 에서 두 변 $\\mathrm{AB}$, $\\mathrm{AC}$ 의 중점을 각각 $\\mathrm{M}$, $\\mathrm{N}$ 이라 하자. $\\overline{\\mathrm{BC}}=12$ 일 때 $\\overline{\\mathrm{MN}}$ 의 길이를 구하고 그 이유를 쓰시오.",
+    "answer": "$6$",
+    "solution": "삼각형의 두 변의 중점을 이은 선분은 나머지 한 변과 평행하고 그 길이는 나머지 한 변의 길이의 절반이다(중점연결정리). 따라서 $\\overline{\\mathrm{MN}}=\\frac{1}{2} \\times 12=6$ 이다.",
+    "메모": "중2 평행선 사이의 선분의 길이의 비 · 서술형(중점연결정리)"
+  },
+  {
+    "unitId": "2df6e52f-7052-4edb-a562-e94cbc000d0d",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "곡선 $y=x^{3}-2x$ 위의 점 $(1,\\,-1)$ 에서의 접선의 $y$ 절편은?\n\n1. $-3$\n2. $-2$\n3. $-1$\n4. $0$\n5. $1$",
+    "answer": "②",
+    "solution": "$y'=3x^{2}-2$ 이므로 $x=1$ 에서의 접선의 기울기는 $3-2=1$ 이다. 접선의 방정식은 $y-(-1)=1 \\times (x-1)$, 즉 $y=x-2$ 이므로 $y$ 절편은 $-2$ 이다. 따라서 답은 ②이다.",
+    "메모": "미적분1 접선의 방정식"
+  },
+  {
+    "unitId": "cf8a556f-7921-444f-b694-33b54857fe55",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "평행사변형 $\\mathrm{ABCD}$ 에서 $\\angle A=115^{\\circ}$ 일 때, $\\angle B$ 의 크기는?\n\n1. $55^{\\circ}$\n2. $65^{\\circ}$\n3. $75^{\\circ}$\n4. $115^{\\circ}$\n5. $125^{\\circ}$",
+    "answer": "②",
+    "solution": "평행사변형에서 이웃하는 두 각의 크기의 합은 $180^{\\circ}$ 이다. 따라서 $\\angle B=180^{\\circ}-115^{\\circ}=65^{\\circ}$ 이므로 답은 ②이다.",
+    "메모": "중2 평행사변형 · 이웃각의 합"
+  },
+  {
+    "unitId": "cf8a556f-7921-444f-b694-33b54857fe55",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "평행사변형 $\\mathrm{ABCD}$ 에서 $\\overline{\\mathrm{AB}}=3x-2$, $\\overline{\\mathrm{CD}}=x+6$ 일 때, $x$ 의 값은?\n\n1. $2$\n2. $3$\n3. $4$\n4. $5$\n5. $6$",
+    "answer": "③",
+    "solution": "평행사변형에서 두 쌍의 대변의 길이는 각각 같으므로 $\\overline{\\mathrm{AB}}=\\overline{\\mathrm{CD}}$ 이다. 즉 $3x-2=x+6$ 에서 $2x=8$, 따라서 $x=4$ 이므로 답은 ③이다.",
+    "메모": "중2 평행사변형 · 대변의 길이"
+  },
+  {
+    "unitId": "cf8a556f-7921-444f-b694-33b54857fe55",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "평행사변형 $\\mathrm{ABCD}$ 의 두 대각선의 교점을 $\\mathrm{O}$ 라 하자. $\\overline{\\mathrm{AC}}=10$ 일 때, $\\overline{\\mathrm{AO}}$ 의 길이는?\n\n1. $3$\n2. $4$\n3. $5$\n4. $6$\n5. $10$",
+    "answer": "③",
+    "solution": "평행사변형의 두 대각선은 서로 다른 것을 이등분한다. 따라서 $\\overline{\\mathrm{AO}}=\\frac{1}{2}\\overline{\\mathrm{AC}}=\\frac{10}{2}=5$ 이므로 답은 ③이다.",
+    "메모": "중2 평행사변형 · 대각선의 이등분"
+  }
+]
