@@ -52,6 +52,16 @@ const FIGURE_LOCK = "scripts/qa/reports/missing-figure-lock.json";
 
 const APPLY = process.argv.includes("--apply");
 const REVERT = process.argv.includes("--revert");
+/**
+ * `--revert --recovered` — **짝을 되찾은 행만** 푼다.
+ *
+ * 통째 `--revert` 는 29행을 다 푼다. 그런데 그중 되찾은 것만 살아야 한다 —
+ * 아직 못 찾은 행을 같이 풀면 **어느 그림이 ①인지 모르는 문항이 지면으로 돌아간다.**
+ * 「회수와 잠금 해제는 한 세트」인데, **세트의 범위가 회수분이어야** 한다.
+ * 판정 근거는 `choice_figure_index` 가 비었는지 — 규약상 빈 배열이 «모른다»다
+ * (`src/lib/problem/choiceFigureIndex.ts`).
+ */
+const ONLY_RECOVERED = process.argv.includes("--recovered");
 
 if ((APPLY || REVERT) && process.env.ALLOW_UNIT_FIX !== "1") {
   console.error(
@@ -239,15 +249,31 @@ async function fetchAll(): Promise<Map<string, Row>> {
   return new Map(rows.map((r) => [r.id, r]));
 }
 
+/** 짝을 되찾은 행 — `choice_figure_index` 가 비어 있지 않은 것. */
+async function fetchRecovered(): Promise<Set<string>> {
+  const rows = (await prisma.$queryRawUnsafe(
+    `SELECT id::text AS id FROM problem
+      WHERE choice_figure_index IS NOT NULL
+        AND cardinality(choice_figure_index) > 0`,
+  )) as { id: string }[];
+  return new Set(rows.map((r) => r.id));
+}
+
 async function revert() {
   if (!existsSync(LEDGER)) throw new Error(`원장이 없다: ${LEDGER}`);
   const ledger = JSON.parse(readFileSync(LEDGER, "utf8")) as {
     이전상태: LockedRow[];
   };
   const all = await fetchAll();
+  const recovered = ONLY_RECOVERED ? await fetchRecovered() : null;
   let restored = 0;
   let untouched = 0;
+  let notRecovered = 0;
   for (const row of ledger.이전상태) {
+    if (recovered && !recovered.has(row.id)) {
+      notRecovered += 1;
+      continue;
+    }
     const d = revertDiscard(row, all.get(row.id));
     if (!d.restore) {
       untouched += 1;
@@ -261,8 +287,15 @@ async function revert() {
     restored += 1;
   }
   console.log(
-    `되돌림 ${restored}행 · 값이 달라 건드리지 않음 ${untouched}행 (남의 변경을 덮지 않는다)`,
+    `되돌림 ${restored}행 · 값이 달라 건드리지 않음 ${untouched}행 (남의 변경을 덮지 않는다)` +
+      (recovered ? ` · 아직 짝을 못 찾아 잠근 채로 둠 ${notRecovered}행` : ""),
   );
+  // 분모가 안 맞으면 조용히 빠진 행이 있다는 뜻이다.
+  if (restored + untouched + notRecovered !== ledger.이전상태.length) {
+    throw new Error(
+      `분모가 안 맞는다: 원장 ${ledger.이전상태.length} ≠ 합 ${restored + untouched + notRecovered}`,
+    );
+  }
 }
 
 async function main() {
