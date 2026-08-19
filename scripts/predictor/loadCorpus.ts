@@ -11,9 +11,9 @@
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 
+import { normalizeDifficultyLabel } from "../../src/lib/import/buildExamPaper";
 import { fillScore } from "../../src/lib/predictor/fillScore";
 import type {
-  DifficultyLabel,
   ExamLevel,
   ExamPaper,
   ExamQuestion,
@@ -39,18 +39,8 @@ const QTYPE: Record<string, QuestionType> = {
   서술형: "서술형",
 };
 
-/**
- * 난이도 라벨 정규화. 원본에 `중상`·`중하`·`킬러` 같은 표기가 소수(1% 미만) 섞여 있다.
- * 3단계로 접되, **없는 것을 지어내지는 않는다** — 알 수 없으면 null.
- */
-const DIFFICULTY: Record<string, DifficultyLabel> = {
-  하: "하",
-  중: "중",
-  상: "상",
-  중하: "중",
-  중상: "중",
-  킬러: "상",
-};
+// 난이도 라벨 정규화는 `src/lib/import/buildExamPaper.ts` 한 곳에만 둔다 —
+// 규칙이 두 벌이 되면 한쪽만 고쳐도 아무도 모른다(CLAUDE.md 2026-08-18).
 
 interface RawQuestion {
   number?: number;
@@ -179,7 +169,7 @@ function toPaper(
       number: q.number as number,
       score,
       qtype,
-      difficultyLabel: label ? (DIFFICULTY[label.trim()] ?? null) : null,
+      difficultyLabel: normalizeDifficultyLabel(label),
       topicRaw: topic ? String(topic).slice(0, 100) : null,
       // 추출 산출물에는 우리 트리 단원이 없다 — 원문 표기로만 다룬다(11 §2.4).
       unitId: null,

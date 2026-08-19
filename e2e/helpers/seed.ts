@@ -89,6 +89,7 @@ async function createApprovedProblems(
     for (let i = 0; i < counts[difficulty]; i += 1) {
       n += 1;
       created.push(
+        // exam-wiring: 테스트 — E2E 시드다. 제품 적재 경로가 아니다
         await db.problem.create({
           data: {
             userId,
