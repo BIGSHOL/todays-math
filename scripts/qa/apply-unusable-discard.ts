@@ -35,6 +35,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 import { PrismaClient } from "@prisma/client";
 
+import { FATAL_VERDICTS as FATAL_LIST } from "./answerChoiceRules";
 import { mergeLedgerRows, stillApplied } from "./revertLedger";
 
 const prisma = new PrismaClient();
@@ -62,17 +63,15 @@ const DAILY = 8;
 const REVIEW = 25;
 
 /**
- * 「학생이 정답을 고를 수 없다」로 판정된 다섯 가지. **이 목록이 처리 대상 무리다.**
- * `report-unusable-problems.ts` 가 내는 판정 중 ⚠️(지면번호어긋남·보기수이상·
- * 정답표기가번호아님)는 **정답을 고를 수는 있으므로** 여기 없다.
+ * 「학생이 정답을 고를 수 없다」로 판정된 것들. **이 목록이 처리 대상 무리다.**
+ *
+ * 🔴 **판정 목록은 `answerChoiceRules.ts` 한 곳에서 온다.** 여기에 손으로 다시
+ *    적으면, 나중에 판정이 하나 늘었을 때 **세는 쪽은 세고 막는 쪽은 안 막는다** —
+ *    이 저장소가 여러 번 값을 치른 자리다(CLAUDE.md 2026-08-18 「목록을 손으로 쓰면
+ *    세는 쪽과 고치는 쪽이 같이 눈이 먼다」). ⚠️ 부류(지면번호어긋남·보기수이상·
+ *    정답표기가번호아님)는 **정답을 고를 수는 있으므로** 그 목록에 없다.
  */
-export const FATAL_VERDICTS = new Set([
-  "보기0칸",
-  "정답보기없음",
-  "정답번호어긋남",
-  "정답번호중복",
-  "정답표기가모호",
-]);
+export const FATAL_VERDICTS = new Set<string>(FATAL_LIST);
 
 export interface FatalRow {
   id: string;
