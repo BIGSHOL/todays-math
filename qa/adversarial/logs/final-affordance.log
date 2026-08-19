@@ -1,0 +1,4 @@
+
+> todays-math@0.1.0 lint:affordance
+> node src/lint/check-affordance.mjs
+

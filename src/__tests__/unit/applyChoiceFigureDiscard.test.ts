@@ -21,6 +21,7 @@ import { describe, expect, it } from "vitest";
 import {
   classifyDiscard,
   decideDiscard,
+  isChoiceAnswer,
   revertDiscard,
   type LockedRow,
 } from "../../../scripts/qa/apply-choice-figure-discard";
@@ -37,6 +38,8 @@ const row = (over: Partial<Parameters<typeof decideDiscard>[1]> = {}) =>
     pool: "shared",
     reviewStatus: "approved",
     noAnswer: false,
+    answer: "③",
+    figureUrls: ["/figures/1/q03.jpeg", "/figures/1/q03_1.jpeg"],
     ...over,
   }) as NonNullable<Parameters<typeof decideDiscard>[1]>;
 
@@ -67,6 +70,30 @@ describe("🔴 안 빼는 경우 — 멀쩡한 문항을 쓸어 담지 않는다
     });
   });
 
+  it("🔴 정답이 보기 번호가 아니면 안 뺀다 — **433 오독이 한 겹 아래 남아 있었다**", () => {
+    // 달서고 25번: 본문에 `[그림]` 이 **한 번도 안 나오는** 순수 서술형인데
+    // 그림 넷이 붙어 있다는 이유만으로 열쇠 ㉯(`nFig>=4 && nFilled<5`)에 걸렸다.
+    // 서술형에는 「어느 그림이 ①인가」라는 물음 자체가 성립하지 않는다.
+    const d = decideDiscard(
+      pair(),
+      row({ answer: "(1) 4개  (2) $(8+4\\sqrt{7})\\pi$" }),
+      false,
+      true,
+    );
+    expect(d).toEqual({
+      lock: false,
+      reason: "정답이 보기 번호가 아니다 (객관식이 아니라 짝을 물을 수 없다)",
+    });
+  });
+
+  it("🔴 그림이 하나도 없으면 안 뺀다 — 못 짚은 게 아니라 짝지을 것이 없다", () => {
+    const d = decideDiscard(pair(), row({ figureUrls: [] }), false, true);
+    expect(d).toEqual({
+      lock: false,
+      reason: "그림이 하나도 없다 (짝지을 것이 없다 — 그림 유실 쪽 결함)",
+    });
+  });
+
   it("🔴 «자동»(짝을 되찾음)은 안 뺀다", () => {
     const d = decideDiscard(pair("자동"), row(), false, true);
     expect(d.lock).toBe(false);
@@ -94,6 +121,24 @@ describe("🔴 안 빼는 경우 — 멀쩡한 문항을 쓸어 담지 않는다
 
   it("DB 에 행이 없으면 안 건드린다", () => {
     expect(decideDiscard(pair(), undefined, false, true).lock).toBe(false);
+  });
+});
+
+describe("객관식인가 — 가르는 것은 `question_type` 이 아니라 **정답 모양**", () => {
+  it.each(["①", "⑤", "3", "③, ⑤", " ② "])("보기 번호 «%s» 는 객관식", (a) => {
+    expect(isChoiceAnswer(a)).toBe(true);
+  });
+
+  it.each([
+    "36",
+    "16.5",
+    "⑴ y=1, ⑵ x=-3",
+    "풀이 참조 (벤다이어그램 색칠)",
+    "$36$",
+    "",
+    null,
+  ])("«%s» 는 객관식이 아니다", (a) => {
+    expect(isChoiceAnswer(a)).toBe(false);
   });
 });
 

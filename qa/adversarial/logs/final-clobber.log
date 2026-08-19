@@ -1,0 +1,7 @@
+적용 직후 원장: 이전상태 29행 · 적용됨 true
+드라이런 한 번 뒤:  이전상태 29행 · 적용됨 true
+
+🟢 원장이 살아남았다.
+입력·원장 되돌림 완료
+(node:17508) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)

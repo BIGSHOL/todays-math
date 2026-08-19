@@ -1,0 +1,13 @@
+
+> todays-math@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.10 C:/Users/user/orca/workspaces/testautocreator/adv-figref
+
+
+ Test Files  109 passed | 1 skipped (110)
+      Tests  1698 passed | 1 skipped (1699)
+   Start at  09:59:19
+   Duration  252.92s (transform 25.91s, setup 438.64s, import 56.01s, tests 109.81s, environment 1035.98s)
+
