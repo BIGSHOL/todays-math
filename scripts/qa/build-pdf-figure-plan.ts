@@ -16,7 +16,21 @@
  *    같은 규칙을 다시 돌리면 같은 것을 놓친다. 그래서 오려내기는 RPM 쪽에서 쓰는
  *    「발문은 DB 본문에 있고 그림 라벨은 없다」 규칙을 쓴다(`crop-pdf-by-stem.py`).
  */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync, writeFileSync } from "node:fs";
+
+/**
+ * **「파일이 있다」를 「쓸 수 있다」로 읽으면 안 된다.** 한글 변환이 중간에 죽으면
+ * 0바이트 PDF 가 남는데, `existsSync` 만 보면 그 편이 계획에 들어가고 오려내기가
+ * `EmptyFileError` 로 **통째로 멈춘다**(2026-08-19 실측 `.hwp-pdf/5049.pdf`).
+ * 같은 함정을 `hwp-to-pdf.py` 는 이미 고쳐 두었는데 이 쪽만 남아 있었다.
+ */
+function usable(path: string): boolean {
+  try {
+    return existsSync(path) && statSync(path).size > 0;
+  } catch {
+    return false;
+  }
+}
 
 /**
  * **사람이 보고 뺀 것.** 자동 검사가 다 잡지는 못한다 — 뺀 이유를 여기 적어 둔다.
@@ -115,7 +129,7 @@ function main(): void {
       ? `.hwp-pdf/${e}.pdf`
       : (pdfByExam.get(e) ??
         (t.sourceFile?.toLowerCase().endsWith(".pdf") ? t.sourceFile : null));
-    if (!cand || !existsSync(cand)) {
+    if (!cand || !usable(cand)) {
       noPdf++;
       continue;
     }
