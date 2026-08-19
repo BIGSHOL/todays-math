@@ -1,0 +1,93 @@
+{
+ "만든날": "2026-08-19",
+ "목록": [
+  {
+   "id": "19eabf36-272a-46cd-b8e7-98e5250555ed",
+   "field": "content",
+   "book": "RPM 중학 3-1 학생용.pdf",
+   "q": "0103",
+   "before": "$\\surd$\n\n$\\frac{40a}{3}$\n\n가 자연수가 되도록 하는 가장 작은 자연수\n\n$a$\n\n의 값\n\n을 구하시오.",
+   "after": "$\\sqrt{\\frac{40a}{3}}$가 자연수가 되도록 하는 가장 작은 자연수 $a$의 값 을 구하시오."
+  },
+  {
+   "id": "2832a403-0033-435b-8c44-24289f57c715",
+   "field": "content",
+   "book": "RPM 중학 3-1 학생용.pdf",
+   "q": "0356",
+   "before": "양의 유리수\n\n$a$\n\n,\n\n$b$\n\n에 대하여 다음 식의 값을 구하시오.\n\n$9b$\n\n$10a$\n\n$b$\n\n$\\times\\times\\div5b$\n\n$\\surd a$\n\n$3b$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$",
+   "after": "양의 유리수 $a, b$에 대하여 다음 식의 값을 구하시오.$\\frac{\\sqrt{9b}}{\\sqrt{a}}\\times\\sqrt{10a} \\times\\sqrt{\\frac{b}{6a}} \\div\\sqrt{\\frac{5b}{a}} \\sqrt{3b}$"
+  },
+  {
+   "id": "2b3b2226-ff53-4a9c-b329-f83a5fc97fcc",
+   "field": "content",
+   "book": "RPM 중학 3-1 학생용.pdf",
+   "q": "0092",
+   "before": "$a<0$\n\n일 때,\n\n$a^{2}$\n\n을 간단히 하면?\n\n$\\surd \\frac{81}{4}$\n\n① $-\\frac{9}{2}a$\n\n② $-\\frac{9}{4}a$\n\n③ $-\\frac{3}{2}a$\n\n④ $\\frac{3}{2}a$\n\n⑤ $\\frac{9}{2}a$",
+   "after": "$a<0$일 때,$\\sqrt{\\frac{81}{4}a^{2}}$을간단히 하면?\n\n① $-\\frac{9}{2}a$\n\n② $-\\frac{9}{4}a$\n\n③ $-\\frac{3}{2}a$\n\n④ $\\frac{3}{2}a$\n\n⑤ $\\frac{9}{2}a$"
+  },
+  {
+   "id": "2bfacf99-01cb-4ecb-bd0e-59ff664b2be9",
+   "field": "content",
+   "book": "RPM 중학 3-1 학생용.pdf",
+   "q": "0213",
+   "before": "다음 제곱근표에서\n\n$a=7.308$\n\n,\n\n$b=7.155$\n\n를 만족시키는\n\n$\\surd$\n\n$\\surd$\n\n$a+b$\n\n$a$\n\n,\n\n$b$\n\n에 대하여 의 값은?\n\n$\\surd$\n\n① $7.211$\n\n② $7.232$\n\n③ $7.239$\n\n④ $7.280$\n\n⑤ $7.287$",
+   "after": "다음 제곱근표에서$\\sqrt{a}=7.308, \\sqrt{b}=7.155$를만족시키는 $a, b$에 대하여$\\sqrt{\\frac{a+b}{2}}$의 값은? \n\n① $7.211$\n\n② $7.232$\n\n③ $7.239$\n\n④ $7.280$\n\n⑤ $7.287$"
+  },
+  {
+   "id": "39f2b24d-b9b6-465d-92e0-00de7ba01088",
+   "field": "content",
+   "book": "RPM 중학 3-1 학생용.pdf",
+   "q": "0149",
+   "before": "부등식\n\n$1.4<\\surd x<2.5$\n\n를 만족시키는\n\n$x$\n\n의 값 중에서 가장\n\n$a$\n\n큰 자연수를\n\n$a$\n\n, 가장 작은 자연수를\n\n$b$\n\n라 할 때,\n\n$\\times n$\n\n이\n\n$\\surd$\n\n한 자리 자연수가 되도록 하는 자연수\n\n$n$\n\n의 값을 모두 구하\n\n시오.",
+   "after": "부등식 $1.4<\\sqrt{x}<2.5$를 만족시키는 $x$의 값 중에서 가장 큰 자연수를 $a$, 가장 작은 자연수를 $b$라 할 때,$\\sqrt{\\frac{a}{b}}\\times n$이 한 자리 자연수가 되도록 하는 자연수 $n$의 값을 모두 구하 시오."
+  },
+  {
+   "id": "4cb1bec2-d3bd-48a1-936f-950d059804ff",
+   "field": "content",
+   "book": "RPM 중학 3-1 학생용.pdf",
+   "q": "0349",
+   "before": "다음 중 옳은 것은?\n\n① $\\surd 5\\surd 6=\\surd 11$\n\n② $-2\\surd 3\\times\\surd 10=-\\surd 60$\n\n$11$\n\n③ $4$\n\n$5\\times7=4$\n\n$35$\n\n④ $\\times28$\n\n$=4$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$\n\n$16$\n\n⑤ $-2$\n\n$\\times 3$\n\n$=-6$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$",
+   "after": "다음 중 옳은 것은?\n\n① $\\sqrt{5}\\sqrt{6}=\\sqrt{11}$\n\n② $-2\\sqrt{3}\\times\\sqrt{10}=-\\sqrt{60}$\n\n③ $4\\sqrt{5}\\times\\sqrt{7}=4\\sqrt{35}$\n\n④ $\\sqrt{\\frac{11}{7}}\\times\\sqrt{\\frac{28}{11}}=4$\n\n⑤ $-2\\sqrt{\\frac{16}{15}}\\times3\\sqrt{\\frac{5}{8}}=-6\\sqrt{\\frac{5}{3}}$"
+  },
+  {
+   "id": "5916fb32-b992-4198-a4f6-80a0f18fc11d",
+   "field": "content",
+   "book": "RPM 중학 3-1 학생용.pdf",
+   "q": "0355",
+   "before": "$b$\n\n$2$\n\n$==c$\n\n$6$\n\n일 때,\n\n$abc$\n\n의 값은?\n\n$\\surd \\frac{32}{75}$\n\n$a\\surd \\surd$\n\n$\\surd$\n\n(단,\n\n$a$\n\n,\n\n$b$\n\n는 서로소인 자연수이고,\n\n$c$\n\n는 유리수이다.)\n\n① $\\frac{9}{2}$\n\n② $5$\n\n③ $\\frac{16}{3}$\n\n④ $6$\n\n⑤ $\\frac{20}{3}$",
+   "after": "$\\sqrt{\\frac{32}{75}}=\\frac{b\\sqrt{2}}{a\\sqrt{3}}=c\\sqrt{6}$일때,$abc$의 값은? (단,$a, b$는 서로소인 자연수이고,$c$는 유리수이다.)\n\n① $\\frac{9}{2}$\n\n② $5$\n\n③ $\\frac{16}{3}$\n\n④ $6$\n\n⑤ $\\frac{20}{3}$"
+  },
+  {
+   "id": "7aed8a3d-ae98-46fc-9469-39a722cdfb6c",
+   "field": "content",
+   "book": "RPM 중학 3-1 학생용.pdf",
+   "q": "0073",
+   "before": "다음 중 근호를 사용하지 않고 나타낼 수 있는 것은?\n\n① $-2.5$\n\n② $90$\n\n③ $216$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$\n\n⑤ $-1.44$\n\n$\\surd \\frac{18}{49}$\n\n$\\surd$",
+   "after": "다음 중 근호를 사용하지 않고 나타낼 수 있는 것은?\n\n① $-\\sqrt{2.5}$\n\n② $\\sqrt{90}$\n\n③ $\\sqrt{216}$\n\n④ $\\sqrt{\\frac{18}{49}}$\n\n⑤ $-\\sqrt{1.44}$"
+  },
+  {
+   "id": "8ccce48e-0397-41ff-a912-ff829171fbc3",
+   "field": "content",
+   "book": "RPM 중학 3-1 학생용.pdf",
+   "q": "0139",
+   "before": "$90$\n\n$=b$\n\n일 때,\n\n$b$\n\n가 자연수가 되도록 하는 가장 작은 자연\n\n$\\surd$\n\n수\n\n$a$\n\n와 그때의\n\n$b$\n\n에 대하여\n\n$ab$\n\n의 값을 구하시오.",
+   "after": "$\\sqrt{\\frac{90}{a}}=b$일 때,$b$가 자연수가 되도록 하는 가장 작은 자연 수 $a$와 그때의 $b$에 대하여 $ab$의 값을 구하시오."
+  },
+  {
+   "id": "b84bf809-4a9c-4859-ad4b-826aa2515fc1",
+   "field": "content",
+   "book": "RPM 중학 3-1 학생용.pdf",
+   "q": "0214",
+   "before": "다음 중\n\n$\\surd 3$\n\n과\n\n$4$\n\n사이에 있는 수의 개수를 구하시오.\n\n,\n\n$10+1$\n\n,\n\n$3+2$\n\n,\n\n$5+2$\n\n,\n\n$4-3$\n\n$\\surd \\frac{19}{2}$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$",
+   "after": "다음 중$\\sqrt{3}$과$4$ 사이에 있는 수의 개수를 구하시오.$\\sqrt{\\frac{19}{2}}, \\sqrt{10}+1, \\sqrt{3}+2, \\sqrt{5}+2, 4-\\sqrt{3}$"
+  },
+  {
+   "id": "d88ce3c1-d078-4090-be13-915934b78c9a",
+   "field": "content",
+   "book": "RPM 중학 3-1 학생용.pdf",
+   "q": "0107",
+   "before": "$\\surd$\n\n$\\surd 540$\n\n두 수\n\n$60x$\n\n와 이 모두 자연수가 되도록 하는 두 자\n\n리 자연수\n\n$x$\n\n의 개수는?\n\n① $1$\n\n② $2$\n\n③ $3$\n\n④ $4$\n\n⑤ $5$",
+   "after": "두 수 $\\sqrt{60x}$와 $\\sqrt{\\frac{540}{x}}$이 모두 자연수가 되도록 하는 두 자 리 자연수 $x$의 개수는? \n\n① $1$\n\n② $2$\n\n③ $3$\n\n④ $4$\n\n⑤ $5$"
+  }
+ ]
+}

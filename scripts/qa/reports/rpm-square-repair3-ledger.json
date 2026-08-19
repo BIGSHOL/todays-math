@@ -1,0 +1,21 @@
+{
+ "만든날": "2026-08-19",
+ "목록": [
+  {
+   "id": "b84bf809-4a9c-4859-ad4b-826aa2515fc1",
+   "field": "solution",
+   "book": "RPM 중학 3-1 학생용.pdf",
+   "q": 214,
+   "before": "$1<3<4$\n\n에서\n\n$1<3<2$\n\n이고\n\n$4=16$\n\n이다.\n\n$=9.5$\n\n$\\square$\n\n$^{4}$\n\n$9<10<16$\n\n에서\n\n$3<10<4$\n\n이므로\n\n$^{2}$\n\n$^{2}$\n\n$^{2}$\n\n$4<10+1<5$\n\n$\\square$\n\n$\\square\\square\\square$\n\n$\\square$\n\n$\\square^{2}$\n\n$\\square$\n\n$\\square$\n\n$\\square\\square$\n\n$\\square$\n\n$1<3<2$\n\n이므로\n\n$3<3+2<4$\n\n$4<5<9$\n\n에서\n\n$2<5<3$\n\n이므로\n\n$4<5+2<5$\n\n$1<3<2$\n\n에서\n\n$-2<-3<-1$\n\n이므로\n\n$2<4-3<3$\n\n$19$\n\n따라서\n\n$3$\n\n과\n\n$4$\n\n사이에 있는 수는,\n\n$3+2$\n\n,\n\n$4-3$\n\n의\n\n$3$\n\n개이\n\n$\\square$\n\n$\\square\\square$\n\n$2$\n\n$\\square$\n\n$\\square$\n\n다.",
+   "after": "전략 $a<\\sqrt{c}<b$이면 $\\sqrt{a^{2}}<\\sqrt{c}<\\sqrt{b^{2}}$임을 이용한다.$\\sqrt{1}<\\sqrt{3}<\\sqrt{4}$에서 $1<\\sqrt{3}<2$이고 $4=\\sqrt{16}$이다.$\\sqrt{\\frac{19}{2}}=\\sqrt{9.5} \\sqrt{9}<\\sqrt{10}<\\sqrt{16}$에서 $3<\\sqrt{10}<4$이므로 $4<\\sqrt{10}+1<5 1<\\sqrt{3}<2$이므로 $3<\\sqrt{3}+2<4 \\sqrt{4}<\\sqrt{5}<\\sqrt{9}$에서 $2<\\sqrt{5}<3$이므로 $4<\\sqrt{5}+2<5 1<\\sqrt{3}<2$에서 $-2<-\\sqrt{3}<-1$이므로 $2<4-\\sqrt{3}<3$ 따라서$\\sqrt{3}$과$4$ 사이에 있는 수는$\\sqrt{\\frac{19}{2}},\\sqrt{3}+2, 4-\\sqrt{3}$의$3$개이 다."
+  },
+  {
+   "id": "5916fb32-b992-4198-a4f6-80a0f18fc11d",
+   "field": "solution",
+   "book": "RPM 중학 3-1 학생용.pdf",
+   "q": 355,
+   "before": "$32$\n\n$2$\n\n$2\\times3$\n\n$6$\n\n$== 4$\n\n$= 4$\n\n$= 4$\n\n$\\square\\square\\frac{32}{75}$\n\n$\\square\\square75$\n\n$5\\square\\square3$\n\n$\\frac{4}{15}5\\square\\square3\\times\\square\\square3$\n\n$15\\square$\n\n따라서\n\n$a=5$\n\n,\n\n$b=4$\n\n,\n\n$c=$\n\n이므로\n\n$abc=5\\times 4\\times\\frac{4}{15}=$",
+   "after": "전략 근호 안의 제곱인 인수를 근호 밖으로 꺼낸 후 분모 를 유리화한다.$\\sqrt{\\frac{32}{75}} =\\frac{\\sqrt{32}}{\\sqrt{75}}=\\frac{4\\sqrt{2}}{5\\sqrt{3}}=\\frac{4\\sqrt{2}\\times\\sqrt{3}}{5\\sqrt{3}\\times\\sqrt{3}}=\\frac{4\\sqrt{6}}{15}$ 따라서 $a=5, b=4,c=\\frac{4}{15}$이므로 $abc=5\\times4\\times\\frac{4}{15}=\\frac{16}{3}$ 함"
+  }
+ ]
+}
