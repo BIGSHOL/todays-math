@@ -2,7 +2,7 @@
  "적용": "그림 유실 문항 출제 제외 (directUseAllowed=false)",
  "기준시각": "2026-08-18T10:23:09.822Z",
  "되돌리기": "ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-missing-figure-lock.ts --revert",
- "잠근건수": 446,
+ "잠근건수": 441,
  "이전상태": [
   {
    "id": "0042cff5-8668-4c07-9696-4331221e6ce0",
@@ -460,11 +460,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "3470bed0-bffb-4f91-8972-9441fad8ddd0",
-   "externalId": "5070-18",
-   "directUseAllowed": true
-  },
-  {
    "id": "347bc5cd-fb30-4b81-bd15-d8b34ebd156c",
    "externalId": "019fd1da-bdca-752a-872e-cc5f9240ec78",
    "directUseAllowed": true
@@ -820,11 +815,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "5e242049-9eb7-430e-a2a8-af744c8bfcd6",
-   "externalId": "5070-8",
-   "directUseAllowed": true
-  },
-  {
    "id": "5f4a1042-7a5b-46c6-a411-356f7431cc49",
    "externalId": "5347-19",
    "directUseAllowed": true
@@ -972,11 +962,6 @@
   {
    "id": "77d220a3-3c8d-4457-ac8d-211a1f4e5e39",
    "externalId": "019fd1d7-5b7d-74bf-8d9f-009c9c1a925a",
-   "directUseAllowed": true
-  },
-  {
-   "id": "77fa8cfd-2d75-4698-b127-57bfa96c1326",
-   "externalId": "5055-22",
    "directUseAllowed": true
   },
   {
@@ -1615,11 +1600,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "c8fa2cee-c7a2-4d73-99b5-ca648f1d4242",
-   "externalId": "5006-11",
-   "directUseAllowed": true
-  },
-  {
    "id": "c917d321-076b-4879-8ba0-ce2ebc0798df",
    "externalId": "019fd1de-5322-769d-96ba-f44edd9c5e82",
    "directUseAllowed": true
@@ -1852,11 +1832,6 @@
   {
    "id": "e1a3f45d-7d82-49c7-a87e-12f659924aba",
    "externalId": "019fd1de-5e6f-726e-b2eb-0c14c1378594",
-   "directUseAllowed": true
-  },
-  {
-   "id": "e1b74f97-92b8-49f6-9a63-33a88ab5bd05",
-   "externalId": "5006-15",
    "directUseAllowed": true
   },
   {
