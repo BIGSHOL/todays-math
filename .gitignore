@@ -102,6 +102,10 @@ scripts/qa/reports/*
 # 보기 그림 짝 적재 원장 — **공유 DB 를 되돌리는 유일한 근거다** (행마다 `before`).
 # 여기 없으면 다른 컴퓨터에서 97건을 되돌릴 방법이 없다.
 !scripts/qa/reports/choice-figure-index-apply.json
+# 그림 물리 폭(mm) 적재 원장 — **공유 DB 를 되돌리는 유일한 근거다** (행마다 `before`).
+!scripts/qa/reports/figure-source-mm-apply.json
+# 그림 적용 트랙 단계 0 측정 — 보고서가 인용하는 분모·출제 영향.
+!scripts/qa/reports/figure-apply-stage0.json
 # 보기 그림 짝을 못 찾아 **출제에서 뺀** 문항 원장 — 행마다 이전 상태와 사유.
 # 영구 삭제가 아니라 되살릴 수 있어야 하고, 그 근거가 이 파일뿐이다.
 !scripts/qa/reports/choice-figure-discard-lock.json

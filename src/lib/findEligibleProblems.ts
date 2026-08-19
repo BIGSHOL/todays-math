@@ -84,7 +84,11 @@ export async function findEligibleProblems(
       difficulty: true,
       problemType: true,
       directUseAllowed: true,
-      // ── 지면을 보기 위한 셋 (⑷) ────────────────────────────────────────
+      // ── 지면을 보기 위한 셋 (⑷) + mm 은 컬럼이 생긴 뒤에 추가 ──────────
+      // `figureSourceMm` 는 마이그레이션을 적용하고 schema.prisma 에 넣은
+      // 다음에 select 에 올린다. 컬럼 없이 넣으면 출제 조회가 통째로 죽는다.
+      // 엔진(`risksTightSeat`)은 이미 이 필드를 읽는다 — 여기가 빠지면
+      // 적재만 되고 출제는 오늘과 한 글자도 같다.
       content: true,
       figureUrls: true,
       figureDims: true,

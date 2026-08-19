@@ -1,0 +1,464 @@
+{
+  "generatedAt": "2026-08-19T16:39:04.015Z",
+  "ledger": {
+    "total": 16119,
+    "withMm": 14391,
+    "dropped": 0
+  },
+  "db": {
+    "all": 47421,
+    "eligible": 44407,
+    "eligibleWithFigures": 9056,
+    "allWithFigures": 9686,
+    "figuresEligible": 9761
+  },
+  "match": {
+    "usable": {
+      "problems": 7878,
+      "figures": 8464
+    },
+    "partial": {
+      "problems": 1,
+      "figures": 2
+    },
+    "none": {
+      "problems": 1177,
+      "figures": 1295
+    },
+    "urlOdd": {
+      "problems": 0,
+      "figures": 0
+    },
+    "partialDetail": {
+      "someMissing": 0,
+      "someNoMm": 1,
+      "both": 0
+    },
+    "partialRows": [
+      {
+        "id": "93b5f015-e1f8-40ab-8723-73b3e4d0364a",
+        "urls": [
+          "/figures/4314/q07.jpeg",
+          "/figures/4314/q07_1.jpeg"
+        ],
+        "known": 1,
+        "missing": 0,
+        "noMm": 1
+      }
+    ],
+    "nonePrefix": {
+      "rpm": 27,
+      "hwp-": 1122,
+      "hwppdf-": 14,
+      "pdf-": 23,
+      "qNN": 109
+    },
+    "figuresUsable": 8464,
+    "figuresPartialKnown": 1
+  },
+  "dims": {
+    "empty": 15,
+    "mismatch": 0,
+    "ok": 9041,
+    "emptyButMmUsable": 0,
+    "mismatchButMmUsable": 0
+  },
+  "overflow": {
+    "loadable": 7878,
+    "continuation": {
+      "overflowToFit": 1624,
+      "fitToOverflow": 3,
+      "unchanged": 6251,
+      "riskyBefore": 2655,
+      "riskyAfter": 1034
+    },
+    "firstPage": {
+      "overflowToFit": 2365,
+      "fitToOverflow": 8
+    },
+    "reverseContinuation": [
+      {
+        "id": "9dad0cf3-df69-45ad-b882-24ddd7a82910",
+        "unitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+        "grade": "중2",
+        "section": "다항식의 덧셈과 뺄셈",
+        "dir": "fit-to-overflow",
+        "slot": "continuation",
+        "pxBefore": 452,
+        "pxAfter": 471.86127120707846
+      },
+      {
+        "id": "0692409c-0d52-4a3a-9643-457826832fbe",
+        "unitId": "7d66ac49-0f88-4815-9bb2-abadd3ccb626",
+        "grade": "중2",
+        "section": "여러 가지 경우의 수",
+        "dir": "fit-to-overflow",
+        "slot": "continuation",
+        "pxBefore": 365.375,
+        "pxAfter": 510.208073543493
+      },
+      {
+        "id": "1a115113-d74e-4888-b84b-26d283c68e0b",
+        "unitId": "e128c4d4-a36a-4888-a877-997bf69c116b",
+        "grade": "공통수학2",
+        "section": "무리함수(1)",
+        "dir": "fit-to-overflow",
+        "slot": "continuation",
+        "pxBefore": 461,
+        "pxAfter": 486.3359446820416
+      }
+    ],
+    "reverseFirst": [
+      {
+        "id": "3f4968ec-8f0e-420d-b6af-376e5201672c",
+        "unitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+        "grade": "중2",
+        "section": "다항식의 덧셈과 뺄셈",
+        "dir": "fit-to-overflow",
+        "slot": "first",
+        "pxBefore": 382.3125,
+        "pxAfter": 396.4729155989377
+      },
+      {
+        "id": "0692409c-0d52-4a3a-9643-457826832fbe",
+        "unitId": "7d66ac49-0f88-4815-9bb2-abadd3ccb626",
+        "grade": "중2",
+        "section": "여러 가지 경우의 수",
+        "dir": "fit-to-overflow",
+        "slot": "first",
+        "pxBefore": 365.375,
+        "pxAfter": 510.208073543493
+      },
+      {
+        "id": "908b890d-8486-4fb4-8dd2-8a6fc7a2c4c1",
+        "unitId": "e63d61c6-2b41-4c83-a74b-a605fd343c42",
+        "grade": "중3",
+        "section": "다항식의 곱셈",
+        "dir": "fit-to-overflow",
+        "slot": "first",
+        "pxBefore": 372.6875,
+        "pxAfter": 402.28363919227843
+      },
+      {
+        "id": "eb571c66-760a-4c68-a68a-14d5234cb503",
+        "unitId": "0bf7d13f-6e7a-490d-bf0c-ba54a76e2e54",
+        "grade": "중3",
+        "section": "삼각비의 활용",
+        "dir": "fit-to-overflow",
+        "slot": "first",
+        "pxBefore": 381.0625,
+        "pxAfter": 401.21790510707194
+      },
+      {
+        "id": "925beca7-9f5d-47e3-82e5-0118e951c321",
+        "unitId": "6209acdc-9fcf-498a-af2e-13f614d0f277",
+        "grade": "중3",
+        "section": "산점도와 상관관계",
+        "dir": "fit-to-overflow",
+        "slot": "first",
+        "pxBefore": 381.375,
+        "pxAfter": 387.70017269697115
+      },
+      {
+        "id": "f61bdabe-e269-47f7-9c9e-658c00e62fcc",
+        "unitId": "caa38fbc-dd0e-4893-916a-aec45a966a86",
+        "grade": "공통수학2",
+        "section": "점과 직선 사이의 거리",
+        "dir": "fit-to-overflow",
+        "slot": "first",
+        "pxBefore": 377.6875,
+        "pxAfter": 414.4206424481031
+      },
+      {
+        "id": "ea62ca4a-f37a-4568-9551-1f6470b7e52e",
+        "unitId": "b2074a5e-b852-4218-bb8b-4c602bde6098",
+        "grade": "공통수학2",
+        "section": "합성함수(1)",
+        "dir": "fit-to-overflow",
+        "slot": "first",
+        "pxBefore": 366.375,
+        "pxAfter": 394.8337438198132
+      },
+      {
+        "id": "1baedc7d-36c8-46a1-87f4-3e9c105fab80",
+        "unitId": "6468d681-ffe3-48c9-b271-d2fd8c54ed94",
+        "grade": "공통수학2",
+        "section": "유리함수(1)",
+        "dir": "fit-to-overflow",
+        "slot": "first",
+        "pxBefore": 344.0625,
+        "pxAfter": 422.3642414793954
+      }
+    ],
+    "pxChanged": 6716,
+    "pxSame": 1162,
+    "pxDelta": {
+      "p05": -186.07700350945947,
+      "p50": -74.57982987791664,
+      "p95": -9.27626415142737,
+      "meanAbs": 87.75606035211905
+    }
+  },
+  "units": {
+    "n": 443,
+    "below8": {
+      "before": 0,
+      "after": 0,
+      "newlyDown": [],
+      "rescued": 0
+    },
+    "below25": {
+      "before": 1,
+      "after": 1,
+      "newlyDown": [],
+      "rescued": 0
+    }
+  },
+  "select": {
+    "trials": 2830,
+    "differNow": 1321,
+    "papersThatContainFlipped": 1348,
+    "unitsSample": [
+      {
+        "grade": "중1",
+        "section": "최대공약수와 최소공배수의 활용",
+        "count": 1,
+        "seedsDifferNow": 3,
+        "seedsDifferIfWired": 3,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "문자의 사용과 식의 값",
+        "count": 6,
+        "seedsDifferNow": 2,
+        "seedsDifferIfWired": 2,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "등식의 성질",
+        "count": 1,
+        "seedsDifferNow": 5,
+        "seedsDifferIfWired": 5,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "일차방정식의 활용(증가와 감소, 원가와 정가)",
+        "count": 6,
+        "seedsDifferNow": 2,
+        "seedsDifferIfWired": 2,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "그래프의 이해",
+        "count": 30,
+        "seedsDifferNow": 13,
+        "seedsDifferIfWired": 13,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "정비례 관계 y=ax의 그래프",
+        "count": 74,
+        "seedsDifferNow": 16,
+        "seedsDifferIfWired": 16,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "반비례 관계 y=a/x의 그래프",
+        "count": 1,
+        "seedsDifferNow": 14,
+        "seedsDifferIfWired": 14,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "각",
+        "count": 19,
+        "seedsDifferNow": 16,
+        "seedsDifferIfWired": 16,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "평행선",
+        "count": 22,
+        "seedsDifferNow": 18,
+        "seedsDifferIfWired": 18,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "작도",
+        "count": 6,
+        "seedsDifferNow": 17,
+        "seedsDifferIfWired": 17,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "합동",
+        "count": 2,
+        "seedsDifferNow": 18,
+        "seedsDifferIfWired": 18,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "다각형",
+        "count": 6,
+        "seedsDifferNow": 14,
+        "seedsDifferIfWired": 14,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "원과 부채꼴",
+        "count": 9,
+        "seedsDifferNow": 18,
+        "seedsDifferIfWired": 18,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "다면체",
+        "count": 5,
+        "seedsDifferNow": 12,
+        "seedsDifferIfWired": 12,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "도수분포표",
+        "count": 7,
+        "seedsDifferNow": 19,
+        "seedsDifferIfWired": 19,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "상대도수",
+        "count": 2,
+        "seedsDifferNow": 17,
+        "seedsDifferIfWired": 17,
+        "trials": 20
+      },
+      {
+        "grade": "중2",
+        "section": "순환소수를 포함한 식의 계산",
+        "count": 3,
+        "seedsDifferNow": 3,
+        "seedsDifferIfWired": 3,
+        "trials": 20
+      },
+      {
+        "grade": "중2",
+        "section": "단항식의 곱셈과 나눗셈",
+        "count": 11,
+        "seedsDifferNow": 3,
+        "seedsDifferIfWired": 3,
+        "trials": 20
+      },
+      {
+        "grade": "중2",
+        "section": "다항식의 덧셈과 뺄셈",
+        "count": 12,
+        "seedsDifferNow": 8,
+        "seedsDifferIfWired": 8,
+        "trials": 20
+      },
+      {
+        "grade": "중2",
+        "section": "일차부등식의 풀이",
+        "count": 1,
+        "seedsDifferNow": 1,
+        "seedsDifferIfWired": 1,
+        "trials": 20
+      },
+      {
+        "grade": "중2",
+        "section": "미지수가 2개인 연립일차방정식",
+        "count": 1,
+        "seedsDifferNow": 5,
+        "seedsDifferIfWired": 5,
+        "trials": 20
+      },
+      {
+        "grade": "중2",
+        "section": "연립방정식의 활용(수, 평균, 나이)",
+        "count": 4,
+        "seedsDifferNow": 4,
+        "seedsDifferIfWired": 4,
+        "trials": 20
+      },
+      {
+        "grade": "중2",
+        "section": "연립방정식의 활용(가격, 개수, 증감, 도형)",
+        "count": 1,
+        "seedsDifferNow": 20,
+        "seedsDifferIfWired": 20,
+        "trials": 20
+      },
+      {
+        "grade": "중2",
+        "section": "일차함수의 그래프와 절편",
+        "count": 53,
+        "seedsDifferNow": 14,
+        "seedsDifferIfWired": 14,
+        "trials": 20
+      },
+      {
+        "grade": "중2",
+        "section": "일차함수의 식 구하기",
+        "count": 1,
+        "seedsDifferNow": 7,
+        "seedsDifferIfWired": 7,
+        "trials": 10
+      },
+      {
+        "grade": "중2",
+        "section": "일차함수의 활용(속력, 도형, 기타)",
+        "count": 1,
+        "seedsDifferNow": 20,
+        "seedsDifferIfWired": 20,
+        "trials": 20
+      },
+      {
+        "grade": "중2",
+        "section": "일차함수와 일차방정식",
+        "count": 31,
+        "seedsDifferNow": 12,
+        "seedsDifferIfWired": 12,
+        "trials": 20
+      },
+      {
+        "grade": "중2",
+        "section": "일차함수의 그래프와 연립방정식의 해",
+        "count": 8,
+        "seedsDifferNow": 17,
+        "seedsDifferIfWired": 17,
+        "trials": 20
+      },
+      {
+        "grade": "중2",
+        "section": "이등변삼각형의 성질",
+        "count": 42,
+        "seedsDifferNow": 19,
+        "seedsDifferIfWired": 19,
+        "trials": 20
+      },
+      {
+        "grade": "중2",
+        "section": "직각삼각형의 합동",
+        "count": 2,
+        "seedsDifferNow": 3,
+        "seedsDifferIfWired": 10,
+        "trials": 10
+      }
+    ]
+  }
+}
