@@ -5,11 +5,32 @@
 
 ## 0. 위치와 진입점
 
-엔진 원본: `D:\시험지 한글화` (testchanger, Python). **이식하지 않고 그대로 호출**한다.
+엔진 원본: **`F:\시험지변환기`** (testchanger, Python). **이식하지 않고 그대로 호출**한다.
 SVG를 사전 생성해 문자열로 DB에 저장하는 방식이다.
 
+> ⚠️ **2026-08-19 정정.** 이 문서는 오래 `D:\시험지 한글화` 를 적어 두었으나 그 경로는
+> **없다**(적대적 리뷰에서 드러남). 실제 위치는 위 경로다. 코드는 경로를 박지 않고
+> `FIGURE_ENGINE_PATH` 환경변수를 먼저 본다 — 없으면 위 기본값.
+> 「없다」를 적을 때는 무엇을 보고 없다고 했는지 함께 적을 것(CLAUDE.md 2026-08-18).
+
+### 0.1 제품에서 부르는 길 (D-55, 2026-08-19)
+
+AI 문제 변형이 도형을 **새로 그린다**. 사람이 파이썬을 직접 부르지 않는다.
+
+```
+AI(figureSpec v2 JSON)
+  → src/lib/figure/renderFigureSpec.ts   (Node: 프로세스 하나 띄워 stdin/stdout)
+  → scripts/figure/render_spec.py        (render_figure_spec + sanitize_svg)
+  → Problem.figureSvg
+```
+
+**SVG 의 유일한 생산자는 서버다.** 미리보기에서 본 도형도 채택할 때는 **스펙으로**
+되돌아와 서버가 다시 그린다 — 브라우저가 준 마크업을 저장하면 지면·화면에 남는
+주입 통로가 된다. 스펙 검증은 **엔진이 정본**이고(허용 키 밖은 `FigureSpecError`)
+TypeScript 쪽에서 다시 좁히지 않는다. 두 벌이 되면 갈라진다.
+
 ```python
-import sys; sys.path.insert(0, r"D:\시험지 한글화")
+import sys; sys.path.insert(0, r"F:\시험지변환기")
 from core.figure_scene import compile_figure_spec   # 구조화 스펙 → 검증된 SVG
 from core.figure_svg   import line, txt, circ, curve_path, arc, rangle, ...
 from core.figure_solid import View                  # 3D 사방투영

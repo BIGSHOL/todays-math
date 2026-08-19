@@ -26,7 +26,7 @@ import {
   classifyFigureNeed,
   MENTIONS_FIGURE_WHERE,
   NO_FIGURE_WHERE,
-} from "./missingFigureRule";
+} from "../../src/lib/figure/missingFigureRule";
 
 const prisma = new PrismaClient();
 

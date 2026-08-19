@@ -19,6 +19,7 @@ import {
   MOCK_AI_GENERATED_PROBLEMS,
   MOCK_AI_TRANSFORMED_PROBLEMS,
   MOCK_PROBLEM_WITH_FRACTION,
+  MOCK_PROBLEM_WITH_FIGURE,
   MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL,
   MOCK_PROBLEMS,
   MOCK_UNITS,
@@ -34,7 +35,7 @@ async function renderBank() {
 }
 
 describe("[T3.3 S-08] 문제은행 — 크롬·필터·액션", () => {
-  it("AppChrome 내비와 학년/중단원/소단원/난이도/유형/상태 필터, 등록·생성·변형을 보여 준다", async () => {
+  it("AppChrome 내비와 학년/중단원/소단원/난이도/유형/상태 필터, 등록·생성을 보여 준다", async () => {
     await renderBank();
 
     expect(screen.getByRole("link", { name: "오늘의수학" })).toHaveAttribute(
@@ -57,7 +58,11 @@ describe("[T3.3 S-08] 문제은행 — 크롬·필터·액션", () => {
 
     expect(screen.getByRole("button", { name: "등록" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "생성" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "변형" })).toBeInTheDocument();
+    // 「변형」은 위쪽 액션이 아니다 — 문제 카드 안에서 연다(원장님 확정 2026-08-19).
+    // 종전의 위쪽 드롭다운은 네이티브 select 라 수식을 못 그려 무엇을 고르는지 알 수 없었다.
+    expect(
+      screen.queryByRole("form", { name: "변형" }),
+    ).not.toBeInTheDocument();
   });
 
   it("목록에서 분수·도형 수식을 MathText로 렌더하고 [교체]는 없다", async () => {
@@ -387,7 +392,9 @@ describe("[S-08] 문제은행 — 계단식 단원 필터 (MSW)", () => {
     await user.type(within(form).getByLabelText("정답"), "2");
     await user.click(within(form).getByRole("button", { name: "등록하기" }));
 
-    await screen.findByText("1건 등록");
+    // 안내는 「만들었다」에서 멈추지 않고 **화면에 몇 건 보이는지**까지 말한다.
+    // 종전에는 "1건 등록"이라 해 놓고 목록에도 총계에도 변화가 없어 실패로 읽혔다.
+    await screen.findByText("1건 등록 — 현재 필터에 0건만 보입니다");
     expect(screen.queryByText(/다른 중단원의 문제/)).not.toBeInTheDocument();
   });
 
@@ -422,10 +429,10 @@ describe("[S-08] 문제은행 — 계단식 단원 필터 (MSW)", () => {
 });
 
 describe("[T3.3 S-08] 문제은행 — 페이지네이션", () => {
-  // MSW 전체 풀 = 등록형 30 + 타 사용자 shared 1 + AI 생성/변형 픽스처
+  // MSW 전체 풀 = 등록형 30 + 그림 문항 1 + 타 사용자 shared 1 + AI 생성/변형 픽스처
   const TOTAL =
     MOCK_PROBLEMS.length +
-    1 +
+    2 +
     MOCK_AI_GENERATED_PROBLEMS.length +
     MOCK_AI_TRANSFORMED_PROBLEMS.length;
 
@@ -497,7 +504,7 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
     await user.type(within(form).getByLabelText("정답"), "2");
     await user.click(within(form).getByRole("button", { name: "등록하기" }));
 
-    await screen.findByText("1건 등록");
+    await screen.findByText("1건 등록 — 현재 필터에 0건만 보입니다");
     expect(screen.queryByText(/필터에서 제외할 문제/)).not.toBeInTheDocument();
     expect(screen.getByText(/밑변의 길이가/)).toBeInTheDocument();
   });
@@ -549,7 +556,7 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
     expect(MOCK_AI_GENERATED_PROBLEMS[0]!.content).toContain("소금물");
   });
 
-  it("변형하면 변형 픽스처 본문이 현재 목록에 추가된다", async () => {
+  it("카드에서 변형하면 후보를 먼저 보여 주고, 채택한 것만 목록에 들어온다", async () => {
     const { user } = await renderBank();
     await user.selectOptions(
       screen.getByLabelText("소단원"),
@@ -562,17 +569,107 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
       ).not.toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole("button", { name: "변형" }));
-    const form = screen.getByRole("form", { name: "변형" });
-    await user.selectOptions(
-      within(form).getByLabelText("원본 문제"),
-      MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL.id,
+    // 고르는 자리가 곧 보고 있는 자리다 — 카드마다 「변형」이 붙는다.
+    await user.click(screen.getAllByRole("button", { name: "변형" })[0]!);
+    const panel = screen.getByRole("region", { name: "변형" });
+    await user.click(within(panel).getByRole("button", { name: "변형하기" }));
+
+    // 후보가 뜬 시점에는 **아직 은행에 없다** — 미리보기 단계다.
+    await within(panel).findByText(/변형 결과/);
+    expect(screen.queryByText(/건 변형$/)).not.toBeInTheDocument();
+
+    await user.click(
+      within(panel).getByRole("button", { name: "채택분 저장" }),
     );
-    await user.click(within(form).getByRole("button", { name: "변형하기" }));
 
     await screen.findByText("1건 변형");
     expect(screen.getByText(/을 유한소수로 나타내어라/)).toBeInTheDocument();
     expect(MOCK_AI_TRANSFORMED_PROBLEMS[0]!.content).toContain("11");
+  });
+
+  /** 그림 문항 카드를 열고 변형 패널을 띄운다 — 도형 갈래 테스트가 같이 쓴다. */
+  async function openFigureTransform(
+    user: ReturnType<typeof userEvent.setup>,
+    count?: string,
+  ) {
+    await user.selectOptions(
+      screen.getByLabelText("소단원"),
+      MOCK_PROBLEM_WITH_FIGURE.unitId,
+    );
+    await waitFor(() => {
+      expect(screen.getByText(/직각삼각형 ABC 의 넓이/)).toBeInTheDocument();
+    });
+    const card = screen
+      .getByText(/직각삼각형 ABC 의 넓이/)
+      .closest("article") as HTMLElement;
+    await user.click(within(card).getByRole("button", { name: "변형" }));
+    const panel = within(card).getByRole("region", { name: "변형" });
+    if (count) {
+      await user.selectOptions(within(panel).getByLabelText("개수"), count);
+    }
+    await user.click(within(panel).getByRole("button", { name: "변형하기" }));
+    await within(panel).findByText(/변형 결과/);
+    return panel;
+  }
+
+  it("그림 문항은 도형을 새로 그려 보여 주고, 그려진 후보는 채택할 수 있다", async () => {
+    const { user } = await renderBank();
+    const panel = await openFigureTransform(user);
+
+    // 왜 도형이 붙어 있는지를 먼저 말한다.
+    expect(within(panel).getByRole("status")).toHaveTextContent(
+      /그림이 있어야 풀리는 문항/,
+    );
+    // 서버가 그려 준 SVG 가 실제로 지면에 들어간다.
+    expect(
+      panel.querySelector("[data-figure-preview] svg"),
+    ).toBeInTheDocument();
+    expect(within(panel).getAllByRole("checkbox")).toHaveLength(1);
+    expect(
+      within(panel).getByRole("button", { name: "채택분 저장" }),
+    ).toBeEnabled();
+  });
+
+  it("도형을 못 그린 후보는 사유와 함께 채택할 수 없다", async () => {
+    const { user } = await renderBank();
+    // mock 은 첫 후보를 «도형 못 그림», 마지막을 «재현 검사 실패» 로 둔다.
+    const panel = await openFigureTransform(user, "2");
+
+    expect(
+      within(panel).getByText(/도형 없음 — .*도형을 확정하지 못했습니다/),
+    ).toBeInTheDocument();
+    // 도형이 없으면 재현 검사를 통과했어도 못 쓴다 — 본문이 그림을 가리킨 채로 나간다.
+    expect(within(panel).queryAllByRole("checkbox")).toHaveLength(0);
+    expect(
+      within(panel).getByRole("button", { name: "채택분 저장" }),
+    ).toBeDisabled();
+  });
+
+  it("원본 재현 검사에 떨어진 후보는 사유와 함께 「폐기」로 보이고 채택할 수 없다", async () => {
+    const { user } = await renderBank();
+    await user.selectOptions(
+      screen.getByLabelText("소단원"),
+      MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL.unitId,
+    );
+    await waitFor(() => {
+      expect(screen.getByText(/밑변의 길이가/)).toBeInTheDocument();
+    });
+
+    await user.click(screen.getAllByRole("button", { name: "변형" })[0]!);
+    const panel = screen.getByRole("region", { name: "변형" });
+    // mock 은 마지막 하나를 일부러 탈락시킨다 — 2개를 뽑아야 그 경로가 나온다.
+    await user.selectOptions(within(panel).getByLabelText("개수"), "2");
+    await user.click(within(panel).getByRole("button", { name: "변형하기" }));
+
+    await within(panel).findByText(/변형 결과 2건/);
+    // 「몇 개 왔다」가 아니라 **왜 못 쓰는지**가 보여야 한다.
+    expect(within(panel).getByText("폐기")).toBeInTheDocument();
+    expect(
+      within(panel).getByText(/원본 재현 검사 실패 — 재현값/),
+    ).toBeInTheDocument();
+    // 탈락 후보에는 채택 체크박스가 없다 — 통과한 하나만 고를 수 있다.
+    expect(within(panel).getAllByRole("checkbox")).toHaveLength(1);
+    expect(within(panel).getByText("채택 1건")).toBeInTheDocument();
   });
 });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { PROBLEM_CARD_MIN_WIDTH } from "@/components/print/tokens";
 import { Button } from "@/components/ui/Button";
@@ -19,13 +19,14 @@ import { useDebounced } from "@/hooks/useDebounced";
 import { FieldSelect, FieldText, FIELD_SELECT_WIDTH } from "./FieldSelect";
 import { PROBLEM_TYPES } from "./labels";
 import { ProblemCard } from "./ProblemCardLazy";
-import {
-  ProblemGenerateForm,
-  ProblemRegisterForm,
-  ProblemTransformForm,
-} from "./ProblemPanelsLazy";
+import { ProblemGenerateForm, ProblemRegisterForm } from "./ProblemPanelsLazy";
 
-type Panel = "register" | "generate" | "transform" | null;
+/**
+ * 위쪽 액션 패널 — 「변형」은 **여기 없다**(원장님 확정 2026-08-19).
+ * 변형은 문제 카드 안에서 고르고 연다(`ProblemCard` → `ProblemTransformPanel`) —
+ * 종전 드롭다운은 네이티브 select 라 수식을 못 그려 무엇을 고르는지 알 수 없었다.
+ */
+type Panel = "register" | "generate" | null;
 
 /** 초등 chapter는 "1-1 9까지의 수" 꼴 — 앞 숫자가 학기. 그 외 학년은 학기 개념이 없다. */
 const SEMESTER_CHAPTER_RE = /^[12]-/;
@@ -284,16 +285,45 @@ export function ProblemBank() {
     setPanel((current) => (current === next ? null : next));
   }
 
-  function prepend(count: number, created: ProblemEntity[], label: string) {
-    const matching = created.filter((problem) =>
-      matchesFilters(problem, filters, unitById),
-    );
-    setProblems((current) => [...matching, ...current]);
-    setTotal((current) => current + matching.length);
-    setNotice(`${count}건 ${label}`);
-    setPanel(null);
-    setError(null);
-  }
+  /**
+   * 새로 만들어진 문항을 목록에 얹고 안내를 띄운다 — **등록·생성·변형이 이 함수 하나**를 쓴다.
+   *
+   * ⚠️ 안내는 「몇 건 만들었나」가 아니라 「그중 몇 건이 지금 화면에 보이나」까지 말한다.
+   *    적대적 리뷰 2026-08-19 실측: 난이도 「한 단계 아래」로 변형하면 결과가 현재 난이도
+   *    필터를 벗어나는데, 화면은 "1건 변형"이라 하고 목록에도 총계에도 아무 변화가 없었다.
+   *    성공했는데 사라진 것처럼 보이면 그건 실패로 읽힌다.
+   */
+  const prepend = useCallback(
+    (created: ProblemEntity[], label: string) => {
+      const matching = created.filter((problem) =>
+        matchesFilters(problem, filters, unitById),
+      );
+      setProblems((current) => [...matching, ...current]);
+      setTotal((current) => current + matching.length);
+      setNotice(
+        matching.length === created.length
+          ? `${created.length}건 ${label}`
+          : `${created.length}건 ${label} — 현재 필터에 ${matching.length}건만 보입니다`,
+      );
+      setPanel(null);
+      setError(null);
+    },
+    [filters, unitById],
+  );
+
+  /**
+   * 카드에서 변형 채택분이 저장되면 목록에 얹는다 — 등록·생성과 **같은 `prepend`** 를 쓴다.
+   *
+   * ⚠️ `useCallback` 이어야 한다 — `ProblemCard` 는 `memo` 라, 인라인 화살표로 넘기면
+   * 카드 20장이 렌더마다 전부 다시 그려진다(카드마다 KaTeX 조판이 붙는다).
+   *
+   * 그래서 `prepend` 도 `useCallback` 이다 — 그것이 렌더마다 새로 만들어지면
+   * 이 콜백도 같이 새로 만들어져 memo 가 죽는다.
+   */
+  const handleTransformAdopted = useCallback(
+    (created: ProblemEntity[]) => prepend(created, "변형"),
+    [prepend],
+  );
 
   return (
     <main className="px-[26px] py-6">
@@ -312,9 +342,6 @@ export function ProblemBank() {
             onClick={() => toggle("generate")}
           >
             생성
-          </Button>
-          <Button variant="secondary" onClick={() => toggle("transform")}>
-            변형
           </Button>
         </div>
       </div>
@@ -498,7 +525,7 @@ export function ProblemBank() {
         <ProblemRegisterForm
           units={units}
           defaultUnitId={defaultUnitId}
-          onCreated={(count, created) => prepend(count, created, "등록")}
+          onCreated={(_count, created) => prepend(created, "등록")}
           onError={setError}
         />
       ) : null}
@@ -506,14 +533,7 @@ export function ProblemBank() {
         <ProblemGenerateForm
           units={units}
           defaultUnitId={defaultUnitId}
-          onCreated={(count, created) => prepend(count, created, "생성")}
-          onError={setError}
-        />
-      ) : null}
-      {panel === "transform" ? (
-        <ProblemTransformForm
-          problems={problems}
-          onCreated={(count, created) => prepend(count, created, "변형")}
+          onCreated={(_count, created) => prepend(created, "생성")}
           onError={setError}
         />
       ) : null}
@@ -551,7 +571,11 @@ export function ProblemBank() {
           <p className="text-[12.5px] text-text-2">등록된 문제가 없습니다</p>
         ) : !loading && !error ? (
           problems.map((problem) => (
-            <ProblemCard key={problem.id} problem={problem} />
+            <ProblemCard
+              key={problem.id}
+              problem={problem}
+              onTransformAdopted={handleTransformAdopted}
+            />
           ))
         ) : null}
       </section>

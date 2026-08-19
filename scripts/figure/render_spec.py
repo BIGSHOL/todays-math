@@ -1,0 +1,78 @@
+"""FigureSpec v2 (JSON) → 검증·정제된 SVG 한 장. **stdin → stdout 한 번**.
+
+    echo '{"version":2,...}' | python scripts/figure/render_spec.py
+
+성공: {"svg": "<svg …>"}   실패: {"error": "사람이 읽을 사유"}
+**어떤 경우에도 0으로 끝나고 JSON 한 줄만 낸다** — 호출하는 Node 쪽
+(`src/lib/figure/renderFigureSpec.ts`)이 종료 코드가 아니라 이 JSON 을 읽는다.
+엔진 예외 메시지를 그대로 흘리지 않고 앞머리만 잘라 싣는다.
+
+엔진은 이식하지 않고 그대로 호출한다(09-figure-engine-guide.md §0).
+위치는 `FIGURE_ENGINE_PATH` 환경변수 — 없으면 아래 기본값.
+⚠️ 문서가 적어 둔 `D:\\시험지 한글화` 는 2026-08-19 현재 **없다**. 실제는 아래 경로다.
+"""
+
+from __future__ import annotations
+
+import io
+import json
+import os
+import sys
+
+DEFAULT_ENGINE_PATH = r"F:\시험지변환기"
+
+# 스펙은 LLM 이 낸 것이라 통째로 믿지 않는다. 너무 큰 입력은 엔진에 넣기 전에 끊는다.
+MAX_SPEC_BYTES = 64 * 1024
+
+
+def fail(message: str) -> None:
+    sys.stdout.write(json.dumps({"error": message}, ensure_ascii=False))
+    sys.exit(0)
+
+
+def main() -> None:
+    # Windows 기본 코드페이지에서 한글 라벨이 깨진다 — 양쪽 다 UTF-8 로 못 박는다.
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    raw = io.TextIOWrapper(sys.stdin.buffer, encoding="utf-8").read()
+
+    if len(raw.encode("utf-8")) > MAX_SPEC_BYTES:
+        fail("도형 스펙이 너무 큽니다")
+
+    try:
+        spec = json.loads(raw)
+    except Exception:
+        fail("도형 스펙이 올바른 JSON 이 아닙니다")
+        return
+
+    engine = os.environ.get("FIGURE_ENGINE_PATH") or DEFAULT_ENGINE_PATH
+    if not os.path.isdir(engine):
+        fail(f"도형 엔진을 찾을 수 없습니다: {engine}")
+    sys.path.insert(0, engine)
+
+    try:
+        from core.figure_scene import render_figure_spec
+        from core.figure_quality import sanitize_svg
+    except Exception as exc:  # 엔진 자체를 못 불러온 경우 — 설정 문제다.
+        fail(f"도형 엔진을 불러오지 못했습니다: {type(exc).__name__}")
+        return
+
+    try:
+        svg = render_figure_spec(spec)
+    except Exception as exc:
+        # FigureSpecError/GeometryValidationError 는 **스펙이 틀렸다**는 뜻이라
+        # 사유를 그대로 보여 주는 편이 낫다(원장님이 보고 판단한다). 길이는 자른다.
+        fail(f"도형을 그리지 못했습니다: {str(exc)[:200]}")
+        return
+
+    try:
+        # 엔진이 낸 것이라도 정제기를 통과시킨다 — 지면과 화면에 그대로 들어가는 마크업이다.
+        svg = sanitize_svg(svg)
+    except Exception as exc:
+        fail(f"도형이 안전 검사를 통과하지 못했습니다: {type(exc).__name__}")
+        return
+
+    sys.stdout.write(json.dumps({"svg": svg}, ensure_ascii=False))
+
+
+if __name__ == "__main__":
+    main()

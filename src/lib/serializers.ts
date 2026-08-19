@@ -87,6 +87,7 @@ export function serializeProblem(row: ProblemRow): ProblemEntity {
     pool: row.pool,
     // 그림이 없는 문항은 빈 배열이다 — 화면이 널 검사를 하지 않아도 되게 한다.
     figureUrls: row.figureUrls ?? [],
+    figureSvg: row.figureSvg ?? null,
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
   };

@@ -28,9 +28,10 @@ vi.mock("openai", () => ({
 import { generateProblems } from "@/lib/ai/generator";
 import {
   transformProblem,
-  verifiesOriginalReproduction,
 } from "@/lib/ai/transformer";
-import { AiGenerationError } from "@/lib/ai/errors";
+import { verifiesOriginalReproduction } from "@/lib/ai/originalReproduction";
+import { buildTransformSystemPrompt } from "@/lib/ai/prompts/transform";
+import { AiCapacityError, AiGenerationError } from "@/lib/ai/errors";
 import {
   normalizeLatex,
   parseAiJsonArray,
@@ -265,15 +266,15 @@ describe("[T3.2] generateProblems — AI 문제 생성", () => {
   });
 });
 
-describe("[T3.2] transformProblem — AI 문제 변형(원본 재현 검사)", () => {
-  it("원본 재현 검사를 통과한 후보만 source=transformed로 반환하고, 분류 필드는 원본을 그대로 물려받는다", async () => {
+describe("transformProblem — AI 문제 변형(후보 반환, 2026-08-19 고도화)", () => {
+  it("후보만 돌려준다 — 분류/출처/검수 필드는 담지 않는다(저장 시점에 서버가 부여)", async () => {
     mockCreate.mockResolvedValueOnce(
       aiTextResponse(
         JSON.stringify([
           {
-            content: "$\\frac{11}{40}$을 유한소수로 나타내어라.",
+            content: "$\frac{11}{40}$을 유한소수로 나타내어라.",
             answer: "0.275",
-            solution: "$\\frac{11}{40} = \\frac{275}{1000} = 0.275$",
+            solution: "$\frac{11}{40} = \frac{275}{1000} = 0.275$",
             // 원본(7/25=0.28) 규칙을 되돌려 적용한 값 — 원본 정답과 일치해야 통과.
             originalAnswerRecomputed: "0.28",
           },
@@ -281,21 +282,19 @@ describe("[T3.2] transformProblem — AI 문제 변형(원본 재현 검사)", (
       ),
     );
 
-    const [draft] = await transformProblem({
-      origin: ORIGIN,
-      count: 1,
-    });
+    const [candidate] = await transformProblem({ origin: ORIGIN, count: 1 });
 
-    expect(draft!.source).toBe("transformed");
-    expect(draft!.originProblemId).toBe(ORIGIN.id);
-    expect(draft!.unitId).toBe(ORIGIN.unitId);
-    expect(draft!.difficulty).toBe(ORIGIN.difficulty);
-    expect(draft!.problemType).toBe(ORIGIN.problemType);
-    expect(draft!.reviewStatus).toBe("pending");
-    expect(draft!.answer).toBe("0.275");
+    expect(candidate!.verified).toBe(true);
+    expect(candidate!.answer).toBe("0.275");
+    // originProblemId 가 NULL 인지 아닌지가 RPM 이관본과 AI 변형본을 가르는 유일한
+    // 판별자다(D-51). 변형기가 흘리면 그 판별이 무너지므로 여기서 못 박는다.
+    expect(candidate).not.toHaveProperty("source");
+    expect(candidate).not.toHaveProperty("originProblemId");
+    expect(candidate).not.toHaveProperty("reviewStatus");
+    expect(candidate).not.toHaveProperty("difficulty");
   });
 
-  it("원본 재현 검사에 실패한 후보는 폐기하고, 통과한 후보만 남긴다", async () => {
+  it("원본 재현 검사에 떨어진 후보도 사유를 달아 **버리지 않고** 돌려준다", async () => {
     mockCreate.mockResolvedValueOnce(
       aiTextResponse(
         JSON.stringify([
@@ -303,10 +302,10 @@ describe("[T3.2] transformProblem — AI 문제 변형(원본 재현 검사)", (
             content: "잘못된 변형(재현 실패)",
             answer: "9.99",
             solution: null,
-            originalAnswerRecomputed: "완전히 다른 값", // origin.answer("0.28")와 불일치 → 폐기
+            originalAnswerRecomputed: "완전히 다른 값", // origin.answer("0.28")와 불일치
           },
           {
-            content: "$\\frac{11}{40}$을 유한소수로 나타내어라.",
+            content: "$\frac{11}{40}$을 유한소수로 나타내어라.",
             answer: "0.275",
             solution: null,
             originalAnswerRecomputed: "0.28", // origin.answer와 일치 → 통과
@@ -315,13 +314,16 @@ describe("[T3.2] transformProblem — AI 문제 변형(원본 재현 검사)", (
       ),
     );
 
-    const drafts = await transformProblem({ origin: ORIGIN, count: 2 });
+    const candidates = await transformProblem({ origin: ORIGIN, count: 2 });
 
-    expect(drafts).toHaveLength(1);
-    expect(drafts[0]!.answer).toBe("0.275");
+    // v1 은 여기서 1개만 남겼다. 그러면 화면은 「2개 요청했는데 1개」만 알고 이유를 못 본다.
+    expect(candidates).toHaveLength(2);
+    expect(candidates[0]!.verified).toBe(false);
+    expect(candidates[0]!.originalAnswerRecomputed).toBe("완전히 다른 값");
+    expect(candidates[1]!.verified).toBe(true);
   });
 
-  it("원본 재현 검사를 통과한 후보가 하나도 없으면 AiGenerationError를 던진다", async () => {
+  it("전부 검사에 떨어져도 던지지 않는다 — 사유를 봐야 하기 때문이다", async () => {
     mockCreate.mockResolvedValueOnce(
       aiTextResponse(
         JSON.stringify([
@@ -335,12 +337,181 @@ describe("[T3.2] transformProblem — AI 문제 변형(원본 재현 검사)", (
       ),
     );
 
+    const candidates = await transformProblem({ origin: ORIGIN, count: 1 });
+
+    expect(candidates).toHaveLength(1);
+    expect(candidates[0]!.verified).toBe(false);
+  });
+
+  it("응답에서 후보를 하나도 읽지 못하면 AiGenerationError를 던진다", async () => {
+    // 재시도까지 두 번 다 빈 배열 — 파싱은 됐지만 후보가 0개다.
+    mockCreate
+      .mockResolvedValueOnce(aiTextResponse("[]"))
+      .mockResolvedValueOnce(aiTextResponse("[]"));
+
     await expect(
       transformProblem({ origin: ORIGIN, count: 1 }),
     ).rejects.toBeInstanceOf(AiGenerationError);
   });
 
-  it("픽스처(MOCK_AI_TRANSFORMED_PROBLEMS)의 변형 결과 형태와 정합적인 draft를 만든다", async () => {
+  it("변형 방식·난이도 조정이 프롬프트에 실제로 실린다", async () => {
+    mockCreate.mockResolvedValueOnce(
+      aiTextResponse(
+        JSON.stringify([
+          {
+            content: "조건까지 바꾼 변형",
+            answer: "0.275",
+            solution: null,
+            originalAnswerRecomputed: "0.28",
+          },
+        ]),
+      ),
+    );
+
+    await transformProblem({
+      origin: ORIGIN,
+      count: 1,
+      mode: "conditions",
+      difficultyShift: "up",
+    });
+
+    const sent = mockCreate.mock.calls[0]![0]!.messages[1]!.content as string;
+    expect(sent).toContain("조건과 상황 설정까지");
+    expect(sent).toContain("한 단계 어렵게");
+    expect(sent).not.toContain("숫자만** 바꾸십시오");
+  });
+
+  it("그림 문항이면 프롬프트가 도형 스펙을 요구하고, 아니면 요구하지 않는다", async () => {
+    const reply = aiTextResponse(
+      JSON.stringify([
+        {
+          content: "도형 변형",
+          answer: "0.275",
+          solution: null,
+          originalAnswerRecomputed: "0.28",
+          figureSpec: { version: 2 },
+        },
+      ]),
+    );
+
+    mockCreate.mockResolvedValueOnce(reply);
+    await transformProblem({ origin: ORIGIN, count: 1, figureRequired: true });
+    const withFigure = mockCreate.mock.calls[0]![0]!.messages[1]!
+      .content as string;
+    expect(withFigure).toContain("figureSpec");
+    // 「못 그리면 null」이 빠지면 AI 가 도형을 지어내고, 본문과 어긋난 그림이 나간다.
+    expect(withFigure).toContain("지어내지 마십시오");
+
+    mockCreate.mockResolvedValueOnce(reply);
+    await transformProblem({ origin: ORIGIN, count: 1 });
+    const without = mockCreate.mock.calls[1]![0]!.messages[1]!
+      .content as string;
+    expect(without).not.toContain("figureSpec");
+  });
+
+  it("답을 내기 전에 길이 한도에 걸리면 AiCapacityError 다 — 생각을 답으로 넘기지 않는다", async () => {
+    // 2026-08-19 실측: 그림 문항에서 추론이 예산을 다 써 `content` 가 비고
+    // `reasoning_content` 54KB 가 문장 중간에 끊긴 채 왔다(JSON 배열 0개).
+    // 이 검사가 없으면 그 «생각»이 답으로 넘어가 "유효한 JSON 이 아닙니다"로만 남는다.
+    mockCreate.mockResolvedValueOnce({
+      choices: [
+        {
+          finish_reason: "length",
+          message: { content: "", reasoning_content: "우리는 한국어로 된 지시를…" },
+        },
+      ],
+    });
+
+    await expect(
+      transformProblem({ origin: ORIGIN, count: 1 }),
+    ).rejects.toBeInstanceOf(AiCapacityError);
+  });
+
+  it("잘리지 않았으면 reasoning_content 폴백은 그대로 산다", async () => {
+    mockCreate.mockResolvedValueOnce({
+      choices: [
+        {
+          finish_reason: "stop",
+          message: {
+            content: "",
+            reasoning_content: JSON.stringify([
+              {
+                content: "폴백 변형",
+                answer: "0.275",
+                solution: null,
+                originalAnswerRecomputed: "0.28",
+              },
+            ]),
+          },
+        },
+      ],
+    });
+
+    const [candidate] = await transformProblem({ origin: ORIGIN, count: 1 });
+    expect(candidate!.answer).toBe("0.275");
+  });
+
+  it("시스템 프롬프트가 필드 **개수**를 못 박지 않는다 (사용자 프롬프트와 어긋난다)", async () => {
+    // 그림 문항에서는 `figureSpec` 이 하나 더 붙는다. 시스템 쪽에서 "4개 필드"라고
+    // 세면 두 프롬프트가 서로 다른 말을 한다 — 실제로 그 상태로 나갔다(2026-08-19).
+    expect(buildTransformSystemPrompt()).not.toMatch(/\d+\s*개\s*필드/);
+  });
+
+  it("그림이 필요 없으면 AI 가 낸 도형 스펙을 버린다", async () => {
+    mockCreate.mockResolvedValueOnce(
+      aiTextResponse(
+        JSON.stringify([
+          {
+            content: "안 쓰는 도형이 딸린 변형",
+            answer: "0.275",
+            solution: null,
+            originalAnswerRecomputed: "0.28",
+            figureSpec: { version: 2, points: { A: [0, 0] } },
+          },
+        ]),
+      ),
+    );
+
+    const [candidate] = await transformProblem({ origin: ORIGIN, count: 1 });
+
+    // 안 쓰는 도형을 지면에 얹을 이유도, 그 자리에서만 나는 오류를 만들 이유도 없다.
+    expect(candidate!.figureSpec).toBeNull();
+  });
+
+  it("기본값은 가장 안전한 쪽 — 숫자만 바꾸고 난이도는 원본을 유지한다", async () => {
+    mockCreate.mockResolvedValueOnce(
+      aiTextResponse(
+        JSON.stringify([
+          {
+            content: "기본 변형",
+            answer: "0.275",
+            solution: null,
+            originalAnswerRecomputed: "0.28",
+          },
+        ]),
+      ),
+    );
+
+    await transformProblem({ origin: ORIGIN, count: 1 });
+
+    const sent = mockCreate.mock.calls[0]![0]!.messages[1]!.content as string;
+    expect(sent).toContain("숫자만");
+    expect(sent).toContain("원본과 같은 수준을 유지");
+  });
+
+  it("E2E_MOCK_AI=1 이면 AI 를 부르지 않고 모의 후보를 만든다 — 마지막 하나는 탈락", async () => {
+    vi.stubEnv("E2E_MOCK_AI", "1");
+
+    const candidates = await transformProblem({ origin: ORIGIN, count: 3 });
+
+    expect(mockCreate).not.toHaveBeenCalled();
+    expect(candidates).toHaveLength(3);
+    expect(candidates.map((c) => c.verified)).toEqual([true, true, false]);
+    // 「폐기」 표시와 사유 경로가 모의에서도 반드시 한 번은 밟힌다.
+    expect(candidates[2]!.originalAnswerRecomputed).not.toBe(ORIGIN.answer);
+  });
+
+  it("픽스처(MOCK_AI_TRANSFORMED_PROBLEMS)의 변형 결과 형태와 정합적인 후보를 만든다", async () => {
     const fixture = MOCK_AI_TRANSFORMED_PROBLEMS[0]!;
     mockCreate.mockResolvedValueOnce(
       aiTextResponse(
@@ -355,11 +526,11 @@ describe("[T3.2] transformProblem — AI 문제 변형(원본 재현 검사)", (
       ),
     );
 
-    const [draft] = await transformProblem({ origin: ORIGIN, count: 1 });
+    const [candidate] = await transformProblem({ origin: ORIGIN, count: 1 });
 
-    expect(draft!.content).toBe(fixture.content);
-    expect(draft!.answer).toBe(fixture.answer);
-    expect(draft!.source).toBe("transformed");
+    expect(candidate!.content).toBe(fixture.content);
+    expect(candidate!.answer).toBe(fixture.answer);
+    expect(candidate!.verified).toBe(true);
   });
 });
 

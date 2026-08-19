@@ -45,6 +45,26 @@ export const PRINT_ROUTE = "/tests/{시험지id}/print";
 
 export const ITEMS: PrintCheckItem[] = [
   {
+    id: "figure-svg-inline",
+    title: "AI 변형이 새로 그린 도형(SVG)의 지면 배치 — 처음 종이에 나가는 갈래",
+    changed:
+      "`Problem.figureSvg` 가 계약·직렬화·지면에 처음 이어졌다(D-55). 그 전까지는 DB 컬럼만 있고 0건이라 **한 번도 인쇄된 적이 없다.** 스캔 그림(`figureUrls`, `<img>`)과 달리 이쪽은 inline `<svg>` 이고 폭 규칙도 따로다 — 화면 360px / 인쇄 70mm, `[&>svg]:w-full` 로 폭에 맞춰 늘린다.",
+    look:
+      "① 도형이 문항 칸 안에 들어가는가(넘쳐서 다음 문항을 밀거나 겹치지 않는가). ② 선 굵기가 인쇄에서 사라지거나 뭉개지지 않는가 — 벡터라 화면에서 멀쩡해도 종이에서 다르다. ③ 도형 안 글자(꼭짓점 이름·치수)가 읽히는 크기인가. ④ 스캔 그림과 같은 문항에 함께 있을 때 두 그림이 나란히 서는가.",
+    lookFromSource: false,
+    evidence: [
+      "src/components/math/ProblemContent.tsx (figureSvg 블록)",
+      "docs/planning/09-figure-engine-guide.md §0.1",
+      "docs/planning/07-coding-convention.md D-55",
+    ],
+    scale:
+      "지금은 0건 — AI 변형으로 채택한 문항에서만 생긴다. 원본 후보는 그림 문항 9,419건(출제 가능의 20.2%)",
+    needs:
+      "그림 문항을 변형해 도형이 그려진 후보를 채택하고, 그 문항을 시험지에 넣어야 드러난다",
+    status: "대기",
+    changedOn: "2026-08-19",
+  },
+  {
     id: "figures-multi",
     title: "그림 회수 590건 — 다장 문항의 지면 배치",
     changed:

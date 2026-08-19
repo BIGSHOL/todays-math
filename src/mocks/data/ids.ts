@@ -71,6 +71,8 @@ export function problemId(seq: number): string {
 export const PROBLEM_OTHER_ID = makeId("5000", 99);
 /** USER_OTHER_ID 소유 shared — 공용 풀 조회 테스트 전용 (D-31). */
 export const PROBLEM_OTHER_SHARED_ID = makeId("5000", 98);
+/** 그림이 붙은 문항 — 변형 차단 경로를 밟는 유일한 mock. */
+export const PROBLEM_WITH_FIGURE_ID = makeId("5000", 97);
 
 // ── AI 생성/변형 문제 (aiProblems.ts) ─────────────────────────
 export function aiGeneratedProblemId(seq: number): string {

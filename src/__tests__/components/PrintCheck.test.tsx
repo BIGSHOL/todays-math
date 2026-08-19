@@ -22,7 +22,8 @@ describe("실물 출력 검수 목록 — 데이터", () => {
    * 아무도 모른다. 항목을 늘리거나 줄이면 이 숫자도 같이 고쳐야 한다 — 그게 의도다.
    */
   it("항목 수가 바뀌면 알아차린다", () => {
-    expect(ITEMS.length).toBe(15);
+    // 16: figure-svg-inline 추가 (D-55, 2026-08-19 — figureSvg 가 처음 지면에 나간다)
+    expect(ITEMS.length).toBe(16);
   });
 
   /**
