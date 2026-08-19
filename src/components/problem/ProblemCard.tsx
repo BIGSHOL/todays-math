@@ -4,6 +4,7 @@ import { memo, useState } from "react";
 
 import { MathText } from "@/components/math/MathText";
 import { PaperProblemView } from "@/components/print/PaperProblemView";
+import type { ReviewStatus } from "@/contracts/common.contract";
 import type { ProblemEntity } from "@/contracts/problem.contract";
 
 import { DIFFICULTY_LABEL, REVIEW_STATUS_LABEL } from "./labels";
@@ -37,6 +38,16 @@ type ProblemCardProps = {
    * (`TestReview` 와 같은 이유) — `useCallback` 으로 고정해서 넘길 것.
    */
   onTransformAdopted?: (created: ProblemEntity[]) => void;
+  /**
+   * 검수 승격/반려. **넘기지 않으면 그 버튼이 아예 없다** — 문제은행(S-08)에서만 검수한다.
+   *
+   * D-22: 승격은 사람이 누른다. 2026-08-19 까지 화면에 이 수단이 **아예 없어서**,
+   * `pending` 으로 들어온 문항(실측 271건 — 기출 144 · 변형 107 · AI 20)은 출제 풀에
+   * 영영 못 들어갔다. API(`PATCH /api/problems/{id}/review-status`)는 처음부터 있었다.
+   *
+   * ⚠️ `ProblemCard` 는 `memo` 다 — `useCallback` 으로 고정해서 넘길 것.
+   */
+  onReviewStatusChange?: (id: string, next: ReviewStatus) => Promise<void>;
 };
 
 /**
@@ -53,9 +64,22 @@ type ProblemCardProps = {
 export const ProblemCard = memo(function ProblemCard({
   problem,
   onTransformAdopted,
+  onReviewStatusChange,
 }: ProblemCardProps) {
   const [showSolution, setShowSolution] = useState(false);
   const [showTransform, setShowTransform] = useState(false);
+  // 승격은 왕복이 있다. 누른 뒤 응답이 오기 전에 또 누르면 같은 요청이 두 번 나간다.
+  const [reviewBusy, setReviewBusy] = useState(false);
+
+  const changeReview = async (next: ReviewStatus) => {
+    if (!onReviewStatusChange || reviewBusy) return;
+    setReviewBusy(true);
+    try {
+      await onReviewStatusChange(problem.id, next);
+    } finally {
+      setReviewBusy(false);
+    }
+  };
 
   return (
     // 카드 사이 간격은 목록 그리드의 gap 이 준다(`ProblemBank`). 화면에서 `mb-6` 을
@@ -64,6 +88,14 @@ export const ProblemCard = memo(function ProblemCard({
     // 이제 그림자가 아니라 **테두리**가 만든다 — 원장님 지시 "문제마다 테두리 주면 구분될듯".
     // 색은 앱의 다른 경계선과 같은 토큰(--divider)을 쓴다. slate-200(#e2e8f0)은
     // 흰 바탕에서 거의 안 보였다.
+    // 폭은 **목록 그리드의 트랙**이 박는다 (`PROBLEM_GRID_STYLE` =
+    // `repeat(auto-fill, min(100%, PROBLEM_CARD_WIDTH))`, 원장님 지시 2026-08-19
+    // "문제를 보여주는 공간은 문제크기와 함께 고정해 박아버려"). 본문(`.paperParity`)이
+    // 지면 폭으로 고정이라 카드가 늘어나면 그만큼 오른쪽이 빈다.
+    //
+    // ⚠️ 여기에 인라인 `style={{ width }}` 로 박지 않는다 — **인라인은 `print:w-auto` 를
+    //    이겨서**(Tailwind 유틸리티는 `!important` 가 아니다) 이 화면을 그대로 인쇄할 때
+    //    카드가 고정폭으로 나간다. 폭을 두 곳에서 정하지도 않는다.
     <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-divider bg-surface print:mb-4 print:block print:h-auto print:rounded-none print:border-none print:shadow-none">
       {/* 머리 띠는 면색이 아니라 1px 룰로 가른다 — 흰 바탕에서 옅은 회색 띠는
           구조가 아니라 얼룩으로 읽힌다. Q 배지는 잉크라 화면과 인쇄가 같아진다. */}
@@ -71,7 +103,13 @@ export const ProblemCard = memo(function ProblemCard({
         <span className="flex h-8 w-8 items-center justify-center bg-ink text-lg font-bold text-bg print:bg-black">
           Q
         </span>
-        <span className="font-semibold text-text-2">문제</span>
+        {/* 「문제」라는 말 대신 **문항 코드**를 놓는다 (원장님 지시 2026-08-19
+            "문항 코드가 안보이는것도 맞고"). Q 배지가 이미 「문제」라고 말하고 있고,
+            이 자리가 필요한 것은 **지목할 이름**이다(D-53). 검색칸에 그대로 붙여
+            넣으면 이 한 건이 나온다. 숫자 폭을 고정해 코드끼리 세로로 맞춘다. */}
+        <span className="font-semibold tabular-nums text-text-2">
+          {problem.problemCode}
+        </span>
         {/* 난이도·유형·상태는 **마이크로 라벨**이다 (05 §8.6 확정, 원장님 재확인 2026-08-18).
             알약 칩은 면색을 세 개 더 만들어 팔레트를 흐린다. 위계는 글자 명도로 낸다. */}
         <span className={`ml-auto flex flex-wrap items-center gap-3 ${MICRO}`}>
@@ -95,12 +133,34 @@ export const ProblemCard = memo(function ProblemCard({
           figureSvg={problem.figureSvg}
         />
 
-        <div className="mt-auto flex flex-wrap justify-end gap-2 pt-6 print:hidden">
+        <div className="mt-auto flex flex-wrap items-center gap-2 pt-6 print:hidden">
+          {/* 검수 — 왼쪽(판단), 보기·변형 — 오른쪽(작업). 지금 상태가 될 버튼은 안 낸다
+              (승인된 것에 「승인」을 다시 누를 일이 없다). */}
+          {onReviewStatusChange && problem.reviewStatus !== "approved" ? (
+            <button
+              type="button"
+              disabled={reviewBusy}
+              onClick={() => void changeReview("approved")}
+              className={CARD_ACTION_CLASS}
+            >
+              승인
+            </button>
+          ) : null}
+          {onReviewStatusChange && problem.reviewStatus !== "rejected" ? (
+            <button
+              type="button"
+              disabled={reviewBusy}
+              onClick={() => void changeReview("rejected")}
+              className={CARD_ACTION_CLASS}
+            >
+              반려
+            </button>
+          ) : null}
           <button
             type="button"
             aria-expanded={showSolution}
             onClick={() => setShowSolution((current) => !current)}
-            className={CARD_ACTION_CLASS}
+            className={`ml-auto ${CARD_ACTION_CLASS}`}
           >
             {showSolution ? "정답 및 해설 숨기기" : "정답 및 해설 확인"}
           </button>

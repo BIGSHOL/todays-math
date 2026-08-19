@@ -112,6 +112,29 @@ export async function createProblem(input: ProblemCreateRequest) {
   return problemResponseSchema.parse(await res.json());
 }
 
+/**
+ * 검수 승격 — D-22 의 「사람이 승격한다」를 실제로 누를 수 있게 하는 자리.
+ *
+ * ⚠️ 등록·수정 경로는 `reviewStatus` 를 **안 받는다**(계약이 strictObject 로 거부).
+ *    승격은 이 전용 엔드포인트 하나뿐이다 — 클라이언트가 등록과 동시에 스스로
+ *    승인하는 길을 원천 차단하려고 그렇게 만들어 두었다.
+ */
+export async function updateReviewStatus(
+  id: string,
+  reviewStatus: ReviewStatus,
+) {
+  const { problemReviewStatusUpdateRequestSchema, problemResponseSchema } =
+    await problemContract();
+  const body = problemReviewStatusUpdateRequestSchema.parse({ reviewStatus });
+  const res = await fetch(`/api/problems/${id}/review-status`, {
+    method: "PATCH",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) await failWithServerReason(res, "검수 상태를 바꾸지 못했습니다");
+  return problemResponseSchema.parse(await res.json());
+}
+
 export async function generateProblems(input: ProblemGenerateRequest) {
   const { problemGenerateRequestSchema, problemGenerateResponseSchema } =
     await problemContract();

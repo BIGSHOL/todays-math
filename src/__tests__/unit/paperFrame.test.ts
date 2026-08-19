@@ -1,7 +1,7 @@
 /**
  * 지면 문항 열 폭이 **두 곳에 따로 적힌 것**을 잠근다 (렌더 수리 A).
  *
- * `.paperParity`(CSS) 는 화면 카드 본문의 폭이고, `PROBLEM_CARD_MIN_WIDTH`(TS) 는
+ * `.paperParity`(CSS) 는 화면 카드 본문의 폭이고, `PROBLEM_CARD_WIDTH`(TS) 는
  * 문제은행 다단 그리드의 열 하한이다. 둘이 갈라지면 열이 본문보다 좁아져
  * 카드마다 가로 스크롤이 생기거나(좁아짐), 열이 남아돌아 다시 우측이 빈다(넓어짐).
  *
@@ -16,7 +16,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   PAPER_COLUMN_WIDTH,
-  PROBLEM_CARD_MIN_WIDTH,
+  PROBLEM_CARD_WIDTH,
 } from "@/components/print/tokens";
 
 const CSS_SOURCE = readFileSync(
@@ -42,8 +42,8 @@ describe("[렌더 수리 A] 지면 문항 열 폭 — CSS 와 TS 상수가 같�
     expect(normalize(width![1])).toBe(normalize(PAPER_COLUMN_WIDTH));
   });
 
-  it("카드 최소 폭은 본문 열 + 카드 좌우 패딩(24px×2) + 테두리(1px×2) 다", () => {
-    expect(normalize(PROBLEM_CARD_MIN_WIDTH)).toBe(
+  it("카드 폭은 본문 열 + 카드 좌우 패딩(24px×2) + 테두리(1px×2) 다 — 딱 맞는다", () => {
+    expect(normalize(PROBLEM_CARD_WIDTH)).toBe(
       normalize(`calc(${PAPER_COLUMN_WIDTH} + 50px)`),
     );
   });

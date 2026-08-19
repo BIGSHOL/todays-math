@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { PROBLEM_CARD_MIN_WIDTH } from "@/components/print/tokens";
+import { PROBLEM_CARD_WIDTH } from "@/components/print/tokens";
 import { Button } from "@/components/ui/Button";
 import type {
   Difficulty,
@@ -14,6 +14,7 @@ import type { UnitEntity } from "@/contracts/unit.contract";
 import {
   loadProblems,
   PROBLEM_PAGE_SIZE,
+  updateReviewStatus,
   type ProblemListFilters,
 } from "@/lib/problem/problemApi";
 import { loadUnits } from "@/lib/units/unitApi";
@@ -43,15 +44,24 @@ const SEMESTER_CHAPTER_RE = /^[12]-/;
  * 줄바꿈이 지면과 갈라지므로(2026-08-17 "인쇄시와 동일한 뷰"), 폭은 그대로 두고
  * **카드를 여러 열로** 깐다.
  *
- * 창 크기 브레이크포인트를 박지 않고 `auto-fit` 을 쓰는 이유: 실제로 남는 폭에 반응해야
- * 사이드 여백·확대 배율이 달라져도 맞는다. `min(100%, …)` 가 **너무 좁은 창 가드**다 —
- * 남는 폭이 카드 한 장보다 좁아지면 열 하한이 100%로 내려가 1단이 된다(가로 스크롤 대신).
+ * ⚠️ **트랙을 늘리지 않는다** (원장님 지시 2026-08-19: 「문제 공간은 고정시켜 …
+ * 창 크기에 따라서 그냥 3열 4열 이렇게만 바뀌면 되고」). 종전에는 `minmax(…, 1fr)` 이라
+ * 열이 남는 폭만큼 늘어났는데 **본문은 고정**이라 늘어난 만큼이 카드 오른쪽 **빈칸**이
+ * 됐다 — 2단일 때 카드 600px 에 본문 364px, 오른쪽 190px 이 그냥 비었다.
+ * 이제 트랙 폭이 카드 폭 그대로이고 남는 폭은 **열 수**로만 간다(`auto-fill`).
+ *
+ * `auto-fit` 이 아니라 `auto-fill` 인 이유: `auto-fit` 은 빈 트랙을 접는데, 폭이 고정이라
+ * 접히든 말든 열 수는 같다. 필터 바와 **같은 관용구**를 써서 둘이 갈리지 않게 둔다.
+ *
+ * 창 크기 브레이크포인트를 박지 않는 이유: 실제로 남는 폭에 반응해야 사이드 여백·확대
+ * 배율이 달라져도 맞는다. `min(100%, …)` 가 **너무 좁은 창 가드**다 — 남는 폭이 카드
+ * 한 장보다 좁아지면 트랙이 100%로 내려가 1단이 된다(가로 스크롤 대신).
  *
  * `print:block` — 문제은행 화면을 그대로 인쇄할 때의 결과를 종전과 같게 둔다.
  * 시험지 인쇄는 이 화면이 아니라 `TestPrint` 가 그린다.
  */
 const PROBLEM_GRID_STYLE = {
-  gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, ${PROBLEM_CARD_MIN_WIDTH}), 1fr))`,
+  gridTemplateColumns: `repeat(auto-fill, min(100%, ${PROBLEM_CARD_WIDTH}))`,
 } as const;
 
 /**
@@ -335,6 +345,46 @@ export function ProblemBank() {
     [prepend],
   );
 
+  /**
+   * 카드에서 승인·반려를 누르면 서버에 알리고 목록을 맞춘다 (D-22 — 사람이 승격한다).
+   *
+   * ⚠️ **바뀐 문항이 현재 필터를 벗어나면 목록에서 뺀다.** 「상태=대기」로 보는 중에
+   *    승인하면 그 카드는 더 이상 그 목록의 것이 아니다. 그냥 두면 화면과 필터가
+   *    갈려서, 새로고침하는 순간 조용히 사라진다 — 그건 실패로 읽힌다.
+   *    안내에도 **어느 문항인지**(문항 코드) 적는다. 카드가 사라지면 무엇이 사라진
+   *    것인지 화면에 아무 흔적이 없기 때문이다.
+   *
+   * ⚠️ `useCallback` — `ProblemCard` 는 `memo` 다(카드마다 KaTeX 조판이 붙는다).
+   */
+  const handleReviewStatusChange = useCallback(
+    async (id: string, next: ReviewStatus) => {
+      const label = next === "approved" ? "승인" : "반려";
+      try {
+        const { data } = await updateReviewStatus(id, next);
+        const stays = matchesFilters(data, filters, unitById);
+        setProblems((current) =>
+          stays
+            ? current.map((p) => (p.id === id ? data : p))
+            : current.filter((p) => p.id !== id),
+        );
+        if (!stays) setTotal((current) => Math.max(0, current - 1));
+        setNotice(
+          stays
+            ? `${data.problemCode} ${label}`
+            : `${data.problemCode} ${label} — 현재 필터에서 빠집니다`,
+        );
+        setError(null);
+      } catch (caught) {
+        setError(
+          caught instanceof Error
+            ? caught.message
+            : "검수 상태를 바꾸지 못했습니다",
+        );
+      }
+    },
+    [filters, unitById],
+  );
+
   return (
     <main className="px-[26px] py-6">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
@@ -604,6 +654,7 @@ export function ProblemBank() {
               key={problem.id}
               problem={problem}
               onTransformAdopted={handleTransformAdopted}
+              onReviewStatusChange={handleReviewStatusChange}
             />
           ))
         ) : null}

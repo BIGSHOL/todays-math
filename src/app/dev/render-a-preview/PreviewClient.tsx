@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { AppChrome } from "@/components/chrome/AppChrome";
-import { PROBLEM_CARD_MIN_WIDTH } from "@/components/print/tokens";
+import { PROBLEM_CARD_WIDTH } from "@/components/print/tokens";
 import {
   FieldSelect,
   FIELD_SELECT_WIDTH,
@@ -25,7 +25,7 @@ const FILTER_GRID_STYLE = {
 };
 
 const GRID_STYLE = {
-  gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, ${PROBLEM_CARD_MIN_WIDTH}), 1fr))`,
+  gridTemplateColumns: `repeat(auto-fill, min(100%, ${PROBLEM_CARD_WIDTH}))`,
 };
 
 const TONES = [

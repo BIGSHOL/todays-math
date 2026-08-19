@@ -13,11 +13,12 @@ import { http, HttpResponse } from "msw";
 import { describe, expect, it } from "vitest";
 
 import ProblemsPage from "@/app/(main)/problems/page";
-import { PROBLEM_CARD_MIN_WIDTH } from "@/components/print/tokens";
+import { PROBLEM_CARD_WIDTH } from "@/components/print/tokens";
 import { FIELD_SELECT_WIDTH } from "@/components/problem/FieldSelect";
 import {
   MOCK_AI_GENERATED_PROBLEMS,
   MOCK_AI_TRANSFORMED_PROBLEMS,
+  MOCK_PENDING_PROBLEM,
   MOCK_PROBLEM_WITH_FRACTION,
   MOCK_PROBLEM_WITH_FIGURE,
   MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL,
@@ -681,13 +682,40 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
  * 실물 브라우저 실측으로 확인했다 (docs/planning/tracks/reports/render-a-layout.md).
  */
 describe("[렌더 수리 A] 문제은행 — 목록 다단 배치", () => {
-  it("남는 폭에 반응하는 auto-fit 그리드로 깐다 (브레이크포인트 하드코딩 없음)", async () => {
+  it("남는 폭에 반응하는 그리드로 깐다 (브레이크포인트 하드코딩 없음)", async () => {
     const { container } = await renderBank();
     const grid = container.querySelector<HTMLElement>("[data-problem-grid]");
 
     expect(grid).not.toBeNull();
     expect(grid!.className).toContain("grid");
-    expect(grid!.style.gridTemplateColumns).toContain("auto-fit");
+    expect(grid!.style.gridTemplateColumns).toContain("auto-fill");
+  });
+
+  /**
+   * 🔴 원장님 지시 2026-08-19 — 「문제 공간은 고정시켜 … 창 크기에 따라서 그냥
+   * 3열 4열 이렇게만 바뀌면 되고」.
+   *
+   * 종전 `minmax(…, 1fr)` 은 열을 남는 폭만큼 **늘렸다.** 본문은 지면 폭으로 고정이라
+   * (`.paperParity`) 늘어난 만큼이 카드 오른쪽 빈칸이 됐다 — 2단일 때 카드 600px 에
+   * 본문 364px. 트랙이 다시 늘어나면 이 검사가 빨개진다.
+   */
+  /**
+   * 🔴 폭을 **카드에도** 박으면(인라인 `style={{width}}`) 인쇄가 깨진다 —
+   *    인라인은 `print:w-auto` 를 이긴다(Tailwind 유틸리티는 `!important` 가 아니다).
+   *    폭은 그리드 트랙 **한 곳**에서만 정한다.
+   */
+  it("카드는 제 폭을 인라인으로 박지 않는다 — 폭은 트랙 한 곳에서만 정한다", async () => {
+    const { container } = await renderBank();
+    for (const card of container.querySelectorAll<HTMLElement>("article"))
+      expect(card.getAttribute("style") ?? "").not.toContain("width");
+  });
+
+  it("트랙을 늘리지 않는다 — 남는 폭은 열 수로만 간다", async () => {
+    const { container } = await renderBank();
+    const grid = container.querySelector<HTMLElement>("[data-problem-grid]")!;
+
+    expect(grid.style.gridTemplateColumns).not.toContain("1fr");
+    expect(grid.style.gridTemplateColumns).not.toContain("minmax");
   });
 
   it("열 하한은 카드 최소 폭 — 그보다 좁으면 100%로 떨어져 1단이 된다", async () => {
@@ -696,7 +724,7 @@ describe("[렌더 수리 A] 문제은행 — 목록 다단 배치", () => {
 
     // min(100%, <카드 최소 폭>) — 너무 좁은 창에서 가로 스크롤 대신 1단으로.
     expect(grid.style.gridTemplateColumns).toContain("min(100%,");
-    expect(grid.style.gridTemplateColumns).toContain(PROBLEM_CARD_MIN_WIDTH);
+    expect(grid.style.gridTemplateColumns).toContain(PROBLEM_CARD_WIDTH);
   });
 
   it("카드에 세로 여백을 겹쳐 주지 않는다 — 간격은 그리드 gap 하나만", async () => {
@@ -1141,5 +1169,103 @@ describe("[S-08] 문제은행 — 출처 필터 (MSW)", () => {
     await waitFor(() => {
       expect(captured.at(-1)?.get("page")).toBe("1");
     });
+  });
+});
+
+/**
+ * 검수 승격 — 원장님 지시 2026-08-19 「승격 버튼이 있어야겠네」.
+ *
+ * 🔴 API(`PATCH /api/problems/{id}/review-status`)는 **처음부터 있었는데**
+ *    화면에서 그것을 부르는 곳이 하나도 없었다. 그래서 D-22 의 「사람이 승격한다」가
+ *    실제로는 「아무도 승격할 수 없다」였고, `pending` 271건(기출 144 · 변형 107 ·
+ *    AI 20)이 출제 풀에 영영 못 들어갔다.
+ */
+describe("[D-22] 문제은행 — 검수 승격 (MSW)", () => {
+  const target = MOCK_PENDING_PROBLEM;
+
+  function capturePatch() {
+    const calls: { id: string; body: unknown }[] = [];
+    server.use(
+      http.patch(
+        "/api/problems/:id/review-status",
+        async ({ params, request }) => {
+          const body = (await request.json()) as { reviewStatus: string };
+          calls.push({ id: String(params.id), body });
+          return HttpResponse.json({
+            data: { ...target, reviewStatus: body.reviewStatus },
+          });
+        },
+      ),
+    );
+    return calls;
+  }
+
+  const 대기카드 = () =>
+    screen
+      .getAllByRole("article")
+      .find((el) => el.textContent?.includes(target.problemCode))!;
+
+  it("문항 코드를 카드에 보여 준다 — 검색칸에 그대로 넣을 수 있어야 한다", async () => {
+    await renderBank();
+    expect(screen.getByText(target.problemCode)).toBeInTheDocument();
+  });
+
+  it("대기 문항은 승인·반려를 둘 다 낸다", async () => {
+    await renderBank();
+    const card = within(대기카드());
+    expect(card.getByRole("button", { name: "승인" })).toBeInTheDocument();
+    expect(card.getByRole("button", { name: "반려" })).toBeInTheDocument();
+  });
+
+  it("승인을 누르면 그 문항으로 승격 요청이 나간다", async () => {
+    const { user } = await renderBank();
+    const calls = capturePatch();
+
+    await user.click(within(대기카드()).getByRole("button", { name: "승인" }));
+
+    await waitFor(() => {
+      expect(calls).toHaveLength(1);
+    });
+    expect(calls[0]!.id).toBe(target.id);
+    expect(calls[0]!.body).toEqual({ reviewStatus: "approved" });
+  });
+
+  it("승인된 문항에는 「승인」이 없다 — 다시 누를 일이 없다", async () => {
+    const { user } = await renderBank();
+    capturePatch();
+
+    await user.click(within(대기카드()).getByRole("button", { name: "승인" }));
+
+    await waitFor(() => {
+      expect(
+        within(대기카드()).queryByRole("button", { name: "승인" }),
+      ).toBeNull();
+    });
+    expect(
+      within(대기카드()).getByRole("button", { name: "반려" }),
+    ).toBeInTheDocument();
+  });
+
+  /**
+   * 🔴 「상태=대기」로 보는 중에 승인하면 그 카드는 더 이상 그 목록의 것이 아니다.
+   *    그냥 두면 화면과 필터가 갈려서 **새로고침하는 순간 조용히 사라진다** —
+   *    그건 성공인데 실패로 읽힌다(변형 채택에서 이미 겪은 자리).
+   */
+  it("「대기」만 보는 중에 승인하면 목록에서 빠지고, 무엇이 빠졌는지 알려 준다", async () => {
+    const { user } = await renderBank();
+    await user.selectOptions(screen.getByLabelText("상태"), "pending");
+    await waitFor(() => {
+      expect(screen.getByText(target.problemCode)).toBeInTheDocument();
+    });
+    capturePatch();
+
+    await user.click(within(대기카드()).getByRole("button", { name: "승인" }));
+
+    await waitFor(() => {
+      expect(screen.queryByText(target.problemCode)).toBeNull();
+    });
+    expect(
+      screen.getByText(new RegExp(`${target.problemCode} 승인`)),
+    ).toBeInTheDocument();
   });
 });
