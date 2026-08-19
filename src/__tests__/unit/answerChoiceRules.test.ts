@@ -399,3 +399,68 @@ describe("judgeAnswerChoice — 판정", () => {
       expect(isFatal(v)).toBe(false);
   });
 });
+
+/**
+ * 🔴 변이 시험이 찾아낸 구멍 — **「본문 보기 마커를 ①..⑤ 로 좁힌다」가 초록이었다**
+ * (2026-08-19, `mutate-answer-choice-rules.sh`).
+ *
+ * ## 픽스처를 지어내지 않은 이유
+ *
+ * 실데이터를 먼저 셌다: 분모 47,152건에서 **줄머리 마커가 `⑥`..`⑮` 인 행은 2행**이고,
+ * 그 둘도 열어 보니 보기가 아니었다(하나는 `<보기>` 상자에 `1. 2. …`, 다른 하나는
+ * 수식 안). 즉 **DB 로는 이 경계를 못 가른다.** 여기서 「⑥ 이 보기인 문항」을
+ * 지어내면 없는 데이터를 있다고 말하는 것이다.
+ *
+ * ## 그래서 **불변식**으로 잠근다
+ *
+ * 이 자(`choiceLabels`)는 **제품 파서와 같은 마커를 봐야 한다.** 한쪽만 좁히면
+ * 판정기가 제품이 자르는 자리를 못 보게 되고, 그 순간 「세는 쪽과 고치는 쪽이
+ * 다른 것을 본다」(CLAUDE.md 2026-08-18). 데이터가 없어도 **이 불변식은 참이어야
+ * 한다** — 그리고 이건 반증 가능하다.
+ */
+describe("본문 마커 — 판정기와 **제품 파서가 같은 것**을 본다", () => {
+  /** 마커 하나로 만든 최소 본문. 지면 형태가 아니라 **두 구현의 합의**를 본다. */
+  const withMarkers = (marks: readonly string[]) =>
+    ["다음 중 옳은 것은?", ...marks.map((m, i) => `${m} 보기${i + 1}`)].join(
+      "\n",
+    );
+
+  it.each(["①", "⑤", "⑩", "⑮"])(
+    "`%s` 를 제품이 자르면 자도 같은 수를 센다",
+    (mark) => {
+      const marks = [
+        "①",
+        "②",
+        "③",
+        "④",
+        "⑤",
+        "⑥",
+        "⑦",
+        "⑧",
+        "⑨",
+        "⑩",
+        "⑪",
+        "⑫",
+        "⑬",
+        "⑭",
+        "⑮",
+      ];
+      const upto = marks.slice(0, marks.indexOf(mark) + 1);
+      if (upto.length < 2) return; // 마커가 하나면 제품이 보기로 안 본다
+      const body = withMarkers(upto);
+      const product = parseProblemContent(body);
+      expect(product.choices).toHaveLength(upto.length);
+      // 자가 본 라벨 = 제품이 자른 칸 수. 한쪽만 좁히면 여기서 갈린다.
+      const seen = choiceLabels(body);
+      expect(seen, "자가 «판정 불가»를 냈다").not.toBeNull();
+      expect(seen!.labels).toHaveLength(product.choices.length);
+      expect(seen!.labels).toEqual(upto.map((_, i) => i + 1));
+    },
+  );
+
+  it("🔴 `❶`(U+2776) 은 **양쪽 다** 보기로 안 본다 — 규칙 항목·작도 순서다", () => {
+    const body = withMarkers(["❶", "❷", "❸", "❹", "❺"]);
+    expect(parseProblemContent(body).choices).toHaveLength(0);
+    expect(choiceLabels(body)?.labels ?? []).toHaveLength(0);
+  });
+});

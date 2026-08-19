@@ -16,7 +16,13 @@
  * 그래서 (1) 참은 캐시가 **실측한** 칸(`availPx`)에서 오고, (2) 캐시 옆에 지면
  * 입력의 지문을 남겨 어긋나면 멈춘다.
  */
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 
 import { describe, expect, it } from "vitest";
@@ -165,6 +171,30 @@ describe("[적대④-E] 채점기의 참이 제품 상수에서 나오지 않는
  * 지문은 **높이를 바꾸는 모든 것**을 봐야 한다 — URL 문자열이 아니라 «그 URL 뒤에
  * 파일이 있는가, 몇 바이트인가».
  */
+/**
+ * 🔴 **`rmSync` 는 경로에 한글이 있으면 노드를 죽인다.** `unlinkSync` 를 쓴다.
+ *
+ * Node v24.13.0 · Windows. 종료 코드 `0xC0000409`(STATUS_STACK_BUFFER_OVERRUN) 로
+ * **메시지 하나 없이** 프로세스가 사라진다. 파일이 있든 없든 똑같고,
+ * **상대 경로여도 cwd 에 한글이 있으면 죽는다.**
+ *
+ * | API | 한글 경로 |
+ * | --- | --- |
+ * | `rmSync` | 🔴 죽음 |
+ * | `unlinkSync` | ✓ |
+ * | `fs/promises` 의 `rm` | ✓ |
+ *
+ * ASCII 경로에서는 멀쩡하다. 그래서 **메인 워크트리(`C:/Creative/testautocreator`)에서는
+ * 안 보이고**, 오르카가 만드는 한글 이름 워크트리에서만 이 파일이 통째로 죽었다 —
+ * 그리고 vitest 요약은 「119 통과」라고만 적어 **한 파일이 안 돌았다는 말을 안 했다**
+ * (2026-08-19 에 실제로 그렇게 지나갔다). 재현: `node scripts/qa/probe-rmsync-crash.mjs`.
+ *
+ * 노드 버그라 우리가 고칠 수 없다. **밟지 않는다.**
+ */
+function removeIfExists(file: string): void {
+  if (existsSync(file)) unlinkSync(file);
+}
+
 describe("[검수] 지문이 그림 파일 자체를 본다", () => {
   const row = {
     id: "a",
@@ -177,7 +207,7 @@ describe("[검수] 지문이 그림 파일 자체를 본다", () => {
     const dir = path.join(process.cwd(), "public/figures");
     const file = path.join(dir, "__fingerprint_probe__.png");
     mkdirSync(dir, { recursive: true });
-    rmSync(file, { force: true });
+    removeIfExists(file);
 
     const before = measuredRowsHash([row]);
     writeFileSync(file, Buffer.alloc(64, 7));
@@ -185,7 +215,7 @@ describe("[검수] 지문이 그림 파일 자체를 본다", () => {
       // 🔴 파일만 생겼다 — DB 는 한 글자도 안 바뀌었다.
       expect(measuredRowsHash([row])).not.toBe(before);
     } finally {
-      rmSync(file, { force: true });
+      removeIfExists(file);
     }
   });
 
@@ -199,7 +229,7 @@ describe("[검수] 지문이 그림 파일 자체를 본다", () => {
     try {
       expect(measuredRowsHash([row])).not.toBe(small);
     } finally {
-      rmSync(file, { force: true });
+      removeIfExists(file);
     }
   });
 });

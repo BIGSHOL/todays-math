@@ -14,6 +14,7 @@ import {
   type FatalRow,
   type LockedRow,
 } from "../../../scripts/qa/apply-unusable-discard";
+import { FATAL_VERDICTS as SSOT } from "../../../scripts/qa/answerChoiceRules";
 
 function fatal(over: Partial<FatalRow> = {}): FatalRow {
   return {
@@ -41,6 +42,13 @@ function db(over: Partial<DbRow> = {}): DbRow {
     ...over,
   };
 }
+
+describe("판정 목록은 **한 곳**에서 온다", () => {
+  // 🔴 손으로 다시 적으면, 판정이 하나 늘었을 때 세는 쪽은 세고 막는 쪽은 안 막는다.
+  it("`answerChoiceRules` 의 치명 판정과 **정확히 같다**", () => {
+    expect([...FATAL_VERDICTS].sort()).toEqual([...SSOT].sort());
+  });
+});
 
 describe("치명 판정만 뺀다", () => {
   it("다섯 가지 치명 판정은 뺀다", () => {
