@@ -285,7 +285,8 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
                 min_overlap: float = 12.0,
                 avoid: list[fitz.Rect] | None = None,
                 thin_pt: float = 0.0,
-                furniture: set | None = None) -> fitz.Rect | None:
+                furniture: set | None = None,
+                clip_images: bool = True) -> fitz.Rect | None:
     """문항 사각형 **안에서 그림만** 골라 낸다.
 
     `source_coords` 는 문항 블록 전체(발문 + 그림)다. 그대로 오리면 발문이 지면에
@@ -313,6 +314,19 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
        (실측 `019fd1d5-988a`). 그래서 그 규칙은 여기서 안 쓴다.
 
     하나도 없으면 **오려내지 않는다** — 발문 사진을 붙이느니 안 붙이는 게 낫다.
+
+    ## `clip_images` — 「삼키지 마라」는 「없는 셈 쳐라」가 아니다 (2026-08-19)
+
+    겹침이 `min_overlap` 에 모자란 이미지는 후보에서 빠지는데, 그러면 **완비 검사가
+    «가로질렀다»고 셀 수도 없다.** 칸이 그것을 반으로 잘라도 조용히 통과한다.
+    실측 `019fd1d7-fe94`: 공장 8개 그림에서 아래쪽이 겹침 부족으로 빠졌고, 오려낸 칸은
+    다섯 개만 담은 채 왼쪽 아래가 잘렸다 — 정답 `28`=C(8,2) 가 8개를 요구해서
+    **사람 눈으로만** 드러났다.
+
+    그래서 그런 이미지도 `edges` 에 넣는다(덩어리로는 안 센다). **기본을 켠 이유는
+    재 봤기 때문이다**: 이미 성공한 332건 중 좌표가 달라진 것 2건 · **못 찾게 된 것 0건**
+    이고, 달라진 둘은 눈으로 보니 **둘 다 개선**이었다(`019fd1d8-bc0e` 는 잘렸던 선반
+    오른쪽 기둥이, `019fd1dc-36d2` 는 잘렸던 집이 들어왔다).
 
     ## `thin_pt` — **곧은 선은 `is_empty` 다** (2026-08-19)
 
@@ -414,6 +428,14 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
     # 구조적으로 못 본다 — 이미 잘려 있으니 경계를 «가로지르지» 않는다(실측: 원뿔이
     # 48pt 밖까지 뻗었는데 bleed 30 으로 잘려 있어 완비 검사가 초록이었다).
     core_raw: list[fitz.Rect] = []
+    # **덩어리로는 안 세지만 «자르지 마라»에는 넣는 이미지.** 겹침이 모자라 후보에서
+    # 빠진 것들이다 — 이 파일이 span 에 대해 이미 적은 문장이 여기도 그대로다:
+    # 「삼키지 마라」는 **「없는 셈 쳐라」가 아니다.** 후보가 아니면 완비 검사가
+    # «가로질렀다»고 셀 수도 없어서, 칸이 그것을 반으로 잘라도 조용히 통과한다.
+    # 실측(2026-08-19 `019fd1d7-fe94`): 공장 8개가 늘어선 그림에서 아래쪽 넷이
+    # 겹침 부족으로 빠졌고, 오려낸 칸은 다섯 개만 담은 채 왼쪽 아래가 잘렸다.
+    # 정답 `28`=C(8,2) 가 8개를 요구해서 **사람 눈으로만** 드러났다.
+    near_images: list[fitz.Rect] = []
 
     for b in raw.get("blocks", []):
         if b.get("type") == 0:
@@ -427,6 +449,10 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
         # ⚠️ 상자가 **추정치**일 때는 이 문턱을 낮춰야 한다 — 발문으로 상자를 잡는
         #    `crop-pdf-by-stem.py` 는 그림이 상자 끝에 5pt 만 걸치는 일이 흔하다.
         if inter.is_empty or inter.width < min_overlap or inter.height < min_overlap:
+            # 덩어리로는 안 세되 **자르지는 못하게** 남긴다(위 주석). 상자에서 아주
+            # 먼 것은 남의 것이므로 `bleed` 에 걸친 것만 본다.
+            if not inter.is_empty and not (r & bleed).is_empty:
+                near_images.append(r)
             continue
         core.append(r & bleed)
         core_raw.append(r)
@@ -533,7 +559,7 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
     # 그림 라벨이 잘려도 못 잡는다 — 실측 `019fd1da-6321` 의 `3x-2y+12=0` 은 본문에도
     # 같은 식이 있어 발문으로 갈렸고, 그 바람에 꼬리 `0` 이 칸 밖에 남았다.
     # 삼킨 뒤 정말로 발문이 들어왔다면 아래 **발문 침입 검사**가 그 문항을 버린다.
-    edges = span_rects + core_raw
+    edges = span_rects + core_raw + (near_images if clip_images else [])
     for _ in range(LABEL_ROUNDS):
         grew = False
         for t in edges:
