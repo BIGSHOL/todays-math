@@ -70,6 +70,7 @@ scripts/qa/reports/*
 !scripts/qa/reports/rpm-square-compare.json
 # □ 되살리기 — **되돌리기 원장**. 공유 DB 를 바꾸므로 반드시 커밋된다.
 !scripts/qa/reports/rpm-square-repair-ledger.json
+!scripts/qa/reports/rpm-square-repair-ledger2.json
 !scripts/qa/reports/rpm-square-verified.json
 !scripts/qa/reports/rpm-book-fill-ledger.json
 !scripts/qa/reports/rpm-content-repair-ledger.json
