@@ -88,8 +88,15 @@ export interface SubjectResolution {
   ratio: number;
 }
 
-/** 대괄호 토큰. `[[23-1-중간]` 처럼 겹친 것도 하나로 읽는다(실측 3편). */
-const BRACKET = /\[+([^[\]]*)\]+/g;
+/**
+ * 대괄호 토큰.
+ *
+ * ⚠️ 한때 `\[+…\]+` 로 «겹친 대괄호(`[[23-1-중간]`, 실측 3편)» 를 막는다고 적어 두었는데,
+ * **변이 시험에서 살아남았다** — 홑괄호 정규식도 같은 결과를 낸다(`[` 다음이 `[` 면 그
+ * 자리에서 실패하고 한 칸 밀려 제대로 잡는다). 아무것도 안 가르는 장치라 지웠다.
+ * (죽은 검사를 남겨 두면 「막고 있다」고 잘못 읽힌다 — CLAUDE.md 2026-08-18.)
+ */
+const BRACKET = /\[([^[\]]*)\]/g;
 
 /**
  * 기간 토큰. 실측 37종이 하이픈·공백·「년」·네자리 연도로 흔들린다.
@@ -294,17 +301,24 @@ const PERIOD_FIELDS = ["year", "semester", "round"] as const;
 /**
  * 폴더가 두 후보 중 어느 쪽을 지지하는가.
  *
- * **둘이 다른 항목**에 대해서만 묻는다 — 같은 항목에서 일치하는 것은 아무것도 안 가른다.
- * 폴더가 그 항목들에 대해 아무 말도 안 하면 `null`(판단 불가)이다.
+ * ⚠️ **폴더가 말하는 항목 전부**를 본다 — 「둘이 다른 항목만」 보면 안 된다.
+ * 실측 2편에서 폴더가 **둘이 합의한 항목**을 반박했다
+ * (`[소선여중][2][25-2-기말]` 이 `2025년 1학기 기말고사 모음/` 아래 있다).
+ * 그 폴더 이름은 그 시험지의 시점이 아니라 **묶음의 이름**이라, 학기를 틀리게 말하는
+ * 폴더의 회차만 골라 믿을 근거가 없다. 그런 폴더는 심판에서 뺀다 → `null`(고르지 않는다).
+ *
+ * 폴더가 아무 말도 안 하면 역시 `null` 이다.
  */
 function folderVote(
   a: PeriodTriple,
   b: PeriodTriple,
   folder: FolderPeriod,
 ): "a" | "b" | null {
-  const differing = PERIOD_FIELDS.filter((f) => a[f] !== b[f]);
-  const spoken = differing.filter((f) => folder[f] !== null);
+  const spoken = PERIOD_FIELDS.filter((f) => folder[f] !== null);
   if (spoken.length === 0) return null;
+  // 다투는 항목에 대해 아무 말도 안 하는 폴더는 갈라 줄 수 없다.
+  if (!PERIOD_FIELDS.some((f) => a[f] !== b[f] && folder[f] !== null))
+    return null;
   const supportsA = spoken.every((f) => folder[f] === a[f]);
   const supportsB = spoken.every((f) => folder[f] === b[f]);
   if (supportsA && !supportsB) return "a";
@@ -354,15 +368,16 @@ export interface ExamKeyInput {
  * 다른 편들**이었다(재현 실측 2026-08-18). 학년을 넣으면 색인 5,925편에서 충돌 3조합,
  * 우리 2,701편에서는 **0조합**이다.
  *
- * 길이는 `@db.VarChar(120)` 안에 든다 — 학교·과목이 한도(50자)여도 넘지 않게 자른다.
+ * 길이는 `@db.VarChar(120)` 안에 **저절로** 든다 — 스키마 상한(학교 50 · 과목 50)에서
+ * 재 보면 114자다. 한때 40자로 잘라 두었는데 **변이 시험에서 살아남았다**(자를 일이 없다).
+ * 게다가 자르면 앞 40자가 같은 둘이 **한 키가 되어 조용히 덮인다** — 이득 없이 위험만
+ * 있는 장치라 지웠다. 상한은 테스트가 지킨다.
  */
 export function buildExamKey(input: ExamKeyInput): string {
-  const school = input.school.slice(0, 40);
-  const subject = input.subject.slice(0, 40);
   return [
-    school,
+    input.school,
     `${input.level}${input.grade}`,
-    subject,
+    input.subject,
     `${input.year}-${input.semester}-${input.round}`,
   ].join("|");
 }

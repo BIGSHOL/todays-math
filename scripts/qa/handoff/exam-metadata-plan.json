@@ -1,5 +1,5 @@
 {
- "note": "지금 DB 에 들어 있는 목록(원장). --apply 로 실제로 쓴 뒤에만 갱신한다.",
+ "note": "넣으려는 목록(계획). 되돌리려면 이 externalExamId 로 exam 을 지운다 (exam_question 은 onDelete: Cascade 로 함께 지워진다).",
  "count": 2584,
  "externalExamIds": [
   "가창중|중1|중1|2024-1-기말",

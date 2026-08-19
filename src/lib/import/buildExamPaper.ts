@@ -29,8 +29,9 @@ import { MISSING_ANSWER } from "@/lib/missingAnswer";
 
 import type { ResolvedExam } from "./examIdentity";
 
-/** `examPaperSchema.questions` 의 상한. 넘으면 편을 짓지 않는다. */
-const MAX_QUESTIONS = 60;
+// 문항 수 상한(60)은 **계약이 이미 막는다**(`examPaperSchema.questions.max(60)`,
+// 사유 문구에 60 도 들어 있다). 여기서 한 번 더 세던 검사는 변이 시험에서 살아남았다 —
+// 대수적으로 같은 말이라 아무것도 더 안 갈랐다. 지웠다(CLAUDE.md 2026-08-18).
 
 /** 원본의 사람 난이도 표기. 3단계로 접되 **모르는 표기는 지어내지 않는다**. */
 const DIFFICULTY: Record<string, DifficultyLabel> = {
@@ -180,16 +181,6 @@ export function buildExamPaper(
       linkedProblems,
     };
   }
-  if (questions.length > MAX_QUESTIONS) {
-    return {
-      paper: null,
-      reason: `문항이 ${questions.length}개다 — 계약 상한 ${MAX_QUESTIONS} 을 넘는다`,
-      dropped,
-      scoreFilled,
-      linkedProblems,
-    };
-  }
-
   questions.sort((a, b) => a.number - b.number);
 
   const paper: ExamPaper = {
