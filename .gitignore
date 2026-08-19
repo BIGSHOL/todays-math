@@ -157,3 +157,11 @@ scripts/classify/reports/loaded-external-ids.json
 # 임시 조사용 (커밋하지 않는다)
 .probe/
 !scripts/qa/reports/question-type-unify-ledger.json
+
+# 그림 칸 원장(㉮) — 「이 그림이 원본 지면에서 몇 mm 였나」의 유일한 자리.
+# 300dpi 재크롭·인쇄 물리 크기·벡터 SVG 목표 크기가 전부 이 값을 쓴다.
+# 다시 만들려면 원본 PDF 전량을 다시 매핑해야 해서 20분 넘게 걸린다.
+!scripts/qa/reports/figure-rect-ledger.json
+
+# 이 트랙의 임시 산출물 (커밋하지 않는다)
+.work/
