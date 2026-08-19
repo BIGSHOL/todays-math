@@ -34,6 +34,8 @@ import { PrismaClient } from "@prisma/client";
 
 import { checkChoiceFigureIndex } from "../../src/lib/problem/choiceFigureIndex";
 
+import { mergeLedgerRows, stillApplied } from "./revertLedger";
+
 const PAIRS = "scripts/qa/reports/choice-figure-pairs.json";
 const LEDGER = "scripts/qa/reports/choice-figure-index-apply.json";
 
@@ -318,7 +320,24 @@ async function main() {
   for (const [k, n] of [...shapes.entries()].sort((a, b) => b[1] - a[1]))
     console.log(`     ${String(n).padStart(4)}  ${k}`);
 
-  // ⑤ 되돌리기 자료를 **먼저** 쓴다
+  // ⑤ 되돌리기 자료를 **먼저** 쓴다 — 그리고 **덮어쓰지 않고 이어 쓴다.**
+  //
+  //    적용을 마치면 다음 실행의 계획은 비게 된다(멱등 가드). 그때 원장을 덮으면
+  //    `--revert` 가 0행을 되돌린다 — 「영구 삭제가 아니다」의 근거가 사라진다.
+  //    시연: `qa/adversarial/scripts/demo-ledger-clobber.mjs`
+  const previous = existsSync(LEDGER)
+    ? (JSON.parse(readFileSync(LEDGER, "utf8")) as {
+        rows?: LedgerRow[];
+        applied?: boolean;
+        beforeIsInferred?: boolean;
+      })
+    : null;
+  const merged = mergeLedgerRows(previous?.rows, plan);
+  const applied = stillApplied(previous?.applied, APPLY);
+  const inferred =
+    (plan.length > 0 && !hasColumn) ||
+    (merged.carried > 0 && previous?.beforeIsInferred === true);
+
   mkdirSync(dirname(LEDGER), { recursive: true });
   writeFileSync(
     LEDGER,
@@ -328,21 +347,25 @@ async function main() {
           "되돌리기 자료. `before` 가 적용 전 DB 값이다. " +
           "되돌리려면: ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-choice-figure-index.ts --revert",
         generatedFrom: PAIRS,
-        applied: APPLY,
-        beforeIsInferred: !hasColumn,
-        beforeNote: hasColumn
+        applied,
+        beforeIsInferred: inferred,
+        beforeNote: !inferred
           ? "before 는 DB 에서 읽은 값이다."
-          : "⚠️ 컬럼이 없어 before 를 읽지 못했다. 전부 [] 로 적었으나 이는 추론이다 — 적용 전에 컬럼이 있는 상태로 다시 돌릴 것.",
+          : "⚠️ 컬럼이 없어 before 를 읽지 못한 행이 있다. [] 로 적었으나 이는 추론이다 — 적용 전에 컬럼이 있는 상태로 다시 돌릴 것.",
         planned: plan.length,
+        carriedOver: merged.carried,
         skipped,
-        rows: plan,
+        rows: merged.rows,
       },
       null,
       1,
     ),
     "utf8",
   );
-  console.log(`  되돌리기 자료 → ${LEDGER} (행마다 before)`);
+  console.log(
+    `  되돌리기 자료 → ${LEDGER} (행마다 before) · 이번 계획 ${plan.length}행` +
+      (merged.carried ? ` · 옛 원장에서 이어받음 ${merged.carried}행` : ""),
+  );
 
   if (!APPLY) {
     console.log(
@@ -366,6 +389,17 @@ async function main() {
     written += Number(n);
   }
   console.log(`  쓴 행 ${written}`);
+  // 🔴 계획과 쓴 행이 다르면 **그 사이 남이 썼다.** 조용히 넘어가면 원장이
+  //    「우리가 쓴 값」이라고 거짓말을 하고, 되돌리기가 남의 값을 우리 것으로 센다.
+  if (written !== plan.length) {
+    console.error(
+      `
+🔴 계획 ${plan.length}행 중 ${written}행만 들어갔다 — 그 사이 누가 같은 행을 썼다.` +
+        `
+   원장은 계획을 담고 있으므로 되돌리기 전에 반드시 눈으로 확인하라.`,
+    );
+    process.exitCode = 1;
+  }
   await verify(plan, { readBack: true, hasColumn });
   await prisma.$disconnect();
 }

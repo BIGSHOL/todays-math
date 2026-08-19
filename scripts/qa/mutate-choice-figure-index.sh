@@ -10,6 +10,9 @@ APPLY=scripts/qa/apply-choice-figure-index.ts
 DISCARD=scripts/qa/apply-choice-figure-discard.ts
 TESTS="src/__tests__/unit/choiceFigureIndex.test.ts src/__tests__/unit/applyChoiceFigureIndex.test.ts src/__tests__/unit/applyChoiceFigureDiscard.test.ts"
 R_ORIG=$(mktemp); A_ORIG=$(mktemp); D_ORIG=$(mktemp)
+# 🔴 못 찾은 패턴·초록 변이를 **센다**. 세지 않으면 「21개 전부 빨강」이 거짓말이 된다
+# — 실제로 둘이 조용히 건너뛰어졌고 스크립트는 종료 코드 0 을 냈다(적대적 리뷰 ⑤).
+MISSING=0; GREEN=0
 # ⚠️ 고정 이름을 쓰면 이 스크립트의 출력을 같은 파일로 리다이렉트했을 때 서로 덮어쓴다.
 VITEST_LOG=$(mktemp)
 cp "$RULE" "$R_ORIG"; cp "$APPLY" "$A_ORIG"; cp "$DISCARD" "$D_ORIG"
@@ -27,9 +30,13 @@ if a not in s:
     sys.stderr.write('PATTERN NOT FOUND\n'); sys.exit(3)
 open(p, 'w', encoding='utf-8').write(s.replace(a, b, 1))
 PY
-  if [ $? -ne 0 ]; then echo "SKIP  $name (패턴 없음)"; return; fi
+  if [ $? -ne 0 ]; then
+    echo "🟠 못 찾음  $name  <-- 변이가 **돌지 않았다**. 패턴을 고쳐라"
+    MISSING=$((MISSING + 1)); return
+  fi
   if npx vitest run $TESTS >"$VITEST_LOG" 2>&1; then
     echo "🟢 초록  $name  <-- 가드가 아니다"
+    GREEN=$((GREEN + 1))
   else
     echo "🔴 빨강  $name"
   fi
@@ -82,19 +89,33 @@ mutate "쓰기 전 규약 검산을 건너뛴다" "$APPLY" \
 #    행을 이미 걷어내므로 계획 시점의 `before` 는 항상 빈 배열이다. 그래서 그 변이는
 #    빼고, 값이 실제로 쓰이는 **되돌리기 쪽**을 대신 망가뜨린다(아래 둘).
 mutate "되돌릴 값을 원장의 before 대신 빈 배열로 박는다" "$APPLY"   'return { restore: true, to: row.before };'   'return { restore: true, to: [] };'
-mutate "되돌리기가 남의 변경을 덮는다" "$APPLY"   'if (!same)
-    return { restore: false, reason: "우리가 쓴 값이 아니다'   'if (false)
-    return { restore: false, reason: "우리가 쓴 값이 아니다'
+mutate "되돌리기가 남의 변경을 덮는다" "$APPLY"   '  if (!same)
+    return {
+      restore: false,
+      reason: "우리가 쓴 값이 아니다 — 남의 변경을 덮지 않는다",
+    };
+'   ''
 
 
 # ── 출제 제외 가드 (scripts/qa/apply-choice-figure-discard.ts) ───────────
 mutate "무리를 안 거르고 «불가» 를 전부 뺀다 (43 -> 433 그 결함)" "$DISCARD"   '  if (!isChoiceFigure)'   '  if (false)'
 mutate "«사람확인» 도 뺀다" "$DISCARD"   '  if (pair.verdict !== "불가")'   '  if (false)'
 mutate "그림 유실 원장과 겹쳐도 뺀다" "$DISCARD"   '  if (alreadyFigureLocked)'   '  if (false)'
-mutate "이미 빠진 행도 다시 뺀다 (멱등 깨기)" "$DISCARD"   '  if (!row.directUseAllowed) return { lock: false, reason: "이미 빠져 있다 (멱등)" };'   '  void row.directUseAllowed;'
+mutate "이미 빠진 행도 다시 뺀다 (멱등 깨기)" "$DISCARD"   '  if (!row.directUseAllowed)
+    return { lock: false, reason: "이미 빠져 있다 (멱등)" };
+'   ''
 mutate "되돌리기가 남의 변경을 덮는다" "$DISCARD"   '  if (now.directUseAllowed !== false)'   '  if (false)'
 mutate "되돌릴 값을 true 로 박는다" "$DISCARD"   '  return { restore: true, to: locked.directUseAllowed };'   '  return { restore: true, to: true };'
+mutate "🔴 객관식이 아닌 문항도 뺀다 (43 안에 서술형 10건이 섞인 그 결함)" "$DISCARD"   '  if (!isChoiceAnswer(row.answer))'   '  if (false)'
+mutate "🔴 정답 모양 대신 아무 글자나 객관식으로 본다" "$DISCARD"   'return /^\s*[①-⑩1-5](\s*[,·]\s*[①-⑩1-5])*\s*$/.test((answer ?? "").trim());'   'return (answer ?? "").length > 0;'
+mutate "🔴 그림이 하나도 없는 행도 뺀다" "$DISCARD"   '  if ((row.figureUrls?.length ?? 0) === 0)'   '  if (false)'
 
 restore
 rm -f "$R_ORIG" "$A_ORIG" "$D_ORIG" "$VITEST_LOG"
 echo "원복 완료"
+if [ "$MISSING" -ne 0 ] || [ "$GREEN" -ne 0 ]; then
+  echo "🔴 변이 시험 실패 — 못 찾음 ${MISSING}개 · 초록 ${GREEN}개"
+  echo "   (못 찾은 변이는 «돌지 않은» 것이다. 「전부 빨강」이라고 적으면 거짓말이 된다)"
+  exit 1
+fi
+echo "✅ 변이 전부 빨강"

@@ -1,0 +1,10 @@
+
+> todays-math@0.1.0 lint
+> eslint
+
+
+C:\Users\user\orca\workspaces\testautocreator\adv-figref\lint-staged.config.mjs
+  4:1  warning  Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+✖ 1 problem (0 errors, 1 warning)
+

@@ -1,12 +1,10 @@
 {
  "적용": "보기 그림 짝을 되찾지 못한 문항 출제 제외 (directUseAllowed=false) — 원장님 확정 2026-08-18",
- "기준시각": "2026-08-19T00:54:21.302Z",
+ "기준시각": "2026-08-18T15:08:56.045Z",
  "되돌리기": "ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-choice-figure-discard.ts --revert",
  "영구삭제아님": "행마다 사유·부류를 남겼다. 원본을 다시 구하거나 사람이 확인해 살릴 수 있다.",
  "적용됨": false,
- "잠근건수": 29,
- "이번계획": 29,
- "이어받음": 0,
+ "잠근건수": 43,
  "이전상태": [
   {
    "id": "10bc6c2c-df4d-4972-bced-b5df323e23e3",
@@ -45,6 +43,15 @@
    "부류": "문항 병합 — 재이관해야 산다"
   },
   {
+   "id": "2fcb40bd-248b-426d-962d-06829ec1f459",
+   "externalId": "3936-1",
+   "directUseAllowed": true,
+   "school": "효성중",
+   "questionNumber": 1,
+   "사유": "그림 파일 이름에서 문항 번호를 못 읽는다",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
+  },
+  {
    "id": "30fe0201-880b-4a2d-9566-033e9031a8af",
    "externalId": "5920-15",
    "directUseAllowed": true,
@@ -69,6 +76,15 @@
    "school": "포산중",
    "questionNumber": 10,
    "사유": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
+  },
+  {
+   "id": "435052cb-493d-4c48-8f70-1be8aebec0b7",
+   "externalId": "4194-6",
+   "directUseAllowed": true,
+   "school": "학산중",
+   "questionNumber": 6,
+   "사유": "그림 파일 이름에서 문항 번호를 못 읽는다",
    "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
   },
   {
@@ -97,6 +113,15 @@
    "questionNumber": 14,
    "사유": "보기 자리에 그림이 없다 (보기가 글자다)",
    "부류": "문항 병합 — 재이관해야 산다"
+  },
+  {
+   "id": "4d4ade67-5c04-4d14-910f-34fbb00d942d",
+   "externalId": "4418-24",
+   "directUseAllowed": true,
+   "school": "송현여고",
+   "questionNumber": 24,
+   "사유": "원본에도 보기 마커가 없다",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
   },
   {
    "id": "54efb5ae-53d4-4bb8-be7f-1504702b2ffa",
@@ -135,12 +160,48 @@
    "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
   },
   {
+   "id": "6ea39be1-a762-43f3-b24f-b723a6910b41",
+   "externalId": "4275-24",
+   "directUseAllowed": true,
+   "school": "구암고",
+   "questionNumber": 24,
+   "사유": "원본에도 보기 마커가 없다",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
+  },
+  {
+   "id": "730d9237-6d41-4019-a84c-daf3e4cf2d45",
+   "externalId": "3107-23",
+   "directUseAllowed": true,
+   "school": "대구여고",
+   "questionNumber": 23,
+   "사유": "원본에도 보기 마커가 없다",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
+  },
+  {
    "id": "8b5928f3-ad46-4bc0-9d1a-448441d642d8",
    "externalId": "3666-4",
    "directUseAllowed": true,
    "school": "경운중",
    "questionNumber": 4,
    "사유": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
+  },
+  {
+   "id": "8f28d5a3-6aa8-4b9f-b881-a62a65d6a37b",
+   "externalId": "3892-20",
+   "directUseAllowed": true,
+   "school": "정화중",
+   "questionNumber": 20,
+   "사유": "원본에도 보기 마커가 없다",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
+  },
+  {
+   "id": "938608ec-e4fd-4c7d-ab9d-1c6e53730e83",
+   "externalId": "3969-21",
+   "directUseAllowed": true,
+   "school": "고산중",
+   "questionNumber": 21,
+   "사유": "보기 자리에 그림이 없다 (보기가 글자다)",
    "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
   },
   {
@@ -153,12 +214,57 @@
    "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
   },
   {
+   "id": "9f3c028b-db3a-4ed5-9ffd-040936c7daa0",
+   "externalId": "2978-17",
+   "directUseAllowed": true,
+   "school": "경상여고",
+   "questionNumber": 17,
+   "사유": "원본에도 보기 마커가 없다",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
+  },
+  {
+   "id": "9fb49573-c4db-4261-b879-1d30f01f9ebb",
+   "externalId": "3150-19",
+   "directUseAllowed": true,
+   "school": "도원고",
+   "questionNumber": 19,
+   "사유": "원본에도 보기 마커가 없다",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
+  },
+  {
+   "id": "acffcd72-6353-40b0-aeca-9cc387d0db63",
+   "externalId": "4314-5",
+   "directUseAllowed": true,
+   "school": "대구국제고",
+   "questionNumber": 5,
+   "사유": "원본에도 보기 마커가 없다",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
+  },
+  {
    "id": "b0c10c1c-4ed3-4617-9d17-ae6cb8501d28",
    "externalId": "5907-17",
    "directUseAllowed": true,
    "school": "학남중",
    "questionNumber": 17,
    "사유": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
+  },
+  {
+   "id": "be9b1c36-407d-4d10-bbe0-63a02969d773",
+   "externalId": "5348-8",
+   "directUseAllowed": true,
+   "school": "학산중",
+   "questionNumber": 8,
+   "사유": "그림 파일 이름에서 문항 번호를 못 읽는다",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
+  },
+  {
+   "id": "c75f9b32-a407-45ea-867b-4dbbc8a4379e",
+   "externalId": "4295-25",
+   "directUseAllowed": true,
+   "school": "달서고",
+   "questionNumber": 25,
+   "사유": "원본에도 보기 마커가 없다",
    "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
   },
   {
@@ -171,12 +277,30 @@
    "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
   },
   {
+   "id": "c9e49b27-c90d-42e6-9cf2-4014206143cb",
+   "externalId": "5225-7",
+   "directUseAllowed": true,
+   "school": "대진중",
+   "questionNumber": 7,
+   "사유": "그림 파일 이름에서 문항 번호를 못 읽는다",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
+  },
+  {
    "id": "cb95a5bc-2697-4e84-90ed-c28adbe2461a",
    "externalId": "3667-1",
    "directUseAllowed": true,
    "school": "경운중",
    "questionNumber": 1,
    "사유": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+   "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
+  },
+  {
+   "id": "d2fe14b0-151c-40eb-aeae-91e5dabff85b",
+   "externalId": "019fd1de-499c-7459-8d1d-47e5b391d1a2",
+   "directUseAllowed": true,
+   "school": null,
+   "questionNumber": null,
+   "사유": "원본 메타 없음",
    "부류": "짝을 못 찾음 — 원본을 다시 구해야 산다"
   },
   {
