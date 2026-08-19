@@ -151,6 +151,7 @@ scripts/classify/reports/loaded-external-ids.json
 # 300dpi 재크롭 산출 — 대용량. 견준 뒤에 바꿔치기한다. 커밋하지 마라.
 # (다중 세션이 git add -A 로 쓸어 담지 못하게 막는다.)
 public/figures-300/
+public/figures-300-enhanced/
 
 # RPM 원본 교재 PDF (내려받은 것 — 저장소에 넣지 않는다)
 .rpm-src/
