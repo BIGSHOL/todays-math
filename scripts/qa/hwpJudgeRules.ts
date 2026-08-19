@@ -1,3 +1,5 @@
+import { parseProblemContent } from "../../src/lib/problem/parseProblemContent";
+
 /**
  * 트랙 D-2 — **어느 문항이 PDF 경로 때문에 망가졌는지** 가르는 규칙.
  *
@@ -41,7 +43,12 @@ const ANSWER_TAG_LINE = /^\s*정답\s*$/;
 const WORKER_SIGN = /^\s*(?:워드|오검|완료|검수|교정|작업)\s*[:：]/;
 /** 지웠는데도 남는 미지의 워터마크·출처 표기 — 이건 사람이 봐야 한다. */
 const RESIDUAL_WATERMARK = [
-  "무단전재", "저작권", "복제를 금", "출제자 :", "www.", "http",
+  "무단전재",
+  "저작권",
+  "복제를 금",
+  "출제자 :",
+  "www.",
+  "http",
 ];
 
 export function stripWatermark(text: string): string {
@@ -85,15 +92,68 @@ export function dice(a: string, b: string): number {
   return (2 * inter) / total;
 }
 
+/**
+ * **포함도** — `b` 의 bigram 중 몇 %가 `a` 에도 있는가 (비대칭).
+ *
+ * `dice` 는 대칭이라 **크기가 다르면 벌한다.** 이 트랙에서는 크기가 다른 것이 정상이다:
+ *  - DB 한 행에 문항이 여럿 뭉쳐 있으면(실측 덕원중 13: 한글 287자) DB 쪽이 훨씬 크다.
+ *  - `_split_choices` 가 발문을 일찍 자르면 HWP 쪽이 훨씬 작다(강북중 6: 16자).
+ * 두 경우 다 **같은 문항인데** Dice 는 0.11~0.28 로 떨어져 «다른 문제»로 몬다.
+ * 포함도로 물으면 셋 다 1.000 이고, 진짜 다른 문제는 0.03~0.24 로 남는다.
+ * 「문턱이 아니라 축이 틀린 것이다」(CLAUDE.md 2026-08-18).
+ */
+export function containment(a: string, b: string): number {
+  if (b.length < 2) return 0;
+  const A = new Map<string, number>();
+  for (let i = 0; i < a.length - 1; i += 1) {
+    const g = a.slice(i, i + 2);
+    A.set(g, (A.get(g) ?? 0) + 1);
+  }
+  const used = new Map<string, number>();
+  let total = 0;
+  let hit = 0;
+  for (let i = 0; i < b.length - 1; i += 1) {
+    const g = b.slice(i, i + 2);
+    total += 1;
+    const u = used.get(g) ?? 0;
+    if (u < (A.get(g) ?? 0)) {
+      hit += 1;
+      used.set(g, u + 1);
+    }
+  }
+  return total > 0 ? hit / total : 0;
+}
+
 /** 해설 지면 냄새. PDF 추출기가 뒤쪽 해설면의 `1.` `2.` 줄머리를 앞 문제 위에 덮어썼다. */
 const SOLUTION_MARKS = [
-  "따라서", "이므로", "대입하면", "위의 식", "그러므로", "∴",
-  "구하는 값은", "주어진 식", "양변을", "정리하면", "이때",
+  "따라서",
+  "이므로",
+  "대입하면",
+  "위의 식",
+  "그러므로",
+  "∴",
+  "구하는 값은",
+  "주어진 식",
+  "양변을",
+  "정리하면",
+  "이때",
 ];
 /** 문제 냄새 — 발문은 물음으로 끝난다. */
 const QUESTION_MARKS = [
-  "구하시오", "구하여라", "고르시오", "고르면", "옳은", "옳지", "무엇",
-  "?", "하시오", "하여라", "쓰시오", "나타내시오", "보이시오", "구하라",
+  "구하시오",
+  "구하여라",
+  "고르시오",
+  "고르면",
+  "옳은",
+  "옳지",
+  "무엇",
+  "?",
+  "하시오",
+  "하여라",
+  "쓰시오",
+  "나타내시오",
+  "보이시오",
+  "구하라",
 ];
 
 export const countMarks = (text: string, marks: string[]): number =>
@@ -227,19 +287,26 @@ export function judgeSignals(input: JudgeInput): Signals {
   const S2 = dbSol >= 2 && dbQ === 0 && hwpQ >= 1 && hwpSig.length >= 10;
   if (S2) S.push("S2_해설냄새");
 
-  if (PUA.test(row.content) || MANGLED_OPS.test(row.content) || MANGLED_BRACE.test(row.content)) {
+  if (
+    PUA.test(row.content) ||
+    MANGLED_OPS.test(row.content) ||
+    MANGLED_BRACE.test(row.content)
+  ) {
     S.push("S3_PUA잔재");
   }
   // 지문이 아예 다른 문항이다 — 해설이 앞 문제를 덮은 전형적 결과.
-  if (dbSig.length >= 8 && hwpSig.length >= 8 && sim < 0.35) S.push("S4_유사도바닥");
+  if (dbSig.length >= 8 && hwpSig.length >= 8 && sim < 0.35)
+    S.push("S4_유사도바닥");
 
-  if ((hwp.choices?.length ?? 0) >= 4 && dbChoices.length === 0) S.push("S5_보기결손");
+  if ((hwp.choices?.length ?? 0) >= 4 && dbChoices.length === 0)
+    S.push("S5_보기결손");
 
   // 수식이 DB 에서만 깨진다 — PDF 텍스트 레이어가 만든 훼손.
   if (input.dbMathFail > input.hwpMathFail) S.push("S6_수식렌더실패");
 
   // 물음이 통째로 사라졌다. HWP 는 묻는데 DB 는 안 묻는다.
-  if (hwpQ >= 1 && dbQ === 0 && sim < 0.5 && dbSig.length >= 8) S.push("S7_발문소실");
+  if (hwpQ >= 1 && dbQ === 0 && sim < 0.5 && dbSig.length >= 8)
+    S.push("S7_발문소실");
 
   // ── 표본 눈검증으로 뒤늦게 추가한 신호들 (거짓 음성 사냥) ────────────
   if (FRACTION_SLASH.test(row.content) || BULLET_IN_MATH.test(row.content)) {
@@ -255,10 +322,12 @@ export function judgeSignals(input: JudgeInput): Signals {
   if (S10) S.push("S10_해설지머리표");
 
   // 한글 지문이 통째로 날아갔다. 길이 비교라 수식 위주 문항에서도 잡힌다.
-  if (hwpSig.length >= 15 && dbSig.length < hwpSig.length * 0.3) S.push("S11_지문소실");
+  if (hwpSig.length >= 15 && dbSig.length < hwpSig.length * 0.3)
+    S.push("S11_지문소실");
 
   // 시험지 머리말·학원 로고가 본문에 딸려 들어왔다.
-  const S12 = PAGE_FURNITURE.test(row.content) && !PAGE_FURNITURE.test(hwpContent);
+  const S12 =
+    PAGE_FURNITURE.test(row.content) && !PAGE_FURNITURE.test(hwpContent);
   if (S12) S.push("S12_지면머리말혼입");
 
   // 수식 캡션에서 샌 base64 덩어리가 본문에 박혔다.
@@ -279,7 +348,8 @@ export function judgeSignals(input: JudgeInput): Signals {
   if (hwpContent.trim().length < 20) H.push("H1_HWP빈약");
 
   // 지워도 남은 미지의 워터마크·출처 표기.
-  if (RESIDUAL_WATERMARK.some((w) => hwpContent.includes(w))) H.push("H2_잔여워터마크");
+  if (RESIDUAL_WATERMARK.some((w) => hwpContent.includes(w)))
+    H.push("H2_잔여워터마크");
 
   // HWP 가 지문을 잃었다. ⚠️ S1·S2 가 잡혔으면 **끄다** — 해설은 원래 문제보다 길다.
   // S12 가 잡혔으면 끈다 — DB 의 한글이 긴 이유가 **머리말 오염 그 자체**라
@@ -290,13 +360,18 @@ export function judgeSignals(input: JudgeInput): Signals {
   const dbQSig = sigKo(dbQuestion);
   const hwpQSig = sigKo(hwp.stem ?? "");
   if (
-    !S1 && !S2 && !S10 && !S12 &&
-    dbQSig.length >= 20 && hwpQSig.length < dbQSig.length * 0.6
+    !S1 &&
+    !S2 &&
+    !S10 &&
+    !S12 &&
+    dbQSig.length >= 20 &&
+    hwpQSig.length < dbQSig.length * 0.6
   ) {
     H.push("H3_HWP더짧음");
   }
   // 표는 HWP XML 을 훑으면 칸 구분이 사라져 한 줄로 뭉갠다. DB 는 `[표]` 로 보존돼 있다.
-  if (row.content.includes("[표]") && !hwpContent.includes("[표]")) H.push("H4_표구조손실");
+  if (row.content.includes("[표]") && !hwpContent.includes("[표]"))
+    H.push("H4_표구조손실");
 
   if (input.hwpMathFail > input.dbMathFail) H.push("H5_렌더열위");
 
@@ -318,11 +393,16 @@ export function judgeSignals(input: JudgeInput): Signals {
   if (PAGE_FURNITURE.test(hwpContent) && !PAGE_FURNITURE.test(row.content)) {
     H.push("H12_HWP지면머리말");
   }
-  if (dbChoices.length >= 4 && (hwp.choices?.length ?? 0) < 4) H.push("H6_보기손실");
+  if (dbChoices.length >= 4 && (hwp.choices?.length ?? 0) < 4)
+    H.push("H6_보기손실");
 
   // 그림 파일이 안 붙은 문항의 `[그림] 말풀이` 는 **유일한 단서**다(10-handoff §8.5).
   // 그림이 붙어 있으면(figs>0) 이미지가 남으므로 막지 않는다.
-  if (row.figs === 0 && row.content.includes("[그림]") && !hwpContent.includes("[그림]")) {
+  if (
+    row.figs === 0 &&
+    row.content.includes("[그림]") &&
+    !hwpContent.includes("[그림]")
+  ) {
     H.push("H7_그림단서손실");
   }
   // ⑴⑵ 소문항이 DB 에만 있다 — 빼면 `물음에 답하시오.` 만 남는다.
@@ -353,4 +433,109 @@ export type Verdict = "교체" | "보류" | "유지";
 export function verdictOf(s: Signals): Verdict {
   if (s.S.length === 0) return "유지";
   return s.H.length === 0 ? "교체" : "보류";
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * 5. 편 정렬 — **`number` 는 미주 순번이지 시험지 번호가 아니다.**
+ *
+ * `judge-hwp-replacement.ts`(D-2 교체)와 `measure-hwp-rescue.ts`(회수 측정)가
+ * **이 한 벌**을 쓴다. 한쪽만 옮기면 두 트랙의 숫자가 말없이 갈라진다
+ * (CLAUDE.md 2026-08-18 «같은 규칙을 쓰는 자리가 둘이면 한 숫자를 두 곳이 쓰게 하라»).
+ * ──────────────────────────────────────────────────────────────────────────── */
+const ALIGN_OFFSETS = [0, 1, -1, 2, -2, 3, -3, 4, -4, 5, -5];
+/** 오프셋 0 을 버리려면 다른 오프셋이 이만큼 뚜렷이 나아야 한다. */
+const SHIFT_MARGIN = 1.5;
+const SHIFT_MIN_STRONG = 3;
+
+export type Align = {
+  offset: number;
+  grade: "확정" | "정황" | "근거없음";
+  strong: number;
+  sumSim: number;
+  scoreEq: number;
+  ansEq: number;
+  pairs: number;
+};
+
+/** 원문자·공백을 지운 정답 비교용 표기. 정답 컬럼은 트랙 B 소관이라 **읽기만** 한다. */
+export const normAnswer = (s: string): string =>
+  (s ?? "")
+    .replace(/\s+/g, "")
+    .replace(/[①②③④⑤]/g, (c) => String("①②③④⑤".indexOf(c) + 1));
+
+export function scoreOffset(
+  qs: HwpQ[],
+  rows: Map<number, DbRow>,
+  off: number,
+): Omit<Align, "offset" | "grade"> {
+  let pairs = 0;
+  let strong = 0;
+  let sumSim = 0;
+  let scoreEq = 0;
+  let ansEq = 0;
+  for (const q of qs) {
+    const r = rows.get(q.number + off);
+    if (!r) continue;
+    pairs += 1;
+    const sv = dice(
+      sigKo(q.stem),
+      sigKo(parseProblemContent(r.content).question),
+    );
+    sumSim += sv;
+    if (sv >= 0.7) strong += 1;
+    if (
+      q.score != null &&
+      r.score != null &&
+      Math.abs(q.score - r.score) < 0.01
+    ) {
+      scoreEq += 1;
+    }
+    const a = normAnswer(q.answer ?? "");
+    const b = normAnswer(r.answer === "(정답 없음)" ? "" : r.answer);
+    if (a && b && a === b) ansEq += 1;
+  }
+  return { pairs, strong, sumSim, scoreEq, ansEq };
+}
+
+const composite = (m: {
+  strong: number;
+  sumSim: number;
+  scoreEq: number;
+  ansEq: number;
+}) => m.strong * 2 + m.sumSim + m.scoreEq + m.ansEq;
+
+export function alignExam(qs: HwpQ[], rows: Map<number, DbRow>): Align {
+  const at = new Map<number, ReturnType<typeof scoreOffset>>();
+  for (const off of ALIGN_OFFSETS) at.set(off, scoreOffset(qs, rows, off));
+  const zero = at.get(0)!;
+  const c0 = composite(zero);
+
+  let bestOff = 0;
+  let bestC = c0;
+  for (const [off, m] of at) {
+    if (off === 0) continue;
+    const c = composite(m);
+    // 오프셋 이동은 **뚜렷한 우위 + 실제 강한 일치**가 둘 다 있을 때만 인정한다.
+    if (
+      c > bestC &&
+      c >= c0 * SHIFT_MARGIN + 2 &&
+      m.strong >= SHIFT_MIN_STRONG
+    ) {
+      bestOff = off;
+      bestC = c;
+    }
+  }
+  const m = at.get(bestOff)!;
+  const others = [...at.entries()]
+    .filter(([o]) => o !== bestOff)
+    .map(([, v]) => composite(v));
+  const runnerUp = others.length ? Math.max(...others) : 0;
+
+  let grade: Align["grade"];
+  if (m.strong >= 3 || m.scoreEq + m.ansEq >= 3) grade = "확정";
+  else if (m.pairs >= 3 && bestC >= runnerUp * 1.5 && bestC > 0.5)
+    grade = "정황";
+  else grade = "근거없음";
+
+  return { offset: bestOff, grade, ...m };
 }
