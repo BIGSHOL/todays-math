@@ -84,7 +84,12 @@ const DRAWABLE_SPEC = {
  * 검사가 브라우저에만 있으면 없는 것과 같아서, 저장 직전에 서버가 다시 댄다.
  */
 function adoptItem(content: string, recomputed = MOCK_PROBLEMS[0]!.answer) {
-  return { content, answer: "2", solution: null, originalAnswerRecomputed: recomputed };
+  return {
+    content,
+    answer: "2",
+    solution: null,
+    originalAnswerRecomputed: recomputed,
+  };
 }
 
 beforeEach(() => {
@@ -279,6 +284,8 @@ describe("그림에 기대는 원본은 변형본을 채택할 수 없다 (2026-
     delete rest.id;
     delete rest.createdAt;
     delete rest.updatedAt;
+    // exam-wiring: 테스트 — 픽스처다. 제품 적재 경로가 아니다
+    // exam-wiring: 테스트 — 픽스처다. 기출이 아니라 시드 행을 펼쳐 만든 변형 원본이다.
     return prismaTestDouble.problem.create({
       data: {
         ...(rest as Parameters<
@@ -590,10 +597,7 @@ describe("POST /api/problems/transform/adopt — 채택분만 넣는다", () => 
         adoptRoute(
           jsonRequest("http://localhost/api/problems/transform/adopt", {
             originProblemId: origin.id,
-            items: [
-              adoptItem("첫 번째"),
-              adoptItem("두 번째"),
-            ],
+            items: [adoptItem("첫 번째"), adoptItem("두 번째")],
           }),
         ),
       ).rejects.toThrow("묶음 저장 실패");
