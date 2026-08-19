@@ -43,3 +43,25 @@ export class AiConfigError extends AiGenerationError {
     this.name = "AiConfigError";
   }
 }
+
+/**
+ * 모델이 **답을 내기 전에 최대 길이에 도달**한 경우(`finish_reason === "length"`).
+ *
+ * v4-pro 는 사고과정(`reasoning_content`)이 `max_tokens` 를 함께 소모한다. 어려운 문항에서는
+ * 추론만으로 예산을 다 써서 정작 답변(`content`)이 비어 버린다 — 2026-08-19 실측:
+ * 그림 문항 변형에서 **9분을 태우고 54KB 짜리 추론 원문만** 왔고 JSON 배열은 0개였다.
+ *
+ * 이것을 일반 파싱 실패로 두면 화면에는 "유효한 JSON 이 아닙니다"만 남아 **원인이 사라진다**
+ * (게다가 재시도가 같은 예산으로 한 번 더 9분을 태운다). 그래서 별도 타입으로 세우고
+ * 재시도 대상에서 뺀다.
+ *
+ * `AiGenerationError` 를 상속하므로 기존 `instanceof AiGenerationError` 검사는 그대로 잡는다.
+ * ⚠️ 다만 라우트는 이것을 **먼저** 검사해야 한다 — 순서가 뒤집히면 다시 조용해진다
+ *    (`AiConfigError` 와 같은 함정). 라우트에 가드 테스트가 있다.
+ */
+export class AiCapacityError extends AiGenerationError {
+  constructor(message: string, options?: { cause?: unknown }) {
+    super(message, options);
+    this.name = "AiCapacityError";
+  }
+}

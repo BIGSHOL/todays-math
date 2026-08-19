@@ -30,7 +30,8 @@ import {
   transformProblem,
 } from "@/lib/ai/transformer";
 import { verifiesOriginalReproduction } from "@/lib/ai/originalReproduction";
-import { AiGenerationError } from "@/lib/ai/errors";
+import { buildTransformSystemPrompt } from "@/lib/ai/prompts/transform";
+import { AiCapacityError, AiGenerationError } from "@/lib/ai/errors";
 import {
   normalizeLatex,
   parseAiJsonArray,
@@ -406,6 +407,54 @@ describe("transformProblem — AI 문제 변형(후보 반환, 2026-08-19 고도
     const without = mockCreate.mock.calls[1]![0]!.messages[1]!
       .content as string;
     expect(without).not.toContain("figureSpec");
+  });
+
+  it("답을 내기 전에 길이 한도에 걸리면 AiCapacityError 다 — 생각을 답으로 넘기지 않는다", async () => {
+    // 2026-08-19 실측: 그림 문항에서 추론이 예산을 다 써 `content` 가 비고
+    // `reasoning_content` 54KB 가 문장 중간에 끊긴 채 왔다(JSON 배열 0개).
+    // 이 검사가 없으면 그 «생각»이 답으로 넘어가 "유효한 JSON 이 아닙니다"로만 남는다.
+    mockCreate.mockResolvedValueOnce({
+      choices: [
+        {
+          finish_reason: "length",
+          message: { content: "", reasoning_content: "우리는 한국어로 된 지시를…" },
+        },
+      ],
+    });
+
+    await expect(
+      transformProblem({ origin: ORIGIN, count: 1 }),
+    ).rejects.toBeInstanceOf(AiCapacityError);
+  });
+
+  it("잘리지 않았으면 reasoning_content 폴백은 그대로 산다", async () => {
+    mockCreate.mockResolvedValueOnce({
+      choices: [
+        {
+          finish_reason: "stop",
+          message: {
+            content: "",
+            reasoning_content: JSON.stringify([
+              {
+                content: "폴백 변형",
+                answer: "0.275",
+                solution: null,
+                originalAnswerRecomputed: "0.28",
+              },
+            ]),
+          },
+        },
+      ],
+    });
+
+    const [candidate] = await transformProblem({ origin: ORIGIN, count: 1 });
+    expect(candidate!.answer).toBe("0.275");
+  });
+
+  it("시스템 프롬프트가 필드 **개수**를 못 박지 않는다 (사용자 프롬프트와 어긋난다)", async () => {
+    // 그림 문항에서는 `figureSpec` 이 하나 더 붙는다. 시스템 쪽에서 "4개 필드"라고
+    // 세면 두 프롬프트가 서로 다른 말을 한다 — 실제로 그 상태로 나갔다(2026-08-19).
+    expect(buildTransformSystemPrompt()).not.toMatch(/\d+\s*개\s*필드/);
   });
 
   it("그림이 필요 없으면 AI 가 낸 도형 스펙을 버린다", async () => {

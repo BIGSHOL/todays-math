@@ -36,7 +36,11 @@ import {
   problemTransformResponseSchema,
   shiftDifficulty,
 } from "@/contracts/problem.contract";
-import { AiConfigError, AiGenerationError } from "@/lib/ai/errors";
+import {
+  AiCapacityError,
+  AiConfigError,
+  AiGenerationError,
+} from "@/lib/ai/errors";
 import {
   MOCK_PROBLEM_OTHER_USER,
   MOCK_PROBLEMS,
@@ -210,6 +214,27 @@ describe("POST /api/problems/transform — 후보만 만든다", () => {
     expect(res.status).toBe(502);
     const body = errorResponseSchema.parse(await res.json());
     expect(JSON.stringify(body)).not.toContain("secret-123");
+    log.mockRestore();
+  });
+
+  it("길이 한도(AiCapacityError)는 **무엇을 하면 되는지** 알려 주는 사유를 돌려준다", async () => {
+    const log = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    mockTransformProblem.mockRejectedValueOnce(
+      new AiCapacityError("AI 응답이 최대 길이에서 잘렸습니다."),
+    );
+
+    const res = await transformRoute(
+      jsonRequest("http://localhost/api/problems/transform", {
+        originProblemId: MOCK_PROBLEMS[0]!.id,
+        count: 1,
+      }),
+    );
+
+    // AiCapacityError 도 AiGenerationError 의 하위 타입이다 — 검사 순서가 뒤집히면
+    // 여기서 일반 문구가 나오고 원인이 사라진다(AiConfigError 와 같은 함정).
+    const body = errorResponseSchema.parse(await res.json());
+    expect(body.error.message).toContain("길이 한도");
+    expect(body.error.message).toContain("개수를 줄이");
     log.mockRestore();
   });
 

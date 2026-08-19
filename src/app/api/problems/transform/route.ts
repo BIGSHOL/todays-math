@@ -13,7 +13,11 @@ import {
   problemTransformRequestSchema,
   problemTransformResponseSchema,
 } from "@/contracts/problem.contract";
-import { AiConfigError, AiGenerationError } from "@/lib/ai/errors";
+import {
+  AiCapacityError,
+  AiConfigError,
+  AiGenerationError,
+} from "@/lib/ai/errors";
 import { transformProblem } from "@/lib/ai/transformer";
 import {
   jsonError,
@@ -88,6 +92,16 @@ export async function POST(request: NextRequest) {
       meta: { figureRequired },
     });
   } catch (error) {
+    // ⚠️ `AiCapacityError`·`AiConfigError` 는 둘 다 `AiGenerationError` 의 하위 타입이다 —
+    //    **이 검사들이 먼저** 와야 한다. 순서를 뒤집으면 원인이 일반 실패로 뭉개진다.
+    if (error instanceof AiCapacityError) {
+      console.error("[POST /api/problems/transform] AI response truncated");
+      return jsonError(
+        "AI_GENERATION_FAILED",
+        "AI 가 답을 내기 전에 길이 한도에 걸렸습니다 — 개수를 줄이거나 더 단순한 문항으로 다시 시도해주세요.",
+        502,
+      );
+    }
     // ⚠️ `AiConfigError` 는 `AiGenerationError` 의 하위 타입이다 — **이 검사가 먼저** 와야
     //    한다. 순서를 뒤집으면 설정 누락이 다시 일반 실패로 뭉개져 화면에서 원인을 못 본다.
     if (error instanceof AiConfigError) {
