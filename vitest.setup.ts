@@ -16,8 +16,17 @@ import { server } from "@/mocks/server";
 //
 // vitest.config.mts 가 같은 렌더 스택 때문에 testTimeout 을 5초→20초로 올린 것과
 // 같은 성질의 조정이다. 단언 내용은 아무것도 바뀌지 않는다 — 깨진 렌더는 여전히
-// 실패하고, 다만 1초가 아니라 5초 뒤에 실패한다(testTimeout 20초 안이다).
-configure({ asyncUtilTimeout: 5000 });
+// 실패하고, 다만 상한만큼 늦게 실패한다(testTimeout 20초 안이다).
+//
+// ⚠️ **2026-08-19: 5초도 모자랐다 — 상한을 기계 한 대 기준으로 잡았기 때문이다.**
+// 오르카 다중 세션이 기본(CLAUDE.md 절대 규칙 9)이라 이 저장소의 전체 실행은
+// **다른 세션의 dev 서버·vitest·npm install 과 CPU 를 나눠 쓰는 것이 정상 상태**다.
+// 그 상태에서 `ProblemBank.test.tsx` 첫 테스트가 5초를 넘겨 **두 번 연속** 빨갛게
+// 났고(기계가 한가해지자 통과), 같은 테스트를 혼자 돌리면 언제나 초록이다.
+// 즉 이 값이 재는 것은 렌더 성능이 아니라 **그때 이 기계가 얼마나 바빴는가**다.
+// 부하가 그날그날 다르므로 상한도 그만큼 넉넉해야 한다. 12초는 testTimeout(20초)
+// 안이므로 **정말 안 그려지는 화면은 여전히 실패한다** — 늦게 실패할 뿐이다.
+configure({ asyncUtilTimeout: 12000 });
 
 // Phase 2, T2.1 — `src/__tests__/api/class.test.ts`(및 이후 progress/problem/test API
 // 테스트)는 Route Handler를 fetch가 아니라 함수로 직접 호출하므로 MSW(위 server)가 가로챌 수

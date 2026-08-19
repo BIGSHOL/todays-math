@@ -1,61 +1,111 @@
 "use client";
 
-import { memo } from "react";
 import Link from "next/link";
 
+import { UnitTreePicker } from "@/components/progress/UnitTreePicker";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import type { UnitEntity } from "@/contracts/unit.contract";
 
 import { FIELD_CLASS } from "./labels";
+import { describeRange } from "./rangeSummary";
 import { useGenerateSetup } from "./useGenerateSetup";
 
 const LABEL_CLASS =
   "grid gap-1 text-[10px] font-extrabold tracking-[1.2px] text-text-2";
 
-type UnitSelectProps = {
-  label: string;
-  value: string;
-  units: UnitEntity[];
-  onChange: (value: string) => void;
-};
-
 /**
- * 소단원 목록은 실제로 1,472개다. 이 select 를 폼 안에 그대로 두면 **문항 수
- * 칸에 글자 하나 칠 때마다** option 1,472개가 두 벌씩 다시 조정된다.
- * memo 로 잘라 두면 값이 안 바뀐 select 는 React 가 아예 들어가지 않는다.
- * (`setRangeStartUnitId` 는 useState 의 setter 라 참조가 고정이므로 memo 가 산다 —
- *  여기에 화살표 함수를 새로 만들어 넘기면 이 수리가 통째로 죽는다.)
+ * 확인테스트 범위 — **평소에는 한 줄, 고칠 때만 펼친다**(D-07 확정 2026-08-19:
+ * Wire C안 → Hi-fi ④ 범위 막대 → 펼침은 ㈟ 3열 피커 두 벌).
  *
- * 같은 저장소 ClassManage 의 AddClassForm 처럼 "입력 상태를 격리"하는 것과 목적은
- * 같지만 방식이 다르다. 여기 값들은 훅과 **양방향**이다 — selectClass 가 반의
- * 기본 문항 수·난이도를, reduceCount 가 줄인 문항 수를 되쓴다. 상태를 로컬로
- * 내리면 그 되쓰기와 동기화가 필요해져 화면 동작이 달라질 위험이 있어,
- * 대신 무거운 목록 쪽을 잘라 냈다. 그려지는 DOM 은 전과 같다.
+ * 예전에는 소단원 select 두 개가 **735개**를 늘어놓고 기본값이 「초1 첫 소단원 ~
+ * 미적분2 마지막」이었다. 원장이 손대지 않으면 전 교육과정이 범위가 되는데
+ * **오류도 경고도 안 났다** — 후보가 4만 건이라 정원이 채워지기 때문이다.
+ * 이제 기본값은 진도가 정하고(`/api/tests/default-range`), 화면은 그것을 읽어 준다.
  */
-const UnitSelect = memo(function UnitSelect({
-  label,
-  value,
+function RangeField({
   units,
-  onChange,
-}: UnitSelectProps) {
+  startUnitId,
+  endUnitId,
+  editing,
+  unknown,
+  onToggleEdit,
+  onSelectStart,
+  onSelectEnd,
+}: {
+  units: UnitEntity[];
+  startUnitId: string;
+  endUnitId: string;
+  editing: boolean;
+  unknown: boolean;
+  onToggleEdit: () => void;
+  onSelectStart: (unitId: string) => void;
+  onSelectEnd: (unitId: string) => void;
+}) {
+  const summary = describeRange(units, startUnitId, endUnitId);
+
   return (
-    <label className={LABEL_CLASS}>
-      {label}
-      <select
-        className={FIELD_CLASS}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-      >
-        {units.map((unit) => (
-          <option key={unit.id} value={unit.id}>
-            {unit.section}
-          </option>
-        ))}
-      </select>
-    </label>
+    <div className={LABEL_CLASS}>
+      범위
+      <div className="flex items-baseline gap-3">
+        <span className="text-[12.5px] font-black text-ink">
+          {summary ? summary.text : "진도 기록이 없어 범위를 정하지 못했습니다"}
+        </span>
+        <button
+          type="button"
+          onClick={onToggleEdit}
+          className="ml-auto cursor-pointer text-[12.5px] font-bold text-g-blue underline-offset-4 hover:underline"
+        >
+          {editing ? "접기" : "고치기"}
+        </button>
+      </div>
+      {summary ? (
+        <>
+          {/* 막대는 라벨이 말하는 것을 그림으로 되풀이할 뿐이라 보조기기에서는 숨긴다. */}
+          <div aria-hidden className="mt-1 h-[6px] w-full bg-seg-empty">
+            <div
+              className="h-full bg-g-blue"
+              style={{
+                marginLeft: `${summary.offsetPct}%`,
+                width: `${summary.widthPct}%`,
+              }}
+            />
+          </div>
+          <span className="text-[10.5px] font-bold tracking-normal text-text-3">
+            {summary.label}
+          </span>
+        </>
+      ) : null}
+      {unknown && !editing ? (
+        <span className="text-[10.5px] font-bold tracking-normal text-text-3">
+          진도를 기록하거나 「고치기」로 직접 고르세요
+        </span>
+      ) : null}
+      {editing ? (
+        <div className="mt-2 grid gap-4">
+          <div className={LABEL_CLASS}>
+            시작
+            <UnitTreePicker
+              label="범위 시작 소단원"
+              units={units}
+              currentUnitId={startUnitId || null}
+              onSelect={onSelectStart}
+            />
+          </div>
+          <div className={LABEL_CLASS}>
+            끝
+            <UnitTreePicker
+              label="범위 끝 소단원"
+              units={units}
+              currentUnitId={endUnitId || null}
+              onSelect={onSelectEnd}
+            />
+          </div>
+        </div>
+      ) : null}
+    </div>
   );
-});
+}
 
 type Props = {
   initialClassId?: string;
@@ -194,20 +244,16 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
           </div>
 
           {form.testType === "review" ? (
-            <div className="grid gap-4 sm:grid-cols-2">
-              <UnitSelect
-                label="시작 소단원"
-                value={form.rangeStartUnitId}
-                units={form.units}
-                onChange={form.setRangeStartUnitId}
-              />
-              <UnitSelect
-                label="끝 소단원"
-                value={form.rangeEndUnitId}
-                units={form.units}
-                onChange={form.setRangeEndUnitId}
-              />
-            </div>
+            <RangeField
+              units={form.units}
+              startUnitId={form.rangeStartUnitId}
+              endUnitId={form.rangeEndUnitId}
+              editing={form.rangeEditing}
+              unknown={form.rangeUnknown}
+              onToggleEdit={() => form.setRangeEditing(!form.rangeEditing)}
+              onSelectStart={form.setRangeStartUnitId}
+              onSelectEnd={form.setRangeEndUnitId}
+            />
           ) : null}
 
           {form.insufficient ? (
@@ -257,7 +303,17 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
             </p>
           ) : null}
 
-          <Button type="submit" variant="primary" disabled={form.busy}>
+          {/* 확인테스트인데 범위를 못 정했으면 누를 수 없다 — 범위 없이 출제하면
+              서버가 400 을 낼 뿐이고, 원장은 무엇을 고쳐야 하는지 모른다. */}
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={
+              form.busy ||
+              (form.testType === "review" &&
+                (!form.rangeStartUnitId || !form.rangeEndUnitId))
+            }
+          >
             출제
           </Button>
         </form>

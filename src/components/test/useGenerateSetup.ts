@@ -99,6 +99,14 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
   const [hard, setHard] = useState(1);
   const [rangeStartUnitId, setRangeStartUnitId] = useState("");
   const [rangeEndUnitId, setRangeEndUnitId] = useState("");
+  /** 「고치기」를 눌러 3열 피커를 펼쳤는가 (S-04 C안 — 평소에는 한 줄이다). */
+  const [rangeEditing, setRangeEditing] = useState(false);
+  /**
+   * 서버가 범위를 못 냈다(진도 기록 없음). **여기서 지어내지 않는다** —
+   * 예전 기본값(초1 첫 소단원 ~ 미적분2 마지막)이 바로 그 지어냄이었고,
+   * 손대지 않고 출제하면 다섯 학년이 섞인 시험지가 조용히 나왔다.
+   */
+  const [rangeUnknown, setRangeUnknown] = useState(false);
   const [insufficient, setInsufficient] = useState<InsufficientState | null>(
     null,
   );
@@ -130,10 +138,10 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
           setClassId(nextClass.id);
           applyClass(nextClass, setProblemCount, setEasy, setMid, setHard);
         }
-        const first = unitBody.data[0];
-        const last = unitBody.data[unitBody.data.length - 1];
-        if (first) setRangeStartUnitId(first.id);
-        if (last) setRangeEndUnitId(last.id);
+        // ⚠️ 여기서 범위 기본값을 **정하지 않는다.** 예전에는 `units[0]`(초1 첫
+        //    소단원) ~ `units[마지막]`(미적분2 마지막)을 넣었다 — 그게 전 교육과정
+        //    735단원짜리 확인테스트를 오류 없이 만들던 자리다. 범위는 진도가 정하고,
+        //    그 판정은 서버(`/api/tests/default-range`)에 한 벌만 둔다.
         setReady(true);
       })
       .catch(() => {
@@ -171,6 +179,46 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
     };
   }, [classId, initialStudentId]);
 
+  /**
+   * 확인테스트 기본 범위 — **진도가 정한다**(원장님 확정 2026-08-19).
+   * 반·학생이 바뀌면 다시 묻는다. 원장이 「고치기」로 고른 값은 그때 함께 버려진다 —
+   * 다른 반의 범위를 물려받는 것이 더 위험하다.
+   */
+  useEffect(() => {
+    if (!classId) return;
+    let cancelled = false;
+    setRangeEditing(false);
+    const query = new URLSearchParams({ classId });
+    if (studentId) query.set("studentId", studentId);
+    fetch(`/api/tests/default-range?${query.toString()}`)
+      .then(async (res) => {
+        if (!res.ok) throw new Error("fail");
+        const { defaultReviewRangeResponseSchema } = await testContract();
+        return defaultReviewRangeResponseSchema.parse(await res.json());
+      })
+      .then((body) => {
+        if (cancelled) return;
+        if (!body.data) {
+          setRangeUnknown(true);
+          setRangeStartUnitId("");
+          setRangeEndUnitId("");
+          return;
+        }
+        setRangeUnknown(false);
+        setRangeStartUnitId(body.data.rangeStartUnitId);
+        setRangeEndUnitId(body.data.rangeEndUnitId);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setRangeUnknown(true);
+        setRangeStartUnitId("");
+        setRangeEndUnitId("");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [classId, studentId]);
+
   const selectClass = useCallback(
     (nextId: string) => {
       setClassId(nextId);
@@ -200,6 +248,11 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
         setEasy(difficultyRatio.easy);
         setMid(difficultyRatio.mid);
         setHard(difficultyRatio.hard);
+      }
+      if (testType === "review" && (!rangeStartUnitId || !rangeEndUnitId)) {
+        setInsufficient(null);
+        setSubmitError("진도 기록이 없어 범위를 정하지 못했습니다");
+        return;
       }
       if (
         difficultyRatio.easy + difficultyRatio.mid + difficultyRatio.hard !==
@@ -334,6 +387,8 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
     hard,
     rangeStartUnitId,
     rangeEndUnitId,
+    rangeEditing,
+    rangeUnknown,
     insufficient,
     generatedPendingCount,
     submitError,
@@ -347,6 +402,7 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
     setHard,
     setRangeStartUnitId,
     setRangeEndUnitId,
+    setRangeEditing,
     selectClass,
     generate,
     generateAiDrafts,

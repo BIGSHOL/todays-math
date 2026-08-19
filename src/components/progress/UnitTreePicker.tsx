@@ -9,19 +9,25 @@ type UnitTreePickerProps = {
   units: UnitNode[];
   currentUnitId: string | null;
   onSelect: (unitId: string) => void;
+  /**
+   * 접근성 이름. 한 화면에 피커가 둘 이상이면(확인테스트 범위의 시작·끝) 같은 이름이
+   * 겹쳐 무엇을 고르는 자리인지 읽히지 않는다. 기본값은 진도 화면(S-07)이 쓰던 그대로다.
+   */
+  label?: string;
 };
 
 export function UnitTreePicker({
   units,
   currentUnitId,
   onSelect,
+  label = "단원 선택",
 }: UnitTreePickerProps) {
   const tree = useUnitTree(units, currentUnitId);
 
   return (
     <div
       role="group"
-      aria-label="단원 선택"
+      aria-label={label}
       className="grid grid-cols-3 border border-divider"
     >
       <PickerColumn title="학년">

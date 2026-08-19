@@ -213,3 +213,36 @@ export const testConfirmResponseSchema = dataResponseSchema(testSchema);
 export const testPrintRequestSchema = z.strictObject({});
 export type TestPrintRequest = z.infer<typeof testPrintRequestSchema>;
 export const testPrintResponseSchema = dataResponseSchema(testSchema);
+
+// ─────────────────────────────────────────────
+// 확인테스트 기본 범위 (S-04 — 진도가 정한다)
+// ─────────────────────────────────────────────
+
+export const defaultReviewRangeQuerySchema = z.strictObject({
+  classId: uuidSchema,
+  /** 미지정 시 반 전체 기준. 지정하면 그 학생의 진도·직전 확인테스트를 본다. */
+  studentId: uuidSchema.optional(),
+});
+export type DefaultReviewRangeQuery = z.infer<
+  typeof defaultReviewRangeQuerySchema
+>;
+
+/**
+ * 화면이 **손대지 않아도 맞는** 범위. `null` 이면 진도 기록이 없어 범위를 못 낸다
+ * (화면은 그때 범위를 비우고 원장이 직접 고르게 한다).
+ */
+export const defaultReviewRangeResponseSchema = dataResponseSchema(
+  z
+    .strictObject({
+      rangeStartUnitId: uuidSchema,
+      rangeEndUnitId: uuidSchema,
+      /** 범위 안 소단원 수 — 화면 한 줄에 「소단원 N개」로 적는다. */
+      unitCount: z.number().int().min(1),
+      /** 시작을 무엇이 정했나 — 화면 안내 문구가 갈린다. */
+      startedFrom: z.enum(["last-review", "progress-start", "current-only"]),
+    })
+    .nullable(),
+);
+export type DefaultReviewRangeResponse = z.infer<
+  typeof defaultReviewRangeResponseSchema
+>;

@@ -16,6 +16,8 @@ import {
   CLASS_A_ID,
   CLASS_B_ID,
   CLASS_STARVED_ID,
+  MOCK_CURRENT_PROGRESS_UNIT,
+  MOCK_UNITS,
   MOCK_CLASS_A,
   MOCK_CLASS_B,
   MOCK_PROBLEMS,
@@ -107,54 +109,142 @@ describe("[T4.3 S-04] 출제 설정 — 폼 골격", () => {
     );
   });
 
-  it("확인테스트면 시작·끝 소단원을 보여 주고, 일일이면 숨긴다", async () => {
+  /**
+   * 🔴 RED → 🟢 — **범위는 진도가 정한다. 화면은 한 줄로 보여 준다.**
+   *
+   * 예전에는 소단원 select 두 개가 **전 교육과정 735개**를 늘어놓고, 기본값이
+   * 「초1 첫 소단원 ~ 미적분2 마지막」이었다. 손대지 않고 출제하면 다섯 학년이
+   * 섞인 시험지가 **오류도 경고도 없이** 나왔다(실측).
+   *
+   * 확정(2026-08-19, D-07 절차): Wire **C안**(평소 한 줄, 고칠 때만 펼침) →
+   * Hi-fi **④ 범위 막대** → 펼침은 **㈟ 3열 피커 두 벌**(S-07 과 같은 것).
+   */
+  it("확인테스트면 범위를 한 줄로 보여 준다 — 평단 목록은 없다", async () => {
     const { user } = await renderSetup();
 
-    expect(screen.queryByLabelText("시작 소단원")).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("끝 소단원")).not.toBeInTheDocument();
+    expect(screen.queryByText(/~/)).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("radio", { name: "확인테스트" }));
 
-    const start = screen.getByLabelText("시작 소단원");
-    const end = screen.getByLabelText("끝 소단원");
-    expect(start).toBeInTheDocument();
-    expect(end).toBeInTheDocument();
+    // 기본값은 서버(`/api/tests/default-range`)가 준다 — 반 A 는 확인테스트를 낸 적이
+    // 없으니 **진도 이력 첫 단원 ~ 현재 진도**다.
+    await screen.findByText(
+      `${MOCK_UNITS[0]!.section} ~ ${MOCK_CURRENT_PROGRESS_UNIT.section}`,
+    );
+
+    // ④ 막대의 라벨 — 「그 학년 전체에서 어디까지인가」.
     expect(
-      within(start).getByRole("option", {
-        name: MOCK_REVIEW_RANGE_START_UNIT.section,
-      }),
+      screen.getByText(
+        `${MOCK_CURRENT_PROGRESS_UNIT.grade} 소단원 ${MOCK_UNITS.length}개 중 1~4번째`,
+      ),
     ).toBeInTheDocument();
-    expect(
-      within(end).getByRole("option", {
-        name: MOCK_REVIEW_RANGE_END_UNIT.section,
-      }),
-    ).toBeInTheDocument();
+
+    // 평소에는 고를 것이 없다 — 목록도 피커도 안 나온다.
+    expect(screen.queryByLabelText("시작 소단원")).not.toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: /범위 시작/ })).toBeNull();
   });
 
-  it("문항 수를 고친 뒤에도 소단원 선택이 그대로 살아 있다", async () => {
-    // 소단원 option 은 실제로 1,472개다. 글자 하나마다 두 벌을 다시 조정하지
-    // 않도록 select 를 memo 로 잘라 뒀는데, 잘못 자르면 핸들러가 옛 값을 붙든
-    // 채 굳는다(고전적인 memo 사고). 그 방향을 잠근다.
+  it("「고치기」를 누르면 3열 피커가 시작·끝 두 벌 열린다", async () => {
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+    await screen.findByRole("button", { name: "고치기" });
+
+    await user.click(screen.getByRole("button", { name: "고치기" }));
+
+    const startPicker = screen.getByRole("group", { name: "범위 시작 소단원" });
+    const endPicker = screen.getByRole("group", { name: "범위 끝 소단원" });
+    // 3열 — 학년 | 대단원 | 소단원 (S-07 UnitTreePicker 그대로)
+    expect(within(startPicker).getByText("학년")).toBeInTheDocument();
+    expect(within(startPicker).getByText("대단원")).toBeInTheDocument();
+    expect(within(endPicker).getByText("소단원")).toBeInTheDocument();
+  });
+
+  it("피커에서 끝을 바꾸면 한 줄과 출제 요청이 함께 바뀐다", async () => {
+    let body: unknown;
+    server.use(
+      http.post("/api/tests/generate", async ({ request }) => {
+        body = await request.json();
+        return HttpResponse.json(
+          {
+            data: {
+              test: MOCK_TEST_DRAFT,
+              problems: MOCK_TEST_DRAFT_PROBLEMS,
+              shortfall: [],
+            },
+          },
+          { status: 201 },
+        );
+      }),
+    );
+
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+    await screen.findByRole("button", { name: "고치기" });
+    await user.click(screen.getByRole("button", { name: "고치기" }));
+
+    const endPicker = screen.getByRole("group", { name: "범위 끝 소단원" });
+    await user.click(
+      within(endPicker).getByRole("button", {
+        name: MOCK_REVIEW_RANGE_END_UNIT.section,
+      }),
+    );
+
+    await screen.findByText(
+      `${MOCK_UNITS[0]!.section} ~ ${MOCK_REVIEW_RANGE_END_UNIT.section}`,
+    );
+
+    await user.click(screen.getByRole("button", { name: "출제" }));
+    await waitFor(() => expect(body).toBeDefined());
+    expect(body).toMatchObject({
+      testType: "review",
+      rangeStartUnitId: MOCK_UNITS[0]!.id,
+      rangeEndUnitId: MOCK_REVIEW_RANGE_END_UNIT.id,
+    });
+  });
+
+  /**
+   * 🔒 진도가 없으면 범위를 **지어내지 않는다**. 예전 기본값(초1~미적분2)이 바로
+   * 그 «지어냄»이었다. 안내하고 원장이 직접 고르게 한다.
+   */
+  it("진도가 없어 범위를 못 내면 안내하고 출제를 막는다", async () => {
+    server.use(
+      http.get("/api/tests/default-range", () =>
+        HttpResponse.json({ data: null }),
+      ),
+    );
+
     const { user } = await renderSetup();
     await user.click(screen.getByRole("radio", { name: "확인테스트" }));
 
-    const start = screen.getByLabelText("시작 소단원");
-    const kept = (start as HTMLSelectElement).value;
+    expect(
+      await screen.findByText("진도 기록이 없어 범위를 정하지 못했습니다"),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "출제" })).toBeDisabled();
+  });
+
+  it("문항 수를 고쳐도 고르던 범위가 그대로 살아 있다", async () => {
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+    await screen.findByRole("button", { name: "고치기" });
+    await user.click(screen.getByRole("button", { name: "고치기" }));
+
+    const endPicker = screen.getByRole("group", { name: "범위 끝 소단원" });
+    await user.click(
+      within(endPicker).getByRole("button", {
+        name: MOCK_REVIEW_RANGE_END_UNIT.section,
+      }),
+    );
 
     const count = screen.getByLabelText("문항 수");
     await user.clear(count);
     await user.type(count, "12");
 
     expect(screen.getByLabelText("문항 수")).toHaveValue(12);
-    // 목록·선택값 모두 그대로다.
-    expect(screen.getByLabelText("시작 소단원")).toHaveValue(kept);
-    await user.selectOptions(
-      screen.getByLabelText("끝 소단원"),
-      MOCK_REVIEW_RANGE_END_UNIT.id,
-    );
-    expect(screen.getByLabelText("끝 소단원")).toHaveValue(
-      MOCK_REVIEW_RANGE_END_UNIT.id,
-    );
+    expect(
+      screen.getByText(
+        `${MOCK_UNITS[0]!.section} ~ ${MOCK_REVIEW_RANGE_END_UNIT.section}`,
+      ),
+    ).toBeInTheDocument();
   });
 });
 

@@ -83,25 +83,53 @@ function groupByDifficulty<T extends SelectableProblem>(
 }
 
 /**
- * 후보 목록에서 **⑴ 지면 칸에 들어가는 것 → ⑵ 유형 사용 빈도가 낮은 것** 순으로
- * 최대 `target`개를 뽑는다. 동률이면 후보 목록 순서(호출자가 이미 시드로 셔플해
- * 넘긴 순서)를 그대로 지킨다.
+ * 후보 목록에서 **⑴ 지면 칸에 들어가는 것 → ⑵ 단원·유형을 통틀어 제일 덜 쓴 것**
+ * 순으로 최대 `target`개를 뽑는다. ⑵ 가 같으면 **단원을 덜 쓴 쪽**, 그것도 같으면
+ * 후보 목록 순서(호출자가 이미 시드로 셔플해 넘긴 순서)를 그대로 지킨다.
  *
- * ## 왜 지면이 유형보다 앞인가 (⑷)
+ * ## 왜 지면이 맨 앞인가 (⑷ · D-52)
  *
  * 「같은 유형 3연속 금지」의 **보장 자체**는 `arrangeByType` 이 나중에 따로 한다.
  * 여기서 유형 빈도를 보는 것은 그 보장이 가능하도록 **구성을 미리 고르게 만드는**
  * 보조 규칙일 뿐이라, 앞에 지면을 두어도 그 보장은 그대로다.
  * 반대로 지면을 뒤에 두면 정책이 거의 안 듣는다 — 「아직 안 쓴 유형」 하나만 있으면
- * 안 들어가는 문항이 그대로 뽑힌다.
+ * 안 들어가는 문항이 그대로 뽑힌다. 원장님이 2026-08-18 지면 우선으로 확정했다.
+ *
+ * ## 왜 단원과 유형을 **합쳐서** 보나 (D-54, 2026-08-19 원장님 확정)
+ *
+ * 확인테스트는 여러 단원을 묶어 누적 점검을 하는데, 엔진이 단원을 안 보면 뽑힐
+ * 확률이 **단원의 재고에 비례**한다 — 그 재고가 1건 대 736건까지 벌어져 있다.
+ * 그래서 10단원 범위 8문항이 평균 4.5단원에서만 나왔다.
+ *
+ * 네 가지 규칙을 같은 시드·같은 범위로 실측했다(`scripts/qa/measure-review-spread.ts`,
+ * 30개 조합 × 시드 30개. 상세는 `docs/planning/tracks/reports/review-spread.md`):
+ *
+ * | 규칙 | 단원 커버리지 | 단원 최다몫 | 유형 최다몫 |
+ * |---|---|---|---|
+ * | 단원 안 봄(예전) | 66.2% | 38.8% | 33.8% |
+ * | 단원 → 유형 | 98.8% | 17.9% | 41.7% |
+ * | 유형 → 단원 | 91.6% | 24.2% | 33.9% |
+ * | **합산 (채택)** | **95.9%** | **20.3%** | **37.3%** |
+ *
+ * 우선순위를 매기면 **뒤에 놓인 쪽이 그만큼 나빠진다.** 합산은 둘 중 무엇이 먼저인지
+ * 정하지 않고 「이 시험지에서 제일 덜 쓴 것」을 고른다 — 커버리지의 대부분을 얻으면서
+ * 유형 편중은 덜 는다. 동률일 때만 단원을 앞세운다(그때는 잃는 것이 없다).
+ *
+ * 그리고 이 규칙이 실제로 갈라 주는 것은 **확인테스트**뿐이다: 일일테스트는 풀의
+ * 단원이 하나라 `unitUsage` 가 모든 후보에게 같은 값이라, 합이 유형 빈도만으로 갈려
+ * 예전과 **한 글자도 다르지 않다**(`selectSpreadsUnits.test.ts` 가 정책 이전 실측
+ * 순서로 잠근다).
  *
  * ⚠️ **제외가 아니라 후순위다.** 들어가는 후보가 떨어지면 안 들어가는 것도 그대로
  *    뽑는다. 얇은 단원에서 출제가 막히면 안 된다(D-20 · `INSUFFICIENT_PROBLEMS`).
+ *    같은 이유로 **난이도 tier 안에서만** 고른다 — 단원을 고루 하려고 난이도를
+ *    대체하지는 않는다.
  */
 function pickTypeBalanced<T extends SelectableProblem>(
   candidates: T[],
   target: number,
   typeUsage: Map<string, number>,
+  unitUsage: Map<string, number>,
   seatRank: (problem: T) => number,
 ): T[] {
   const remaining = [...candidates];
@@ -110,13 +138,24 @@ function pickTypeBalanced<T extends SelectableProblem>(
   while (picked.length < target && remaining.length > 0) {
     let bestIndex = 0;
     let bestRank = seatRank(remaining[0]!);
-    let bestUsage = typeUsage.get(remaining[0]!.problemType) ?? 0;
+    let bestUnit = unitUsage.get(remaining[0]!.unitId) ?? 0;
+    let bestType = typeUsage.get(remaining[0]!.problemType) ?? 0;
     for (let i = 1; i < remaining.length; i++) {
       const rank = seatRank(remaining[i]!);
-      const usage = typeUsage.get(remaining[i]!.problemType) ?? 0;
-      if (rank < bestRank || (rank === bestRank && usage < bestUsage)) {
+      const unit = unitUsage.get(remaining[i]!.unitId) ?? 0;
+      const type = typeUsage.get(remaining[i]!.problemType) ?? 0;
+      // 지면이 갈리면 뒤는 안 본다(D-52). 그다음은 **단원+유형 합**이고, 합이 같을
+      // 때만 단원을 앞세운다. 셋이 다 같으면 후보 순서(시드 셔플)를 그대로 지킨다.
+      const better =
+        rank !== bestRank
+          ? rank < bestRank
+          : unit + type !== bestUnit + bestType
+            ? unit + type < bestUnit + bestType
+            : unit < bestUnit;
+      if (better) {
         bestRank = rank;
-        bestUsage = usage;
+        bestUnit = unit;
+        bestType = type;
         bestIndex = i;
       }
     }
@@ -126,6 +165,7 @@ function pickTypeBalanced<T extends SelectableProblem>(
       chosen!.problemType,
       (typeUsage.get(chosen!.problemType) ?? 0) + 1,
     );
+    unitUsage.set(chosen!.unitId, (unitUsage.get(chosen!.unitId) ?? 0) + 1);
   }
 
   return picked;
@@ -149,6 +189,8 @@ export function balanceDifficulty<T extends SelectableProblem>(
   const substitutions: SubstitutionRecord[] = [];
   const shortfall: ShortfallItem[] = [];
   const typeUsage = new Map<string, number>();
+  /** 이 시험지에서 각 단원을 몇 개 썼는가 — 난이도 tier 를 가로질러 이어진다. */
+  const unitUsage = new Map<string, number>();
   // shortfall.unitId는 이 함수가 아는 유일한 단원 정보(pool[0])로 채운다 — 이 엔진은
   // 여러 단원이 섞인 범위 pool을 그대로 받을 수 있어 완벽한 단원별 귀속은 상위(T4.2
   // API 계층)가 단원별로 나눠 호출할 때 정확해진다.
@@ -165,6 +207,7 @@ export function balanceDifficulty<T extends SelectableProblem>(
       primaryCandidates,
       target,
       typeUsage,
+      unitUsage,
       seatRank,
     );
     for (const p of picked) {
@@ -182,6 +225,7 @@ export function balanceDifficulty<T extends SelectableProblem>(
         altCandidates,
         stillNeeded,
         typeUsage,
+        unitUsage,
         seatRank,
       );
       for (const p of altPicked) {
