@@ -538,6 +538,36 @@ def build_rpm(limit):
     return out, dict(stat)
 
 
+#: 못 구한 사유를 **부류로** 센다. 사유 문장에 파일 치수·문항 번호가 섞여 있어
+#: 문자열 앞머리로 세면 한 건짜리 칸이 90개 넘게 생겨 「몇 건이 왜 빠졌나」가 안 보인다.
+NO_RECT_KINDS = (
+    ("HWP BinData 계열 — PDF 좌표가 애초에 없다", "BinData"),
+    # ⚠️ 순서가 뜻이 있다. 「figure_rect 재현 실패」 사유 문장 **안에도**
+    #    「무리 그림 계획」이라는 말이 들어 있어서, 무리 쪽을 먼저 보면
+    #    600건이 통째로 무리로 세어진다(실제로 93 이 693 이 됐다).
+    #    낱말이 파일 안 다른 곳에도 있는지 먼저 볼 것(CLAUDE.md 2026-08-18).
+    ("RPM figure_rect 재현 실패 — 그때 쓴 계획이 이 컴퓨터에 없다", "figure_rect 를 다시 불러도"),
+    ("RPM 무리 그림 — 어느 장이 어느 칸인지 못 가른다", "한 문항에 그림이"),
+    ("지금 map_exam 결과에 대응이 없다", "대응이 없다"),
+    ("같은 자리인데 바이트가 다르다", "바이트가 다르다"),
+    ("렌더 치수가 안 맞는다", "렌더 치수가 안 맞는다"),
+    ("crop-pdf-by-stem 계열", "crop-pdf-by-stem"),
+    ("crop-table-by-stem 계열", "crop-table-by-stem"),
+    ("hwppdf 계열 — 만든 경로 미확인", "hwppdf 계열"),
+    ("원본이 HWP — 변환 PDF 캐시가 없다", "원본이 HWP"),
+    ("원본 PDF 가 디스크에 없다", "원본 PDF 가 디스크에 없다"),
+    ("교재 PDF 를 못 찾았다", "교재 PDF 를 못 찾았다"),
+)
+
+
+def no_rect_kind(note):
+    n = note or ""
+    for label, needle in NO_RECT_KINDS:
+        if needle in n:
+            return label
+    return "분류 안 됨: %s" % n[:60]
+
+
 def do_merge():
     rows, parts = [], {}
     for p in sorted(REPORTS.glob("figure-rect-ledger-*.json")):
@@ -548,11 +578,14 @@ def do_merge():
     for r in rows:
         agg["행"] += 1
         agg["rect 있음" if r["rect_pt"] else "rect 없음"] += 1
+        agg["크기(mm) 있음" if r["width_mm"] else "크기(mm) 없음"] += 1
         if not r["rect_pt"]:
-            agg["사유:%s" % ((r["note"] or "사유 없음")[:44])] += 1
+            agg["사유:%s" % no_rect_kind(r["note"])] += 1
         else:
             agg["kind:%s" % r["kind"]] += 1
             agg["증명:%s" % r["match"]] += 1
+        if r["note"] and "교차검산 어긋남" in r["note"]:
+            agg["⚠ 치수 교차검산 어긋남"] += 1
     disk = sum(1 for f in FIGROOT.rglob("*") if f.is_file())
     agg["디스크 파일"] = disk
     agg["원장에 안 담긴 파일"] = disk - agg["행"]
