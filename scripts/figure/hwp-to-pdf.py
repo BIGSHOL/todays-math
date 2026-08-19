@@ -132,7 +132,14 @@ def main() -> None:
     plan = json.loads(ROWS.read_text(encoding="utf-8"))["편"]
     if a.limit:
         plan = plan[: a.limit]
-    todo = [p for p in plan if not (OUT / f"{p['e']}.pdf").exists()]
+    # ⚠️ **「파일이 있다」를 「변환됐다」로 읽으면 안 된다.** 변환이 중간에 죽으면 0바이트
+    #    파일이 남고, 그러면 다음 실행이 그 편을 «이미 됨» 으로 건너뛴다 — 에러가 아니라
+    #    숫자만 조용히 줄어든다(2026-08-19 실측: `5049.pdf` 0바이트가 그렇게 남아 있었다).
+    def done(e: str) -> bool:
+        f = OUT / f"{e}.pdf"
+        return f.exists() and f.stat().st_size > 0
+
+    todo = [p for p in plan if not done(p["e"])]
     print(f"편 {len(plan)} · 이미 변환됨 {len(plan) - len(todo)} · 할 것 {len(todo)}")
     if not a.write:
         print("드라이런이다. 실제로 찍으려면 --write 를 붙여라.")
