@@ -128,3 +128,4 @@ scripts/classify/reports/loaded-external-ids.json
 
 # 임시 조사용 (커밋하지 않는다)
 .probe/
+!scripts/qa/reports/question-type-unify-ledger.json

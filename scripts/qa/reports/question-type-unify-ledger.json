@@ -1,0 +1,251 @@
+{
+ "적용": "시험지 원본이 «서답형» 인 문항을 questionType=서술형 으로 통일 — 원장님 확정 2026-08-19 (D-57)",
+ "기준시각": "2026-08-19T07:02:07.279Z",
+ "되돌리기": "ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-question-type-unify.ts --revert",
+ "적용됨": true,
+ "고친건수": 30,
+ "이번계획": 30,
+ "이어받음": 0,
+ "이전상태": [
+  {
+   "id": "d104e63a-30f6-46ec-b281-447f5610bbf1",
+   "questionType": "단답형",
+   "school": "남산고",
+   "questionNumber": 20,
+   "머리표": "[서답형 $2$]",
+   "exam": "1580"
+  },
+  {
+   "id": "5e5df228-a115-45b2-bbd1-d290d8b9c3ac",
+   "questionType": "단답형",
+   "school": "학남고",
+   "questionNumber": 20,
+   "머리표": "[서답형 $3$]",
+   "exam": "1902"
+  },
+  {
+   "id": "8ee419f7-92c5-43ca-9237-f70d70e65d3d",
+   "questionType": "단답형",
+   "school": "사대부중",
+   "questionNumber": 17,
+   "머리표": "[서답형 $2$]",
+   "exam": "2492"
+  },
+  {
+   "id": "e59087d8-4ea8-4d9b-a2d1-feca1ed548e1",
+   "questionType": "단답형",
+   "school": "사대부중",
+   "questionNumber": 19,
+   "머리표": "[서답형 $4$]",
+   "exam": "2492"
+  },
+  {
+   "id": "6976d0e5-cb0d-438d-a6de-a262a26299a3",
+   "questionType": "단답형",
+   "school": "사대부중",
+   "questionNumber": 20,
+   "머리표": "[서답형 $5$]",
+   "exam": "2492"
+  },
+  {
+   "id": "6859a829-0ba5-4203-af7d-3dd0afec75d4",
+   "questionType": "단답형",
+   "school": "오성중",
+   "questionNumber": 18,
+   "머리표": "[서답형 $3$]",
+   "exam": "2564"
+  },
+  {
+   "id": "8d11ba48-ec2f-41f8-92dd-2e4c62646b99",
+   "questionType": "단답형",
+   "school": "오성중",
+   "questionNumber": 19,
+   "머리표": "[서답형 $4$]",
+   "exam": "2564"
+  },
+  {
+   "id": "a8108bcf-a979-4175-9194-1bd1a6d83b45",
+   "questionType": "단답형",
+   "school": "오성중",
+   "questionNumber": 20,
+   "머리표": "[서답형 $5$]",
+   "exam": "2564"
+  },
+  {
+   "id": "fe4c640e-c5e2-480a-8f93-170b44a74bf6",
+   "questionType": "단답형",
+   "school": "중앙고",
+   "questionNumber": 17,
+   "머리표": "[서답형 $1$]",
+   "exam": "3358"
+  },
+  {
+   "id": "e783553c-c020-4898-8d85-ea9a7de6d9d4",
+   "questionType": "단답형",
+   "school": "중앙고",
+   "questionNumber": 18,
+   "머리표": "[서답형 $2$]",
+   "exam": "3358"
+  },
+  {
+   "id": "9d72886b-066d-457e-8d78-ae97632c4121",
+   "questionType": "단답형",
+   "school": "중앙고",
+   "questionNumber": 19,
+   "머리표": "[서답형 $3$]",
+   "exam": "3358"
+  },
+  {
+   "id": "d239ff6e-c071-4110-b016-beffd5168deb",
+   "questionType": "단답형",
+   "school": "중앙고",
+   "questionNumber": 20,
+   "머리표": "[서답형 $4$]",
+   "exam": "3358"
+  },
+  {
+   "id": "6018c696-07fa-45b3-abe5-a064bd884c08",
+   "questionType": "단답형",
+   "school": "중앙고",
+   "questionNumber": 21,
+   "머리표": "[서답형 $5$]",
+   "exam": "3358"
+  },
+  {
+   "id": "8a6ec5f4-90c3-4116-87d6-51481c11373b",
+   "questionType": "단답형",
+   "school": "중앙고",
+   "questionNumber": 22,
+   "머리표": "[서답형 $6$]",
+   "exam": "3358"
+  },
+  {
+   "id": "d11f30db-100e-46d6-90cb-253acfce5346",
+   "questionType": "단답형",
+   "school": "중앙고",
+   "questionNumber": 23,
+   "머리표": "[서답형 $7$]",
+   "exam": "3358"
+  },
+  {
+   "id": "08e5ec6f-4aa6-4434-b0c5-4c5974bf3081",
+   "questionType": "단답형",
+   "school": "관음중",
+   "questionNumber": 18,
+   "머리표": "[서답형 $1$]",
+   "exam": "3509"
+  },
+  {
+   "id": "0223d415-4bbb-4672-8269-6c01451859ec",
+   "questionType": "단답형",
+   "school": "관음중",
+   "questionNumber": 19,
+   "머리표": "[서답형 $2$]",
+   "exam": "3509"
+  },
+  {
+   "id": "8cdb58c2-ec43-48ab-a149-3cc9e287ab34",
+   "questionType": "단답형",
+   "school": "관음중",
+   "questionNumber": 20,
+   "머리표": "[서답형 $3$]",
+   "exam": "3509"
+  },
+  {
+   "id": "5c269979-28cb-42a8-ab2d-9e8c7b98a51c",
+   "questionType": "단답형",
+   "school": "관음중",
+   "questionNumber": 21,
+   "머리표": "[서답형 $4$]",
+   "exam": "3509"
+  },
+  {
+   "id": "26aa7b2d-374e-4788-8156-cf13bf51fd3b",
+   "questionType": "단답형",
+   "school": "관음중",
+   "questionNumber": 23,
+   "머리표": "[서답형 $6$]",
+   "exam": "3509"
+  },
+  {
+   "id": "f84afca4-e2e3-42e6-bf34-3717d52a1887",
+   "questionType": "단답형",
+   "school": "학산중",
+   "questionNumber": 17,
+   "머리표": "[서답형 $1$]",
+   "exam": "3635"
+  },
+  {
+   "id": "108397e4-cd68-452a-9650-c281a55a8cf3",
+   "questionType": "단답형",
+   "school": "학산중",
+   "questionNumber": 18,
+   "머리표": "[서답형 $2$]",
+   "exam": "3635"
+  },
+  {
+   "id": "971b134c-5611-4afc-b9e4-e9a923abe777",
+   "questionType": "단답형",
+   "school": "학산중",
+   "questionNumber": 19,
+   "머리표": "[서답형 $3$]",
+   "exam": "3635"
+  },
+  {
+   "id": "ae0bf802-d4c4-4b4e-9efd-2260f3db633c",
+   "questionType": "단답형",
+   "school": "학산중",
+   "questionNumber": 20,
+   "머리표": "[서답형 $4$]",
+   "exam": "3635"
+  },
+  {
+   "id": "cf5111b0-408c-4fdd-843f-ddb162d0a262",
+   "questionType": "단답형",
+   "school": "화원고",
+   "questionNumber": 19,
+   "머리표": "[서답형 $1$]",
+   "exam": "5070"
+  },
+  {
+   "id": "387fff1e-5878-4b0c-aeea-6da220b73d8f",
+   "questionType": "단답형",
+   "school": "화원고",
+   "questionNumber": 20,
+   "머리표": "[서답형 $2$]",
+   "exam": "5070"
+  },
+  {
+   "id": "c07abb80-a1e8-4bae-8cd3-7985af0af7d3",
+   "questionType": "단답형",
+   "school": "화원고",
+   "questionNumber": 21,
+   "머리표": "[서답형 $3$]",
+   "exam": "5070"
+  },
+  {
+   "id": "4902318c-66c7-40fd-aa03-d1f05f140efb",
+   "questionType": "단답형",
+   "school": "화원고",
+   "questionNumber": 22,
+   "머리표": "[서답형 $4$]",
+   "exam": "5070"
+  },
+  {
+   "id": "751bc250-3f65-4c9f-be6f-d793853fd28c",
+   "questionType": "단답형",
+   "school": "화원고",
+   "questionNumber": 23,
+   "머리표": "[서답형 $5$]",
+   "exam": "5070"
+  },
+  {
+   "id": "b3fc2424-a9d7-4ac5-a335-9fd93a0e1e6e",
+   "questionType": "단답형",
+   "school": "화원고",
+   "questionNumber": 24,
+   "머리표": "[서답형 $6$]",
+   "exam": "5070"
+  }
+ ]
+}
