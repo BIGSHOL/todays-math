@@ -59,7 +59,6 @@ import {
   sigKo,
   type HwpQ,
 } from "./hwpJudgeRules";
-import { splitInlineChoiceMarkers } from "./choiceRepairRules";
 
 /**
  * 재 보는 두 갈래.
@@ -383,22 +382,6 @@ export function judgeRescue(input: RescueInput): RescueResult {
     pair,
     fake,
   };
-}
-
-/** 두 HWP 팔 중 «나은 쪽». 정상 > 치명아님 > 치명. 같으면 칸이 많은 쪽. */
-function pickBest(a: Judgement, b: Judgement): Judgement {
-  const rank = (j: Judgement): number =>
-    j.verdict === "정상"
-      ? 3
-      : j.verdict === "미분류"
-        ? 0
-        : isFatal(j.verdict)
-          ? 1
-          : 2;
-  const ra = rank(a);
-  const rb = rank(b);
-  if (ra !== rb) return ra > rb ? a : b;
-  return a.labels.length >= b.labels.length ? a : b;
 }
 
 /** 판정기가 실제로 본 보기 본문 — 값 비교(값일치·번호.값)에 쓴다. */

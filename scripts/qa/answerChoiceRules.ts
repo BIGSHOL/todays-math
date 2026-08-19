@@ -109,13 +109,6 @@ function dedupeRepeatedBlock<T extends { body: string }>(items: T[]): T[] {
     : items;
 }
 
-function markerLabel(marker: string): number {
-  const trimmed = marker.trim();
-  const circled = circledValue(trimmed[0] ?? "");
-  if (circled > 0) return circled;
-  return Number(/^(\d+)/.exec(trimmed)![1]);
-}
-
 export interface ChoiceLabels {
   /** 지면에 실제로 그려지는 보기의 **원래 번호**, 그려지는 순서대로. */
   labels: number[];
