@@ -10,6 +10,8 @@
 import { http, type HttpHandler } from "msw";
 
 import {
+  defaultReviewRangeQuerySchema,
+  defaultReviewRangeResponseSchema,
   insufficientProblemsErrorResponseSchema,
   testConfirmResponseSchema,
   testDetailResponseSchema,
@@ -20,8 +22,12 @@ import {
   testPrintResponseSchema,
   testProblemReplaceResponseSchema,
 } from "@/contracts/test.contract";
+import { resolveDefaultReviewRange } from "@/lib/generator/defaultReviewRange";
+import { resolveRange } from "@/lib/generator/resolveRange";
 
 import {
+  MOCK_PROGRESS,
+  MOCK_UNITS,
   CLASS_STARVED_ID,
   MOCK_EMPTY_PROBLEM_UNIT,
   MOCK_PROBLEMS,
@@ -37,7 +43,67 @@ function findTest(id: string) {
   return MOCK_TESTS.find((t) => t.id === id);
 }
 
+/**
+ * 확인테스트 기본 범위는 **제품과 같은 순수 함수**로 만든다. 픽스처에 숫자를 적어 두면
+ * 규칙이 바뀔 때 화면 테스트만 옛 값을 보고 초록으로 남는다(모의 카탈로그가 결함을
+ * 가리는 자리 — CLAUDE.md 2026-08-14).
+ */
+function defaultRangeFor(classId: string, studentId: string | null) {
+  const rows = MOCK_PROGRESS.filter(
+    (row) => row.classId === classId && row.studentId === studentId,
+  );
+  const fallback = MOCK_PROGRESS.filter(
+    (row) => row.classId === classId && row.studentId === null,
+  );
+  const history = rows.length > 0 ? rows : fallback;
+  const current = history.reduce<(typeof history)[number] | undefined>(
+    (latest, row) =>
+      !latest || row.recordedAt > latest.recordedAt ? row : latest,
+    undefined,
+  );
+  if (!current) return null;
+
+  const lastReview = MOCK_TESTS.filter(
+    (t) => t.classId === classId && t.testType === "review",
+  ).at(-1);
+
+  const range = resolveDefaultReviewRange({
+    units: MOCK_UNITS,
+    currentUnitId: current.unitId,
+    lastReviewEndUnitId: lastReview?.rangeEndUnitId ?? null,
+    progressUnitIds: history.map((row) => row.unitId),
+  });
+  if (!range) return null;
+
+  const { unitIds } = resolveRange({
+    testType: "review",
+    rangeStartUnitId: range.startUnitId,
+    rangeEndUnitId: range.endUnitId,
+    units: MOCK_UNITS,
+  });
+  return {
+    rangeStartUnitId: range.startUnitId,
+    rangeEndUnitId: range.endUnitId,
+    unitCount: unitIds.length,
+    startedFrom: range.startedFrom,
+  };
+}
+
 export const testHandlers: HttpHandler[] = [
+  // GET /api/tests/default-range — 확인테스트가 손대지 않아도 맞는 범위(S-04)
+  http.get("/api/tests/default-range", ({ request }) => {
+    const parsed = defaultReviewRangeQuerySchema.safeParse(
+      Object.fromEntries(new URL(request.url).searchParams),
+    );
+    if (!parsed.success) return validationError(parsed.error);
+    return jsonOk(defaultReviewRangeResponseSchema, {
+      data: defaultRangeFor(
+        parsed.data.classId,
+        parsed.data.studentId ?? null,
+      ),
+    });
+  }),
+
   // POST /api/tests/generate — 자동 출제 실행(draft TEST + TEST_PROBLEM 생성)
   http.post("/api/tests/generate", async ({ request }) => {
     const parsed = testGenerateRequestSchema.safeParse(await request.json());

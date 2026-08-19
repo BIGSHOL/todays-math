@@ -16,10 +16,11 @@ import {
   CLASS_A_ID,
   CLASS_B_ID,
   CLASS_STARVED_ID,
+  MOCK_CURRENT_PROGRESS_UNIT,
+  MOCK_UNITS,
   MOCK_CLASS_A,
   MOCK_CLASS_B,
   MOCK_PROBLEMS,
-  MOCK_REVIEW_RANGE_END_UNIT,
   MOCK_REVIEW_RANGE_START_UNIT,
   MOCK_STUDENT_1,
   MOCK_TEST_DRAFT,
@@ -107,54 +108,280 @@ describe("[T4.3 S-04] 출제 설정 — 폼 골격", () => {
     );
   });
 
-  it("확인테스트면 시작·끝 소단원을 보여 주고, 일일이면 숨긴다", async () => {
+  /**
+   * 🔴 RED → 🟢 — **범위는 진도가 정한다. 화면은 한 줄로 보여 준다.**
+   *
+   * 예전에는 소단원 select 두 개가 **전 교육과정 735개**를 늘어놓고, 기본값이
+   * 「초1 첫 소단원 ~ 미적분2 마지막」이었다. 손대지 않고 출제하면 다섯 학년이
+   * 섞인 시험지가 **오류도 경고도 없이** 나왔다(실측).
+   *
+   * 확정(2026-08-19, D-07 절차): Wire **C안**(평소 한 줄, 고칠 때만 펼침) →
+   * Hi-fi **④ 범위 막대** → 펼침은 **Ⓐ 한 피커에서 두 번 눌러 범위**(달력의 기간
+   * 선택과 같은 손놀림). 두 벌을 세로로 쌓으면 학년 열이 16행이라 폼이 통째로
+   * 화면 밖으로 밀린다 — 원장님이 실제 화면에서 잡아 주신 것이다.
+   */
+  it("확인테스트면 범위를 한 줄로 보여 준다 — 평단 목록은 없다", async () => {
     const { user } = await renderSetup();
 
-    expect(screen.queryByLabelText("시작 소단원")).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("끝 소단원")).not.toBeInTheDocument();
+    expect(screen.queryByText(/~/)).not.toBeInTheDocument();
 
     await user.click(screen.getByRole("radio", { name: "확인테스트" }));
 
-    const start = screen.getByLabelText("시작 소단원");
-    const end = screen.getByLabelText("끝 소단원");
-    expect(start).toBeInTheDocument();
-    expect(end).toBeInTheDocument();
+    // 기본값은 서버(`/api/tests/default-range`)가 준다 — 반 A 는 확인테스트를 낸 적이
+    // 없으니 **진도 이력 첫 단원 ~ 현재 진도**다.
+    await screen.findByText(
+      `${MOCK_UNITS[0]!.section} ~ ${MOCK_CURRENT_PROGRESS_UNIT.section}`,
+    );
+
+    // ④ 막대의 라벨 — 「그 학년 전체에서 어디까지인가」.
     expect(
-      within(start).getByRole("option", {
-        name: MOCK_REVIEW_RANGE_START_UNIT.section,
-      }),
+      screen.getByText(
+        `${MOCK_CURRENT_PROGRESS_UNIT.grade} 소단원 ${MOCK_UNITS.length}개 중 1~4번째`,
+      ),
     ).toBeInTheDocument();
-    expect(
-      within(end).getByRole("option", {
-        name: MOCK_REVIEW_RANGE_END_UNIT.section,
+
+    // 평소에는 고를 것이 없다 — 목록도 피커도 안 나온다.
+    expect(screen.queryByLabelText("시작 소단원")).not.toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: "범위 선택" })).toBeNull();
+  });
+
+  it("「고치기」를 누르면 3열 피커가 **한 벌** 열린다", async () => {
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+    await screen.findByRole("button", { name: "고치기" });
+
+    await user.click(screen.getByRole("button", { name: "고치기" }));
+
+    const picker = screen.getByRole("group", { name: "범위 선택" });
+    // 3열 — 학년 | 대단원 | 소단원 (S-07 과 같은 문법)
+    expect(within(picker).getByText("학년")).toBeInTheDocument();
+    expect(within(picker).getByText("대단원")).toBeInTheDocument();
+    expect(within(picker).getByText("소단원")).toBeInTheDocument();
+    // 🔒 두 벌이면 폼이 밀린다 — 한 벌뿐인 것을 잠근다.
+    expect(screen.getAllByRole("group", { name: "범위 선택" })).toHaveLength(1);
+  });
+
+  /**
+   * 🔒 **페이지를 굴리지 않는다.** 열에 높이 상한(260px)이 걸려 있어 고른 것이 창
+   * 밖에 있을 수 있는데, 그걸 `scrollIntoView` 로 끌어오면 사양상 **문서까지** 굴러
+   * 페이지가 튄다 — 이 작업이 고치려던 「스크롤이 강제된다」 그 증상이다.
+   * 굴리는 것은 **열 상자뿐**이고, 얼마나 굴릴지는 `scrollDeltaToReveal` 이 정한다
+   * (그 계산은 `revealWithin.test.ts` 가 따로 잠근다).
+   */
+  it("피커를 열어도 페이지를 굴리지 않는다", async () => {
+    const scrollIntoView = vi.fn();
+    const original = (
+      Element.prototype as unknown as { scrollIntoView?: unknown }
+    ).scrollIntoView;
+    (
+      Element.prototype as unknown as { scrollIntoView: unknown }
+    ).scrollIntoView = scrollIntoView;
+
+    try {
+      const { user } = await renderSetup();
+      await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+      await screen.findByRole("button", { name: "고치기" });
+
+      await user.click(screen.getByRole("button", { name: "고치기" }));
+
+      expect(
+        screen.getByRole("group", { name: "범위 선택" }),
+      ).toBeInTheDocument();
+      expect(scrollIntoView).not.toHaveBeenCalled();
+    } finally {
+      if (original === undefined) {
+        delete (Element.prototype as unknown as { scrollIntoView?: unknown })
+          .scrollIntoView;
+      } else {
+        (
+          Element.prototype as unknown as { scrollIntoView: unknown }
+        ).scrollIntoView = original;
+      }
+    }
+  });
+
+  it("소단원을 두 번 누르면 시작·끝이 되고 출제 요청도 함께 바뀐다", async () => {
+    let body: unknown;
+    server.use(
+      http.post("/api/tests/generate", async ({ request }) => {
+        body = await request.json();
+        return HttpResponse.json(
+          {
+            data: {
+              test: MOCK_TEST_DRAFT,
+              problems: MOCK_TEST_DRAFT_PROBLEMS,
+              shortfall: [],
+            },
+          },
+          { status: 201 },
+        );
       }),
+    );
+
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+    await screen.findByRole("button", { name: "고치기" });
+    await user.click(screen.getByRole("button", { name: "고치기" }));
+
+    const picker = screen.getByRole("group", { name: "범위 선택" });
+    // 첫 번째 클릭 = 시작 (그 순간 범위는 그 한 단원이다)
+    await user.click(
+      within(picker).getByRole("button", { name: MOCK_UNITS[1]!.section }),
+    );
+    await screen.findByText(
+      `${MOCK_UNITS[1]!.section} ~ ${MOCK_UNITS[1]!.section}`,
+    );
+
+    // 두 번째 클릭 = 끝
+    await user.click(
+      within(picker).getByRole("button", { name: MOCK_UNITS[7]!.section }),
+    );
+    await screen.findByText(
+      `${MOCK_UNITS[1]!.section} ~ ${MOCK_UNITS[7]!.section}`,
+    );
+
+    await user.click(screen.getByRole("button", { name: "출제" }));
+    await waitFor(() => expect(body).toBeDefined());
+    expect(body).toMatchObject({
+      testType: "review",
+      rangeStartUnitId: MOCK_UNITS[1]!.id,
+      rangeEndUnitId: MOCK_UNITS[7]!.id,
+    });
+  });
+
+  /**
+   * 🔒 **거꾸로 된 범위를 만들지 않는다.** 끝으로 시작보다 앞을 누르면 그것이 새
+   * 시작이 된다 — 그대로 두면 `resolveRange` 가 정렬해 엉뚱한 범위가 조용히 나간다.
+   */
+  it("끝으로 시작보다 앞을 누르면 그것이 새 시작이 된다", async () => {
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+    await screen.findByRole("button", { name: "고치기" });
+    await user.click(screen.getByRole("button", { name: "고치기" }));
+
+    const picker = screen.getByRole("group", { name: "범위 선택" });
+    await user.click(
+      within(picker).getByRole("button", { name: MOCK_UNITS[7]!.section }),
+    );
+    await user.click(
+      within(picker).getByRole("button", { name: MOCK_UNITS[1]!.section }),
+    );
+
+    expect(
+      await screen.findByText(
+        `${MOCK_UNITS[1]!.section} ~ ${MOCK_UNITS[1]!.section}`,
+      ),
     ).toBeInTheDocument();
   });
 
-  it("문항 수를 고친 뒤에도 소단원 선택이 그대로 살아 있다", async () => {
-    // 소단원 option 은 실제로 1,472개다. 글자 하나마다 두 벌을 다시 조정하지
-    // 않도록 select 를 memo 로 잘라 뒀는데, 잘못 자르면 핸들러가 옛 값을 붙든
-    // 채 굳는다(고전적인 memo 사고). 그 방향을 잠근다.
+  /**
+   * 🔴 적대적 리뷰(2026-08-19) — **아직 안 온 것과 없는 것을 같이 말했다.**
+   *
+   * 범위를 불러오는 동안 화면은 「진도 기록이 없어 범위를 정하지 못했습니다」를 띄웠다.
+   * 느린 회선에서 원장은 **진도를 기록하러 간다** — 진도는 멀쩡한데.
+   */
+  it("범위를 불러오는 동안에는 진도가 없다고 말하지 않는다", async () => {
+    server.use(
+      http.get("/api/tests/default-range", () => new Promise(() => {})),
+    );
+
     const { user } = await renderSetup();
     await user.click(screen.getByRole("radio", { name: "확인테스트" }));
 
-    const start = screen.getByLabelText("시작 소단원");
-    const kept = (start as HTMLSelectElement).value;
+    expect(await screen.findByText("범위를 불러오는 중")).toBeInTheDocument();
+    expect(
+      screen.queryByText("진도 기록이 없어 범위를 정하지 못했습니다"),
+    ).not.toBeInTheDocument();
+  });
+
+  /**
+   * 🔴 적대적 리뷰(2026-08-19) — **반을 바꾼 직후 이전 반의 범위로 출제할 수 있었다.**
+   *
+   * 반이 바뀌면 범위를 다시 묻는데, 답이 오기 전까지 `rangeStartUnitId` 는 **이전 반의
+   * 값**을 그대로 들고 있다. 「출제」가 그때 눌리면 그 값이 그대로 실려 나간다 —
+   * 단원 id 는 반과 무관하게 유효하므로 서버도 막지 않는다. 조용히 틀리는 자리다.
+   */
+  it("반을 바꾼 뒤 범위가 오기 전에는 출제할 수 없다", async () => {
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+    await screen.findByRole("button", { name: "고치기" });
+
+    // 다음 조회는 영원히 안 온다 — 반을 바꾸는 순간부터 「모르는」 상태다.
+    server.use(
+      http.get("/api/tests/default-range", () => new Promise(() => {})),
+    );
+    await user.selectOptions(screen.getByLabelText("반"), CLASS_B_ID);
+
+    expect(await screen.findByText("범위를 불러오는 중")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "출제" })).toBeDisabled();
+  });
+
+  /**
+   * 🔴 같은 뿌리 — **조회 실패도 「진도 없음」으로 읽었다.** 500 이든 회선이 끊겼든
+   * 화면은 진도 탓을 했다. 손상은 「모른다」로 말해야 한다.
+   */
+  it("범위 조회가 실패하면 진도가 아니라 조회를 탓한다", async () => {
+    server.use(
+      http.get(
+        "/api/tests/default-range",
+        () => new HttpResponse("broken", { status: 500 }),
+      ),
+    );
+
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+
+    expect(
+      await screen.findByText("범위를 불러오지 못했습니다"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("진도 기록이 없어 범위를 정하지 못했습니다"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "출제" })).toBeDisabled();
+  });
+
+  /**
+   * 🔒 진도가 없으면 범위를 **지어내지 않는다**. 예전 기본값(초1~미적분2)이 바로
+   * 그 «지어냄»이었다. 안내하고 원장이 직접 고르게 한다.
+   */
+  it("진도가 없어 범위를 못 내면 안내하고 출제를 막는다", async () => {
+    server.use(
+      http.get("/api/tests/default-range", () =>
+        HttpResponse.json({ data: null }),
+      ),
+    );
+
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+
+    expect(
+      await screen.findByText("진도 기록이 없어 범위를 정하지 못했습니다"),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "출제" })).toBeDisabled();
+  });
+
+  it("문항 수를 고쳐도 고르던 범위가 그대로 살아 있다", async () => {
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+    await screen.findByRole("button", { name: "고치기" });
+    await user.click(screen.getByRole("button", { name: "고치기" }));
+
+    const picker = screen.getByRole("group", { name: "범위 선택" });
+    await user.click(
+      within(picker).getByRole("button", { name: MOCK_UNITS[1]!.section }),
+    );
+    await user.click(
+      within(picker).getByRole("button", { name: MOCK_UNITS[7]!.section }),
+    );
 
     const count = screen.getByLabelText("문항 수");
     await user.clear(count);
     await user.type(count, "12");
 
     expect(screen.getByLabelText("문항 수")).toHaveValue(12);
-    // 목록·선택값 모두 그대로다.
-    expect(screen.getByLabelText("시작 소단원")).toHaveValue(kept);
-    await user.selectOptions(
-      screen.getByLabelText("끝 소단원"),
-      MOCK_REVIEW_RANGE_END_UNIT.id,
-    );
-    expect(screen.getByLabelText("끝 소단원")).toHaveValue(
-      MOCK_REVIEW_RANGE_END_UNIT.id,
-    );
+    expect(
+      screen.getByText(`${MOCK_UNITS[1]!.section} ~ ${MOCK_UNITS[7]!.section}`),
+    ).toBeInTheDocument();
   });
 });
 
