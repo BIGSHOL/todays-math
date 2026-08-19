@@ -2,13 +2,13 @@
  "note": "되돌리기 자료. `before` 가 적용 전 DB 값이다. 되돌리려면: ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/backfill-figure-source-mm.ts --revert --apply",
  "generatedFrom": "scripts/qa/reports/figure-rect-ledger.json",
  "applied": false,
- "beforeIsInferred": true,
- "beforeNote": "⚠️ 컬럼이 없어 before 를 읽지 못한 행이 있다. [] 로 적었으나 이는 추론이다 — 적용 전에 컬럼이 있는 상태로 다시 돌릴 것.",
+ "beforeIsInferred": false,
+ "beforeNote": "before 는 DB 에서 읽은 값이다.",
  "planned": 8238,
  "carriedOver": 0,
- "skippedCount": 1448,
+ "skippedCount": 1490,
  "skipReasons": {
-  "원장에 mm 이 없다 (N장)": 1445,
+  "원장에 mm 이 없다 (N장)": 1487,
   "일부만 원장에 있다 (N장 중 N장)": 3
  },
  "rows": [

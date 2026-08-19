@@ -625,6 +625,10 @@ describe("[T3.1] findEligibleProblems — 출제 가능 풀 조회", () => {
       expect(typeof row.content).toBe("string");
       expect(Array.isArray(row.figureUrls)).toBe(true);
       expect(Array.isArray(row.figureDims)).toBe(true);
+      // mm 은 「얼마로 그린다」의 유일한 근거다. select 에서 빠지면 undefined 가
+      // 되어 엔진이 그 문항 높이를 «모른다»로 받고 **후순위**로 돌린다 —
+      // 적재는 됐는데 출제만 옛 크기로 고르는, 조용히 갈라지는 자리다.
+      expect(Array.isArray(row.figureSourceMm)).toBe(true);
     }
   });
 });

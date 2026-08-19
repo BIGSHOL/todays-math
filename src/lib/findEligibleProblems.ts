@@ -84,14 +84,15 @@ export async function findEligibleProblems(
       difficulty: true,
       problemType: true,
       directUseAllowed: true,
-      // ── 지면을 보기 위한 셋 (⑷) + mm 은 컬럼이 생긴 뒤에 추가 ──────────
-      // `figureSourceMm` 는 마이그레이션을 적용하고 schema.prisma 에 넣은
-      // 다음에 select 에 올린다. 컬럼 없이 넣으면 출제 조회가 통째로 죽는다.
-      // 엔진(`risksTightSeat`)은 이미 이 필드를 읽는다 — 여기가 빠지면
-      // 적재만 되고 출제는 오늘과 한 글자도 같다.
+      // ── 지면을 보기 위한 넷 (⑷ · mm 은 2026-08-20) ─────────────────────
+      // 엔진(`risksTightSeat`)이 이 넷으로 「칸에 들어가나」를 본다. 하나라도
+      // 빠지면 그 문항의 높이를 «모른다»로 받아 **후순위**로 돌린다.
+      // `figureSourceMm` 은 컬럼(20260819120000)이 있어야 한다 — 없는 DB 에
+      // 이걸 SELECT 하면 출제 조회가 통째로 죽는다.
       content: true,
       figureUrls: true,
       figureDims: true,
+      figureSourceMm: true,
     },
   });
 
@@ -106,5 +107,6 @@ export async function findEligibleProblems(
     content: row.content,
     figureUrls: row.figureUrls,
     figureDims: row.figureDims,
+    figureSourceMm: row.figureSourceMm,
   }));
 }

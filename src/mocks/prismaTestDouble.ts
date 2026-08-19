@@ -101,6 +101,11 @@ interface ProblemRow {
    * 계약(`ProblemEntity`)엔 없고 DB 컬럼에만 있다 — 출제 ⑷ 와 넘침 판정이 읽는다.
    */
   figureDims: number[];
+  /**
+   * `figureUrls` 와 같은 순서·같은 길이의 **원본 지면 물리 폭(mm)**.
+   * 계약엔 없고 DB 컬럼에만 있다 — 출제 ⑷ 와 넘침 판정이 「얼마로 그린다」를 여기서 읽는다.
+   */
+  figureSourceMm: number[];
   reviewStatus: ReviewStatus;
   directUseAllowed: boolean;
   pool: "shared" | "private";
@@ -373,6 +378,7 @@ function toProblemRow(entity: ProblemEntity): ProblemRow {
     questionType: null,
     // 계약엔 없는 DB 컬럼 — 빈 배열이 실제 기본값이다(`@default([])`).
     figureDims: [],
+    figureSourceMm: [],
     createdAt: new Date(entity.createdAt),
     updatedAt: new Date(entity.updatedAt),
   };
@@ -391,6 +397,7 @@ function toFixtureProblemRow(
     figureUrls: [],
     figureSvg: null,
     figureDims: [],
+    figureSourceMm: [],
     createdAt: new Date(fixture.createdAt),
     updatedAt: new Date(fixture.updatedAt),
   };
