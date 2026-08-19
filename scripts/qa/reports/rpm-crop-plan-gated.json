@@ -1,0 +1,6919 @@
+{
+ "기준": "본문 유사도 0.85 이상 · 책별 (dx,dy) 보정 적용",
+ "책": [
+  {
+   "책": "RPM 중학 1-1 학생용.pdf",
+   "대상": 9,
+   "쪽오프셋": 0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "보정전중앙값": 0.964,
+   "보정후중앙값": 0.964,
+   "통과": 9
+  },
+  {
+   "책": "RPM 중학 1-2 학생용.pdf",
+   "대상": 208,
+   "쪽오프셋": 0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "보정전중앙값": 0.912,
+   "보정후중앙값": 0.912,
+   "통과": 115
+  },
+  {
+   "책": "RPM 중학 2-1 학생용.pdf",
+   "대상": 39,
+   "쪽오프셋": 0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "보정전중앙값": 0.962,
+   "보정후중앙값": 0.962,
+   "통과": 30
+  },
+  {
+   "책": "RPM 중학 2-2 학생용.pdf",
+   "대상": 262,
+   "쪽오프셋": 0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "보정전중앙값": 0.93,
+   "보정후중앙값": 0.93,
+   "통과": 161
+  },
+  {
+   "책": "RPM 중학 3-1 학생용.pdf",
+   "대상": 43,
+   "쪽오프셋": 0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "보정전중앙값": 0.959,
+   "보정후중앙값": 0.959,
+   "통과": 39
+  },
+  {
+   "책": "RPM 중학 3-2 학생용.pdf",
+   "대상": 106,
+   "쪽오프셋": 3,
+   "dx": 0.0,
+   "dy": 0.0,
+   "보정전중앙값": 0.816,
+   "보정후중앙값": 0.816,
+   "통과": 49
+  }
+ ],
+ "문항수": 403,
+ "목록": [
+  {
+   "problemId": "eb5dd130-e8b7-4eb5-99af-6c5255e8ae6e",
+   "externalId": "019fd1d5-988a-73d8-a484-ff48f18cbb8b",
+   "pdf": ".rpm-src\\RPM 중학 1-1 학생용.pdf",
+   "page": 42,
+   "rect": [
+    56.67,
+    635.94,
+    296.48,
+    713.39
+   ],
+   "out": "public\\figures\\rpm\\019fd1d5-988a-73d8-a484-ff48f18cbb8b\\0.png",
+   "sim": 0.923,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "351cfe94-6072-40a8-afe8-9f2b6d30b20e",
+   "externalId": "019fd1d5-c472-7046-8fa3-79e5e2203390",
+   "pdf": ".rpm-src\\RPM 중학 1-1 학생용.pdf",
+   "page": 59,
+   "rect": [
+    65.2,
+    173.43,
+    295.45,
+    245.73
+   ],
+   "out": "public\\figures\\rpm\\019fd1d5-c472-7046-8fa3-79e5e2203390\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "55d48145-041b-4b85-80c2-990f85973d32",
+   "externalId": "019fd1d5-c53a-74fd-80f0-e5ac2c1ab30d",
+   "pdf": ".rpm-src\\RPM 중학 1-1 학생용.pdf",
+   "page": 59,
+   "rect": [
+    65.2,
+    606.88,
+    297.38,
+    677.17
+   ],
+   "out": "public\\figures\\rpm\\019fd1d5-c53a-74fd-80f0-e5ac2c1ab30d\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "9a9b91f1-5845-4cec-858f-fb983e74badd",
+   "externalId": "019fd1d5-dc72-7753-8ec0-efd500a848e7",
+   "pdf": ".rpm-src\\RPM 중학 1-1 학생용.pdf",
+   "page": 69,
+   "rect": [
+    65.2,
+    59.45,
+    294.05,
+    145.52
+   ],
+   "out": "public\\figures\\rpm\\019fd1d5-dc72-7753-8ec0-efd500a848e7\\0.png",
+   "sim": 0.939,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c15b1ab4-b92f-484a-b90c-c4d1cbc403f9",
+   "externalId": "019fd1d6-43d1-7678-8be8-2ff7e01aee94",
+   "pdf": ".rpm-src\\RPM 중학 1-1 학생용.pdf",
+   "page": 91,
+   "rect": [
+    330.23,
+    256.19,
+    606.67,
+    388.48
+   ],
+   "out": "public\\figures\\rpm\\019fd1d6-43d1-7678-8be8-2ff7e01aee94\\0.png",
+   "sim": 0.949,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c0974b3b-abf8-4cac-ba4d-29f4a279c8fa",
+   "externalId": "019fd1d6-76c9-718a-b129-6a3a5b9fffda",
+   "pdf": ".rpm-src\\RPM 중학 1-1 학생용.pdf",
+   "page": 111,
+   "rect": [
+    65.19,
+    514.53,
+    301.89,
+    623.52
+   ],
+   "out": "public\\figures\\rpm\\019fd1d6-76c9-718a-b129-6a3a5b9fffda\\0.png",
+   "sim": 0.942,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d7acfd10-2b75-410e-8fab-50aff6c22c6b",
+   "externalId": "019fd1d6-86cf-7188-b4bb-bf92f68053fd",
+   "pdf": ".rpm-src\\RPM 중학 1-1 학생용.pdf",
+   "page": 118,
+   "rect": [
+    56.69,
+    261.31,
+    296.48,
+    378.87
+   ],
+   "out": "public\\figures\\rpm\\019fd1d6-86cf-7188-b4bb-bf92f68053fd\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "77740128-dbcb-48ff-8e48-7accd2c6882d",
+   "externalId": "019fd1d6-871b-736a-bc14-bd396d6d6484",
+   "pdf": ".rpm-src\\RPM 중학 1-1 학생용.pdf",
+   "page": 118,
+   "rect": [
+    56.69,
+    442.66,
+    296.48,
+    603.66
+   ],
+   "out": "public\\figures\\rpm\\019fd1d6-871b-736a-bc14-bd396d6d6484\\0.png",
+   "sim": 0.976,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "58204b58-ce67-4bb3-b6e9-5e67cee31f1e",
+   "externalId": "019fd1d6-f4e6-75c8-bb6e-ae72868a7f48",
+   "pdf": ".rpm-src\\RPM 중학 1-1 학생용.pdf",
+   "page": 147,
+   "rect": [
+    330.23,
+    280.19,
+    606.67,
+    464.49
+   ],
+   "out": "public\\figures\\rpm\\019fd1d6-f4e6-75c8-bb6e-ae72868a7f48\\0.png",
+   "sim": 0.964,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "3c386c32-cb5b-4ef6-a7d6-60e188970893",
+   "externalId": "019fd1d7-67a8-70af-8554-06908b7d6743",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 27,
+   "rect": [
+    330.24,
+    78.17,
+    471.86,
+    122.44
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-67a8-70af-8554-06908b7d6743\\0.png",
+   "sim": 0.865,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a0ef04c1-c4e5-4165-8a7b-7db0cfc1f187",
+   "externalId": "019fd1d7-773d-714e-9499-5dc2af080111",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 35,
+   "rect": [
+    65.19,
+    234.05,
+    297.32,
+    347.01
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-773d-714e-9499-5dc2af080111\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "fd84bf79-e61f-430e-bdc0-381aff50bafd",
+   "externalId": "019fd1d7-77ec-761c-9f46-98fdcb2392d7",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 35,
+   "rect": [
+    65.2,
+    664.21,
+    292.22,
+    711.14
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-77ec-761c-9f46-98fdcb2392d7\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b2f5a9e9-889a-41b7-a1e3-6207b7e1fd1b",
+   "externalId": "019fd1d7-783b-777f-a06e-03b8f3b9b4c6",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 35,
+   "rect": [
+    330.24,
+    163.26,
+    606.67,
+    253.27
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-783b-777f-a06e-03b8f3b9b4c6\\0.png",
+   "sim": 0.85,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "33fc4635-3279-4400-aa27-6afb54695ba5",
+   "externalId": "019fd1d7-7888-77ba-aba9-23067a6552a3",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 35,
+   "rect": [
+    330.23,
+    341.61,
+    566.93,
+    441.24
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-7888-77ba-aba9-23067a6552a3\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d59d4794-cdbe-472b-a8b3-e41eb7f64fd7",
+   "externalId": "019fd1d7-7a2b-737c-9c92-1e56e7cfb72d",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 36,
+   "rect": [
+    56.69,
+    631.96,
+    293.39,
+    747.59
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-7a2b-737c-9c92-1e56e7cfb72d\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c166fc44-164c-4083-bbf3-1ff29a64c2d9",
+   "externalId": "019fd1d7-7a78-7279-a25a-f79599ef80f9",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 36,
+   "rect": [
+    321.73,
+    193.2,
+    558.43,
+    275.23
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-7a78-7279-a25a-f79599ef80f9\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "959543be-fbe0-43c2-8df7-9a924f38c545",
+   "externalId": "019fd1d7-7ac4-7633-b5ce-c97210b51fd0",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 36,
+   "rect": [
+    321.73,
+    402.33,
+    558.43,
+    484.36
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-7ac4-7633-b5ce-c97210b51fd0\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "5df78719-2259-4b6c-85c2-cf6d547b9d4f",
+   "externalId": "019fd1d7-7b6f-7534-a077-df801389ab71",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 37,
+   "rect": [
+    65.2,
+    254.42,
+    301.89,
+    336.46
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-7b6f-7534-a077-df801389ab71\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b412c04b-e66e-4a8a-b462-4675a7b6b71b",
+   "externalId": "019fd1d7-7bbc-71f1-874a-eb281290a1fe",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 37,
+   "rect": [
+    65.2,
+    407.9,
+    301.89,
+    458.63
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-7bbc-71f1-874a-eb281290a1fe\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "77dc1597-e615-478a-b707-a81e886eb11c",
+   "externalId": "019fd1d7-7c09-754c-bef5-8e2f1d84a6a6",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 37,
+   "rect": [
+    65.2,
+    530.75,
+    301.89,
+    587.86
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-7c09-754c-bef5-8e2f1d84a6a6\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "ba7ebf12-d7dc-4332-9df2-cd4b6893e6ef",
+   "externalId": "019fd1d7-7c5b-722b-a6a4-536dc30e4e41",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 37,
+   "rect": [
+    65.2,
+    667.1,
+    301.89,
+    749.13
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-7c5b-722b-a6a4-536dc30e4e41\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "29e6a92b-8266-43f4-bb56-7267847ea7e5",
+   "externalId": "019fd1d7-7cb1-75a7-829b-389dca43c8c4",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 37,
+   "rect": [
+    330.23,
+    254.39,
+    566.93,
+    321.42
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-7cb1-75a7-829b-389dca43c8c4\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "772cc209-828c-4039-bbe5-625528df0208",
+   "externalId": "019fd1d7-7da1-7614-b63c-4234f053aeee",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 37,
+   "rect": [
+    330.24,
+    674.11,
+    566.93,
+    739.89
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-7da1-7614-b63c-4234f053aeee\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a65868e6-1879-4e99-875f-911bd3d589d9",
+   "externalId": "019fd1d7-7df2-757a-aebb-cd4e81e2ae16",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 38,
+   "rect": [
+    56.69,
+    214.85,
+    293.39,
+    297.29
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-7df2-757a-aebb-cd4e81e2ae16\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "287a51d5-c3ce-4572-9648-8a3b6ad06cab",
+   "externalId": "019fd1d7-7f05-758a-a997-86ed122d3114",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 38,
+   "rect": [
+    321.73,
+    218.46,
+    528.86,
+    261.56
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-7f05-758a-a997-86ed122d3114\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e13e7228-8281-4ee8-86ca-82176cdb8f3f",
+   "externalId": "019fd1d7-81f8-73ec-a69f-ad61b04e9059",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 39,
+   "rect": [
+    330.24,
+    467.49,
+    566.93,
+    528.87
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-81f8-73ec-a69f-ad61b04e9059\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d39689da-532a-41b0-a6c2-0de01faf6bb7",
+   "externalId": "019fd1d7-95eb-743e-8ee5-4314678b3593",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 48,
+   "rect": [
+    321.73,
+    456.8,
+    536.39,
+    551.09
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-95eb-743e-8ee5-4314678b3593\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "51e6054d-7e97-4e14-8280-404a2a723159",
+   "externalId": "019fd1d7-9793-750b-b3c7-aff855decd23",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 49,
+   "rect": [
+    330.24,
+    200.42,
+    606.67,
+    320.28
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-9793-750b-b3c7-aff855decd23\\0.png",
+   "sim": 0.909,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "1660e9c9-889e-4f7c-9ef3-7e66e7b3f327",
+   "externalId": "019fd1d7-99de-754c-81a9-92ef938a1f97",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 50,
+   "rect": [
+    321.73,
+    201.25,
+    558.43,
+    323.57
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-99de-754c-81a9-92ef938a1f97\\0.png",
+   "sim": 0.886,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "1e8ee9d6-d0dc-4ecc-9fff-c5997a376f80",
+   "externalId": "019fd1d7-9c9d-76c5-80cd-ceff3219067d",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 51,
+   "rect": [
+    330.23,
+    466.87,
+    569.98,
+    637.34
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-9c9d-76c5-80cd-ceff3219067d\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "9505b817-943d-4538-bbf0-0f4464c4be5b",
+   "externalId": "019fd1d7-9cfa-752f-be88-0912844e53e3",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 51,
+   "rect": [
+    330.24,
+    687.15,
+    566.93,
+    768.69
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-9cfa-752f-be88-0912844e53e3\\0.png",
+   "sim": 0.947,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c3f8ea9f-6952-4e09-bfe0-2e9341ffb6d7",
+   "externalId": "019fd1d7-9efe-737d-a0db-e294cc287237",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 53,
+   "rect": [
+    65.19,
+    262.0,
+    301.89,
+    376.85
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-9efe-737d-a0db-e294cc287237\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "fe38e37b-6138-432e-92ed-6e69355f0e6d",
+   "externalId": "019fd1d7-9f5c-7275-8f32-c192eda2ffa6",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 53,
+   "rect": [
+    65.2,
+    437.14,
+    301.89,
+    552.21
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-9f5c-7275-8f32-c192eda2ffa6\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "cb738806-c65c-484f-ab66-36595ae414d5",
+   "externalId": "019fd1d7-9fc7-71f3-9bd4-64300a437b61",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 53,
+   "rect": [
+    65.19,
+    612.52,
+    301.89,
+    759.38
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-9fc7-71f3-9bd4-64300a437b61\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c45b369a-8178-43f4-a0a0-bd08d026af44",
+   "externalId": "019fd1d7-a032-735f-a8cd-b00df7768780",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 53,
+   "rect": [
+    330.23,
+    210.66,
+    606.67,
+    379.88
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-a032-735f-a8cd-b00df7768780\\0.png",
+   "sim": 0.938,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "53d7f3de-acc3-4dad-ade4-49d18c57e98f",
+   "externalId": "019fd1d7-a0db-7213-b5e1-b43d8c8354fa",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 53,
+   "rect": [
+    330.23,
+    683.51,
+    566.93,
+    760.73
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-a0db-7213-b5e1-b43d8c8354fa\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e01792bb-a23b-4f6a-b6e3-086e84c04eb6",
+   "externalId": "019fd1d7-a250-714a-aa3b-e5a965f19107",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 54,
+   "rect": [
+    321.73,
+    235.49,
+    554.57,
+    413.35
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-a250-714a-aa3b-e5a965f19107\\0.png",
+   "sim": 0.992,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "82566ee4-f180-42a5-bed1-a214f69f0765",
+   "externalId": "019fd1d7-a3b6-76fd-a107-11943e8c0234",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 55,
+   "rect": [
+    65.2,
+    393.98,
+    301.89,
+    463.27
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-a3b6-76fd-a107-11943e8c0234\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "6cab61ed-c922-449e-a17f-395a7d0eb10c",
+   "externalId": "019fd1d7-a4c8-7021-97f6-eac94a615211",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 55,
+   "rect": [
+    330.23,
+    297.76,
+    565.72,
+    461.16
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-a4c8-7021-97f6-eac94a615211\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "81a6c9a9-011b-4705-bd1b-50d2cd6f429a",
+   "externalId": "019fd1d7-a715-763d-ab7c-6e042cd4b62e",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 56,
+   "rect": [
+    321.73,
+    613.45,
+    558.42,
+    726.31
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-a715-763d-ab7c-6e042cd4b62e\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d758f939-d234-4078-b93e-9fb0e865f9b1",
+   "externalId": "019fd1d7-a7bb-7623-ae71-70e83d4d0799",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 57,
+   "rect": [
+    65.2,
+    333.49,
+    301.9,
+    448.6
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-a7bb-7623-ae71-70e83d4d0799\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "3ffdb6ef-7abd-451d-82b6-e76d40a9c725",
+   "externalId": "019fd1d7-a916-7010-bfb4-626e672c9651",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 57,
+   "rect": [
+    330.24,
+    533.42,
+    570.02,
+    739.43
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-a916-7010-bfb4-626e672c9651\\0.png",
+   "sim": 0.974,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "3be47700-5464-4bd2-b610-821d4edf8efc",
+   "externalId": "019fd1d7-aaf9-7657-b5da-0ce4d5e8b3aa",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 58,
+   "rect": [
+    321.73,
+    589.66,
+    558.42,
+    688.63
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-aaf9-7657-b5da-0ce4d5e8b3aa\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "10c4e8ff-2e17-4b30-ba0d-4bf22566b490",
+   "externalId": "019fd1d7-e0bb-706c-bff4-1d0c4ab2bc0c",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 66,
+   "rect": [
+    321.73,
+    292.31,
+    558.35,
+    375.39
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-e0bb-706c-bff4-1d0c4ab2bc0c\\0.png",
+   "sim": 0.901,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "84fa5eab-6d5f-4fab-ab95-beb94c062465",
+   "externalId": "019fd1d7-e157-772b-a091-26089008f620",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 66,
+   "rect": [
+    321.73,
+    541.96,
+    558.42,
+    596.65
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-e157-772b-a091-26089008f620\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a1486580-3a51-4318-97f4-1a0470776c87",
+   "externalId": "019fd1d7-e6f2-770f-9579-1de24dc014da",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 69,
+   "rect": [
+    65.19,
+    509.21,
+    301.89,
+    586.43
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-e6f2-770f-9579-1de24dc014da\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e7c549e1-5daf-4d8a-a925-b20616bc0836",
+   "externalId": "019fd1d7-e799-74b9-bd9e-0cd8d4b665f8",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 69,
+   "rect": [
+    330.24,
+    200.95,
+    606.67,
+    256.0
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-e799-74b9-bd9e-0cd8d4b665f8\\0.png",
+   "sim": 0.903,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "7031064b-54d5-4921-877b-790f45913830",
+   "externalId": "019fd1d7-e7e1-779f-8945-6ad0789d680c",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 69,
+   "rect": [
+    330.23,
+    342.2,
+    564.57,
+    425.43
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-e7e1-779f-8945-6ad0789d680c\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a7f82e5f-ce7d-4f63-8ac2-431ca12a1db0",
+   "externalId": "019fd1d7-e82c-738e-85a8-0366b111ce6a",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 69,
+   "rect": [
+    330.24,
+    511.33,
+    566.93,
+    572.97
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-e82c-738e-85a8-0366b111ce6a\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "fca7e06f-d0d5-4f70-a68e-712e15139d72",
+   "externalId": "019fd1d7-efa9-737b-980c-7753c768edf3",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 73,
+   "rect": [
+    65.2,
+    646.34,
+    226.4,
+    721.45
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-efa9-737b-980c-7753c768edf3\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "0118be6c-ebe9-44da-85a7-7e8dd618d4a1",
+   "externalId": "019fd1d7-f118-739e-9a29-edfd8356d334",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 74,
+   "rect": [
+    56.69,
+    187.54,
+    293.39,
+    253.57
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f118-739e-9a29-edfd8356d334\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "06cb94d3-44b3-45c2-85d1-29b2d0a3d6fb",
+   "externalId": "019fd1d7-f16d-712b-b65a-cf708cb8bfa5",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 74,
+   "rect": [
+    56.69,
+    349.58,
+    284.51,
+    426.94
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f16d-712b-b65a-cf708cb8bfa5\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "ba535ef6-7d51-4052-b7e6-4982cdc9f299",
+   "externalId": "019fd1d7-f24c-70ca-857c-b768db58f930",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 74,
+   "rect": [
+    321.73,
+    193.21,
+    552.3,
+    265.07
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f24c-70ca-857c-b768db58f930\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "bc8e9ea2-0843-4f90-a637-ed7ec1d81892",
+   "externalId": "019fd1d7-f4bf-7639-95af-56c5dca95177",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 75,
+   "rect": [
+    330.23,
+    209.4,
+    606.67,
+    308.25
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f4bf-7639-95af-56c5dca95177\\0.png",
+   "sim": 0.96,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "9fb1291d-8a62-4c17-9980-cdfa6f09f06a",
+   "externalId": "019fd1d7-f50e-72cb-a4c6-6086baa7261a",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 75,
+   "rect": [
+    330.24,
+    436.09,
+    566.93,
+    513.65
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f50e-72cb-a4c6-6086baa7261a\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a13a1687-33ae-41cc-aee5-ff4327516048",
+   "externalId": "019fd1d7-f565-715e-9f41-f441906e99bc",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 75,
+   "rect": [
+    330.23,
+    593.1,
+    566.08,
+    691.95
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f565-715e-9f41-f441906e99bc\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "5d9bb202-fa55-4cd2-98ef-814e4975644c",
+   "externalId": "019fd1d7-f5bc-74af-9d3b-e2de427422a1",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 76,
+   "rect": [
+    56.69,
+    180.94,
+    293.39,
+    295.9
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f5bc-74af-9d3b-e2de427422a1\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "735c52a9-246a-41d9-b932-c5a5cd2f080e",
+   "externalId": "019fd1d7-f606-737f-88ff-f5136cd366b0",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 76,
+   "rect": [
+    56.69,
+    419.31,
+    293.39,
+    496.16
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f606-737f-88ff-f5136cd366b0\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "7b1d4b90-425f-482e-b244-2a5aaa296051",
+   "externalId": "019fd1d7-f653-763e-8ab5-68e6e81a0a4a",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 76,
+   "rect": [
+    56.69,
+    619.72,
+    293.39,
+    696.71
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f653-763e-8ab5-68e6e81a0a4a\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "47b59ac8-916d-4773-9dc2-dd5d5aff6469",
+   "externalId": "019fd1d7-f6aa-744d-b419-b4e1f3847037",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 76,
+   "rect": [
+    321.73,
+    272.58,
+    506.82,
+    386.71
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f6aa-744d-b419-b4e1f3847037\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "76212686-8a47-4345-8613-89fbfa4579e6",
+   "externalId": "019fd1d7-f6f2-707d-8bc3-3800faabbed5",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 76,
+   "rect": [
+    321.73,
+    492.78,
+    557.83,
+    570.76
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f6f2-707d-8bc3-3800faabbed5\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "340d36c7-6c9d-4727-b1e6-a2b912df9b46",
+   "externalId": "019fd1d7-f73b-718c-a000-2a1cc74e300e",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 76,
+   "rect": [
+    321.73,
+    663.59,
+    483.87,
+    707.86
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f73b-718c-a000-2a1cc74e300e\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "7746505c-aa9e-4f02-9904-778ab1c68033",
+   "externalId": "019fd1d7-f787-740f-b9ff-ddaf5c3608a9",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 77,
+   "rect": [
+    65.19,
+    279.53,
+    299.25,
+    357.0
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f787-740f-b9ff-ddaf5c3608a9\\0.png",
+   "sim": 0.989,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "63a62e6b-c397-4a17-a39c-e9686fb4a60d",
+   "externalId": "019fd1d7-f8ca-7399-826d-6945b4c8a116",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 77,
+   "rect": [
+    330.24,
+    382.98,
+    564.12,
+    452.01
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f8ca-7399-826d-6945b4c8a116\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "19bea1fc-54b1-4bd8-a72d-1ac6891e1cc3",
+   "externalId": "019fd1d7-f918-7366-a004-f40434f0ec9a",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 77,
+   "rect": [
+    330.24,
+    529.01,
+    557.57,
+    572.19
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-f918-7366-a004-f40434f0ec9a\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "53e4d219-fa28-468d-a1bb-ce478616a36a",
+   "externalId": "019fd1d7-fd69-7299-a5a6-879ab08ee69e",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 80,
+   "rect": [
+    56.69,
+    83.56,
+    290.55,
+    149.69
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-fd69-7299-a5a6-879ab08ee69e\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "be5c4bc7-219d-4e7f-af23-03a9985d9cae",
+   "externalId": "019fd1d7-fe94-778d-9c5e-3739ec3aa6d7",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 80,
+   "rect": [
+    321.73,
+    333.95,
+    460.27,
+    426.23
+   ],
+   "out": "public\\figures\\rpm\\019fd1d7-fe94-778d-9c5e-3739ec3aa6d7\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "801437e0-a155-423d-89ad-2e5d33612b28",
+   "externalId": "019fd1d8-0112-769e-9d6e-f4cdc38894d3",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 83,
+   "rect": [
+    65.19,
+    143.13,
+    299.04,
+    210.11
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-0112-769e-9d6e-f4cdc38894d3\\0.png",
+   "sim": 0.913,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "30b82a6a-4ef3-4fb1-b4fe-004445d9b7ef",
+   "externalId": "019fd1d8-0bb2-74ed-a5f2-ba042778af69",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 86,
+   "rect": [
+    56.69,
+    307.05,
+    293.39,
+    454.03
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-0bb2-74ed-a5f2-ba042778af69\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "63a7f78a-2882-4ac8-9636-de24a7089ad0",
+   "externalId": "019fd1d8-0c90-767f-9636-75d44e4572b1",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 86,
+   "rect": [
+    321.73,
+    245.26,
+    558.42,
+    360.34
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-0c90-767f-9636-75d44e4572b1\\0.png",
+   "sim": 0.906,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "ad1c0da8-a73b-40be-8182-8524f78ca45b",
+   "externalId": "019fd1d8-0e99-717d-97c0-eecce0c02a59",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 87,
+   "rect": [
+    65.2,
+    419.4,
+    301.89,
+    464.61
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-0e99-717d-97c0-eecce0c02a59\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "03fee2f8-0f6e-45f1-9a69-2f02a983b86d",
+   "externalId": "019fd1d8-12cc-71d2-8d31-ac396c568191",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 88,
+   "rect": [
+    321.73,
+    171.27,
+    558.42,
+    244.86
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-12cc-71d2-8d31-ac396c568191\\0.png",
+   "sim": 0.945,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a540b2c4-65d1-4bca-9443-b8484ca86f77",
+   "externalId": "019fd1d8-1434-7347-9f10-4bb05363a479",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 89,
+   "rect": [
+    65.2,
+    186.3,
+    297.14,
+    313.03
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-1434-7347-9f10-4bb05363a479\\0.png",
+   "sim": 0.979,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "87ec82d1-0ee3-4b8e-9cfc-96c1de7eee04",
+   "externalId": "019fd1d8-155b-7480-aff5-1567a1fb14c9",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 89,
+   "rect": [
+    330.24,
+    216.35,
+    606.67,
+    305.75
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-155b-7480-aff5-1567a1fb14c9\\0.png",
+   "sim": 0.903,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "5f766cd1-90b3-4d0c-80f7-0b8d470799b8",
+   "externalId": "019fd1d8-1774-75eb-bd37-cfcd561ca88c",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 90,
+   "rect": [
+    56.69,
+    684.22,
+    293.39,
+    745.44
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-1774-75eb-bd37-cfcd561ca88c\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a1675b9c-b8ab-499c-981f-a4a75b2e0409",
+   "externalId": "019fd1d8-17c7-765c-8ac3-2f503459e3b9",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 90,
+   "rect": [
+    321.73,
+    235.75,
+    544.91,
+    294.85
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-17c7-765c-8ac3-2f503459e3b9\\0.png",
+   "sim": 0.952,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "f4d0e729-22c7-4fb0-989b-ea1557f0e0c0",
+   "externalId": "019fd1d8-191e-71cb-a61b-0bb60ab1e9c0",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 91,
+   "rect": [
+    65.2,
+    247.61,
+    299.57,
+    312.48
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-191e-71cb-a61b-0bb60ab1e9c0\\0.png",
+   "sim": 0.929,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "9963c395-e9a7-4f1b-ad98-d619c48b9332",
+   "externalId": "019fd1d8-1a6d-71ab-960f-e70033bf1c69",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 91,
+   "rect": [
+    330.24,
+    203.52,
+    606.67,
+    316.38
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-1a6d-71ab-960f-e70033bf1c69\\0.png",
+   "sim": 0.911,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e1267d79-3cae-40e1-8f81-0641d2987c5d",
+   "externalId": "019fd1d8-1abc-735c-9bca-a52d7cf88751",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 91,
+   "rect": [
+    330.24,
+    391.38,
+    566.93,
+    465.81
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-1abc-735c-9bca-a52d7cf88751\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "83697db6-734e-462c-a533-34c6a64bf7b3",
+   "externalId": "019fd1d8-1bc0-7016-9efb-409d9bd49415",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 92,
+   "rect": [
+    56.69,
+    211.38,
+    269.95,
+    340.25
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-1bc0-7016-9efb-409d9bd49415\\0.png",
+   "sim": 0.959,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "67753c5d-7617-42eb-96d9-34d5016d3ae0",
+   "externalId": "019fd1d8-1c1a-7358-af34-24d236cac3d0",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 92,
+   "rect": [
+    56.69,
+    390.67,
+    268.11,
+    467.54
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-1c1a-7358-af34-24d236cac3d0\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "016328a3-8fd5-4941-87e7-3227454c6f28",
+   "externalId": "019fd1d8-1c6f-74b8-8039-6104f75ca3c5",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 92,
+   "rect": [
+    56.69,
+    520.59,
+    270.15,
+    596.56
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-1c6f-74b8-8039-6104f75ca3c5\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "72a52a5e-f2d8-46e8-be4d-e8e12840b317",
+   "externalId": "019fd1d8-1ccd-7657-a018-5bbc19ca2223",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 92,
+   "rect": [
+    56.69,
+    685.44,
+    292.54,
+    771.13
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-1ccd-7657-a018-5bbc19ca2223\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "fbef6086-4d47-47c7-85ab-a182d30e7c45",
+   "externalId": "019fd1d8-1d22-73da-bcea-72e006300c16",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 92,
+   "rect": [
+    321.73,
+    207.84,
+    536.76,
+    278.43
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-1d22-73da-bcea-72e006300c16\\0.png",
+   "sim": 0.952,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "29771bd4-9774-406a-8908-d49c4744ac81",
+   "externalId": "019fd1d8-1dd6-72c9-a800-2c7a7babac23",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 92,
+   "rect": [
+    321.73,
+    530.47,
+    536.05,
+    607.4
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-1dd6-72c9-a800-2c7a7babac23\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b63f4845-e631-4be4-9fa5-e368f51de3fc",
+   "externalId": "019fd1d8-1e8d-760d-a7de-0ea987836eb6",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 93,
+   "rect": [
+    65.2,
+    207.0,
+    301.89,
+    344.08
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-1e8d-760d-a7de-0ea987836eb6\\0.png",
+   "sim": 0.926,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e3e7f3f7-84d5-4e59-b033-24a665d607da",
+   "externalId": "019fd1d8-1f4f-75a8-9b14-5a766fba49be",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 93,
+   "rect": [
+    65.2,
+    589.39,
+    301.54,
+    735.3
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-1f4f-75a8-9b14-5a766fba49be\\0.png",
+   "sim": 0.929,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "ebd93526-44ea-42e9-a803-0abe422d8789",
+   "externalId": "019fd1d8-1fa6-720a-be47-7a9f099a8c39",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 93,
+   "rect": [
+    330.24,
+    201.71,
+    606.67,
+    364.41
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-1fa6-720a-be47-7a9f099a8c39\\0.png",
+   "sim": 0.963,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "43a4655d-d57a-4926-be53-dbb493a4c98c",
+   "externalId": "019fd1d8-20c2-7758-8e52-5edf51bbe2f7",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 94,
+   "rect": [
+    56.69,
+    217.51,
+    284.93,
+    281.13
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-20c2-7758-8e52-5edf51bbe2f7\\0.png",
+   "sim": 0.983,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "94261bd7-cdbc-4e1c-b7a5-289890df729e",
+   "externalId": "019fd1d8-221a-76bb-b41c-4f75665b94cb",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 94,
+   "rect": [
+    321.73,
+    171.36,
+    558.43,
+    287.08000000000004
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-221a-76bb-b41c-4f75665b94cb\\0.png",
+   "sim": 0.971,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c39ba875-2a0d-451d-a627-620b4d579cce",
+   "externalId": "019fd1d8-2277-73dc-bc6d-1c17f63f430c",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 94,
+   "rect": [
+    321.73,
+    397.16,
+    561.52,
+    500.9
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-2277-73dc-bc6d-1c17f63f430c\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "19860887-d6a0-4308-aae5-65210524425a",
+   "externalId": "019fd1d8-2313-73fd-8530-bd003a342946",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 95,
+   "rect": [
+    65.19,
+    127.96,
+    301.89,
+    274.94
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-2313-73fd-8530-bd003a342946\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "7bce1d5d-4b5d-406d-b09a-f0e7cba54753",
+   "externalId": "019fd1d8-23a9-714c-a1aa-80320ca7cbbd",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 95,
+   "rect": [
+    65.2,
+    517.56,
+    301.89,
+    568.91
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-23a9-714c-a1aa-80320ca7cbbd\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a53a9046-1924-4f7b-b6ff-409d188119fc",
+   "externalId": "019fd1d8-261f-758c-b678-069e6b8f782f",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 96,
+   "rect": [
+    56.69,
+    644.8,
+    273.41,
+    714.92
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-261f-758c-b678-069e6b8f782f\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "7d949359-d94c-4a8f-a1f1-ffc6edd0e5e5",
+   "externalId": "019fd1d8-26b3-74f9-8966-367668133d41",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 96,
+   "rect": [
+    321.73,
+    280.43,
+    558.43,
+    359.63
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-26b3-74f9-8966-367668133d41\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b03e452f-424b-4e49-a73c-4eedf6b161c7",
+   "externalId": "019fd1d8-26fd-7458-85bd-4a660769d636",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 96,
+   "rect": [
+    321.73,
+    445.5,
+    558.43,
+    515.54
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-26fd-7458-85bd-4a660769d636\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "cf2bf2b2-9a17-4eb5-b990-802a9ba18712",
+   "externalId": "019fd1d8-274b-72d0-ac51-91a3dca85e8e",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 96,
+   "rect": [
+    321.73,
+    599.29,
+    558.43,
+    731.02
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-274b-72d0-ac51-91a3dca85e8e\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "4bd337d6-e161-4cd1-91aa-301cb7cadcde",
+   "externalId": "019fd1d8-28d7-753f-b9ea-66b5bc91749d",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 97,
+   "rect": [
+    330.23,
+    111.67,
+    606.67,
+    305.75
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-28d7-753f-b9ea-66b5bc91749d\\0.png",
+   "sim": 0.965,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "acbb9b24-9ed6-4d33-bfe2-f831a04c92a4",
+   "externalId": "019fd1d8-507b-7342-90db-e23d59e60acd",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 104,
+   "rect": [
+    56.69,
+    398.98,
+    225.35,
+    426.08
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-507b-7342-90db-e23d59e60acd\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "6e49bc95-0a36-408b-8847-8d7175ee364f",
+   "externalId": "019fd1d8-514e-735f-a730-e87d2746022c",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 104,
+   "rect": [
+    321.79,
+    359.12,
+    483.23,
+    439.99
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-514e-735f-a730-e87d2746022c\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "3602be4d-e3a1-4cec-8102-bef4d83df2de",
+   "externalId": "019fd1d8-54e0-7458-9413-21a5d9244d7d",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 106,
+   "rect": [
+    56.69,
+    338.74,
+    216.73,
+    381.84
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-54e0-7458-9413-21a5d9244d7d\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "bac61103-16a4-42cc-a130-42499f5617b2",
+   "externalId": "019fd1d8-583a-772a-91e8-4e96de28f9b3",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 107,
+   "rect": [
+    330.24,
+    701.09,
+    498.78,
+    744.19
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-583a-772a-91e8-4e96de28f9b3\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "ca2abb3d-1287-4c47-9d11-0bcce2464c1d",
+   "externalId": "019fd1d8-5a18-750e-be24-be7de9bf7378",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 109,
+   "rect": [
+    65.19,
+    255.09,
+    231.08,
+    383.81
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-5a18-750e-be24-be7de9bf7378\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "75976882-c614-43eb-b85f-4ff889b255e0",
+   "externalId": "019fd1d8-5a5a-735a-8362-b55557d4228c",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 109,
+   "rect": [
+    65.2,
+    456.53,
+    192.81,
+    499.63
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-5a5a-735a-8362-b55557d4228c\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "19d56c14-dddd-4cee-bee3-5badd7642d6a",
+   "externalId": "019fd1d8-5ad2-76e8-afb4-6073746bc1a4",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 109,
+   "rect": [
+    330.23,
+    79.62,
+    566.92,
+    126.36
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-5ad2-76e8-afb4-6073746bc1a4\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "637e0be9-ee2f-4e99-9f59-75b1b80b419d",
+   "externalId": "019fd1d8-5b6d-707c-87f7-f707d2256301",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 109,
+   "rect": [
+    330.23,
+    527.74,
+    566.93,
+    658.02
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-5b6d-707c-87f7-f707d2256301\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "759ff722-fe88-4039-b6f9-b8a45b6b6156",
+   "externalId": "019fd1d8-5bbf-71ca-82b6-8fb9c043737e",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 110,
+   "rect": [
+    56.69,
+    227.75,
+    293.06,
+    327.52
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-5bbf-71ca-82b6-8fb9c043737e\\0.png",
+   "sim": 0.966,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "f0157767-8c6f-421d-a06b-33076463a8c7",
+   "externalId": "019fd1d8-5d8b-7069-83b2-d20303bcd18a",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 111,
+   "rect": [
+    65.2,
+    308.04,
+    232.97,
+    431.18
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-5d8b-7069-83b2-d20303bcd18a\\0.png",
+   "sim": 0.97,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "83a2c1a6-57f5-4154-bdb4-617b0c583656",
+   "externalId": "019fd1d8-5dd7-7279-adb3-f612f87f32b1",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 111,
+   "rect": [
+    65.19,
+    592.39,
+    302.27,
+    685.47
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-5dd7-7279-adb3-f612f87f32b1\\0.png",
+   "sim": 0.98,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "fc9d7b32-ef9c-449a-9e63-bbac84193475",
+   "externalId": "019fd1d8-5e5e-733a-a010-cf949d35f8bc",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 111,
+   "rect": [
+    330.24,
+    483.75,
+    507.05,
+    619.14
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-5e5e-733a-a010-cf949d35f8bc\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "08d7911a-97d0-4d7e-9511-a871b576d390",
+   "externalId": "019fd1d8-5f5c-715f-807f-1ddd69986b65",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 112,
+   "rect": [
+    321.73,
+    184.28,
+    558.3,
+    260.54
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-5f5c-715f-807f-1ddd69986b65\\0.png",
+   "sim": 0.978,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "cc0ded06-5cf4-41fb-8c61-7b862bd1e96a",
+   "externalId": "019fd1d8-5fa0-74d9-aaaf-b0212309be5a",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 112,
+   "rect": [
+    321.73,
+    331.02,
+    558.43,
+    391.97
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-5fa0-74d9-aaaf-b0212309be5a\\0.png",
+   "sim": 0.942,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c6189e8a-e2c9-4351-bd17-6c247681ae6b",
+   "externalId": "019fd1d8-60f6-75bc-9bb3-e525ca88bc19",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 113,
+   "rect": [
+    65.2,
+    640.36,
+    301.89,
+    721.87
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-60f6-75bc-9bb3-e525ca88bc19\\0.png",
+   "sim": 0.971,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "583a32d7-2d8f-4334-a978-57ad43c69f27",
+   "externalId": "019fd1d8-61f4-7678-9351-9500003d01c1",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 114,
+   "rect": [
+    56.69,
+    216.27,
+    220.08,
+    275.37
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-61f4-7678-9351-9500003d01c1\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "1c92afb8-4f6d-4ccb-9e94-ec22fee6fd7a",
+   "externalId": "019fd1d8-6238-769f-abd4-fbd2d9126da2",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 114,
+   "rect": [
+    56.69,
+    369.45,
+    201.0,
+    428.74
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-6238-769f-abd4-fbd2d9126da2\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c6d10f4f-fe9e-4829-9f01-ed02f3a14a5d",
+   "externalId": "019fd1d8-671b-7008-b602-645e2a50a61e",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 116,
+   "rect": [
+    321.73,
+    640.46,
+    558.43,
+    738.84
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-671b-7008-b602-645e2a50a61e\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a1d12ec5-324b-4376-bb73-632bfade9f9e",
+   "externalId": "019fd1d8-6795-722b-bec4-07908f821e8b",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 117,
+   "rect": [
+    65.2,
+    291.64,
+    301.89,
+    370.39
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-6795-722b-bec4-07908f821e8b\\0.png",
+   "sim": 0.973,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e798b703-d71a-4616-b43f-150908de843b",
+   "externalId": "019fd1d8-67d6-7009-9b41-76d96ca0b8b8",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 117,
+   "rect": [
+    65.2,
+    516.23,
+    293.14,
+    660.38
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-67d6-7009-9b41-76d96ca0b8b8\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "186b53fc-202b-47c4-adee-20835c0af0cd",
+   "externalId": "019fd1d8-680d-7255-9e15-8d6698b7db79",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 117,
+   "rect": [
+    330.23,
+    79.49,
+    606.67,
+    312.04
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-680d-7255-9e15-8d6698b7db79\\0.png",
+   "sim": 0.947,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "52d67675-a631-4356-af8b-fa39143ce05b",
+   "externalId": "019fd1d8-6963-7503-b971-ba1eaca639cb",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 118,
+   "rect": [
+    56.69,
+    211.74,
+    296.4,
+    277.19
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-6963-7503-b971-ba1eaca639cb\\0.png",
+   "sim": 0.967,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "18010ec8-935a-4fdf-900a-037e2228f770",
+   "externalId": "019fd1d8-6aa7-7032-906d-16caabcec7af",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 118,
+   "rect": [
+    321.73,
+    252.34,
+    481.86,
+    343.63
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-6aa7-7032-906d-16caabcec7af\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "68d74062-5221-4169-826d-dae023aa9176",
+   "externalId": "019fd1d8-6c2e-74f9-bfd4-654166f751b0",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 121,
+   "rect": [
+    65.19,
+    265.72,
+    305.04,
+    441.43
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-6c2e-74f9-bfd4-654166f751b0\\0.png",
+   "sim": 0.958,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "5a608f78-f025-4b1a-91bf-0034a8c002ff",
+   "externalId": "019fd1d8-72d2-75d0-b1fa-2bd81654ec8e",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 123,
+   "rect": [
+    330.24,
+    278.48,
+    489.86,
+    305.58
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-72d2-75d0-b1fa-2bd81654ec8e\\0.png",
+   "sim": 0.905,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "57f43684-808c-49d8-83d4-c221f4f37332",
+   "externalId": "019fd1d8-bc0e-7436-91a2-b80268a4e340",
+   "pdf": ".rpm-src\\RPM 중학 1-2 학생용.pdf",
+   "page": 145,
+   "rect": [
+    65.2,
+    170.84,
+    302.18,
+    299.8
+   ],
+   "out": "public\\figures\\rpm\\019fd1d8-bc0e-7436-91a2-b80268a4e340\\0.png",
+   "sim": 0.851,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b5d36716-aef7-47cf-bb1d-e4a2558fbff3",
+   "externalId": "019fd1d9-4fb5-7763-8df3-7476387a5c30",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 38,
+   "rect": [
+    321.73,
+    220.44,
+    557.31,
+    295.65
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-4fb5-7763-8df3-7476387a5c30\\0.png",
+   "sim": 0.973,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "fab61b7c-0fc1-466c-9ae3-1020e110e348",
+   "externalId": "019fd1d9-5039-70fa-bebc-0194e08809be",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 38,
+   "rect": [
+    321.73,
+    513.11,
+    539.43,
+    557.48
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-5039-70fa-bebc-0194e08809be\\0.png",
+   "sim": 0.974,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "8662f715-5d25-4357-bfff-9f5c9fba916f",
+   "externalId": "019fd1d9-507c-75d4-be95-e1ae0bcc9093",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 38,
+   "rect": [
+    321.73,
+    657.71,
+    524.65,
+    736.49
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-507c-75d4-be95-e1ae0bcc9093\\0.png",
+   "sim": 0.988,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "4a91a23f-5d6e-496b-80fb-af205ec8b401",
+   "externalId": "019fd1d9-5745-753c-97d4-13e968d5a990",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 42,
+   "rect": [
+    321.73,
+    429.8,
+    523.18,
+    510.74
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-5745-753c-97d4-13e968d5a990\\0.png",
+   "sim": 0.962,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "8b554d8d-0953-4972-b86a-b3c43e820de0",
+   "externalId": "019fd1d9-68a8-705a-92ae-1e280e65dddf",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 50,
+   "rect": [
+    56.69,
+    234.48,
+    293.39,
+    342.44
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-68a8-705a-92ae-1e280e65dddf\\0.png",
+   "sim": 0.945,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "04322e65-167d-454f-a0cd-abd42a041a46",
+   "externalId": "019fd1d9-6934-722f-a5cf-24393b53b71f",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 50,
+   "rect": [
+    56.69,
+    616.31,
+    293.0,
+    714.41
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-6934-722f-a5cf-24393b53b71f\\0.png",
+   "sim": 0.894,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "f87d153c-b8ea-42f2-8d47-f04612e91e92",
+   "externalId": "019fd1d9-697b-726c-920f-3ca9189f341c",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 50,
+   "rect": [
+    321.73,
+    84.71,
+    558.43,
+    197.68
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-697b-726c-920f-3ca9189f341c\\0.png",
+   "sim": 0.92,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "24159e1a-cfb1-4bed-9b92-f31cf14fc19d",
+   "externalId": "019fd1d9-69c3-770c-9b67-11d36aae29a2",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 50,
+   "rect": [
+    321.73,
+    315.59,
+    558.43,
+    431.98
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-69c3-770c-9b67-11d36aae29a2\\0.png",
+   "sim": 0.915,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "eeff43bb-b3d1-4aff-b87a-7ef414280f12",
+   "externalId": "019fd1d9-6a0b-7406-8ef0-c11d0a5e4dc4",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 50,
+   "rect": [
+    321.73,
+    553.33,
+    561.52,
+    699.65
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-6a0b-7406-8ef0-c11d0a5e4dc4\\0.png",
+   "sim": 0.981,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b33ffca2-a015-408a-9f41-b57303ec1144",
+   "externalId": "019fd1d9-6d09-77fe-8926-36cea18fa6d9",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 52,
+   "rect": [
+    56.69,
+    582.51,
+    293.39,
+    693.15
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-6d09-77fe-8926-36cea18fa6d9\\0.png",
+   "sim": 0.944,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "942fae99-e43c-4261-8429-33f10d14caa5",
+   "externalId": "019fd1d9-70a9-741f-848f-9661cb020166",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 54,
+   "rect": [
+    321.73,
+    84.72,
+    558.43,
+    181.69
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-70a9-741f-848f-9661cb020166\\0.png",
+   "sim": 0.909,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "adca9b3b-6f38-41cd-8c44-5b50e91e053a",
+   "externalId": "019fd1d9-9887-7588-9653-6066e33aa4d0",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 65,
+   "rect": [
+    65.2,
+    637.64,
+    261.59,
+    734.6
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-9887-7588-9653-6066e33aa4d0\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b697608f-3cc6-44fc-a7e9-5d565e6c2cca",
+   "externalId": "019fd1d9-9cdf-7709-b998-83326efec6d2",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 67,
+   "rect": [
+    65.2,
+    651.18,
+    261.84,
+    706.65
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-9cdf-7709-b998-83326efec6d2\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "5dfd734f-407d-416f-83a4-891930487ea3",
+   "externalId": "019fd1d9-9e82-7427-a2b8-6d9bb5748d91",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 68,
+   "rect": [
+    56.69,
+    427.94,
+    260.15,
+    494.07
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-9e82-7427-a2b8-6d9bb5748d91\\0.png",
+   "sim": 0.969,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "82216a27-b20c-4bc6-89cb-775257a743c9",
+   "externalId": "019fd1d9-a2bb-772f-a416-dc089b0c2ea8",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 70,
+   "rect": [
+    321.73,
+    82.11,
+    558.43,
+    187.42
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-a2bb-772f-a416-dc089b0c2ea8\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b568452f-f4fe-4380-8a5d-9cc698f1e399",
+   "externalId": "019fd1d9-b09d-703a-b8d2-035a5352a19b",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 77,
+   "rect": [
+    330.23,
+    504.98,
+    530.17,
+    577.61
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-b09d-703a-b8d2-035a5352a19b\\0.png",
+   "sim": 0.992,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "8e53c18a-c8f8-425f-9d73-32bdad5b2217",
+   "externalId": "019fd1d9-b7be-72ca-a82d-1bcf587c7c62",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 82,
+   "rect": [
+    56.69,
+    340.97,
+    293.39,
+    450.07
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-b7be-72ca-a82d-1bcf587c7c62\\0.png",
+   "sim": 0.952,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "ee187b7e-2824-44ad-bc8c-70ea46fe13cb",
+   "externalId": "019fd1d9-f8a0-7098-8c35-720fd47d4435",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 108,
+   "rect": [
+    56.69,
+    593.62,
+    296.33,
+    740.69
+   ],
+   "out": "public\\figures\\rpm\\019fd1d9-f8a0-7098-8c35-720fd47d4435\\0.png",
+   "sim": 0.983,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "ab544eaa-fb17-4d3a-a06f-107c08d1b5aa",
+   "externalId": "019fd1da-08a8-767c-910e-e7b822ec6cac",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 117,
+   "rect": [
+    65.19,
+    355.94,
+    304.84,
+    414.51
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-08a8-767c-910e-e7b822ec6cac\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "ab0940e7-293f-4a15-af90-bf22063f770d",
+   "externalId": "019fd1da-3c4d-7124-8588-4054ea3195a0",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 136,
+   "rect": [
+    321.73,
+    279.03,
+    558.43,
+    377.61
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-3c4d-7124-8588-4054ea3195a0\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "be19201b-6a4b-43e6-9717-47b5906ade9b",
+   "externalId": "019fd1da-3d18-77d7-add5-79ac514d14e1",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 137,
+   "rect": [
+    65.2,
+    201.3,
+    301.27,
+    270.04
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-3d18-77d7-add5-79ac514d14e1\\0.png",
+   "sim": 0.978,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "57366756-0926-4342-acf2-a13efe92e24b",
+   "externalId": "019fd1da-460b-7705-9b6f-0c66fd955ed8",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 142,
+   "rect": [
+    56.69,
+    261.75,
+    293.39,
+    370.52
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-460b-7705-9b6f-0c66fd955ed8\\0.png",
+   "sim": 0.986,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "9334eb89-3068-4824-be6d-0c1ec196141d",
+   "externalId": "019fd1da-48a7-778c-871a-c2ec9bc94a6a",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 143,
+   "rect": [
+    330.24,
+    173.43,
+    570.02,
+    288.32
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-48a7-778c-871a-c2ec9bc94a6a\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d4bcb55b-e9c0-4207-90bb-7facfd815daf",
+   "externalId": "019fd1da-4e23-724d-8c62-363ec1209c84",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 146,
+   "rect": [
+    321.73,
+    590.72,
+    561.54,
+    680.84
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-4e23-724d-8c62-363ec1209c84\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "2e878ae6-6c15-4848-8ccb-b1d57f3e0b6c",
+   "externalId": "019fd1da-5a2b-72ab-8ebc-1b88b51fbc6e",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 153,
+   "rect": [
+    65.17,
+    225.42,
+    301.47,
+    323.64
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-5a2b-72ab-8ebc-1b88b51fbc6e\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a6ecebbf-1cd1-4306-80df-e5a2a7911712",
+   "externalId": "019fd1da-5b8f-73fe-a70b-0a803cba3ee5",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 154,
+   "rect": [
+    56.69,
+    171.86,
+    292.77,
+    302.38
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-5b8f-73fe-a70b-0a803cba3ee5\\0.png",
+   "sim": 0.978,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "0531edb4-03b6-49ba-8d64-b1c679c9df47",
+   "externalId": "019fd1da-5f20-7109-be8d-4b20515f80ba",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 156,
+   "rect": [
+    56.67,
+    200.95,
+    292.81,
+    294.04
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-5f20-7109-be8d-4b20515f80ba\\0.png",
+   "sim": 0.973,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b631ca5a-c616-4b87-ac68-c34aee56f3e2",
+   "externalId": "019fd1da-6321-772f-af8e-371ff4fd672d",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 158,
+   "rect": [
+    56.68,
+    202.15,
+    292.53,
+    283.46
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-6321-772f-af8e-371ff4fd672d\\0.png",
+   "sim": 0.851,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "437aa315-0a11-4c3e-a496-cacb1bfe1f42",
+   "externalId": "019fd1da-651f-763c-8bd8-6b5d941a52c2",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 159,
+   "rect": [
+    65.19,
+    217.27,
+    300.67,
+    348.44
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-651f-763c-8bd8-6b5d941a52c2\\0.png",
+   "sim": 0.855,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "60b9b3a7-75f8-44ed-ba0d-2cd435dc7966",
+   "externalId": "019fd1da-65f9-778e-8d94-6d888bca31da",
+   "pdf": ".rpm-src\\RPM 중학 2-1 학생용.pdf",
+   "page": 159,
+   "rect": [
+    330.23,
+    240.96,
+    566.93,
+    373.09
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-65f9-778e-8d94-6d888bca31da\\0.png",
+   "sim": 0.939,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "984ac91a-b8d5-41e7-a88b-6b8c4bdf3d49",
+   "externalId": "019fd1da-8e7a-741c-8a3a-b70d4afbc236",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 12,
+   "rect": [
+    321.73,
+    303.46,
+    558.16,
+    402.44
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-8e7a-741c-8a3a-b70d4afbc236\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "68a9b347-0557-4ee2-8647-3c739f9cd016",
+   "externalId": "019fd1da-8f73-70bd-8e9e-f9d90f6f1919",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 12,
+   "rect": [
+    321.73,
+    660.1,
+    558.43,
+    721.36
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-8f73-70bd-8e9e-f9d90f6f1919\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "ebc05a60-176a-4181-8272-8cfcd51cace4",
+   "externalId": "019fd1da-90d5-7308-8474-30110bc02fc1",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 13,
+   "rect": [
+    330.23,
+    82.6,
+    606.67,
+    168.9
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-90d5-7308-8474-30110bc02fc1\\0.png",
+   "sim": 0.899,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "ab25687b-830a-4807-9abd-bc6371aaf317",
+   "externalId": "019fd1da-96af-720d-9b4e-3bebd5ca3045",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 15,
+   "rect": [
+    65.19,
+    381.1,
+    301.89,
+    496.07
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-96af-720d-9b4e-3bebd5ca3045\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "452ba896-6f2d-4072-8861-eec696177cf0",
+   "externalId": "019fd1da-9a85-7096-b39e-19242d5ab64c",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 16,
+   "rect": [
+    321.73,
+    82.74,
+    558.42,
+    213.58
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-9a85-7096-b39e-19242d5ab64c\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "22ab0273-fd95-4b3b-bf2d-feef12989510",
+   "externalId": "019fd1da-9ae4-72b9-a43b-6ca516ff26d9",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 16,
+   "rect": [
+    321.73,
+    277.09,
+    558.43,
+    477.09
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-9ae4-72b9-a43b-6ca516ff26d9\\0.png",
+   "sim": 0.98,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "5b412d4d-8508-4aef-a582-cb13196fb9da",
+   "externalId": "019fd1da-9b5e-77cd-81b2-432b6c59fafd",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 16,
+   "rect": [
+    321.73,
+    551.81,
+    558.13,
+    745.67
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-9b5e-77cd-81b2-432b6c59fafd\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "58b26de0-586d-4fce-a29a-5f96fdb765aa",
+   "externalId": "019fd1da-9ec2-7700-8f69-61b25ad47f31",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 18,
+   "rect": [
+    56.69,
+    260.57,
+    291.13,
+    375.54
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-9ec2-7700-8f69-61b25ad47f31\\0.png",
+   "sim": 0.977,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "86cbd162-a9cd-41ef-a171-d521361a4ef1",
+   "externalId": "019fd1da-a1bf-71c8-9e6f-6aece4e911fc",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 19,
+   "rect": [
+    65.2,
+    605.47,
+    301.89,
+    681.27
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-a1bf-71c8-9e6f-6aece4e911fc\\0.png",
+   "sim": 0.939,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "5c1c6997-a6ac-41a8-8798-9023da233fea",
+   "externalId": "019fd1da-a781-7374-a54f-f4ab1e7f7c63",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 21,
+   "rect": [
+    330.24,
+    556.09,
+    566.93,
+    703.06
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-a781-7374-a54f-f4ab1e7f7c63\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d643f68b-e930-4228-a79c-2bb3f76d7d8c",
+   "externalId": "019fd1da-a8e4-72bc-a33c-6edeeea72674",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 22,
+   "rect": [
+    321.73,
+    82.58,
+    558.42,
+    143.82
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-a8e4-72bc-a33c-6edeeea72674\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b71992e3-5bfe-490b-8caa-922271137d76",
+   "externalId": "019fd1da-b633-7406-8975-5d13059e8008",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 28,
+   "rect": [
+    321.73,
+    250.62,
+    558.51,
+    366.01
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-b633-7406-8975-5d13059e8008\\0.png",
+   "sim": 0.863,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "f896571d-3562-4b8d-a2db-154fde08744d",
+   "externalId": "019fd1da-bb4f-716b-9fd7-80646bd07c57",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 30,
+   "rect": [
+    321.73,
+    243.63,
+    558.43,
+    305.61
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-bb4f-716b-9fd7-80646bd07c57\\0.png",
+   "sim": 0.981,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "347bc5cd-fb30-4b81-bd15-d8b34ebd156c",
+   "externalId": "019fd1da-bdca-752a-872e-cc5f9240ec78",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 31,
+   "rect": [
+    330.23,
+    212.1,
+    606.67,
+    303.66
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-bdca-752a-872e-cc5f9240ec78\\0.png",
+   "sim": 0.889,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "8ffadcec-d743-4eef-b9b0-6994112b8d8a",
+   "externalId": "019fd1da-becf-71a1-8eaa-0f21edc62c07",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 31,
+   "rect": [
+    330.23,
+    667.66,
+    566.93,
+    744.87
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-becf-71a1-8eaa-0f21edc62c07\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "61a7dd70-e568-4d89-8f63-b6231f98010b",
+   "externalId": "019fd1da-c21f-74c8-800c-596013b97567",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 33,
+   "rect": [
+    65.2,
+    204.8,
+    301.89,
+    298.02
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-c21f-74c8-800c-596013b97567\\0.png",
+   "sim": 0.989,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "74da012c-90ec-4e42-9b04-4cc2facec16f",
+   "externalId": "019fd1da-c37e-730a-b33f-c9b8ce764543",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 33,
+   "rect": [
+    330.23,
+    186.42,
+    606.67,
+    286.47
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-c37e-730a-b33f-c9b8ce764543\\0.png",
+   "sim": 0.896,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "94ab11e3-3399-4093-b26a-5ebbece5846b",
+   "externalId": "019fd1da-c495-7289-9f6f-de2033b2bc83",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 33,
+   "rect": [
+    330.23,
+    664.12,
+    566.94,
+    757.33
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-c495-7289-9f6f-de2033b2bc83\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e18a1612-aa36-4d3d-b001-eb914d115ea0",
+   "externalId": "019fd1da-c614-772c-b028-59ba33785cfd",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 34,
+   "rect": [
+    321.73,
+    270.82,
+    558.43,
+    364.14
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-c614-772c-b028-59ba33785cfd\\0.png",
+   "sim": 0.957,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "f29fe4d4-81df-4fb4-85b2-ac7d7fee538c",
+   "externalId": "019fd1da-c723-753e-a17c-1d4f158632b2",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 35,
+   "rect": [
+    65.2,
+    130.08,
+    304.98,
+    306.96
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-c723-753e-a17c-1d4f158632b2\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "9054a133-9f14-41e7-bcbd-941faa63193c",
+   "externalId": "019fd1da-c790-7368-9a30-4218176dc372",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 35,
+   "rect": [
+    65.2,
+    417.36,
+    301.89,
+    483.19
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-c790-7368-9a30-4218176dc372\\0.png",
+   "sim": 0.987,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "6b2bbe1e-4d04-4aed-91c6-423a50f683ea",
+   "externalId": "019fd1da-c7ff-77ad-995b-f355d87a95c6",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 35,
+   "rect": [
+    65.19,
+    594.27,
+    301.89,
+    709.34
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-c7ff-77ad-995b-f355d87a95c6\\0.png",
+   "sim": 0.965,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "9649b7c9-33b2-4817-8d72-6635ba9b1efe",
+   "externalId": "019fd1da-cc7c-767a-9d30-fcc2f3e82811",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 37,
+   "rect": [
+    65.19,
+    556.09,
+    302.13,
+    687.17
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-cc7c-767a-9d30-fcc2f3e82811\\0.png",
+   "sim": 0.963,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "f24ab9f3-29f6-40e1-9331-cb3ce28a62e8",
+   "externalId": "019fd1da-fd8f-759d-9f78-285ff3c39514",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 42,
+   "rect": [
+    56.69,
+    233.26,
+    293.39,
+    332.17
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-fd8f-759d-9f78-285ff3c39514\\0.png",
+   "sim": 0.958,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b8ccc680-fa21-4880-8b00-5c610f9fc22a",
+   "externalId": "019fd1da-fe1b-742a-8bb1-ad83a3d78788",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 42,
+   "rect": [
+    56.69,
+    425.3,
+    293.39,
+    502.38
+   ],
+   "out": "public\\figures\\rpm\\019fd1da-fe1b-742a-8bb1-ad83a3d78788\\0.png",
+   "sim": 0.988,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "0cd874da-b263-466d-8fb3-cd54c163da09",
+   "externalId": "019fd1db-002a-719c-a561-86860e3e70ac",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 43,
+   "rect": [
+    65.19,
+    202.59,
+    301.89,
+    349.43
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-002a-719c-a561-86860e3e70ac\\0.png",
+   "sim": 0.987,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "3d00013c-879c-4166-a8a7-872a116c12df",
+   "externalId": "019fd1db-00ac-768d-895a-bed321b9327e",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 43,
+   "rect": [
+    65.2,
+    456.32,
+    301.89,
+    539.27
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-00ac-768d-895a-bed321b9327e\\0.png",
+   "sim": 0.852,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "dfc21b5a-cf6c-4dea-8b7d-5330a82be70d",
+   "externalId": "019fd1db-0305-703a-9168-a690c901de9a",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 44,
+   "rect": [
+    56.69,
+    186.49,
+    293.39,
+    339.54
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-0305-703a-9168-a690c901de9a\\0.png",
+   "sim": 0.959,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b6f2ca7f-046e-47ba-bb6c-d7d5c4a10aab",
+   "externalId": "019fd1db-037c-7328-8b33-92ddef3af5cd",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 44,
+   "rect": [
+    56.69,
+    452.64,
+    292.75,
+    513.73
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-037c-7328-8b33-92ddef3af5cd\\0.png",
+   "sim": 0.974,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "6448de99-dbd0-4ffd-a4ee-c484b629a16e",
+   "externalId": "019fd1db-0870-73cf-9613-5648d00ff69a",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 46,
+   "rect": [
+    56.69,
+    188.48,
+    293.39,
+    265.07
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-0870-73cf-9613-5648d00ff69a\\0.png",
+   "sim": 0.938,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "fdf395b1-4089-403e-8d39-991d8b173ce7",
+   "externalId": "019fd1db-08fb-762d-9c33-a5620065577d",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 46,
+   "rect": [
+    56.69,
+    369.78,
+    293.39,
+    498.64
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-08fb-762d-9c33-a5620065577d\\0.png",
+   "sim": 0.97,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "9c7500f9-c6d0-4d88-8010-70d5f80a173e",
+   "externalId": "019fd1db-0976-731c-830e-7956c9972f5c",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 46,
+   "rect": [
+    56.69,
+    601.15,
+    293.39,
+    716.48
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-0976-731c-830e-7956c9972f5c\\0.png",
+   "sim": 0.982,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b214ecd0-982e-4711-8ae1-2dfb705d5ab4",
+   "externalId": "019fd1db-0b2b-7560-b8aa-6180c8f08c32",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 47,
+   "rect": [
+    65.19,
+    470.29,
+    301.89,
+    521.3
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-0b2b-7560-b8aa-6180c8f08c32\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "f4ff19a0-03ac-448b-8e11-9aba1e8b7c1d",
+   "externalId": "019fd1db-0ec1-704e-b843-3ec06e46c6e0",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 48,
+   "rect": [
+    321.73,
+    515.91,
+    558.43,
+    694.98
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-0ec1-704e-b843-3ec06e46c6e0\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "889c6ef6-ce93-4cdb-9919-c37d8b798c90",
+   "externalId": "019fd1db-0fb5-733a-8a3c-ba19c8584492",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 49,
+   "rect": [
+    65.2,
+    379.59,
+    301.89,
+    456.2
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-0fb5-733a-8a3c-ba19c8584492\\0.png",
+   "sim": 0.977,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "33648692-9108-455d-a80d-519ed1d7dba0",
+   "externalId": "019fd1db-1105-70ae-952d-93dff95add48",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 49,
+   "rect": [
+    330.23,
+    200.42,
+    606.67,
+    316.09
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-1105-70ae-952d-93dff95add48\\0.png",
+   "sim": 0.895,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c03db0ae-5efe-46b3-9d19-3f842a37fc53",
+   "externalId": "019fd1db-116a-753f-a285-247d7d08165b",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 49,
+   "rect": [
+    330.24,
+    384.03,
+    566.93,
+    461.28
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-116a-753f-a285-247d7d08165b\\0.png",
+   "sim": 0.967,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "276224a3-3086-4d09-aa42-f1157b6af9ba",
+   "externalId": "019fd1db-12ca-74fa-a49a-2ff7ea039b10",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 50,
+   "rect": [
+    56.69,
+    215.9,
+    293.39,
+    293.2
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-12ca-74fa-a49a-2ff7ea039b10\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "6890f5d7-fd37-4442-8dc6-888042fd86f9",
+   "externalId": "019fd1db-1455-7109-b400-5a6e08c0c14d",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 50,
+   "rect": [
+    321.73,
+    171.34,
+    558.42,
+    302.32
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-1455-7109-b400-5a6e08c0c14d\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "000e5663-981d-49e0-9cf1-4eb948d979de",
+   "externalId": "019fd1db-1768-762e-a252-f0c01ec4ce53",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 51,
+   "rect": [
+    330.24,
+    338.88,
+    566.93,
+    437.73
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-1768-762e-a252-f0c01ec4ce53\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "231fc3a1-c9f7-434a-8769-507e52567fe5",
+   "externalId": "019fd1db-219d-763f-9d94-f224c5765650",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 55,
+   "rect": [
+    330.24,
+    308.85,
+    485.73,
+    367.95
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-219d-763f-9d94-f224c5765650\\0.png",
+   "sim": 0.882,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "2808ae5f-173d-4a42-9ad4-42bdd904a25b",
+   "externalId": "019fd1db-2a00-72ea-a8e8-d581a08034fa",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 58,
+   "rect": [
+    56.69,
+    247.24,
+    293.39,
+    346.32
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-2a00-72ea-a8e8-d581a08034fa\\0.png",
+   "sim": 0.966,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "2ec539a1-19c7-4593-b53b-e2a371a241b3",
+   "externalId": "019fd1db-2a69-778c-9b4a-4f589dc49f16",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 58,
+   "rect": [
+    56.69,
+    453.98,
+    293.39,
+    553.06
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-2a69-778c-9b4a-4f589dc49f16\\0.png",
+   "sim": 0.989,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e32805f8-fd3a-417f-94e8-1b7febe6e9ce",
+   "externalId": "019fd1db-2b9a-732e-942e-32858e9ddf7c",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 58,
+   "rect": [
+    321.73,
+    421.06,
+    558.42,
+    519.95
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-2b9a-732e-942e-32858e9ddf7c\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "8710e960-2f62-45eb-ab06-4fdf89bad405",
+   "externalId": "019fd1db-2c66-723a-bf6f-9ea50aa42fed",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 59,
+   "rect": [
+    65.19,
+    185.35,
+    301.89,
+    284.71
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-2c66-723a-bf6f-9ea50aa42fed\\0.png",
+   "sim": 0.981,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "f8576f1e-bf87-4501-8fe8-f7948aeb3be0",
+   "externalId": "019fd1db-2d38-71ec-a920-59159efc5144",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 59,
+   "rect": [
+    65.19,
+    678.37,
+    301.89,
+    755.18
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-2d38-71ec-a920-59159efc5144\\0.png",
+   "sim": 0.988,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "8fa124d5-a9b9-4e4d-b9c3-774a42ef66f5",
+   "externalId": "019fd1db-2e0f-760e-b7f3-c06bc08dbd54",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 59,
+   "rect": [
+    330.23,
+    420.14,
+    566.93,
+    519.02
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-2e0f-760e-b7f3-c06bc08dbd54\\0.png",
+   "sim": 0.939,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b3dc3c34-99c3-4ca0-8131-cd2d2ed2ee6a",
+   "externalId": "019fd1db-2e70-7089-8974-4c48f27e567d",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 59,
+   "rect": [
+    330.24,
+    631.0,
+    566.93,
+    708.04
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-2e70-7089-8974-4c48f27e567d\\0.png",
+   "sim": 0.99,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "08a65cce-5208-42bc-8dae-935f2fc4b92a",
+   "externalId": "019fd1db-2f3d-7138-a79e-ba5aea3a16ca",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 60,
+   "rect": [
+    56.69,
+    406.46,
+    293.39,
+    521.09
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-2f3d-7138-a79e-ba5aea3a16ca\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "42c007a1-80ed-4569-be10-37cfbbd1f7b7",
+   "externalId": "019fd1db-3027-7599-b7c4-9b8c2a019156",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 60,
+   "rect": [
+    321.73,
+    195.13,
+    558.43,
+    310.06
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-3027-7599-b7c4-9b8c2a019156\\0.png",
+   "sim": 0.99,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b9bc2439-5976-4005-bdb8-e6ec6efaf269",
+   "externalId": "019fd1db-316b-73fe-9ccb-a450ff2e4c68",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 61,
+   "rect": [
+    65.19,
+    201.11,
+    301.89,
+    263.62
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-316b-73fe-9ccb-a450ff2e4c68\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "24a613f2-8f02-41da-baa8-f3f3fbf0bcb4",
+   "externalId": "019fd1db-31e0-74fe-b6f7-80ff18f17886",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 61,
+   "rect": [
+    65.19,
+    345.9,
+    301.89,
+    444.95
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-31e0-74fe-b6f7-80ff18f17886\\0.png",
+   "sim": 0.928,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b32c5630-dcc7-4bad-bb3c-950d43fca227",
+   "externalId": "019fd1db-3299-76ab-b64c-45af29fc2867",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 61,
+   "rect": [
+    330.24,
+    82.6,
+    606.67,
+    276.31
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-3299-76ab-b64c-45af29fc2867\\0.png",
+   "sim": 0.876,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "4574516d-c39e-49f2-9f7d-7d8ab8354b38",
+   "externalId": "019fd1db-3448-7725-8b3f-1b0bc1bf7053",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 62,
+   "rect": [
+    56.69,
+    241.14,
+    293.38,
+    387.98
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-3448-7725-8b3f-1b0bc1bf7053\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d67b4a86-3391-4670-8684-fee6d2039198",
+   "externalId": "019fd1db-34ab-74cd-b223-7d90cbcf6047",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 62,
+   "rect": [
+    56.69,
+    453.0,
+    293.39,
+    547.47
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-34ab-74cd-b223-7d90cbcf6047\\0.png",
+   "sim": 0.973,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e5a02687-05e2-4a2b-9f91-d2106ee698af",
+   "externalId": "019fd1db-3512-70fb-bc45-19974cb3cba0",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 62,
+   "rect": [
+    56.69,
+    623.94,
+    293.39,
+    754.78
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-3512-70fb-bc45-19974cb3cba0\\0.png",
+   "sim": 0.99,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "04043c39-7f79-4b70-842e-bcc4115bcc1a",
+   "externalId": "019fd1db-3583-7153-ba7b-a12a474ee276",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 62,
+   "rect": [
+    321.73,
+    246.25,
+    558.42,
+    345.23
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-3583-7153-ba7b-a12a474ee276\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a8b4401c-4fd1-4ce6-8fc9-30290b9b4375",
+   "externalId": "019fd1db-35f4-74ee-8b70-3f6b26b0da85",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 62,
+   "rect": [
+    321.73,
+    444.61,
+    558.42,
+    559.58
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-35f4-74ee-8b70-3f6b26b0da85\\0.png",
+   "sim": 0.987,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "dd7089e9-bb47-4c16-9590-56f377c68af0",
+   "externalId": "019fd1db-36d4-756c-936a-a76fb0309375",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 63,
+   "rect": [
+    65.2,
+    240.16,
+    301.89,
+    339.76
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-36d4-756c-936a-a76fb0309375\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "42c78ae4-1ece-47ea-bc17-a576aca0d994",
+   "externalId": "019fd1db-3758-735f-aaf7-9684300e871c",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 63,
+   "rect": [
+    65.19,
+    433.46,
+    301.89,
+    570.98
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-3758-735f-aaf7-9684300e871c\\0.png",
+   "sim": 0.911,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "7f339969-2d62-4b99-9818-d881ee60c707",
+   "externalId": "019fd1db-37e0-77a6-bf89-a22ce130c316",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 63,
+   "rect": [
+    65.2,
+    664.02,
+    301.89,
+    725.43
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-37e0-77a6-bf89-a22ce130c316\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e3e5369c-e436-4b46-b1ad-b1e0de211b4d",
+   "externalId": "019fd1db-3854-746b-acca-0db6e5cf5c57",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 63,
+   "rect": [
+    330.24,
+    171.75,
+    606.67,
+    284.03
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-3854-746b-acca-0db6e5cf5c57\\0.png",
+   "sim": 0.925,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "0ee6c6ac-9396-4037-aada-8226797934e8",
+   "externalId": "019fd1db-394b-76c9-b8ec-fe17b7d82556",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 63,
+   "rect": [
+    330.23,
+    648.68,
+    566.93,
+    725.89
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-394b-76c9-b8ec-fe17b7d82556\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b8711c0a-ca30-43e1-9771-5c8e75beffc9",
+   "externalId": "019fd1db-3cf4-7338-9052-b0250be77c37",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 65,
+   "rect": [
+    330.23,
+    232.39,
+    606.67,
+    351.52
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-3cf4-7338-9052-b0250be77c37\\0.png",
+   "sim": 0.899,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "632eb69a-a573-4c79-b866-369c2090a586",
+   "externalId": "019fd1db-3d6f-76cf-b6e6-dba004666a22",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 65,
+   "rect": [
+    330.23,
+    427.31,
+    566.93,
+    558.39
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-3d6f-76cf-b6e6-dba004666a22\\0.png",
+   "sim": 0.911,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e7c500eb-c309-419d-97f1-278dfc7113ad",
+   "externalId": "019fd1db-3e77-737a-a78a-7d3d9b88ff6c",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 66,
+   "rect": [
+    56.69,
+    201.57,
+    293.39,
+    316.55
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-3e77-737a-a78a-7d3d9b88ff6c\\0.png",
+   "sim": 0.911,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "cdf8802a-722e-49d6-9bf5-594745970514",
+   "externalId": "019fd1db-3ef8-77a8-b143-9eebd0122144",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 66,
+   "rect": [
+    56.69,
+    420.15,
+    293.63,
+    497.37
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-3ef8-77a8-b143-9eebd0122144\\0.png",
+   "sim": 0.985,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c6aabf93-75c8-46da-ba2b-4018e06eb11c",
+   "externalId": "019fd1db-3f89-7661-a2f0-da0f5e1f424e",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 66,
+   "rect": [
+    56.69,
+    601.07,
+    293.39,
+    716.15
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-3f89-7661-a2f0-da0f5e1f424e\\0.png",
+   "sim": 0.925,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e9364dcf-73c9-48a0-8e34-eb994bf79900",
+   "externalId": "019fd1db-3ffe-7222-ad35-a8f03f06de28",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 66,
+   "rect": [
+    321.73,
+    223.83,
+    558.43,
+    338.69
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-3ffe-7222-ad35-a8f03f06de28\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e9b69fdf-76ae-4c73-93a7-ec2aec1ce2c2",
+   "externalId": "019fd1db-406a-77ea-80f1-e14386b4d9f6",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 66,
+   "rect": [
+    321.73,
+    442.1,
+    558.43,
+    519.36
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-406a-77ea-80f1-e14386b4d9f6\\0.png",
+   "sim": 0.977,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "9b33da14-ff00-4a2a-a356-038fd6961ac7",
+   "externalId": "019fd1db-415e-744f-a958-83a62c01261b",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 67,
+   "rect": [
+    65.19,
+    245.27,
+    301.89,
+    360.87
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-415e-744f-a958-83a62c01261b\\0.png",
+   "sim": 0.937,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "0d68bc7d-5110-4817-9cb2-83d85edb6a2a",
+   "externalId": "019fd1db-430e-7173-8f50-f8e699e1c89e",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 67,
+   "rect": [
+    330.24,
+    171.46,
+    606.67,
+    286.25
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-430e-7173-8f50-f8e699e1c89e\\0.png",
+   "sim": 0.897,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "8e5474e6-6d3e-4b59-9dfa-fbd613b78e6c",
+   "externalId": "019fd1db-4545-7530-bda4-e690931dae4a",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 68,
+   "rect": [
+    56.69,
+    583.82,
+    293.39,
+    698.74
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-4545-7530-bda4-e690931dae4a\\0.png",
+   "sim": 0.98,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "339ef0d2-d82f-4bcc-8724-d8254dc02134",
+   "externalId": "019fd1db-4681-73f9-837e-b2ed09ceeb53",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 68,
+   "rect": [
+    321.73,
+    553.61,
+    558.42,
+    675.75
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-4681-73f9-837e-b2ed09ceeb53\\0.png",
+   "sim": 0.952,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "59c3ff64-ec20-486d-87b9-4eb1773bd970",
+   "externalId": "019fd1db-46f3-75f0-8e0e-fd4781b53354",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 69,
+   "rect": [
+    65.2,
+    82.61,
+    301.89,
+    240.22
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-46f3-75f0-8e0e-fd4781b53354\\0.png",
+   "sim": 0.981,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "3857eae9-9318-4593-b182-b809b7411b1a",
+   "externalId": "019fd1db-488f-7308-b481-90e2a80853a6",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 69,
+   "rect": [
+    330.24,
+    310.04,
+    566.85,
+    371.69
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-488f-7308-b481-90e2a80853a6\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d284c096-0f9e-412e-aa32-2d9a03ff9b9f",
+   "externalId": "019fd1db-49a1-70ac-8014-e2a94271b487",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 70,
+   "rect": [
+    56.69,
+    315.47,
+    293.39,
+    453.6
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-49a1-70ac-8014-e2a94271b487\\0.png",
+   "sim": 0.956,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "3ba0651f-3a09-44fa-b647-08a74e61ca4c",
+   "externalId": "019fd1db-4afb-77bd-bf84-99d9d5e8a397",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 70,
+   "rect": [
+    321.73,
+    335.65,
+    558.43,
+    467.12
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-4afb-77bd-bf84-99d9d5e8a397\\0.png",
+   "sim": 0.937,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "6629f8a8-8e82-4012-8cb1-bd4a93dda81a",
+   "externalId": "019fd1db-4bd4-7426-8b46-e0aa477c6b95",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 71,
+   "rect": [
+    65.19,
+    111.65,
+    301.89,
+    204.74
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-4bd4-7426-8b46-e0aa477c6b95\\0.png",
+   "sim": 0.984,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "1ace4362-5b77-4663-b28a-0f8b07705992",
+   "externalId": "019fd1db-4d41-7178-93ab-569432a921d5",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 71,
+   "rect": [
+    330.24,
+    111.52,
+    606.67,
+    284.03
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-4d41-7178-93ab-569432a921d5\\0.png",
+   "sim": 0.862,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "26aea9e8-8c7d-4772-8119-cb6d2b6b0316",
+   "externalId": "019fd1db-4de1-7559-9ca8-cd4bab9cda57",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 71,
+   "rect": [
+    330.24,
+    320.4,
+    566.93,
+    413.34
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-4de1-7559-9ca8-cd4bab9cda57\\0.png",
+   "sim": 0.99,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "22cde571-4db4-457f-bab2-3aac51e010ab",
+   "externalId": "019fd1db-8b09-75ab-bcc3-4190636f1d94",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 82,
+   "rect": [
+    56.69,
+    611.51,
+    296.47,
+    757.82
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-8b09-75ab-bcc3-4190636f1d94\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "0a9174f4-c9f3-4efc-b3e5-aca34af56b23",
+   "externalId": "019fd1db-8c4f-764a-baf5-876986e2a5fc",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 82,
+   "rect": [
+    321.73,
+    575.38,
+    558.43,
+    722.46
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-8c4f-764a-baf5-876986e2a5fc\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "56ce1c16-90cf-4566-b3d6-0d97157abd0c",
+   "externalId": "019fd1db-8d69-7336-b416-0146ba34c05a",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 83,
+   "rect": [
+    65.2,
+    537.01,
+    301.89,
+    616.06
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-8d69-7336-b416-0146ba34c05a\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "9c26dff7-2de0-4379-b35d-eec32a415da3",
+   "externalId": "019fd1db-8dca-766b-b8cf-eb8d4e5db8d4",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 83,
+   "rect": [
+    65.2,
+    691.93,
+    301.89,
+    743.77
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-8dca-766b-b8cf-eb8d4e5db8d4\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "77e8322e-ddb4-4769-a639-0a003e05d690",
+   "externalId": "019fd1db-8f08-73e2-beaf-cede857daa7e",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 83,
+   "rect": [
+    330.23,
+    513.27,
+    566.93,
+    606.3
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-8f08-73e2-beaf-cede857daa7e\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "21d3050c-cf27-47b8-9b7a-050d99ea2132",
+   "externalId": "019fd1db-90e4-70f9-8717-ead89edee84c",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 84,
+   "rect": [
+    56.69,
+    494.28,
+    293.39,
+    603.35
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-90e4-70f9-8717-ead89edee84c\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b8ed1217-e45f-48fa-918c-657916bc6991",
+   "externalId": "019fd1db-9208-74b8-91c8-fa64b9245786",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 84,
+   "rect": [
+    321.73,
+    369.26,
+    558.42,
+    500.34
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-9208-74b8-91c8-fa64b9245786\\0.png",
+   "sim": 0.951,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a4998584-df40-48a2-bff7-b68c06ae0388",
+   "externalId": "019fd1db-95a4-735d-a46f-9c7d3922ef2d",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 85,
+   "rect": [
+    330.24,
+    637.77,
+    565.36,
+    731.14
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-95a4-735d-a46f-9c7d3922ef2d\\0.png",
+   "sim": 0.917,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "94f0c3d2-b400-4aa7-83f5-f427b32eb3e5",
+   "externalId": "019fd1db-972f-7332-8c26-502fe2f2892f",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 86,
+   "rect": [
+    321.73,
+    128.91,
+    558.42,
+    251.94
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-972f-7332-8c26-502fe2f2892f\\0.png",
+   "sim": 0.93,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "20ff5f0b-63aa-4bc9-b2f4-597d73ffef71",
+   "externalId": "019fd1db-9789-731c-bd7f-005662336f03",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 86,
+   "rect": [
+    321.73,
+    356.98,
+    561.52,
+    496.97
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-9789-731c-bd7f-005662336f03\\0.png",
+   "sim": 0.946,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "77c13abe-2604-48f6-be2a-f1e9c391cc9d",
+   "externalId": "019fd1db-97f9-70cc-a05b-28a6713ee1d0",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 86,
+   "rect": [
+    321.73,
+    577.62,
+    546.76,
+    715.86
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-97f9-70cc-a05b-28a6713ee1d0\\0.png",
+   "sim": 0.968,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "2bdecf9f-2e48-4854-9fe6-98f06ea28b3e",
+   "externalId": "019fd1db-992a-75eb-b584-d97390411260",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 87,
+   "rect": [
+    65.2,
+    557.93,
+    301.89,
+    685.3
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-992a-75eb-b584-d97390411260\\0.png",
+   "sim": 0.978,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d81e2d69-7dab-4491-9323-d0cf7ba8f6f1",
+   "externalId": "019fd1db-998f-70ca-97d2-95c016c262b6",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 87,
+   "rect": [
+    330.23,
+    82.61,
+    606.67,
+    305.75
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-998f-70ca-97d2-95c016c262b6\\0.png",
+   "sim": 0.93,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "025b1d11-7607-4d60-8086-63feb326128d",
+   "externalId": "019fd1db-99ee-77fc-99f6-214278109a72",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 87,
+   "rect": [
+    330.24,
+    369.77,
+    566.93,
+    453.48
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-99ee-77fc-99f6-214278109a72\\0.png",
+   "sim": 0.9,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "bd5ad8ca-4c84-4198-951f-ba05d8d2dc14",
+   "externalId": "019fd1db-9ae8-70ae-b190-8bc8b8731a5b",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 88,
+   "rect": [
+    56.69,
+    82.93,
+    293.39,
+    215.88
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-9ae8-70ae-b190-8bc8b8731a5b\\0.png",
+   "sim": 0.963,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "8e9392d5-f8a1-4a38-9d5c-d81f2ea09ed0",
+   "externalId": "019fd1db-9b53-72da-81ed-a9b74e9a083d",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 88,
+   "rect": [
+    56.69,
+    312.69,
+    293.39,
+    484.74
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-9b53-72da-81ed-a9b74e9a083d\\0.png",
+   "sim": 0.875,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "5094f8ad-aeaf-4ba3-aa54-b29fb7138c6c",
+   "externalId": "019fd1db-9d42-7219-b3e0-fe6048a6cdf3",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 89,
+   "rect": [
+    65.19,
+    111.75,
+    302.1,
+    194.02
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-9d42-7219-b3e0-fe6048a6cdf3\\0.png",
+   "sim": 0.875,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "81c43d1d-a174-46cc-bbfa-470dc49fcaab",
+   "externalId": "019fd1db-9daf-73eb-927d-0a677f0c55ba",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 89,
+   "rect": [
+    65.19,
+    314.14,
+    304.98,
+    490.91
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-9daf-73eb-927d-0a677f0c55ba\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "8ffd6361-6dbe-437f-8581-30f802470d73",
+   "externalId": "019fd1db-9eae-71dd-bcad-a175fe7f3787",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 89,
+   "rect": [
+    330.23,
+    112.47,
+    606.67,
+    305.75
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-9eae-71dd-bcad-a175fe7f3787\\0.png",
+   "sim": 0.976,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "bbaeb6b0-b77c-4863-90ce-b2ebd8796d06",
+   "externalId": "019fd1db-a957-705f-b950-56deebe5f478",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 94,
+   "rect": [
+    56.69,
+    546.5,
+    293.39,
+    639.76
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-a957-705f-b950-56deebe5f478\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b05c33ff-9ed1-40a0-ac93-33b170f77675",
+   "externalId": "019fd1db-aa36-7609-98d2-7d5965e6454d",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 94,
+   "rect": [
+    321.73,
+    294.02,
+    558.43,
+    369.28
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-aa36-7609-98d2-7d5965e6454d\\0.png",
+   "sim": 0.892,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "cc32e442-900c-44f2-895a-8a8e5fa89ad1",
+   "externalId": "019fd1db-ab21-7108-9d20-dedbbe5f278c",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 94,
+   "rect": [
+    321.73,
+    545.85,
+    558.42,
+    639.06
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-ab21-7108-9d20-dedbbe5f278c\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "32d015b1-4dc5-4b50-afed-65fdd91ecc48",
+   "externalId": "019fd1db-af84-76a7-904f-5b46d6e43f20",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 96,
+   "rect": [
+    56.69,
+    640.05,
+    293.39,
+    771.02
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-af84-76a7-904f-5b46d6e43f20\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d3230f25-e383-4ff5-ade9-9a12540c3d15",
+   "externalId": "019fd1db-b268-7065-a8d3-241cb919e95a",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 97,
+   "rect": [
+    330.24,
+    200.47,
+    606.67,
+    312.04
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-b268-7065-a8d3-241cb919e95a\\0.png",
+   "sim": 0.883,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "928e7ced-0e6d-4f55-b33f-305885ebeab1",
+   "externalId": "019fd1db-b38b-7010-9768-d9c98348a154",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 98,
+   "rect": [
+    56.69,
+    203.44,
+    293.39,
+    285.57
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-b38b-7010-9768-d9c98348a154\\0.png",
+   "sim": 0.88,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b83b136a-13dd-40cb-b00b-5372692d7a3c",
+   "externalId": "019fd1db-b6b1-728c-86d7-4dd7ff142d31",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 99,
+   "rect": [
+    65.19,
+    243.73,
+    301.89,
+    378.98
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-b6b1-728c-86d7-4dd7ff142d31\\0.png",
+   "sim": 0.946,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "f22349b4-578b-4969-bdaa-b3a9176c9b70",
+   "externalId": "019fd1db-bbb1-7595-8fdd-c6ff5773cdad",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 101,
+   "rect": [
+    65.19,
+    402.48,
+    301.89,
+    503.91
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-bbb1-7595-8fdd-c6ff5773cdad\\0.png",
+   "sim": 0.875,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c533430b-f2a7-4b57-ab94-e988e0da5ca7",
+   "externalId": "019fd1db-c9a9-77e8-bad6-7092120fdb37",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 107,
+   "rect": [
+    330.23,
+    635.78,
+    566.93,
+    729.0
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-c9a9-77e8-bad6-7092120fdb37\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "84cb154d-b90e-409f-b220-3caa6a2f9b1a",
+   "externalId": "019fd1db-cb3d-7687-b120-fd9b17ddb1a4",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 108,
+   "rect": [
+    321.73,
+    247.84,
+    558.43,
+    362.92
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-cb3d-7687-b120-fd9b17ddb1a4\\0.png",
+   "sim": 0.957,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "dd918e14-5b29-418b-ac47-bbad16b2f6fe",
+   "externalId": "019fd1db-cb95-71d6-9256-f1ba2cc97368",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 108,
+   "rect": [
+    321.73,
+    458.41,
+    558.42,
+    535.23
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-cb95-71d6-9256-f1ba2cc97368\\0.png",
+   "sim": 0.952,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "b658df8d-e9b5-46f6-bc0d-242a006d3f87",
+   "externalId": "019fd1db-cc44-73ab-8b99-9d2c552b8131",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 109,
+   "rect": [
+    65.19,
+    223.89,
+    301.87,
+    317.1
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-cc44-73ab-8b99-9d2c552b8131\\0.png",
+   "sim": 0.962,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "7add8b71-2990-4ab3-85ad-a727f3723ace",
+   "externalId": "019fd1db-ce68-755a-a85a-092243884abd",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 109,
+   "rect": [
+    330.23,
+    601.76,
+    566.93,
+    716.84
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-ce68-755a-a85a-092243884abd\\0.png",
+   "sim": 0.959,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "4ff1c3ab-a7cb-4571-b16d-9a7ef797af8b",
+   "externalId": "019fd1db-d39c-7149-a986-8a9023bf4e88",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 112,
+   "rect": [
+    56.69,
+    232.99,
+    293.39,
+    304.01
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-d39c-7149-a986-8a9023bf4e88\\0.png",
+   "sim": 0.986,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "f63a5386-d8ef-41b1-b2d4-1c6875e44ab4",
+   "externalId": "019fd1db-d5c9-772c-a335-57c63362a7bc",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 113,
+   "rect": [
+    65.2,
+    261.96,
+    301.89,
+    395.4
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-d5c9-772c-a335-57c63362a7bc\\0.png",
+   "sim": 0.941,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "cee31d48-2a28-4168-975e-4d09b3e1f3ab",
+   "externalId": "019fd1db-d67f-701a-831b-80b91a52f731",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 113,
+   "rect": [
+    65.2,
+    652.27,
+    301.89,
+    729.5
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-d67f-701a-831b-80b91a52f731\\0.png",
+   "sim": 0.97,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "bda53d6e-75f2-451a-8a83-0d604e0b5ca5",
+   "externalId": "019fd1db-d7ae-7399-9500-3c53a15698aa",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 113,
+   "rect": [
+    330.23,
+    581.47,
+    566.93,
+    674.44
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-d7ae-7399-9500-3c53a15698aa\\0.png",
+   "sim": 0.966,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "231c7ced-5ff6-49ee-bda8-0e29aa1dba9d",
+   "externalId": "019fd1db-d8c9-746f-aa3b-24db2974b624",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 114,
+   "rect": [
+    56.69,
+    546.11,
+    293.38,
+    702.89
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-d8c9-746f-aa3b-24db2974b624\\0.png",
+   "sim": 0.928,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "712bb873-99d3-4df8-81a2-84697e231a01",
+   "externalId": "019fd1db-dace-7234-8bdd-af4a205064f2",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 115,
+   "rect": [
+    65.19,
+    340.7,
+    301.89,
+    434.05
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-dace-7234-8bdd-af4a205064f2\\0.png",
+   "sim": 0.977,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "49e09ab3-8dc3-46bd-b4d3-6ee084379c26",
+   "externalId": "019fd1db-dcc6-75ac-a618-17167e8957c0",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 115,
+   "rect": [
+    330.23,
+    655.52,
+    566.93,
+    732.82
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-dcc6-75ac-a618-17167e8957c0\\0.png",
+   "sim": 0.98,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "88137325-2936-4e4e-a266-5954de761763",
+   "externalId": "019fd1db-e7ea-71ae-b574-88dd4353d48c",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 122,
+   "rect": [
+    56.69,
+    247.24,
+    293.39,
+    346.32
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-e7ea-71ae-b574-88dd4353d48c\\0.png",
+   "sim": 0.93,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "f2108f8f-e54e-4ad9-ac24-12d8f9c992c0",
+   "externalId": "019fd1db-e94b-74be-9850-95b1d0b091ba",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 122,
+   "rect": [
+    321.73,
+    448.41,
+    558.42,
+    565.68
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-e94b-74be-9850-95b1d0b091ba\\0.png",
+   "sim": 0.947,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "8b2c16dd-09d9-4850-9932-2311160ef8dc",
+   "externalId": "019fd1db-e9a3-744a-adab-be34ca1c44d9",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 122,
+   "rect": [
+    321.73,
+    656.51,
+    558.43,
+    727.86
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-e9a3-744a-adab-be34ca1c44d9\\0.png",
+   "sim": 0.892,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "9fde2ab2-baa3-4312-b707-9c9b789d2b53",
+   "externalId": "019fd1db-e9f8-741e-9355-9b9a0aecfcea",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 123,
+   "rect": [
+    65.19,
+    200.94,
+    301.89,
+    332.4
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-e9f8-741e-9355-9b9a0aecfcea\\0.png",
+   "sim": 0.939,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "15ecb8e6-bf14-47a6-91bf-f2e0bc0ac467",
+   "externalId": "019fd1db-eb09-76e5-bf74-918192bb4170",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 123,
+   "rect": [
+    330.24,
+    279.27,
+    606.67,
+    391.41
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-eb09-76e5-bf74-918192bb4170\\0.png",
+   "sim": 0.967,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "95068fd0-9a1a-46cc-82ff-92514f7ecfe2",
+   "externalId": "019fd1db-ec12-7479-bcd6-abc63a7a3f96",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 123,
+   "rect": [
+    330.23,
+    681.21,
+    566.92,
+    758.43
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-ec12-7479-bcd6-abc63a7a3f96\\0.png",
+   "sim": 0.886,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "3d6df2db-a38c-4ee8-b4ce-144276bb9e68",
+   "externalId": "019fd1db-ed69-741b-97df-ec62135cbf13",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 124,
+   "rect": [
+    321.73,
+    216.52,
+    558.43,
+    325.56
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-ed69-741b-97df-ec62135cbf13\\0.png",
+   "sim": 0.968,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "0b5bfe45-14d4-4a33-a3c4-e4ff974d64c4",
+   "externalId": "019fd1db-ee28-7038-afa3-b633f8d4560b",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 124,
+   "rect": [
+    321.73,
+    645.47,
+    558.43,
+    724.56
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-ee28-7038-afa3-b633f8d4560b\\0.png",
+   "sim": 0.954,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a92e4327-b29b-4a0f-b8a3-5aa93a17bb2c",
+   "externalId": "019fd1db-f18c-75ca-ad20-3f639cab66ed",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 126,
+   "rect": [
+    321.73,
+    215.78,
+    558.42,
+    314.86
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-f18c-75ca-ad20-3f639cab66ed\\0.png",
+   "sim": 0.984,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "12618403-d72b-457b-b6b6-f783cb9a362c",
+   "externalId": "019fd1db-f24c-7689-a330-a300e6748889",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 126,
+   "rect": [
+    321.73,
+    636.25,
+    558.43,
+    697.66
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-f24c-7689-a330-a300e6748889\\0.png",
+   "sim": 0.968,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "35eccfd8-4f1a-4c44-a9dc-f94fffcbe612",
+   "externalId": "019fd1db-f2a3-74cc-846f-b5bdf8904fd6",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 127,
+   "rect": [
+    65.2,
+    223.43,
+    301.89,
+    322.51
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-f2a3-74cc-846f-b5bdf8904fd6\\0.png",
+   "sim": 0.967,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "3769124b-399d-43f0-a176-8277777934e3",
+   "externalId": "019fd1db-f3a9-73fa-809f-05bdc812a385",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 127,
+   "rect": [
+    330.24,
+    200.93,
+    566.93,
+    261.97
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-f3a9-73fa-809f-05bdc812a385\\0.png",
+   "sim": 0.957,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "7093ee31-e716-41ec-b260-41a9ef15bbe2",
+   "externalId": "019fd1db-f4bf-74f8-b14d-034e683ac984",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 128,
+   "rect": [
+    56.69,
+    201.58,
+    293.38,
+    278.99
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-f4bf-74f8-b14d-034e683ac984\\0.png",
+   "sim": 0.981,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e547b399-a585-45f4-8d76-3096f3e5669c",
+   "externalId": "019fd1db-f592-761a-8fa1-997ae46b7126",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 128,
+   "rect": [
+    56.69,
+    626.19,
+    293.39,
+    703.4
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-f592-761a-8fa1-997ae46b7126\\0.png",
+   "sim": 0.992,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c8af11c5-22a7-428f-8a79-f40f85b202e3",
+   "externalId": "019fd1db-f5f6-755c-b3ac-02fe16542967",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 128,
+   "rect": [
+    321.73,
+    224.43,
+    556.95,
+    339.5
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-f5f6-755c-b3ac-02fe16542967\\0.png",
+   "sim": 0.937,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e7b54033-ce38-426d-a2d3-a625e7935aee",
+   "externalId": "019fd1db-f77f-71e6-a84c-e3f9f631e6f6",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 129,
+   "rect": [
+    65.19,
+    454.82,
+    302.01,
+    539.47
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-f77f-71e6-a84c-e3f9f631e6f6\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d48edb01-ca7b-40c6-b943-2210cb3dfc66",
+   "externalId": "019fd1db-f846-7760-9903-73f32417182a",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 129,
+   "rect": [
+    330.23,
+    231.48,
+    566.93,
+    324.59
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-f846-7760-9903-73f32417182a\\0.png",
+   "sim": 0.942,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "814ef36b-1a2f-4a7d-9226-b0a29da752be",
+   "externalId": "019fd1db-f96a-744a-b797-91868114ee4a",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 130,
+   "rect": [
+    56.69,
+    127.96,
+    293.39,
+    227.04
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-f96a-744a-b797-91868114ee4a\\0.png",
+   "sim": 0.946,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c28d911c-9475-4e0f-96a0-d81969e5576f",
+   "externalId": "019fd1db-fafe-738a-8fa9-3cd11f06e860",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 130,
+   "rect": [
+    321.73,
+    128.17,
+    558.43,
+    227.04
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-fafe-738a-8fa9-3cd11f06e860\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "bbb7a51e-c92d-4898-a20f-64994d3e85ea",
+   "externalId": "019fd1db-fce3-71ae-9be0-01f1401fce6a",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 131,
+   "rect": [
+    65.19,
+    566.89,
+    301.89,
+    681.95
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-fce3-71ae-9be0-01f1401fce6a\\0.png",
+   "sim": 0.944,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "3f348c8b-77d0-426e-bbac-cf44f686a9ce",
+   "externalId": "019fd1db-feaf-714c-bf8d-6fee9d37209a",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 132,
+   "rect": [
+    56.69,
+    324.85,
+    293.39,
+    439.93
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-feaf-714c-bf8d-6fee9d37209a\\0.png",
+   "sim": 0.946,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "68944bcf-ea42-4bb4-8ec4-4abd8d6c34cc",
+   "externalId": "019fd1db-ff60-70ae-b5df-02663c0e20a3",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 132,
+   "rect": [
+    321.73,
+    82.61,
+    558.28,
+    197.69
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-ff60-70ae-b5df-02663c0e20a3\\0.png",
+   "sim": 0.976,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "9e173b3c-56e1-4ec6-b993-e2e36c535173",
+   "externalId": "019fd1db-ffb8-72df-8197-5646aa2ef0cf",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 132,
+   "rect": [
+    321.73,
+    306.69,
+    555.23,
+    407.06
+   ],
+   "out": "public\\figures\\rpm\\019fd1db-ffb8-72df-8197-5646aa2ef0cf\\0.png",
+   "sim": 0.934,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "e91537ed-da01-417c-93f0-737fac07870f",
+   "externalId": "019fd1dc-0133-748b-9945-57a86dec60ec",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 133,
+   "rect": [
+    65.2,
+    592.3,
+    301.89,
+    669.52
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-0133-748b-9945-57a86dec60ec\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "ed1b0b54-7e0b-4000-86f1-84ca42975810",
+   "externalId": "019fd1dc-025d-7117-9bbc-d8208bf872e3",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 133,
+   "rect": [
+    330.24,
+    557.09,
+    536.65,
+    649.49
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-025d-7117-9bbc-d8208bf872e3\\0.png",
+   "sim": 0.97,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "8004150a-86f9-4374-9435-69e6f93e2091",
+   "externalId": "019fd1dc-35a6-750c-b795-aab5b2de0f7b",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 141,
+   "rect": [
+    330.24,
+    202.87,
+    562.23,
+    309.97
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-35a6-750c-b795-aab5b2de0f7b\\0.png",
+   "sim": 0.949,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "702def1b-63e4-46e2-8519-a60b32774f53",
+   "externalId": "019fd1dc-36d2-705f-ae63-d866716ea827",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 142,
+   "rect": [
+    56.69,
+    203.45,
+    291.61,
+    332.42
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-36d2-705f-ae63-d866716ea827\\0.png",
+   "sim": 0.974,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d732656a-093b-4ed3-a825-cb1baa417ceb",
+   "externalId": "019fd1dc-42b7-73dd-a018-b2e9417c32d1",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 146,
+   "rect": [
+    321.73,
+    295.92,
+    492.69,
+    340.19
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-42b7-73dd-a018-b2e9417c32d1\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "10b3bdfe-603f-4f78-9e78-2c475830c348",
+   "externalId": "019fd1dc-4307-75cb-8bab-4421dfc5932e",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 146,
+   "rect": [
+    321.73,
+    453.49,
+    561.52,
+    548.81
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-4307-75cb-8bab-4421dfc5932e\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "449a4802-d152-4943-8811-83fbd42fba4c",
+   "externalId": "019fd1dc-435f-714a-ac33-bcd81dc69f7f",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 146,
+   "rect": [
+    321.73,
+    646.86,
+    492.36,
+    723.32
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-435f-714a-ac33-bcd81dc69f7f\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "19c42c6d-67b6-4b91-8582-f684b1edc913",
+   "externalId": "019fd1dc-43c2-7034-a3f2-e81c9fe9f695",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 147,
+   "rect": [
+    65.19,
+    261.43,
+    301.89,
+    392.32
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-43c2-7034-a3f2-e81c9fe9f695\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c534739e-39bf-42b7-8723-985397470341",
+   "externalId": "019fd1dc-441e-717a-b043-e734f922c155",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 147,
+   "rect": [
+    65.2,
+    465.39,
+    297.31,
+    580.47
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-441e-717a-b043-e734f922c155\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "c1eeec24-f2c3-4016-8f12-12ce855c53d9",
+   "externalId": "019fd1dc-4478-7764-a334-71a008250c9b",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 147,
+   "rect": [
+    65.2,
+    653.36,
+    305.04,
+    746.58
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-4478-7764-a334-71a008250c9b\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "dfe3ecaa-fa65-441e-955e-c3bedb0f2eac",
+   "externalId": "019fd1dc-4582-77ed-8fce-9604229f741e",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 147,
+   "rect": [
+    330.23,
+    646.4,
+    566.93,
+    723.35
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-4582-77ed-8fce-9604229f741e\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "85708dcb-0385-4d8d-b11e-7b3cc8e10790",
+   "externalId": "019fd1dc-47a9-7234-8e74-625451c06564",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 148,
+   "rect": [
+    321.73,
+    557.32,
+    561.52,
+    686.28
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-47a9-7234-8e74-625451c06564\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "9a1140c0-a69d-4930-98b0-af94bd70a7e5",
+   "externalId": "019fd1dc-4896-7069-bd9e-cf1a5f69332e",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 149,
+   "rect": [
+    65.2,
+    568.63,
+    304.98,
+    612.9
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-4896-7069-bd9e-cf1a5f69332e\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "54b68f0c-37cf-42d6-a5bb-820cff96553b",
+   "externalId": "019fd1dc-4b86-7438-a9c7-cd04814d5c65",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 150,
+   "rect": [
+    321.73,
+    534.75,
+    549.43,
+    649.83
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-4b86-7438-a9c7-cd04814d5c65\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "8ab7e52e-2625-4b4c-8a93-7a5c8dcb4965",
+   "externalId": "019fd1dc-4ce1-776d-bfbc-37568d51c04e",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 151,
+   "rect": [
+    330.23,
+    111.52,
+    570.02,
+    221.7
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-4ce1-776d-bfbc-37568d51c04e\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "fac352d0-2552-4791-94ea-82f5243da795",
+   "externalId": "019fd1dc-4d3f-7671-a4cb-b9796aebfd1e",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 151,
+   "rect": [
+    330.23,
+    373.81,
+    606.67,
+    456.77
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-4d3f-7671-a4cb-b9796aebfd1e\\0.png",
+   "sim": 0.964,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a32e676f-2bf4-46e3-9329-8180661409f0",
+   "externalId": "019fd1dc-4eee-74bf-bd65-c4ff075ed26a",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 153,
+   "rect": [
+    65.2,
+    552.23,
+    233.31,
+    628.5
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-4eee-74bf-bd65-c4ff075ed26a\\0.png",
+   "sim": 0.971,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "25cae66c-71c5-4f1b-ac68-a7f664d200bb",
+   "externalId": "019fd1dc-4f35-71bf-8254-cc139c70cb3b",
+   "pdf": ".rpm-src\\RPM 중학 2-2 학생용.pdf",
+   "page": 153,
+   "rect": [
+    65.2,
+    689.6,
+    293.63,
+    765.88
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-4f35-71bf-8254-cc139c70cb3b\\0.png",
+   "sim": 0.969,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "558f6e34-19af-4578-a837-0973f34b4b37",
+   "externalId": "019fd1dc-be43-70ab-9fff-af8e0d5e054f",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 29,
+   "rect": [
+    330.23,
+    266.61,
+    570.02,
+    373.71
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-be43-70ab-9fff-af8e0d5e054f\\0.png",
+   "sim": 0.963,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "dd82ba1f-ce82-47c0-bcc1-5541047ebf5a",
+   "externalId": "019fd1dc-c66e-77b8-83e8-6d2d893f27ec",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 33,
+   "rect": [
+    330.23,
+    608.15,
+    570.02,
+    723.37
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-c66e-77b8-83e8-6d2d893f27ec\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d96a7bb0-ec23-4863-bdcd-ca857aa348a2",
+   "externalId": "019fd1dc-e1de-706c-ae73-1a8fa2715824",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 44,
+   "rect": [
+    56.69,
+    201.3,
+    285.57,
+    321.82
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-e1de-706c-ae73-1a8fa2715824\\0.png",
+   "sim": 0.977,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "fb1332a2-ac01-4a8b-bd4e-43fd9cf61541",
+   "externalId": "019fd1dc-e2c3-7485-8a49-567f73004345",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 44,
+   "rect": [
+    321.73,
+    84.71,
+    558.43,
+    184.26
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-e2c3-7485-8a49-567f73004345\\0.png",
+   "sim": 0.916,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "5f23dade-0ff4-440d-864b-4cbeb977f159",
+   "externalId": "019fd1dc-e31f-738e-9f02-3932e2bac5c3",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 44,
+   "rect": [
+    321.73,
+    335.97,
+    558.42,
+    440.47
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-e31f-738e-9f02-3932e2bac5c3\\0.png",
+   "sim": 0.87,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "7422c5cb-63c3-4d5e-a477-223377c18fbe",
+   "externalId": "019fd1dc-e78c-7795-947b-26c86b64545e",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 46,
+   "rect": [
+    321.73,
+    408.08,
+    561.54,
+    484.91
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-e78c-7795-947b-26c86b64545e\\0.png",
+   "sim": 0.929,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "96d082f4-49cc-4cde-8c46-53d9af3c4dcf",
+   "externalId": "019fd1dc-f1f9-728a-9124-0a3e5a31f6e2",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 52,
+   "rect": [
+    56.69,
+    582.3,
+    293.38,
+    648.76
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-f1f9-728a-9124-0a3e5a31f6e2\\0.png",
+   "sim": 0.902,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "63f43b10-0434-453f-b52a-16e810977982",
+   "externalId": "019fd1dc-f324-7183-9864-c0c949bb72f8",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 53,
+   "rect": [
+    65.19,
+    83.56,
+    301.89,
+    179.72
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-f324-7183-9864-c0c949bb72f8\\0.png",
+   "sim": 0.98,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "f87a0598-4098-4ca8-a77a-b5310e0de7ba",
+   "externalId": "019fd1dc-f464-7129-aa20-d2227ede7e60",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 53,
+   "rect": [
+    330.23,
+    335.12,
+    566.93,
+    416.8
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-f464-7129-aa20-d2227ede7e60\\0.png",
+   "sim": 0.922,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "0b73cace-5855-4a2f-88c7-9d9dc77ca2f9",
+   "externalId": "019fd1dc-f56a-74cf-be2b-f4e76b7eb6e2",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 54,
+   "rect": [
+    56.69,
+    294.11,
+    296.48,
+    456.13
+   ],
+   "out": "public\\figures\\rpm\\019fd1dc-f56a-74cf-be2b-f4e76b7eb6e2\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "33dbf008-647d-4fcc-bd21-049fd5397a83",
+   "externalId": "019fd1dd-18e1-7691-bf69-438ba7c4dc21",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 62,
+   "rect": [
+    56.69,
+    201.71,
+    285.1,
+    332.54
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-18e1-7691-bf69-438ba7c4dc21\\0.png",
+   "sim": 0.949,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "28c019bf-a0bc-4d98-bfe4-3e5d7b861301",
+   "externalId": "019fd1dd-19bd-761f-9c68-ca2a7f7a1d07",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 62,
+   "rect": [
+    321.73,
+    279.91,
+    558.43,
+    356.42
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-19bd-761f-9c68-ca2a7f7a1d07\\0.png",
+   "sim": 0.967,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "6ba53593-b216-4dd7-8fb4-13f90e009b35",
+   "externalId": "019fd1dd-1a06-733c-be6e-bebb528282f4",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 62,
+   "rect": [
+    321.73,
+    434.52,
+    558.42,
+    526.88
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-1a06-733c-be6e-bebb528282f4\\0.png",
+   "sim": 0.929,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "4449e82f-c0d5-4c5e-9418-1a13c7dcb8b6",
+   "externalId": "019fd1dd-2720-708a-a750-f471f55ed666",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 69,
+   "rect": [
+    330.24,
+    265.79,
+    606.67,
+    433.49
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-2720-708a-a750-f471f55ed666\\0.png",
+   "sim": 0.871,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "db0e7930-cecc-48ab-96c2-eff711bd9b10",
+   "externalId": "019fd1dd-43d0-75e3-bddf-e5e8dbce26c7",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 82,
+   "rect": [
+    321.73,
+    174.5,
+    494.42,
+    233.6
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-43d0-75e3-bddf-e5e8dbce26c7\\0.png",
+   "sim": 0.976,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "fad4bf03-8f06-44cc-98c2-0ef9abe8c13c",
+   "externalId": "019fd1dd-4ebc-776f-bf14-50178f8bd93d",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 88,
+   "rect": [
+    321.73,
+    479.13,
+    561.52,
+    686.11
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-4ebc-776f-bf14-50178f8bd93d\\0.png",
+   "sim": 0.949,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "87adc663-5f02-4b26-b327-a06e06813b6d",
+   "externalId": "019fd1dd-4efe-7008-9880-1ea6b8a1dae8",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 89,
+   "rect": [
+    65.2,
+    83.56,
+    278.13,
+    143.83
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-4efe-7008-9880-1ea6b8a1dae8\\0.png",
+   "sim": 0.971,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "791210a2-27c3-411e-ae9b-2a6d048ca176",
+   "externalId": "019fd1dd-50e5-72b8-a9b4-59f705abd818",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 90,
+   "rect": [
+    56.69,
+    357.69,
+    222.0,
+    448.79
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-50e5-72b8-a9b4-59f705abd818\\0.png",
+   "sim": 0.979,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d52fff54-b5ec-418f-b646-3608311ebc28",
+   "externalId": "019fd1dd-a210-77de-a791-28012ed2fb14",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 118,
+   "rect": [
+    56.69,
+    188.42,
+    293.39,
+    295.52
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-a210-77de-a791-28012ed2fb14\\0.png",
+   "sim": 0.98,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "7ab67599-0887-492d-8f16-f10fe5203b1f",
+   "externalId": "019fd1dd-a2ad-759b-9994-16d71c058f4f",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 118,
+   "rect": [
+    56.69,
+    489.72,
+    268.61,
+    547.71
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-a2ad-759b-9994-16d71c058f4f\\0.png",
+   "sim": 0.988,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "10ea0156-a938-4719-a547-1e65c9d3a707",
+   "externalId": "019fd1dd-a2ff-74de-b6ab-c5f9c5a85ee4",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 118,
+   "rect": [
+    56.69,
+    620.71,
+    296.48,
+    746.22
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-a2ff-74de-b6ab-c5f9c5a85ee4\\0.png",
+   "sim": 0.958,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "53f386b1-4890-4897-88ab-89b16d09cbe6",
+   "externalId": "019fd1dd-a35c-76cd-82b6-ffd14a3103cb",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 118,
+   "rect": [
+    321.73,
+    243.32,
+    534.05,
+    336.68
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-a35c-76cd-82b6-ffd14a3103cb\\0.png",
+   "sim": 0.97,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d16cfa08-d83a-4076-8b94-d96403dba3f2",
+   "externalId": "019fd1dd-a3ab-7565-9528-23465984ac33",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 118,
+   "rect": [
+    321.73,
+    440.43,
+    558.42,
+    518.27
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-a3ab-7565-9528-23465984ac33\\0.png",
+   "sim": 0.934,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "0dc14631-4879-4a51-a14a-6e430bcc4761",
+   "externalId": "019fd1dd-a3fa-70f7-891a-ec42e052b0ca",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 118,
+   "rect": [
+    321.73,
+    621.69,
+    561.52,
+    715.47
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-a3fa-70f7-891a-ec42e052b0ca\\0.png",
+   "sim": 0.968,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "ee1f4fc8-a105-4d12-b6a4-774b0d5de36d",
+   "externalId": "019fd1dd-a44b-765b-b762-2104c3ab6cd9",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 119,
+   "rect": [
+    65.19,
+    201.62,
+    304.98,
+    310.52
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-a44b-765b-b762-2104c3ab6cd9\\0.png",
+   "sim": 0.976,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "3ca371ed-0643-49cd-89be-810d88e97382",
+   "externalId": "019fd1dd-a49b-73fa-825d-0f1861665d42",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 119,
+   "rect": [
+    65.2,
+    407.59,
+    301.89,
+    532.63
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-a49b-73fa-825d-0f1861665d42\\0.png",
+   "sim": 0.959,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "6a8e44d8-5f9e-41f3-af67-5aaf4014a9c8",
+   "externalId": "019fd1dd-a53c-733e-87d9-47fb385f5635",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 119,
+   "rect": [
+    330.24,
+    201.04,
+    606.67,
+    382.6
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-a53c-733e-87d9-47fb385f5635\\0.png",
+   "sim": 0.916,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "5ba8ab52-35fa-4396-9537-93f51600ac0f",
+   "externalId": "019fd1dd-a9bb-76cd-adda-238e18128b87",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 121,
+   "rect": [
+    330.31,
+    553.89,
+    570.1,
+    671.15
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-a9bb-76cd-adda-238e18128b87\\0.png",
+   "sim": 0.973,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d991c4ac-3fa9-4649-9cdd-aaf5e61fdd84",
+   "externalId": "019fd1dd-ab46-71d7-9fcb-65a8d9293e2c",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 122,
+   "rect": [
+    321.73,
+    332.07,
+    542.2,
+    425.24
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-ab46-71d7-9fcb-65a8d9293e2c\\0.png",
+   "sim": 0.956,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "621fac82-3e23-457b-8902-f46821046476",
+   "externalId": "019fd1dd-ab94-76df-ae45-db5476dca62a",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 122,
+   "rect": [
+    321.73,
+    577.44,
+    558.43,
+    669.04
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-ab94-76df-ae45-db5476dca62a\\0.png",
+   "sim": 0.955,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "d1ec37a8-492b-4f3b-a4ef-f7e0834f3859",
+   "externalId": "019fd1dd-e07e-73bc-9e4e-899e2dfac96e",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 140,
+   "rect": [
+    56.69,
+    265.75,
+    293.39,
+    396.18
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-e07e-73bc-9e4e-899e2dfac96e\\0.png",
+   "sim": 0.987,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "142e607b-f4fd-424c-b83a-ac1030310a8b",
+   "externalId": "019fd1dd-e178-76e9-9325-6cf0a4ad5e25",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 140,
+   "rect": [
+    321.73,
+    170.93,
+    558.43,
+    303.32
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-e178-76e9-9325-6cf0a4ad5e25\\0.png",
+   "sim": 0.956,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "eab227b6-b032-4b5b-82f6-8e9a3dbb3120",
+   "externalId": "019fd1dd-ecef-7459-b605-3dff8c902548",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 147,
+   "rect": [
+    330.23,
+    154.46,
+    490.67,
+    299.84
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-ecef-7459-b605-3dff8c902548\\0.png",
+   "sim": 0.863,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "a99203cb-3438-4fd8-bdb8-ab6f51774a4d",
+   "externalId": "019fd1dd-ed3b-772c-b814-52a6f76f3d27",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 147,
+   "rect": [
+    330.23,
+    369.14,
+    490.7,
+    514.53
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-ed3b-772c-b814-52a6f76f3d27\\0.png",
+   "sim": 0.859,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "7a35b6f0-ccd1-41a3-b378-1280d29f85cf",
+   "externalId": "019fd1dd-fc07-72ed-b098-462bd47b4bb6",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 154,
+   "rect": [
+    56.69,
+    246.73,
+    293.38,
+    319.02
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-fc07-72ed-b098-462bd47b4bb6\\0.png",
+   "sim": 0.989,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "bb9b95c4-82eb-4650-9978-4e3d34a06886",
+   "externalId": "019fd1dd-fd51-720e-8029-c1e5f8c5bf3a",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 154,
+   "rect": [
+    321.73,
+    289.82,
+    557.8,
+    335.54
+   ],
+   "out": "public\\figures\\rpm\\019fd1dd-fd51-720e-8029-c1e5f8c5bf3a\\0.png",
+   "sim": 0.982,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "2b459977-f779-4dfa-848f-3419672a0d93",
+   "externalId": "019fd1de-072b-7710-86af-93edcd85cee6",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 159,
+   "rect": [
+    330.23,
+    171.49,
+    570.02,
+    280.71
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-072b-7710-86af-93edcd85cee6\\0.png",
+   "sim": 0.973,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "0153ce7e-9a2f-421e-994d-2cdf9b7f79c2",
+   "externalId": "019fd1de-07c5-75f4-aa09-7135ae278462",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 159,
+   "rect": [
+    330.24,
+    643.82,
+    498.1,
+    686.92
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-07c5-75f4-aa09-7135ae278462\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "7e5bb12a-0db1-47f3-a144-04c7d168fdce",
+   "externalId": "019fd1de-08ff-76b5-b3d1-f44f8d14c19a",
+   "pdf": ".rpm-src\\RPM 중학 3-1 학생용.pdf",
+   "page": 160,
+   "rect": [
+    321.73,
+    230.35,
+    558.2,
+    361.94
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-08ff-76b5-b3d1-f44f8d14c19a\\0.png",
+   "sim": 0.986,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 0
+  },
+  {
+   "problemId": "849221a4-dc5d-4d2e-8121-80bc7c999a98",
+   "externalId": "019fd1de-2dad-74d2-87e7-717fa71b5a25",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 15,
+   "rect": [
+    321.73,
+    128.18,
+    558.42,
+    255.38
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-2dad-74d2-87e7-717fa71b5a25\\0.png",
+   "sim": 0.915,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "d15943b2-d1bc-4d74-9e13-f389ef007eb1",
+   "externalId": "019fd1de-2f06-7745-bbe6-786827b66669",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 16,
+   "rect": [
+    65.19,
+    186.49,
+    301.9,
+    257.84
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-2f06-7745-bbe6-786827b66669\\0.png",
+   "sim": 0.935,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "dbe5b9d8-3f7b-4027-8fe1-b1eb07d715fd",
+   "externalId": "019fd1de-2f4b-7771-a4f5-bb3c2157944d",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 16,
+   "rect": [
+    65.19,
+    352.48,
+    301.89,
+    419.14
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-2f4b-7771-a4f5-bb3c2157944d\\0.png",
+   "sim": 0.947,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "8f12af26-7860-4dd0-b82e-2f75dbb0de53",
+   "externalId": "019fd1de-2f9d-73f5-84e5-05a4a26ba95c",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 16,
+   "rect": [
+    65.2,
+    513.72,
+    301.89,
+    559.19
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-2f9d-73f5-84e5-05a4a26ba95c\\0.png",
+   "sim": 0.963,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "d3fac8c3-ed33-48e1-8f85-4098f8be60ec",
+   "externalId": "019fd1de-31d4-73ec-8116-9ced7c8257df",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 17,
+   "rect": [
+    56.69,
+    403.76,
+    293.38,
+    531.77
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-31d4-73ec-8116-9ced7c8257df\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "d75dd3c0-b50a-4834-87b3-5ef148c258ad",
+   "externalId": "019fd1de-3389-77f1-af64-9cabe7640c22",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 18,
+   "rect": [
+    65.19,
+    241.98,
+    301.27,
+    359.86
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-3389-77f1-af64-9cabe7640c22\\0.png",
+   "sim": 0.893,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "30b6a20f-2fe2-4420-903f-6b996f665da5",
+   "externalId": "019fd1de-407a-714a-99f9-799482f15f94",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 24,
+   "rect": [
+    330.24,
+    616.85,
+    566.93,
+    724.92
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-407a-714a-99f9-799482f15f94\\0.png",
+   "sim": 0.971,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "b35e1d66-2529-4f03-9cbb-e1e5ef73a625",
+   "externalId": "019fd1de-4166-7296-bd27-840793e10356",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 25,
+   "rect": [
+    56.69,
+    559.91,
+    293.39,
+    698.32
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-4166-7296-bd27-840793e10356\\0.png",
+   "sim": 0.883,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "62057b4a-ddda-4e42-b914-858cd0b7536c",
+   "externalId": "019fd1de-5135-729b-b7a9-d40c06744084",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 34,
+   "rect": [
+    65.19,
+    186.19,
+    283.93,
+    317.27
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-5135-729b-b7a9-d40c06744084\\0.png",
+   "sim": 0.966,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "c917d321-076b-4879-8ba0-ce2ebc0798df",
+   "externalId": "019fd1de-5322-769d-96ba-f44edd9c5e82",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 35,
+   "rect": [
+    56.69,
+    380.55,
+    293.39,
+    450.28
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-5322-769d-96ba-f44edd9c5e82\\0.png",
+   "sim": 0.933,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "f68e8366-3bda-4ec6-9a35-3ee46020a543",
+   "externalId": "019fd1de-5875-72a6-95ce-4e3161426e73",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 37,
+   "rect": [
+    321.73,
+    82.17,
+    558.34,
+    144.92
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-5875-72a6-95ce-4e3161426e73\\0.png",
+   "sim": 0.97,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "c73f45b8-9647-4302-9b5d-6942f4ec1f84",
+   "externalId": "019fd1de-5993-75c9-8e8a-f8d38dc8b375",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 38,
+   "rect": [
+    65.2,
+    358.49,
+    301.96,
+    419.71
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-5993-75c9-8e8a-f8d38dc8b375\\0.png",
+   "sim": 0.879,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "b59e3469-7479-4d34-8804-e2b737bff0c8",
+   "externalId": "019fd1de-5b46-7608-8c5f-86ea36d75096",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 39,
+   "rect": [
+    56.69,
+    202.13,
+    293.15,
+    301.21
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-5b46-7608-8c5f-86ea36d75096\\0.png",
+   "sim": 0.918,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "17a8ae7d-3ebf-4327-be4a-6dc5f8ac8ccb",
+   "externalId": "019fd1de-5b8f-7052-a5f7-10d90b1977c0",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 39,
+   "rect": [
+    56.69,
+    376.76,
+    293.15,
+    437.97
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-5b8f-7052-a5f7-10d90b1977c0\\0.png",
+   "sim": 0.897,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "81cd120a-3187-408d-a4ab-ece9e2369a15",
+   "externalId": "019fd1de-5cf5-76bd-9959-1fff5e5fe610",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 39,
+   "rect": [
+    321.73,
+    543.55,
+    558.47,
+    588.76
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-5cf5-76bd-9959-1fff5e5fe610\\0.png",
+   "sim": 0.852,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "4d8be05a-9d0d-4c9c-a3b5-c713eebe3a8e",
+   "externalId": "019fd1de-5d80-7543-8be8-9aa1ee7ca272",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 40,
+   "rect": [
+    65.2,
+    186.3,
+    301.61,
+    322.82
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-5d80-7543-8be8-9aa1ee7ca272\\0.png",
+   "sim": 0.948,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "28a44e45-03c1-4d2b-8ce4-945b6ced26fe",
+   "externalId": "019fd1de-5dc7-711a-9cdf-8fadfa278e8a",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 40,
+   "rect": [
+    65.19,
+    396.0,
+    304.98,
+    505.28
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-5dc7-711a-9cdf-8fadfa278e8a\\0.png",
+   "sim": 0.945,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "66eef752-13b2-4c15-b500-c511521aa3db",
+   "externalId": "019fd1de-5eff-742f-8624-5b2f6a79a3d2",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 40,
+   "rect": [
+    330.23,
+    611.98,
+    566.93,
+    694.69
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-5eff-742f-8624-5b2f6a79a3d2\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "f65875da-3b5d-439a-ae13-912a65147696",
+   "externalId": "019fd1de-62b8-720e-ae62-32aabc1af6cf",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 43,
+   "rect": [
+    56.69,
+    82.88,
+    296.48,
+    159.83
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-62b8-720e-ae62-32aabc1af6cf\\0.png",
+   "sim": 0.864,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "bccc3761-646e-411f-b7f0-c87cabcd8174",
+   "externalId": "019fd1de-634e-711d-baa9-4b8a52eb069d",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 43,
+   "rect": [
+    56.69,
+    540.37,
+    293.39,
+    676.6
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-634e-711d-baa9-4b8a52eb069d\\0.png",
+   "sim": 0.906,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "2b283530-138e-4fe6-b780-5d287763479e",
+   "externalId": "019fd1de-6425-74e5-8be1-5999d1d4a20d",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 43,
+   "rect": [
+    321.73,
+    582.74,
+    534.2,
+    671.27
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-6425-74e5-8be1-5999d1d4a20d\\0.png",
+   "sim": 0.918,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "297d6b06-0101-4243-b633-0c49620c2dff",
+   "externalId": "019fd1de-a2a0-747c-b47e-da0c1f35178e",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 71,
+   "rect": [
+    321.73,
+    252.27,
+    558.42,
+    325.6
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-a2a0-747c-b47e-da0c1f35178e\\0.png",
+   "sim": 0.968,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "f2cbf7e5-bc90-4b08-8b88-e56890885a4a",
+   "externalId": "019fd1de-a48b-75b6-b0f9-503d3c12676f",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 72,
+   "rect": [
+    330.23,
+    213.14,
+    606.67,
+    286.05
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-a48b-75b6-b0f9-503d3c12676f\\0.png",
+   "sim": 0.925,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "a165f817-c81e-47c8-be96-066a1b9e6066",
+   "externalId": "019fd1de-a5a0-7539-bbe0-87c2ecccfd0e",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 73,
+   "rect": [
+    56.69,
+    221.21,
+    293.38,
+    274.56
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-a5a0-7539-bbe0-87c2ecccfd0e\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "dd3a5767-63c3-4f94-9242-fe4cbcd0da3f",
+   "externalId": "019fd1de-a62b-77a8-adf2-41d432cb2d89",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 73,
+   "rect": [
+    56.69,
+    510.88,
+    293.39,
+    571.57
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-a62b-77a8-adf2-41d432cb2d89\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "e13696a7-28e6-44ed-9364-bde2e607e2db",
+   "externalId": "019fd1de-a671-75e3-89c5-148ec06cf595",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 73,
+   "rect": [
+    56.68,
+    663.85,
+    293.39,
+    736.37
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-a671-75e3-89c5-148ec06cf595\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "2e91d4fe-b10a-4d92-bfd6-3dd205e35651",
+   "externalId": "019fd1de-aa36-70ad-a405-80557e87a920",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 75,
+   "rect": [
+    321.73,
+    285.71,
+    558.42,
+    421.2
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-aa36-70ad-a405-80557e87a920\\0.png",
+   "sim": 0.933,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "fe383a56-e68b-43be-811e-01469d7e5d1f",
+   "externalId": "019fd1de-b1a3-710c-9374-ef52d2c2f43a",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 80,
+   "rect": [
+    65.19,
+    201.94,
+    301.89,
+    248.91
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-b1a3-710c-9374-ef52d2c2f43a\\0.png",
+   "sim": 0.963,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "80f0dc2a-3303-41ae-ad79-cf43a8861747",
+   "externalId": "019fd1de-b447-739f-a1c6-4bdc4ec1ac7e",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 81,
+   "rect": [
+    321.73,
+    231.7,
+    558.42,
+    303.72
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-b447-739f-a1c6-4bdc4ec1ac7e\\0.png",
+   "sim": 0.93,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "1f805483-0fb3-4859-bf8a-359a1c3df1a5",
+   "externalId": "019fd1de-b633-767d-bee1-5fbf2076efd2",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 82,
+   "rect": [
+    330.23,
+    247.01,
+    606.67,
+    313.47
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-b633-767d-bee1-5fbf2076efd2\\0.png",
+   "sim": 0.861,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "f0135b4b-4c9d-47f8-837a-97fd695eaed5",
+   "externalId": "019fd1de-b8b1-737e-87cd-e377174165cd",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 84,
+   "rect": [
+    65.2,
+    204.21,
+    301.08,
+    319.29
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-b8b1-737e-87cd-e377174165cd\\0.png",
+   "sim": 0.976,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "1bb8bb43-6d06-431f-a9b8-b4d126fa0ee3",
+   "externalId": "019fd1de-badb-718b-85af-f8494acc52bc",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 85,
+   "rect": [
+    56.69,
+    519.38,
+    293.39,
+    593.82
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-badb-718b-85af-f8494acc52bc\\0.png",
+   "sim": 0.925,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "0c939eca-49f4-416d-80b9-cf9b109e066e",
+   "externalId": "019fd1de-bb6a-7269-bf38-bdc3d6648fe0",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 85,
+   "rect": [
+    321.73,
+    230.92,
+    558.61,
+    346.0
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-bb6a-7269-bf38-bdc3d6648fe0\\0.png",
+   "sim": 0.979,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "ea3ec42b-17d8-49c1-9f04-1636cd9b1466",
+   "externalId": "019fd1de-bd65-7294-b98a-83a7048a8279",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 86,
+   "rect": [
+    330.24,
+    231.99,
+    606.67,
+    313.47
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-bd65-7294-b98a-83a7048a8279\\0.png",
+   "sim": 0.895,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "06822769-4219-4fc7-a20f-6d2ab57f2e67",
+   "externalId": "019fd1de-be35-742f-af2a-c5642230dc48",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 87,
+   "rect": [
+    56.69,
+    217.15,
+    293.39,
+    294.37
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-be35-742f-af2a-c5642230dc48\\0.png",
+   "sim": 0.982,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "bca1ff8b-f82c-44f3-ba45-81cb8f21b619",
+   "externalId": "019fd1de-bf03-731a-a8ab-ddeb9f7d615d",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 87,
+   "rect": [
+    321.73,
+    201.46,
+    558.43,
+    322.48
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-bf03-731a-a8ab-ddeb9f7d615d\\0.png",
+   "sim": 0.979,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "a43c1d5c-df63-4af6-8bd1-96cfce83adf9",
+   "externalId": "019fd1de-f058-718e-a9c8-53f508195d22",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 108,
+   "rect": [
+    330.24,
+    84.72,
+    606.67,
+    408.28
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-f058-718e-a9c8-53f508195d22\\0.png",
+   "sim": 0.933,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "0e041372-4982-4c6f-8b30-b97e8545ac7f",
+   "externalId": "019fd1de-f14a-7546-81dd-7a036dc6dcc2",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 109,
+   "rect": [
+    56.69,
+    586.13,
+    296.4,
+    675.21
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-f14a-7546-81dd-7a036dc6dcc2\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "67575834-52fe-4704-bc91-99d552cdbf1a",
+   "externalId": "019fd1de-f1df-7272-8a26-3662fead2b49",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 109,
+   "rect": [
+    321.73,
+    486.81,
+    561.52,
+    704.01
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-f1df-7272-8a26-3662fead2b49\\0.png",
+   "sim": 0.925,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "3f819f28-97dd-4a3b-b05e-ab283ce20c7a",
+   "externalId": "019fd1de-f386-75f8-baff-3b3d79ed2975",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 111,
+   "rect": [
+    56.69,
+    294.42,
+    293.68,
+    472.36
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-f386-75f8-baff-3b3d79ed2975\\0.png",
+   "sim": 0.933,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "0bc3241a-8054-40d0-bcc9-2fadd0b20fb7",
+   "externalId": "019fd1de-f4b6-774a-9e30-3bc867842f9d",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 111,
+   "rect": [
+    321.73,
+    491.81,
+    558.04,
+    722.16
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-f4b6-774a-9e30-3bc867842f9d\\0.png",
+   "sim": 0.893,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "c7b3952f-37cd-46cf-9ee7-bfcf4a81b887",
+   "externalId": "019fd1de-f500-7797-b89b-439a6b273dd6",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 112,
+   "rect": [
+    65.19,
+    271.49,
+    301.61,
+    400.45
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-f500-7797-b89b-439a6b273dd6\\0.png",
+   "sim": 0.851,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "29e842d0-993a-43a7-afd3-0fa7afe6437c",
+   "externalId": "019fd1de-f682-710e-8411-726ec2de69fe",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 113,
+   "rect": [
+    56.69,
+    225.55,
+    292.96,
+    339.77
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-f682-710e-8411-726ec2de69fe\\0.png",
+   "sim": 1.0,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "3860241b-1c0a-4363-8e86-faa790b89085",
+   "externalId": "019fd1de-f707-73ef-a40a-0741d58ea5a3",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 113,
+   "rect": [
+    321.73,
+    81.71,
+    557.99,
+    298.82
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-f707-73ef-a40a-0741d58ea5a3\\0.png",
+   "sim": 0.989,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "88bba822-ef09-43df-9a7f-beb9f11b29ea",
+   "externalId": "019fd1de-f7c0-74e4-bb0d-90eaf6982906",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 114,
+   "rect": [
+    65.2,
+    207.12,
+    304.98,
+    367.89
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-f7c0-74e4-bb0d-90eaf6982906\\0.png",
+   "sim": 0.971,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "1eeb2200-e077-4dc4-8834-e2a86e8093d4",
+   "externalId": "019fd1de-fa4f-7390-8c54-14dfa329a8dc",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 115,
+   "rect": [
+    321.73,
+    106.96,
+    561.52,
+    353.22
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-fa4f-7390-8c54-14dfa329a8dc\\0.png",
+   "sim": 0.967,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "ae60053b-2964-4bca-a4dc-36ccfeabc200",
+   "externalId": "019fd1de-fa9c-7529-b5eb-fbbf5f279498",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 115,
+   "rect": [
+    321.73,
+    458.49,
+    561.44,
+    704.9
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-fa9c-7529-b5eb-fbbf5f279498\\0.png",
+   "sim": 0.965,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "c3fa53ee-cf5b-456b-93ca-deff913a74ef",
+   "externalId": "019fd1de-fb87-75ab-8073-1070c16e96fb",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 116,
+   "rect": [
+    330.23,
+    61.61,
+    606.67,
+    367.16
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-fb87-75ab-8073-1070c16e96fb\\0.png",
+   "sim": 0.858,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  },
+  {
+   "problemId": "be6a02b2-89af-4777-8295-64a229bdc64f",
+   "externalId": "019fd1de-fe21-742d-b5ba-3780451dc03a",
+   "pdf": ".rpm-src\\RPM 중학 3-2 학생용.pdf",
+   "page": 118,
+   "rect": [
+    65.2,
+    294.3,
+    302.08,
+    496.26
+   ],
+   "out": "public\\figures\\rpm\\019fd1de-fe21-742d-b5ba-3780451dc03a\\0.png",
+   "sim": 0.854,
+   "dx": 0.0,
+   "dy": 0.0,
+   "pageOff": 3
+  }
+ ]
+}

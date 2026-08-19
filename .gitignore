@@ -162,3 +162,20 @@ public/figures-300-enhanced/
 # 임시 조사용 (커밋하지 않는다)
 .probe/
 !scripts/qa/reports/question-type-unify-ledger.json
+
+# 그림 칸 원장(㉮) — 「이 그림이 원본 지면에서 몇 mm 였나」의 유일한 자리.
+# 300dpi 재크롭·인쇄 물리 크기·벡터 SVG 목표 크기가 전부 이 값을 쓴다.
+# 다시 만들려면 원본 PDF 전량을 다시 매핑해야 해서 20분 넘게 걸린다.
+!scripts/qa/reports/figure-rect-ledger.json
+# RPM 오려내기 계획 3개 — 원장의 「자리 못 구함 600」을 메우는 근거.
+# 앞 세션이 「이 컴퓨터에 없다」고 적었던 바로 그 파일이다.
+!scripts/qa/reports/rpm-crop-plan-gated.json
+!scripts/qa/reports/rpm-crop-plan-main667.json
+!scripts/qa/reports/rpm-crop-plan-recrop1646.json
+# 그 600장을 계획+디스크 PNG 로 되찾은 원장.
+!scripts/qa/reports/rpm-rect-fill.json
+# 벡터 SVG 전량 산출 결과 — 다시 뽑으려면 Chromium 전량이 필요하다.
+!scripts/qa/reports/figure-vector-svg-result.json
+
+# 이 트랙의 임시 산출물 (커밋하지 않는다)
+.work/
