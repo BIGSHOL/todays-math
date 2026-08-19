@@ -672,7 +672,7 @@ describe("[렌더 수리 A] 문제은행 — 필터 폭 고정", () => {
  * 그림 문항을 찾으려면 은행을 통째로 넘겨야 했다. `figureSvg` 는 아직 0건이지만
  * 스키마상 그림의 다른 갈래라 서버 조건에 함께 넣는다.
  */
-describe("[S-08] 문제은행 — 그림 있는 문제만 (MSW)", () => {
+describe("[S-08] 문제은행 — 자료 토글 그림·해설·정답 (MSW)", () => {
   const EMPTY_LIST = { data: [], meta: { page: 1, pageSize: 20, total: 0 } };
 
   function captureQueries() {
@@ -689,7 +689,7 @@ describe("[S-08] 문제은행 — 그림 있는 문제만 (MSW)", () => {
   it("체크박스를 보여 주고 기본은 꺼져 있다", async () => {
     await renderBank();
 
-    const box = screen.getByRole("checkbox", { name: "그림 있는 문제만" });
+    const box = screen.getByRole("checkbox", { name: "그림" });
     expect(box).toBeInTheDocument();
     expect(box).not.toBeChecked();
   });
@@ -698,16 +698,12 @@ describe("[S-08] 문제은행 — 그림 있는 문제만 (MSW)", () => {
     const { user } = await renderBank();
     const captured = captureQueries();
 
-    await user.click(
-      screen.getByRole("checkbox", { name: "그림 있는 문제만" }),
-    );
+    await user.click(screen.getByRole("checkbox", { name: "그림" }));
     await waitFor(() => {
       expect(captured.at(-1)?.get("hasFigure")).toBe("true");
     });
 
-    await user.click(
-      screen.getByRole("checkbox", { name: "그림 있는 문제만" }),
-    );
+    await user.click(screen.getByRole("checkbox", { name: "그림" }));
     await waitFor(() => {
       expect(captured.at(-1)?.has("hasFigure")).toBe(false);
     });
@@ -717,9 +713,108 @@ describe("[S-08] 문제은행 — 그림 있는 문제만 (MSW)", () => {
     const { user } = await renderBank();
     const captured = captureQueries();
 
-    await user.click(
-      screen.getByRole("checkbox", { name: "그림 있는 문제만" }),
+    await user.click(screen.getByRole("checkbox", { name: "그림" }));
+    await waitFor(() => {
+      expect(captured.at(-1)?.get("page")).toBe("1");
+    });
+  });
+});
+
+/**
+ * 🔴 RED → 🟢 GREEN — 「자료」 토글 셋 (원장님 지시 2026-08-19).
+ *
+ * 「그림 있는 문제만」 하나였던 자리를 **그림 · 해설 · 정답** 셋으로 넓힌다.
+ *
+ * ## 왜 셋 다 뜻이 있나 — 만들기 전에 실측으로 확인했다 (DB 47,152건)
+ *
+ *   그림 있음  9,448 (20.0%)   `figureUrls` 또는 `figureSvg`
+ *   해설 있음 13,909 (29.5%)   `solution` 이 비지 않음
+ *   정답 있음 45,041 (95.5%)   ← ⚠️ 여기가 함정이었다
+ *
+ * ⚠️ **`answer` 는 빈 값이 0건이다.** 「비어 있지 않은가」로 만들면 100% 를 통과시켜
+ *    아무것도 안 거른다. 실제 자리표시자는 **`(정답 없음)` 문자열 2,111건**이다.
+ *    「빈 값」이 빈 문자열이 아니라 **글자로 적힌 자리표시자**인 것은 이 저장소에서
+ *    되풀이된 부류다(CLAUDE.md 2026-08-18 「빈 컬럼이 결함이 아니라 판별자였다」).
+ *
+ * 셋은 **서로 독립**이다 — 켠 것을 모두 만족하는 문항만 남는다(AND).
+ */
+describe("[S-08] 문제은행 — 해설·정답 토글 (MSW)", () => {
+  const EMPTY_LIST = { data: [], meta: { page: 1, pageSize: 20, total: 0 } };
+
+  function captureQueries() {
+    const captured: URLSearchParams[] = [];
+    server.use(
+      http.get("/api/problems", ({ request }) => {
+        captured.push(new URL(request.url).searchParams);
+        return HttpResponse.json(EMPTY_LIST);
+      }),
     );
+    return captured;
+  }
+
+  it("셋을 다 보여 주고 기본은 전부 꺼져 있다", async () => {
+    await renderBank();
+
+    for (const name of ["그림", "해설", "정답"]) {
+      const box = screen.getByRole("checkbox", { name });
+      expect(box).toBeInTheDocument();
+      expect(box).not.toBeChecked();
+    }
+  });
+
+  it("셋이 한 묶음으로 묶여 있다 — 이름만으로는 무엇을 거르는지 모른다", async () => {
+    await renderBank();
+    // `그림` 한 글자로는 「그림이 있는 것만」인지 「그림 종류」인지 알 수 없다.
+    // 묶음 이름이 그 뜻을 지고 있어야 한다.
+    expect(screen.getByRole("group", { name: "자료" })).toBeInTheDocument();
+  });
+
+  it("해설을 켜면 hasSolution=true 로 조회하고, 끄면 다시 빠진다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+
+    await user.click(screen.getByRole("checkbox", { name: "해설" }));
+    await waitFor(() => {
+      expect(captured.at(-1)?.get("hasSolution")).toBe("true");
+    });
+
+    await user.click(screen.getByRole("checkbox", { name: "해설" }));
+    await waitFor(() => {
+      expect(captured.at(-1)?.has("hasSolution")).toBe(false);
+    });
+  });
+
+  it("정답을 켜면 hasAnswer=true 로 조회한다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+
+    await user.click(screen.getByRole("checkbox", { name: "정답" }));
+    await waitFor(() => {
+      expect(captured.at(-1)?.get("hasAnswer")).toBe("true");
+    });
+  });
+
+  it("셋을 같이 켜면 셋 다 붙는다 — 서로를 지우지 않는다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+
+    await user.click(screen.getByRole("checkbox", { name: "그림" }));
+    await user.click(screen.getByRole("checkbox", { name: "해설" }));
+    await user.click(screen.getByRole("checkbox", { name: "정답" }));
+
+    await waitFor(() => {
+      const q = captured.at(-1)!;
+      expect(q.get("hasFigure")).toBe("true");
+      expect(q.get("hasSolution")).toBe("true");
+      expect(q.get("hasAnswer")).toBe("true");
+    });
+  });
+
+  it("해설·정답도 1페이지부터 다시 본다 — 켠 채로 옛 페이지에 남으면 빈 화면이 된다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+
+    await user.click(screen.getByRole("checkbox", { name: "해설" }));
     await waitFor(() => {
       expect(captured.at(-1)?.get("page")).toBe("1");
     });

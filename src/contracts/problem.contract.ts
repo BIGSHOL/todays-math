@@ -141,6 +141,22 @@ export const problemFilterQuerySchema = z.strictObject({
    * 쿼리스트링은 전부 문자열이라 그 함정에 그대로 걸린다. 그래서 리터럴로 받는다.
    */
   hasFigure: z.literal("true").optional(),
+  /**
+   * 해설이 있는 문항만(2026-08-19). 실측 13,909건(29.5%).
+   * `solution` 은 nullable 이고 빈 문자열도 들어 있어 **둘 다** 걸러야 한다.
+   */
+  hasSolution: z.literal("true").optional(),
+  /**
+   * 정답이 있는 문항만(2026-08-19). 실측 45,041건(95.5%).
+   *
+   * ⚠️ `answer` 는 **빈 값이 0건**이다. 「비어 있지 않은가」로 만들면 100% 를
+   * 통과시켜 아무것도 안 거른다. 실제 자리표시자는 **`(정답 없음)` 문자열
+   * 2,111건**이다 — 빈 값이 빈 문자열이 아니라 **글자로 적혀 있다.**
+   * 상수는 `MISSING_ANSWER`(`src/lib/missingAnswer.ts`) 한 곳에 이미 있고,
+   * **출제 자격(`findEligibleProblems`)이 쓰는 바로 그 값**이다. 화면 필터와
+   * 출제 자격이 갈리면 「은행에 보이는데 안 뽑히는」 문항이 생긴다.
+   */
+  hasAnswer: z.literal("true").optional(),
   page: paginationParamsSchema.shape.page,
   pageSize: paginationParamsSchema.shape.pageSize,
 });
