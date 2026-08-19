@@ -148,6 +148,11 @@ scripts/classify/reports/loaded-external-ids.json
 # 지면 실측 캐시 (scripts/qa/measure-*.tsx --json) — 재생성 가능, 수 MB
 .measure/
 
+# 300dpi 재크롭 산출 — 대용량. 견준 뒤에 바꿔치기한다. 커밋하지 마라.
+# (다중 세션이 git add -A 로 쓸어 담지 못하게 막는다.)
+public/figures-300/
+public/figures-300-enhanced/
+
 # RPM 원본 교재 PDF (내려받은 것 — 저장소에 넣지 않는다)
 .rpm-src/
 
@@ -157,3 +162,25 @@ scripts/classify/reports/loaded-external-ids.json
 # 임시 조사용 (커밋하지 않는다)
 .probe/
 !scripts/qa/reports/question-type-unify-ledger.json
+
+# 그림 칸 원장(㉮) — 「이 그림이 원본 지면에서 몇 mm 였나」의 유일한 자리.
+# 300dpi 재크롭·인쇄 물리 크기·벡터 SVG 목표 크기가 전부 이 값을 쓴다.
+# 다시 만들려면 원본 PDF 전량을 다시 매핑해야 해서 20분 넘게 걸린다.
+!scripts/qa/reports/figure-rect-ledger.json
+# RPM 오려내기 계획 3개 — 원장의 「자리 못 구함 600」을 메우는 근거.
+# 앞 세션이 「이 컴퓨터에 없다」고 적었던 바로 그 파일이다.
+!scripts/qa/reports/rpm-crop-plan-gated.json
+!scripts/qa/reports/rpm-crop-plan-main667.json
+!scripts/qa/reports/rpm-crop-plan-recrop1646.json
+# 그 600장을 계획+디스크 PNG 로 되찾은 원장.
+!scripts/qa/reports/rpm-rect-fill.json
+# 벡터 SVG 전량 산출 결과 — 다시 뽑으려면 Chromium 전량이 필요하다.
+!scripts/qa/reports/figure-vector-svg-result.json
+
+# 이 트랙의 임시 산출물 (커밋하지 않는다)
+.work/
+# 그림 인쇄 크기 트랙 2차 — 15mm 미만 53장을 원본 지면에서 조사한 결과.
+# 보고서가 이 숫자를 인용하므로 **원장 없이도 검산되게** 커밋한다
+# (원장 figure-rect-ledger.json 도 위에서 커밋한다 — 다시 만들려면 원본 PDF
+#  전량을 20분 넘게 다시 매핑해야 한다).
+!scripts/qa/reports/figure-tiny-inspect.json

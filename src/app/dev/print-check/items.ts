@@ -45,6 +45,77 @@ export const PRINT_ROUTE = "/tests/{시험지id}/print";
 
 export const ITEMS: PrintCheckItem[] = [
   {
+    id: "figure-print-size-mm",
+    title: "그림 크기를 **픽셀이 아니라 물리 크기(mm)** 로 정한다",
+    changed:
+      "종전 규칙은 「픽셀 폭이 264.567(=70mm)을 넘으면 70mm 로 줄이고, 아니면 픽셀 그대로(96dpi)」뿐이었다. " +
+      "**「얼마로 그린다」가 없다** — 원본 가로가 41~7,343px(중앙 425)이라 같은 삼각형이 문항마다 다른 크기로 인쇄된다. " +
+      '이제 그림마다 「원본 지면에서 차지하던 물리 폭(mm)」을 알면 `<img style="width: Xmm">` 로 그리고, ' +
+      "넘침 판정도 **같은 함수**로 그 크기를 잰다. **모르면 종전과 한 글자도 다르지 않다**(회귀 0). " +
+      "원장님 지시 2026-08-19 「모든 그림이나 도형 크기가 일관성이 있어야 하니까」.",
+    look:
+      "① 같은 종류의 도형(삼각형·수직선·좌표평면)이 문항마다 **같은 크기**로 나오는가 — 이게 이 변경의 목적이다. " +
+      "② 작아진 그림의 글자·눈금이 **읽히는가.** 물리 크기를 따르면 종전보다 작아지는 그림이 생긴다(종전에 70mm 로 확대되던 것). " +
+      "③ 그림이 문항 열(약 96mm)을 넘어 옆 칸을 침범하지 않는가 — 어떤 그림도 70mm 를 넘으면 안 된다. " +
+      "④ 그림 아래 보기·정답란이 밀려 다음 문항과 겹치지 않는가(넘침은 잘림이 아니라 **겹침**으로 나타난다). " +
+      "⑤ mm 를 모르는 그림과 아는 그림이 **한 지면에 섞여** 있을 때 어색하지 않은가.",
+    lookFromSource: false,
+    evidence: [
+      "src/lib/figurePrintSize.ts (규칙 한 곳 — 자와 지면이 같이 부른다)",
+      "src/lib/printOverflow.ts `estimateFigureBlockPx`",
+      "src/components/math/ProblemContent.tsx (인라인 `width: Xmm`)",
+      "src/__tests__/unit/figurePrintSize.test.ts · printFigureHeight.test.ts · problemFigures.test.tsx",
+      "scripts/qa/mutate-figure-print-size.mjs (변이 20 · 잡힘 18 · 동치 2 · 안 잡힘 0)",
+      "docs/planning/tracks/figure-quality-brief.md §9 · §14",
+      "docs/planning/tracks/report-figure-print-size.md",
+    ],
+    scale:
+      "**지금은 0건이다** — 물리 폭을 담을 컬럼(`figure_source_mm`)의 마이그레이션을 만들었지만 " +
+      "적용하지 않았고(공유 DB), 값을 회수하는 일은 `그림벡터` 트랙이 맡는다. " +
+      "값이 들어오는 순간 그림 문항 전량(그림 16,122장)의 지면 크기가 바뀐다. " +
+      "그때 이 항목이 **실물 검수 대상**이 된다.",
+    status: "대기",
+    needs:
+      "값이 DB 에 들어오기 전에는 `/dev/figure-print-size` 에서 **전후 비교 지면**으로 본다 " +
+      "(같은 문항을 종전 규칙 / 새 규칙으로 나란히 그린다). " +
+      "그 화면은 실측 원장(`scripts/qa/reports/figure-rect-ledger.json`)을 읽는다. " +
+      "원장이 없으면 가정값으로 내려가지 않고 「원장이 없다」고 적고 멈춘다. " +
+      "값이 컬럼에 들어오면 실제 인쇄 화면이 바뀌고 그때 이 항목이 실물 검수 대상이 된다.",
+    changedOn: "2026-08-19",
+  },
+  {
+    id: "figure-blend-multiply",
+    title: "그림의 **흰 배경**을 지면 종이색에 녹인다 (곱셈 혼합)",
+    changed:
+      "오려 온 그림은 배경이 **순백(#FFFFFF)** 인데 지면은 `--paper-warm`(#FCFCF8) 이라, " +
+      "그림 자리마다 **더 밝은 사각형**이 떠 보였다(원장님 2026-08-20: 「그림은 배경이 흰색인데, " +
+      "문제지는 배경이 흰색이 아니라 좀 이상한건 있긴하네」). " +
+      "그림에 `mix-blend-multiply` 를 걸어 흰 배경이 종이색에 녹게 했다 — 흰색을 곱하면 바탕이 " +
+      "그대로 남고 검은 획·글자는 진하게 남는다. **그림 파일은 하나도 안 건드린다.** " +
+      "화면(흰 배경)에서는 곱셈이 아무 일도 안 하므로 문제은행·검수 화면은 종전 그대로다.",
+    look:
+      "🔴 ① **그림 둘레의 밝은 사각형이 사라졌는가** — 이 변경의 목적이다. " +
+      "② 그림 안의 **검은 선·글자가 옅어지지 않았는가.** 곱셈은 진한 쪽을 남기므로 그대로여야 한다. " +
+      "③ **색 있는 그림**(노란 바탕 삽화·빨간 도형)의 색이 탁해지지 않았는가 — 종이색이 곱해진다. " +
+      "④ 그림 안에 **원래 흰색으로 칠한 부분**(가림·지우개 역할)이 있으면 그 자리가 비쳐 보이지 않는가. " +
+      "🔴 ⑤ **프린터가 혼합을 제대로 찍는가** — 브라우저·드라이버마다 다르게 나올 수 있는 부류다. " +
+      "화면 미리보기가 멀쩡해도 종이에서 회색 사각형으로 나오는 일이 있는지 반드시 확인한다.",
+    lookFromSource: false,
+    evidence: [
+      "src/components/math/ProblemContent.tsx `FIGURE_BLEND_CLASS`",
+      "src/__tests__/unit/problemFigures.test.tsx (「흰 배경을 지면 색에 녹인다」)",
+      "src/components/print/TestPrint.module.css `--paper-warm` = #FCFCF8",
+    ],
+    scale:
+      "그림이 붙은 문항 **전량**이 대상이다(그림 16,000여 장). 되돌리기는 상수 한 줄을 지우는 것이다.",
+    status: "대기",
+    needs:
+      "혼합은 **인쇄에서만 눈에 띄는** 변경이다(화면은 배경이 흰색이라 아무 일도 안 한다). " +
+      "그래서 미리보기로는 판정이 안 되고 실물 출력이 필요하다. " +
+      "특히 색 있는 그림 한 장과 흰색으로 가린 부분이 있는 그림 한 장을 같은 지면에 넣어 본다.",
+    changedOn: "2026-08-20",
+  },
+  {
     id: "inline-choice-repair-r2",
     title:
       "R2 — 한 줄에 붙어 있던 보기 다섯이 **처음 지면에 서는** 문항 (D-58)",

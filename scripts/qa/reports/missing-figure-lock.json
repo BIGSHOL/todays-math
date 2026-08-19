@@ -2,7 +2,7 @@
  "적용": "그림 유실 문항 출제 제외 (directUseAllowed=false)",
  "기준시각": "2026-08-18T10:23:09.822Z",
  "되돌리기": "ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-missing-figure-lock.ts --revert",
- "잠근건수": 236,
+ "잠근건수": 209,
  "이전상태": [
   {
    "id": "0042cff5-8668-4c07-9696-4331221e6ce0",
@@ -80,18 +80,8 @@
    "directUseAllowed": true
   },
   {
-   "id": "10c4e8ff-2e17-4b30-ba0d-4bf22566b490",
-   "externalId": "019fd1d7-e0bb-706c-bff4-1d0c4ab2bc0c",
-   "directUseAllowed": true
-  },
-  {
    "id": "10cbf140-247c-41bd-8a76-2ba56e9f89ff",
    "externalId": "019fd1de-f5ed-7172-a14f-63cd63a97c1d",
-   "directUseAllowed": true
-  },
-  {
-   "id": "1211ce43-197d-4b2d-a3fc-85c6e2be5aa3",
-   "externalId": "019fd1d7-3616-731c-be9c-c869dd605e54",
    "directUseAllowed": true
   },
   {
@@ -135,11 +125,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "18995789-c555-449e-834e-a6e8fb7fa977",
-   "externalId": "019fd1d7-5cde-751d-af54-70017ca23152",
-   "directUseAllowed": true
-  },
-  {
    "id": "191953f1-983a-426d-a1af-35c170d3cf3f",
    "externalId": "019fd1d7-3b0f-77cd-bf34-19b0679a3a9a",
    "directUseAllowed": true
@@ -152,11 +137,6 @@
   {
    "id": "1e755ba3-9663-4c9b-8114-68fb21216834",
    "externalId": "5049-19",
-   "directUseAllowed": true
-  },
-  {
-   "id": "1e8ee9d6-d0dc-4ecc-9fff-c5997a376f80",
-   "externalId": "019fd1d7-9c9d-76c5-80cd-ceff3219067d",
    "directUseAllowed": true
   },
   {
@@ -220,11 +200,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "2f21783a-0232-410a-91c9-2d710cfd50b6",
-   "externalId": "019fd1db-a826-71be-8319-600a5b931469",
-   "directUseAllowed": true
-  },
-  {
    "id": "33648692-9108-455d-a80d-519ed1d7dba0",
    "externalId": "019fd1db-1105-70ae-952d-93dff95add48",
    "directUseAllowed": true
@@ -237,11 +212,6 @@
   {
    "id": "346a5d01-f795-40a7-8db8-01782223dbf8",
    "externalId": "019fd1d8-0921-76cb-81c1-d81777e2cb32",
-   "directUseAllowed": true
-  },
-  {
-   "id": "347bc5cd-fb30-4b81-bd15-d8b34ebd156c",
-   "externalId": "019fd1da-bdca-752a-872e-cc5f9240ec78",
    "directUseAllowed": true
   },
   {
@@ -262,11 +232,6 @@
   {
    "id": "3860241b-1c0a-4363-8e86-faa790b89085",
    "externalId": "019fd1de-f707-73ef-a40a-0741d58ea5a3",
-   "directUseAllowed": true
-  },
-  {
-   "id": "389dba5f-c3e7-4df7-8545-a5a9f3ddc9d7",
-   "externalId": "019fd1d7-5df6-744d-afd2-2c2d83b6f2a1",
    "directUseAllowed": true
   },
   {
@@ -320,11 +285,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "4de6a8f4-80c4-40a3-9639-b007a6fedfa4",
-   "externalId": "019fd1db-a7cd-759b-916c-ad5fe13cb1eb",
-   "directUseAllowed": true
-  },
-  {
    "id": "4e0f2597-6326-4b1b-a9d8-e8e3fa9e23c4",
    "externalId": "019fd1d7-3a67-721e-9c83-62b0f3c58cef",
    "directUseAllowed": true
@@ -342,11 +302,6 @@
   {
    "id": "51acc9cb-1abd-4ba3-b422-d34421ccd12a",
    "externalId": "019fd1db-7e0b-716f-95bb-823523e867c8",
-   "directUseAllowed": true
-  },
-  {
-   "id": "51e6054d-7e97-4e14-8280-404a2a723159",
-   "externalId": "019fd1d7-9793-750b-b3c7-aff855decd23",
    "directUseAllowed": true
   },
   {
@@ -387,11 +342,6 @@
   {
    "id": "585c2f02-b19b-4c53-888c-5cf8fc429171",
    "externalId": "5907-12",
-   "directUseAllowed": true
-  },
-  {
-   "id": "58b26de0-586d-4fce-a29a-5f96fdb765aa",
-   "externalId": "019fd1da-9ec2-7700-8f69-61b25ad47f31",
    "directUseAllowed": true
   },
   {
@@ -445,11 +395,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "6448de99-dbd0-4ffd-a4ee-c484b629a16e",
-   "externalId": "019fd1db-0870-73cf-9613-5648d00ff69a",
-   "directUseAllowed": true
-  },
-  {
    "id": "6730ad42-1d62-4c03-bb24-9c7a89d02086",
    "externalId": "5221-10",
    "directUseAllowed": true
@@ -475,18 +420,8 @@
    "directUseAllowed": true
   },
   {
-   "id": "72df5759-1f18-4f6c-90fc-75fd726dc40e",
-   "externalId": "019fd1d7-5aeb-77c3-aa8c-44e6d3ee05db",
-   "directUseAllowed": true
-  },
-  {
    "id": "737ee6ad-b4f2-480f-a294-347010b6de93",
    "externalId": "019fd1d7-ed3b-706c-afa9-276567a0d8a0",
-   "directUseAllowed": true
-  },
-  {
-   "id": "74da012c-90ec-4e42-9b04-4cc2facec16f",
-   "externalId": "019fd1da-c37e-730a-b33f-c9b8ce764543",
    "directUseAllowed": true
   },
   {
@@ -515,11 +450,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "7d534bed-25c6-4d43-811d-7417d0e6cb21",
-   "externalId": "019fd1d7-5d25-768a-ba91-014010d815ee",
-   "directUseAllowed": true
-  },
-  {
    "id": "7e75d40c-fcaa-49f5-855b-add2cbe26b8b",
    "externalId": "019fd1d7-356a-7053-a1c8-7ed3ae574ddd",
    "directUseAllowed": true
@@ -532,11 +462,6 @@
   {
    "id": "81dfc008-9bcc-48e9-b7cf-c047ff744653",
    "externalId": "019fd1de-f548-7740-9062-21ac7e6f1f3a",
-   "directUseAllowed": true
-  },
-  {
-   "id": "83a2c1a6-57f5-4154-bdb4-617b0c583656",
-   "externalId": "019fd1d8-5dd7-7279-adb3-f612f87f32b1",
    "directUseAllowed": true
   },
   {
@@ -595,11 +520,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "92957de4-9c49-4158-8acb-e597bdc3cb6b",
-   "externalId": "019fd1db-75d5-702e-ad57-0f54dcf755dc",
-   "directUseAllowed": true
-  },
-  {
    "id": "94c33a1a-2237-42b1-ae10-b40c972e86c6",
    "externalId": "019fd1d8-6e8d-769a-86a1-b9bb26d0fdd2",
    "directUseAllowed": true
@@ -607,11 +527,6 @@
   {
    "id": "94f3436b-d9ca-4fff-97b1-710ac2148d05",
    "externalId": "019fd1d7-8eb1-77b1-9c8e-b6b65c9fd078",
-   "directUseAllowed": true
-  },
-  {
-   "id": "9505b817-943d-4538-bbf0-0f4464c4be5b",
-   "externalId": "019fd1d7-9cfa-752f-be88-0912844e53e3",
    "directUseAllowed": true
   },
   {
@@ -725,11 +640,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "b2f5a9e9-889a-41b7-a1e3-6207b7e1fd1b",
-   "externalId": "019fd1d7-783b-777f-a06e-03b8f3b9b4c6",
-   "directUseAllowed": true
-  },
-  {
    "id": "b697608f-3cc6-44fc-a7e9-5d565e6c2cca",
    "externalId": "019fd1d9-9cdf-7709-b998-83326efec6d2",
    "directUseAllowed": true
@@ -770,11 +680,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "bbaeb6b0-b77c-4863-90ce-b2ebd8796d06",
-   "externalId": "019fd1db-a957-705f-b950-56deebe5f478",
-   "directUseAllowed": true
-  },
-  {
    "id": "bc8e9ea2-0843-4f90-a637-ed7ec1d81892",
    "externalId": "019fd1d7-f4bf-7639-95af-56c5dca95177",
    "directUseAllowed": true
@@ -782,11 +687,6 @@
   {
    "id": "bcb176d1-48be-4735-9650-c83791bcacff",
    "externalId": "019fd1da-5410-73e6-96c8-cb7694d4a152",
-   "directUseAllowed": true
-  },
-  {
-   "id": "bcbaefd7-6dbf-4666-8477-e7ef3e04aeff",
-   "externalId": "019fd1d7-5db0-771e-9af1-171a62e417de",
    "directUseAllowed": true
   },
   {
@@ -822,11 +722,6 @@
   {
    "id": "c0f75412-bf22-41d5-aae0-4a3cefceb9b5",
    "externalId": "019fd1db-78b5-77f3-83c1-ef61966d320a",
-   "directUseAllowed": true
-  },
-  {
-   "id": "c166fc44-164c-4083-bbf3-1ff29a64c2d9",
-   "externalId": "019fd1d7-7a78-7279-a25a-f79599ef80f9",
    "directUseAllowed": true
   },
   {
@@ -875,11 +770,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "c77973b1-bab5-419c-8af0-2184dab09da1",
-   "externalId": "019fd1db-7625-7599-9714-3b9705bbe768",
-   "directUseAllowed": true
-  },
-  {
    "id": "c8c32690-dbec-4bed-9db7-a4762b4d9dfa",
    "externalId": "019fd1dc-288a-77a5-8bda-120f49270e56",
    "directUseAllowed": true
@@ -905,11 +795,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "ce56916e-7c76-453b-9b89-89a15e8f9e35",
-   "externalId": "019fd1d7-5c98-701a-9f21-1a544295c4bd",
-   "directUseAllowed": true
-  },
-  {
    "id": "cecf3937-ec90-4436-a1e4-3c1911de7b6d",
    "externalId": "019fd1db-7e6b-746c-90f0-ea5216ff93b1",
    "directUseAllowed": true
@@ -917,11 +802,6 @@
   {
    "id": "cf1d17ae-1ecd-4413-b81c-aa3ae1e86ef8",
    "externalId": "019fd1d7-8d8c-7169-b783-327e3e525f35",
-   "directUseAllowed": true
-  },
-  {
-   "id": "d23d0be5-5f4e-47ee-9c5b-4d71bfaa87d4",
-   "externalId": "019fd1d7-8f89-7370-b431-f7c4c71bfdde",
    "directUseAllowed": true
   },
   {
@@ -977,11 +857,6 @@
   {
    "id": "d81e2d69-7dab-4491-9323-d0cf7ba8f6f1",
    "externalId": "019fd1db-998f-70ca-97d2-95c016c262b6",
-   "directUseAllowed": true
-  },
-  {
-   "id": "d96a7bb0-ec23-4863-bdcd-ca857aa348a2",
-   "externalId": "019fd1dc-e1de-706c-ae73-1a8fa2715824",
    "directUseAllowed": true
   },
   {
@@ -1055,11 +930,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "e91537ed-da01-417c-93f0-737fac07870f",
-   "externalId": "019fd1dc-0133-748b-9945-57a86dec60ec",
-   "directUseAllowed": true
-  },
-  {
    "id": "e9b42100-8fdd-4646-b401-03d8fee97964",
    "externalId": "019fd1d8-096e-7218-a234-46ff45fa4f3c",
    "directUseAllowed": true
@@ -1092,11 +962,6 @@
   {
    "id": "ece8de15-e926-48f5-87d6-7f5d7085fcb0",
    "externalId": "019fd1de-f894-71c8-afe5-c3ad079c125c",
-   "directUseAllowed": true
-  },
-  {
-   "id": "ecf47a43-8362-4d59-b9f0-e5e456908825",
-   "externalId": "019fd1db-766f-703d-a4ac-b66137aae49d",
    "directUseAllowed": true
   },
   {

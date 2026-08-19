@@ -35,6 +35,11 @@
  *    `scripts/qa/eval-overflow-rules.ts` 가 이 판정을 그 실측과 대조해 채점한다.
  */
 import type { TestPrintProblem } from "@/components/print/types";
+import {
+  type FigureDimension as FigureDimensionType,
+  figurePrintWidthPx,
+  parseFigureDimensions as parseFigureDimensionsRule,
+} from "@/lib/figurePrintSize";
 import { displayWidth, fitsTwoColumns } from "@/lib/math/displayWidth";
 import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
 import { paginateAnswerKey } from "@/lib/printLayout";
@@ -83,11 +88,13 @@ export const OVERFLOW_FIGURE_LIMIT = 2;
  * 그림 높이 — 인자에 없던 것 (적대적 리뷰 ③ §2)
  * ──────────────────────────────────────────────────────────────────────── */
 
-/** 그림 한 장의 **원본** 치수. 인쇄 폭 상한을 적용하기 전 값이다. */
-export interface FigureDimension {
-  width: number;
-  height: number;
-}
+/**
+ * 그림 한 장의 **원본** 치수(+ 알면 원본 지면 물리 폭 mm). 인쇄 폭 상한 적용 전 값이다.
+ *
+ * 정의는 `figurePrintSize.ts` 에 있다 — 「얼마로 그린다」를 자와 지면이 **같은 함수**로
+ * 정하기 때문이다. 여기서는 예전 import 경로를 지키려고 다시 내보낸다.
+ */
+export type { FigureDimension } from "@/lib/figurePrintSize";
 
 /**
  * 치수를 모르는 그림 한 장이 먹는다고 **가정**하는 높이.
@@ -103,30 +110,11 @@ export const UNKNOWN_FIGURE_HEIGHT_PX = 207;
 const UNKNOWN_FIGURE_WIDTH_PX = JASEUP_MEASURED_PX.figureMaxWidth;
 
 /**
- * DB 의 평탄 배열(`problem.figure_dims` = `[w1,h1,w2,h2,…]`)을 그림 수에 맞춰 짝짓는다.
- *
- * ⚠️ **손상된 입력은 «작은 그림»이 아니라 «모른다»로 받는다.** 길이가 안 맞으면
- *    어느 그림에 붙는 값인지 알 수 없으므로 전부 `null` 이다. 짝은 맞는데 값이
- *    0·음수·NaN 이면 그 자리만 `null` 이다. 여기서 0을 그대로 흘리면 넘치는
- *    문항이 «높이 0» 으로 읽힌다(CLAUDE.md 2026-08-16).
+ * DB 의 평탄 배열(`problem.figure_dims`)을 그림 수에 맞춰 짝짓는다.
+ * 규칙은 `figurePrintSize.ts` 한 곳에 있다 — 자(여기)와 지면(`ProblemContent`)이
+ * **같은 함수**를 부른다. 예전 import 경로를 지키려고 다시 내보낸다.
  */
-export function parseFigureDimensions(
-  figureCount: number,
-  flat: readonly number[] | null | undefined,
-): (FigureDimension | null)[] {
-  if (figureCount <= 0) return [];
-  const unknown = (): (FigureDimension | null)[] =>
-    Array.from({ length: figureCount }, () => null);
-  if (!flat || flat.length !== figureCount * 2) return unknown();
-
-  return Array.from({ length: figureCount }, (_, index) => {
-    const width = flat[index * 2]!;
-    const height = flat[index * 2 + 1]!;
-    if (!Number.isFinite(width) || !Number.isFinite(height)) return null;
-    if (width <= 0 || height <= 0) return null;
-    return { width, height };
-  });
-}
+export { parseFigureDimensions } from "@/lib/figurePrintSize";
 
 /**
  * 그림 묶음이 문항 칸에서 먹는 **세로 픽셀**.
@@ -140,13 +128,17 @@ export function parseFigureDimensions(
  *
  * 폭 상한(264.57px)이 문항 열(363.5px)보다 좁으므로 한 장이 혼자 넘쳐 줄어드는
  * 일은 없다 — flex 축소를 따로 세지 않는 근거다.
+ *
+ * ⚠️ **폭은 `figurePrintWidthPx` 한 함수가 정한다.** 지면 컴포넌트가 붙이는 인라인
+ *    `width: Xmm` 도 같은 함수에서 나온다 — 규칙이 두 벌이 되면 한쪽만 옮겨도
+ *    아무도 모른다(CLAUDE.md 2026-08-18). `sourceMm` 이 없으면 그 함수는
+ *    `min(원본 픽셀, 264.567)` 을 그대로 돌려주므로 **오늘 값과 한 값**이다.
  */
 export function estimateFigureBlockPx(
-  figures: readonly (FigureDimension | null)[],
+  figures: readonly (FigureDimensionType | null)[],
 ): number {
   if (figures.length === 0) return 0;
-  const { problemColumn, figureMaxWidth, figureGap, figureBlockTop } =
-    JASEUP_MEASURED_PX;
+  const { problemColumn, figureGap, figureBlockTop } = JASEUP_MEASURED_PX;
 
   let total = figureBlockTop;
   let rowWidth = 0;
@@ -154,8 +146,12 @@ export function estimateFigureBlockPx(
   let rows = 0;
 
   for (const figure of figures) {
-    const scale = figure ? Math.min(1, figureMaxWidth / figure.width) : 1;
-    const width = figure ? figure.width * scale : UNKNOWN_FIGURE_WIDTH_PX;
+    // 비율은 원본 픽셀에서, 크기는 (알면) mm 에서 온다 — 출처가 다른 두 근거다.
+    const printedWidth = figure
+      ? figurePrintWidthPx(figure)
+      : UNKNOWN_FIGURE_WIDTH_PX;
+    const scale = figure ? printedWidth / figure.width : 1;
+    const width = printedWidth;
     const height = figure ? figure.height * scale : UNKNOWN_FIGURE_HEIGHT_PX;
 
     const wouldBe = rowWidth === 0 ? width : rowWidth + figureGap + width;
@@ -268,7 +264,7 @@ function choicesBlockPx(items: readonly string[]): number {
  */
 export function estimateProblemPx(
   content: string,
-  figures: readonly (FigureDimension | null)[] = [],
+  figures: readonly (FigureDimensionType | null)[] = [],
 ): number {
   const { question, choices } = parseProblemContent(content);
   const { line, boxChrome, fixedChrome } = JASEUP_MEASURED_PX;
@@ -359,7 +355,7 @@ export function estimateProblemPx(
  */
 export function estimateProblemLines(
   content: string,
-  figures: readonly (FigureDimension | null)[] = [],
+  figures: readonly (FigureDimensionType | null)[] = [],
 ): number {
   return Math.ceil(
     estimateProblemPx(content, figures) / JASEUP_MEASURED_PX.line,
@@ -496,7 +492,9 @@ export interface SeatAssessment {
 
 /** 판정이 읽는 것 — 문항 전체가 아니라 이 셋뿐이다. */
 export type SeatProblem = Pick<TestPrintProblem, "content"> &
-  Partial<Pick<TestPrintProblem, "figureUrls" | "figureDims">>;
+  Partial<
+    Pick<TestPrintProblem, "figureUrls" | "figureDims" | "figureSourceMm">
+  >;
 
 /**
  * 문항 하나를 **높이 `slotPx` 인 칸**에 놓았을 때의 판정.
@@ -511,7 +509,11 @@ export function assessSeat(
   slotPx: number,
 ): SeatAssessment {
   const figureCount = problem.figureUrls?.length ?? 0;
-  const figures = parseFigureDimensions(figureCount, problem.figureDims);
+  const figures = parseFigureDimensionsRule(
+    figureCount,
+    problem.figureDims,
+    problem.figureSourceMm,
+  );
   const lines = estimateProblemLines(problem.content, figures);
   const limit = lineLimitFor(slotPx);
   const wide = displayWidth(problem.content) > OVERFLOW_WIDTH_LIMIT;
