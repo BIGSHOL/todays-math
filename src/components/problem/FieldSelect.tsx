@@ -1,5 +1,9 @@
-import { Children, isValidElement, type ReactNode } from "react";
-import type { InputHTMLAttributes, SelectHTMLAttributes } from "react";
+import { Children, isValidElement, useId, type ReactNode } from "react";
+import type {
+  ButtonHTMLAttributes,
+  InputHTMLAttributes,
+  SelectHTMLAttributes,
+} from "react";
 
 /**
  * 필터 칸 폭 — **고정**이다 (2026-08-17 원장님 "필터 선택할때마다 크기 제각각인데
@@ -90,5 +94,47 @@ export function FieldText({
         {...props}
       />
     </label>
+  );
+}
+
+/**
+ * 필터 줄의 **누르는 칸** — 목록으로는 못 고르는 값(단원 범위)이 앉는 자리.
+ *
+ * 원장님 지시 2026-08-19: 「범위 고르기가 너무 작아. 내 의도는 난이도 왼쪽에서
+ * 누르면 범위 선택하는거였어」. 그 전에는 필터 바 **위**에 작은 글자 링크로 뒀는데,
+ * 다른 필터와 크기·자리가 달라 「필터 하나」로 안 읽혔다.
+ *
+ * ⚠️ 줄맞춤은 «같은 클래스»가 아니라 **같은 구조**에서 나온다(`FieldText` 와 같은 이유).
+ *    제목이 첫 줄로 서고 그 아래 `h-11` 상자가 오는 흐름을 그대로 지킨다.
+ *
+ * ⚠️ 감싸개가 `<label>` 이 아니라 `<span>` 이다 — `<label>` 은 폼 컨트롤을 가리키는
+ *    물건이고 button 은 그 대상이 아니다(클릭이 두 번 전달되기도 한다). 대신
+ *    `aria-labelledby` 로 **제목과 값을 함께** 읽히게 한다 — 이름이 「범위」뿐이면
+ *    화면 낭독기는 지금 무엇이 골라져 있는지 알 수 없다.
+ */
+export function FieldButton({
+  label,
+  value,
+  className = "",
+  ...props
+}: Omit<ButtonHTMLAttributes<HTMLButtonElement>, "value"> & {
+  label: string;
+  value: string;
+}) {
+  const id = useId();
+  return (
+    <span className="flex min-w-0 flex-col gap-1 text-[10.5px] font-black tracking-[1.5px] text-text-2">
+      <span id={`${id}-label`}>{label}</span>
+      <button
+        id={`${id}-value`}
+        type="button"
+        aria-labelledby={`${id}-label ${id}-value`}
+        title={value}
+        className={`${SELECT_CLASS} text-left ${className}`}
+        {...props}
+      >
+        {value}
+      </button>
+    </span>
   );
 }

@@ -24,7 +24,12 @@ import { useDebounced } from "@/hooks/useDebounced";
 import { UnitRangePicker } from "@/components/progress/UnitRangePicker";
 import { describeRange } from "@/components/test/rangeSummary";
 
-import { FieldSelect, FieldText, FIELD_SELECT_WIDTH } from "./FieldSelect";
+import {
+  FieldButton,
+  FieldSelect,
+  FieldText,
+  FIELD_SELECT_WIDTH,
+} from "./FieldSelect";
 import { PROBLEM_TYPES, SOURCE_LABEL, SOURCE_OPTIONS } from "./labels";
 import { ProblemCard } from "./ProblemCardLazy";
 import { ProblemGenerateForm, ProblemRegisterForm } from "./ProblemPanelsLazy";
@@ -35,9 +40,6 @@ import { ProblemGenerateForm, ProblemRegisterForm } from "./ProblemPanelsLazy";
  * 종전 드롭다운은 네이티브 select 라 수식을 못 그려 무엇을 고르는지 알 수 없었다.
  */
 type Panel = "register" | "generate" | null;
-
-/** 마이크로 라벨 — 문제 카드(`ProblemCard`)와 같은 규격 (05 §8.6). */
-const MICRO_LABEL = "text-[10px] font-extrabold tracking-[1.2px]";
 
 /**
  * 목록 다단 배치 (2026-08-17 원장님 지시 "기본 2단, 창 크기 따라 3단 혹은 1단").
@@ -364,69 +366,6 @@ export function ProblemBank() {
         </div>
       </div>
 
-      {/*
-        단원 **범위** — 원장님 지시 2026-08-19 「문제은행도 다른거처럼 시작 클릭
-        끝 클릭으로 스마트하게」. 확인테스트(S-04)가 쓰는 `UnitRangePicker` 와
-        `describeRange` 를 **그대로** 쓴다 — 손놀림과 요약이 두 화면에서 갈리지 않게.
-
-        ⚠️ 이 블록은 필터 그리드 **밖**이다. 그리드는 칸이 모두 같은 고정 폭인데
-           (2026-08-17 원장님 "고정된 크기에서 선택만 바뀌도록") 피커는 3열 표라
-           그 칸에 안 들어간다. 접혀 있을 때는 한 줄이므로 자리를 거의 안 먹는다.
-      */}
-      <div className="mt-4" data-range-filter>
-        <div className="flex flex-wrap items-baseline gap-3">
-          <span className={`${MICRO_LABEL} text-text-3`}>범위</span>
-          <span className="text-[12.5px] font-black text-ink">
-            {rangeSummary ? rangeSummary.text : "전체"}
-          </span>
-          {rangeStart ? (
-            <button
-              type="button"
-              onClick={clearRange}
-              className="cursor-pointer text-[12.5px] font-bold text-text-3 underline-offset-4 hover:underline"
-            >
-              전체로
-            </button>
-          ) : null}
-          <button
-            type="button"
-            aria-expanded={rangeEditing}
-            disabled={unitActionsDisabled}
-            onClick={() => setRangeEditing((current) => !current)}
-            className="ml-auto cursor-pointer text-[12.5px] font-bold text-g-blue underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:text-text-3 disabled:no-underline"
-          >
-            {rangeEditing ? "접기" : rangeStart ? "고치기" : "범위 고르기"}
-          </button>
-        </div>
-        {rangeSummary ? (
-          <>
-            {/* 막대는 라벨이 말하는 것을 그림으로 되풀이할 뿐이라 보조기기에서는 숨긴다. */}
-            <div aria-hidden className="mt-1 h-[6px] w-full bg-seg-empty">
-              <div
-                className="h-full bg-g-blue"
-                style={{
-                  marginLeft: `${rangeSummary.offsetPct}%`,
-                  width: `${rangeSummary.widthPct}%`,
-                }}
-              />
-            </div>
-            <span className="text-[10.5px] font-bold tracking-normal text-text-3">
-              {rangeSummary.label}
-            </span>
-          </>
-        ) : null}
-        {rangeEditing ? (
-          <div className="mt-2">
-            <UnitRangePicker
-              units={units}
-              startUnitId={rangeStart}
-              endUnitId={rangeEnd}
-              onChange={handleRangeChange}
-            />
-          </div>
-        ) : null}
-      </div>
-
       <div
         className="mt-4 grid gap-3"
         style={FILTER_GRID_STYLE}
@@ -448,6 +387,18 @@ export function ProblemBank() {
           placeholder="본문·문항번호·정답·해설"
           style={{ gridColumn: "span 2" }}
           value={query}
+        />
+        {/*
+          단원 **범위** — 원장님 지시 2026-08-19 「난이도 왼쪽에서 누르면 범위 선택」.
+          다른 필터와 **같은 규격의 칸**이다(`FieldButton`) — 값은 지금 범위, 누르면 펼친다.
+          펼친 표는 이 그리드 칸에 안 들어가므로 **필터 바 아래**에 통째로 나온다.
+        */}
+        <FieldButton
+          label="범위"
+          value={rangeSummary ? rangeSummary.text : "전체"}
+          aria-expanded={rangeEditing}
+          disabled={unitActionsDisabled}
+          onClick={() => setRangeEditing((current) => !current)}
         />
         <FieldSelect
           label="난이도"
@@ -567,6 +518,61 @@ export function ProblemBank() {
           </div>
         </div>
       </div>
+
+      {/*
+        펼친 범위 표 — 필터 바 **아래**에 통째로 놓는다. 3열 표라 그리드 칸
+        (12rem 고정)에는 못 들어간다. 접혀 있을 때는 아무것도 안 그린다.
+      */}
+      {rangeEditing ? (
+        <div className="mt-3" data-range-panel>
+          <div className="flex flex-wrap items-baseline gap-3">
+            <span className="text-[12.5px] font-black text-ink">
+              {rangeSummary ? rangeSummary.text : "시작 소단원을 고르세요"}
+            </span>
+            {rangeStart ? (
+              <button
+                type="button"
+                onClick={clearRange}
+                className="cursor-pointer text-[12.5px] font-bold text-text-3 underline-offset-4 hover:underline"
+              >
+                전체로
+              </button>
+            ) : null}
+            <button
+              type="button"
+              onClick={() => setRangeEditing(false)}
+              className="ml-auto cursor-pointer text-[12.5px] font-bold text-g-blue underline-offset-4 hover:underline"
+            >
+              접기
+            </button>
+          </div>
+          {rangeSummary ? (
+            <>
+              {/* 막대는 라벨이 말하는 것을 그림으로 되풀이할 뿐이라 보조기기에서는 숨긴다. */}
+              <div aria-hidden className="mt-1 h-[6px] w-full bg-seg-empty">
+                <div
+                  className="h-full bg-g-blue"
+                  style={{
+                    marginLeft: `${rangeSummary.offsetPct}%`,
+                    width: `${rangeSummary.widthPct}%`,
+                  }}
+                />
+              </div>
+              <span className="text-[10.5px] font-bold tracking-normal text-text-3">
+                {rangeSummary.label}
+              </span>
+            </>
+          ) : null}
+          <div className="mt-2">
+            <UnitRangePicker
+              units={units}
+              startUnitId={rangeStart}
+              endUnitId={rangeEnd}
+              onChange={handleRangeChange}
+            />
+          </div>
+        </div>
+      ) : null}
 
       {panel === "register" ? (
         <ProblemRegisterForm

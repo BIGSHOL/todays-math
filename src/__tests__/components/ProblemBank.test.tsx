@@ -39,7 +39,7 @@ async function pickUnit(
 ) {
   const unit = MOCK_UNITS.find((u) => u.id === unitId);
   const section = unit?.section ?? unitId;
-  const open = screen.getByRole("button", { name: /범위 고르기|고치기/ });
+  const open = screen.getByRole("button", { name: /^범위/ });
   await waitFor(() => {
     expect(open).toBeEnabled();
   });
@@ -72,10 +72,12 @@ describe("[T3.3 S-08] 문제은행 — 크롬·필터·액션", () => {
     );
 
     // 단원은 **범위 하나**로 고른다(2026-08-19). 계단식 드롭다운은 없앴다.
-    expect(document.querySelector("[data-range-filter]")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "범위 고르기" }),
-    ).toBeInTheDocument();
+      screen
+        .getByRole("button", { name: /^범위/ })
+        .closest("[data-filter-bar]"),
+    ).not.toBeNull();
+    expect(screen.getByRole("button", { name: /^범위/ })).toBeInTheDocument();
     for (const gone of ["학년", "중단원", "소단원", "학기"])
       expect(screen.queryByLabelText(gone)).not.toBeInTheDocument();
     expect(screen.getByLabelText("난이도")).toBeInTheDocument();
@@ -137,7 +139,7 @@ describe("[T3.3 S-08] 문제은행 — 필터 (MSW)", () => {
     );
 
     const { user } = await renderBank();
-    const open = screen.getByRole("button", { name: "범위 고르기" });
+    const open = screen.getByRole("button", { name: /^범위/ });
     await waitFor(() => {
       expect(open).toBeEnabled();
     });
@@ -219,8 +221,8 @@ describe("[S-08] 문제은행 — 단원 범위 (MSW)", () => {
     startSection: string,
     endSection: string,
   ) {
-    // 단원 목록이 오기 전에는 「범위 고르기」가 비활성이다 — 누르면 아무 일도 안 난다.
-    const open = screen.getByRole("button", { name: "범위 고르기" });
+    // 단원 목록이 오기 전에는 범위 칸이 비활성이다 — 누르면 아무 일도 안 난다.
+    const open = screen.getByRole("button", { name: /^범위/ });
     await waitFor(() => {
       expect(open).toBeEnabled();
     });
@@ -231,12 +233,13 @@ describe("[S-08] 문제은행 — 단원 범위 (MSW)", () => {
 
   it("기본은 「전체」이고, 범위를 안 고르면 단원 조건을 안 보낸다", async () => {
     await renderBank();
-    const bar = document.querySelector("[data-range-filter]")!;
-    expect(bar.textContent).toContain("범위");
-    expect(bar.textContent).toContain("전체");
-    expect(
-      screen.getByRole("button", { name: "범위 고르기" }),
-    ).toBeInTheDocument();
+    // 다른 필터와 **같은 줄·같은 규격**의 칸이다 (원장님 지시 2026-08-19
+    // 「난이도 왼쪽에서 누르면 범위 선택」). 값은 지금 범위이고 기본은 「전체」다.
+    const cell = screen.getByRole("button", { name: /^범위/ });
+    expect(cell).toHaveTextContent("전체");
+    expect(cell.closest("[data-filter-bar]")).not.toBeNull();
+    // 접혀 있을 때는 표를 아예 안 그린다.
+    expect(document.querySelector("[data-range-panel]")).toBeNull();
   });
 
   it("종전의 계단식 드롭다운은 없다", async () => {
@@ -267,7 +270,7 @@ describe("[S-08] 문제은행 — 단원 범위 (MSW)", () => {
     const [a, b] = [MOCK_UNITS[0]!, MOCK_UNITS[1]!];
     await pickRange(user, a.section, b.section);
 
-    const bar = () => document.querySelector("[data-range-filter]")!;
+    const bar = () => screen.getByRole("button", { name: /^범위/ });
     await waitFor(() => {
       expect(bar().textContent).toContain(a.section);
     });
@@ -288,7 +291,7 @@ describe("[S-08] 문제은행 — 단원 범위 (MSW)", () => {
     await pickRange(user, a.section, a.section);
     await waitFor(() => {
       expect(
-        document.querySelector("[data-range-filter]")!.textContent,
+        screen.getByRole("button", { name: /^범위/ }).textContent,
       ).toContain(a.section);
     });
 
