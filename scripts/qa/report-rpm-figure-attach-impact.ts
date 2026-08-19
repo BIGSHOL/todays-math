@@ -26,10 +26,22 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const RESULTS = [
+/**
+ * 기본은 세 벌 전부. `--result <경로>` 를 주면 **그것만** 센다 —
+ * 이미 붙인 것이 섞이면 「덮어써서 잃는 것」이 부풀어 보인다(같은 그림을 다시 쓰는 것뿐인데).
+ */
+const DEFAULT_RESULTS = [
   "scripts/qa/reports/rpm-crop-result-gated.json",
   "scripts/qa/reports/rpm-crop-result-group.json",
+  // 검수 시트에서 **사람이 「쓴다」로 판정한 것** (sheet-rpm-stem-split.py --apply)
+  "scripts/qa/reports/rpm-crop-result-sheet.json",
 ];
+const RESULTS = process.argv.includes("--result")
+  ? process.argv.reduce<string[]>(
+      (acc, v, i) => (process.argv[i - 1] === "--result" ? [...acc, v] : acc),
+      [],
+    )
+  : DEFAULT_RESULTS;
 const LOCK_LEDGER = "scripts/qa/reports/missing-figure-lock.json";
 const OUT = "scripts/qa/reports/rpm-figure-attach-impact.json";
 

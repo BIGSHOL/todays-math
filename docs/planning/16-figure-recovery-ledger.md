@@ -40,13 +40,13 @@ npx tsx scripts/qa/report-missing-figures.ts --json   # scripts/qa/reports/missi
 
 ---
 
-## 2. 현재값 (2026-08-20 실측 — RPM **본문방향 27건** 적용 후)
+## 2. 현재값 (2026-08-20 실측 — RPM **본문방향 27 + 검수 시트 42** 적용 후)
 
 | 구분 | 건수 | 비고 |
 |------|-----:|------|
-| **그림 유실** | **209** | 본문이 그림을 지목하는데 그림이 없다 |
+| **그림 유실** | **167** | 본문이 그림을 지목하는데 그림이 없다 |
 | └ 그중 지금 출제 가능 | **0** | 전량 `directUseAllowed=false` 로 잠금 |
-| └ RPM 교재본(`transformed`) | 176 | **27건 회수·적용 완료** — §3.15. 203 − 27 = 176 |
+| └ RPM 교재본(`transformed`) | 134 | **69건 회수·적용 완료** — §3.15·§3.16. 203 − 69 = 134 |
 | └ 기출(`past_exam`) | 31 | 옆 트랙이 21행 더 적용 (52 → 31) |
 | └ 자작(`manual`) | 2 | 그림 없이는 못 푸는 자작 문항 |
 | 본문 오염 (`[그림]` 자국) | 13 | 유실이 아니라 **머리말·학원 로고가 딸려 온 자국**. 별개 결함 — §4.3 |
@@ -94,6 +94,7 @@ npx tsx scripts/qa/report-missing-figures.ts --json   # scripts/qa/reports/missi
 | 2026-08-19 | **보기 그림 짝 7건 회수(드라이런)** — HWP 문단 흐름에서 | 계획만 | — | §5.4 |
 | 2026-08-19 | **RPM 무리 그림** — 지면의 `[0004~0006]` 표시로 띠를 잡아 오려 냄. **적용 완료** | **149** | 272 | §3.13 |
 | 2026-08-20 | **RPM 본문방향** — 발문이 적어 둔 자리(「오른쪽 그림」·「아래 그림」)로 갈라 오려 냄. **적용 완료** | **27** | 209 | §3.15 |
+| 2026-08-20 | **RPM 검수 시트** — 네모 하나로 못 가르는 44건을 **사람이 보고** 골라 냄. **적용 완료** | **42** | 167 | §3.16 |
 | 2026-08-19 | **RPM 「오른쪽 그림」 폴백** — 못 찾았을 때만 띠를 오른쪽 끝까지 넓혀 재검출. **적용 완료** | **15** | 257 | §3.14 |
 
 누적 **590건 회수**(기출 745 → 174). RPM 은 회수분을 **되돌려** 681로 돌아왔다 — 아래 §3.4.
@@ -510,6 +511,44 @@ ALLOW_UNIT_FIX=1     npx tsx scripts/qa/apply-missing-figure-lock.ts --revert --
 | 잠금 해제 | **48건** — 내 27 + 옆 트랙이 회수해 두고 안 푼 21 |
 
 보고서: [`tracks/reports/rpm-stem-split.md`](tracks/reports/rpm-stem-split.md)
+
+### 3.16 RPM **검수 시트** — 44건 중 42건 (2026-08-20)
+
+§3.15 가 남긴 44건은 **원본 문제가 아니라 네모 하나로 못 가르는 배치**였다
+(36건이 「벽이 지면 글자를 가로지른다」). 발문이 그림을 **감싸고 흐르면** 그림을 담는
+어떤 네모에도 발문 조각이 들어온다. 그래서 자동으로 더 밀지 않고 **사람이 보는 자리**를
+만들었다.
+
+```bash
+python scripts/figure/sheet-rpm-stem-split.py                 # 시트(칸 + 지면 맥락)
+python scripts/figure/sheet-rpm-stem-split.py --probe <id>    # 좌표 지도
+python scripts/figure/sheet-rpm-stem-split.py --recut <id> x0 y0 x1 y1 [--keep]
+python scripts/figure/sheet-rpm-stem-split.py --apply         # 「쓴다」만 public/ 으로
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/recover-rpm-figures-from-pdf.ts --attach \
+        --result scripts/qa/reports/rpm-crop-result-sheet.json
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/backfill-figure-dimensions.ts --apply
+ALLOW_UNIT_FIX=1     npx tsx scripts/qa/apply-missing-figure-lock.ts --revert --recovered
+```
+
+| | |
+|---|---|
+| 회수 | **42/44.** 자동 후보 그대로 20 · **사람이 네모를 그린 것 22** |
+| 눈으로 확인 | **44행 전량** — 후보 칸 61개 + 사람이 그린 네모 22개를 한 장씩 열어 봤다 |
+| 판정 기록 | `scripts/qa/reports/rpm-stem-sheet-decision.json` (**커밋된다**, 사유 포함) |
+| 지운 것 | 칸에 들어온 **지면 글자만**. 원본 PDF 는 안 건드리고 사본에서 글자만 뺀다 |
+| 버린 2건 | **보기가 그림인 문항**(`9ae4`·`5d8b`) — 발문 그림만 붙이면 보기가 없어 여전히 못 푼다 |
+| D-20 | 덮어써서 잃는 것 **0/42** · 붙여도 잠긴 채 남을 것 **0/42** |
+| 되돌리기 | `rpm-figure-attach-ledger.json` **233행** (42행 전부 `figureUrls: []`) |
+| 결과 | RPM 유실 176 → **134** · 전체 209 → **167** |
+
+**눈으로 잡아 규칙으로 바꾼 것 셋** — ㉠ 시트가 제 나름대로 그림을 찾자 소단원 머리띠·
+번호 배지·증명 빈칸 상자가 그림 자리에 앉았다(→ 오려내기의 띠·벽을 그대로 부르게 고쳤다).
+㉡ 치수 `12 cm` 의 단위가 지워졌다 — 지면 글자 판정의 **줄 전파**가 그림 라벨을
+소문항 글줄과 한 «줄»로 묶었다(→ **지울 때는 줄로 퍼뜨리지 않는다**). ㉢ 가로축 이름
+「달리기(초)」가 발문의 「100 m 달리기」와 같은 낱말이라 지워졌다(→ 사람이 그린 네모에는
+`--keep`).
+
+보고서: [`tracks/reports/rpm-stem-split.md`](tracks/reports/rpm-stem-split.md) §9
 
 ### 남은 242건 (RPM 203 · 기출 52 · manual 2 중 RPM 몫)
 
