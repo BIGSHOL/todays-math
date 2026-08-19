@@ -7,9 +7,14 @@ import { PaperProblemView } from "@/components/print/PaperProblemView";
 import type { ProblemEntity } from "@/contracts/problem.contract";
 
 import { DIFFICULTY_LABEL, REVIEW_STATUS_LABEL } from "./labels";
+import { ProblemTransformPanel } from "./ProblemTransformPanelLazy";
 
 /** 마이크로 라벨 — 검수 카드(`ReviewProblemCard`)와 같은 규격을 쓴다. */
 const MICRO = "text-[10px] font-extrabold tracking-[1.2px]";
+
+/** 카드 바닥 액션 — 「정답 및 해설」과 「변형」이 같은 규격을 쓴다(둘 다 카드를 펼친다). */
+const CARD_ACTION_CLASS =
+  "inline-flex min-h-11 cursor-pointer items-center gap-2 border border-control bg-surface px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-side";
 
 /**
  * 검수 상태에 기능색을 쓴다 (원장님 확정 2026-08-18 "검수 상태에도 색을 써서 더 명확하게").
@@ -24,6 +29,14 @@ const REVIEW_STATUS_TONE: Record<string, string> = {
 
 type ProblemCardProps = {
   problem: ProblemEntity;
+  /**
+   * 변형 채택분이 저장되면 알린다. **넘기지 않으면 「변형」 버튼이 아예 없다** —
+   * 문제은행(S-08)에서만 변형하고, dev 미리보기 같은 자리에서는 나오지 않는다.
+   *
+   * ⚠️ 카드는 `memo` 다. 호출부에서 인라인 화살표로 넘기면 20장이 매번 다시 그려진다
+   * (`TestReview` 와 같은 이유) — `useCallback` 으로 고정해서 넘길 것.
+   */
+  onTransformAdopted?: (created: ProblemEntity[]) => void;
 };
 
 /**
@@ -39,8 +52,10 @@ type ProblemCardProps = {
  */
 export const ProblemCard = memo(function ProblemCard({
   problem,
+  onTransformAdopted,
 }: ProblemCardProps) {
   const [showSolution, setShowSolution] = useState(false);
+  const [showTransform, setShowTransform] = useState(false);
 
   return (
     // 카드 사이 간격은 목록 그리드의 gap 이 준다(`ProblemBank`). 화면에서 `mb-6` 을
@@ -79,16 +94,39 @@ export const ProblemCard = memo(function ProblemCard({
           figureUrls={problem.figureUrls}
         />
 
-        <div className="mt-auto flex justify-end pt-6 print:hidden">
+        <div className="mt-auto flex flex-wrap justify-end gap-2 pt-6 print:hidden">
           <button
             type="button"
             aria-expanded={showSolution}
             onClick={() => setShowSolution((current) => !current)}
-            className="inline-flex min-h-11 cursor-pointer items-center gap-2 border border-control bg-surface px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-side"
+            className={CARD_ACTION_CLASS}
           >
             {showSolution ? "정답 및 해설 숨기기" : "정답 및 해설 확인"}
           </button>
+          {/* 변형은 **여기서** 고른다 (원장님 확정 2026-08-19). 위쪽 드롭다운으로 고르던
+              종전 방식은 네이티브 select 가 수식을 못 그려 무엇을 고르는지 알 수 없었다. */}
+          {onTransformAdopted ? (
+            <button
+              type="button"
+              aria-expanded={showTransform}
+              onClick={() => setShowTransform((current) => !current)}
+              className={CARD_ACTION_CLASS}
+            >
+              {showTransform ? "변형 닫기" : "변형"}
+            </button>
+          ) : null}
         </div>
+
+        {showTransform && onTransformAdopted ? (
+          <ProblemTransformPanel
+            origin={problem}
+            onAdopted={(created) => {
+              setShowTransform(false);
+              onTransformAdopted(created);
+            }}
+            onClose={() => setShowTransform(false)}
+          />
+        ) : null}
 
         {showSolution ? (
           <div className="mt-4 space-y-4">

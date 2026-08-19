@@ -3,9 +3,11 @@
 import dynamic from "next/dynamic";
 
 /**
- * 등록·생성·변형 패널을 **지연 청크로 떼어 낸다** (성능 수리 C-2).
+ * 변형 패널은 여기 없다 — 카드 안에서 열리므로 `ProblemTransformPanelLazy` 가 맡는다.
  *
- * 세 패널은 `panel === null` 이 기본 상태라 문제은행 첫 화면에 하나도 그려지지
+ * 등록·생성 패널을 **지연 청크로 떼어 낸다** (성능 수리 C-2).
+ *
+ * 두 패널은 `panel === null` 이 기본 상태라 문제은행 첫 화면에 하나도 그려지지
  * 않는데 전부 첫 로드에 실리고 있었다. 효과는 크지 않다(−3.5KB, 초기 요청 1개
  * 감소) — 카드(−398KB)와 달리 이건 덤이다.
  *
@@ -21,15 +23,9 @@ const loadGenerateForm = () =>
   import("@/components/problem/ProblemGenerateForm").then((mod) => ({
     default: mod.ProblemGenerateForm,
   }));
-const loadTransformForm = () =>
-  import("@/components/problem/ProblemTransformForm").then((mod) => ({
-    default: mod.ProblemTransformForm,
-  }));
-
 if (typeof window !== "undefined") {
   void loadRegisterForm();
   void loadGenerateForm();
-  void loadTransformForm();
 }
 
 export const ProblemRegisterForm = dynamic(loadRegisterForm, {
@@ -38,11 +34,6 @@ export const ProblemRegisterForm = dynamic(loadRegisterForm, {
 });
 
 export const ProblemGenerateForm = dynamic(loadGenerateForm, {
-  ssr: false,
-  loading: () => null,
-});
-
-export const ProblemTransformForm = dynamic(loadTransformForm, {
   ssr: false,
   loading: () => null,
 });

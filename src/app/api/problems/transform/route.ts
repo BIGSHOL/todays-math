@@ -1,5 +1,10 @@
 /**
- * POST /api/problems/transform — 원본 문제를 변형해 pending으로 적재.
+ * POST /api/problems/transform — 원본 문제를 변형해 **후보만** 돌려준다.
+ *
+ * ⚠️ 이 엔드포인트는 **DB 를 건드리지 않는다** (원장님 확정 2026-08-19 "미리보기 후 채택").
+ *    종전에는 생성과 적재가 한 몸이라, 결과를 보기도 전에 은행에 pending 이 쌓였다.
+ *    채택한 후보의 저장은 `POST /api/problems/transform/adopt` 가 맡는다.
+ *
  * 대응 계약: src/contracts/problem.contract.ts
  */
 import type { NextRequest } from "next/server";
@@ -8,7 +13,7 @@ import {
   problemTransformRequestSchema,
   problemTransformResponseSchema,
 } from "@/contracts/problem.contract";
-import { AiGenerationError } from "@/lib/ai/errors";
+import { AiConfigError, AiGenerationError } from "@/lib/ai/errors";
 import { transformProblem } from "@/lib/ai/transformer";
 import {
   jsonError,
@@ -16,9 +21,7 @@ import {
   unauthorizedError,
   validationError,
 } from "@/lib/apiResponse";
-import { db } from "@/lib/db";
 import { requireAccessibleProblem } from "@/lib/ownership";
-import { serializeProblem } from "@/lib/serializers";
 import { getSessionUser } from "@/lib/session";
 import type { ProblemType } from "@/contracts/problem.contract";
 
@@ -39,7 +42,7 @@ export async function POST(request: NextRequest) {
   const origin = accessible.data;
 
   try {
-    const drafts = await transformProblem({
+    const candidates = await transformProblem({
       origin: {
         id: origin.id,
         unitId: origin.unitId,
@@ -50,34 +53,23 @@ export async function POST(request: NextRequest) {
         solution: origin.solution,
       },
       count: parsed.data.count,
+      mode: parsed.data.mode,
+      difficultyShift: parsed.data.difficultyShift,
     });
 
-    // 🔴 생성 개수만큼 INSERT 를 순차로 await 하던 자리다. `createManyAndReturn` 은
-    //    PostgreSQL 의 `INSERT ... RETURNING` 이라 **한 문장**으로 넣고 넣은 행을 그대로
-    //    돌려준다. 문장이 하나뿐이므로 트랜잭션 래퍼 없이도 전부 아니면 전무다.
-    //    반환 순서는 입력 순서 = 응답 순서라 계약(배열)도 그대로다.
-    // exam-wiring: 기출아님 — AI 변형본(source=transformed)만 넣는다. 원본 시험지가 없다
-    const created = await db.problem.createManyAndReturn({
-      data: drafts.map((draft) => ({
-        userId: session.id,
-        unitId: draft.unitId,
-        source: draft.source,
-        originProblemId: draft.originProblemId,
-        difficulty: draft.difficulty,
-        problemType: draft.problemType,
-        content: draft.content,
-        answer: draft.answer,
-        solution: draft.solution,
-        reviewStatus: draft.reviewStatus,
-      })),
-    });
-
-    return jsonOk(
-      problemTransformResponseSchema,
-      { data: created.map(serializeProblem) },
-      { status: 201 },
-    );
+    // 201 이 아니라 **200** 이다 — 만든 것이 없다(created nothing). 아직 자원이 아니다.
+    return jsonOk(problemTransformResponseSchema, { data: candidates });
   } catch (error) {
+    // ⚠️ `AiConfigError` 는 `AiGenerationError` 의 하위 타입이다 — **이 검사가 먼저** 와야
+    //    한다. 순서를 뒤집으면 설정 누락이 다시 일반 실패로 뭉개져 화면에서 원인을 못 본다.
+    if (error instanceof AiConfigError) {
+      console.error("[POST /api/problems/transform] AI not configured");
+      return jsonError(
+        "AI_GENERATION_FAILED",
+        "AI 설정이 없습니다 — 서버 환경변수 DEEPSEEK_API_KEY 를 확인해주세요.",
+        503,
+      );
+    }
     if (error instanceof AiGenerationError) {
       console.error("[POST /api/problems/transform] AI transform failed");
       return jsonError(

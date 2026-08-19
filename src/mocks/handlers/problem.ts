@@ -21,9 +21,12 @@ import {
   problemListResponseSchema,
   problemResponseSchema,
   problemReviewStatusUpdateRequestSchema,
+  problemTransformAdoptRequestSchema,
+  problemTransformAdoptResponseSchema,
   problemTransformRequestSchema,
   problemTransformResponseSchema,
   problemUpdateRequestSchema,
+  shiftDifficulty,
 } from "@/contracts/problem.contract";
 
 import {
@@ -46,6 +49,9 @@ import {
   paginate,
   validationError,
 } from "./_helpers";
+
+/** 채택 저장이 만들어 내는 mock id 앞자리 — 실서버가 부여하는 UUID 자리를 흉내 낸다. */
+const MOCK_TRANSFORM_ADOPT_ID_PREFIX = "aa000000-0000-4000-8000-00000000000";
 
 /** 등록형(30개) + AI 생성/변형(8개) 전체 — GET 목록/단건 조회가 참조하는 전체 풀. */
 const ALL_PROBLEMS = [
@@ -243,7 +249,7 @@ export const problemHandlers: HttpHandler[] = [
     );
   }),
 
-  // POST /api/problems/transform — 기존 문제 변형(originProblemId, count)
+  // POST /api/problems/transform — 후보만 만든다(DB 미적재). 실제 라우트와 같은 형태.
   http.post("/api/problems/transform", async ({ request }) => {
     const parsed = problemTransformRequestSchema.safeParse(
       await request.json(),
@@ -263,19 +269,59 @@ export const problemHandlers: HttpHandler[] = [
     );
     if (!origin) return notFoundError("원본 문제");
 
-    const problems = MOCK_AI_TRANSFORMED_PROBLEMS.slice(
+    // 마지막 하나는 **일부러 검사 탈락**으로 둔다 — 화면이 「폐기」와 사유를 그리는
+    // 경로가 mock 에서 한 번도 안 밟히면, 그 경로는 E2E 전까지 아무도 안 본다.
+    const candidates = MOCK_AI_TRANSFORMED_PROBLEMS.slice(
       0,
       parsed.data.count,
-    ).map((p) => ({
-      ...p,
+    ).map((p, at, all) => {
+      const verified = all.length === 1 || at < all.length - 1;
+      return {
+        content: p.content,
+        answer: p.answer,
+        solution: p.solution,
+        verified,
+        originalAnswerRecomputed: verified ? origin.answer : "다른 값",
+      };
+    });
+
+    return jsonOk(problemTransformResponseSchema, { data: candidates });
+  }),
+
+  // POST /api/problems/transform/adopt — 채택분만 적재.
+  http.post("/api/problems/transform/adopt", async ({ request }) => {
+    const parsed = problemTransformAdoptRequestSchema.safeParse(
+      await request.json(),
+    );
+    if (!parsed.success) return validationError(parsed.error);
+
+    const origin = ALL_PROBLEMS.find(
+      (p) => p.id === parsed.data.originProblemId,
+    );
+    if (!origin) return notFoundError("원본 문제");
+
+    // 실제 라우트와 같이 분류는 원본에서 물려받고 난이도만 조정한다.
+    const difficulty = shiftDifficulty(
+      origin.difficulty,
+      parsed.data.difficultyShift,
+    );
+    const created = parsed.data.items.map((item, at) => ({
+      ...MOCK_AI_TRANSFORMED_PROBLEMS[at % MOCK_AI_TRANSFORMED_PROBLEMS.length]!,
+      id: `${MOCK_TRANSFORM_ADOPT_ID_PREFIX}${at}`,
+      content: item.content,
+      answer: item.answer,
+      solution: item.solution,
+      source: "transformed" as const,
       originProblemId: origin.id,
       unitId: origin.unitId,
-      difficulty: origin.difficulty,
+      difficulty,
       problemType: origin.problemType,
+      reviewStatus: "pending" as const,
     }));
+
     return jsonOk(
-      problemTransformResponseSchema,
-      { data: problems },
+      problemTransformAdoptResponseSchema,
+      { data: created },
       { status: 201 },
     );
   }),

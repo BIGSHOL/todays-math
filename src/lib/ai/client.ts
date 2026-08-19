@@ -14,7 +14,7 @@
  */
 import OpenAI from "openai";
 
-import { AiGenerationError } from "./errors";
+import { AiConfigError } from "./errors";
 
 /** 문제 생성/변형에 사용하는 모델 — 프롬프트 버전과 마찬가지로 변경 시 사유를 남긴다. */
 export const DEEPSEEK_MODEL = "deepseek-v4-pro";
@@ -32,7 +32,7 @@ const DEEPSEEK_MIN_MAX_TOKENS = 32000;
 function requireApiKey(): string {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   if (!apiKey) {
-    throw new AiGenerationError(
+    throw new AiConfigError(
       "DEEPSEEK_API_KEY가 설정되어 있지 않습니다. 서버 환경변수를 확인해주세요.",
     );
   }

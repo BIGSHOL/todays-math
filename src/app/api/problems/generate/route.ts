@@ -9,7 +9,7 @@ import {
   problemGenerateResponseSchema,
 } from "@/contracts/problem.contract";
 import { generateProblems } from "@/lib/ai/generator";
-import { AiGenerationError } from "@/lib/ai/errors";
+import { AiConfigError, AiGenerationError } from "@/lib/ai/errors";
 import {
   jsonError,
   jsonOk,
@@ -66,6 +66,16 @@ export async function POST(request: NextRequest) {
       { status: 201 },
     );
   } catch (error) {
+    // ⚠️ `AiConfigError` 는 `AiGenerationError` 의 하위 타입이다 — **이 검사가 먼저** 와야
+    //    한다. 순서를 뒤집으면 설정 누락이 다시 일반 실패로 뭉개져 화면에서 원인을 못 본다.
+    if (error instanceof AiConfigError) {
+      console.error("[POST /api/problems/generate] AI not configured");
+      return jsonError(
+        "AI_GENERATION_FAILED",
+        "AI 설정이 없습니다 — 서버 환경변수 DEEPSEEK_API_KEY 를 확인해주세요.",
+        503,
+      );
+    }
     if (error instanceof AiGenerationError) {
       console.error("[POST /api/problems/generate] AI generation failed");
       return jsonError(

@@ -2,6 +2,7 @@ import type { Difficulty, ReviewStatus } from "@/contracts/common.contract";
 import type {
   ProblemCreateRequest,
   ProblemGenerateRequest,
+  ProblemTransformAdoptRequest,
   ProblemTransformRequest,
   ProblemType,
 } from "@/contracts/problem.contract";
@@ -49,6 +50,24 @@ function listQuery(filters: ProblemListFilters, page: number) {
   return params.toString();
 }
 
+/**
+ * 서버가 보낸 사유를 **살려서** 던진다.
+ *
+ * 종전에는 `res.ok` 만 보고 "변형에 실패했습니다" 같은 한 줄로 갈아쳤다. 그래서 서버가
+ * "DEEPSEEK_API_KEY가 설정되어 있지 않습니다" 라고 정확히 말하고 있어도 화면에는 아무
+ * 단서가 없었다 — 2026-08-19 에 실제로 이것 때문에 원인을 못 찾았다. 서버는 이미
+ * 내부 사정을 걷어낸 문구만 내려보내므로(라우트가 `jsonError` 로 정리한다) 그대로 쓴다.
+ */
+async function failWithServerReason(
+  res: Response,
+  fallback: string,
+): Promise<never> {
+  const body: unknown = await res.json().catch(() => undefined);
+  const message = (body as { error?: { message?: unknown } } | undefined)?.error
+    ?.message;
+  throw new Error(typeof message === "string" && message ? message : fallback);
+}
+
 export async function loadProblems(filters: ProblemListFilters, page = 1) {
   const res = await fetch(`/api/problems?${listQuery(filters, page)}`);
   if (!res.ok) throw new Error("목록을 불러오지 못했습니다");
@@ -65,7 +84,7 @@ export async function createProblem(input: ProblemCreateRequest) {
     headers: { "content-type": "application/json" },
     body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error("등록에 실패했습니다");
+  if (!res.ok) await failWithServerReason(res, "등록에 실패했습니다");
   return problemResponseSchema.parse(await res.json());
 }
 
@@ -78,10 +97,14 @@ export async function generateProblems(input: ProblemGenerateRequest) {
     headers: { "content-type": "application/json" },
     body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error("생성에 실패했습니다");
+  if (!res.ok) await failWithServerReason(res, "생성에 실패했습니다");
   return problemGenerateResponseSchema.parse(await res.json());
 }
 
+/**
+ * 변형 **후보**를 받아 온다 — 아직 은행에 들어가지 않는다.
+ * 채택한 것만 `adoptTransformed` 가 넣는다 (원장님 확정 2026-08-19 "미리보기 후 채택").
+ */
 export async function transformProblems(input: ProblemTransformRequest) {
   const { problemTransformRequestSchema, problemTransformResponseSchema } =
     await problemContract();
@@ -91,6 +114,22 @@ export async function transformProblems(input: ProblemTransformRequest) {
     headers: { "content-type": "application/json" },
     body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error("변형에 실패했습니다");
+  if (!res.ok) await failWithServerReason(res, "변형에 실패했습니다");
   return problemTransformResponseSchema.parse(await res.json());
+}
+
+/** 미리보기에서 채택한 후보만 pending 으로 적재한다. */
+export async function adoptTransformed(input: ProblemTransformAdoptRequest) {
+  const {
+    problemTransformAdoptRequestSchema,
+    problemTransformAdoptResponseSchema,
+  } = await problemContract();
+  const body = problemTransformAdoptRequestSchema.parse(input);
+  const res = await fetch("/api/problems/transform/adopt", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) await failWithServerReason(res, "채택에 실패했습니다");
+  return problemTransformAdoptResponseSchema.parse(await res.json());
 }

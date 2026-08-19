@@ -25,3 +25,21 @@ export class AiGenerationError extends Error {
     this.name = "AiGenerationError";
   }
 }
+
+/**
+ * **설정**이 없어서 AI 를 아예 부르지 못한 경우 — `DEEPSEEK_API_KEY` 미설정 등.
+ *
+ * `AiGenerationError` 를 상속하므로 기존 `instanceof AiGenerationError` 검사는 그대로
+ * 잡는다(안전). 다만 라우트는 이것을 **먼저** 검사해 원장님이 화면에서 바로 알아볼 수 있는
+ * 사유를 돌려준다 — 값(키)은 절대 싣지 않고 "무엇이 없다"만 말한다.
+ *
+ * ⚠️ 이 타입이 없던 2026-08-19, `DEEPSEEK_API_KEY` 가 어느 워크트리에도 없어 변형이 100%
+ *    실패하고 있었는데 화면에는 "변형에 실패했습니다" 한 줄뿐이라 원인을 볼 수 없었다.
+ *    상속 관계 때문에 **검사 순서가 뒤집히면 다시 조용해진다** — 라우트에 가드 테스트가 있다.
+ */
+export class AiConfigError extends AiGenerationError {
+  constructor(message: string, options?: { cause?: unknown }) {
+    super(message, options);
+    this.name = "AiConfigError";
+  }
+}

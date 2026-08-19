@@ -22,6 +22,7 @@ import {
   problemGenerateResponseSchema,
   problemListResponseSchema,
   problemResponseSchema,
+  problemTransformAdoptResponseSchema,
   problemTransformResponseSchema,
 } from "@/contracts/problem.contract";
 import {
@@ -285,8 +286,24 @@ describe("[T0.5.2] MSW ↔ 계약 — problem/AI 생성·변형", () => {
       originProblemId: MOCK_PROBLEMS[0]!.id,
       count: 2,
     });
+    // 201 이 아니라 200 이다 — 이 엔드포인트는 후보만 만들고 **아무것도 저장하지 않는다**
+    // (원장님 확정 2026-08-19 "미리보기 후 채택"). 저장은 /transform/adopt 가 201 로 한다.
+    expect(res.status).toBe(200);
+    const body = problemTransformResponseSchema.parse(await res.json());
+    // mock 은 마지막 하나를 일부러 검사 탈락으로 둔다 — 화면의 「폐기」 경로를 밟게 한다.
+    expect(body.data.some((candidate) => !candidate.verified)).toBe(true);
+  });
+
+  it("POST /api/problems/transform/adopt 성공 응답은 채택 계약을 통과하고 201 이다", async () => {
+    const res = await postJson("/api/problems/transform/adopt", {
+      originProblemId: MOCK_PROBLEMS[0]!.id,
+      items: [{ content: "채택된 변형", answer: "0.275", solution: null }],
+    });
     expect(res.status).toBe(201);
-    problemTransformResponseSchema.parse(await res.json());
+    const body = problemTransformAdoptResponseSchema.parse(await res.json());
+    expect(body.data[0]!.source).toBe("transformed");
+    expect(body.data[0]!.originProblemId).toBe(MOCK_PROBLEMS[0]!.id);
+    expect(body.data[0]!.reviewStatus).toBe("pending");
   });
 
   it("POST /api/problems/transform 존재하지 않는 원본은 NOT_FOUND를 반환한다", async () => {

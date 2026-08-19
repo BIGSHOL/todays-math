@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { PROBLEM_CARD_MIN_WIDTH } from "@/components/print/tokens";
 import { Button } from "@/components/ui/Button";
@@ -17,13 +17,14 @@ import { loadUnits } from "@/lib/units/unitApi";
 import { FieldSelect, FIELD_SELECT_WIDTH } from "./FieldSelect";
 import { PROBLEM_TYPES } from "./labels";
 import { ProblemCard } from "./ProblemCardLazy";
-import {
-  ProblemGenerateForm,
-  ProblemRegisterForm,
-  ProblemTransformForm,
-} from "./ProblemPanelsLazy";
+import { ProblemGenerateForm, ProblemRegisterForm } from "./ProblemPanelsLazy";
 
-type Panel = "register" | "generate" | "transform" | null;
+/**
+ * 위쪽 액션 패널 — 「변형」은 **여기 없다**(원장님 확정 2026-08-19).
+ * 변형은 문제 카드 안에서 고르고 연다(`ProblemCard` → `ProblemTransformPanel`) —
+ * 종전 드롭다운은 네이티브 select 라 수식을 못 그려 무엇을 고르는지 알 수 없었다.
+ */
+type Panel = "register" | "generate" | null;
 
 /** 초등 chapter는 "1-1 9까지의 수" 꼴 — 앞 숫자가 학기. 그 외 학년은 학기 개념이 없다. */
 const SEMESTER_CHAPTER_RE = /^[12]-/;
@@ -281,6 +282,26 @@ export function ProblemBank() {
     setError(null);
   }
 
+  /**
+   * 카드에서 변형 채택분이 저장되면 목록에 얹는다.
+   *
+   * ⚠️ `useCallback` 이어야 한다 — `ProblemCard` 는 `memo` 라, 인라인 화살표로 넘기면
+   * 카드 20장이 렌더마다 전부 다시 그려진다(카드마다 KaTeX 조판이 붙는다).
+   * 의존이 `filters`/`unitById` 뿐이라 필터가 그대로면 참조도 그대로다.
+   */
+  const handleTransformAdopted = useCallback(
+    (created: ProblemEntity[]) => {
+      const matching = created.filter((problem) =>
+        matchesFilters(problem, filters, unitById),
+      );
+      setProblems((current) => [...matching, ...current]);
+      setTotal((current) => current + matching.length);
+      setNotice(`${created.length}건 변형`);
+      setError(null);
+    },
+    [filters, unitById],
+  );
+
   return (
     <main className="px-[26px] py-6">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
@@ -298,9 +319,6 @@ export function ProblemBank() {
             onClick={() => toggle("generate")}
           >
             생성
-          </Button>
-          <Button variant="secondary" onClick={() => toggle("transform")}>
-            변형
           </Button>
         </div>
       </div>
@@ -452,13 +470,6 @@ export function ProblemBank() {
           onError={setError}
         />
       ) : null}
-      {panel === "transform" ? (
-        <ProblemTransformForm
-          problems={problems}
-          onCreated={(count, created) => prepend(count, created, "변형")}
-          onError={setError}
-        />
-      ) : null}
 
       {notice ? (
         <p className="mt-4 text-[12.5px] font-bold text-ink">{notice}</p>
@@ -493,7 +504,11 @@ export function ProblemBank() {
           <p className="text-[12.5px] text-text-2">등록된 문제가 없습니다</p>
         ) : !loading && !error ? (
           problems.map((problem) => (
-            <ProblemCard key={problem.id} problem={problem} />
+            <ProblemCard
+              key={problem.id}
+              problem={problem}
+              onTransformAdopted={handleTransformAdopted}
+            />
           ))
         ) : null}
       </section>

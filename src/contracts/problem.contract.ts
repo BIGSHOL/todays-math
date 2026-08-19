@@ -9,7 +9,8 @@
  *   DELETE /api/problems/{id}                — 문제 삭제
  *   PATCH  /api/problems/{id}/review-status  — 검수 승격 (pending → approved 등, D-22)
  *   POST   /api/problems/generate            — AI 문제 생성 (unitId, difficulty, count)
- *   POST   /api/problems/transform           — 기존 문제 변형 (originProblemId, count)
+ *   POST   /api/problems/transform           — 기존 문제 변형 → **후보만** 반환(DB 미적재)
+ *   POST   /api/problems/transform/adopt     — 미리보기에서 채택한 후보만 DB 적재
  *
  * Problem.directUseAllowed — T3.0/D-26. RPM 원본은 false, 그 외 기본 true.
  * Problem.pool — D-31. 기본 shared. 특별 지시가 없으면 전부 공용 풀.
@@ -23,6 +24,7 @@
  */
 import { z } from "zod";
 
+import type { Difficulty } from "./common.contract";
 import { problemCodeSchema } from "./problemCode.contract";
 import {
   dataResponseSchema,
@@ -175,6 +177,42 @@ export const problemGenerateResponseSchema = dataResponseSchema(
 );
 
 // ── 변형 ────────────────────────────────────────────────
+
+/**
+ * 변형 방식 (원장님 확정 2026-08-19).
+ * - `numbers`: 숫자만 바꾼다. 문장 구조를 그대로 두므로 가장 안전하다.
+ * - `conditions`: 조건·문맥까지 바꾼다. 개념과 유형은 유지한다.
+ */
+export const transformModeSchema = z.enum(["numbers", "conditions"]);
+export type TransformMode = z.infer<typeof transformModeSchema>;
+
+/**
+ * 난이도 조정 (원장님 확정 2026-08-19). 원본 난이도에서 한 단계 올리거나 내린다.
+ * 끝(hard 에서 up, easy 에서 down)은 제자리다 — `shiftDifficulty` 가 SSOT.
+ */
+export const difficultyShiftSchema = z.enum(["keep", "up", "down"]);
+export type DifficultyShift = z.infer<typeof difficultyShiftSchema>;
+
+/** 난이도 사다리 — 오름차순. `shiftDifficulty` 만 쓴다. */
+const DIFFICULTY_LADDER = ["easy", "mid", "hard"] as const;
+
+/**
+ * 난이도 한 단계 이동 — **여기가 유일한 구현**이다.
+ *
+ * 계약에 두는 이유: 후보를 만들 때(프롬프트에 실을 난이도)와 채택해 저장할 때(DB 에 넣을
+ * 난이도)가 **다른 모듈**이라, 각자 손으로 사다리를 적으면 한쪽만 고쳐도 아무도 모른다
+ * (2026-08-18 「규칙이 옳아도 배선이 한쪽만 되면 그쪽 지표만 좋아진다」와 같은 자리).
+ */
+export function shiftDifficulty(
+  difficulty: Difficulty,
+  shift: DifficultyShift,
+): Difficulty {
+  if (shift === "keep") return difficulty;
+  const at = DIFFICULTY_LADDER.indexOf(difficulty);
+  const next = at + (shift === "up" ? 1 : -1);
+  return DIFFICULTY_LADDER[next] ?? difficulty;
+}
+
 export const problemTransformRequestSchema = z.strictObject({
   originProblemId: uuidSchema,
   count: z
@@ -183,11 +221,62 @@ export const problemTransformRequestSchema = z.strictObject({
     .min(1, { error: "변형 개수는 1개 이상이어야 합니다." })
     .max(10, { error: "변형 개수는 10개를 초과할 수 없습니다." })
     .default(1),
+  mode: transformModeSchema.default("numbers"),
+  difficultyShift: difficultyShiftSchema.default("keep"),
 });
 export type ProblemTransformRequest = z.infer<
   typeof problemTransformRequestSchema
 >;
 
+/**
+ * 변형 후보 — **아직 DB 에 없다** (원장님 확정 2026-08-19 "미리보기 후 채택").
+ * `id` 가 없는 것이 그 뜻이다. 채택한 것만 `POST /api/problems/transform/adopt` 가 넣는다.
+ *
+ * ⚠️ **원본 재현 검사에 떨어진 후보도 그대로 담는다**(`verified: false`). 걸러서 보내면
+ * 화면은 「3개 요청했는데 2개만 왔다」는 사실만 보고 **왜인지를 못 본다** — 실패가 침묵하는
+ * 자리다. 화면은 떨어진 후보를 「폐기」로 표시하고 `originalAnswerRecomputed` 를 사유로 쓴다.
+ */
+export const transformCandidateSchema = z.strictObject({
+  content: z.string().min(1),
+  answer: z.string().min(1),
+  solution: z.string().nullable(),
+  /** 원본 재현 검사 통과 여부. false 인 후보는 화면에서 채택할 수 없다. */
+  verified: z.boolean(),
+  /** AI 가 제 변형 규칙을 원본 숫자에 되돌려 적용한 값 — 불일치 사유를 그대로 보여 준다. */
+  originalAnswerRecomputed: z.string(),
+});
+export type TransformCandidate = z.infer<typeof transformCandidateSchema>;
+
 export const problemTransformResponseSchema = dataResponseSchema(
+  z.array(transformCandidateSchema),
+);
+
+/**
+ * 채택 저장 — 미리보기에서 고른 후보만 DB 에 넣는다.
+ *
+ * ⚠️ `source` / `originProblemId` / `reviewStatus` 는 **요청에 없다**. 서버가 강제한다.
+ * `originProblemId` 가 NULL 인지 아닌지가 RPM 교재 이관본과 AI 변형본을 가르는 **유일한
+ * 판별자**이고(D-51), `composePredictedPaper` 의 `SOURCE_RANK` 가 그 값에 기댄다.
+ * 클라이언트가 정하게 두면 출제 등급이 조용히 어긋난다.
+ */
+export const problemTransformAdoptRequestSchema = z.strictObject({
+  originProblemId: uuidSchema,
+  difficultyShift: difficultyShiftSchema.default("keep"),
+  items: z
+    .array(
+      z.strictObject({
+        content: z.string().min(1),
+        answer: z.string().min(1),
+        solution: z.string().nullable(),
+      }),
+    )
+    .min(1, { error: "채택할 변형을 하나 이상 골라주세요." })
+    .max(10, { error: "한 번에 10개를 초과해 채택할 수 없습니다." }),
+});
+export type ProblemTransformAdoptRequest = z.infer<
+  typeof problemTransformAdoptRequestSchema
+>;
+
+export const problemTransformAdoptResponseSchema = dataResponseSchema(
   z.array(problemSchema),
 );
