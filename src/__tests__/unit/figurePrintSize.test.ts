@@ -168,6 +168,14 @@ describe("[그림크기] 손상된 mm 는 «작은 그림»이 아니라 «모�
     expect(parseFigureSourceMm(1, [7000])).toEqual([null]);
   });
 
+  it("숫자가 아닌 값도 모른다다 — JSON 대장이 문자열을 실어 올 수 있다", () => {
+    // `"40"` 은 `>= 1 && <= 210` 을 **통과한다**(문자열이 수로 강제된다).
+    // 그대로 흘리면 `figureWidthStyle` 의 `toFixed` 에서 터져 **인쇄 화면이 죽는다.**
+    expect(parseFigureSourceMm(2, ["40", null] as unknown as number[])).toEqual(
+      [null, null],
+    );
+  });
+
   it("성한 값과 손상된 값이 섞이면 **자리마다** 가른다", () => {
     expect(parseFigureSourceMm(3, [35.5, -1, 62])).toEqual([35.5, null, 62]);
   });
