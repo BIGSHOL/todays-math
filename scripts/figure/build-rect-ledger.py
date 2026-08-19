@@ -74,9 +74,13 @@ PDF_MAPPED_FAM = "q"
 NO_COORD_REASON = {
     "hwp-q": "HWP BinData 에서 꺼낸 이미지 — PDF 좌표가 애초에 없다"
              " (recover-hwp-figures.py / prepare-load-figures.py)",
-    "hwppdf-q": "hwppdf 계열 — 만든 경로를 아직 못 짚었다",
+    # `figure-attach-ledger.json` 이 계획 이름을 적어 둬서 짚혔다:
+    # `pdf-figure-result-hwp.json` — HWP 를 PDF 로 바꾼 사본(.hwp-pdf/, gitignore)을
+    # `crop-pdf-by-stem.py` 로 오린 것이다. 그 사본이 이 컴퓨터에 없어 자리는 못 구한다.
+    "hwppdf-q": "crop-pdf-by-stem.py 를 **HWP 변환본**에 돌린 것"
+                " (계획 pdf-figure-result-hwp.json). 변환 사본이 이 컴퓨터에 없다",
     "pdf-q": "crop-pdf-by-stem.py 계열 — 별도 좌표 경로",
-    "tbl-q": "crop-table-by-stem.py 계열 — 표 오려내기",
+    "tbl-q": "crop-table-by-stem.py 계열 — 표 오려내기 (계획 table-crop-result.json)",
 }
 
 HWP_NOTE = (
@@ -546,14 +550,18 @@ NO_RECT_KINDS = (
     #    「무리 그림 계획」이라는 말이 들어 있어서, 무리 쪽을 먼저 보면
     #    600건이 통째로 무리로 세어진다(실제로 93 이 693 이 됐다).
     #    낱말이 파일 안 다른 곳에도 있는지 먼저 볼 것(CLAUDE.md 2026-08-18).
-    ("RPM figure_rect 재현 실패 — 그때 쓴 계획이 이 컴퓨터에 없다", "figure_rect 를 다시 불러도"),
+    ("RPM figure_rect 재현 실패 — 계획 rect 는 source_coords", "figure_rect 를 다시 불러도"),
     ("RPM 무리 그림 — 어느 장이 어느 칸인지 못 가른다", "한 문항에 그림이"),
     ("지금 map_exam 결과에 대응이 없다", "대응이 없다"),
     ("같은 자리인데 바이트가 다르다", "바이트가 다르다"),
     ("렌더 치수가 안 맞는다", "렌더 치수가 안 맞는다"),
-    ("crop-pdf-by-stem 계열", "crop-pdf-by-stem"),
-    ("crop-table-by-stem 계열", "crop-table-by-stem"),
+    ("RPM 계획으로도 자리 못 구함", "계획 3개로 쪽을 고르고"),
+    # hwppdf 바늘을 crop-pdf-by-stem **앞**에 둔다. 새 주석에 crop-pdf-by-stem.py 가
+    # 들어 있어, 순서가 바뀌면 15장이 crop-pdf 계열로 빨려 들어간다.
+    ("hwppdf 계열 — HWP 변환본 오려내기, 사본 없음", "HWP 변환본"),
     ("hwppdf 계열 — 만든 경로 미확인", "hwppdf 계열"),
+    ("crop-pdf-by-stem 계열", "crop-pdf-by-stem.py 계열"),
+    ("crop-table-by-stem 계열", "crop-table-by-stem"),
     ("원본이 HWP — 변환 PDF 캐시가 없다", "원본이 HWP"),
     ("원본 PDF 가 디스크에 없다", "원본 PDF 가 디스크에 없다"),
     ("교재 PDF 를 못 찾았다", "교재 PDF 를 못 찾았다"),
