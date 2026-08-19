@@ -59,6 +59,11 @@ scripts/qa/reports/*
 !scripts/qa/reports/missing-figure-lock.json
 # AI 생성 문항 보기 표기 정규화 — 되돌리기 원장(공유 DB 를 바꾼다)
 !scripts/qa/reports/view-normalize-ledger.json
+# 정답 정정 목록 — **이 목록 자체가 되돌리기 근거다**(`before`→`after`).
+# `apply-answer-corrections.ts` 가 이걸 읽어 공유 DB 를 바꾸는데, 커밋이 안 되고
+# 있었다. 다른 컴퓨터에서는 「무엇을 왜 바꿨나」를 알 길이 없다(2026-08-19 발견,
+# 그때 이미 3행이 적용돼 있었다).
+!scripts/qa/reports/answer-corrections.json
 # RPM 출처 스냅샷 — **sumaek 을 대신하는 정본이다.** 이게 없으면 다른 컴퓨터에서
 # RPM 의 책·쪽·문항번호를 알 길이 없다(원본 접속은 저장소 밖 두 파일에 의존한다).
 !scripts/qa/reports/rpm-origin.json

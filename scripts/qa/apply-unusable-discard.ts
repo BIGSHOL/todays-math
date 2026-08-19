@@ -4,6 +4,8 @@
  *   npx tsx scripts/qa/apply-unusable-discard.ts                      드라이런(기본)
  *   ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-unusable-discard.ts --apply
  *   ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-unusable-discard.ts --revert
+ *   npx tsx scripts/qa/apply-unusable-discard.ts --revert-fixed            드라이런
+ *   ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-unusable-discard.ts --revert-fixed --apply
  *
  * 원장님 확정(2026-08-19): 「AI로 새로 내자」 — 원본 복구가 아니라 **새 문항으로
  * 대체**한다. 대체 전에 먼저 막는 이유는, 이 297건이 **지금도 출제되고 있어서**다
@@ -35,7 +37,10 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 import { PrismaClient } from "@prisma/client";
 
-import { FATAL_VERDICTS as FATAL_LIST } from "./answerChoiceRules";
+import {
+  FATAL_VERDICTS as FATAL_LIST,
+  judgeAnswerChoice,
+} from "./answerChoiceRules";
 import { mergeLedgerRows, stillApplied } from "./revertLedger";
 
 const prisma = new PrismaClient();
@@ -50,10 +55,13 @@ const OTHER_LOCKS = [
 
 const APPLY = process.argv.includes("--apply");
 const REVERT = process.argv.includes("--revert");
+const REVERT_FIXED = process.argv.includes("--revert-fixed");
 
+// `--revert-fixed` 는 **드라이런이 기본**이라 여기서 막지 않는다 —
+// 실제로 쓸 때는 `--apply` 가 같이 있어야 하고, 그때 이 가드에 걸린다.
 if ((APPLY || REVERT) && process.env.ALLOW_UNIT_FIX !== "1") {
   console.error(
-    "공유 DB 쓰기가 막혀 있다(D-31). ALLOW_UNIT_FIX=1 과 --apply(또는 --revert) 가 둘 다 필요하다.",
+    "공유 DB 쓰기가 막혀 있다(D-31). ALLOW_UNIT_FIX=1 과 --apply(또는 --revert / --revert-fixed) 가 둘 다 필요하다.",
   );
   process.exit(1);
 }
@@ -153,6 +161,43 @@ export function revertUnusable(
   return { restore: true, to: locked.directUseAllowed };
 }
 
+/**
+ * **고쳐진 것만 골라 푼다** (`--revert-fixed`).
+ *
+ * 세 트랙(파서 R2 · HWP 재추출 · 정답 확정)이 원본에서 되찾은 뒤, 잠긴 269행 중
+ * 일부가 지금 판정기로 «정상» 이 됐다. 전량 `--revert` 는 **아직 깨진 행까지 같이
+ * 풀어** 학생이 못 푸는 문항을 지면에 다시 올린다. 그래서 판정을 다시 보고 정상인
+ * 것만 푼다.
+ *
+ * ⚠️ 판정 목록을 여기 옮겨 적지 않는다 — 부르는 쪽이 `judgeAnswerChoice`(세는 쪽이
+ * 쓰는 그 함수)로 얻은 **지금 판정**을 넘긴다. 이 함수는 「그 판정이면 풀어도 되나」만
+ * 가른다. 규칙이 두 벌이 되면 세는 쪽과 푸는 쪽이 갈라진다(CLAUDE.md 2026-08-18).
+ *
+ * 가드 셋을 다 통과해야 푼다:
+ *   ㉠ 지금 판정이 **정확히 «정상»** 이다 (치명이 아닌 것으로는 부족하다 —
+ *      「보기수이상」 같은 경고 부류는 아직 사람이 봐야 한다)
+ *   ㉡ 지금 값이 **우리가 쓴 값(false)** 이다 — 남의 변경을 덮지 않는다
+ *   ㉢ **다른 원장이 안 잠갔다** — 내가 안 잠근 것은 내가 풀지 않는다
+ */
+export function decideRevertFixed(
+  locked: LockedRow,
+  now: { directUseAllowed: boolean } | undefined,
+  verdictNow: string,
+  ownedElsewhere: boolean,
+): RevertDecision {
+  const base = revertUnusable(locked, now);
+  if (!base.restore) return base;
+  if (ownedElsewhere)
+    return {
+      restore: false,
+      reason:
+        "다른 원장(그림 유실·보기 그림)도 잠갔다 — 내가 안 잠근 것은 안 푼다",
+    };
+  if (verdictNow !== "정상")
+    return { restore: false, reason: `아직 «${verdictNow}» 다 — 안 푼다` };
+  return base;
+}
+
 /* ── 실행 ────────────────────────────────────────────────────────────── */
 
 function otherLockedIds(): Set<string> {
@@ -245,6 +290,106 @@ async function countLoss(todo: LockedRow[], all: Map<string, DbRow>) {
   };
 }
 
+/**
+ * 고쳐진 것만 골라 푼다. 판정은 **세는 쪽이 쓰는 그 함수**(`judgeAnswerChoice`)로
+ * 지금 본문을 다시 봐서 얻는다 — 원장에 적힌 옛 판정을 믿지 않는다. 원장의 판정은
+ * 「잠글 때 그랬다」는 기록이고, 그 사이 본문이 고쳐졌는지가 지금 묻는 것이다.
+ */
+async function revertFixed() {
+  if (!existsSync(LEDGER)) throw new Error(`원장이 없다: ${LEDGER}`);
+  const ledger = JSON.parse(readFileSync(LEDGER, "utf8")) as {
+    이전상태: LockedRow[];
+    해제됨?: (LockedRow & { 해제사유: string; 해제시각: string })[];
+  };
+  const elsewhere = otherLockedIds();
+  const all = await fetchAll();
+
+  const ids = ledger.이전상태.map((r) => r.id);
+  const judged = (await prisma.$queryRawUnsafe(
+    `SELECT id::text AS id, content, answer, solution,
+            question_type::text AS "questionType", source::text AS source,
+            figure_urls AS "figureUrls", figure_svg AS "figureSvg"
+       FROM problem WHERE id = ANY($1::uuid[])`,
+    ids,
+  )) as Record<string, unknown>[];
+  const verdictOf = new Map<string, string>(
+    judged.map((r) => [
+      String(r.id),
+      (judgeAnswerChoice(r as never) as { verdict: string }).verdict,
+    ]),
+  );
+
+  // 🔴 분모를 **먼저** 찍는다 — 「풀 것 + 건너뜀」이 원장 행수와 안 맞으면 범위가 샌 것이다.
+  console.log(`  분모 검산 — 원장 ${ledger.이전상태.length}행`);
+
+  const todo: LockedRow[] = [];
+  const skipped = new Map<string, number>();
+  for (const row of ledger.이전상태) {
+    const d = decideRevertFixed(
+      row,
+      all.get(row.id),
+      verdictOf.get(row.id) ?? "(DB 에 없다)",
+      elsewhere.has(row.id),
+    );
+    if (d.restore) todo.push(row);
+    else skipped.set(d.reason, (skipped.get(d.reason) ?? 0) + 1);
+  }
+  const seen = todo.length + [...skipped.values()].reduce((a, b) => a + b, 0);
+  if (seen !== ledger.이전상태.length)
+    throw new Error(`분모가 안 맞는다: ${seen} != ${ledger.이전상태.length}`);
+
+  console.log(`\n
+■ 풀 것 ${todo.length}행 · 건너뜀 ${seen - todo.length}행`);
+  for (const [why, n] of [...skipped].sort((a, b) => b[1] - a[1]))
+    console.log(`   · ${why} — ${n}`);
+
+  if (!APPLY) {
+    console.log(
+      `\n
+드라이런이다. 실제로 풀려면:
+` +
+        `  ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-unusable-discard.ts --revert-fixed --apply`,
+    );
+    return;
+  }
+
+  // 원장을 **DB 보다 먼저** 쓴다 — 되돌리기 근거가 먼저 남아야 한다.
+  const now = new Date().toISOString();
+  const restIds = new Set(todo.map((r) => r.id));
+  writeFileSync(
+    LEDGER,
+    JSON.stringify(
+      {
+        ...ledger,
+        이전상태: ledger.이전상태.filter((r) => !restIds.has(r.id)),
+        해제됨: [
+          ...todo.map((r) => ({
+            ...r,
+            해제사유: `원본 회수로 판정이 «정상» 이 됐다 (잠글 때는 «${r.판정}»)`,
+            해제시각: now,
+          })),
+          ...(ledger.해제됨 ?? []),
+        ],
+        잠근건수: ledger.이전상태.length - todo.length,
+      },
+      null,
+      2,
+    ) + "\n",
+    "utf8",
+  );
+
+  let restored = 0;
+  for (const row of todo) {
+    await prisma.$executeRawUnsafe(
+      `UPDATE problem SET direct_use_allowed = true WHERE id = $1::uuid`,
+      row.id,
+    );
+    restored += 1;
+  }
+  console.log(`\n
+✅ 푼 행 ${restored} · 원장에 «해제됨» 으로 남겼다`);
+}
+
 async function revert() {
   if (!existsSync(LEDGER)) throw new Error(`원장이 없다: ${LEDGER}`);
   const ledger = JSON.parse(readFileSync(LEDGER, "utf8")) as {
@@ -272,6 +417,11 @@ async function revert() {
 }
 
 async function main() {
+  if (REVERT_FIXED) {
+    await revertFixed();
+    await prisma.$disconnect();
+    return;
+  }
   if (REVERT) {
     await revert();
     await prisma.$disconnect();

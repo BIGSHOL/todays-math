@@ -8,6 +8,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   FATAL_VERDICTS,
+  decideRevertFixed,
   decideUnusableDiscard,
   revertUnusable,
   type DbRow,
@@ -123,5 +124,74 @@ describe("되돌리기는 우리가 쓴 값일 때만", () => {
 
   it("DB 에 행이 없으면 건드리지 않는다", () => {
     expect(revertUnusable(locked, undefined).restore).toBe(false);
+  });
+});
+
+/**
+ * 🔴 **고쳐진 것만 골라 푼다** (`--revert-fixed`).
+ *
+ * 세 트랙이 원본에서 되찾은 뒤 잠긴 269행 중 48행이 지금 판정기로 «정상» 이 됐다.
+ * 전량 `--revert` 는 아직 깨진 221행까지 같이 풀어 **학생이 못 푸는 문항을 다시
+ * 지면에 올린다.** 그래서 판정을 **다시 보고** 정상인 것만 푼다.
+ *
+ * ⚠️ 판정 목록을 여기 옮겨 적지 않는다 — 부르는 쪽이 `judgeAnswerChoice` 로 얻은
+ * 지금 판정을 넘긴다. 이 함수는 「그 판정이면 풀어도 되나」만 가른다.
+ */
+describe("고쳐진 것만 골라 푼다", () => {
+  const locked: LockedRow = {
+    id: "a",
+    externalId: null,
+    directUseAllowed: true,
+    school: null,
+    questionNumber: null,
+    판정: "보기0칸",
+    원인: "x",
+    unitId: "u1",
+    원본: null,
+  };
+  const now = { directUseAllowed: false };
+
+  it("지금 «정상» 이고 우리가 잠근 값이면 푼다", () => {
+    expect(decideRevertFixed(locked, now, "정상", false)).toEqual({
+      restore: true,
+      to: true,
+    });
+  });
+
+  // 🔴 이게 전량 되돌리기와 갈리는 자리다.
+  it("아직 치명이면 **풀지 않는다** — 못 푸는 문항이 지면에 다시 올라간다", () => {
+    const d = decideRevertFixed(locked, now, "보기0칸", false);
+    expect(d.restore).toBe(false);
+    expect(d.restore === false && d.reason).toContain("아직");
+  });
+
+  it("경고 부류(치명 아님)도 «정상» 이 아니면 풀지 않는다", () => {
+    expect(decideRevertFixed(locked, now, "보기수이상", false).restore).toBe(
+      false,
+    );
+  });
+
+  // 그림유실·보기그림 원장이 같은 컬럼을 잠근다. 내가 안 잠근 것은 내가 풀지 않는다.
+  it("다른 원장도 잠근 행이면 풀지 않는다", () => {
+    const d = decideRevertFixed(locked, now, "정상", true);
+    expect(d.restore).toBe(false);
+    expect(d.restore === false && d.reason).toContain("다른 원장");
+  });
+
+  it("그 사이 누가 풀었으면 건드리지 않는다", () => {
+    const d = decideRevertFixed(
+      locked,
+      { directUseAllowed: true },
+      "정상",
+      false,
+    );
+    expect(d.restore).toBe(false);
+    expect(d.restore === false && d.reason).toContain("남의 변경");
+  });
+
+  it("DB 에 행이 없으면 건드리지 않는다", () => {
+    expect(decideRevertFixed(locked, undefined, "정상", false).restore).toBe(
+      false,
+    );
   });
 });
