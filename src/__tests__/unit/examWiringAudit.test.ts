@@ -83,3 +83,39 @@ describe("auditCodePaths — 저장소 전수", () => {
     expect(auditCodePaths().length).toBeGreaterThanOrEqual(9);
   });
 });
+
+/**
+ * 🔴 → 🟢 줄끝이 판정을 바꾸면 안 된다 (2026-08-19).
+ *
+ * `classifyFile` 이 줄 시작 오프셋을 **`split` 한 줄들의 길이로** 더하고 있었다.
+ * `split(/\r?\n/)` 은 `\r` 까지 지우므로 **CRLF 파일에서는 줄마다 1바이트씩 밀린다.**
+ * 270줄쯤 내려가면 8줄이 어긋나 `MARKER_LOOKBACK`(8) 밖으로 나가고,
+ * **표시를 제대로 붙여 둔 호출이 「판단불가」로 뒤집혔다.**
+ *
+ * Windows 체크아웃은 CRLF 라 이 결함은 늘 켜져 있었고, 워크트리마다 줄끝이 달라
+ * **「어떤 워크트리에서는 초록, 어떤 데서는 빨강」**이 됐다 — 가장 나쁜 종류의 결함이다.
+ */
+describe("classifyFile — 줄끝이 판정을 바꾸지 않는다", () => {
+  /** 표시가 `MARKER_LOOKBACK` 안에 있는 호출 하나를, 앞에 긴 머리를 붙여 만든다. */
+  const build = (eol: string): string =>
+    [
+      ...Array.from({ length: 300 }, (_, i) => `// 머리 ${i}`),
+      "// exam-wiring: 기출아님 — 자작만 넣는다",
+      "await db.problem.create({ data: {} });",
+    ].join(eol);
+
+  it("LF 와 CRLF 가 같은 판정을 낸다", () => {
+    const lf = classifyFile("a.ts", build("\n"));
+    const crlf = classifyFile("a.ts", build("\r\n"));
+    expect(lf).toHaveLength(1);
+    expect(crlf).toHaveLength(1);
+    expect(crlf[0]!.verdict).toBe("기출아님");
+    expect(crlf[0]!.verdict).toBe(lf[0]!.verdict);
+  });
+
+  it("CRLF 에서도 줄 번호가 맞는다 — 밀리면 표시를 못 찾는다", () => {
+    const crlf = classifyFile("a.ts", build("\r\n"));
+    // 머리 300줄 + 표시 1줄 = 302번째 줄이 호출이다.
+    expect(crlf[0]!.line).toBe(302);
+  });
+});

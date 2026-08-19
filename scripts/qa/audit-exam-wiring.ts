@@ -109,13 +109,22 @@ export function classifyFile(file: string, source: string): WiringSite[] {
   const lines = source.split(/\r?\n/);
 
   // 줄 시작 오프셋 — 매치 위치를 줄 번호로 되돌리는 데 쓴다.
-  const lineStart: number[] = [];
-  {
-    let at = 0;
-    for (const l of lines) {
-      lineStart.push(at);
-      at += l.length + 1;
-    }
+  //
+  // ⚠️ `lines` 의 길이로 더하면 **CRLF 파일에서 줄마다 1바이트씩 밀린다.**
+  //    `split` 이 `\r` 까지 지우는데 원문에는 그 한 바이트가 남아 있기 때문이다.
+  //    270줄쯤 내려가면 8줄이 어긋나 `MARKER_LOOKBACK`(8) 밖으로 나가고,
+  //    **표시를 붙여 둔 호출이 「판단불가」가 된다.** 실제로 그렇게 됐다
+  //    (2026-08-19: `load-apply.ts:268` 이 276 으로 나왔다). Windows 체크아웃은
+  //    CRLF 라 이 결함은 이 저장소에서 **늘 켜져 있었다** — 워크트리마다
+  //    줄끝이 달라 「어떤 워크트리에서는 초록, 어떤 데서는 빨강」이 된다.
+  //    그러니 길이로 세지 말고 **원문에서 개행 위치를 그대로** 찾는다.
+  const lineStart: number[] = [0];
+  for (
+    let at = source.indexOf("\n");
+    at !== -1;
+    at = source.indexOf("\n", at + 1)
+  ) {
+    lineStart.push(at + 1);
   }
   const lineOf = (offset: number): number => {
     let lo = 0;
