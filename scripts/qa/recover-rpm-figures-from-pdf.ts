@@ -50,6 +50,13 @@ const BUCKET = "sources";
 const SRC_DIR = ".rpm-src";
 const PLAN = "scripts/qa/reports/rpm-crop-plan.json";
 const CROP_RESULT = "scripts/qa/reports/rpm-crop-result.json";
+/**
+ * **되돌리기 원장** — 붙이기 **전** 상태를 담는다. DB 보다 **먼저** 쓴다.
+ * 이 파일이 없으면 되돌릴 수 없다(문서 16 §5). 커밋되는지
+ * `git check-ignore -v <파일>` 로 확인할 것 — 2026-08-18 에 공유 DB 를 790건
+ * 바꿔 놓고 되돌리기가 이 컴퓨터에만 남은 적이 있다.
+ */
+const ATTACH_LEDGER = "scripts/qa/reports/rpm-figure-attach-ledger.json";
 
 /**
  * 로컬에 둘 파일 이름. `storage_path` 가 `local:RPM 중학 1-1 학생용.pdf` 처럼
@@ -257,10 +264,30 @@ async function fetchSources() {
 /** 오려낸 결과를 DB 에 붙인다. **파일이 실재하는 것만.** */
 async function attach() {
   const { readFile } = await import("node:fs/promises");
-  const result = JSON.parse(await readFile(CROP_RESULT, "utf8")) as {
-    성공: Array<{ problemId: string; publicPath: string }>;
+  // 계획을 두 벌(관문 통과분 · 무리 그림) 돌리면 결과도 두 벌이다.
+  // `--result <경로>` 를 여러 번 줄 수 있다. 안 주면 기본 한 벌.
+  const paths: string[] = [];
+  for (let i = 0; i < process.argv.length; i += 1) {
+    if (process.argv[i] === "--result" && process.argv[i + 1]) {
+      paths.push(process.argv[i + 1]);
+    }
+  }
+  if (paths.length === 0) paths.push(CROP_RESULT);
+  const merged = new Map<string, string>();
+  for (const p of paths) {
+    const one = JSON.parse(await readFile(p, "utf8")) as {
+      성공: Array<{ problemId: string; publicPath: string }>;
+    };
+    console.log(`  ${p}: 성공 ${one.성공.length}건`);
+    for (const r of one.성공) merged.set(r.problemId, r.publicPath);
+  }
+  const result = {
+    성공: [...merged].map(([problemId, publicPath]) => ({
+      problemId,
+      publicPath,
+    })),
   };
-  console.log(`오려내기 성공 ${result.성공.length}건`);
+  console.log(`오려내기 성공 ${result.성공.length}건 (겹침 제거 뒤)`);
 
   const alive: typeof result.성공 = [];
   for (const r of result.성공) {
@@ -272,6 +299,41 @@ async function attach() {
     }
   }
   console.log(`파일이 실재하는 것 ${alive.length}건`);
+
+  // ── 되돌리기 원장을 **DB 보다 먼저** 쓴다 ──────────────────────────
+  // 중간에 죽으면 undo 가 사라진다(문서 16 §3.4-(3)). 드라이런에서도 쓴다 —
+  // 그래야 다음 사람이 「무엇을 덮어쓰게 되는지」를 붙이기 **전에** 볼 수 있다.
+  const before = await prisma.problem.findMany({
+    where: { id: { in: alive.map((r) => r.problemId) } },
+    select: { id: true, figureUrls: true, figureSource: true },
+  });
+  const byId = new Map(alive.map((r) => [r.problemId, r.publicPath]));
+  await mkdir(path.dirname(ATTACH_LEDGER), { recursive: true });
+  await writeFile(
+    ATTACH_LEDGER,
+    JSON.stringify(
+      {
+        기준: "붙이기 전 상태 — 되돌릴 때 이 값을 그대로 쓴다",
+        건수: before.length,
+        행: before.map((b) => ({
+          problemId: b.id,
+          figureUrls: b.figureUrls,
+          figureSource: b.figureSource,
+          새경로: byId.get(b.id) ?? null,
+        })),
+      },
+      null,
+      1,
+    ),
+    "utf8",
+  );
+  console.log(`되돌리기 원장 ${before.length}행 → ${ATTACH_LEDGER}`);
+  const dirty = before.filter((b) => b.figureUrls.length > 0);
+  if (dirty.length > 0) {
+    console.log(
+      `⚠️ 이미 그림이 있는 행 ${dirty.length}건 — 덮어쓰기 전에 사람이 봐야 한다.`,
+    );
+  }
 
   if (process.env.ALLOW_SHARED_IMPORT !== "1") {
     console.log(

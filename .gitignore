@@ -98,6 +98,10 @@ scripts/qa/reports/*
 # 보기 그림 짝을 못 찾아 **출제에서 뺀** 문항 원장 — 행마다 이전 상태와 사유.
 # 영구 삭제가 아니라 되살릴 수 있어야 하고, 그 근거가 이 파일뿐이다.
 !scripts/qa/reports/choice-figure-discard-lock.json
+
+# RPM 그림 되붙이기 **되돌리기 원장** — 공유 DB 를 바꾸는 스크립트의 undo 다.
+# 이 컴퓨터에만 남으면 되돌릴 길이 없다(2026-08-18 실측).
+!scripts/qa/reports/rpm-figure-attach-ledger.json
 # 정답과 보기가 안 맞는 문항 전량 목록 — 원장님이 «빼자»를 정하는 근거다.
 # DB 없는 컴퓨터에서도 바로 읽혀야 한다 (162KB).
 !scripts/qa/reports/unusable-problems.json

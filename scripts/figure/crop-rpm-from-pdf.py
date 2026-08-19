@@ -60,9 +60,44 @@ RESULT = pathlib.Path("scripts/qa/reports/rpm-crop-result.json")
 DEFAULT_DPI = 200
 # 여백 — 좌표가 획에 딱 붙어 있으면 선이 잘려 보인다.
 PAD = 2.0
-# 그림에 딸린 라벨을 되찾을 때 허용하는 세로 간격(pt). 본문 줄높이가 약 12pt 라
+# 그림에 딸린 라벨을 되찾을 때 허용하는 간격(pt). 본문 줄높이가 약 12pt 라
 # 이보다 크게 잡으면 발문 마지막 줄이 딸려 온다(실측 간격 9.3pt).
 LABEL_GAP = 4.0
+# **라벨 모양의 짧은 글자**만 이만큼까지 더 본다. 직선 이름 `l`·`m` 이 화살촉에서
+# 4.5pt 떨어져 통째로 빠졌다(실측 2-2 p57 `l∥m`). 간격을 통째로 넓히면 남의 글자까지
+# 들어와 오히려 11건이 검사에 걸려 버려졌다 — 그래서 **넓히는 대신 대상을 좁힌다.**
+SIDE_GAP = 8.0
+#: 라벨 모양 — 한글이 없고 이보다 짧은 낱말(`l` `m` `A` `16 cm`). 문장은 여기 안 걸린다.
+LABEL_TOKEN_MAX = 6
+#: **눈금자**를 되찾을 때 보는 거리(pt). 상자그림·좌표평면의 눈금 숫자는 그림에서
+#: 10pt 넘게 떨어져 있어 라벨 규칙(4pt)으로는 안 닿는다. 실측 3-2 p104 상자그림 4건이
+#: 눈금(`0 2 4 6 8 10(회)`) 없이 오려졌다 — **최솟값을 묻는 문항인데 눈금이 없다.**
+#: ⚠️ 그 그림의 눈금선 자체는 **쪽 배경 이미지 안**이라 획으로 안 잡힌다. 그래서
+#: 「획이 있나」가 아니라 **숫자가 줄지어 있나**로 찾는다.
+AXIS_GAP = 15.0
+#: 눈금 한 줄로 보려면 숫자가 이만큼은 있어야 하고, 그림 폭의 이만큼은 덮어야 한다.
+AXIS_MIN_TICKS = 3
+AXIS_COVER = 0.5
+#: 눈금은 고르게 놓인다 — 가장 넓은 간격이 가장 좁은 간격의 이 배를 넘으면 눈금이 아니다.
+AXIS_EVEN = 2.5
+NUMERIC = re.compile(r"^[0-9]+$")
+_HANGUL = re.compile(r"[가-힣]")
+
+
+def _label_shaped(txt: str) -> bool:
+    t = txt.strip()
+    return 0 < len(t) <= LABEL_TOKEN_MAX and not _HANGUL.search(t)
+
+
+def _touches(band, t, txt: str = "") -> bool:
+    vgap = max(band.y0 - t.y1, t.y0 - band.y1, 0)
+    hgap = max(band.x0 - t.x1, t.x0 - band.x1, 0)
+    if vgap <= LABEL_GAP and hgap <= LABEL_GAP:
+        return True
+    if not _label_shaped(txt):
+        return False
+    # 한 축이 겹쳐 **나란히** 있는 라벨만 멀리까지 본다.
+    return (vgap == 0 and hgap <= SIDE_GAP) or (hgap == 0 and vgap <= SIDE_GAP)
 # 조각이 이만큼(pt) 넘게 떨어져 있으면 다른 덩어리로 본다. 그림 조각 사이 간격보다는
 # 크고, 쪽 장식과 그림 사이(실측 39pt)보다는 작아야 한다.
 CLUSTER_GAP = 12
@@ -90,6 +125,9 @@ REVIEWED_OUT = {
     "019fd1db-46f3-75f0-8e0e-fd4781b53354":
         "「보기」 글상자만 잡힌다 — 발문이 가리키는 사각형 ABCD 가 칸 밖이다",
 }
+#: 계획이 「그림이 아니다」로 짚어 준 자리(번호 배지·발문)가 칸에 이만큼 들어오면 버린다.
+#: 글자 획 하나가 보이기 시작하는 크기다 — 비율이 아니라 **크기**로 잰다.
+INTRUSION_W, INTRUSION_H = 2.0, 4.0
 #: 칸 경계에 걸친 요소는 **절반 이상이 안쪽일 때만** 삼킨다 — 그 아래는 남의 것이다.
 CROSS_KEEP = 0.4
 #: 그림이 `source_coords` 밖으로 나가는 것을 이만큼(pt)까지 허용한다.
@@ -207,6 +245,7 @@ def largest_cluster(parts: list[fitz.Rect]) -> list[fitz.Rect]:
 
 def figure_rect(page, box: fitz.Rect, stem_key: str = "",
                 min_overlap: float = 12.0,
+                avoid: list[fitz.Rect] | None = None,
                 thin_pt: float = 0.0,
                 furniture: set | None = None) -> fitz.Rect | None:
     """문항 사각형 **안에서 그림만** 골라 낸다.
@@ -288,6 +327,7 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
     # 줄 단위로 본다. span 단위는 너무 짧아(`의 `, `2`) 본문 어디에나 있고,
     # 블록 단위는 너무 길어(폭 236pt) 라벨을 통째로 삼킨다.
     label_rects: list[fitz.Rect] = []
+    label_text: dict[int, str] = {}
     span_rects: list[fitz.Rect] = []
     for b in raw.get("blocks", []):
         if b.get("type") != 0:
@@ -300,7 +340,21 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
                 # 상자로 거르면 통째로 사라지고, 인쇄물에 꼭짓점 이름이 반만 나온다.
                 if sr.is_empty or (sr & bleed).is_empty:
                     continue
+                # ⚠️ **완비 검사(`span_rects`)에는 반드시 넣는다.** 「삼키지 마라」는
+                #    「없는 셈 쳐라」가 아니다 — 빼 두었더니 칸이 각도값 `100°` 를
+                #    반으로 자르고도 조용히 통과했다(실측 사다리꼴 1건).
                 span_rects.append(sr)
+                # **문항 번호 배지·발문 낱말은 라벨이 아니다.** 계획이 그 자리를
+                # 알려 주면 라벨로는 안 본다 — 실측 1-2 p121 의 `0803` 이 원뿔에 0pt 로
+                # 붙어 있어 라벨 되찾기가 그대로 삼켰다.
+                # 문턱이 낮으면 **배지 옆에 붙은 라벨**까지 같이 막힌다 — 실측으로
+                # 꼭짓점 이름 `C` 가 배지 상자에 63% 걸려 통째로 사라졌다.
+                if avoid and any(
+                    not (sr & av).is_empty
+                    and (sr & av).get_area() >= sr.get_area() * 0.8
+                    for av in avoid
+                ):
+                    continue
                 k = content_key(
                     "".join(c["c"] for c in sp.get("chars", []) if "c" in c)
                 )
@@ -313,6 +367,9 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
                 if len(k) >= STEM_LINE_CHARS_SPAN and longest_common_run(k, stem_key) >= STEM_LINE_CHARS_SPAN:
                     continue
                 label_rects.append(sr)
+                label_text[id(sr)] = "".join(
+                    c["c"] for c in sp.get("chars", []) if "c" in c
+                )
 
     core: list[fitz.Rect] = []
     # 자르기 **전** 크기도 같이 든다. 잘라 놓은 것만 보면 「칸이 요소를 반으로 잘랐다」를
@@ -380,9 +437,49 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
         for t in label_rects:
             if band.contains(t):
                 continue
-            vgap = max(band.y0 - t.y1, t.y0 - band.y1, 0)
-            hgap = max(band.x0 - t.x1, t.x0 - band.x1, 0)
-            if vgap <= LABEL_GAP and hgap <= LABEL_GAP:
+            if _touches(band, t, label_text.get(id(t), "")):
+                out |= t
+                grew = True
+        if not grew:
+            break
+
+    # ── 눈금자를 되찾는다 — 줄지어 선 숫자 ──────────────────────────────
+    rows: dict[int, list[fitz.Rect]] = {}
+    for t in label_rects:
+        txt = label_text.get(id(t), "").strip()
+        if not NUMERIC.match(txt):
+            continue
+        if max(out.y0 - t.y1, t.y0 - out.y1, 0) > AXIS_GAP:
+            continue
+        rows.setdefault(int(round(t.y0 / 3)), []).append(t)
+    for row in rows.values():
+        if len(row) < AXIS_MIN_TICKS:
+            continue
+        row = sorted(row, key=lambda t: t.x0)
+        vals = [int(label_text[id(t)].strip()) for t in row]
+        # **눈금은 왼쪽에서 오른쪽으로 커지고 고르게 놓인다.** 이 조건이 없으면
+        # 다각형 그림의 각도값(`50 60 75`)이 눈금으로 잡혀 칸이 엉뚱하게 넓어진다
+        # (실측 3건이 그렇게 검사에 걸려 버려졌다).
+        if any(b <= a for a, b in zip(vals, vals[1:])):
+            continue
+        mids = [(t.x0 + t.x1) / 2 for t in row]
+        gaps = [b - a for a, b in zip(mids, mids[1:])]
+        if min(gaps) <= 0 or max(gaps) / min(gaps) > AXIS_EVEN:
+            continue
+        band = row[0]
+        for t in row[1:]:
+            band |= t
+        if band.width < out.width * AXIS_COVER or band.x0 > out.x1 or band.x1 < out.x0:
+            continue
+        out |= band
+    # 눈금을 들인 뒤 라벨을 한 번 더 — 눈금 끝에 붙은 단위(`(회)`)를 되찾는다.
+    for _ in range(LABEL_ROUNDS):
+        band = fitz.Rect(out)
+        grew = False
+        for t in label_rects:
+            if band.contains(t):
+                continue
+            if _touches(band, t, label_text.get(id(t), "")):
                 out |= t
                 grew = True
         if not grew:
@@ -432,6 +529,9 @@ def main() -> None:
     ap.add_argument("--plan", default=str(PLAN),
                     help="좌표 계획 (기본: 날 좌표. 붙일 때는 "
                          "scripts/qa/reports/rpm-crop-plan-gated.json)")
+    # ⚠️ 계획을 두 벌(관문 통과분·무리 그림) 돌리는데 결과 파일이 하나면
+    #    **뒤에 돌린 것이 앞의 것을 덮는다.** 조용히 사라지므로 낼 곳을 나눌 수 있게 한다.
+    ap.add_argument("--out", default=str(RESULT), help="결과 JSON 을 낼 곳")
     ap.add_argument("--content", default="scripts/qa/reports/rpm-crop-content.json",
                     help="DB 본문 — 오려낸 칸에 발문이 딸려 왔는지 보는 근거")
     a = ap.parse_args()
@@ -453,9 +553,21 @@ def main() -> None:
     # 같은 쪽의 **다른 문항** 상자. 오려낸 칸이 이걸 덮으면 옆 문항 그림이 딸려 온 것이다.
     # 계획 전량을 쓴다 — 이번에 오리는 것만 보면 옆 문항이 목록에 없을 때 눈이 먼다.
     all_boxes = json.loads(PLAN.read_text(encoding="utf-8"))["목록"]
+    # ⚠️ 날 계획의 `page` 는 **DB 쪽번호**이고, 관문을 거친 계획의 `page` 는 거기에
+    # 책별 **쪽 오프셋**이 더해진 값이다(실측 3-2 는 +3). 그대로 맞대면 3-2 는 키가
+    # 어긋나 옆 문항 상자가 **하나도 안 잡히고**, 그러면 이 검사가 조용히 통과한다 —
+    # 가드가 없는 것과 같다. 오려낼 계획이 들고 있는 `pageOff` 로 맞춰 준다.
+    page_off_of: dict[str, int] = {}
+    for it in items:
+        off = int(it.get("pageOff", 0) or 0)
+        name = pathlib.Path(it["pdf"]).name
+        if page_off_of.setdefault(name, off) != off:
+            raise SystemExit(f"한 책에 쪽 오프셋이 둘이다: {name}")
     by_page: dict[tuple[str, int], list[dict]] = {}
     for b in all_boxes:
-        by_page.setdefault((pathlib.Path(b["pdf"]).name, int(b["page"])), []).append(b)
+        name = pathlib.Path(b["pdf"]).name
+        page = int(b["page"]) + page_off_of.get(name, 0)
+        by_page.setdefault((name, page), []).append(b)
 
     # 원본이 없으면 **그 사실을 먼저 말한다.** 0건 성공을 조용히 보고하지 않는다.
     missing_pdf = sorted(
@@ -511,7 +623,10 @@ def main() -> None:
                 continue
 
             db_key = content_key(content.get(it["problemId"], ""))
-            fig = figure_rect(page, box, db_key)
+            avoid = [fitz.Rect(*a) for a in it.get("avoid", [])]
+            # 「삼키지 말 것」과 「들어오면 버릴 것」은 **다른 목록**이다 — 계획 주석 참조.
+            forbid = [fitz.Rect(*a) for a in it.get("forbid", avoid)]
+            fig = figure_rect(page, box, db_key, avoid=avoid)
             if fig is None:
                 fail.append(
                     {"externalId": it["externalId"], "이유": "문항 안에서 그림을 못 찾았다"}
@@ -520,6 +635,19 @@ def main() -> None:
             rect = fitz.Rect(
                 fig.x0 - PAD, fig.y0 - PAD, fig.x1 + PAD, fig.y1 + PAD
             ) & page.rect
+            # 여백(PAD) 때문에 **번호 배지에 새로 닿았다면** 그만큼 물러선다.
+            # 그림 자체가 배지에 닿은 것이 아니라 여백이 닿은 것이므로 자를 것도 없다.
+            for av in avoid:
+                if not (av & fig).is_empty or (av & rect).is_empty:
+                    continue
+                if av.x1 <= fig.x0:
+                    rect.x0 = max(rect.x0, av.x1 + 0.2)
+                elif av.x0 >= fig.x1:
+                    rect.x1 = min(rect.x1, av.x0 - 0.2)
+                elif av.y1 <= fig.y0:
+                    rect.y0 = max(rect.y0, av.y1 + 0.2)
+                elif av.y0 >= fig.y1:
+                    rect.y1 = min(rect.y1, av.y0 - 0.2)
 
             # ── 관문 뒤에도 남는 두 부류를 여기서 막는다 (2026-08-18 육안 검수) ──
             # ⑴ 발문 침입 — 그림이 아니라 문항을 통째로 오린 것.
@@ -556,6 +684,20 @@ def main() -> None:
                 fail.append({"externalId": it["externalId"],
                              "이유": f"옆 문항 상자를 덮었다 ({clash[:13]})"})
                 continue
+            # ⑷ 지면 글자 침입 — 계획이 「여기는 그림이 아니다」로 짚어 준 자리
+            #    (문항 번호 배지·발문 낱말)가 칸에 들어왔다면 **버린다.**
+            #    막는 것과 세는 것을 같은 근거(계획이 준 `avoid`)로 둔다.
+            # ⚠️ **면적 비율로 재면 안 된다.** 네 자리 배지의 마지막 한 글자만
+            #    들어와도 비율은 25% 라 통과한다 — 실측으로 초록 `7`·`2` 가 그림 옆에
+            #    그대로 찍혔다. 사람 눈에 보이는 것은 비율이 아니라 **글자 조각의 크기**다.
+            if any(
+                (av & rect).width >= INTRUSION_W and (av & rect).height >= INTRUSION_H
+                for av in forbid
+                if not (av & rect).is_empty
+            ):
+                fail.append({"externalId": it["externalId"],
+                             "이유": "칸에 지면 글자가 들어왔다 (번호 배지·발문)"})
+                continue
 
             out.parent.mkdir(parents=True, exist_ok=True)
             pix = page.get_pixmap(clip=rect, dpi=a.dpi)
@@ -565,8 +707,9 @@ def main() -> None:
         for d in docs.values():
             d.close()
 
-    RESULT.parent.mkdir(parents=True, exist_ok=True)
-    RESULT.write_text(
+    result_path = pathlib.Path(a.out)
+    result_path.parent.mkdir(parents=True, exist_ok=True)
+    result_path.write_text(
         json.dumps(
             {
                 "대상": len(items),
@@ -588,7 +731,7 @@ def main() -> None:
     for reason in sorted({f['이유'] for f in fail}):
         n = sum(1 for f in fail if f["이유"] == reason)
         print(f"   실패:{reason} {n}")
-    print(f"→ {RESULT}")
+    print(f"→ {result_path}")
     if ok and not missing_pdf:
         print(
             "다음: ALLOW_SHARED_IMPORT=1 npx tsx "
