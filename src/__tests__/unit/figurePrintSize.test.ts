@@ -29,6 +29,7 @@ import {
   MAX_FIGURE_MM,
   MIN_FIGURE_MM,
   checkFigureSourceMm,
+  cssPxToMm,
   figurePrintWidthMm,
   figurePrintWidthPx,
   figureWidthStyle,
@@ -50,6 +51,12 @@ describe("[그림크기] mm → CSS px 는 한 곳에서만 환산한다", () =>
 
   it("70mm 는 264.5669…px 이다", () => {
     expect(mmToCssPx(FIGURE_MAX_WIDTH_MM)).toBeCloseTo(SEVENTY_MM_PX, 6);
+  });
+
+  it("cssPxToMm 은 mmToCssPx 의 역이다 — 96 을 두 곳이 적어 두면 한쪽만 옮겨도 모른다", () => {
+    expect(cssPxToMm(96)).toBeCloseTo(25.4, 10);
+    expect(cssPxToMm(mmToCssPx(40))).toBeCloseTo(40, 10);
+    expect(cssPxToMm(SEVENTY_MM_PX)).toBeCloseTo(70, 10);
   });
 
   it("상한은 70mm 다 — 지면 CSS `print:max-w-[70mm]` 와 같은 수", () => {
