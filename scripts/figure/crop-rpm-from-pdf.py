@@ -84,6 +84,49 @@ NUMERIC = re.compile(r"^[0-9]+$")
 _HANGUL = re.compile(r"[가-힣]")
 
 
+def span_rect(sp, tight: bool = False) -> fitz.Rect:
+    """조각(span)의 상자. `tight` 면 **보이는 글자에 바짝 조인다.**
+
+    PDF 조각 상자는 꼬리 공백·안 보이는 제어 글자까지 담는다. 실측 1-2 p66 의
+    발문 마지막 조각은 `'에서 \x08'` 이라 상자가 489.4 까지 가는데, 그 자리에는
+    이미 **그림 꼭짓점 `B`**(488.8~)가 서 있다. 조이지 않고 자를 자리를 고르면
+    그 `B` 를 반으로 자른 것으로 보고, 자를 자리가 **그림 라벨을 타고** 그림
+    한가운데(518.9)까지 밀려간다. 실제로 그렇게 밀렸다.
+
+    ⚠️ **조이는 것은 「본문이 말하는 자리」 폴백에서만 쓴다.** 완비 검사·라벨
+       되찾기의 기존 경로는 조이지 않은 상자로 이미 값을 치르고 자리를 잡았다 —
+       거기까지 바꾸면 회수해 둔 것들의 좌표가 흔들린다(md5 로 검산한다).
+       대신 폴백 안에서는 **자르는 쪽과 검사하는 쪽이 같은 자를** 쓴다.
+    """
+    if not tight:
+        return fitz.Rect(*sp["bbox"])
+    chars = sp.get("chars", [])
+    # **제어 코드가 늘 «안 보이는 것»은 아니다.** 둘을 갈라야 한다.
+    #
+    # · 글자가 든 조각의 **꼬리에 붙은** 제어 코드 — 지면에 아무것도 안 그린다.
+    #   실측 1-2 p66 발문 마지막 조각이 `'에서 '` 이고 그 `` 이 상자를 3.5pt
+    #   늘려, 바로 옆 꼭짓점 `B` 를 반으로 가르는 자리에 벽이 서게 만들었다.
+    # · **조각이 통째로 제어 코드뿐**이면 그건 글꼴이 그렇게 인코딩한 **진짜 글자**다.
+    #   RPM 수식 글꼴(`EHsang-Plain-KSCms-UHC-H`)은 숫자 `2` 를 `` 으로 적는다.
+    #   그것을 «안 보인다»고 버렸더니 치수 `2 cm` 의 숫자가 벽 밖으로 나가고,
+    #   그 칸이 그대로 오려져 **숫자가 반쯤 잘린 그림**이 나왔다(육안으로 잡았다).
+    inked = any(
+        c.get("c", "").strip() and c["c"].isprintable() for c in chars
+    )
+    out: fitz.Rect | None = None
+    for c in chars:
+        ch = c.get("c", "")
+        if not ch or ch.isspace():
+            continue
+        if inked and not ch.isprintable():
+            continue
+        cr = fitz.Rect(*c["bbox"])
+        if cr.is_empty:
+            continue
+        out = cr if out is None else (out | cr)
+    return out if out is not None else fitz.Rect()
+
+
 def _label_shaped(txt: str) -> bool:
     t = txt.strip()
     return 0 < len(t) <= LABEL_TOKEN_MAX and not _HANGUL.search(t)
@@ -166,6 +209,25 @@ WIDEN_RIGHT_MARGIN = 4.0
 #:    (`019fd1d9-9cdf` 는 `0467` 만 오려졌다). 계획이 `avoid` 를 안 준 문항에서 난다.
 COLUMN_W = 311.8
 BADGE_ONLY = re.compile(r"^\d{3,5}$")
+#: ── **「본문이 말하는 자리」 폴백** (2026-08-19) ─────────────────────────
+#: 「칸에 발문이 N자 들어왔다」로 떨어진 62건(관문 37 + 무리 25)을 되찾는다.
+#: 앞 트랙은 이 부류를 「그림과 발문이 붙어 있어 못 가른다」로 보고 **발문 줄을 흰
+#: 사각형으로 덮고 오리기**를 다음 수로 적었는데, 지면을 떠서 보니 **깨끗이 갈린다** —
+#: 발문·보기가 한쪽, 그림이 다른 쪽이다. 덮을 필요가 없다.
+#:
+#: 왜냐면 **책이 스스로 적어 뒀기 때문이다**: 「**오른쪽** 그림에서…」·「**아래** 그림
+#: 에서…」. 62건 전량에 이 낱말이 있다(오른쪽 40 · 아래 19 · 다음 3 · 없는 것 0).
+#: 문턱을 고르는 게 아니라 **본문을 읽는** 것이다.
+#:
+#: ⚠️ 낱말은 **축만** 정한다. 어느 쪽인지는 **잉크가** 정한다 — 본문과 독립인 근거다.
+#:    다만 낱말과 **반대쪽**(글자가 띠 뒤에만 있는 자리)에서 나온 그림은 다른 배치이므로
+#:    버린다. 그래서 이 가드는 «실패할 수 있는» 형태다.
+#: ⚠️ **폴백이지 넓힘이 아니다.** 이미 성공한 칸은 여기 들어오지도 못한다 —
+#:    손실이 구조적으로 0이고, 오려낸 전 장의 md5 로 검산한다.
+STEM_DIRECTION = (
+    ("x", "오른쪽", re.compile(r"(?:오른쪽|우측)\s*(?:그림|그래프|표|도형)")),
+    ("y", "아래", re.compile(r"(?:아래|다음)\s*(?:그림|그래프|표|도형)")),
+)
 #: 칸 경계에 걸친 요소는 **절반 이상이 안쪽일 때만** 삼킨다 — 그 아래는 남의 것이다.
 CROSS_KEEP = 0.4
 #: 그림이 `source_coords` 밖으로 나가는 것을 이만큼(pt)까지 허용한다.
@@ -290,7 +352,9 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
                 label_syntax: re.Pattern | None = None,
                 bound: fitz.Rect | None = None,
                 avoid_stem: bool = False,
-                trace: dict | None = None) -> fitz.Rect | None:
+                trace: dict | None = None,
+                limit: fitz.Rect | None = None,
+                ink_out: list[fitz.Rect] | None = None) -> fitz.Rect | None:
     """문항 사각형 **안에서 그림만** 골라 낸다.
 
     `source_coords` 는 문항 블록 전체(발문 + 그림)다. 그대로 오리면 발문이 지면에
@@ -448,11 +512,31 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
         """
         return bound is not None and (r.x0 < bound.x0 - 0.5 or r.x1 > bound.x1 + 0.5)
 
+    # ── 두 울타리는 **다른 정책**이다 (2026-08-20 병합) ──────────────────
+    #   `bound`(기출) — 가로지르는 것을 후보에서도 완비 검사에서도 뺀다.
+    #                   머리띠는 울타리 밖까지 뻗어 절대 못 삼키기 때문이다.
+    #   `limit`(RPM)  — 삼키지만 않을 뿐 **목록에는 남긴다.** 「삼키지 마라」를
+    #                   「없는 셈 쳐라」로 만들면 벽이 발문을 반으로 잘라도
+    #                   조용히 통과한다(2026-08-19 교훈).
+    # 둘 다 기본값이 `None` 이라 서로의 경로를 안 건드린다. 순서는 `bound` 가
+    # 먼저다 — `bleed` 를 좁힌 뒤 그것을 다시 `limit` 로 자른다.
+    # ── `limit` — **넘을 수 없는 벽** (「본문이 말하는 자리」 폴백이 준다) ──
+    # 라벨 되찾기·완비 검사의 «삼키기»가 이 밖으로 나가려 하면 **삼키지 않는다.**
+    # 그러면 「못 삼키면 오려내지 않는다」 불변식이 그대로 살아, 벽을 가로지르는
+    # 요소가 하나라도 있으면 이 함수는 `None` 을 낸다.
+    # ⚠️ **`span_rects`(완비 검사가 볼 목록)는 `bleed` 그대로 모은다.** 벽 밖이라고
+    #    빼 두면 「삼키지 마라」가 「없는 셈 쳐라」가 되어(2026-08-19 교훈), 벽이
+    #    발문을 반으로 잘라도 조용히 통과한다.
+    room = (bleed & limit) if limit is not None else bleed
+
+
     # ── 발문 줄과 그림 라벨을 가른다 ────────────────────────────────────
     # 줄 단위로 본다. span 단위는 너무 짧아(`의 `, `2`) 본문 어디에나 있고,
     # 블록 단위는 너무 길어(폭 236pt) 라벨을 통째로 삼킨다.
     label_rects: list[fitz.Rect] = []
     label_text: dict[int, str] = {}
+    #: 벽 밖에 남은 «발문이 아닌 글자». 칸에 닿으면 그 문항은 버린다(아래).
+    outside: list[tuple[fitz.Rect, str]] = []
     span_rects: list[fitz.Rect] = []
     #: 라벨이 **아니라고 판정된** 조각 — 본문에 있는 발문 조각과 지면 문법(선택지·배점).
     #: 둘 다 「그림이 아니다」라고 이미 가려낸 것들이라, 삼키면 안 되는 것들이다.
@@ -482,7 +566,7 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
             if not ln_rect.is_empty and not (ln_rect & bleed).is_empty:
                 text_lines.append(ln_rect)
             for sp in ln.get("spans", []):
-                sr = fitz.Rect(*sp["bbox"])
+                sr = span_rect(sp, tight=limit is not None)
                 # **`box` 가 아니라 `bleed` 로 거른다.** 라벨은 발문 상자 밖에 있을 때가
                 # 많다 — 실측 `019fd1da-460b` 의 `D` `C` 는 상자 오른쪽 5.4pt 밖이라
                 # 상자로 거르면 통째로 사라지고, 인쇄물에 꼭짓점 이름이 반만 나온다.
@@ -519,6 +603,14 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
                 if line_is_syntax:
                     _t("라벨:지면문법(선택지·배점)")
                     avoid_spans.append(ln_rect)
+                    continue
+                # 벽 밖의 글자는 **라벨로 끌어오지 않는다.** 끌어오면 띠가 벽을
+                # 넘어 자라고, 그 순간 발문 쪽으로 되돌아간다.
+                # 다만 **없는 셈 치지도 않는다** — 발문이 아닌 글자(그림 라벨 모양)가
+                # 벽 밖에 남아 칸에 닿아 있으면, 그건 **못 가른 것**이다. 아래에서 본다.
+                if limit is not None and not room.contains(sr):
+                    outside.append((sr, "".join(
+                        c["c"] for c in sp.get("chars", []) if "c" in c)))
                     continue
                 label_rects.append(sr)
                 label_text[id(sr)] = raw_txt
@@ -559,7 +651,7 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
             else:
                 _t("이미지:상자밖")
             continue
-        core.append(r & bleed)
+        core.append(r & room)
         core_raw.append(r)
         _t("이미지:후보")
 
@@ -592,7 +684,7 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
         if is_inside_text(r):
             _t("획:글자속")
             continue
-        core.append(r & bleed)
+        core.append(r & room)
         core_raw.append(r)
         _t("획:후보")
         if trace is not None:
@@ -613,6 +705,14 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
     out = core[0]
     for r in core[1:]:
         out |= r
+    #: 라벨을 들이기 **전**의 잉크 덩어리. 벽 밖 검사가 이것을 기준으로 본다 —
+    #: 자른 자리는 늘 글자 끝에 **바짝** 붙어 있어서, 라벨까지 들인 `out` 으로 재면
+    #: 벽 바로 밖의 발문 조각이 늘 «닿았다»가 된다.
+    ink = fitz.Rect(out)
+    # 「본문이 말하는 자리」 폴백이 이 잉크를 받아 벽을 세운다. 그림을 찾는 규칙을
+    # 거기 다시 쓰면 두 곳이 갈라지고, 갈라지면 같이 눈이 먼다.
+    if ink_out is not None:
+        ink_out.append(fitz.Rect(ink))
 
     # ── 라벨을 되찾는다 — 그림 덩어리에 «닿는» 것만 ──────────────────────
     # 발문 줄은 위에서 이미 뺐으므로, 여기서는 간격을 넉넉히 줘도 발문이 안 들어온다.
@@ -745,7 +845,7 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
             if out.contains(t) or (t & out).is_empty:
                 continue
             merged = out | t
-            if not bleed.contains(merged):
+            if not room.contains(merged):
                 continue
             out = merged
             grew = True
@@ -760,6 +860,26 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
                 )
             return None
 
+    # ── 벽 밖에 **그림 재료가 남았나** ──────────────────────────────────
+    # 벽은 발문을 막으려고 세운 것이지 그림을 자르려고 세운 것이 아니다. 발문이 아닌
+    # 글자(꼭짓점 이름·치수)가 벽 밖에 남아 칸에 **닿아** 있으면, 그건 「가르지 못한
+    # 자리」다 — 그대로 오리면 라벨 없는 그림이 조용히 나간다. **버린다.**
+    # (공백뿐인 조각은 지면에 안 보이므로 세지 않는다.)
+    for t, txt in outside:
+        if not txt.strip():
+            continue
+        if _touches(ink, t, txt):
+            return None
+        # **눈금 숫자는 라벨 간격으로 안 닿는다.** 상자그림·좌표평면의 눈금은 그림에서
+        # 10pt 넘게 떨어져 있어 위 검사를 통과해 버린다. 그런데 그것이 벽 밖에 남은
+        # 채로 오려내면 **눈금 없는 상자그림**이 나간다 — 「35개 이하」를 묻는 문항인데
+        # 눈을 대 볼 자가 없다(실측 3-2 p109 `0627`, 육안으로 잡았다).
+        # 안에서 눈금을 되찾는 규칙(`AXIS_GAP`)과 **같은 거리**를 쓴다.
+        if NUMERIC.match(txt.strip()) and max(
+            ink.y0 - t.y1, t.y0 - ink.y1, ink.x0 - t.x1, t.x0 - ink.x1, 0
+        ) <= AXIS_GAP:
+            return None
+
     # 쪽 밖으로는 못 나간다. 발문 상자로는 자르지 않는다(bleed 참조).
     out = out & page.rect
     # 너무 작으면 그림이 아니라 잡티다(밑줄 한 토막·점 하나).
@@ -767,6 +887,192 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
         _t("버림:너무작다")
         return None
     _t("찾음")
+    return out
+
+
+def stem_direction(text: str) -> tuple[str | None, str | None]:
+    """본문이 그림의 자리를 말하는가 — 말한다면 **어느 축**인가.
+
+    둘 다 나오면(「아래 그림 … 오른쪽 그림」) **고르지 않는다.** 짐작해서 가르면
+    반대 축으로 잘라 놓고도 조용히 통과할 수 있다 — 판정 불가로 남기고 보고한다.
+    """
+    hit = [(axis, word) for axis, word, rx in STEM_DIRECTION if rx.search(text)]
+    if len(hit) != 1:
+        return None, None
+    return hit[0]
+
+
+def span_boxes(raw, region: fitz.Rect, stem_key: str,
+               propagate: bool = True) -> list[tuple[fitz.Rect, bool]]:
+    """구역에 걸친 **모든** 글자 조각과 「지면 글자인가」 — 판정은 **여기 한 곳뿐**이다.
+
+    셋 중 하나면 지면 글자다.
+
+    ㉠ DB 본문에 들어 있는 조각 — 발문·보기 문장 (`figure_rect` 와 **같은 열쇠**)
+    ㉡ 선택지 번호 `①`~ — 시험지 자신의 서식이라 그림에 있을 수 없다
+    ㉢ 한글이 든 조각 — 문장은 한글이 있고 그림 라벨(`A` `16 cm` `110°`)은 없다
+
+    ㉠ 만으로는 모자란다: 「① `AC=DF`(윗줄 표기)」 같은 보기는 열쇠가 비어 본문
+    대조에 안 걸리는데(한글·숫자가 없다) **분명히 지면 글자**다. 그것을 빼먹으면
+    띠가 선택지까지 삼키고, 그러면 선택지 번호 가드가 그 문항을 버린다.
+
+    ⚠️ 한글이 든 그림 라벨(`(회)` `정면`)은 여기서 지면 글자로 잡힌다. 그러면 벽이
+       그 앞에서 서고, 벽 밖에 남은 그것이 그림에 닿아 있으면 **오려내지 않는다**.
+       못 가르는 것은 **버리는 쪽**으로 둔다 — 잘린 그림은 지면에서 티가 안 난다.
+
+    상자는 **보이는 글자에 바짝 조인다**(`span_rect`). 안 조이면 꼬리 공백·제어
+    글자까지 글자로 세어, 벽을 세울 자리가 그림 쪽으로 밀려간다.
+    """
+    out: list[tuple[fitz.Rect, bool]] = []
+    for b in raw.get("blocks", []):
+        if b.get("type") != 0:
+            continue
+        for ln in b.get("lines", []):
+            row: list[tuple[fitz.Rect, bool]] = []
+            for sp in ln.get("spans", []):
+                sr = span_rect(sp, tight=True)
+                if sr.is_empty:
+                    continue
+                txt = "".join(c["c"] for c in sp.get("chars", []) if "c" in c)
+                k = content_key(txt)
+                is_text = (
+                    (len(k) >= STEM_LINE_CHARS_SPAN
+                     and longest_common_run(k, stem_key) >= STEM_LINE_CHARS_SPAN)
+                    or bool(EXAM_SYNTAX.search(txt))
+                    or bool(_HANGUL.search(txt))
+                )
+                row.append((sr, is_text))
+            # **한 줄에 지면 글자가 하나라도 있으면 그 줄은 통째로 지면 글자다.**
+            # 발문의 수식 토막(`sABC=`)은 셋 어디에도 안 걸리는데(한글도 숫자도
+            # 선택지 번호도 없다) 분명히 발문이다 — 실측 2-2 p58 `0448` 은 그런 줄
+            # 둘이 그림 **아래**를 지나가서, 벽이 거기서 안 서고 칸이 발문을 삼켰다.
+            # 줄로 보면 그림 라벨이 발문 줄에 얹힌 배치에서 라벨을 잃을 수 있는데,
+            # 그때는 그 라벨이 그림에 닿아 있으므로 «벽 밖» 검사가 그 문항을 버린다.
+            # `propagate=False` 면 줄로 퍼뜨리지 않는다. **지우는 쪽**이 그렇게 쓴다 —
+            # 벽을 세울 때는 줄로 보는 게 옳지만(발문 수식 토막을 잡아야 한다),
+            # **지우는 것은 되돌릴 수 없으므로** 조각이 스스로 지면 글자일 때만 지운다.
+            # 실측 2-2 p75 `0407`: 치수 `12 cm` 의 `cm` 가 소문항 글줄과 한 «줄»로
+            # 묶여 있어, 줄로 퍼뜨리면 그림에서 단위가 지워진다.
+            hit = propagate and any(is_text for _, is_text in row)
+            for sr, is_text in row:
+                if (sr & region).is_empty:
+                    continue
+                out.append((sr, is_text or hit))
+    return out
+
+
+def page_text_rects(raw, region: fitz.Rect, stem_key: str) -> list[fitz.Rect]:
+    """구역의 **지면 글자**만. 판정은 `span_boxes` 한 곳에서 온다."""
+    return [r for r, is_text in span_boxes(raw, region, stem_key) if is_text]
+
+
+def stem_text_bands(page, box: fitz.Rect, stem_key: str, axis: str,
+                    raw=None) -> list[fitz.Rect]:
+    """본문이 말한 축에서 **지면 글자가 안 차지한 띠**들. 벽을 세우기 전에 자리를 좁힌다.
+
+    왜 이것과 `stem_wall` 이 **둘 다** 필요한가 — 실측으로 서로 다른 자리에서 진다.
+
+    · 띠만 쓰면: 글자가 그림을 **감싸고 흐르는** 배치에서 진다. 마지막 줄이 그림
+      아래를 지나 더 멀리 가면, 그 끝에서 자른 선이 그림 한가운데를 지난다
+      (실측 2-2 p46 `0234`).
+    · 벽만 쓰면: 잉크에 **그림이 아닌 것**이 섞였을 때 진다. 「대표문제」 배지의
+      둥근 상자가 그림 9pt 위에 있어 한 덩어리로 붙는다(실측 1-2 p35 `0219`) —
+      그러면 잉크가 발문 자리까지 뻗어 「왼쪽에 글자가 없다」가 된다.
+
+    그래서 **띠마다 벽을 세워 보고**, 띠 없이도 한 번 세워 본다. 나온 칸이 서로
+    다르면 **어느 것이 그 문항의 그림인지 본문이 말해 주지 않는 것**이므로 버린다.
+    """
+    raw = page.get_text("rawdict") if raw is None else raw
+    texts = page_text_rects(raw, box, stem_key)
+    if not texts:
+        return []
+    lo, hi = (box.x0, box.x1) if axis == "x" else (box.y0, box.y1)
+    proj = sorted(
+        (max(lo, r.x0 if axis == "x" else r.y0),
+         min(hi, r.x1 if axis == "x" else r.y1))
+        for r in texts
+    )
+    free: list[tuple[float, float]] = []
+    cur = lo
+    for a0, b0 in proj:
+        if a0 > cur:
+            free.append((cur, a0))
+        cur = max(cur, b0)
+    if cur < hi:
+        free.append((cur, hi))
+
+    out: list[fitz.Rect] = []
+    for a0, b0 in free:
+        # **본문이 말하는 쪽인가.** 「오른쪽 그림」이면 글자가 이 띠 앞쪽에 있어야 한다.
+        if not any((r.x1 if axis == "x" else r.y1) <= a0 + 0.1 for r in texts):
+            continue
+        strip = (fitz.Rect(a0, page.rect.y0, b0, page.rect.y1) if axis == "x"
+                 else fitz.Rect(page.rect.x0, a0, page.rect.x1, b0))
+        out.append(strip & page.rect)
+    return out
+
+
+def stem_wall(page, box: fitz.Rect, stem_key: str, ink: fitz.Rect, axis: str,
+              raw=None, bound: fitz.Rect | None = None) -> fitz.Rect | None:
+    """잉크 둘레를 **지면 글자에 닿을 때까지** 넓힌 벽. 못 세우면 `None`.
+
+    ## 왜 한 줄로 자르지 않나
+
+    처음엔 본문이 말한 축으로 상자를 **한 번 잘랐다**(「오른쪽」이면 글자 끝에서
+    세로로). 그런데 RPM 은 글자가 그림을 **감싸고 흐른다** — 실측 2-2 p46 `0234` 는
+    발문 넉 줄이 그림 왼쪽에 있고 **마지막 줄이 그림 아래를 지나** 더 오른쪽까지 간다.
+    그 줄 끝에서 세로로 자르면 자르는 선이 **그림 한가운데**를 지난다. 한 축으로는
+    안 갈리는 배치이지 그림이 없는 게 아니다.
+
+    그래서 자를 자리를 «고르지» 않고 **잉크에서 밖으로 자란다**: 네 방향 각각,
+    그 방향에서 **처음 만나는 지면 글자** 앞에서 멈춘다. 나란한 글자만 막는다
+    (어긋난 글자는 그 방향을 못 막는다) — 그래서 감싸고 흐르는 글자도 제자리에서 멈춘다.
+
+    ## ⛔ 벽을 «글자 사이로 밀어 넣는» 판은 지웠다
+
+    벽이 글자를 반으로 가를 때 안팎으로 밀어 맞추는 판을 만들어 돌려 봤다. **변이
+    시험에서 통째로 초록이었다** — 지우고 돌려도 회수 27건이 한 장도 안 바뀐다.
+    조각 상자를 글자에 조이고(`span_rect`) 줄 단위로 지면 글자를 퍼뜨리고 나면
+    벽이 글자 한가운데 서는 일이 없어졌기 때문이다. 그리고 그렇게 서는 배치는
+    밀어서 될 일이 아니었다 — 실측 `019fd1db-748f` 은 꼭짓점 `H` 와 머리글
+    마지막 줄이 1.8pt 겹쳐서, 안팎 두 요구가 맞부딪쳐 벽이 두 값을 오갔다.
+    네모 하나로 못 가르는 배치는 **버리는 쪽**이 맞다(완비 검사가 버린다).
+
+    ## 본문이 말한 쪽에 글자가 있어야 한다
+
+    「오른쪽 그림」이면 **왼쪽에 글자가 있어서** 왼쪽 벽이 서야 한다. 아무것도 안
+    막았다면 그 배치가 아니다 — 낱말이 가리킨 것과 지면이 다르므로 **버린다.**
+    """
+    raw = page.get_text("rawdict") if raw is None else raw
+    bleed = fitz.Rect(box.x0 - BOX_BLEED, box.y0 - BOX_BLEED,
+                      box.x1 + BOX_BLEED, box.y1 + BOX_BLEED) & page.rect
+    if bound is not None:
+        bleed &= bound
+        if bleed.is_empty or not bleed.contains(ink):
+            return None
+    spans = span_boxes(raw, bleed, stem_key)
+    texts = [r for r, is_text in spans if is_text]
+    side = [r for r in texts if r.y0 < ink.y1 and r.y1 > ink.y0]   # 옆으로 나란한 글자
+    over = [r for r in texts if r.x0 < ink.x1 and r.x1 > ink.x0]   # 위아래로 나란한 글자
+    wall = [
+        max([r.x1 for r in side if r.x1 <= ink.x0], default=bleed.x0),
+        max([r.y1 for r in over if r.y1 <= ink.y0], default=bleed.y0),
+        min([r.x0 for r in side if r.x0 >= ink.x1], default=bleed.x1),
+        min([r.y0 for r in over if r.y0 >= ink.y1], default=bleed.y1),
+    ]
+    # 미리 자른 자리(`bound`)도 벽이다 — 그 자리 역시 **글자가 정한** 것이다.
+    blocked = [wall[i] != v for i, v in enumerate((bleed.x0, bleed.y0, bleed.x1, bleed.y1))]
+    if bound is not None:
+        for i in range(4):
+            blocked[i] = blocked[i] or bound[i] == bleed[i]
+    if axis == "x" and not blocked[0]:
+        return None
+    if axis == "y" and not blocked[1]:
+        return None
+
+    out = fitz.Rect(*wall) & bleed
+    if out.is_empty or not out.contains(ink):
+        return None
     return out
 
 
@@ -787,6 +1093,10 @@ def main() -> None:
     # 기본은 꺼짐 — 회수 280건을 다시 흔들지 않는다(`thin_pt` 와 같은 이유).
     ap.add_argument("--widen-fallback", action="store_true",
                     help="보통 상자로 **못 찾았을 때만** 띠를 쪽 오른쪽 끝까지 넓혀 다시 찾는다")
+    # 기본은 꺼짐 — 켜지 않으면 동작이 한 바이트도 안 바뀐다(md5 로 검산한다).
+    ap.add_argument("--stem-split", action="store_true",
+                    help="칸에 **발문이 들어왔을 때만** 본문이 말하는 축(「오른쪽 그림」·"
+                         "「아래 그림」)으로 상자를 갈라 다시 찾는다")
     a = ap.parse_args()
 
     plan_path = pathlib.Path(a.plan)
@@ -879,107 +1189,191 @@ def main() -> None:
             avoid = [fitz.Rect(*a) for a in it.get("avoid", [])]
             # 「삼키지 말 것」과 「들어오면 버릴 것」은 **다른 목록**이다 — 계획 주석 참조.
             forbid = [fitz.Rect(*a) for a in it.get("forbid", avoid)]
-            fig = figure_rect(page, box, db_key, avoid=avoid)
+            def attempt(search: fitz.Rect, *, limit=None, widened: bool = False,
+                        ink_out=None):
+                """상자 하나로 오려내 본다 — `(칸, None)` 또는 `(None, 사유)`.
+
+                검사를 **한 벌만** 둔다. 폴백마다 검사를 새로 쓰면 두 벌이 갈라지고,
+                갈라지면 같이 눈이 먼다(이 파일이 여러 번 값을 치른 자리다).
+                """
+                fig = figure_rect(page, search, db_key, avoid=avoid, limit=limit,
+                                  ink_out=ink_out)
+                if fig is None:
+                    return None, "문항 안에서 그림을 못 찾았다"
+                rect = fitz.Rect(
+                    fig.x0 - PAD, fig.y0 - PAD, fig.x1 + PAD, fig.y1 + PAD
+                ) & page.rect
+                # 여백(PAD) 때문에 **번호 배지에 새로 닿았다면** 그만큼 물러선다.
+                # 그림 자체가 배지에 닿은 것이 아니라 여백이 닿은 것이므로 자를 것도 없다.
+                for av in avoid:
+                    if not (av & fig).is_empty or (av & rect).is_empty:
+                        continue
+                    if av.x1 <= fig.x0:
+                        rect.x0 = max(rect.x0, av.x1 + 0.2)
+                    elif av.x0 >= fig.x1:
+                        rect.x1 = min(rect.x1, av.x0 - 0.2)
+                    elif av.y1 <= fig.y0:
+                        rect.y0 = max(rect.y0, av.y1 + 0.2)
+                    elif av.y0 >= fig.y1:
+                        rect.y1 = min(rect.y1, av.y0 - 0.2)
+
+                # 여백(PAD)이 **글자에 닿으면** 그쪽은 여백을 버린다. 벽에 바짝 붙여
+                # 자른 칸이라 2pt 여백이 옆 줄의 머리에 닿는 일이 있다 — 실측
+                # `019fd1db-a826` 은 발문 꼬리 「시오」의 윗머리 1.5pt 를 달고 나왔다.
+                # (완비 검사는 여백을 **붙이기 전**의 칸을 보므로 이 부류를 못 본다.
+                #  검사를 여백 뒤로 옮기면 이미 회수한 것들의 좌표가 흔들리므로,
+                #  **벽을 쓰는 길에서만** 여백을 물린다.)
+                if limit is not None:
+                    for attr, strip in (
+                        ("x0", fitz.Rect(rect.x0, rect.y0, fig.x0, rect.y1)),
+                        ("y0", fitz.Rect(rect.x0, rect.y0, rect.x1, fig.y0)),
+                        ("x1", fitz.Rect(fig.x1, rect.y0, rect.x1, rect.y1)),
+                        ("y1", fitz.Rect(rect.x0, fig.y1, rect.x1, rect.y1)),
+                    ):
+                        if strip.is_empty or not page.get_text("text", clip=strip).strip():
+                            continue
+                        setattr(rect, attr, getattr(fig, attr))
+
+                # ── 관문 뒤에도 남는 두 부류를 여기서 막는다 (2026-08-18 육안 검수) ──
+                # ⑴ 발문 침입 — 그림이 아니라 문항을 통째로 오린 것.
+                box_key = content_key(page.get_text("text", clip=rect))
+                run = longest_common_run(box_key, db_key)
+                if run >= STEM_INTRUSION_CHARS:
+                    return None, f"칸에 발문이 {run}자 들어왔다"
+                # ⑵ 문장·선택지 침입 — 그림이 아니라 지면을 오린 것이다.
+                box_text = page.get_text("text", clip=rect)
+                longest_ko = max(
+                    (sum(1 for ch in ln if "가" <= ch <= "힣") for ln in box_text.splitlines()),
+                    default=0,
+                )
+                if longest_ko >= SENTENCE_KO:
+                    return None, f"칸에 문장이 들어왔다 (한 줄 한글 {longest_ko}자)"
+                if EXAM_SYNTAX.search(box_text):
+                    return None, "칸에 선택지 번호가 들어왔다"
+                # ⑶ 옆 문항 침입 — 다른 문항의 좌표 상자를 덮었다.
+                clash = None
+                for b in by_page.get((pathlib.Path(pdf).name, int(it["page"])), []):
+                    if b["problemId"] == it["problemId"]:
+                        continue
+                    other = fitz.Rect(*b["rect"])
+                    inter = other & rect
+                    if not inter.is_empty and inter.get_area() > NEIGHBOR_OVERLAP * other.get_area():
+                        clash = b["externalId"]
+                        break
+                if clash is not None:
+                    return None, f"옆 문항 상자를 덮었다 ({clash[:13]})"
+                # ⑷ 지면 글자 침입 — 계획이 「여기는 그림이 아니다」로 짚어 준 자리
+                #    (문항 번호 배지·발문 낱말)가 칸에 들어왔다면 **버린다.**
+                #    막는 것과 세는 것을 같은 근거(계획이 준 `avoid`)로 둔다.
+                # ⚠️ **면적 비율로 재면 안 된다.** 네 자리 배지의 마지막 한 글자만
+                #    들어와도 비율은 25% 라 통과한다 — 실측으로 초록 `7`·`2` 가 그림 옆에
+                #    그대로 찍혔다. 사람 눈에 보이는 것은 비율이 아니라 **글자 조각의 크기**다.
+                if any(
+                    (av & rect).width >= INTRUSION_W and (av & rect).height >= INTRUSION_H
+                    for av in forbid
+                    if not (av & rect).is_empty
+                ):
+                    return None, "칸에 지면 글자가 들어왔다 (번호 배지·발문)"
+
+                # ── 폴백으로 나온 칸에만 대는 가드 (상수 주석 참조) ──
+                if widened:
+                    if rect.width > COLUMN_W:
+                        return None, f"넓힌 칸이 한 단보다 넓다 ({rect.width:.0f}pt)"
+                    bare = "".join(page.get_text("text", clip=rect).split())
+                    if BADGE_ONLY.match(bare):
+                        return None, f"칸에 문항 번호 배지만 있다 ({bare})"
+                return rect, None
+
+            # ── ① 계획이 준 상자 그대로 ─────────────────────────────────
+            rect, why = attempt(box)
             widened = False
-            if fig is None and a.widen_fallback:
-                # 「오른쪽 그림」 — 같은 세로 띠를 쪽 오른쪽 끝까지 넓혀 한 번 더 본다.
+            split_axis: str | None = None
+            band_why: list[str] = []
+            src = box
+            # ── ② 「오른쪽 그림」 넓힘 폴백 — 그림을 **못 찾았을 때만** ──
+            if why == "문항 안에서 그림을 못 찾았다" and a.widen_fallback:
+                # 같은 세로 띠를 쪽 오른쪽 끝까지 넓혀 한 번 더 본다.
                 # **여기 들어오는 것은 이미 실패한 문항뿐**이므로 성공분은 안 흔들린다.
                 wide = fitz.Rect(box.x0, box.y0,
                                  page.rect.x1 - WIDEN_RIGHT_MARGIN, box.y1) & page.rect
                 if wide.width > box.width + 1:
-                    fig = figure_rect(page, wide, db_key, avoid=avoid)
-                    widened = fig is not None
-            if fig is None:
-                fail.append(
-                    {"externalId": it["externalId"], "이유": "문항 안에서 그림을 못 찾았다"}
-                )
-                continue
-            rect = fitz.Rect(
-                fig.x0 - PAD, fig.y0 - PAD, fig.x1 + PAD, fig.y1 + PAD
-            ) & page.rect
-            # 여백(PAD) 때문에 **번호 배지에 새로 닿았다면** 그만큼 물러선다.
-            # 그림 자체가 배지에 닿은 것이 아니라 여백이 닿은 것이므로 자를 것도 없다.
-            for av in avoid:
-                if not (av & fig).is_empty or (av & rect).is_empty:
-                    continue
-                if av.x1 <= fig.x0:
-                    rect.x0 = max(rect.x0, av.x1 + 0.2)
-                elif av.x0 >= fig.x1:
-                    rect.x1 = min(rect.x1, av.x0 - 0.2)
-                elif av.y1 <= fig.y0:
-                    rect.y0 = max(rect.y0, av.y1 + 0.2)
-                elif av.y0 >= fig.y1:
-                    rect.y1 = min(rect.y1, av.y0 - 0.2)
+                    rect, why = attempt(wide, widened=True)
+                    widened = rect is not None
+                    src = wide
+            # ── ③ 「본문이 말하는 자리」 폴백 — **발문이 들어왔을 때만** ──
+            #    상수 `STEM_DIRECTION` 주석 참조. 이 길에 들어오는 것도 **이미 실패한
+            #    문항뿐**이라 성공분은 안 흔들린다(md5 로 검산한다).
+            if rect is None and a.stem_split and why.startswith("칸에 발문이"):
+                axis, word = stem_direction(content.get(it["problemId"], ""))
+                if axis is None:
+                    # **판정 불가를 반드시 찍는다.** 조용히 0이 되면 「본문이 자리를
+                    # 말하지 않는 부류」가 있다는 사실 자체가 안 보인다.
+                    why += " — 본문이 자리를 말하지 않는다"
+                else:
+                    src2, wide2 = src, widened
+                    if axis == "x":
+                        # 「오른쪽 그림」인데 상자가 **글자 열만** 덮은 배치가 있다 —
+                        # 실측 `019fd1d8-5d8b` 은 상자 오른쪽 끝(233.0)이 발문 끝
+                        # (232.9)과 같고 그림은 그 밖에 있다. 그럴 때는 넓힘 폴백과
+                        # **같은 자리**까지 넓혀서 찾는다. 넓힘에 걸린 가드
+                        # (한 단보다 넓다 · 번호 배지뿐)를 그대로 쓴다.
+                        # ⚠️ 왼쪽 단은 **지면 가운데에서 멈춘다.** 끝까지 넓히면 옆 단
+                        #    그림이 딸려 올 수 있다 — 두 단 지면이라 가운데가 경계다.
+                        edge = (page.rect.x1 - WIDEN_RIGHT_MARGIN
+                                if src.x1 > COLUMN_W else COLUMN_W)
+                        if edge > src.x1 + 1:
+                            src2 = fitz.Rect(src.x0, src.y0, edge, src.y1) & page.rect
+                            wide2 = True
+                    got: dict[tuple, fitz.Rect] = {}
+                    last = "가를 자리가 없다"
+                    for pre in [None, *stem_text_bands(page, src2, db_key, axis)]:
+                        ink: list[fitz.Rect] = []
+                        attempt(src2, limit=pre, widened=wide2, ink_out=ink)
+                        if not ink:
+                            continue
+                        wall = stem_wall(page, src2, db_key, ink[0], axis, bound=pre)
+                        if wall is None:
+                            continue
+                        r2, w2 = attempt(src2, limit=wall, widened=wide2)
+                        band_why.append(
+                            f"[{wall.x0:.0f},{wall.y0:.0f},{wall.x1:.0f},{wall.y1:.0f}] "
+                            + (w2 or "성공")
+                        )
+                        if r2 is None:
+                            last = w2
+                            continue
+                        got[tuple(round(v, 1) for v in r2)] = r2
+                    if len(got) == 1:
+                        rect, why, split_axis = next(iter(got.values())), None, word
+                    elif got:
+                        # 「수가 맞는다」를 「짝이 맞는다」로 읽지 않는다. 길이 서로
+                        # **다른 칸**을 가리키면 어느 것이 이 문항의 그림인지
+                        # 본문이 말해 주지 않는다 — 버린다.
+                        why += f" — 본문방향({word})으로 갈랐더니 칸이 {len(got)}개다"
+                    else:
+                        why += f" — 본문방향({word})으로 갈라도 {last}"
 
-            # ── 관문 뒤에도 남는 두 부류를 여기서 막는다 (2026-08-18 육안 검수) ──
-            # ⑴ 발문 침입 — 그림이 아니라 문항을 통째로 오린 것.
-            box_key = content_key(page.get_text("text", clip=rect))
-            run = longest_common_run(box_key, db_key)
-            if run >= STEM_INTRUSION_CHARS:
-                fail.append({"externalId": it["externalId"],
-                             "이유": f"칸에 발문이 {run}자 들어왔다"})
+            if rect is None:
+                rec_fail = {"externalId": it["externalId"], "이유": why}
+                if band_why:
+                    rec_fail["띠"] = band_why
+                fail.append(rec_fail)
                 continue
-            # ⑵ 문장·선택지 침입 — 그림이 아니라 지면을 오린 것이다.
-            box_text = page.get_text("text", clip=rect)
-            longest_ko = max(
-                (sum(1 for ch in ln if "가" <= ch <= "힣") for ln in box_text.splitlines()),
-                default=0,
-            )
-            if longest_ko >= SENTENCE_KO:
-                fail.append({"externalId": it["externalId"],
-                             "이유": f"칸에 문장이 들어왔다 (한 줄 한글 {longest_ko}자)"})
-                continue
-            if EXAM_SYNTAX.search(box_text):
-                fail.append({"externalId": it["externalId"], "이유": "칸에 선택지 번호가 들어왔다"})
-                continue
-            # ⑶ 옆 문항 침입 — 다른 문항의 좌표 상자를 덮었다.
-            clash = None
-            for b in by_page.get((pathlib.Path(pdf).name, int(it["page"])), []):
-                if b["problemId"] == it["problemId"]:
-                    continue
-                other = fitz.Rect(*b["rect"])
-                inter = other & rect
-                if not inter.is_empty and inter.get_area() > NEIGHBOR_OVERLAP * other.get_area():
-                    clash = b["externalId"]
-                    break
-            if clash is not None:
-                fail.append({"externalId": it["externalId"],
-                             "이유": f"옆 문항 상자를 덮었다 ({clash[:13]})"})
-                continue
-            # ⑷ 지면 글자 침입 — 계획이 「여기는 그림이 아니다」로 짚어 준 자리
-            #    (문항 번호 배지·발문 낱말)가 칸에 들어왔다면 **버린다.**
-            #    막는 것과 세는 것을 같은 근거(계획이 준 `avoid`)로 둔다.
-            # ⚠️ **면적 비율로 재면 안 된다.** 네 자리 배지의 마지막 한 글자만
-            #    들어와도 비율은 25% 라 통과한다 — 실측으로 초록 `7`·`2` 가 그림 옆에
-            #    그대로 찍혔다. 사람 눈에 보이는 것은 비율이 아니라 **글자 조각의 크기**다.
-            if any(
-                (av & rect).width >= INTRUSION_W and (av & rect).height >= INTRUSION_H
-                for av in forbid
-                if not (av & rect).is_empty
-            ):
-                fail.append({"externalId": it["externalId"],
-                             "이유": "칸에 지면 글자가 들어왔다 (번호 배지·발문)"})
-                continue
-
-            # ── 폴백으로 나온 칸에만 대는 가드 (상수 주석 참조) ──
-            if widened:
-                if rect.width > COLUMN_W:
-                    fail.append({"externalId": it["externalId"],
-                                 "이유": f"넓힌 칸이 한 단보다 넓다 ({rect.width:.0f}pt)"})
-                    continue
-                bare = "".join(page.get_text("text", clip=rect).split())
-                if BADGE_ONLY.match(bare):
-                    fail.append({"externalId": it["externalId"],
-                                 "이유": f"칸에 문항 번호 배지만 있다 ({bare})"})
-                    continue
 
             out.parent.mkdir(parents=True, exist_ok=True)
             pix = page.get_pixmap(clip=rect, dpi=a.dpi)
             pix.save(str(out))
-            rec = {"problemId": it["problemId"], "publicPath": to_public(out)}
+            # **칸 좌표를 남긴다.** 앞 트랙이 「고치려면 결과에 칸 좌표를 남겨야
+            # 한다」고 적어 둔 자리다(§3.14) — 좌표가 없으면 오려낸 뒤에 「이 칸이
+            # 옆 문항을 덮었나」를 **다시 물을 수가 없다.**
+            rec = {"problemId": it["problemId"], "publicPath": to_public(out),
+                   "칸": [round(v, 2) for v in rect],
+                   "쪽": int(it["page"]), "책": pathlib.Path(pdf).name}
             if widened:
                 # 폴백으로 나온 것은 **따로 표시한다** — 육안 검수에서 이것부터 본다.
                 rec["넓힘폴백"] = True
+            if split_axis:
+                rec["본문방향"] = split_axis
             ok.append(rec)
     finally:
         for d in docs.values():
