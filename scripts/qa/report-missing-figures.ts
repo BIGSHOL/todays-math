@@ -23,10 +23,11 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { PrismaClient } from "@prisma/client";
 
 import {
-  classifyFigureNeed,
+  classifyFigure,
   MENTIONS_FIGURE_WHERE,
   NO_FIGURE_WHERE,
 } from "./missingFigureRule";
+import { REVIEWED_UNCLASSIFIED } from "./reviewedUnclassified";
 
 const prisma = new PrismaClient();
 
@@ -70,7 +71,7 @@ async function main() {
     불필요: benign,
     미분류: unclassified,
   };
-  for (const r of rows) bucket[classifyFigureNeed(r.content)].push(r);
+  for (const r of rows) bucket[classifyFigure(r.content)].push(r);
 
   const printable = (rs: Row[]) =>
     rs.filter((r) => r.directUseAllowed && r.reviewStatus === "approved")
@@ -90,15 +91,30 @@ async function main() {
   console.log(`■ 본문 오염 (\`[그림]\` 자국)  ${contaminated.length}건`);
   console.log(`   · 지금 출제 가능           ${printable(contaminated)}건`);
   console.log(`□ 그림이 필요 없는 것        ${benign.length}건`);
+  // ⚠️ 「미분류가 0이 아니면 목록이 눈멀었다」는 경고가 쓸모 있으려면 **아직 아무도 안 본 것**만
+  //    켜져야 한다. 이미 사람이 보고 판정한 것까지 세면 경고가 늘 켜져 있고, 늘 켜진 경고는
+  //    아무도 안 본다(2026-08-19).
+  const seen = unclassified.filter(
+    (r) => REVIEWED_UNCLASSIFIED[r.externalId ?? r.id] !== undefined,
+  );
+  const unseen = unclassified.filter(
+    (r) => REVIEWED_UNCLASSIFIED[r.externalId ?? r.id] === undefined,
+  );
+  console.log(`? 미분류                     ${unclassified.length}건`);
   console.log(
-    `? 미분류 — 목록이 눈멀었는지 확인해야 한다  ${unclassified.length}건`,
+    `   · 사람이 이미 보고 판정함  ${seen.length}건 (reviewedUnclassified.ts)`,
+  );
+  console.log(
+    `   · 아직 아무도 안 봤다      ${unseen.length}건  ← 0 이어야 한다`,
   );
 
-  if (unclassified.length > 0) {
+  if (unseen.length > 0) {
     console.log("\n미분류 표본 (사람이 봐야 한다):");
-    const step = Math.max(1, Math.floor(unclassified.length / 10));
-    for (let i = 0; i < unclassified.length && i / step < 10; i += step) {
-      console.log(`  · ${flat(unclassified[i]!.content).slice(0, 120)}`);
+    const step = Math.max(1, Math.floor(unseen.length / 10));
+    for (let i = 0; i < unseen.length && i / step < 10; i += step) {
+      console.log(
+        `  · [${unseen[i]!.externalId ?? unseen[i]!.id}] ${flat(unseen[i]!.content).slice(0, 110)}`,
+      );
     }
   }
 
