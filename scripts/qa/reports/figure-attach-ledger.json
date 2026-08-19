@@ -1,0 +1,268 @@
+{
+ "note": "되돌리기 자료. `before` 가 붙이기 전 값이다.",
+ "rows": [
+  {
+   "id": "395fa629-1bb9-434d-9029-6897d34746d5",
+   "e": "2564",
+   "q": 14,
+   "before": [],
+   "after": [
+    "/figures/2564/hwp-q14.png"
+   ],
+   "plan": "scripts/qa/reports/figure-recover-plan.json"
+  },
+  {
+   "id": "5aa09fa7-2160-4e58-ad50-7599d1ec377e",
+   "e": "2622",
+   "q": 14,
+   "before": [],
+   "after": [
+    "/figures/2622/hwp-q14.png"
+   ],
+   "plan": "scripts/qa/reports/figure-recover-plan.json"
+  },
+  {
+   "id": "6a579083-ee09-4577-91de-1aa4baa2a4d0",
+   "e": "2622",
+   "q": 16,
+   "before": [],
+   "after": [
+    "/figures/2622/hwp-q16.png"
+   ],
+   "plan": "scripts/qa/reports/figure-recover-plan.json"
+  },
+  {
+   "id": "a9b6e8b0-ccb9-4460-9342-5585d2fc8710",
+   "e": "2622",
+   "q": 6,
+   "before": [],
+   "after": [
+    "/figures/2622/hwp-q06.png"
+   ],
+   "plan": "scripts/qa/reports/figure-recover-plan.json"
+  },
+  {
+   "id": "da5145cc-0b9f-4fce-bfc6-b54c3dda4081",
+   "e": "2633",
+   "q": 3,
+   "before": [],
+   "after": [
+    "/figures/2633/hwp-q03.png"
+   ],
+   "plan": "scripts/qa/reports/figure-recover-plan.json"
+  },
+  {
+   "id": "296bc404-43a4-413a-8404-590426431d42",
+   "e": "4539",
+   "q": 20,
+   "before": [],
+   "after": [
+    "/figures/4539/hwp-q20.png"
+   ],
+   "plan": "scripts/qa/reports/figure-recover-plan.json"
+  },
+  {
+   "id": "708d33dd-87d0-42dd-a2d5-b0283311b4c6",
+   "e": "4539",
+   "q": 10,
+   "before": [],
+   "after": [
+    "/figures/4539/hwp-q10.png"
+   ],
+   "plan": "scripts/qa/reports/figure-recover-plan.json"
+  },
+  {
+   "id": "f1ec1767-4cfb-4f13-b2b1-95996d9ecc6a",
+   "e": "5836",
+   "q": 20,
+   "before": [],
+   "after": [
+    "/figures/5836/hwp-q20.png"
+   ],
+   "plan": "scripts/qa/reports/figure-recover-plan.json"
+  },
+  {
+   "id": "07f4dd3f-16f4-427d-b3ff-ea1c61ab6bd5",
+   "e": "3624",
+   "q": 13,
+   "before": [],
+   "after": [
+    "/figures/3624/hwppdf-q13.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "22de0ca3-1897-4556-b5dd-fa1d9f4dafc9",
+   "e": "3195",
+   "q": 20,
+   "before": [],
+   "after": [
+    "/figures/3195/hwppdf-q20.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "29a366e9-0769-4dfe-b5b3-9b9e6bb10409",
+   "e": "5866",
+   "q": 8,
+   "before": [],
+   "after": [
+    "/figures/5866/hwppdf-q08.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "303dde09-7e2d-4adf-8f55-e00ddbfd57b6",
+   "e": "5388",
+   "q": 16,
+   "before": [],
+   "after": [
+    "/figures/5388/hwppdf-q16.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "320e05f1-31c4-4808-a6d1-47da8ed5aa2a",
+   "e": "5455",
+   "q": 16,
+   "before": [],
+   "after": [
+    "/figures/5455/hwppdf-q16.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "39457a61-1f08-4829-b1e2-358062e8bc13",
+   "e": "4546",
+   "q": 15,
+   "before": [],
+   "after": [
+    "/figures/4546/hwppdf-q15.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "4a9174dd-5f69-4278-b062-da6a9e9e20ad",
+   "e": "5608",
+   "q": 11,
+   "before": [],
+   "after": [
+    "/figures/5608/hwppdf-q11.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "4ce54c45-198c-45cf-9af0-c478c7d3c225",
+   "e": "5381",
+   "q": 19,
+   "before": [],
+   "after": [
+    "/figures/5381/hwppdf-q19.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "6f15054a-7861-427a-8b80-4c4436c0c44f",
+   "e": "3708",
+   "q": 10,
+   "before": [],
+   "after": [
+    "/figures/3708/hwppdf-q10.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "789f81a4-ed2f-4211-a466-f532896c4eeb",
+   "e": "3613",
+   "q": 19,
+   "before": [],
+   "after": [
+    "/figures/3613/hwppdf-q19.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "7abb1487-701a-4b68-a783-17470934647d",
+   "e": "3572",
+   "q": 17,
+   "before": [],
+   "after": [
+    "/figures/3572/hwppdf-q17.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "7f6c7850-038b-477a-af93-8e9ddef89b5c",
+   "e": "5221",
+   "q": 17,
+   "before": [],
+   "after": [
+    "/figures/5221/hwppdf-q17.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "aef2eda6-44ef-4363-89e8-7c6e4a97d32b",
+   "e": "4235",
+   "q": 13,
+   "before": [],
+   "after": [
+    "/figures/4235/hwppdf-q13.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "f1eeaa3a-f16e-4e26-9671-299a181bf85c",
+   "e": "2761",
+   "q": 10,
+   "before": [],
+   "after": [
+    "/figures/2761/hwppdf-q10.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "f2dfeebd-0236-4bdb-a656-ad6c0707f809",
+   "e": "5204",
+   "q": 7,
+   "before": [],
+   "after": [
+    "/figures/5204/hwppdf-q07.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-result-hwp.json"
+  },
+  {
+   "id": "2fcb40bd-248b-426d-962d-06829ec1f459",
+   "e": "3936",
+   "q": 1,
+   "before": [],
+   "after": [
+    "/figures/3936/tbl-q01.png"
+   ],
+   "plan": "scripts/qa/reports/table-crop-result.json"
+  },
+  {
+   "id": "c9e49b27-c90d-42e6-9cf2-4014206143cb",
+   "e": "5225",
+   "q": 7,
+   "before": [],
+   "after": [
+    "/figures/5225/tbl-q07.png"
+   ],
+   "plan": "scripts/qa/reports/table-crop-result.json"
+  },
+  {
+   "id": "be9b1c36-407d-4d10-bbe0-63a02969d773",
+   "e": "5348",
+   "q": 8,
+   "before": [],
+   "after": [
+    "/figures/5348/tbl-q08.png"
+   ],
+   "plan": "scripts/qa/reports/table-crop-result.json"
+  }
+ ],
+ "기준시각": "2026-08-19T07:13:45.841Z",
+ "적용됨": true,
+ "되돌리기": "ALLOW_SHARED_IMPORT=1 node scripts/figure/attach-hwp-figures.mjs --revert"
+}

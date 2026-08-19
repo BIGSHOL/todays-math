@@ -18,10 +18,15 @@
  * 되살릴 수 없는 것이 여기 남는다(원장님: 그림 쪽은 쓸 수 있는 AI 를 나중에 정한다).
  *
  * 세는 쪽(`scripts/qa/report-missing-figures.ts`)·잠그는 쪽
- * (`scripts/qa/apply-missing-figure-lock.ts`)과 **같은 `classifyFigureNeed`** 를 쓴다.
+ * (`scripts/qa/apply-missing-figure-lock.ts`)과 **같은 `classifyFigure`** 를 쓴다.
  * 목록을 두 벌로 두면 세는 쪽과 막는 쪽이 같이 눈이 먼다.
+ *
+ * ⚠️ `classifyFigureNeed`(앞단만)를 부르면 안 된다. 세는 쪽·잠그는 쪽은 그 뒤에
+ * `refineUnclassified` 를 한 번 더 거치는 `classifyFigure` 를 쓴다 — 미분류 20건을
+ * 눈으로 보고 만든 마무리 판정이고, 그 2건이 **그림 없이 출제 가능**이던 것들이다.
+ * 앞단만 부르면 이 파일만 그 둘을 못 본다(2026-08-19 병합에서 실제로 갈라졌다).
  */
-import { classifyFigureNeed } from "./missingFigureRule";
+import { classifyFigure } from "./missingFigureRule";
 
 /** 판정에 필요한 원본의 최소 형태. */
 export interface FigureBlockOrigin {
@@ -36,7 +41,7 @@ export interface FigureBlockOrigin {
  * 두 갈래 중 하나라도 걸리면 참이다.
  *   ㉠ **원본에 그림이 붙어 있다** — 변형본은 그것을 잃는다. 본문이 그림을 말로 가리키지
  *      않더라도, 그림이 붙어 있었다는 것 자체가 필요했다는 뜻이다. (실측 9,419건 전부 이쪽)
- *   ㉡ **본문이 그림을 지목한다**(`classifyFigureNeed` = 유실) — 원본에 그림이 없어도
+ *   ㉡ **본문이 그림을 지목한다**(`classifyFigure` = 유실) — 원본에 그림이 없어도
  *      참이다. 그런 원본은 이미 깨진 문항이라 변형해도 깨진 것이 하나 더 는다.
  *      (오늘은 0건이다 — 이미 잠긴 856건이 출제 풀에서 빠져서다. 새로 들어올 데이터용 가드다.)
  */
@@ -44,7 +49,7 @@ export function originNeedsFigure(origin: FigureBlockOrigin): boolean {
   const hasFigure =
     origin.figureUrls.length > 0 ||
     (origin.figureSvg !== null && origin.figureSvg !== "");
-  return hasFigure || classifyFigureNeed(origin.content) === "유실";
+  return hasFigure || classifyFigure(origin.content) === "유실";
 }
 
 /** 도형이 필요한데 못 그렸을 때 화면에 보일 사유 — 문구를 두 곳에서 짓지 않는다. */
