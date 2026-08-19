@@ -284,7 +284,6 @@ describe("그림에 기대는 원본은 변형본을 채택할 수 없다 (2026-
     delete rest.id;
     delete rest.createdAt;
     delete rest.updatedAt;
-    // exam-wiring: 테스트 — 픽스처다. 제품 적재 경로가 아니다
     // exam-wiring: 테스트 — 픽스처다. 기출이 아니라 시드 행을 펼쳐 만든 변형 원본이다.
     return prismaTestDouble.problem.create({
       data: {
