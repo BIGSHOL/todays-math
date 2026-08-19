@@ -576,7 +576,8 @@ async function main() {
       );
   }
 
-  // selectProblems — 제품 엔진. 지금 배선은 figureSourceMm 을 안 읽는다.
+  // selectProblems — 제품 엔진. 2026-08-20 부터 figureSourceMm 을 **읽는다**
+  // (findEligibleProblems select · risksTightSeat). 두 팔의 차이가 곧 실효과다.
   let selectNowChanged = 0;
   let selectWiredChanged = 0;
   let selectTrials = 0;
@@ -619,14 +620,13 @@ async function main() {
     });
 
     /**
-     * 「배선된 엔진」은 제품 selectProblems 를 그대로 부르되, 풀에서
-     * mm 를 아는 문항의 **높이 효과가 이미 반영된 것처럼** 보이게
-     * 본문을 조작하지 않는다. 제품이 figureSourceMm 을 안 읽으면
-     * 두 팔이 같아진다 — 그게 지금 배선의 측정이다.
+     * 두 팔 다 제품 `selectProblems` 를 그대로 부른다. 다른 것은 **풀에 mm 을
+     * 싣느냐뿐**이다 — 엔진을 흉내 내지 않는다.
      *
-     * 배선 후 효과를 재려면 assessSeat 로 후순위 집합이 바뀌는 단원에서
-     * 같은 시드로 뽑힌 id 집합을 견준다. 엔진이 mm 을 안 보면 집합이
-     * 같고, 보면 다를 수 있다.
+     * 2026-08-20 이전에는 제품이 `figureSourceMm` 을 아예 안 읽어 두 팔이
+     * 같아졌고, 이 값이 **0** 이었다. 그게 「영향 없음」이 아니라 **값이 안
+     * 흘러간다**는 뜻이었다 — 배선을 고치자 1,300장대가 나왔다. 0 이 나오거든
+     * 정책을 의심하기 전에 **배선부터** 보라.
      */
     for (const u of unitList) {
       if (u.o2f + u.f2o === 0) continue;
@@ -661,18 +661,15 @@ async function main() {
             selectNowChanged += 1;
           }
 
-          // 배선 효과: 후순위 집합이 바뀌면 같은 시드라도 고른 문항이 달라질 수
-          // 있다. 제품 엔진이 mm 을 읽지 않으므로, 여기서는 「후순위 멤버십이
-          // 바뀐 문항이 한 팔에만 뽑혔는가」로 센다 — 엔진을 흉내 내지 않고
-          // 엔진이 고른 id 와 assessSeat 전후 집합을 맞댈 뿐이다.
+          // 상한: 「이 시험지에 판정이 뒤집힌 문항이 실렸다」면 자리가 달라질
+          // 수 있는 후보다. 실제로 달라진 것(idsA !== idsB)보다 늘 크거나 같다 —
+          // 후순위라도 풀이 두꺼우면 엔진이 그대로 고를 수 있기 때문이다.
           const setB = new Set(b.problems.map((p) => p.id));
           const flippedInPaper = [...afterFit, ...afterRisk].some((id) =>
             setB.has(id),
           );
           if (flippedInPaper || idsA !== idsB) {
-            // idsA !== idsB 는 배선이 이미 된 경우. flippedInPaper 는
-            // 「이 시험지에 판정이 바뀐 문항이 실렸다」— 배선되면 자리가 달라질
-            // 후보. 둘을 갈라 찍는다.
+            // 둘을 갈라 찍는다 — 실제로 달라진 것과, 달라질 수 있는 상한.
             wiredDiff += 1;
             selectWiredChanged += 1;
           }
@@ -693,7 +690,7 @@ async function main() {
       `  판정이 바뀐 단원에서 시험 ${selectTrials.toLocaleString()}장`,
     );
     console.log(
-      `  지금 배선(엔진이 mm 무시) 다른 시험 ${selectNowChanged.toLocaleString()}장`,
+      `  mm 를 실은 팔에서 선정이 달라진 시험 ${selectNowChanged.toLocaleString()}장  ← 제품 엔진 실효과`,
     );
     console.log(
       `  판정이 바뀐 문항이 그 시험에 실린 장 ${selectWiredChanged.toLocaleString()}  ← 배선되면 구성이 달라질 수 있는 상한`,

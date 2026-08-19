@@ -68,12 +68,17 @@ export const ITEMS: PrintCheckItem[] = [
       "scripts/qa/mutate-figure-print-size.mjs (변이 20 · 잡힘 18 · 동치 2 · 안 잡힘 0)",
       "docs/planning/tracks/figure-quality-brief.md §9 · §14",
       "docs/planning/tracks/report-figure-print-size.md",
+      "docs/planning/tracks/report-figure-apply.md (적재 전후 실측 · 새로 넘치는 3문항)",
+      "scripts/qa/reports/figure-source-mm-apply.json (되돌리기 원장 8,238행)",
     ],
     scale:
-      "**지금은 0건이다** — 물리 폭을 담을 컬럼(`figure_source_mm`)의 마이그레이션을 만들었지만 " +
-      "적용하지 않았고(공유 DB), 값을 회수하는 일은 `그림벡터` 트랙이 맡는다. " +
-      "값이 들어오는 순간 그림 문항 전량(그림 16,122장)의 지면 크기가 바뀐다. " +
-      "그때 이 항목이 **실물 검수 대상**이 된다.",
+      "🔴 **값이 들어왔다 (2026-08-20, 원장님 확정 「끝까지 — 지면·출제까지」).** " +
+      "`figure_source_mm` 에 **8,238문항 · 그림 9,312장**을 적재했고 조회·인쇄 배선까지 넣었다 — " +
+      "**이 항목은 이제 실제로 종이가 바뀐다.** 그림은 대체로 **작아진다**(문항 높이 중앙 −75px). " +
+      "그림이 있는데 mm 를 모르는 1,490문항은 **종전과 한 픽셀도 같다**(회귀 0)  — ⑤ 가 보는 자리다. " +
+      "넘침 판정 2,655 → 1,034 이고, **3문항이 새로 넘친다**(원본에서 크던 그림이 제 크기를 되찾아서다): " +
+      "중2 다항식의 덧셈과 뺄셈 · 중2 여러 가지 경우의 수(그림 두 장이 나란히 94mm 라 접힌다) · 공통수학2 무리함수(1). " +
+      "바닥값(최소 mm)은 **두지 않기로** 확정했다 — 원본 시험지에 실린 크기 그대로 간다.",
     status: "대기",
     needs:
       "값이 DB 에 들어오기 전에는 `/dev/figure-print-size` 에서 **전후 비교 지면**으로 본다 " +

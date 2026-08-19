@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-19T16:39:04.015Z",
+  "generatedAt": "2026-08-19T23:42:23.618Z",
   "ledger": {
     "total": 16119,
     "withMm": 14391,
     "dropped": 0
   },
   "db": {
-    "all": 47421,
-    "eligible": 44407,
-    "eligibleWithFigures": 9056,
-    "allWithFigures": 9686,
-    "figuresEligible": 9761
+    "all": 47049,
+    "eligible": 44075,
+    "eligibleWithFigures": 9096,
+    "allWithFigures": 9728,
+    "figuresEligible": 9801
   },
   "match": {
     "usable": {
@@ -22,8 +22,8 @@
       "figures": 2
     },
     "none": {
-      "problems": 1177,
-      "figures": 1295
+      "problems": 1217,
+      "figures": 1335
     },
     "urlOdd": {
       "problems": 0,
@@ -47,7 +47,7 @@
       }
     ],
     "nonePrefix": {
-      "rpm": 27,
+      "rpm": 67,
       "hwp-": 1122,
       "hwppdf-": 14,
       "pdf-": 23,
@@ -59,7 +59,7 @@
   "dims": {
     "empty": 15,
     "mismatch": 0,
-    "ok": 9041,
+    "ok": 9081,
     "emptyButMmUsable": 0,
     "mismatchButMmUsable": 0
   },
@@ -216,23 +216,31 @@
   },
   "select": {
     "trials": 2830,
-    "differNow": 1321,
-    "papersThatContainFlipped": 1348,
+    "differNow": 1335,
+    "papersThatContainFlipped": 1363,
     "unitsSample": [
       {
         "grade": "중1",
-        "section": "최대공약수와 최소공배수의 활용",
+        "section": "소인수분해",
         "count": 1,
-        "seedsDifferNow": 3,
-        "seedsDifferIfWired": 3,
+        "seedsDifferNow": 2,
+        "seedsDifferIfWired": 2,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "정수와 유리수",
+        "count": 15,
+        "seedsDifferNow": 2,
+        "seedsDifferIfWired": 2,
         "trials": 20
       },
       {
         "grade": "중1",
         "section": "문자의 사용과 식의 값",
         "count": 6,
-        "seedsDifferNow": 2,
-        "seedsDifferIfWired": 2,
+        "seedsDifferNow": 5,
+        "seedsDifferIfWired": 5,
         "trials": 20
       },
       {
@@ -241,6 +249,14 @@
         "count": 1,
         "seedsDifferNow": 5,
         "seedsDifferIfWired": 5,
+        "trials": 20
+      },
+      {
+        "grade": "중1",
+        "section": "일차방정식의 풀이",
+        "count": 3,
+        "seedsDifferNow": 1,
+        "seedsDifferIfWired": 1,
         "trials": 20
       },
       {
@@ -255,16 +271,16 @@
         "grade": "중1",
         "section": "그래프의 이해",
         "count": 30,
-        "seedsDifferNow": 13,
-        "seedsDifferIfWired": 13,
+        "seedsDifferNow": 11,
+        "seedsDifferIfWired": 11,
         "trials": 20
       },
       {
         "grade": "중1",
         "section": "정비례 관계 y=ax의 그래프",
         "count": 74,
-        "seedsDifferNow": 16,
-        "seedsDifferIfWired": 16,
+        "seedsDifferNow": 15,
+        "seedsDifferIfWired": 15,
         "trials": 20
       },
       {
@@ -279,8 +295,8 @@
         "grade": "중1",
         "section": "각",
         "count": 19,
-        "seedsDifferNow": 16,
-        "seedsDifferIfWired": 16,
+        "seedsDifferNow": 18,
+        "seedsDifferIfWired": 18,
         "trials": 20
       },
       {
@@ -295,8 +311,8 @@
         "grade": "중1",
         "section": "작도",
         "count": 6,
-        "seedsDifferNow": 17,
-        "seedsDifferIfWired": 17,
+        "seedsDifferNow": 16,
+        "seedsDifferIfWired": 16,
         "trials": 20
       },
       {
@@ -311,24 +327,24 @@
         "grade": "중1",
         "section": "다각형",
         "count": 6,
-        "seedsDifferNow": 14,
-        "seedsDifferIfWired": 14,
+        "seedsDifferNow": 9,
+        "seedsDifferIfWired": 9,
         "trials": 20
       },
       {
         "grade": "중1",
         "section": "원과 부채꼴",
         "count": 9,
-        "seedsDifferNow": 18,
-        "seedsDifferIfWired": 18,
+        "seedsDifferNow": 16,
+        "seedsDifferIfWired": 16,
         "trials": 20
       },
       {
         "grade": "중1",
         "section": "다면체",
         "count": 5,
-        "seedsDifferNow": 12,
-        "seedsDifferIfWired": 12,
+        "seedsDifferNow": 10,
+        "seedsDifferIfWired": 10,
         "trials": 20
       },
       {
@@ -351,8 +367,8 @@
         "grade": "중2",
         "section": "순환소수를 포함한 식의 계산",
         "count": 3,
-        "seedsDifferNow": 3,
-        "seedsDifferIfWired": 3,
+        "seedsDifferNow": 2,
+        "seedsDifferIfWired": 2,
         "trials": 20
       },
       {
@@ -367,8 +383,8 @@
         "grade": "중2",
         "section": "다항식의 덧셈과 뺄셈",
         "count": 12,
-        "seedsDifferNow": 8,
-        "seedsDifferIfWired": 8,
+        "seedsDifferNow": 4,
+        "seedsDifferIfWired": 4,
         "trials": 20
       },
       {
@@ -383,8 +399,8 @@
         "grade": "중2",
         "section": "미지수가 2개인 연립일차방정식",
         "count": 1,
-        "seedsDifferNow": 5,
-        "seedsDifferIfWired": 5,
+        "seedsDifferNow": 3,
+        "seedsDifferIfWired": 3,
         "trials": 20
       },
       {
@@ -431,8 +447,8 @@
         "grade": "중2",
         "section": "일차함수와 일차방정식",
         "count": 31,
-        "seedsDifferNow": 12,
-        "seedsDifferIfWired": 12,
+        "seedsDifferNow": 16,
+        "seedsDifferIfWired": 16,
         "trials": 20
       },
       {
@@ -442,22 +458,6 @@
         "seedsDifferNow": 17,
         "seedsDifferIfWired": 17,
         "trials": 20
-      },
-      {
-        "grade": "중2",
-        "section": "이등변삼각형의 성질",
-        "count": 42,
-        "seedsDifferNow": 19,
-        "seedsDifferIfWired": 19,
-        "trials": 20
-      },
-      {
-        "grade": "중2",
-        "section": "직각삼각형의 합동",
-        "count": 2,
-        "seedsDifferNow": 3,
-        "seedsDifferIfWired": 10,
-        "trials": 10
       }
     ]
   }

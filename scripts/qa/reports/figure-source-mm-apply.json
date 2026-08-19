@@ -1,7 +1,7 @@
 {
  "note": "되돌리기 자료. `before` 가 적용 전 DB 값이다. 되돌리려면: ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/backfill-figure-source-mm.ts --revert --apply",
  "generatedFrom": "scripts/qa/reports/figure-rect-ledger.json",
- "applied": false,
+ "applied": true,
  "beforeIsInferred": false,
  "beforeNote": "before 는 DB 에서 읽은 값이다.",
  "planned": 8238,
