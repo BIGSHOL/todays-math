@@ -301,6 +301,7 @@ def build_exam(limit):
 
             match = None
             note = None
+            render_dpi = None
             if g["xref"]:
                 stat["네이티브"] += 1
                 try:
@@ -317,14 +318,29 @@ def build_exam(limit):
                         stat["증명실패:바이트"] += 1
             else:
                 stat["클립렌더"] += 1
-                want = [round(rect.width / 72.0 * CLIP_DPI),
-                        round(rect.height / 72.0 * CLIP_DPI)]
+                # ⚠️ `CLIP_DPI` 를 그대로 믿지 않는다 — RPM 은 같은 스크립트를
+                #    `--dpi 300` 으로도 돌려 두 벌이 섞여 있었다. **파일이 스스로
+                #    말하는 값**(PNG pHYs)이 있으면 그걸 먼저 쓰고, 상수와 다르면
+                #    사유에 적는다.
+                fdpi = render_dpi_of(f)
+                use = fdpi or CLIP_DPI
+                want = [round(rect.width / 72.0 * use),
+                        round(rect.height / 72.0 * use)]
                 if px and abs(px[0] - want[0]) <= DIM_TOL and abs(px[1] - want[1]) <= DIM_TOL:
                     match = "dims"
                     stat["증명:치수"] += 1
+                    if fdpi and fdpi != CLIP_DPI:
+                        stat["렌더 dpi 가 상수와 다름:%d" % fdpi] += 1
+                    elif fdpi:
+                        # 두 길이 **서로** 검산됐다 — map_exam 의 rect 와 파일이 적어 둔
+                        # 렌더 dpi 가 같은 치수를 가리킨다.
+                        stat["교차검산:rect↔png dpi"] += 1
                 else:
-                    note = "렌더 치수가 안 맞는다 — 파일 %s vs rect×%ddpi %s" % (px, CLIP_DPI, want)
+                    note = "렌더 치수가 안 맞는다 — 파일 %s vs rect×%ddpi %s" % (px, use, want)
                     stat["증명실패:치수"] += 1
+                render_dpi = fdpi
+            if g["xref"]:
+                render_dpi = None
 
             out.append(row(
                 rel, source_pdf=str(pdf), source_exists=True, page_index0=pno,
@@ -334,7 +350,7 @@ def build_exam(limit):
                 height_mm=mm(rect.height) if match else None,
                 native_xref=bool(g["xref"]),
                 kind=kind if match else None,
-                current_px=px, match=match, note=note,
+                current_px=px, render_dpi=render_dpi, match=match, note=note,
             ))
             if match:
                 stat["kind:%s" % kind] += 1
@@ -491,10 +507,25 @@ def build_rpm(limit):
                 kind, strokes, cover = PageInfo(page).kind(r)
                 stat["자리:찾음"] += 1
                 stat["kind:%s" % kind] += 1
+                # ── 두 길이 **서로** 검산되는가 ────────────────────────────
+                # 크기는 PNG 에 적힌 렌더 dpi 에서, 자리는 `figure_rect` 에서
+                # **따로** 왔다. 둘이 같은 치수를 가리켜야 한다.
+                # ⚠️ 겹쳐 대조만으로는 dpi 가 틀려도 안 걸린다 — 변이로 확인했다
+                #    (렌더 dpi 를 상수 200 으로 고정했더니 60건 중 46건의 mm 가
+                #    1.5배로 틀리는데 「자리:찾음 27」은 **그대로**였다).
+                note = "원본 지면과 겹쳐 대조 %.3f (문턱 %.2f)" % (v, DIFF_OK)
+                if dpi and px:
+                    want = [round(r.width / 72.0 * dpi), round(r.height / 72.0 * dpi)]
+                    if abs(px[0] - want[0]) <= DIM_TOL and abs(px[1] - want[1]) <= DIM_TOL:
+                        stat["교차검산:rect↔png dpi"] += 1
+                    else:
+                        stat["⚠교차검산 어긋남"] += 1
+                        note += " · ⚠ 치수 교차검산 어긋남: 파일 %s vs rect×%ddpi %s" % (
+                            px, dpi, want)
                 out.append(row(
                     rel, page_index0=pi,
                     rect_pt=[round(x, 2) for x in (r.x0, r.y0, r.x1, r.y1)],
-                    kind=kind, note="원본 지면과 겹쳐 대조 %.3f (문턱 %.2f)" % (v, DIFF_OK),
+                    kind=kind, note=note,
                     **{**base, "match": "rect+png-dpi" if dpi else "rect"}))
             else:
                 stat["자리:못 찾음"] += 1
