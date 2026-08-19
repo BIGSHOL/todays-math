@@ -98,6 +98,15 @@ ARC = re.compile(r"(?<![0-9A-Za-z])[µμ¨]\s?([A-Z]{2,3})")
 FRAC_DOUBLE = re.compile(r";;([^;\s]{1,12});;")
 FRAC_ONE = re.compile(r";([^;\s]{1,12});")
 FRAC_COLON = re.compile(r":([^:\s]{1,12}):")
+#: 근호 **덧줄**. 근호 기호는 한 글자만 덮으므로, 긴 근호는 덧줄 글자를 끼워 이어 붙인다
+#: — `'1¶24`=√124 · `'¶1¶44`=√144 · `'§31`=√31 · `'8Ä0`=√80 · `'¶3¶ab`=√(3ab).
+#: ⚠️ **어디서 끝나는지는 글자열로 알 수 없다.** 덧줄의 길이는 그려진 줄에만 있다.
+#:    `'Ä3_48` 은 √(3×48)=√144 인데(실측 3-1 #286) 글자만 보면 √3×48 로 읽힌다 —
+#:    값이 아예 달라진다. 그래서 **경계가 확실할 때만** 바꾼다. 연산자가 이어지면
+#:    덧줄 글자를 그대로 남겨 두어 잔재 검사에 걸리게 하고, 그 행은 안 쓴다.
+ROOT_BAR = re.compile(
+    r"'([0-9A-Za-z]*[¶Ä§][0-9A-Za-z¶Ä§]*)(?=[\s=+\-<>),.:`]|$|[가-힣])"
+)
 #: 근호. `'¶13`(두 자리) · `'1`0`(백틱 끼움) · `'3`(한 자리) 순으로 좁게 먼저 본다.
 ROOT_PILCROW = re.compile(r"'¶(\d+)")
 ROOT_TICK = re.compile(r"'(\d)`(\d)")
@@ -156,6 +165,7 @@ def to_latex(raw: str) -> str:
     """정답책 원문 한 토막을 LaTeX 로 옮긴다."""
     s = raw
     s = ROOT_BIG.sub(lambda m: "\\sqrt{" + m.group(1) + "}", s)
+    s = ROOT_BAR.sub(lambda m: "\\sqrt{" + re.sub(r"[¶Ä§]", "", m.group(1)) + "}", s)
     s = ROOT_PILCROW.sub(lambda m: "\\sqrt{" + m.group(1) + "}", s)
     s = ROOT_TICK.sub(lambda m: "\\sqrt{" + m.group(1) + m.group(2) + "}", s)
     s = FRAC_DOUBLE.sub(_frac, s)
@@ -182,6 +192,73 @@ def to_latex(raw: str) -> str:
     s = CONTROL.sub(" ", s)
     s = s.replace("`", " ")
     return re.sub(r"[ \t]{2,}", " ", s).strip()
+
+
+#: 수식 밖에 그대로 두는 글자 — 우리 DB 의 기존 해설이 쓰는 방식이다.
+#: `∴`·`①`·`❶`·`㉠` 은 KaTeX 밖에서 그냥 글자로 나가는 게 안전하고 보기도 낫다.
+PROSE = set("∴∵⋮…⋯※①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮❶❷❸❹❺㉠㉡㉢㉣㉤㉥㈎㈏㈐㈑⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽")
+#: 수식 **안**에서는 명령으로 바꾼다 — 유니코드 그대로 넣으면 KaTeX 가 흔들린다.
+IN_MATH = {
+    "∠": "\\angle ", "△": "\\triangle ", "∽": "\\backsim ", "≡": "\\equiv ",
+    "⊥": "\\perp ", "∥": "\\parallel ", "≤": "\\leq ", "≥": "\\geq ",
+    "≠": "\\neq ", "×": "\\times ", "÷": "\\div ", "±": "\\pm ",
+    "∼": "\\sim ", "→": "\\to ", "∞": "\\infty ", "√": "\\sqrt ",
+}
+#: 수식 안에서 명령으로 세워야 하는 함수 이름. 맨 글자로 두면 `s·i·n` 세 변수의 곱으로
+#: 조판돼 자간이 벌어진다 — 우리 DB 의 기존 해설도 `\sin` 으로 쓴다.
+FUNCS = re.compile(r"(?<![\\A-Za-z])(sin|cos|tan|log)(?![A-Za-z])")
+#: 한글·공백·산문 글자는 수식 덩어리를 끊는다.
+HANGUL = re.compile(r"[가-힣ㄱ-ㅎㅏ-ㅣ]")
+#: 덩어리 안에 이런 게 하나라도 있어야 수식으로 감싼다. 문장부호만 있으면 글이다.
+MATH_EVIDENCE = re.compile(r"[\\A-Za-z0-9]")
+
+
+def wrap_math(text: str) -> str:
+    """변환된 원문을 **`$…$` 로 감싸** 화면 렌더 경로에 맞춘다.
+
+    `renderMathHtml` 은 `$` 밖의 LaTeX 를 **글자 그대로 이스케이프**한다 — 감싸지 않으면
+    `\\frac{1}{2}` 가 화면에 날 것으로 나간다. 감싼 결과가 실제로 그려지는지는
+    `verify-rpm-square-repair.ts` 가 **제품 렌더러를 불러** 확인한다(내 목록이 아니라).
+    """
+    out: list[str] = []
+    buf: list[str] = []
+
+    def flush() -> None:
+        if not buf:
+            return
+        chunk = "".join(buf)
+        head = chunk[: len(chunk) - len(chunk.lstrip())]
+        tail = chunk[len(chunk.rstrip()):]
+        core = chunk.strip()
+        buf.clear()
+        if not core:
+            out.append(chunk)
+            return
+        if not MATH_EVIDENCE.search(core):
+            out.append(chunk)
+            return
+        # 덩어리 앞뒤의 문장부호는 **밖에 둔다.** 한글 뒤에서 시작한 덩어리는 `.`·`,` 로
+        # 시작하기 일쑤라 `이용한다$. y=…$` 처럼 달러가 마침표 앞에 열린다.
+        while core and core[0] in ".,;:)]}·":
+            head, core = head + core[0], core[1:]
+        while core and core[-1] in ".,":
+            core, tail = core[:-1], core[-1] + tail
+        if not core or not MATH_EVIDENCE.search(core):
+            out.append(chunk)
+            return
+        for a, b in IN_MATH.items():
+            core = core.replace(a, b)
+        core = FUNCS.sub(lambda m: "\\" + m.group(1) + " ", core)
+        out.append(head + "$" + core.strip() + "$" + tail)
+
+    for ch in text:
+        if HANGUL.match(ch) or ch in PROSE:
+            flush()
+            out.append(ch)
+        else:
+            buf.append(ch)
+    flush()
+    return re.sub(r"\$\s*\$", " ", "".join(out)).strip()
 
 
 #: 자체 검사 — **근거 문항을 그대로 못 박는다.** 표를 손으로 고치면 여기가 빨개진다.
@@ -217,6 +294,10 @@ EVIDENCE = [
     ("3-2 #53 프라임 위선", "HH'Ó=ADÓ=6", "\\overline{HH'}=\\overline{AD}=6"),
     ("2-2 #724 위선 뒤 지수", "EHÓ Û`=aÛ`+bÛ`", "\\overline{EH}^{2}=a^{2}+b^{2}"),
     ("2-1 #965 단계 표시는 지수가 아니다", "-3b+3=4 Ú -3b+3=-4일", "-3b+3=4 ❶ -3b+3=-4일"),
+    ("3-2 #243 근호 덧줄", "='1¶24=2'§31`(km)", "=\\sqrt{124}=2\\sqrt{31} (km)"),
+    ("3-1 #286 근호 덧줄 문자", "2'¶1¶44+3'¶3¶ab ", "2\\sqrt{144}+3\\sqrt{3ab}"),
+    ("3-1 #150 근호 덧줄 뺄셈", "'8Ä0-2a-'4Ä0+b의", "\\sqrt{80}-2a-\\sqrt{40}+b의"),
+    ("3-1 #286 경계를 모르면 안 바꾼다", "2'Ä3_48", "2'Ä3\\times48"),
 ]
 
 if __name__ == "__main__":  # pragma: no cover

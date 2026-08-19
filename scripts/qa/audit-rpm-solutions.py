@@ -130,9 +130,10 @@ def book_solution_map(pdf: pathlib.Path) -> dict[int, tuple[str, str]]:
             t = ln.strip()
             if not t or ANCHOR.fullmatch(t.split(" ")[0]):
                 continue
-            k = DIGITS.sub("", t).strip()
-            if k:
-                spots.setdefault(k, []).append((pi, y))
+            # ⚠️ 숫자만 있는 줄은 열쇠가 **빈 문자열**이 되어 장식 판정에서 통째로 빠졌다.
+            #    그래서 판형 번호 `191226` 이 풀이 한복판에 남아 있었다(실측 3-1 #1117).
+            k = DIGITS.sub("", t).strip() or t
+            spots.setdefault(k, []).append((pi, y))
     furniture: dict[str, list[float]] = {}  # 열쇠 → 장식으로 판정된 높이들
     for k, hits in spots.items():
         hits.sort(key=lambda h: h[1])
@@ -153,7 +154,7 @@ def book_solution_map(pdf: pathlib.Path) -> dict[int, tuple[str, str]]:
         for col, y0, x0, txt in lines:
             first = txt.strip().split(" ")[0]
             is_anchor = bool(ANCHOR.fullmatch(first))
-            if not is_anchor and is_furniture(DIGITS.sub("", txt.strip()).strip(), y0):
+            if not is_anchor and is_furniture(DIGITS.sub("", txt.strip()).strip() or txt.strip(), y0):
                 continue  # 쪽 장식 — 풀이가 아니다
             rows.append((col, y0, x0, txt, is_anchor))
         rows.sort(key=lambda r: (r[0], r[1], r[2]))

@@ -81,6 +81,21 @@ SCRIPT_SHIFT = 1.5
 #: 교재가 정답을 찍는 표시. 풀이 줄 **오른쪽 끝**에 붙어 있어 y 로 묶으면 본문과 한 줄이 된다.
 #: 여기서 줄을 끊어야 `book_solution_map` 이 풀이와 답을 가를 수 있다(실측 `답 ×` 가 본문에 붙었다).
 ANSWER_TOKEN = "답"
+#: 교재가 괄호로 그리는 글자. LaTeX 의 «묶음»과 뜻이 달라 여기서 바꾼다.
+BOOK_BRACE = {"{": "(", "}": ")"}
+
+
+#: 근호 표식만 담은 글꼴. 이름에 이게 들어가면 그 글자는 **숫자가 아니라 근호**다.
+#: ⚠️ 실측 3-1 정답책 `316` 은 «삼백십육»이 아니라 $3\\sqrt{6}$ 이다. 가운데 `1` 이
+#:    `EHRoot-Plain` 글꼴이다. 글꼴을 안 보면 **그럴듯한 숫자**가 되어 나가고,
+#:    그건 □ 보다 나쁘다 — 틀린 줄 아무도 모른다(답 `41120` = $4\\sqrt{10}$).
+ROOT_FONT = "Root"
+#: 여는 갈고리(√)의 폭. 실측 4.56~5.30. 중간 덧줄은 0.00, 마감은 1.16 이다.
+HOOK_MIN_W = 3.0
+#: 작은 근호를 닫는 마감 글자의 최소 폭.
+CAP_MIN_W = 0.5
+#: 큰 근호(`!%…^`·`Á°…¤`)를 닫는 자리 — 표식 뒤에 이런 글자가 오면 닫힌 것으로 본다.
+BIG_END = set("=<>,)　 \t")
 
 
 @dataclass
@@ -119,6 +134,145 @@ class Seg:
     @property
     def length(self) -> float:
         return self.x1 - self.x0
+
+
+def _root_aware_words(page: pymupdf.Page) -> list[Tok]:
+    """낱말을 뽑되, **근호 글꼴**을 만나면 그 자리에서 `\\sqrt{…}` 로 세운다.
+
+    근호는 글자가 아니라 **표식**이다. 여는 갈고리(폭 ~5.3)가 근호를 열고, 그 뒤가
+    또 표식이면 «큰 근호»(크기 선택자)라 닫는 표식까지 삼킨다. 아니면 «작은 근호»라
+    영숫자만 삼키고, 폭 있는 마감 표식이나 영숫자가 아닌 글자에서 닫는다.
+
+    실측으로 맞춘 것:
+      · `1125이므로` → $\\sqrt{15}$ 이므로   (가운데 0폭 표식은 덧줄이라 건너뛴다)
+      · `-1+186<2`   → $-1+\\sqrt{8}<2$      (폭 1.16 마감이 닫는다)
+      · `3166`       → $3\\sqrt{6}$
+      · `!%7Û`-4Û`^` → $\\sqrt{7^2-4^2}$     (큰 근호는 연산자도 삼킨다)
+    """
+    toks: list[Tok] = []
+    for blk in page.get_text("rawdict").get("blocks", []):
+        for line in blk.get("lines", []):
+            chars = [
+                (c["c"], sp.get("font", ""), c["bbox"])
+                for sp in line.get("spans", [])
+                for c in sp.get("chars", [])
+            ]
+            text = ""
+            box: list[float] | None = None
+            depth, big = 0, False
+
+            def push(ch: str, bb) -> None:
+                nonlocal text, box
+                text += ch
+                if bb is None:
+                    return
+                box = list(bb) if box is None else [
+                    min(box[0], bb[0]), min(box[1], bb[1]),
+                    max(box[2], bb[2]), max(box[3], bb[3]),
+                ]
+
+            def flush() -> None:
+                nonlocal text, box
+                if text.strip() and box is not None:
+                    toks.append(Tok(box[0], box[1], box[2], box[3], text))
+                text, box = "", None
+
+            def small_extent(k: int) -> tuple[list, int]:
+                """작은 근호가 **어디까지 덮나**. 앞을 내다보고 정한다.
+
+                ⚠️ 덧줄 표식의 개수로는 못 센다. 덧줄은 글자 수가 아니라 **길이**를
+                   글꼴 크기로 나눠 가진다(실측 `4`@11.0 하나가 `1.44` 넉 자를 덮고,
+                   `2`@8.0 둘이 `10` 두 자를 덮는다). 그래서 «몇 개인가»가 아니라
+                   **무엇이 근호 안에 들어갈 수 있나**로 정한다.
+
+                   ㉠ 마감 표식(폭 있는 것)이 나오면 거기까지가 근호다.
+                   ㉡ 마감이 없으면 **숫자 뭉치**까지다 — `1120AHÓ` 는 √10·AH 이지
+                      √(10AH) 가 아니다.
+                """
+                got: list = []
+                j = k
+                while j < len(chars):
+                    c2, f2, b2 = chars[j]
+                    if ROOT_FONT in f2:
+                        if (b2[2] - b2[0]) >= CAP_MIN_W:
+                            return got, j + 1  # ㉠ 마감 — 여기까지가 근호다
+                        j += 1
+                        continue  # 0폭 덧줄 — 글자가 아니다
+                    if c2.isascii() and (c2.isalnum() or c2 == "."):
+                        got.append((c2, b2))
+                        j += 1
+                        continue
+                    break
+                # ㉡ 마감이 없다 — 숫자면 숫자 뭉치까지, 아니면 한 글자만
+                if got and got[0][0].isdigit():
+                    n = 0
+                    while n < len(got) and (got[n][0].isdigit() or got[n][0] == "."):
+                        n += 1
+                    while n > 1 and got[n - 1][0] == ".":
+                        n -= 1
+                else:
+                    n = 1 if got else 0
+                if n == 0:
+                    return [], k
+                # 잘라 낸 만큼만 되짚어 다음 자리를 찾는다(사이에 낀 덧줄은 건너뛴 채로)
+                j, seen = k, 0
+                while j < len(chars) and seen < n:
+                    c2, f2, b2 = chars[j]
+                    if not (ROOT_FONT in f2):
+                        seen += 1
+                    j += 1
+                return got[:n], j
+
+            # 큰 근호는 겹친다(`Á°(2136)Û`…¤` 안에 `2136`=2√3 이 들어 있다). 그래서 쌓는다.
+            big_depth = 0
+
+            i = 0
+            while i < len(chars):
+                ch, font, bb = chars[i]
+                if ROOT_FONT in font:
+                    w = bb[2] - bb[0]
+                    if w >= HOOK_MIN_W:
+                        # 여는 갈고리. **글자가 숫자면 작은 근호**다 — 큰 근호는 `!`·`Á`
+                        # 같은 다른 글자로 열고 크기 선택자가 뒤따른다(실측 census).
+                        if ch.isdigit():
+                            body, nxt = small_extent(i + 1)
+                            if body:
+                                push("\\sqrt{", bb)
+                                for c2, b2 in body:
+                                    push(c2, b2)
+                                push("}", None)
+                                i = nxt
+                                continue
+                        else:
+                            push("\\sqrt{", bb)
+                            big_depth += 1
+                            i += 2 if (i + 1 < len(chars) and ROOT_FONT in chars[i + 1][1]) else 1
+                            continue
+                    elif big_depth:
+                        after = chars[i + 1][0] if i + 1 < len(chars) else ""
+                        if after == "" or after in BIG_END or "가" <= after <= "힣":
+                            push("}", None)
+                            big_depth -= 1
+                    i += 1
+                    continue
+                if ch.isspace():
+                    while big_depth:
+                        push("}", None)
+                        big_depth -= 1
+                    flush()
+                    i += 1
+                    continue
+                # ⚠️ 교재의 `{`·`}` 는 **괄호를 그린 글자**다. 그대로 두면 LaTeX 가
+                #    «묶음»으로 읽어 화면에서 **괄호가 사라진다** — `÷(-⅔y)²` 이
+                #    `÷-⅔y²` 가 된다(실측 1-1 #604·3-1 #192, 통과분의 30%).
+                #    여기서 바꿔야 한다. 뒤에서 만드는 중괄호와 섞이면 못 가른다.
+                push(BOOK_BRACE.get(ch, ch), bb)
+                i += 1
+            while big_depth:
+                push("}", None)
+                big_depth -= 1
+            flush()
+    return toks
 
 
 def _segments(page: pymupdf.Page) -> tuple[list[Seg], list[Seg]]:
@@ -290,7 +444,7 @@ def page_lines(page: pymupdf.Page, columns: int = 2) -> list[tuple[int, float, f
     ⚠️ **단을 먼저 가르고 줄을 묶는다.** 순서가 뒤바뀌면 왼쪽 단과 오른쪽 단의
        같은 높이 줄이 한 줄로 이어 붙는다.
     """
-    toks = [Tok(w[0], w[1], w[2], w[3], w[4]) for w in page.get_text("words") if w[4].strip()]
+    toks = _root_aware_words(page)
     hor, ver = _segments(page)
     toks = _fold_fractions(toks, hor, ver)
 
