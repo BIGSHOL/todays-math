@@ -27,10 +27,22 @@ import { PrismaClient } from "@prisma/client";
 import { allowSharedImport } from "../../src/lib/import/classifyDatabaseUrl";
 import { inspectDatabaseTargets } from "../import/resolveDbTarget";
 
-const VERIFIED = "scripts/qa/reports/rpm-square-verified.json";
-const LEDGER = "scripts/qa/reports/rpm-square-repair-ledger.json";
+const argv = process.argv.slice(2);
+const argOf = (name: string, fallback: string): string => {
+  const at = argv.indexOf(name);
+  return at >= 0 ? (argv[at + 1] ?? fallback) : fallback;
+};
+// 같은 적용기를 두 계획에 쓴다 — 해설·정답 되살리기와 발문 되살리기.
+const VERIFIED = argOf(
+  "--verified",
+  "scripts/qa/reports/rpm-square-verified.json",
+);
+const LEDGER = argOf(
+  "--ledger",
+  "scripts/qa/reports/rpm-square-repair-ledger.json",
+);
 
-type Field = "solution" | "answer";
+type Field = "solution" | "answer" | "content";
 
 interface Verified {
   id: string;
@@ -67,8 +79,8 @@ async function gate(): Promise<boolean> {
 }
 
 async function main(): Promise<void> {
-  const apply = process.argv.includes("--apply");
-  const revert = process.argv.includes("--revert");
+  const apply = argv.includes("--apply");
+  const revert = argv.includes("--revert");
   const prisma = new PrismaClient();
   try {
     if (revert) {
@@ -77,7 +89,7 @@ async function main(): Promise<void> {
       };
       const rows = await prisma.problem.findMany({
         where: { id: { in: [...new Set(ledger.목록.map((r) => r.id))] } },
-        select: { id: true, answer: true, solution: true },
+        select: { id: true, answer: true, solution: true, content: true },
       });
       const now = new Map(rows.map((r) => [r.id, r]));
       let back = 0;
@@ -111,7 +123,7 @@ async function main(): Promise<void> {
     const ids = [...new Set(items.map((v) => v.id))];
     const rows = await prisma.problem.findMany({
       where: { id: { in: ids } },
-      select: { id: true, answer: true, solution: true },
+      select: { id: true, answer: true, solution: true, content: true },
     });
     const cur = new Map(rows.map((r) => [r.id, r]));
 

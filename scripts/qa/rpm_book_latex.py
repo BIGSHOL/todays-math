@@ -84,6 +84,9 @@ CONTROL = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
 # ⚠️ `\b` 를 쓰면 안 된다 — `sABC와` 처럼 뒤에 한글이 오면 한글도 낱말 글자라
 #    경계가 안 생겨 그냥 지나친다(실측 `sACD와`·`sABC에서` 가 안 바뀌었다).
 TRIANGLE = re.compile(r"(?<![A-Za-z])s(?=[A-Z]{3}(?![A-Za-z]))")
+#: 사각형. 한컴은 `f` 를 □ 로 쓴다 — 대문자 이름이 뒤따를 때만(`fABCD`).
+#: 우리 DB 의 기존 발문도 `\\square ABCD` 로 적는다.
+QUAD = re.compile(r"(?<![A-Za-z])f(?=[A-Z]{3,4}(?![A-Za-z]))")
 #: `ABÓ` → `\overline{AB}`. 뒤에 붙는 글자라 앞의 대문자 덩어리를 집는다.
 #: 점 이름에 프라임이 붙기도 하고(`HH'Ó`·`AB''Ó`) 폭 맞춤 글자 `Õ` 가 끼기도 한다
 #: (`BÕAÓ`·`HÕ'HÓ` — 실측 1-2 #491·2-2 #348). 덩어리로 집고 `Õ` 만 걷어낸다.
@@ -177,6 +180,7 @@ def to_latex(raw: str) -> str:
     s = RAY_MARK.sub(lambda m: "\\overrightarrow{" + m.group(1) + "}", s)
     s = ARC.sub(lambda m: "\\overgroup{" + m.group(1) + "}", s)
     s = TRIANGLE.sub("\\\\triangle ", s)
+    s = QUAD.sub("\\\\square ", s)
     s = SUPER_RUN.sub(_super, s)
     # ⚠️ 밑줄을 그대로 쓰면 안 된다 — `_` 는 이 글꼴에서 `\times` 다(CHARS). 나중에 푼다.
     s = SUB_RUN.sub(lambda m: m.group(1) + SUB_MARK + "{" + NUMERATOR[m.group(2)] + "}", s)
@@ -276,6 +280,7 @@ EVIDENCE = [
     ("1-2 #1036 40/100", ";1¢0¼0;", "\\frac{40}{100}"),
     ("2-2 #972 5/10", ";1°0;", "\\frac{5}{10}"),
     ("1-2 #491 위선 이음", "BÕAÓ=BCÓ", "\\overline{BA}=\\overline{BC}"),
+    ("2-2 #211 사각형", "fABCD의넓이가", "\\square ABCD의넓이가"),
     ("2-2 #724 합동", "sAEHªsBFE", "\\triangle AEH\\equiv\\triangle BFE"),
     ("2-1 #397 부등호", "a`É`b", "a \\leq b"),
     ("2-1 #473 부등호", "a¾-8", "a\\geq-8"),

@@ -78,11 +78,18 @@ GLUE_GAP = 1.2
 #: 첨자로 보고 붙일 수 있는 최대 간격과, 첨자라고 볼 최소 높이 차이.
 SCRIPT_GAP = 3.0
 SCRIPT_SHIFT = 1.5
+#: 본문 글자 크기의 이 비율보다 작으면 첨자 후보다(실측 본문 10.5 · 지수 6.0).
+SCRIPT_SIZE = 0.78
+#: 첨자를 붙일 줄을 찾을 때의 세로 허용치.
+SCRIPT_HOST_DY = 12.0
 #: 교재가 정답을 찍는 표시. 풀이 줄 **오른쪽 끝**에 붙어 있어 y 로 묶으면 본문과 한 줄이 된다.
 #: 여기서 줄을 끊어야 `book_solution_map` 이 풀이와 답을 가를 수 있다(실측 `답 ×` 가 본문에 붙었다).
 ANSWER_TOKEN = "답"
 #: 교재가 괄호로 그리는 글자. LaTeX 의 «묶음»과 뜻이 달라 여기서 바꾼다.
 BOOK_BRACE = {"{": "(", "}": ")"}
+#: **내가 끼워 넣은** 중괄호의 글꼴 이름. 교재의 괄호 글자와 헷갈리면
+#: 첨자의 닫는 중괄호가 `)` 로 바뀐다(실측 `^{101)`).
+SYNTH = "<synth>"
 
 
 #: 근호 표식만 담은 글꼴. 이름에 이게 들어가면 그 글자는 **숫자가 아니라 근호**다.
@@ -105,6 +112,8 @@ class Tok:
     x1: float
     y1: float
     text: str
+    #: 이 낱말의 **글자 크기**(가장 큰 것). 첨자 판정에 쓴다.
+    size: float = 0.0
     dead: bool = False
     #: 줄을 묶을 때 쓸 «보이는 중심». 접은 분수는 상자가 두 줄에 걸쳐 있어
     #: 상자 중심이 아니라 **분수선 자리**가 글줄 높이다.
@@ -136,7 +145,88 @@ class Seg:
         return self.x1 - self.x0
 
 
-def _root_aware_words(page: pymupdf.Page) -> list[Tok]:
+def _on_bar(run: list, bars: list) -> bool:
+    """이 글자 덩어리가 **분수선에 얹혀 있나**(분자) 또는 매달려 있나(분모)."""
+    x0 = min(c[2][0] for c in run)
+    x1 = max(c[2][2] for c in run)
+    y0 = min(c[2][1] for c in run)
+    y1 = max(c[2][3] for c in run)
+    for b in bars:
+        if b.x0 - 1 <= x0 and x1 <= b.x1 + 1 and -BAR_EDGE_MAX <= b.y - y1 <= BAR_EDGE_MAX:
+            return True
+        if b.x0 - 1 <= x0 and x1 <= b.x1 + 1 and -BAR_EDGE_MAX <= y0 - b.y <= BAR_EDGE_MAX:
+            return True
+    return False
+
+
+def _fold_scripts(chars: list, sizes: list[float], bars: list, base: float, carry=None) -> list:
+    """**작고 올라간(내려간) 글자**를 `^{…}`·`_{…}` 로 세운다.
+
+    학생용 책은 지수를 글자가 아니라 **크기와 높이**로 나타낸다 — 같은 글꼴
+    `EHsang-Italic` 을 6.0pt 로 올려 찍는다(본문은 10.5pt). 그걸 못 보면
+    `-x^{101}` 이 `-x101` 로 나가 **읽히는 오답**이 된다(실측 1-1 #685).
+
+    ⚠️ 글자 크기만 보면 안 된다 — 그림 라벨도 작다. **바로 앞 글자에 붙어 있고
+       높이가 다를 때만** 첨자로 본다.
+    ⚠️ 그리고 **분수의 분자도 작고 올라가 있다.** 그것까지 첨자로 접으면
+       `rac{5}{AC}` 가 `rac{^{5)}{AC}` 가 된다(실측 3-2 #55). 그래서
+       분수선이 바로 밑(또는 위)에 있는 글자는 건드리지 않는다 — 선이 가른다.
+    """
+    if not chars or len(sizes) != len(chars):
+        return chars
+    out: list = []
+    # ⚠️ 지수는 **앞 줄 끝**에 붙어 오기도 한다 — PyMuPDF 는 올라간 조각을 다른 줄로
+    #    떼어 놓는다(실측 1-1 #685: `-x` 한 줄, `101-(-y)` 다음 줄). 그래서 앞 줄의
+    #    마지막 글자와 그 크기를 물려받아야 첫 글자도 첨자로 볼 수 있다.
+    i = 0
+    while i < len(chars):
+        # ⚠️ 기준은 **쪽의 본문 크기**(최빈값)다. 줄 안에서 앞 글자를 기준으로 삼으면
+        #    지수가 줄 첫머리에 오는 경우(PyMuPDF 가 떼어 놓는다)를 못 본다.
+        if (i == 0 and not carry) or sizes[i] > base * SCRIPT_SIZE or chars[i][0].isspace():
+            out.append(chars[i])
+            i += 1
+            continue
+        j = i
+        while (
+            j < len(chars)
+            and sizes[j] <= base * SCRIPT_SIZE
+            and not chars[j][0].isspace()
+        ):
+            j += 1
+        run = chars[i:j]
+        prev = chars[i - 1] if i else carry[0]
+        if not run:
+            out.append(chars[i])
+            i += 1
+            continue
+        gap = run[0][2][0] - prev[2][2]  # ⚠️ 상자는 (x0, y0, x1, y1) — x1 은 2번이다
+        dy = ((run[0][2][1] + run[0][2][3]) / 2) - ((prev[2][1] + prev[2][3]) / 2)
+        # ⚠️ 간격은 **양쪽으로** 봐야 한다. 새 줄이 왼쪽 여백에서 시작하면 간격이
+        #    크게 음수가 되어 「가깝다」로 통과해 버린다.
+        if not (-1.0 <= gap <= SCRIPT_GAP) or abs(dy) < SCRIPT_SHIFT or _on_bar(run, bars):
+            out.extend(run)
+            i = j
+            continue
+        out.append(("^{" if dy < 0 else "_{", SYNTH, run[0][2]))
+        out.extend(run)
+        out.append(("}", SYNTH, run[-1][2]))
+        i = j
+    return out
+
+
+def _body_size(page: pymupdf.Page) -> float:
+    """이 쪽의 **본문 글자 크기**(최빈값). 첨자 판정의 기준이다."""
+    import collections
+
+    c: collections.Counter = collections.Counter()
+    for blk in page.get_text("rawdict").get("blocks", []):
+        for line in blk.get("lines", []):
+            for sp in line.get("spans", []):
+                c[round(float(sp.get("size", 0)), 1)] += len(sp.get("chars", []))
+    return c.most_common(1)[0][0] if c else 0.0
+
+
+def _root_aware_words(page: pymupdf.Page, bars: list) -> list[Tok]:
     """낱말을 뽑되, **근호 글꼴**을 만나면 그 자리에서 `\\sqrt{…}` 로 세운다.
 
     근호는 글자가 아니라 **표식**이다. 여는 갈고리(폭 ~5.3)가 근호를 열고, 그 뒤가
@@ -150,6 +240,18 @@ def _root_aware_words(page: pymupdf.Page) -> list[Tok]:
       · `!%7Û`-4Û`^` → $\\sqrt{7^2-4^2}$     (큰 근호는 연산자도 삼킨다)
     """
     toks: list[Tok] = []
+    # ⚠️ 물려받는 자리는 **쪽 전체**다. PyMuPDF 는 올라간 조각을 다른 «덩이»(block)로
+    #    떼어 놓기도 한다 — 실측 1-1 #685 는 `-x` 가 blk39, `101` 이 blk40 이었다.
+    #    덩이마다 끊으면 그 자리가 영영 안 보인다. 멀리 있는 것은 간격 검사가 막는다.
+    carry = None
+    import collections
+
+    sizecount: collections.Counter = collections.Counter()
+    for blk in page.get_text("rawdict").get("blocks", []):
+        for line in blk.get("lines", []):
+            for sp in line.get("spans", []):
+                sizecount[round(float(sp.get("size", 0)), 1)] += len(sp.get("chars", []))
+    page_base = sizecount.most_common(1)[0][0] if sizecount else 0.0
     for blk in page.get_text("rawdict").get("blocks", []):
         for line in blk.get("lines", []):
             chars = [
@@ -157,8 +259,18 @@ def _root_aware_words(page: pymupdf.Page) -> list[Tok]:
                 for sp in line.get("spans", [])
                 for c in sp.get("chars", [])
             ]
+            sizes = [
+                float(sp.get("size", 0))
+                for sp in line.get("spans", [])
+                for _c in sp.get("chars", [])
+            ]
+            chars = _fold_scripts(chars, sizes, bars, page_base, carry)
+            if chars:
+                last = next((c for c in reversed(chars) if not c[0].isspace()), None)
+                carry = (last, 0.0) if last else carry
             text = ""
             box: list[float] | None = None
+            maxsize = max(sizes) if sizes else 0.0
             depth, big = 0, False
 
             def push(ch: str, bb) -> None:
@@ -174,7 +286,7 @@ def _root_aware_words(page: pymupdf.Page) -> list[Tok]:
             def flush() -> None:
                 nonlocal text, box
                 if text.strip() and box is not None:
-                    toks.append(Tok(box[0], box[1], box[2], box[3], text))
+                    toks.append(Tok(box[0], box[1], box[2], box[3], text, size=maxsize))
                 text, box = "", None
 
             def small_extent(k: int) -> tuple[list, int]:
@@ -266,7 +378,7 @@ def _root_aware_words(page: pymupdf.Page) -> list[Tok]:
                 #    «묶음»으로 읽어 화면에서 **괄호가 사라진다** — `÷(-⅔y)²` 이
                 #    `÷-⅔y²` 가 된다(실측 1-1 #604·3-1 #192, 통과분의 30%).
                 #    여기서 바꿔야 한다. 뒤에서 만드는 중괄호와 섞이면 못 가른다.
-                push(BOOK_BRACE.get(ch, ch), bb)
+                push(ch if font == SYNTH else BOOK_BRACE.get(ch, ch), bb)
                 i += 1
             while big_depth:
                 push("}", None)
@@ -376,11 +488,24 @@ def _join(toks: list[Tok]) -> str:
     out = ""
     prev: Tok | None = None
     for t in toks:
+        piece = t.text
         if prev is not None:
             gap = t.x0 - prev.x1
             script = gap < SCRIPT_GAP and abs(t.y1 - prev.y1) >= SCRIPT_SHIFT
+            # **작고 올라간(내려간) 낱말**은 첨자다. 학생용 책은 지수를 글자가 아니라
+            # 크기와 높이로 나타내고(본문 10.5 · 지수 6.0), 그 조각을 PyMuPDF 가
+            # **다른 줄**로 떼어 놓는다 — 그래서 글자 단위로는 안 보인다.
+            if (
+                script
+                and t.size
+                and prev.size
+                and t.size <= prev.size * SCRIPT_SIZE
+                and t.cyo is None
+                and not t.text.startswith(("^", "_", "\\"))
+            ):
+                piece = ("^{" if t.cy < prev.cy else "_{") + t.text + "}"
             out += "" if gap < GLUE_GAP or script else " "
-        out += t.text
+        out += piece
         prev = t
     return out
 
@@ -438,14 +563,33 @@ def _split_answer(line: list[Tok]) -> list[list[Tok]]:
     return [g for g in out if g]
 
 
-def page_lines(page: pymupdf.Page, columns: int = 2) -> list[tuple[int, float, float, str]]:
+def page_lines(
+    page: pymupdf.Page,
+    columns: int = 2,
+    clip: tuple[float, float, float, float] | None = None,
+    drop: list[tuple[float, float, float, float]] | None = None,
+) -> list[tuple[int, float, float, str]]:
     """한 쪽을 (단, y, x, 글) 줄 목록으로.
 
     ⚠️ **단을 먼저 가르고 줄을 묶는다.** 순서가 뒤바뀌면 왼쪽 단과 오른쪽 단의
        같은 높이 줄이 한 줄로 이어 붙는다.
     """
-    toks = _root_aware_words(page)
     hor, ver = _segments(page)
+    toks = _root_aware_words(page, hor)
+    if clip is not None:
+        # 칸 하나만 볼 때는 **선도 같이** 걸러야 한다. 칸 밖 분수선이 칸 안 낱말을
+        # 분자·분모로 집어 가면 없는 분수가 생긴다.
+        x0, y0, x1, y1 = clip
+        toks = [t for t in toks if x0 - 2 <= t.cx <= x1 + 2 and y0 - 2 <= t.cy <= y1 + 2]
+        hor = [g for g in hor if x0 - 4 <= (g.x0 + g.x1) / 2 <= x1 + 4 and y0 - 6 <= g.y <= y1 + 6]
+        ver = [g for g in ver if x0 - 4 <= (g.x0 + g.x1) / 2 <= x1 + 4]
+    if drop:
+        # ⚠️ **줄을 묶기 전에** 뺀다. 그림 라벨은 본문과 같은 높이에 있어서
+        #    나중에 빼려 하면 이미 본문 줄에 붙어 있다(실측 `…같은 사각형ABCD의 D`).
+        toks = [
+            t for t in toks
+            if not any(a <= t.cx <= c and b <= t.cy <= d for a, b, c, d in drop)
+        ]
     toks = _fold_fractions(toks, hor, ver)
 
     mid = page.rect.width / 2
@@ -456,9 +600,40 @@ def page_lines(page: pymupdf.Page, columns: int = 2) -> list[tuple[int, float, f
     for col, items in groups.items():
         items.sort(key=lambda t: (t.cy, t.x0))
         lines: list[list[Tok]] = []
+        base = _body_size(page)
+        # ⚠️ **작고 올라간 낱말은 나중에 붙인다.** 큰 괄호에 붙는 지수는 본문보다
+        #    7pt 넘게 올라가 있어 y 로 묶으면 제 줄을 만들고, 정렬에서 **문장 맨 앞**
+        #    으로 간다(실측 1-1 #685 `(…)^2` 의 `2`). 줄을 다 만든 뒤 바로 왼쪽에
+        #    붙은 줄을 찾아 넣어야 한다 — 먼저 붙이려 하면 그 줄이 아직 없다.
+        small = [t for t in items if base and t.size and t.size <= base * SCRIPT_SIZE]
         for t in items:
+            if t in small:
+                continue
             if lines and abs(t.cy - (sum(u.cy for u in lines[-1]) / len(lines[-1]))) <= LINE_TOL:
                 lines[-1].append(t)
+            else:
+                lines.append([t])
+        for t in small:
+            # 붙일 줄은 **가로로도 세로로도** 가까워야 한다. 가로만 보면 단 아래쪽
+            # 엉뚱한 줄에 첨자가 날아가 붙는다.
+            host = next(
+                (
+                    ln for ln in lines
+                    if any(
+                        -1.0 <= t.x0 - u.x1 <= SCRIPT_GAP and abs(t.cy - u.cy) <= SCRIPT_HOST_DY
+                        for u in ln
+                    )
+                ),
+                None,
+            )
+            if host is None:
+                host = next(
+                    (ln for ln in lines
+                     if abs(t.cy - (sum(u.cy for u in ln) / len(ln))) <= LINE_TOL),
+                    None,
+                )
+            if host is not None:
+                host.append(t)
             else:
                 lines.append([t])
         for ln in lines:

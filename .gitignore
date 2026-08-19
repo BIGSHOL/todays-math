@@ -72,6 +72,9 @@ scripts/qa/reports/*
 !scripts/qa/reports/rpm-square-repair-ledger.json
 !scripts/qa/reports/rpm-square-verified.json
 !scripts/qa/reports/rpm-book-fill-ledger.json
+!scripts/qa/reports/rpm-content-repair-ledger.json
+!scripts/qa/reports/rpm-content-verified.json
+!scripts/qa/reports/rpm-damage-census.json
 !scripts/qa/reports/rpm-book-fill-verified.json
 !scripts/qa/reports/rpm-number-check.json
 # 문항 코드 원장(D-53) — 컬럼을 드롭했다 다시 만들 때 **같은 코드**를 되살리는 근거다.
