@@ -79,6 +79,7 @@ scripts/qa/reports/*
 !scripts/qa/reports/rpm-content-verified.json
 !scripts/qa/reports/rpm-damage-census.json
 !scripts/qa/reports/rpm-book-fill-verified.json
+!scripts/qa/reports/unusable-discard-lock.json
 !scripts/qa/reports/rpm-number-check.json
 # 문항 코드 원장(D-53) — 컬럼을 드롭했다 다시 만들 때 **같은 코드**를 되살리는 근거다.
 # 코드는 원장님이 종이·대화에 옮겨 적는 값이라 새로 뽑으면 다른 문항을 가리키게 된다.
