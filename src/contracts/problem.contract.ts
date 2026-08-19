@@ -112,6 +112,17 @@ export const problemSchema = z.strictObject({
    * 참조: docs/planning/09-figure-engine-guide.md §5
    */
   figureUrls: z.array(z.string()).default([]),
+  /**
+   * 도형 SVG (testchanger figure engine 산출물, inline 렌더). 없으면 null.
+   *
+   * `figureUrls`(스캔 오려낸 래스터)와 **다른 갈래**다. 이쪽은 벡터라 화면·인쇄가
+   * 같은 것을 쓰고 해상도 손실이 없다. AI 변형이 만드는 도형이 여기로 들어온다
+   * (원장님 지시 2026-08-19 "도형 변형이 필요한 부분은 svg 엔진을 이용해 새로 만들 것").
+   *
+   * ⚠️ **서버만 이 값을 만든다** — `src/lib/figure/renderFigureSpec.ts` 가 유일한 생산자다.
+   *    화면에 inline 으로 들어가는 마크업이라 클라이언트가 실어 보내는 경로를 두지 않는다.
+   */
+  figureSvg: z.string().nullable().default(null),
   createdAt: isoDateTimeSchema,
   updatedAt: isoDateTimeSchema,
 });
@@ -236,6 +247,9 @@ export type ProblemTransformRequest = z.infer<
  * 화면은 「3개 요청했는데 2개만 왔다」는 사실만 보고 **왜인지를 못 본다** — 실패가 침묵하는
  * 자리다. 화면은 떨어진 후보를 「폐기」로 표시하고 `originalAnswerRecomputed` 를 사유로 쓴다.
  */
+/** FigureSpec v2 — 엔진(`core.figure_scene`)이 허용 키를 강제한다. 여기서 또 좁히지 않는다. */
+export const figureSpecSchema = z.record(z.string(), z.unknown());
+
 export const transformCandidateSchema = z.strictObject({
   content: z.string().min(1),
   answer: z.string().min(1),
@@ -244,6 +258,16 @@ export const transformCandidateSchema = z.strictObject({
   verified: z.boolean(),
   /** AI 가 제 변형 규칙을 원본 숫자에 되돌려 적용한 값 — 불일치 사유를 그대로 보여 준다. */
   originalAnswerRecomputed: z.string(),
+  /**
+   * AI 가 낸 도형 스펙. 원본이 그림에 기대는 문항일 때만 요구한다.
+   * 채택할 때 이것이 서버로 되돌아가고, **서버가 다시 그려서** 저장한다 —
+   * 아래 `figureSvg` 는 미리보기용이지 저장되는 값이 아니다.
+   */
+  figureSpec: figureSpecSchema.nullable(),
+  /** 서버가 그려 본 결과(미리보기). 못 그렸으면 null 이고 사유는 `figureError` 에 있다. */
+  figureSvg: z.string().nullable(),
+  /** 도형을 못 그린 사유. 원장님이 읽고 판단하므로 문구 그대로 싣는다. */
+  figureError: z.string().nullable(),
 });
 export type TransformCandidate = z.infer<typeof transformCandidateSchema>;
 
@@ -261,7 +285,11 @@ export type TransformCandidate = z.infer<typeof transformCandidateSchema>;
 export const problemTransformResponseSchema = z.strictObject({
   data: z.array(transformCandidateSchema),
   meta: z.strictObject({
-    figureBlockedReason: z.string().nullable(),
+    /**
+     * 이 원본이 **그림에 기대는 문항인가**. 참이면 후보마다 도형이 있어야 채택할 수 있다
+     * (`figureSvg !== null`). 변형은 본문 글자만 오가서 원본 그림이 따라가지 않기 때문이다.
+     */
+    figureRequired: z.boolean(),
   }),
 });
 
@@ -291,6 +319,12 @@ export const problemTransformAdoptRequestSchema = z.strictObject({
          * 탈락 후보가 저장되는 경로**는 이것으로 서버에서 닫힌다.
          */
         originalAnswerRecomputed: z.string().min(1),
+        /**
+         * 미리보기에서 본 도형의 **스펙**. SVG 가 아니라 스펙을 되돌려 받는 이유는
+         * 서버가 유일한 SVG 생산자이기 때문이다 — 브라우저가 준 마크업을 그대로 저장하면
+         * 지면과 화면에 남는 주입 통로가 된다.
+         */
+        figureSpec: figureSpecSchema.nullable().default(null),
       }),
     )
     .min(1, { error: "채택할 변형을 하나 이상 골라주세요." })

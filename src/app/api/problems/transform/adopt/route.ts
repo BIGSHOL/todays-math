@@ -27,7 +27,11 @@ import {
   unauthorizedError,
   validationError,
 } from "@/lib/apiResponse";
-import { transformFigureBlockReason } from "@/lib/figure/transformFigureBlock";
+import { renderFigureSpec } from "@/lib/figure/renderFigureSpec";
+import {
+  FIGURE_MISSING_REASON,
+  originNeedsFigure,
+} from "@/lib/figure/transformFigureBlock";
 import { db } from "@/lib/db";
 import { requireAccessibleProblem } from "@/lib/ownership";
 import { serializeProblem } from "@/lib/serializers";
@@ -49,11 +53,25 @@ export async function POST(request: NextRequest) {
 
   const origin = accessible.data;
 
-  // ⚠️ 두 문지기를 **여기서 다시** 세운다. 화면도 막지만 화면만 막으면 문지기가
+  // ⚠️ 문지기를 **여기서 다시** 세운다. 화면도 막지만 화면만 막으면 문지기가
   //    브라우저에 있는 것이고, 그건 없는 것과 같다(적대적 리뷰 2026-08-19).
-  const figureBlocked = transformFigureBlockReason(origin);
-  if (figureBlocked) {
-    return jsonError("CONFLICT", figureBlocked, 409);
+  //
+  // 도형은 **여기서 다시 그린다.** 미리보기에서 본 SVG 를 클라이언트가 실어 보내지 않는다 —
+  // 브라우저가 준 마크업을 그대로 저장하면 지면과 화면에 남는 주입 통로가 된다.
+  // 되돌아오는 것은 스펙뿐이고, SVG 의 유일한 생산자는 서버다.
+  const figureRequired = originNeedsFigure(origin);
+  let figureSvgs: (string | null)[] = parsed.data.items.map(() => null);
+  if (figureRequired) {
+    figureSvgs = await Promise.all(
+      parsed.data.items.map(async (item) => {
+        if (!item.figureSpec) return null;
+        const result = await renderFigureSpec(item.figureSpec);
+        return result.ok ? result.svg : null;
+      }),
+    );
+    if (figureSvgs.some((svg) => svg === null)) {
+      return jsonError("CONFLICT", FIGURE_MISSING_REASON, 409);
+    }
   }
 
   // 원본 재현 검사 — 종전에는 변형기가 탈락 후보를 걸러 서버가 저장을 거부했다.
@@ -79,7 +97,7 @@ export async function POST(request: NextRequest) {
   // 저장되는 일이 없다. 반환 순서는 입력 순서라 응답 순서도 화면이 보낸 그대로다.
   // exam-wiring: 기출아님 — AI 변형본만 넣는다. 원본 시험지가 없다
   const created = await db.problem.createManyAndReturn({
-    data: parsed.data.items.map((item) => ({
+    data: parsed.data.items.map((item, at) => ({
       userId: session.id,
       unitId: origin.unitId,
       source: "transformed",
@@ -89,6 +107,7 @@ export async function POST(request: NextRequest) {
       content: item.content,
       answer: item.answer,
       solution: item.solution,
+      figureSvg: figureSvgs[at],
       reviewStatus: "pending",
     })),
   });

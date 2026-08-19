@@ -25,7 +25,44 @@ import type {
   TransformMode,
 } from "@/contracts/problem.contract";
 
-export const TRANSFORM_PROMPT_VERSION = "v2";
+export const TRANSFORM_PROMPT_VERSION = "v3";
+
+/**
+ * 도형 스펙 요구 — 원본이 그림에 기대는 문항일 때만 붙인다 (원장님 지시 2026-08-19
+ * "도형 변형이 필요한 부분은 svg 엔진을 이용해 도형도 새로 만들 것").
+ *
+ * ⚠️ **AI 는 원본 그림을 못 본다.** 본문 글자만 본다. 그래서 「본문에 적힌 치수·조건만으로
+ *    다시 그릴 수 있으면 그리고, 아니면 null 을 내라」고 시킨다. 억지로 지어낸 도형은
+ *    본문과 어긋나 못 푸는 문항이 된다 — 못 그리는 것을 **못 그린다고 말하게** 하는 편이 낫다.
+ *
+ * 허용 키는 엔진(`core.figure_scene`)이 강제한다. 목록을 여기 옮겨 적은 것이라 엔진이
+ * 바뀌면 갈라진다 — 그래서 스펙 검증은 여기서 하지 않고 **엔진이 정본**이다(틀리면 예외가 나고
+ * 그 사유가 화면까지 간다). 참조: docs/planning/09-figure-engine-guide.md §1.
+ */
+const FIGURE_SPEC_INSTRUCTION = [
+  "",
+  "[도형] 이 문항은 지면의 그림을 보고 푸는 문항입니다. 변형본에는 원본 그림이 따라가지 않으므로,",
+  "각 배열 원소에 figureSpec 필드를 **하나 더** 넣어 변형된 숫자에 맞는 도형을 새로 정의하십시오.",
+  "",
+  "- 본문에 적힌 치수·각도·조건만으로 도형을 확정할 수 있을 때만 만드십시오.",
+  "- 확정할 수 없으면 반드시 figureSpec 을 null 로 두십시오. **지어내지 마십시오.**",
+  "  (그래프·사진·통계 그림처럼 아래 스키마로 표현할 수 없는 것도 null 입니다.)",
+  "- 좌표는 화면 좌표계입니다(y 가 아래로 증가). 도형 하나가 대략 100~300 크기가 되게 잡으십시오.",
+  "",
+  "figureSpec 스키마 (아래 키 **외에는 쓸 수 없습니다**):",
+  '  {"version": 2,',
+  '   "points":   {"A": [0,0], "B": [160,0],',
+  '                "P": {"type":"on_circle","circle":"c","angle":60},',
+  '                "Q": {"type":"intersection","segments":["AB","CD"]}},',
+  '   "circles":  {"c": {"center":"O","radius":85}},',
+  '   "segments": {"AB": ["A","B"], "CD": {"points":["C","D"],"dash":true}},',
+  '   "angles":   {"a1": {"vertex":"A","points":["B","C"],"label":"60°"}},',
+  '   "dimensions": {"d1": {"points":["A","B"],"label":"8 cm","side":"auto"}},',
+  '   "labels":   {"A":"A","B":"B"}}',
+  "",
+  "- dimensions 의 label 은 필수입니다. 치수는 **변형된 새 숫자**를 적으십시오.",
+  "- 점 이름은 본문에 나오는 이름(A·B·C·O·P…)과 같아야 합니다.",
+].join("\n");
 
 /** 변형 방식별 지시 — 계약의 `transformModeSchema` 와 한 벌이다. */
 const MODE_INSTRUCTION: Record<TransformMode, string> = {
@@ -51,6 +88,8 @@ export interface TransformPromptInput {
   count: number;
   mode: TransformMode;
   difficultyShift: DifficultyShift;
+  /** 원본이 그림에 기대는 문항인가 — 참이면 `figureSpec` 을 함께 요구한다. */
+  figureRequired: boolean;
 }
 
 export function buildTransformSystemPrompt(): string {
@@ -77,6 +116,7 @@ export function buildTransformUserPrompt({
   count,
   mode,
   difficultyShift,
+  figureRequired,
 }: TransformPromptInput): string {
   return [
     `원본 문제 유형: ${problemType}, 난이도: ${difficulty}`,
@@ -86,6 +126,7 @@ export function buildTransformUserPrompt({
     "",
     `[변형 방식] ${MODE_INSTRUCTION[mode]}`,
     `[난이도] ${DIFFICULTY_SHIFT_INSTRUCTION[difficultyShift]}`,
+    figureRequired ? FIGURE_SPEC_INSTRUCTION : "",
     "",
     `변형 개수: ${count}개 (서로 달라야 합니다)`,
     "위 지시에 따라 변형한 결과를 JSON 배열로만 응답하십시오.",

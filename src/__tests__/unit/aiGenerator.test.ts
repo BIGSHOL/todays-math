@@ -380,6 +380,55 @@ describe("transformProblem — AI 문제 변형(후보 반환, 2026-08-19 고도
     expect(sent).not.toContain("숫자만** 바꾸십시오");
   });
 
+  it("그림 문항이면 프롬프트가 도형 스펙을 요구하고, 아니면 요구하지 않는다", async () => {
+    const reply = aiTextResponse(
+      JSON.stringify([
+        {
+          content: "도형 변형",
+          answer: "0.275",
+          solution: null,
+          originalAnswerRecomputed: "0.28",
+          figureSpec: { version: 2 },
+        },
+      ]),
+    );
+
+    mockCreate.mockResolvedValueOnce(reply);
+    await transformProblem({ origin: ORIGIN, count: 1, figureRequired: true });
+    const withFigure = mockCreate.mock.calls[0]![0]!.messages[1]!
+      .content as string;
+    expect(withFigure).toContain("figureSpec");
+    // 「못 그리면 null」이 빠지면 AI 가 도형을 지어내고, 본문과 어긋난 그림이 나간다.
+    expect(withFigure).toContain("지어내지 마십시오");
+
+    mockCreate.mockResolvedValueOnce(reply);
+    await transformProblem({ origin: ORIGIN, count: 1 });
+    const without = mockCreate.mock.calls[1]![0]!.messages[1]!
+      .content as string;
+    expect(without).not.toContain("figureSpec");
+  });
+
+  it("그림이 필요 없으면 AI 가 낸 도형 스펙을 버린다", async () => {
+    mockCreate.mockResolvedValueOnce(
+      aiTextResponse(
+        JSON.stringify([
+          {
+            content: "안 쓰는 도형이 딸린 변형",
+            answer: "0.275",
+            solution: null,
+            originalAnswerRecomputed: "0.28",
+            figureSpec: { version: 2, points: { A: [0, 0] } },
+          },
+        ]),
+      ),
+    );
+
+    const [candidate] = await transformProblem({ origin: ORIGIN, count: 1 });
+
+    // 안 쓰는 도형을 지면에 얹을 이유도, 그 자리에서만 나는 오류를 만들 이유도 없다.
+    expect(candidate!.figureSpec).toBeNull();
+  });
+
   it("기본값은 가장 안전한 쪽 — 숫자만 바꾸고 난이도는 원본을 유지한다", async () => {
     mockCreate.mockResolvedValueOnce(
       aiTextResponse(

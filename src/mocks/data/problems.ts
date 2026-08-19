@@ -436,6 +436,7 @@ export const MOCK_PROBLEMS: ProblemEntity[] = PROBLEM_SPECS.map(
     directUseAllowed: true,
     pool: "shared",
     figureUrls: [],
+    figureSvg: null,
     createdAt: spec.createdAt,
     updatedAt: spec.updatedAt ?? spec.createdAt,
   }),
@@ -479,6 +480,7 @@ export const MOCK_PROBLEM_OTHER_USER: ProblemEntity = {
   directUseAllowed: true,
   pool: "private",
   figureUrls: [],
+  figureSvg: null,
   createdAt: "2026-05-01T09:00:00Z",
   updatedAt: "2026-05-01T09:00:00Z",
 };
@@ -504,6 +506,7 @@ export const MOCK_PROBLEM_MISSING_ANSWER: ProblemEntity = {
   directUseAllowed: true,
   pool: "shared",
   figureUrls: [],
+  figureSvg: null,
   createdAt: "2026-05-01T09:00:00Z",
   updatedAt: "2026-05-01T09:00:00Z",
 };
@@ -534,6 +537,7 @@ export const MOCK_PROBLEM_WITH_FIGURE: ProblemEntity = {
   directUseAllowed: true,
   pool: "shared",
   figureUrls: ["/figures/3391/q12.png"],
+  figureSvg: null,
   createdAt: "2026-05-01T09:00:00Z",
   updatedAt: "2026-05-01T09:00:00Z",
 };
@@ -555,6 +559,7 @@ export const MOCK_PROBLEM_OTHER_SHARED: ProblemEntity = {
   directUseAllowed: true,
   pool: "shared",
   figureUrls: [],
+  figureSvg: null,
   createdAt: "2026-05-01T09:00:00Z",
   updatedAt: "2026-05-01T09:00:00Z",
 };

@@ -301,10 +301,12 @@ describe("[T0.5.2] MSW ↔ 계약 — problem/AI 생성·변형", () => {
       count: 1,
     });
     const body = problemTransformResponseSchema.parse(await res.json());
-    expect(body.meta.figureBlockedReason).toContain("그림");
+    expect(body.meta.figureRequired).toBe(true);
+    // mock 은 첫 후보만 그려진 것으로 둔다 — 화면의 두 갈래를 다 밟게 하기 위해서다.
+    expect(body.data[0]?.figureSvg).toMatch(/^<svg/);
   });
 
-  it("POST /api/problems/transform/adopt 그림 붙은 원본은 409로 거부한다", async () => {
+  it("POST /api/problems/transform/adopt 그림 붙은 원본은 도형 스펙 없이는 409다", async () => {
     // 실서버와 **같은 문지기**가 mock 에도 서 있어야 한다. 화면은 저장 버튼을 막아
     // 여기까지 오지 않으므로, 그 가드는 이 자리에서만 살아 있을 수 있다.
     const res = await postJson("/api/problems/transform/adopt", {

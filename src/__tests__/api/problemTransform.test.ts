@@ -53,7 +53,7 @@ function jsonRequest(url: string, body?: unknown) {
   });
 }
 
-/** 검사를 통과한 후보 하나. */
+/** 검사를 통과한 후보 하나. 도형은 없다(그림이 필요 없는 문항의 기본값). */
 function passing(content = "변형된 문제") {
   return {
     content,
@@ -61,8 +61,19 @@ function passing(content = "변형된 문제") {
     solution: null,
     verified: true,
     originalAnswerRecomputed: "원본과 같은 값",
+    figureSpec: null,
+    figureSvg: null,
+    figureError: null,
   };
 }
+
+/** **실제로 그려지는** FigureSpec — 이걸 넣으면 라우트가 진짜 엔진을 부른다. */
+const DRAWABLE_SPEC = {
+  version: 2,
+  points: { A: [0, 0], B: [120, 0], C: [0, 90] },
+  segments: { AB: ["A", "B"], BC: ["B", "C"], CA: ["C", "A"] },
+  labels: { A: "A", B: "B", C: "C" },
+};
 
 /**
  * 채택 한 건 — `originalAnswerRecomputed` 는 **원본 정답과 같아야** 서버 검사를 통과한다.
@@ -120,9 +131,8 @@ describe("POST /api/problems/transform — 후보만 만든다", () => {
     mockTransformProblem.mockResolvedValueOnce([
       passing("통과한 변형"),
       {
-        content: "떨어진 변형",
+        ...passing("떨어진 변형"),
         answer: "9.99",
-        solution: null,
         verified: false,
         originalAnswerRecomputed: "전혀 다른 값",
       },
@@ -272,7 +282,10 @@ describe("그림에 기대는 원본은 변형본을 채택할 수 없다 (2026-
 
     const body = problemTransformResponseSchema.parse(await res.json());
     expect(body.data).toHaveLength(1); // 후보는 보여 준다
-    expect(body.meta.figureBlockedReason).toContain("그림");
+    expect(body.meta.figureRequired).toBe(true);
+    // 스펙이 없으면 도형이 없고, 사유가 남는다 — 조용히 통과하지 않는다.
+    expect(body.data[0]?.figureSvg).toBeNull();
+    expect(body.data[0]?.figureError).toContain("도형");
   });
 
   it("그림 없는 평범한 원본은 막지 않는다 (반대쪽)", async () => {
@@ -286,10 +299,74 @@ describe("그림에 기대는 원본은 변형본을 채택할 수 없다 (2026-
     );
 
     const body = problemTransformResponseSchema.parse(await res.json());
-    expect(body.meta.figureBlockedReason).toBeNull();
+    expect(body.meta.figureRequired).toBe(false);
   });
 
-  it("막힌 원본으로 채택을 시도하면 **서버가** 409로 거부한다", async () => {
+  it("도형 스펙을 내면 **서버가 엔진으로 그려** 후보에 실어 준다", async () => {
+    const seeded = await seedFigureProblem(
+      ["/figures/3391/q12.png"],
+      "다음 그림과 같이 $AC=4$, $BC=8$ 인 직각삼각형 ABC 의 넓이는?",
+    );
+    mockTransformProblem.mockResolvedValueOnce([
+      { ...passing("도형 있는 변형"), figureSpec: DRAWABLE_SPEC },
+    ]);
+
+    const res = await transformRoute(
+      jsonRequest("http://localhost/api/problems/transform", {
+        originProblemId: seeded.id,
+        count: 1,
+      }),
+    );
+
+    const body = problemTransformResponseSchema.parse(await res.json());
+    expect(body.meta.figureRequired).toBe(true);
+    // SVG 의 유일한 생산자는 서버다 — AI 도 화면도 마크업을 만들지 않는다.
+    expect(body.data[0]?.figureSvg).toMatch(/^<svg/);
+    expect(body.data[0]?.figureError).toBeNull();
+  });
+
+  it("스펙이 엔진 규칙을 어기면 사유를 남기고 도형은 비운다", async () => {
+    const seeded = await seedFigureProblem(
+      ["/figures/3391/q12.png"],
+      "다음 그림과 같이 $AC=4$ 인 삼각형 ABC 의 넓이는?",
+    );
+    mockTransformProblem.mockResolvedValueOnce([
+      // 허용 키 밖 — 엔진이 FigureSpecError 를 던진다. 검증은 엔진이 정본이다.
+      { ...passing("스펙 틀린 변형"), figureSpec: { version: 2, 몰라: 1 } },
+    ]);
+
+    const res = await transformRoute(
+      jsonRequest("http://localhost/api/problems/transform", {
+        originProblemId: seeded.id,
+        count: 1,
+      }),
+    );
+
+    const body = problemTransformResponseSchema.parse(await res.json());
+    expect(body.data[0]?.figureSvg).toBeNull();
+    expect(body.data[0]?.figureError).toContain("도형");
+  });
+
+  it("도형 스펙이 있으면 채택이 되고, **서버가 다시 그려** 저장한다", async () => {
+    const seeded = await seedFigureProblem(
+      ["/figures/3391/q12.png"],
+      "다음 그림과 같이 $AC=4$ 인 삼각형 ABC 의 넓이는?",
+    );
+
+    const res = await adoptRoute(
+      jsonRequest("http://localhost/api/problems/transform/adopt", {
+        originProblemId: seeded.id,
+        items: [{ ...adoptItem("도형 있는 변형"), figureSpec: DRAWABLE_SPEC }],
+      }),
+    );
+
+    expect(res.status).toBe(201);
+    const body = problemTransformAdoptResponseSchema.parse(await res.json());
+    // 화면이 보낸 것은 스펙뿐이다. 저장된 SVG 는 서버가 만든 것이어야 한다.
+    expect(body.data[0]!.figureSvg).toMatch(/^<svg/);
+  });
+
+  it("도형 스펙 없이 채택을 시도하면 **서버가** 409로 거부한다", async () => {
     const seeded = await seedFigureProblem(
       ["/figures/3391/q12.png"],
       "다음 그림과 같이 $AC=4$, $BC=8$ 인 삼각형 ABC 의 넓이는?",

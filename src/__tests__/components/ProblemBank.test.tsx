@@ -585,8 +585,11 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
     expect(MOCK_AI_TRANSFORMED_PROBLEMS[0]!.content).toContain("11");
   });
 
-  it("그림이 붙은 문항은 후보를 보여 주되 저장을 막고 사유를 말한다", async () => {
-    const { user } = await renderBank();
+  /** 그림 문항 카드를 열고 변형 패널을 띄운다 — 도형 갈래 테스트가 같이 쓴다. */
+  async function openFigureTransform(
+    user: ReturnType<typeof userEvent.setup>,
+    count?: string,
+  ) {
     await user.selectOptions(
       screen.getByLabelText("소단원"),
       MOCK_PROBLEM_WITH_FIGURE.unitId,
@@ -594,17 +597,46 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
     await waitFor(() => {
       expect(screen.getByText(/직각삼각형 ABC 의 넓이/)).toBeInTheDocument();
     });
-
     const card = screen
       .getByText(/직각삼각형 ABC 의 넓이/)
       .closest("article") as HTMLElement;
     await user.click(within(card).getByRole("button", { name: "변형" }));
     const panel = within(card).getByRole("region", { name: "변형" });
+    if (count) {
+      await user.selectOptions(within(panel).getByLabelText("개수"), count);
+    }
     await user.click(within(panel).getByRole("button", { name: "변형하기" }));
-
     await within(panel).findByText(/변형 결과/);
-    // 「저장이 안 된다」만 보이면 고장으로 읽힌다 — 왜인지를 먼저 말해야 한다.
-    expect(within(panel).getByRole("alert")).toHaveTextContent(/그림/);
+    return panel;
+  }
+
+  it("그림 문항은 도형을 새로 그려 보여 주고, 그려진 후보는 채택할 수 있다", async () => {
+    const { user } = await renderBank();
+    const panel = await openFigureTransform(user);
+
+    // 왜 도형이 붙어 있는지를 먼저 말한다.
+    expect(within(panel).getByRole("status")).toHaveTextContent(
+      /그림이 있어야 풀리는 문항/,
+    );
+    // 서버가 그려 준 SVG 가 실제로 지면에 들어간다.
+    expect(
+      panel.querySelector("[data-figure-preview] svg"),
+    ).toBeInTheDocument();
+    expect(within(panel).getAllByRole("checkbox")).toHaveLength(1);
+    expect(
+      within(panel).getByRole("button", { name: "채택분 저장" }),
+    ).toBeEnabled();
+  });
+
+  it("도형을 못 그린 후보는 사유와 함께 채택할 수 없다", async () => {
+    const { user } = await renderBank();
+    // mock 은 첫 후보를 «도형 못 그림», 마지막을 «재현 검사 실패» 로 둔다.
+    const panel = await openFigureTransform(user, "2");
+
+    expect(
+      within(panel).getByText(/도형 없음 — .*도형을 확정하지 못했습니다/),
+    ).toBeInTheDocument();
+    // 도형이 없으면 재현 검사를 통과했어도 못 쓴다 — 본문이 그림을 가리킨 채로 나간다.
     expect(within(panel).queryAllByRole("checkbox")).toHaveLength(0);
     expect(
       within(panel).getByRole("button", { name: "채택분 저장" }),

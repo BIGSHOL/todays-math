@@ -21,7 +21,8 @@ import {
   unauthorizedError,
   validationError,
 } from "@/lib/apiResponse";
-import { transformFigureBlockReason } from "@/lib/figure/transformFigureBlock";
+import { renderFigureSpec } from "@/lib/figure/renderFigureSpec";
+import { originNeedsFigure } from "@/lib/figure/transformFigureBlock";
 import { requireAccessibleProblem } from "@/lib/ownership";
 import { getSessionUser } from "@/lib/session";
 import type { ProblemType } from "@/contracts/problem.contract";
@@ -41,6 +42,7 @@ export async function POST(request: NextRequest) {
   if (!accessible.ok) return accessible.response;
 
   const origin = accessible.data;
+  const figureRequired = originNeedsFigure(origin);
 
   try {
     const candidates = await transformProblem({
@@ -56,13 +58,34 @@ export async function POST(request: NextRequest) {
       count: parsed.data.count,
       mode: parsed.data.mode,
       difficultyShift: parsed.data.difficultyShift,
+      figureRequired,
     });
 
+    // 도형이 필요한 문항이면 후보마다 **서버가** 그려 본다. 여기서 그려 두는 이유는
+    // 원장님이 채택 전에 도형을 눈으로 보셔야 하기 때문이다. 못 그린 후보는 사유가 남고
+    // 채택할 수 없다 — 실패가 침묵하지 않는다.
+    // 순차가 아니라 한꺼번에 그린다(엔진 프로세스는 후보 수만큼, 최대 10개).
+    const drawn = figureRequired
+      ? await Promise.all(
+          candidates.map(async (candidate) => {
+            if (!candidate.figureSpec) {
+              return {
+                ...candidate,
+                figureError: "AI 가 본문만으로는 도형을 확정하지 못했습니다.",
+              };
+            }
+            const result = await renderFigureSpec(candidate.figureSpec);
+            return result.ok
+              ? { ...candidate, figureSvg: result.svg, figureError: null }
+              : { ...candidate, figureSvg: null, figureError: result.error };
+          }),
+        )
+      : candidates;
+
     // 201 이 아니라 **200** 이다 — 만든 것이 없다(created nothing). 아직 자원이 아니다.
-    // 그림에 기대는 원본이면 후보는 보여 주되 채택을 막는다 — 사유를 문구째 싣는다.
     return jsonOk(problemTransformResponseSchema, {
-      data: candidates,
-      meta: { figureBlockedReason: transformFigureBlockReason(origin) },
+      data: drawn,
+      meta: { figureRequired },
     });
   } catch (error) {
     // ⚠️ `AiConfigError` 는 `AiGenerationError` 의 하위 타입이다 — **이 검사가 먼저** 와야

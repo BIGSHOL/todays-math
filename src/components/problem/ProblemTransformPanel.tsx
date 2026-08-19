@@ -30,6 +30,19 @@ import { FieldSelect } from "./FieldSelect";
 
 const MICRO = "text-[10px] font-extrabold tracking-[1.2px]";
 
+/**
+ * 채택할 수 있는 후보인가 — **한 곳에서만 판단한다.**
+ * 체크박스·개수·저장 목록이 각자 조건을 적으면 한쪽만 고쳐도 아무도 모른다.
+ */
+function isAdoptable(
+  candidate: TransformCandidate,
+  figureRequired: boolean,
+): boolean {
+  if (!candidate.verified) return false;
+  // 그림 문항인데 도형을 못 그렸으면 못 쓴다 — 본문이 그림을 가리키는 채로 나간다.
+  return !figureRequired || candidate.figureSvg !== null;
+}
+
 type Props = {
   origin: ProblemEntity;
   /** 채택분이 저장되면 목록 갱신을 위해 알린다. */
@@ -42,11 +55,8 @@ type Stage =
   | {
       name: "결과";
       candidates: TransformCandidate[];
-      /**
-       * 서버가 「이 원본은 채택하면 안 된다」고 한 사유. null 이면 채택 가능.
-       * 화면이 사유를 다시 짓지 않는다 — 서버 문구를 그대로 보여 준다.
-       */
-      figureBlockedReason: string | null;
+      /** 이 원본이 그림에 기대는 문항인가 — 참이면 도형이 있는 후보만 채택할 수 있다. */
+      figureRequired: boolean;
     };
 
 export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
@@ -73,18 +83,16 @@ export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
       setStage({
         name: "결과",
         candidates: body.data,
-        figureBlockedReason: body.meta.figureBlockedReason,
+        figureRequired: body.meta.figureRequired,
       });
       // 통과한 후보는 기본으로 채택 표시 — 떨어진 것은 애초에 고를 수 없다.
       // 그림 때문에 막힌 경우는 하나도 고르지 않는다.
       setAdopted(
-        body.meta.figureBlockedReason
-          ? new Set()
-          : new Set(
-              body.data.flatMap((candidate, at) =>
-                candidate.verified ? [at] : [],
-              ),
-            ),
+        new Set(
+          body.data.flatMap((candidate, at) =>
+            isAdoptable(candidate, body.meta.figureRequired) ? [at] : [],
+          ),
+        ),
       );
     } catch (caught) {
       // 서버가 보낸 사유를 그대로 보여 준다(problemApi.failWithServerReason).
@@ -97,13 +105,18 @@ export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
   async function saveAdopted() {
     if (stage.name !== "결과") return;
     const items = stage.candidates
-      .filter((candidate, at) => candidate.verified && adopted.has(at))
+      .filter(
+        (candidate, at) =>
+          isAdoptable(candidate, stage.figureRequired) && adopted.has(at),
+      )
       .map((candidate) => ({
         content: candidate.content,
         answer: candidate.answer,
         solution: candidate.solution,
         // 서버가 원본 정답과 다시 대 본다 — 검사를 브라우저에만 두지 않는다.
         originalAnswerRecomputed: candidate.originalAnswerRecomputed,
+        // SVG 가 아니라 **스펙**을 돌려보낸다. 서버가 다시 그린다(주입 통로를 두지 않는다).
+        figureSpec: candidate.figureSpec,
       }));
     if (items.length === 0) return;
 
@@ -131,11 +144,12 @@ export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
     });
   }
 
-  const figureBlockedReason =
-    stage.name === "결과" ? stage.figureBlockedReason : null;
+  const figureRequired = stage.name === "결과" ? stage.figureRequired : false;
   const adoptedCount =
-    stage.name === "결과" && !figureBlockedReason
-      ? stage.candidates.filter((c, at) => c.verified && adopted.has(at)).length
+    stage.name === "결과"
+      ? stage.candidates.filter(
+          (c, at) => isAdoptable(c, figureRequired) && adopted.has(at),
+        ).length
       : 0;
 
   return (
@@ -202,13 +216,15 @@ export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
           <h3 className={`mt-4 ${MICRO} text-ink`}>
             {`변형 결과 ${stage.candidates.length}건`}
           </h3>
-          {/* 막혔으면 **왜인지**를 먼저 말한다. 「저장이 안 된다」만 보이면 고장으로 읽힌다. */}
-          {figureBlockedReason ? (
+          {/* 그림 문항이라는 사실을 **먼저** 말한다. 도형이 왜 붙어 있는지,
+              왜 어떤 후보는 못 쓰는지가 그 다음 줄들에서 이어진다. */}
+          {figureRequired ? (
             <p
-              role="alert"
-              className="mt-2 border-l-[3px] border-g-red-text bg-surface p-3 text-[12.5px] font-bold text-g-red-text"
+              role="status"
+              className="mt-2 border-l-[3px] border-ink bg-surface p-3 text-[12.5px] text-ink"
             >
-              {figureBlockedReason}
+              그림이 있어야 풀리는 문항입니다 — 변형본의 도형을 새로 그렸습니다. 도형까지
+              확인하고 채택해주세요.
             </p>
           ) : null}
           <ol className="mt-2 space-y-2">
@@ -220,11 +236,7 @@ export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
               >
                 <div className="flex flex-wrap items-baseline gap-2">
                   <span className={`${MICRO} text-text-2`}>{at + 1}</span>
-                  {figureBlockedReason ? (
-                    <span className={`ml-auto ${MICRO} text-g-red-text`}>
-                      채택 불가
-                    </span>
-                  ) : candidate.verified ? (
+                  {isAdoptable(candidate, figureRequired) ? (
                     <label className="ml-auto flex cursor-pointer items-center gap-2">
                       <input
                         type="checkbox"
@@ -245,6 +257,21 @@ export function ProblemTransformPanel({ origin, onAdopted, onClose }: Props) {
                   className="mt-2 text-[13px] text-ink"
                   text={candidate.content}
                 />
+                {/* 도형은 **서버가 그린 것**만 그린다 — 엔진(`render_figure_spec`)이 만들고
+                    `sanitize_svg` 를 통과한 마크업이다. 클라이언트가 SVG 를 만들거나 실어
+                    보내는 경로는 없다(계약: 채택 시 되돌아가는 것은 스펙뿐). */}
+                {figureRequired && candidate.figureSvg ? (
+                  <div
+                    data-figure-preview
+                    className="mt-3 max-w-[280px] [&>svg]:h-auto [&>svg]:w-full"
+                    dangerouslySetInnerHTML={{ __html: candidate.figureSvg }}
+                  />
+                ) : null}
+                {figureRequired && candidate.figureError ? (
+                  <p className={`mt-2 ${MICRO} text-g-red-text`}>
+                    {`도형 없음 — ${candidate.figureError}`}
+                  </p>
+                ) : null}
                 <p className="mt-2 flex flex-wrap items-baseline gap-2">
                   <span className={`${MICRO} text-text-2`}>정답</span>
                   <MathText

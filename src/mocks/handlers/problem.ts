@@ -14,7 +14,10 @@ import { http, type HttpHandler } from "msw";
 
 import { deleteResponseSchema } from "@/contracts/common.contract";
 import { verifiesOriginalReproduction } from "@/lib/ai/originalReproduction";
-import { transformFigureBlockReason } from "@/lib/figure/transformFigureBlock";
+import {
+  FIGURE_MISSING_REASON,
+  originNeedsFigure,
+} from "@/lib/figure/transformFigureBlock";
 import {
   problemCreateRequestSchema,
   problemFilterQuerySchema,
@@ -54,6 +57,18 @@ import {
 } from "./_helpers";
 
 /** 채택 저장이 만들어 내는 mock id 앞자리 — 실서버가 부여하는 UUID 자리를 흉내 낸다. */
+/** 화면의 도형 경로를 밟기 위한 최소 스펙·SVG — 실서버는 Python 엔진이 만든다. */
+const MOCK_FIGURE_SPEC = {
+  version: 2,
+  points: { A: [0, 0], B: [120, 0], C: [0, 90] },
+  segments: { AB: ["A", "B"], BC: ["B", "C"], CA: ["C", "A"] },
+  labels: { A: "A", B: "B", C: "C" },
+};
+const MOCK_FIGURE_SVG =
+  '<svg viewBox="0 0 140 110" xmlns="http://www.w3.org/2000/svg">' +
+  '<polygon points="10,100 130,100 10,10" fill="none" stroke="#111" stroke-width="2"/>' +
+  "</svg>";
+
 const MOCK_TRANSFORM_ADOPT_ID_PREFIX = "aa000000-0000-4000-8000-0000000000";
 
 /** 등록형(30개) + AI 생성/변형(8개) 전체 — GET 목록/단건 조회가 참조하는 전체 풀. */
@@ -113,6 +128,7 @@ export const problemHandlers: HttpHandler[] = [
           directUseAllowed: true,
           pool: parsed.data.pool,
           figureUrls: [],
+          figureSvg: null,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         },
@@ -275,30 +291,42 @@ export const problemHandlers: HttpHandler[] = [
 
     // 마지막 하나는 **일부러 검사 탈락**으로 둔다 — 화면이 「폐기」와 사유를 그리는
     // 경로가 mock 에서 한 번도 안 밟히면, 그 경로는 E2E 전까지 아무도 안 본다.
+    // 실서버와 **같은 함수**로 「그림이 필요한 문항인가」를 정한다 — mock 이 제 손으로
+    // 규칙을 적으면 둘이 갈라진다.
+    const figureRequired = originNeedsFigure({
+      content: origin.content,
+      figureUrls: origin.figureUrls ?? [],
+      figureSvg: origin.figureSvg ?? null,
+    });
+
     const candidates = MOCK_AI_TRANSFORMED_PROBLEMS.slice(
       0,
       parsed.data.count,
     ).map((p, at, all) => {
       const verified = all.length === 1 || at < all.length - 1;
+      // 브라우저에서는 Python 엔진을 띄울 수 없다. **모양만** 실서버와 맞춘다.
+      //
+      // 두 실패 갈래를 **다른 후보**에 앉힌다 — 재현 검사 실패는 마지막(위 `verified`),
+      // 도형 실패는 첫째. 같은 후보에 겹치면 화면에서 「폐기 사유가 무엇인지」를
+      // 구분해 확인할 수 없다(그러면 테스트가 두 갈래를 못 가른다).
+      const drawn = figureRequired && (all.length === 1 || at > 0);
       return {
         content: p.content,
         answer: p.answer,
         solution: p.solution,
         verified,
         originalAnswerRecomputed: verified ? origin.answer : "다른 값",
+        figureSpec: drawn ? MOCK_FIGURE_SPEC : null,
+        figureSvg: drawn ? MOCK_FIGURE_SVG : null,
+        figureError: figureRequired && !drawn
+          ? "AI 가 본문만으로는 도형을 확정하지 못했습니다."
+          : null,
       };
     });
 
-    // 실서버와 **같은 함수**로 막는다 — mock 이 제 손으로 규칙을 적으면 둘이 갈라진다.
     return jsonOk(problemTransformResponseSchema, {
       data: candidates,
-      meta: {
-        figureBlockedReason: transformFigureBlockReason({
-          content: origin.content,
-          figureUrls: origin.figureUrls ?? [],
-          figureSvg: null,
-        }),
-      },
+      meta: { figureRequired },
     });
   }),
 
@@ -314,13 +342,16 @@ export const problemHandlers: HttpHandler[] = [
     );
     if (!origin) return notFoundError("원본 문제");
 
-    // 실서버와 같은 두 문지기 — 없으면 mock 만 통과하는 경로가 생긴다.
-    const figureBlocked = transformFigureBlockReason({
+    // 실서버와 같은 문지기 — 없으면 mock 만 통과하는 경로가 생긴다.
+    // 도형이 필요한데 스펙이 없는 항목이 하나라도 있으면 저장하지 않는다.
+    const needsFigure = originNeedsFigure({
       content: origin.content,
       figureUrls: origin.figureUrls ?? [],
-      figureSvg: null,
+      figureSvg: origin.figureSvg ?? null,
     });
-    if (figureBlocked) return jsonError("CONFLICT", figureBlocked, 409);
+    if (needsFigure && parsed.data.items.some((item) => !item.figureSpec)) {
+      return jsonError("CONFLICT", FIGURE_MISSING_REASON, 409);
+    }
     const failed = parsed.data.items.filter(
       (item) => !verifiesOriginalReproduction(origin, item),
     );
@@ -343,6 +374,7 @@ export const problemHandlers: HttpHandler[] = [
       content: item.content,
       answer: item.answer,
       solution: item.solution,
+      figureSvg: item.figureSpec ? MOCK_FIGURE_SVG : null,
       source: "transformed" as const,
       originProblemId: origin.id,
       unitId: origin.unitId,

@@ -92,6 +92,7 @@ export const ProblemCard = memo(function ProblemCard({
         <PaperProblemView
           content={problem.content}
           figureUrls={problem.figureUrls}
+          figureSvg={problem.figureSvg}
         />
 
         <div className="mt-auto flex flex-wrap justify-end gap-2 pt-6 print:hidden">
