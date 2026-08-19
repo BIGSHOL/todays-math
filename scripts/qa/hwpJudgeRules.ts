@@ -1,3 +1,9 @@
+import {
+  ANSWER_CIRCLED_CLASS,
+  circledValueRaw,
+} from "../../src/lib/math/circledNumber";
+import { parseProblemContent } from "../../src/lib/problem/parseProblemContent";
+
 /**
  * 트랙 D-2 — **어느 문항이 PDF 경로 때문에 망가졌는지** 가르는 규칙.
  *
@@ -88,6 +94,38 @@ export function dice(a: string, b: string): number {
     inter += Math.min(v, A.get(g) ?? 0);
   }
   return (2 * inter) / total;
+}
+
+/**
+ * **포함도** — `b` 의 bigram 중 몇 %가 `a` 에도 있는가 (비대칭).
+ *
+ * `dice` 는 대칭이라 **크기가 다르면 벌한다.** 이 트랙에서는 크기가 다른 것이 정상이다:
+ *  - DB 한 행에 문항이 여럿 뭉쳐 있으면(실측 덕원중 13: 한글 287자) DB 쪽이 훨씬 크다.
+ *  - `_split_choices` 가 발문을 일찍 자르면 HWP 쪽이 훨씬 작다(강북중 6: 16자).
+ * 두 경우 다 **같은 문항인데** Dice 는 0.11~0.28 로 떨어져 «다른 문제»로 몬다.
+ * 포함도로 물으면 셋 다 1.000 이고, 진짜 다른 문제는 0.03~0.24 로 남는다.
+ * 「문턱이 아니라 축이 틀린 것이다」(CLAUDE.md 2026-08-18).
+ */
+export function containment(a: string, b: string): number {
+  if (b.length < 2) return 0;
+  const A = new Map<string, number>();
+  for (let i = 0; i < a.length - 1; i += 1) {
+    const g = a.slice(i, i + 2);
+    A.set(g, (A.get(g) ?? 0) + 1);
+  }
+  const used = new Map<string, number>();
+  let total = 0;
+  let hit = 0;
+  for (let i = 0; i < b.length - 1; i += 1) {
+    const g = b.slice(i, i + 2);
+    total += 1;
+    const u = used.get(g) ?? 0;
+    if (u < (A.get(g) ?? 0)) {
+      hit += 1;
+      used.set(g, u + 1);
+    }
+  }
+  return total > 0 ? hit / total : 0;
 }
 
 /** 해설 지면 냄새. PDF 추출기가 뒤쪽 해설면의 `1.` `2.` 줄머리를 앞 문제 위에 덮어썼다. */
@@ -436,4 +474,113 @@ export type Verdict = "교체" | "보류" | "유지";
 export function verdictOf(s: Signals): Verdict {
   if (s.S.length === 0) return "유지";
   return s.H.length === 0 ? "교체" : "보류";
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * 5. 편 정렬 — **`number` 는 미주 순번이지 시험지 번호가 아니다.**
+ *
+ * `judge-hwp-replacement.ts`(D-2 교체)와 `measure-hwp-rescue.ts`(회수 측정)가
+ * **이 한 벌**을 쓴다. 한쪽만 옮기면 두 트랙의 숫자가 말없이 갈라진다
+ * (CLAUDE.md 2026-08-18 «같은 규칙을 쓰는 자리가 둘이면 한 숫자를 두 곳이 쓰게 하라»).
+ * ──────────────────────────────────────────────────────────────────────────── */
+const ALIGN_OFFSETS = [0, 1, -1, 2, -2, 3, -3, 4, -4, 5, -5];
+/** 오프셋 0 을 버리려면 다른 오프셋이 이만큼 뚜렷이 나아야 한다. */
+const SHIFT_MARGIN = 1.5;
+const SHIFT_MIN_STRONG = 3;
+
+export type Align = {
+  offset: number;
+  grade: "확정" | "정황" | "근거없음";
+  strong: number;
+  sumSim: number;
+  scoreEq: number;
+  ansEq: number;
+  pairs: number;
+};
+
+/** 원문자·공백을 지운 정답 비교용 표기. 정답 컬럼은 트랙 B 소관이라 **읽기만** 한다. */
+export const normAnswer = (s: string): string =>
+  (s ?? "")
+    .replace(/\s+/g, "")
+    // 원문자 → 숫자. 계열표는 `circledNumber.ts` **한 곳**에서 온다 —
+    // 예전엔 ①..⑤ 만 봐서 `➂` 로 적힌 정답이 그대로 남아 비교가 어긋났다.
+    .replace(new RegExp(`[${ANSWER_CIRCLED_CLASS}]`, "g"), (c) =>
+      String(circledValueRaw(c)),
+    );
+
+export function scoreOffset(
+  qs: HwpQ[],
+  rows: Map<number, DbRow>,
+  off: number,
+): Omit<Align, "offset" | "grade"> {
+  let pairs = 0;
+  let strong = 0;
+  let sumSim = 0;
+  let scoreEq = 0;
+  let ansEq = 0;
+  for (const q of qs) {
+    const r = rows.get(q.number + off);
+    if (!r) continue;
+    pairs += 1;
+    const sv = dice(
+      sigKo(q.stem),
+      sigKo(parseProblemContent(r.content).question),
+    );
+    sumSim += sv;
+    if (sv >= 0.7) strong += 1;
+    if (
+      q.score != null &&
+      r.score != null &&
+      Math.abs(q.score - r.score) < 0.01
+    ) {
+      scoreEq += 1;
+    }
+    const a = normAnswer(q.answer ?? "");
+    const b = normAnswer(r.answer === "(정답 없음)" ? "" : r.answer);
+    if (a && b && a === b) ansEq += 1;
+  }
+  return { pairs, strong, sumSim, scoreEq, ansEq };
+}
+
+const composite = (m: {
+  strong: number;
+  sumSim: number;
+  scoreEq: number;
+  ansEq: number;
+}) => m.strong * 2 + m.sumSim + m.scoreEq + m.ansEq;
+
+export function alignExam(qs: HwpQ[], rows: Map<number, DbRow>): Align {
+  const at = new Map<number, ReturnType<typeof scoreOffset>>();
+  for (const off of ALIGN_OFFSETS) at.set(off, scoreOffset(qs, rows, off));
+  const zero = at.get(0)!;
+  const c0 = composite(zero);
+
+  let bestOff = 0;
+  let bestC = c0;
+  for (const [off, m] of at) {
+    if (off === 0) continue;
+    const c = composite(m);
+    // 오프셋 이동은 **뚜렷한 우위 + 실제 강한 일치**가 둘 다 있을 때만 인정한다.
+    if (
+      c > bestC &&
+      c >= c0 * SHIFT_MARGIN + 2 &&
+      m.strong >= SHIFT_MIN_STRONG
+    ) {
+      bestOff = off;
+      bestC = c;
+    }
+  }
+  const m = at.get(bestOff)!;
+  const others = [...at.entries()]
+    .filter(([o]) => o !== bestOff)
+    .map(([, v]) => composite(v));
+  const runnerUp = others.length ? Math.max(...others) : 0;
+
+  let grade: Align["grade"];
+  if (m.strong >= 3 || m.scoreEq + m.ansEq >= 3) grade = "확정";
+  else if (m.pairs >= 3 && bestC >= runnerUp * 1.5 && bestC > 0.5)
+    grade = "정황";
+  else grade = "근거없음";
+
+  return { offset: bestOff, grade, ...m };
 }

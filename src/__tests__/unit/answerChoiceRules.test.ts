@@ -161,8 +161,11 @@ describe("choiceLabels — 지면에 찍히는 보기의 «원래 번호»", () 
     );
   });
 
-  it("줄 중간에 붙은 ② 는 안 잡힌다 — 라벨이 [1,3,4,5]", () => {
-    expect(choiceLabels(GLUED)?.labels).toEqual([1, 3, 4, 5]);
+  it("줄 중간에 붙은 ② 도 **R2 가 잡는다** — 라벨이 [1,2,3,4,5] (D-58)", () => {
+    // 2026-08-19 원장님 확정 전에는 [1,3,4,5] 였다. 그때 ⑤ 는 네 번째 자리라
+    // 지면에 ④ 로 찍혔고, 학생이 ⑤ 를 고를 칸이 없었다. R2 가 제품 파서에
+    // 들어가면서 이 부류 27건이 살아났다.
+    expect(choiceLabels(GLUED)?.labels).toEqual([1, 2, 3, 4, 5]);
   });
 
   it("두 열 지면은 라벨이 [1,3,5,2,4] 로 나온다 (개수는 5로 맞다)", () => {
@@ -292,12 +295,10 @@ describe("judgeAnswerChoice — 판정", () => {
     expect(judge(HEALTHY, "③").verdict).toBe("정상");
   });
 
-  it("정답 보기가 다른 번호로 찍히면 «정답번호어긋남»", () => {
-    // GLUED 는 라벨 [1,3,4,5] → ⑤ 는 네 번째 자리라 지면에 ④ 로 찍힌다.
-    const got = judge(GLUED, "⑤");
-    expect(got.verdict).toBe("정답번호어긋남");
-    expect(got.cause).toBe("마커가 줄 중간에 붙었다");
-    expect(got.fixedByLabelRendering).toBe(true);
+  it("줄 중간 마커 부류는 **R2 가 살린다** — 예전엔 «정답번호어긋남» (D-58)", () => {
+    // 이 자리가 R2 의 값이다. 고치기 전에는 라벨이 [1,3,4,5] 라 정답 ⑤ 가
+    // 지면에 ④ 로 찍혔다 — 조용히 틀린 시험지였다.
+    expect(judge(GLUED, "⑤").verdict).toBe("정상");
   });
 
   it("두 열 순서도 «정답번호어긋남» — 개수가 5라고 짝이 맞는 게 아니다", () => {

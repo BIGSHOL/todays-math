@@ -29,10 +29,9 @@ import { parseProblemContent } from "../../src/lib/problem/parseProblemContent";
 import { renderKatexSafe } from "../../src/lib/math/katexRender";
 import { tokenizeMath } from "../../src/lib/math/segments";
 import {
+  alignExam,
   buildHwpContent,
-  dice,
   judgeSignals,
-  sigKo,
   verdictOf,
   type DbRow,
   type HwpQ,
@@ -46,108 +45,6 @@ const DB = "scripts/qa/reports/db-content.jsonl";
 const HWP_DIR = "scripts/qa/reports/hwp-latex";
 const OUT = "scripts/qa/reports/hwp-verdicts.jsonl";
 const SUM = "scripts/qa/reports/hwp-verdicts-summary.json";
-
-const ALIGN_OFFSETS = [0, 1, -1, 2, -2, 3, -3, 4, -4, 5, -5];
-/** 오프셋 0 을 버리려면 다른 오프셋이 이만큼 뚜렷이 나아야 한다. */
-const SHIFT_MARGIN = 1.5;
-const SHIFT_MIN_STRONG = 3;
-
-type Align = {
-  offset: number;
-  grade: "확정" | "정황" | "근거없음";
-  strong: number;
-  sumSim: number;
-  scoreEq: number;
-  ansEq: number;
-  pairs: number;
-};
-
-/** 원문자·공백을 지운 정답 비교용 표기. 정답 컬럼은 트랙 B 소관이라 **읽기만** 한다. */
-const normAnswer = (s: string): string =>
-  (s ?? "")
-    .replace(/\s+/g, "")
-    // 원문자 → 숫자. 계열표는 `circledNumber.ts` **한 곳**에서 온다 —
-    // 예전엔 ①..⑤ 만 봐서 `➂` 로 적힌 정답이 그대로 남아 비교가 어긋났다.
-    .replace(new RegExp(`[${ANSWER_CIRCLED_CLASS}]`, "g"), (c) =>
-      String(circledValueRaw(c)),
-    );
-
-function scoreOffset(
-  qs: HwpQ[],
-  rows: Map<number, DbRow>,
-  off: number,
-): Omit<Align, "offset" | "grade"> {
-  let pairs = 0;
-  let strong = 0;
-  let sumSim = 0;
-  let scoreEq = 0;
-  let ansEq = 0;
-  for (const q of qs) {
-    const r = rows.get(q.number + off);
-    if (!r) continue;
-    pairs += 1;
-    const sv = dice(
-      sigKo(q.stem),
-      sigKo(parseProblemContent(r.content).question),
-    );
-    sumSim += sv;
-    if (sv >= 0.7) strong += 1;
-    if (
-      q.score != null &&
-      r.score != null &&
-      Math.abs(q.score - r.score) < 0.01
-    ) {
-      scoreEq += 1;
-    }
-    const a = normAnswer(q.answer ?? "");
-    const b = normAnswer(r.answer === "(정답 없음)" ? "" : r.answer);
-    if (a && b && a === b) ansEq += 1;
-  }
-  return { pairs, strong, sumSim, scoreEq, ansEq };
-}
-
-const composite = (m: {
-  strong: number;
-  sumSim: number;
-  scoreEq: number;
-  ansEq: number;
-}) => m.strong * 2 + m.sumSim + m.scoreEq + m.ansEq;
-
-function alignExam(qs: HwpQ[], rows: Map<number, DbRow>): Align {
-  const at = new Map<number, ReturnType<typeof scoreOffset>>();
-  for (const off of ALIGN_OFFSETS) at.set(off, scoreOffset(qs, rows, off));
-  const zero = at.get(0)!;
-  const c0 = composite(zero);
-
-  let bestOff = 0;
-  let bestC = c0;
-  for (const [off, m] of at) {
-    if (off === 0) continue;
-    const c = composite(m);
-    // 오프셋 이동은 **뚜렷한 우위 + 실제 강한 일치**가 둘 다 있을 때만 인정한다.
-    if (
-      c > bestC &&
-      c >= c0 * SHIFT_MARGIN + 2 &&
-      m.strong >= SHIFT_MIN_STRONG
-    ) {
-      bestOff = off;
-      bestC = c;
-    }
-  }
-  const m = at.get(bestOff)!;
-  const others = [...at.entries()]
-    .filter(([o]) => o !== bestOff)
-    .map(([, v]) => composite(v));
-  const runnerUp = others.length ? Math.max(...others) : 0;
-
-  let grade: Align["grade"];
-  if (m.strong >= 3 || m.scoreEq + m.ansEq >= 3) grade = "확정";
-  else if (m.pairs >= 3 && bestC >= runnerUp * 1.5 && bestC > 0.5)
-    grade = "정황";
-  else grade = "근거없음";
-
-  return { offset: bestOff, grade, ...m };
-}
 
 /** KaTeX 가 못 그린 수식 개수. renderKatexSafe 는 실패해도 붉게 두지 않고
  *  중립 `.math-raw` 로 떨어뜨린다(CLAUDE.md 교훈) — 그 폴백을 센다. */

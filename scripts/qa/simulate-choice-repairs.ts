@@ -24,7 +24,10 @@
 import { PrismaClient } from "@prisma/client";
 
 import { isFatal, judgeAnswerChoice } from "./answerChoiceRules";
-import { BODY_CHOICE_MARKS } from "../../src/lib/math/circledNumber";
+import { splitInlineChoiceMarkers } from "./choiceRepairRules";
+
+// 앞 트랙이 이 경로에서 가져다 쓰던 이름을 유지한다.
+export { splitInlineChoiceMarkers } from "./choiceRepairRules";
 
 const prisma = new PrismaClient();
 
@@ -36,50 +39,6 @@ interface Row {
   school: string | null;
   questionNumber: number | null;
   questionType: string | null;
-}
-
-const CIRCLED_1_15 = BODY_CHOICE_MARKS;
-
-/**
- * R2 — 「바로 앞 마커의 **다음 번호**가 줄 중간에 있으면」 그 앞에서 줄을 나눈다.
- *
- * ⚠️ **줄 중간에서는 원문자(`①`)만 본다.** 처음에는 `N.`·`N)` 도 함께 봤는데,
- * 성한 문항 **3건이 깨졌다** — `-4.5` 의 `4.` 와 `(1,~-2)` 의 `2)` 가 마커로 잡혀
- * 보기가 쪼개졌다(성명여중 11 · 경상여고 1 · 동원중 15). 소수점과 좌표는 이 축에서
- * 마커와 **겹친다.** 겹치는 축에 문턱을 놓으면 어느 쪽으로 옮겨도 한쪽이 틀리므로
- * (2026-08-18 «문턱이 아니라 축이 틀린 것이다») 열쇠를 **글자 모양**으로 바꿨다.
- * 줄머리 마커는 종전대로 둘 다 본다 — 거기서는 겹치지 않는다.
- */
-export function splitInlineChoiceMarkers(raw: string): string {
-  const text = (raw ?? "").replace(/\r\n?/g, "\n");
-  let out = "";
-  let rest = text;
-  let expected = 0; // 다음에 올 보기 번호. 0 이면 아직 첫 마커를 못 봤다.
-  const MARKER = new RegExp(`(\\n[ \\t]*)?([${CIRCLED_1_15}]|[1-9][0-9]?[.)])`);
-  for (;;) {
-    const m = MARKER.exec(rest);
-    if (!m) break;
-    const atLineStart = m[1] !== undefined;
-    const token = m[2]!;
-    const circled = CIRCLED_1_15.indexOf(token[0]!);
-    const num = circled >= 0 ? circled + 1 : Number(/^(\d+)/.exec(token)![1]);
-    const end = m.index + m[0].length;
-
-    if (atLineStart) {
-      expected = num + 1;
-      out += rest.slice(0, end);
-    } else if (circled >= 0 && (num === expected || num === 1)) {
-      // 줄 중간인데 **원문자**이고 «다음 번호»다 → 경계로 본다.
-      // `expected === 0 && num === 1` 은 **줄머리 마커가 하나도 없는** 문항의 시작이다
-      // (보기 다섯이 통째로 한 줄에 붙은 부류). 이걸 안 두면 그 부류가 통째로 안 잡힌다.
-      out += `${rest.slice(0, m.index)}\n${token} `;
-      expected = num + 1;
-    } else {
-      out += rest.slice(0, end);
-    }
-    rest = rest.slice(end);
-  }
-  return out + rest;
 }
 
 async function main(): Promise<void> {
