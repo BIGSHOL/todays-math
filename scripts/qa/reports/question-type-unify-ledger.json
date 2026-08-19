@@ -1,12 +1,44 @@
 {
  "적용": "시험지 원본이 «서답형» 인 문항을 questionType=서술형 으로 통일 — 원장님 확정 2026-08-19 (D-57)",
- "기준시각": "2026-08-19T07:02:07.279Z",
+ "기준시각": "2026-08-19T07:16:08.184Z",
  "되돌리기": "ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-question-type-unify.ts --revert",
  "적용됨": true,
- "고친건수": 30,
- "이번계획": 30,
- "이어받음": 0,
+ "고친건수": 34,
+ "이번계획": 4,
+ "이어받음": 30,
  "이전상태": [
+  {
+   "id": "3c1372c1-c63f-4655-90d4-ffc1cec1c353",
+   "questionType": "객관식",
+   "school": "계성중",
+   "questionNumber": 22,
+   "머리표": "[서술형 $4$]",
+   "exam": "3505"
+  },
+  {
+   "id": "4b167af1-cd6a-4ba8-95e8-a2f7e2a40f9f",
+   "questionType": "객관식",
+   "school": "소선여중",
+   "questionNumber": 18,
+   "머리표": "[서술형 $2$]",
+   "exam": "3823"
+  },
+  {
+   "id": "0585d2c7-f0a8-47a2-822f-9b07784580ed",
+   "questionType": "객관식",
+   "school": "시지중",
+   "questionNumber": 20,
+   "머리표": "[서술형 $3$]",
+   "exam": "3829"
+  },
+  {
+   "id": "edcbb449-1b01-4bce-9e16-0593463150d9",
+   "questionType": "객관식",
+   "school": "수성중",
+   "questionNumber": 19,
+   "머리표": "[서술형 $2$]",
+   "exam": "4105"
+  },
   {
    "id": "d104e63a-30f6-46ec-b281-447f5610bbf1",
    "questionType": "단답형",

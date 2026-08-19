@@ -6,6 +6,7 @@
  *   ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-question-type-unify.ts --revert
  *
  * 원장님 확정(2026-08-19, D-57): 「서답형 → 서술형 으로 전부. 단답형은 그대로.」
+ * 2차(2026-08-19): 머리표가 **`[서술형]`** 인데 DB 가 객관식인 4건도 고치기로 확정.
  *
  * ## 왜 고칠 것이 남아 있나
  *
@@ -26,8 +27,8 @@
  * ## 무엇을 안 고치나
  *
  *   · 머리표가 `[단답형]` 인 15건 — 원장님이 **그대로 두라** 하셨다.
- *   · 머리표가 `[서술형]` 인데 DB 가 `객관식` 인 4건 — 같은 부류로 보이지만
- *     원장님 지시는 「서답형 → 서술형」이다. **범위 밖이라 손대지 않고 보고만 한다.**
+ *   원본 어휘 셋 중 `단답형` 만 우리 값과 이름이 같고, 나머지 둘은 **모두 `서술형`
+ *   으로 모인다.**
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
@@ -103,11 +104,12 @@ export function decideUnify(
   hwp: HwpQuestion | undefined,
   row: DbRow | undefined,
 ): Decision {
-  // ㉠ 시험지가 «서답형» 이라 한 것만 고친다. 단답형은 원장님이 그대로 두라 하셨다.
-  if (mark !== "서답형")
+  // ㉠ 시험지가 «서답형» 또는 «서술형» 이라 한 것만 고친다 — 둘은 `서술형` 으로 모인다.
+  //    «단답형» 은 원장님이 **그대로 두라** 하셨다.
+  if (mark !== "서답형" && mark !== "서술형")
     return {
       fix: false,
-      reason: `머리표가 서답형이 아니다 (${mark || "없음"})`,
+      reason: `머리표가 서답형·서술형이 아니다 (${mark || "없음"})`,
     };
   if (!hwp) return { fix: false, reason: "HWP 문항을 못 찾았다" };
   if (!row) return { fix: false, reason: "DB 에 그 행이 없다" };
@@ -242,9 +244,11 @@ async function main() {
   const rows = await fetchRows(marks.map((m) => m.id));
 
   // 🔴 분모를 먼저 찍는다. 「고칠 것 + 건너뜀」이 이 수와 안 맞으면 범위가 샌 것이다.
-  const 서답형 = marks.filter((m) => m.mark === "서답형").length;
+  const 대상 = marks.filter(
+    (m) => m.mark === "서답형" || m.mark === "서술형",
+  ).length;
   console.log(
-    `  분모 검산 — 머리표가 있는 행 ${marks.length} · 그중 «서답형» ${서답형}`,
+    `  분모 검산 — 머리표가 있는 행 ${marks.length} · 그중 «서답형·서술형» ${대상}`,
   );
 
   const todo: UnifiedRow[] = [];
@@ -261,18 +265,20 @@ async function main() {
         머리표: m.hwp.label ?? "",
         exam: m.exam,
       });
-    } else if (m.mark === "서답형") {
+    } else if (m.mark === "서답형" || m.mark === "서술형") {
       skipped.set(d.reason, (skipped.get(d.reason) ?? 0) + 1);
     }
   }
 
   const skippedTotal = [...skipped.values()].reduce((a, b) => a + b, 0);
-  if (todo.length + skippedTotal !== 서답형)
+  if (todo.length + skippedTotal !== 대상)
     throw new Error(
-      `범위가 샜다 — 고칠 것 ${todo.length} + 건너뜀 ${skippedTotal} 이 «서답형» ${서답형} 과 안 맞는다.`,
+      `범위가 샜다 — 고칠 것 ${todo.length} + 건너뜀 ${skippedTotal} 이 대상 ${대상} 과 안 맞는다.`,
     );
 
-  console.log(`── 서답형 → 서술형 통일 ${APPLY ? "(적용)" : "(드라이런)"} ──`);
+  console.log(
+    `── 서답형·서술형 → questionType 서술형 통일 ${APPLY ? "(적용)" : "(드라이런)"} ──`,
+  );
   console.log(`  고칠 것  ${todo.length}건`);
   for (const [r, n] of [...skipped.entries()].sort((a, b) => b[1] - a[1]))
     console.log(`  건너뜀 ${String(n).padStart(4)}  ${r}`);

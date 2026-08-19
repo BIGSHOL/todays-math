@@ -51,9 +51,31 @@ describe("decideUnify", () => {
     expect(decideUnify("서답형", hwp(), db())).toEqual({ fix: true });
   });
 
-  // 원장님: 「단답형은 그대로」.
-  it.each(["단답형", "서술형", ""])("머리표가 «%s» 면 안 고친다", (mark) => {
+  // 원장님: 「단답형은 그대로」. 그 값만 우리 어휘와 이름이 같다.
+  it.each(["단답형", ""])("머리표가 «%s» 면 안 고친다", (mark) => {
     const d = decideUnify(mark, hwp(), db());
+    expect(d.fix).toBe(false);
+  });
+
+  // 2차 확정(2026-08-19): 머리표가 «서술형» 인데 DB 가 객관식인 4건도 고친다.
+  // 보기 0칸 · 정답이 번호 아님이라 객관식일 수 없다.
+  it("머리표가 «서술형» 인데 DB 가 객관식이면 고친다", () => {
+    expect(
+      decideUnify(
+        "서술형",
+        hwp({ label: "[서술형 $3$]" }),
+        db({ questionType: "객관식", answer: "x=33, y=27" }),
+      ),
+    ).toEqual({ fix: true });
+  });
+
+  // 같은 머리표라도 보기가 남아 있으면 진짜 객관식이다 — 가드는 그대로 산다.
+  it("머리표가 «서술형» 이어도 보기가 있으면 안 고친다", () => {
+    const d = decideUnify(
+      "서술형",
+      hwp({ label: "[서술형 $3$]", choices: ["①", "②"] }),
+      db({ questionType: "객관식", answer: "x=33" }),
+    );
     expect(d.fix).toBe(false);
   });
 
