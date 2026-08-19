@@ -140,6 +140,47 @@ def intersects(bb, w, h, pad):
     return not (bb[2] < -pad or bb[0] > w + pad or bb[3] < -pad or bb[1] > h + pad)
 
 
+def fix_use_stroke_width(body):
+    """`<use>` 의 `stroke-width` 를 **글리프 변환 배율로 나눈다.**
+
+    ## 왜 (실측 2026-08-19 · 눈으로 찾았다)
+
+    HWP 는 「〈 조 건 〉」 같은 머리글을 **글자를 칠하지 않고 윤곽만 얇게 긋는**
+    방식(PDF 텍스트 렌더 모드 stroke)으로 그린다. MuPDF 는 그것을
+
+        <use href="#font_9_86" stroke-width=".1668" transform="matrix(9,0,0,-9,…)"/>
+
+    로 적는데, SVG 에서 `<use>` 의 `stroke-width` 는 **참조된 내용의 좌표계**에서
+    해석되므로 그 변환(9배)에 **같이 곱해진다.** 즉 0.1668pt 로 그으려던 것이
+    1.5pt 가 되어 **글자가 통째로 굵어진다.**
+
+    ⚠️ **겹쳐 대조로는 이걸 못 잡았다** — 글자가 굵어져도 평균 절대차는 조금만
+    움직인다. 표본을 400dpi 로 확대해 눈으로 보고서야 드러났다.
+
+    그래서 배율(변환 행렬식의 제곱근)로 나눠 원래 물리 굵기로 되돌린다.
+    """
+    def one(m):
+        tag = m.group(0)
+        sw = re.search(r'stroke-width="([-\d.eE]+)"', tag)
+        tr = re.search(r'transform="matrix\(([^)]*)\)"', tag)
+        if not sw or not tr:
+            return tag
+        v = _nums(tr.group(1))
+        if len(v) < 6:
+            return tag
+        det = abs(v[0] * v[3] - v[1] * v[2])
+        if det <= 0:
+            return tag
+        sc = det ** 0.5
+        try:
+            w0 = float(sw.group(1))
+        except ValueError:
+            return tag
+        return tag.replace(sw.group(0), 'stroke-width="%.6g"' % (w0 / sc))
+
+    return re.sub(r"<use\b[^>]*/>", one, body)
+
+
 def prune(svg, w, h, pad=2.0, glyph_span=1.6):
     """칸(0,0,w,h) 밖의 그릴 요소를 쳐내고, 남은 것이 쓰는 defs 만 남긴다.
 
@@ -227,6 +268,7 @@ def prune(svg, w, h, pad=2.0, glyph_span=1.6):
                     grow = True
     new_defs = "<defs>\n%s\n</defs>" % "\n".join(
         byid[i] for i in sorted(used_ids) if i in byid)
+    body = fix_use_stroke_width(body)
     # ⚠️ **흰 바탕을 깔아 준다.** MuPDF 의 쪽 SVG 에는 배경이 없어서 `alpha=False`
     #    로 그리면 **온통 검게** 나온다(첫 대조에서 겹침 차이가 0.94 였다 —
     #    도형이 틀린 게 아니라 바탕이 없었던 것이다). 지면도 흰 종이라 이게 맞다.
