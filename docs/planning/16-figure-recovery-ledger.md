@@ -40,18 +40,23 @@ npx tsx scripts/qa/report-missing-figures.ts --json   # scripts/qa/reports/missi
 
 ---
 
-## 2. 현재값 (2026-08-19 17:24 실측 — RPM 149건 + 기출 77행 적용 후)
+## 2. 현재값 (2026-08-20 실측 — RPM **본문방향 27건** 적용 후)
 
 | 구분 | 건수 | 비고 |
 |------|-----:|------|
-| **그림 유실** | **272** | 본문이 그림을 지목하는데 그림이 없다 |
+| **그림 유실** | **209** | 본문이 그림을 지목하는데 그림이 없다 |
 | └ 그중 지금 출제 가능 | **0** | 전량 `directUseAllowed=false` 로 잠금 |
-| └ RPM 교재본(`transformed`) | 218 | **149건 회수·적용 완료** — §3.13. 367 − 149 = 218 |
-| └ 기출(`past_exam`) | 52 | **옆 트랙이 77행 적용** (§3.11·§3.12) |
+| └ RPM 교재본(`transformed`) | 176 | **27건 회수·적용 완료** — §3.15. 203 − 27 = 176 |
+| └ 기출(`past_exam`) | 31 | 옆 트랙이 21행 더 적용 (52 → 31) |
 | └ 자작(`manual`) | 2 | 그림 없이는 못 푸는 자작 문항 |
 | 본문 오염 (`[그림]` 자국) | 13 | 유실이 아니라 **머리말·학원 로고가 딸려 온 자국**. 별개 결함 — §4.3 |
 | 그림이 필요 없는 것 | 44 | 그림그래프·「상자그림에서」·「…으로 나타내시오」·전개도 개념 문항. **전량 표본 확인** |
-| 미분류 | 5 | **전부 사람이 보고 판정했다**(`reviewedUnclassified.ts`). 낱말로 못 가르는 부류라 규칙은 미분류로 둔다 — §3.10 |
+| 미분류 | 6 | **전부 사람이 보고 판정했다**(`reviewedUnclassified.ts`). 낱말로 못 가르는 부류라 규칙은 미분류로 둔다 — §3.10 |
+
+> ⚠️ **272 → 209 를 한 트랙의 성과로 읽지 마라.** 둘이 섞여 있다 —
+> **RPM 27건**(§3.15, 이 줄의 트랙)과 **기출 21건**(옆 트랙). 트랙의 성과는
+> 그 트랙의 **대상 목록**으로 세야 한다: RPM 쪽은 203 → 176 이고, 27건 전량이
+> 유실 목록에서 빠진 것을 직접 확인했다(그림 있음 27 · 치수 있음 27 · 잠김 0).
 
 > ⚠️ **442 → 444 로 한 번 늘었다가 272 가 됐다.** 늘어난 것은 **미분류 20건을 눈으로 다
 > 보니 그중 2건이 진짜 유실이었기 때문**이다(둘 다 `directUseAllowed=true` 라 그림 없이
@@ -88,6 +93,7 @@ npx tsx scripts/qa/report-missing-figures.ts --json   # scripts/qa/reports/missi
 | 2026-08-19 | **표가 깨진 3건 회수(드라이런)** — 표를 통째로 오려냄 | 계획만 | — | §3.12 |
 | 2026-08-19 | **보기 그림 짝 7건 회수(드라이런)** — HWP 문단 흐름에서 | 계획만 | — | §5.4 |
 | 2026-08-19 | **RPM 무리 그림** — 지면의 `[0004~0006]` 표시로 띠를 잡아 오려 냄. **적용 완료** | **149** | 272 | §3.13 |
+| 2026-08-20 | **RPM 본문방향** — 발문이 적어 둔 자리(「오른쪽 그림」·「아래 그림」)로 갈라 오려 냄. **적용 완료** | **27** | 209 | §3.15 |
 | 2026-08-19 | **RPM 「오른쪽 그림」 폴백** — 못 찾았을 때만 띠를 오른쪽 끝까지 넓혀 재검출. **적용 완료** | **15** | 257 | §3.14 |
 
 누적 **590건 회수**(기출 745 → 174). RPM 은 회수분을 **되돌려** 681로 돌아왔다 — 아래 §3.4.
@@ -470,6 +476,40 @@ ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-missing-figure-lock.ts --revert --reco
 되어, 149행 전부 `figureUrls: []` 이던 원장이 한 번에 「317행이 이미 있었음」으로 바뀌었다
 (실측). `revertLedger.ts` 가 시연으로 잡아 둔 바로 그 사고인데 이 스크립트만 그 헬퍼에
 배선되지 않았다. `mergeLedgerRows` 를 걸어 **옛 행이 이기게** 했다.
+
+### 3.15 RPM 「본문이 말하는 자리」 — 27건 (2026-08-20)
+
+「칸에 발문이 N자 들어왔다」로 떨어진 **62건**(관문 37 + 무리 25)이 대상이다.
+§4.2 는 이 부류를 「그림과 발문이 붙어 있어 못 가른다」로 보고 **발문 줄을 흰
+사각형으로 덮고 오리기**를 다음 수로 적었는데, 지면을 떠서 보니 **덮을 필요가
+없었다** — 발문·보기가 한쪽, 그림이 다른 쪽이다. 그리고 **어느 쪽인지는 책이 스스로
+적어 뒀다**: 62건 전량에 「**오른쪽** 그림」·「**아래** 그림」이 있다(오른쪽 40 ·
+아래 19 · 다음 3 · **없는 것 0**).
+
+```bash
+python scripts/figure/crop-rpm-from-pdf.py \
+       --plan scripts/qa/reports/rpm-crop-plan-gated.json \
+       --out  scripts/qa/reports/rpm-crop-result-gated.json --widen-fallback --stem-split
+python scripts/figure/crop-rpm-from-pdf.py \
+       --plan scripts/qa/reports/rpm-group-crop-plan.json \
+       --out  scripts/qa/reports/rpm-crop-result-group.json --stem-split
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/recover-rpm-figures-from-pdf.ts --attach \
+       --result scripts/qa/reports/rpm-crop-result-gated.json \
+       --result scripts/qa/reports/rpm-crop-result-group.json
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/backfill-figure-dimensions.ts --apply
+ALLOW_UNIT_FIX=1     npx tsx scripts/qa/apply-missing-figure-lock.ts --revert --recovered
+```
+
+| | |
+|---|---|
+| 회수 | **27건** — 본문방향 폴백 **18** + 같은 실행에서 무리 계획의 기존 길 9 |
+| 눈으로 확인 | **27칸 전량**(무리 공용 중복을 빼면 그림 22장). 남의 발문·선택지·번호 배지 **0** |
+| 손실 | **0.** 옛 계획 403행에 같은 코드를 돌려 md5 대조 — 폴백 꺼짐 314장 **전량 동일**, 켜짐 +25장·**바뀐 것 0** |
+| D-20 | 덮어써서 잃는 것 **0** · 붙여도 잠긴 채 남을 것 **0** · 영향 단원 15개 전부 증가 |
+| 되돌리기 | `scripts/qa/reports/rpm-figure-attach-ledger.json` (**191행**, 커밋된다). 27행 전부 `figureUrls: []` |
+| 잠금 해제 | **48건** — 내 27 + 옆 트랙이 회수해 두고 안 푼 21 |
+
+보고서: [`tracks/reports/rpm-stem-split.md`](tracks/reports/rpm-stem-split.md)
 
 ### 남은 242건 (RPM 203 · 기출 52 · manual 2 중 RPM 몫)
 
