@@ -125,3 +125,33 @@ describe("[S-08] ProblemCard — 팔레트 정리", () => {
     expect(new Set(classes).size).toBe(3);
   });
 });
+
+/**
+ * 도형 SVG (D-55) — AI 변형이 엔진으로 새로 그린 도형이 **카드에 실제로 보이는가**.
+ *
+ * ⚠️ 이 가드가 없으면 도형이 저장은 되는데 지면에는 안 나온다. 적대적 변이에서
+ *    「카드가 도형을 안 그린다」가 **초록**이었다 — 아무도 안 보고 있었다.
+ */
+describe("[D-55] ProblemCard — 도형 SVG", () => {
+  const SVG =
+    '<svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" data-probe="1">' +
+    '<line x1="0" y1="0" x2="10" y2="10"/></svg>';
+
+  it("figureSvg 가 있으면 지면에 inline 으로 그린다", () => {
+    const { container } = render(
+      <ProblemCard
+        problem={{ ...MOCK_PROBLEM_WITH_FRACTION, figureSvg: SVG }}
+      />,
+    );
+    expect(
+      container.querySelector('[data-figure-svg] svg[data-probe="1"]'),
+    ).toBeInTheDocument();
+  });
+
+  it("figureSvg 가 없으면 빈 자리를 만들지 않는다", () => {
+    const { container } = render(
+      <ProblemCard problem={MOCK_PROBLEM_WITH_FRACTION} />,
+    );
+    expect(container.querySelector("[data-figure-svg]")).toBeNull();
+  });
+});

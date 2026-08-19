@@ -10,6 +10,8 @@ const paperVariables = PAPER_CSS_VARIABLES as CSSProperties;
 export interface PaperProblemViewProps {
   content: string;
   figureUrls?: string[];
+  /** 도형 SVG (엔진 산출물). 스캔 그림과 다른 갈래 — `ProblemContent` 주석 참조. */
+  figureSvg?: string | null;
   /** false = 이미 지면(A4Page) 안이라 틀 없이 본문만 그린다 (인쇄 템플릿 전용). */
   framed?: boolean;
 }
@@ -23,12 +25,14 @@ export interface PaperProblemViewProps {
 export function PaperProblemView({
   content,
   figureUrls,
+  figureSvg,
   framed = true,
 }: PaperProblemViewProps) {
   const body = (
     <ProblemContent
       content={content}
       figureUrls={figureUrls}
+      figureSvg={figureSvg}
       className={styles.problemText}
       // 인쇄 지면(framed=false)에서는 지연 로딩을 쓰지 않는다 — 인쇄 시점에
       // 아직 안 그려진 그림이 빠지면 학생이 못 푸는 시험지가 나간다(절대 규칙 6).

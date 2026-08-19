@@ -8,9 +8,8 @@
  */
 import { MarkdownRenderer } from "@/components/math/MarkdownRenderer";
 import { fitsTwoColumns } from "@/lib/math/displayWidth";
+import { CHOICE_MARKS } from "@/lib/math/circledNumber";
 import { parseProblemContent } from "@/lib/problem/parseProblemContent";
-
-const CHOICE_MARKS = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"];
 
 export interface ProblemContentProps {
   content: string;
@@ -20,6 +19,16 @@ export interface ProblemContentProps {
    * 순서는 지면에 나온 순서다. 참조: docs/planning/09-figure-engine-guide.md
    */
   figureUrls?: string[];
+  /**
+   * 도형 SVG (엔진 산출물, inline). `figureUrls`(스캔 래스터)와 **다른 갈래**다 —
+   * 이쪽은 벡터라 화면·인쇄가 같은 것을 쓰고 해상도 손실이 없다.
+   * AI 변형이 만드는 도형이 여기로 들어온다(D-55).
+   *
+   * ⚠️ 마크업을 그대로 붙인다. **서버(`renderFigureSpec`)만 이 값을 만든다** —
+   *    엔진이 그리고 `sanitize_svg` 를 통과한 것이다. 클라이언트가 SVG 를 실어 보내는
+   *    경로는 계약에 없다(채택 시 되돌아가는 것은 스펙뿐).
+   */
+  figureSvg?: string | null;
   className?: string;
   /**
    * 그림을 지연 로딩할지. 화면 목록(문제은행·검수)은 true —
@@ -37,6 +46,7 @@ export interface ProblemContentProps {
 export function ProblemContent({
   content,
   figureUrls,
+  figureSvg,
   className = "",
   deferFigures = true,
 }: ProblemContentProps) {
@@ -57,6 +67,14 @@ export function ProblemContent({
   return (
     <div className={className}>
       <MarkdownRenderer content={question} />
+      {figureSvg ? (
+        // 발문 뒤 — 스캔 그림과 같은 자리다. 장식 없음(05 §0).
+        <div
+          data-figure-svg
+          className="mt-3 max-w-[360px] print:max-w-[70mm] [&>svg]:h-auto [&>svg]:w-full print:break-inside-avoid"
+          dangerouslySetInnerHTML={{ __html: figureSvg }}
+        />
+      ) : null}
       {figures.length > 0 ? (
         // 발문 뒤·보기 앞 — 원본 지면 순서 그대로.
         // 장식 없음(05 §0: 유리·그림자·그라데이션 금지). 그림 자체가 내용이다.

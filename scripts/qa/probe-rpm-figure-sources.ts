@@ -33,7 +33,7 @@ import {
   classifyFigure,
   MENTIONS_FIGURE_WHERE,
   NO_FIGURE_WHERE,
-} from "./missingFigureRule";
+} from "../../src/lib/figure/missingFigureRule";
 
 const DEFAULT_SUMAEK_ENV = "C:\\Creative\\sumaek\\.env";
 const DEFAULT_POSTGRES_JS =

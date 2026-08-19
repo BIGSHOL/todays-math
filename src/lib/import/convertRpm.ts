@@ -1,4 +1,5 @@
 import { flattenStructured } from "./flattenStructured";
+import { BODY_CHOICE_MARKS } from "@/lib/math/circledNumber";
 import { mapDifficultyLabel } from "./mapDifficulty";
 import { mapProblemType } from "./mapProblemType";
 import type { ImportDraft } from "./types";
@@ -72,7 +73,8 @@ function rpmDifficultyLabel(value: unknown): string | undefined {
   return undefined;
 }
 
-const CIRCLED = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮";
+// 본문 보기 마커 — `circledNumber.ts` **한 곳**에서 온다(일부러 좁다).
+const CIRCLED = BODY_CHOICE_MARKS;
 
 /** 보기 배열을 `{id, marker, 본문}` 으로 편다. marker 가 없으면 순번으로 만든다. */
 function flattenChoices(

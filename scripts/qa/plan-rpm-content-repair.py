@@ -50,6 +50,8 @@ if hasattr(sys.stdout, "reconfigure"):
 
 HERE = pathlib.Path(__file__).parent
 sys.path.insert(0, str(HERE))
+import rpm_guards  # noqa: E402  — 두 계획이 **같은 가드**를 쓴다
+sys.path.insert(0, str(HERE))
 import rpm_page_text as rpt  # noqa: E402
 
 CENSUS = pathlib.Path("scripts/qa/reports/rpm-damage-census.json")
@@ -154,11 +156,22 @@ def side_tab_boxes(page: pymupdf.Page, clip) -> list[tuple[float, float, float, 
     return out
 
 
+#: 보기 ① 바로 앞에 올 수 있는 글자. 발문은 여기서 끝난다.
+BEFORE_CHOICE = "?.)!:;,"
+
+
 def choices_ok(value: str) -> str | None:
     """보기가 제 꼴인가. 아니면 «왜 아닌지»를 돌려준다."""
     marks = [c for c in value if c in CHOICE_MARKS]
     if not marks:
         return None
+    # ⚠️ **보기 ① 앞에 수식이 남으면** 칸을 잘못 읽은 것이다. 그림·보기 상자가 얽힌
+    #    칸에서 어떤 보기의 알맹이가 발문 끝으로 흘러나오고, 그 보기는 맨 숫자만
+    #    남는다(실측 3-1 #93 `것은? -\sqrt{16a^2}$ ① … ③ 8`, #173 `(정답 2개)$^{2}$ ①`).
+    #    수·근호 개수로는 안 걸린다 — **자리만** 틀렸기 때문이다.
+    head = value[: value.index(marks[0])].rstrip()
+    if head and not (head[-1] in BEFORE_CHOICE or "가" <= head[-1] <= "힣"):
+        return "보기 앞에 수식이 남았다 — 칸을 잘못 읽었다"
     want = list(CHOICE_MARKS[: len(marks)])
     if marks != want:
         return "보기 번호가 차례가 아니다"
@@ -283,7 +296,10 @@ def main() -> None:
         if re.search(r"[$(\s]\[lg]eq(?=[\(])", value):
             bump("부등호 자리가 이상하다 — 못 옮긴 표식이다")
             continue
-        why = choices_ok(value)
+        if " ".join(value.split()) == " ".join((cur or "").split()):
+            bump("바뀌는 것이 없다")
+            continue
+        why = choices_ok(value) or rpm_guards.check(value, cur)
         if why:
             bump(why)
             continue

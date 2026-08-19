@@ -32,6 +32,24 @@ import fitz  # PyMuPDF
 sys.path.append(str(pathlib.Path(__file__).parent))
 from tc_paths import testchanger_dir  # noqa: E402
 
+# ── 원문자 목록은 **한 곳**에서 온다 ──────────────────────────────────────────
+# `scripts/qa/circled-glyphs.json` 은 `src/lib/math/circledNumber.ts` 에서 생성된다
+# (`npx tsx scripts/qa/emit-circled-glyphs.ts`). 손으로 나열하면 세는 쪽과 고치는
+# 쪽이 같이 눈이 먼다 — 실제로 `➀`(U+2780) 계열 43행을 아무도 못 보고 있었다.
+import json as _json
+import pathlib as _pathlib
+
+_GLYPHS = _json.loads(
+    (_pathlib.Path(__file__).resolve().parent.parent / "qa" / "circled-glyphs.json")
+    .read_text(encoding="utf-8")
+    if (_pathlib.Path(__file__).resolve().parent.name != "qa")
+    else (_pathlib.Path(__file__).resolve().parent / "circled-glyphs.json")
+    .read_text(encoding="utf-8")
+)
+CIRCLED_ANSWER = _GLYPHS["정답판독_전체글자"]   # 정답 판독 — 넓다
+CIRCLED_BODY = _GLYPHS["본문마커"]              # 본문 보기 마커 — 일부러 좁다
+
+
 PAIRS = "scripts/qa/reports/final-pairs.json"
 
 # ⚠️ 완료본 PDF 의 텍스트 레이어는 한글은 멀쩡한데 **수식만 HWP 수식폰트의
@@ -67,13 +85,15 @@ PROBLEM_PAGE = re.compile(r"\[중단원\]|\[난이도\]|\[\s*\d+\s*점\s*\]|배�
 # 정답 목록은 예외 없이 `1. ⑤` 형식이라 이걸 강제해도 놓치는 게 거의 없다.
 NUMBER_HEAD = re.compile(r"^\s*(?:\[(\d{1,2})\]|(\d{1,2})\s*[.)])\s*(.*)$")
 # 텍스트만으로 확정 가능한 답 — 원문자 번호이거나 짧은 값.
-CIRCLED = re.compile(r"^[①②③④⑤⑥⑦⑧⑨⑩]$")
+CIRCLED = re.compile(f"^[{re.escape(CIRCLED_ANSWER)}]$")
 
 
 # 정답 목록의 지문 — `1. ④` 처럼 **번호와 원문자만** 있는 줄.
 # 문제 지면에는 이런 줄이 거의 없다(실측: 오검출로 유명한 3766 p3 은 0줄,
 # 진짜 정답면은 14~17줄). 문제지면 표지를 뒤집을 근거로 이것만 쓴다.
-ANSWER_LINE = re.compile(r"^\s*\d{1,2}\s*[.)]\s*[①-⑩]\s*$")
+ANSWER_LINE = re.compile(
+    r"^\s*\d{1,2}\s*[.)]\s*[" + re.escape(CIRCLED_ANSWER) + r"]\s*$"
+)
 
 
 def answer_pages(doc: fitz.Document) -> list[int]:
@@ -141,11 +161,13 @@ def parse_answer(rest: str) -> str | None:
         if len(parts) < 2:
             return None
         # 소문항이 전부 풀이참조면 역시 정답이 없는 것이다.
-        if not re.search(r"[0-9①-⑩=<>√π]", SEE_SOLUTION.sub("", head)):
+        if not re.search(
+            f"[0-9{re.escape(CIRCLED_ANSWER)}" + r"=<>√π]", SEE_SOLUTION.sub("", head)
+        ):
             return None
 
     # `③` 또는 `③, ⑤`
-    circled = re.findall(r"[①②③④⑤⑥⑦⑧⑨⑩]", head)
+    circled = re.findall(f"[{re.escape(CIRCLED_ANSWER)}]", head)
     if circled and len(head) <= 12:
         return ", ".join(circled)
     # 짧은 수식·값 (풀이문이 이어지면 길어지므로 길이로 가른다).

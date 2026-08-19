@@ -33,6 +33,10 @@ import {
   isBrokenByParsedChoices,
   isBrokenByMissingChoices,
 } from "./report-choice-figures";
+import {
+  ANSWER_CIRCLED_CLASS,
+  CHOICE_MARKS,
+} from "../../src/lib/math/circledNumber";
 
 const prisma = new PrismaClient();
 
@@ -52,9 +56,12 @@ interface Row {
 }
 
 /** 정답이 **원문자뿐**이면 객관식이다 — 본문과 독립인 근거다. */
-export const OBJECTIVE_ANSWER = /^[①②③④⑤⑥⑦⑧⑨⑩](?:\s*[,·/]\s*[①②③④⑤⑥⑦⑧⑨⑩])*$/;
+// 계열은 `circledNumber.ts` 한 곳에서 온다.
+export const OBJECTIVE_ANSWER = new RegExp(
+  String.raw`^[${ANSWER_CIRCLED_CLASS}](?:\s*[,·/]\s*[${ANSWER_CIRCLED_CLASS}])*$`,
+);
 
-const CIRCLES = "①②③④⑤⑥⑦⑧⑨⑩";
+const CIRCLES = CHOICE_MARKS.join("");
 
 /** 기록된 정답이 가리키는 **가장 큰 보기 번호**. 원문자가 없으면 0. */
 export function answerChoiceMax(answer: string): number {

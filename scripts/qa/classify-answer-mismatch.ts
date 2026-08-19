@@ -20,6 +20,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 import { isDirectScript } from "../import/isDirectScript";
+import { ANSWER_CIRCLED_CLASS } from "../../src/lib/math/circledNumber";
 
 import {
   answerPieces,
@@ -53,7 +54,8 @@ interface Row {
 /** 완료 기준의 세 낱말과 1:1 로 맞춘다. */
 type Verdict = "표기차이" | "진짜오답" | "판정불가";
 
-const CIRCLED = /[①②③④⑤⑥⑦⑧⑨⑩]/;
+// 계열은 `circledNumber.ts` 한 곳에서 온다 — `➀`(U+2780) 계열이 실측 43행이다.
+const CIRCLED = new RegExp(`[${ANSWER_CIRCLED_CLASS}]`);
 
 /**
  * 공식 정답면 텍스트를 **정본으로 쓸 수 없는지**.
@@ -69,7 +71,10 @@ function officialBroken(text: string): boolean {
   // 연산자로 시작하는 것은 해설 문장의 꼬리다 (`×30=216000`).
   if (/^[*+/=}{)]/.test(t)) return true;
   // 뜻을 읽을 글자가 하나도 안 남는 것 — `}` `„` `…`
-  const core = t.replace(/[^0-9A-Za-z가-힣①②③④⑤⑥⑦⑧⑨⑩√π°]/g, "");
+  const core = t.replace(
+    new RegExp(`[^0-9A-Za-z가-힣${ANSWER_CIRCLED_CLASS}√π°]`, "g"),
+    "",
+  );
   if (core === "") return true;
   // 값이 아니라 안내 문구만 잡힌 것 — `(서술형)` `이다.` `아래 참조`
   return /^[가-힣]{1,6}$/.test(core);
@@ -117,7 +122,8 @@ function sortedTerms(text: string): string | null {
  */
 function containsAtBoundary(ours: string, official: string): boolean {
   if (official.length === 0 || ours.length <= official.length) return false;
-  if (!/[0-9A-Za-z①②③④⑤⑥⑦⑧⑨⑩]/.test(official)) return false;
+  if (!new RegExp(`[0-9A-Za-z${ANSWER_CIRCLED_CLASS}]`).test(official))
+    return false;
   const glued = /[0-9A-Za-z.+\-*/^]/;
   let from = 0;
   for (;;) {
@@ -289,7 +295,10 @@ const COMPOSITE: Rule[] = [
       return bodies.every((body) =>
         ourPieces.some((piece, i) => {
           if (used.has(i)) return false;
-          const hit = atomicMatch(`${piece.label ? `${piece.label}=` : ""}${piece.body}`, body);
+          const hit = atomicMatch(
+            `${piece.label ? `${piece.label}=` : ""}${piece.body}`,
+            body,
+          );
           if (hit) used.add(i);
           return hit;
         }),
@@ -373,7 +382,8 @@ function classify(row: Row): { rule: string; verdict: Verdict } {
   if (hasBrokenGlyph(row.ours)) {
     return { rule: "우리글리프깨짐", verdict: "표기차이" };
   }
-  if (row.ours.trim() === "") return { rule: "우리비었음", verdict: "판정불가" };
+  if (row.ours.trim() === "")
+    return { rule: "우리비었음", verdict: "판정불가" };
 
   const whole = matchOne(row.ours, row.official);
   if (whole) return { rule: whole, verdict: "표기차이" };
@@ -451,8 +461,10 @@ const WHY: Record<string, string> = {
     "소문항이 여럿인데 공식면에서 앞부분만 추출됐다. 겹치는 소문항은 일치한다.",
   공식복수정답:
     "공식 정답면이 원문자를 우리보다 많이 적었다(복수정답). 공식을 따라야 한다.",
-  공식훼손: "공식 정답면이 글꼴 인코딩으로 깨졌거나 해설 조각이 잡혔다. 정본으로 못 쓴다.",
-  "번호↔값": "우리는 번호, 공식은 값이다. 정답면 오추출인지 우리 오답인지 지면을 봐야 한다.",
+  공식훼손:
+    "공식 정답면이 글꼴 인코딩으로 깨졌거나 해설 조각이 잡혔다. 정본으로 못 쓴다.",
+  "번호↔값":
+    "우리는 번호, 공식은 값이다. 정답면 오추출인지 우리 오답인지 지면을 봐야 한다.",
   값이다름: "규칙으로 못 걷어냈다. 값 자체가 다르다.",
 };
 

@@ -25,13 +25,22 @@ _HERE = pathlib.Path(__file__).resolve().parent
 _VENDOR = _HERE.parent / "vendor" / "testchanger"
 sys.path.insert(0, str(_VENDOR))
 
-from hwp_extract import parse_exam, to_hwpx  # noqa: E402
+from hwp_extract import parse_exam  # noqa: E402
 
 sys.path.insert(0, str(_HERE))
 from hwp_text_clean import clean_exam  # noqa: E402
+# ⚠️ 벤더링본 `to_hwpx` 대신 **우리 판**을 쓴다 — 그쪽은 창을 숨기지도, 데스크톱을
+#    가르지도 않아 편마다 한글이 전경을 가져간다(원장님 타이핑이 끊겼다, 2026-08-19).
+#    실측: 3회 변환에 포커스 탈취 5회 → 0회. CLAUDE.md 절대 규칙 9.
+from hwp_to_hwpx_quiet import isolate_desktop, to_hwpx_quiet  # noqa: E402
 
 
 def main() -> None:
+    # COM 을 **처음 부르기 전에** 데스크톱을 가른다. 실패하면 조용히 넘어가지 않는다 —
+    # 격리 없이 도는 것은 원장님 화면을 뺏는다는 뜻이고, 그건 알고 시작해야 한다.
+    if not isolate_desktop():
+        print("⚠️ 데스크톱 격리 실패 — 한글 창이 포커스를 가져갈 수 있다", file=sys.stderr)
+
     ap = argparse.ArgumentParser()
     ap.add_argument("src")
     ap.add_argument("-o", "--out", required=True)
@@ -54,7 +63,7 @@ def main() -> None:
         work = None
     else:
         work = pathlib.Path(tempfile.mkdtemp(prefix="hwpxk_"))
-        hx = to_hwpx(src, work)
+        hx = to_hwpx_quiet(src, work)
         shutil.move(str(hx), str(target))
         hx = target
 

@@ -22,7 +22,7 @@
 | `¤` | 4 | **6** | `;1¦0°0;`=75/100 계열 표결 15:0 |
 | `¥` | 6 | **8** | 2-1 #534 `:¥3¼:`=80/3 |
 | `ª` | ≠ | **≡** | 2-2 #724 `sAEHªsBFE` = s AEH≡s BFE |
-| `¾` | → | **≥** | 2-1 #397 `-;3A;¾-;3B;` = $-\\frac a3\\ge-\\frac b3$ |
+| `¾` | → | **≥·℃·근호 — 글꼴이 가른다** | 2-1 #397 `-;3A;¾-;3B;` = $-\\frac a3\\ge-\\frac b3$ |
 | `Õ` | ∠ | **위선 이음** | 1-2 #491 `BÕAÓ=BCÓ` = $\\overline{BA}=\\overline{BC}$ |
 
 푸는 도구는 `solve-rpm-glyphs.py` 다 — 원문 `;1¢0¼0;` 과 참 `\\frac{40}{100}` 을 맞대면
@@ -70,9 +70,12 @@ SUPER = {
 STEP_MARK = {"Ú": "❶", "Û": "❷", "Ü": "❸", "Ý": "❹", "Þ": "❺"}
 
 #: 자리를 안 타는 낱글자.
+#: ⚠️ `¾` 는 여기 없다 — **글꼴이 갈라야** 하는 글자다.
+#:    `EHyak`=≥(147) · `EHsang`=℃(48) · `EHboN`=큰 근호(51). 전 12권 실측.
+#:    `rpm_page_text.BY_FONT` 가 글자 단위에서 푼다.
 CHARS = {
     "ù": "\\degree", "_": "\\times", "Ö": "\\div",
-    "É": "\\leq", "¾": "\\geq", "ª": "\\equiv", "Ñ": "\\pm",
+    "É": "\\leq", "ª": "\\equiv", "Ñ": "\\pm",
     "»": "\\backsim", "±": "\\sim", "": "\\parallel", "": "\\square",
     "‌": "", "\x03": " ", "\x08": " ", "：": ":", "　": " ",
 }
@@ -144,6 +147,49 @@ ELLIPSIS_DEC = re.compile(r"(\d\.\d+)\s?y")
 ELLIPSIS_RUN = re.compile(r"yy")
 
 
+#: 큰 근호 표식이 **되살린 분수** 앞에 남은 자리. 그 분수는 «선»으로 그려져 있어
+#: 글자 단위에서는 안 보이고, `rpm_page_text` 가 낱말을 합친 뒤에야 생긴다
+#: (실측 `®Â\frac{A}{x}가 자연수가 되도록` = $\sqrt{A/x}$).
+#: ⚠️ 남은 `®`·`¾` 는 **반드시 근호다.** `EHyak`(≥)·`EHsang`(℃) 은 글꼴 단계에서
+#:    이미 풀려 나갔다 — 그래서 여기서는 글자만 보고도 안전하다.
+BIG_ROOT = re.compile(r"[®¾][^\s\\]{0,2}?(?=\\d?frac\{)")
+
+
+def _balanced(s: str, i: int) -> int:
+    """`{` 에서 시작해 짝이 맞는 `}` 다음 자리를 돌려준다. 못 맞으면 -1."""
+    depth = 0
+    while i < len(s):
+        if s[i] == "{":
+            depth += 1
+        elif s[i] == "}":
+            depth -= 1
+            if depth == 0:
+                return i + 1
+        i += 1
+    return -1
+
+
+def fold_big_root(s: str) -> str:
+    """`®`·`¾` + 되살린 분수 → `\\sqrt{분수}`."""
+    out, i = [], 0
+    while True:
+        m = BIG_ROOT.search(s, i)
+        if not m:
+            out.append(s[i:])
+            break
+        j = s.index("frac", m.end()) + 4
+        a = _balanced(s, j)
+        b = _balanced(s, a) if a > 0 else -1
+        if b < 0:
+            out.append(s[i:m.end()])
+            i = m.end()
+            continue
+        out.append(s[i:m.start()])
+        out.append("\\sqrt{" + s[m.end():b] + "}")
+        i = b
+    return "".join(out)
+
+
 def _frac(m: re.Match[str]) -> str:
     body = m.group(1)
     den, num = [], []
@@ -166,7 +212,7 @@ def _super(m: re.Match[str]) -> str:
 
 def to_latex(raw: str) -> str:
     """정답책 원문 한 토막을 LaTeX 로 옮긴다."""
-    s = raw
+    s = fold_big_root(raw)
     s = ROOT_BIG.sub(lambda m: "\\sqrt{" + m.group(1) + "}", s)
     s = ROOT_BAR.sub(lambda m: "\\sqrt{" + re.sub(r"[¶Ä§]", "", m.group(1)) + "}", s)
     s = ROOT_PILCROW.sub(lambda m: "\\sqrt{" + m.group(1) + "}", s)
@@ -283,7 +329,6 @@ EVIDENCE = [
     ("2-2 #211 사각형", "fABCD의넓이가", "\\square ABCD의넓이가"),
     ("2-2 #724 합동", "sAEHªsBFE", "\\triangle AEH\\equiv\\triangle BFE"),
     ("2-1 #397 부등호", "a`É`b", "a \\leq b"),
-    ("2-1 #473 부등호", "a¾-8", "a\\geq-8"),
     ("1-2 #582 호", "7:µAD", "7:\\overgroup{AD}"),
     ("3-2 #414 호", "¨ABC에", "\\overgroup{ABC}에"),
     ("2-1 #200 지수 m·n", "aµ``<aÇ`", "a^{m}<a^{n}"),
@@ -296,6 +341,10 @@ EVIDENCE = [
     ("2-2 #552 닮음", "sAFE»sABC", "\\triangle AFE\\backsim\\triangle ABC"),
     ("2-2 #348 프라임 위선", "HÕ'HÓ=ADÓ", "\\overline{H'H}=\\overline{AD}"),
     ("2-2 #780 겹프라임 위선", "AB''Ó의", "\\overline{AB''}의"),
+    ("3-1 #0107 큰 근호 + 되살린 분수", "®Â\\frac{A}{x}가 자연수",
+     "\\sqrt{\\frac{A}{x}}가 자연수"),
+    ("3-1 #0087 큰 근호 + 되살린 분수", "-®É\\frac{9}{4}aÛ`",
+     "-\\sqrt{\\frac{9}{4}}a^{2}"),
     ("3-2 #53 프라임 위선", "HH'Ó=ADÓ=6", "\\overline{HH'}=\\overline{AD}=6"),
     ("2-2 #724 위선 뒤 지수", "EHÓ Û`=aÛ`+bÛ`", "\\overline{EH}^{2}=a^{2}+b^{2}"),
     ("2-1 #965 단계 표시는 지수가 아니다", "-3b+3=4 Ú -3b+3=-4일", "-3b+3=4 ❶ -3b+3=-4일"),
