@@ -202,6 +202,37 @@ describe("회복 판정 (judgeRescue)", () => {
     expect(r.rescue).toBe("치명탈출");
   });
 
+  it("칸이 **한둘만** 차 있으면 «보기 한 벌»이 아니다 — 못 살린다", () => {
+    // 하한 4 의 경계. 이 검사가 없으면 `CHOICE_BLOCK_MIN` 을 1 로 낮춰도 안 빨개진다.
+    const half: HwpQ = {
+      ...IMAGE_CHOICE_HWP,
+      choices: ["$1$", "$2$", "", "", ""],
+    };
+    const r = judgeRescue(
+      base({ content: 표보기.content, answer: 표보기.answer, hwp: half }),
+    );
+    expect(r.rescue).toBe("HWP도못살림");
+  });
+
+  it("**DB 팔에도** R2 가 걸린다 — 원본 없이 파서만 고쳤을 때의 값", () => {
+    // 이 검사가 없으면 「R2 를 DB 쪽에 안 건다」 변이가 초록이다.
+    const r = judgeRescue(
+      base({ content: 줄중간.content, answer: 줄중간.answer, hwp: 줄중간.hwp }),
+    );
+    expect(r.arms.DB?.verdict).toBe("보기0칸");
+    expect(r.arms["DB+R2"]?.verdict).toBe("정상");
+    expect(r.slots["DB+R2"]).toBe(5);
+  });
+
+  it("HWP 미주 정답이 **다르면** 근거가 «불일치» 여야 한다", () => {
+    // 이 검사가 없으면 「정답 근거를 늘 참으로」 변이가 초록이다.
+    const 다른답: HwpQ = { ...뭉친행.hwp, answer: "④" };
+    const r = judgeRescue(base({ hwp: 다른답 }));
+    expect(뭉친행.answer).toBe("②");
+    expect(r.evidence.정답일치).toBe(false);
+    expect(r.evidence.정답불일치).toBe(true);
+  });
+
   it("정렬 근거가 없으면 **대응실패** — 억지로 맞대지 않는다", () => {
     expect(judgeRescue(base({ alignGrade: "근거없음" })).rescue).toBe(
       "대응실패",

@@ -346,16 +346,14 @@ function main(): void {
       "세지 않으려고 둔 가드다.",
   );
 
+  // ⚠️ 팔의 판정만 보면 안 된다 — **짝이 아닌 행도 HWP 팔이 «정상»** 이다
+  //    (다른 문제의 보기 다섯이 서니까). 실측 3건이 그래서 여기 섞여 18 로 나왔다.
+  //    회복으로 세는 것은 가드를 통과한 «완전회복» 뿐이다.
   const onlyHwp = details.filter(
-    (d) =>
-      (d.armVerdict.HWP === "정상" || d.armVerdict["HWP+R2"] === "정상") &&
-      d.armVerdict["DB+R2"] !== "정상",
+    (d) => d.rescue === "완전회복" && d.armVerdict["DB+R2"] !== "정상",
   ).length;
   const onlyR2 = details.filter(
-    (d) =>
-      d.armVerdict["DB+R2"] === "정상" &&
-      d.armVerdict.HWP !== "정상" &&
-      d.armVerdict["HWP+R2"] !== "정상",
+    (d) => d.armVerdict["DB+R2"] === "정상" && d.rescue !== "완전회복",
   ).length;
   console.log(
     `\n**원본이 있어야만 사는 것 ${onlyHwp}건** · 파서만으로 되는데 HWP 로는 안 되는 것 ${onlyR2}건`,
@@ -501,7 +499,8 @@ function main(): void {
   );
   const harmMismatched = harmDetail.filter((d) => d.pair?.mismatched).length;
   console.log(
-    `그중 **짝이 아닌 것으로 걸러진 행 ${반대쪽.filter((x) => false).length + harmMismatched}건** (개악 목록에서 뺀 것은 아니고 표시만 한다)
+    `그중 **짝이 아닌 것(다른 문제)으로 표시된 행 ${harmMismatched}건** — ` +
+      `개악 집계에서 빼지는 않았고, 짝 확인이 반대쪽에서도 도는지 보이려고 찍는다.
 `,
   );
   console.log("| 팔 | 🔴 개악 (정상 → 치명) | 비율 |");

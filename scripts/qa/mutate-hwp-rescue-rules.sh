@@ -14,12 +14,20 @@ JUDGE=scripts/qa/hwpJudgeRules.ts
 R2=scripts/qa/choiceRepairRules.ts
 TEST=src/__tests__/unit/hwpRescueRules.test.ts
 
-cp "$RULES" "$RULES.bak"; cp "$JUDGE" "$JUDGE.bak"; cp "$R2" "$R2.bak"
-trap 'mv -f "$RULES.bak" "$RULES"; mv -f "$JUDGE.bak" "$JUDGE"; mv -f "$R2.bak" "$R2"' EXIT
+# ⚠️ 백업은 **저장소 밖** 임시 폴더에 둔다. 처음엔 `foo.ts.bak` 를 옆에 두고
+#    `BASE=$(tests)` 로 결과를 받았는데, 명령 치환이 만드는 서브셸에서 EXIT 트랩이
+#    돌아 백업을 **원본 위로 되돌리고 지워 버렸다.** 그 뒤로는 복원이 조용히 실패해
+#    변이가 **차곡차곡 쌓였고**, 「21개 전부 빨강」은 첫 변이 하나 때문이었다.
+#    실제로 소스 세 개가 변이된 채 남았다 — 변이 시험이 규칙을 망가뜨린 것이다.
+#    그래서 (ㄱ) 백업을 트리 밖에 두고 (ㄴ) 명령 치환을 안 쓰고
+#    (ㄷ) 매 변이 전에 **복원이 실제로 됐는지 확인**하고 (ㄹ) 끝나고 원본과 대조한다.
+BAK=$(mktemp -d)
+cp "$RULES" "$BAK/rules"; cp "$JUDGE" "$BAK/judge"; cp "$R2" "$BAK/r2"
+restore() { cp "$BAK/rules" "$RULES"; cp "$BAK/judge" "$JUDGE"; cp "$BAK/r2" "$R2"; }
+trap 'restore; rm -rf "$BAK"' EXIT
 
-tests() { npx vitest run "$TEST" >/dev/null 2>&1 && echo PASS || echo FAIL; }
-
-BASE=$(tests)
+BASE=FAIL
+if npx vitest run "$TEST" >/dev/null 2>&1; then BASE=PASS; fi
 echo "원본: $BASE"
 if [ "$BASE" != "PASS" ]; then
   echo "원본이 이미 빨강이다 — 변이 시험이 의미가 없다. 먼저 고칠 것."
@@ -29,7 +37,11 @@ echo
 
 red=0; green=0
 mutate_file() {
-  cp "$RULES.bak" "$RULES"; cp "$JUDGE.bak" "$JUDGE"; cp "$R2.bak" "$R2"
+  restore
+  # 복원이 실제로 됐는지 **매번** 확인한다. 안 하면 변이가 쌓여도 아무도 모른다.
+  if ! cmp -s "$BAK/rules" "$RULES" || ! cmp -s "$BAK/judge" "$JUDGE" || ! cmp -s "$BAK/r2" "$R2"; then
+    echo "🛑 복원 실패 — 변이가 쌓인다. 중단한다."; exit 1
+  fi
   python - "$1" "$2" "$3" <<'PY'
 import io,sys,os
 p,old,new=sys.argv[1],sys.argv[2],sys.argv[3]
@@ -40,7 +52,8 @@ tmp=p+".tmp"
 f=io.open(tmp,"w",encoding="utf-8",newline=""); f.write(out); f.close()
 os.replace(tmp,p)
 PY
-  t=$(tests)
+  local t=FAIL
+  if npx vitest run "$TEST" >/dev/null 2>&1; then t=PASS; fi
   if [ "$t" = "$BASE" ]; then green=$((green+1)); echo "🟢 안 바뀜   $4"
   else red=$((red+1)); echo "🔴 빨강      $4"; fi
 }
@@ -59,7 +72,7 @@ mutate "    (c) => maxCircledRun(c) >= CIRCLED_RUN_MIN," "    (c) => false," "«
 mutate "    run = i === prev + 1 ? run + 1 : 1;" "    run = run + 1;" "런을 «순서 무관»으로 (역순도 런으로 센다)"
 
 # ── 회복의 정의 ───────────────────────────────────────────────────────────
-mutate "  if (best.verdict === \"정상\") rescue = \"완전회복\";" "  if (!isFatal(best.verdict)) rescue = \"완전회복\";" "🔴 회복을 «치명 아님»으로 (보기를 잃은 것이 회복이 된다)"
+mutate "  else if (best.verdict === \"정상\") rescue = \"완전회복\";" "  else if (!isFatal(best.verdict)) rescue = \"완전회복\";" "🔴 회복을 «치명 아님»으로 (보기를 잃은 것이 회복이 된다)"
 mutate "  if (pair.mismatched) rescue = \"문항불일치\";" "  if (false) rescue = \"문항불일치\";" "🔴 짝 확인을 판정에서 뺀다"
 mutate "  else if (hwpFilled >= CHOICE_BLOCK_MIN) rescue = \"부분\";" "  else if ((hwp.choices ?? []).length >= CHOICE_BLOCK_MIN) rescue = \"부분\";" "🔴 «칸에 글자가 있나»를 «마커가 있나»로 (그림 보기가 «부분»이 된다)"
 mutate "  else if (hwpFilled >= CHOICE_BLOCK_MIN) rescue = \"부분\";" "  else if (Math.max(slots.HWP, slots[\"HWP+R2\"]) >= CHOICE_BLOCK_MIN) rescue = \"부분\";" "«칸에 글자가 있나»를 파서 칸 수로 (발문 조각이 보기가 된다)"
@@ -82,3 +95,11 @@ mutate "    case \"마커는 있으나 본문이 비었다\":
 
 echo
 echo "변이 $((red+green))개 중 빨강 $red · 초록 $green"
+
+# 끝나고 **원본과 같은지 확인**한다. 다르면 변이가 남은 것이다 — 조용히 넘어가지 않는다.
+restore
+if cmp -s "$BAK/rules" "$RULES" && cmp -s "$BAK/judge" "$JUDGE" && cmp -s "$BAK/r2" "$R2"; then
+  echo "복원 확인: 소스 3개 모두 원본과 같다."
+else
+  echo "🛑 복원이 안 됐다 — 소스에 변이가 남아 있다."; exit 1
+fi

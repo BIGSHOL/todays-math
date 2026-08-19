@@ -93,6 +93,10 @@ scripts/qa/reports/*
 # 정답과 보기가 안 맞는 문항 전량 목록 — 원장님이 «빼자»를 정하는 근거다.
 # DB 없는 컴퓨터에서도 바로 읽혀야 한다 (162KB).
 !scripts/qa/reports/unusable-problems.json
+# HWP 원본 회수의 행 단위 판정 — 291건 전량의 «회복/부분/못살림»과 그 근거.
+# 보고서의 모든 숫자가 이 파일에서 나오고, 원장님이 «복구냐 AI 냐»를 정하는 근거다.
+# DB 도 N드라이브도 없는 컴퓨터에서 바로 읽혀야 한다 (164KB).
+!scripts/qa/reports/hwp-rescue-ledger.json
 __pycache__/
 
 # 본문 백업(대용량, 되돌리기용)
