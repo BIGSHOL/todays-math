@@ -2,7 +2,7 @@
  "적용": "그림 유실 문항 출제 제외 (directUseAllowed=false)",
  "기준시각": "2026-08-18T10:23:09.822Z",
  "되돌리기": "ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-missing-figure-lock.ts --revert",
- "잠근건수": 257,
+ "잠근건수": 236,
  "이전상태": [
   {
    "id": "0042cff5-8668-4c07-9696-4331221e6ce0",
@@ -57,11 +57,6 @@
   {
    "id": "0e041372-4982-4c6f-8b30-b97e8545ac7f",
    "externalId": "019fd1de-f14a-7546-81dd-7a036dc6dcc2",
-   "directUseAllowed": true
-  },
-  {
-   "id": "0e1c3fbf-70db-43b6-a344-8a408faa6ee2",
-   "externalId": "4082-11",
    "directUseAllowed": true
   },
   {
@@ -132,11 +127,6 @@
   {
    "id": "1822d2d6-2295-446e-879e-c5b6bf2b64d0",
    "externalId": "019fd1d8-08d8-749d-ac32-be0d046f6c09",
-   "directUseAllowed": true
-  },
-  {
-   "id": "18575aa5-8189-40da-9098-8dcd47ed411a",
-   "externalId": "2085-15",
    "directUseAllowed": true
   },
   {
@@ -312,16 +302,6 @@
   {
    "id": "451323da-2267-4efb-ace5-c27597116113",
    "externalId": "4973-4",
-   "directUseAllowed": true
-  },
-  {
-   "id": "4768cb73-439e-4619-a4b0-338747795ef6",
-   "externalId": "4338-19",
-   "directUseAllowed": true
-  },
-  {
-   "id": "4a3e60b8-02e3-4bdf-bd60-c1a7ee82079d",
-   "externalId": "3493-15",
    "directUseAllowed": true
   },
   {
@@ -530,11 +510,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "7c1085f7-ed2d-427e-9c55-225ea3cf8c60",
-   "externalId": "5236-17",
-   "directUseAllowed": true
-  },
-  {
    "id": "7d2e6e7b-448c-44eb-a8ad-68fc120edd09",
    "externalId": "019fd1da-fb1a-76c0-86e8-f3016d0f0da3",
    "directUseAllowed": true
@@ -610,11 +585,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "8f529c07-df80-4227-b0f4-1b4f32dcb0e6",
-   "externalId": "5350-13",
-   "directUseAllowed": true
-  },
-  {
    "id": "8ffd6361-6dbe-437f-8581-30f802470d73",
    "externalId": "019fd1db-9eae-71dd-bcad-a175fe7f3787",
    "directUseAllowed": true
@@ -645,11 +615,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "9667f03b-0ec2-47f2-b845-1016a96c072e",
-   "externalId": "3588-11",
-   "directUseAllowed": true
-  },
-  {
    "id": "97083736-fc4a-409e-9503-0c415647e83b",
    "externalId": "019fd1d7-386f-756c-b11a-b1ea0afd8123",
    "directUseAllowed": true
@@ -675,11 +640,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "9ce768bb-5824-4167-9b31-2b2ea3571c49",
-   "externalId": "3536-16",
-   "directUseAllowed": true
-  },
-  {
    "id": "9cee4b17-959b-4575-ae09-b65b241eb86c",
    "externalId": "4253-15",
    "directUseAllowed": true
@@ -690,11 +650,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "9d9b774c-a430-48d7-807e-6a4e3878bfcc",
-   "externalId": "3284-15",
-   "directUseAllowed": true
-  },
-  {
    "id": "9f2c35c2-7887-4e25-b378-0fa502e414c7",
    "externalId": null,
    "directUseAllowed": true
@@ -702,11 +657,6 @@
   {
    "id": "a0a1aa1c-bd96-4c2c-8c6e-8cedac4d09c6",
    "externalId": "3412-2",
-   "directUseAllowed": true
-  },
-  {
-   "id": "a43d186d-ad67-45f5-aa49-d237bf5b6deb",
-   "externalId": "5231-2",
    "directUseAllowed": true
   },
   {
@@ -825,11 +775,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "bc43425a-e99a-4c91-aa97-a07ddb656f3f",
-   "externalId": "4068-18",
-   "directUseAllowed": true
-  },
-  {
    "id": "bc8e9ea2-0843-4f90-a637-ed7ec1d81892",
    "externalId": "019fd1d7-f4bf-7639-95af-56c5dca95177",
    "directUseAllowed": true
@@ -875,11 +820,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "c0a051ed-a7f2-449f-b277-aaf9deddd5f7",
-   "externalId": "5362-21",
-   "directUseAllowed": true
-  },
-  {
    "id": "c0f75412-bf22-41d5-aae0-4a3cefceb9b5",
    "externalId": "019fd1db-78b5-77f3-83c1-ef61966d320a",
    "directUseAllowed": true
@@ -897,11 +837,6 @@
   {
    "id": "c2010c32-00f3-4b3f-bf8d-1673fe3d9dc9",
    "externalId": "019fd1d8-4990-7697-84e7-53dfc5fc94e5",
-   "directUseAllowed": true
-  },
-  {
-   "id": "c22bd0ce-2f8e-472c-830c-926564501ed4",
-   "externalId": "3509-14",
    "directUseAllowed": true
   },
   {
@@ -985,11 +920,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "cf4a5161-6f78-440a-a5d3-3b3be6e30877",
-   "externalId": "3524-13",
-   "directUseAllowed": true
-  },
-  {
    "id": "d23d0be5-5f4e-47ee-9c5b-4d71bfaa87d4",
    "externalId": "019fd1d7-8f89-7370-b431-f7c4c71bfdde",
    "directUseAllowed": true
@@ -1040,11 +970,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "d75b2650-3edb-46c8-ae65-08eba1726e90",
-   "externalId": "4973-2",
-   "directUseAllowed": true
-  },
-  {
    "id": "d7c44c09-216f-430c-ad7e-e8de5ac77ac0",
    "externalId": "019fd1db-c276-77f0-9249-9bacb8a798d1",
    "directUseAllowed": true
@@ -1075,11 +1000,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "de46592c-783a-4e9f-a055-44167012dcc3",
-   "externalId": "4213-3",
-   "directUseAllowed": true
-  },
-  {
    "id": "e01792bb-a23b-4f6a-b6e3-086e84c04eb6",
    "externalId": "019fd1d7-a250-714a-aa3b-e5a965f19107",
    "directUseAllowed": true
@@ -1087,11 +1007,6 @@
   {
    "id": "e0e85ca2-ba26-4d81-96ae-3b5f708e9138",
    "externalId": "019fd1de-402f-7218-833d-e6e3bd326d74",
-   "directUseAllowed": true
-  },
-  {
-   "id": "e1006bfa-845f-4687-92b2-91ac7e6da6bd",
-   "externalId": "3530-13",
    "directUseAllowed": true
   },
   {
@@ -1140,18 +1055,8 @@
    "directUseAllowed": true
   },
   {
-   "id": "e7d9f04c-d50e-4fb9-b0d1-ebf415d95dbf",
-   "externalId": "5239-21",
-   "directUseAllowed": true
-  },
-  {
    "id": "e91537ed-da01-417c-93f0-737fac07870f",
    "externalId": "019fd1dc-0133-748b-9945-57a86dec60ec",
-   "directUseAllowed": true
-  },
-  {
-   "id": "e92eff2e-1e28-465b-a6eb-79099fb7608c",
-   "externalId": "4229-24",
    "directUseAllowed": true
   },
   {
@@ -1230,11 +1135,6 @@
    "directUseAllowed": true
   },
   {
-   "id": "f35d19fe-7973-49d9-b3af-73b3aec36e19",
-   "externalId": "2384-6",
-   "directUseAllowed": true
-  },
-  {
    "id": "f4c5d272-54c1-43db-83c5-77ec106095ea",
    "externalId": "019fd1dc-ebe6-768f-a8d4-1592fddc6743",
    "directUseAllowed": true
@@ -1252,11 +1152,6 @@
   {
    "id": "f79d5b84-3272-4c40-b454-766ad7fa5fb6",
    "externalId": "5466-6",
-   "directUseAllowed": true
-  },
-  {
-   "id": "f84afca4-e2e3-42e6-bf34-3717d52a1887",
-   "externalId": "3635-17",
    "directUseAllowed": true
   },
   {
