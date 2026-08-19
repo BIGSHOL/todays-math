@@ -71,11 +71,26 @@ def hwp_pids() -> set[int]:
     return pids
 
 
+def _hide_windows(app) -> None:
+    """열려 있는 한글 창을 전부 숨긴다 (`hwp_to_hwpx_quiet._hide` 와 같은 일)."""
+    try:
+        wins = app.XHwpWindows
+        for i in range(int(wins.Count)):
+            try:
+                wins.Item(i).Visible = False
+            except Exception:  # noqa: BLE001
+                pass
+    except Exception:  # noqa: BLE001
+        pass
+
+
 def convert(app, src: pathlib.Path, dest: pathlib.Path, work: pathlib.Path) -> None:
     """원본을 건드리지 않도록 **사본**을 열어 PDF 로 저장한다."""
     local = work / re.sub(r"[^\w.\-]", "_", src.name)
     shutil.copy2(src, local)
     app.Open(str(local), "HWP", "forceopen:true")
+    # ⚠️ 문서를 열면 창이 **새로 생긴다.** 열기 전에 한 번만 숨기면 그때부터 다시 보인다.
+    _hide_windows(app)
     app.SaveAs(str(dest), "PDF")
     app.Clear(1)  # 저장 안 함
     local.unlink(missing_ok=True)
@@ -91,10 +106,28 @@ def main() -> None:
 
     if a.one:
         import tempfile as _t
+        import importlib.util as _iu
+
+        # 🔴 **창을 숨기는 것만으로는 포커스를 못 막는다** — 훔치는 시점이 `Dispatch`
+        #    그 순간이라 숨기기 «전»이다. 그래서 COM 을 부르기 전에 스레드를 별도
+        #    데스크톱에 붙인다(실측 5회 → 0회). 트릭은 `hwp_to_hwpx_quiet` 한 곳에만
+        #    두고 여기서 **불러 쓴다** — 두 벌이 되면 한쪽만 고쳐도 아무도 모른다.
+        #    (CLAUDE.md 절대 규칙 9 — 원장님 화면 포커스를 뺏지 않는다.)
+        _q = _iu.spec_from_file_location(
+            "hwpquiet",
+            pathlib.Path(__file__).resolve().parent.parent / "qa" / "hwp_to_hwpx_quiet.py",
+        )
+        _quiet = _iu.module_from_spec(_q)
+        _q.loader.exec_module(_quiet)
+        if not _quiet.isolate_desktop():
+            # **조용히 넘어가지 않는다.** 격리에 실패하면 원장님 화면을 건드리게 된다.
+            raise SystemExit("별도 데스크톱 격리 실패 — 포커스를 뺏을 수 있어 멈춘다")
+
         import pythoncom
         import win32com.client
         pythoncom.CoInitialize()
         app = win32com.client.Dispatch("HWPFrame.HwpObject")
+        _quiet._hide(app)
         try:
             app.RegisterModule("FilePathCheckDLL", "FilePathCheckerModule")
         except Exception:  # noqa: BLE001

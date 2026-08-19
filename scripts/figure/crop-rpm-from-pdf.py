@@ -286,7 +286,11 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
                 avoid: list[fitz.Rect] | None = None,
                 thin_pt: float = 0.0,
                 furniture: set | None = None,
-                clip_images: bool = True) -> fitz.Rect | None:
+                clip_images: bool = True,
+                label_syntax: re.Pattern | None = None,
+                bound: fitz.Rect | None = None,
+                avoid_stem: bool = False,
+                trace: dict | None = None) -> fitz.Rect | None:
     """문항 사각형 **안에서 그림만** 골라 낸다.
 
     `source_coords` 는 문항 블록 전체(발문 + 그림)다. 그대로 오리면 발문이 지면에
@@ -341,6 +345,43 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
     `thin_pt > 0` 이면 두께 0인 획을 그만큼 부풀려 살린다. **RPM 경로는 0을 그대로
     쓰므로 동작이 한 바이트도 안 바뀐다** — 회수 280건을 다시 흔들지 않기 위해서다.
 
+    ## `avoid_stem` — 발문은 **삼키지 말고 피한다** (2026-08-19)
+
+    완비 검사는 「칸 경계를 가로지르는 것이 있으면 넓혀서 삼킨다」인데, 가로지른 것이
+    **발문**이면 삼키는 순간 지면에 발문이 두 번 나간다(글자로 한 번, 그림 안에 또
+    한 번). 그래서 뒤 관문이 그 문항을 통째로 버린다 — 실측(2026-08-19) 기출에서
+    그렇게 버려진 것이 여럿이고, 겹친 것은 **발문 마지막 줄의 0.2pt** 였다.
+
+    발문은 그림이 아니므로 삼킬 것이 아니라 **물러설** 것이다. 다만 물러서다 그림
+    조각을 자르면 그건 잘린 그림이 되므로(지면에서 티가 안 난다) **그림 조각을
+    하나라도 자르는 물러섬은 하지 않는다** — 그러면 예전처럼 그 문항이 버려진다.
+    기본이 꺼짐인 이유는 RPM 회수분의 좌표를 흔들지 않기 위해서다(`thin_pt` 와 같은 이유).
+
+    ## `bound` — 이 울타리 밖으로는 자라지 않는다 (2026-08-19)
+
+    `bleed` 는 발문 상자에서 ±`BOX_BLEED`(60pt) 로 정해지는데, 기출은 **단(段)**이
+    있고 **선택지 줄**이 있다. 둘 다 「여기서 멈춰라」는 지면 문법이지 문항 낱말이
+    아니다. 부르는 쪽이 그 울타리를 계산해 넘긴다(`crop-pdf-by-stem.column_band` ·
+    `choice_floor`). `None` 이면 예전 그대로 — RPM 은 안 넘긴다.
+
+    ## `label_syntax` — **선택지·배점 표시는 라벨이 아니다** (2026-08-19)
+
+    라벨 되찾기는 「본문에 없는 짧은 글자」를 그림에 딸린 것으로 본다. 그런데 기출
+    선택지 `② 9` 는 열쇠가 `9` 한 글자라 `STEM_LINE_CHARS_SPAN`(3) 아래로 떨어져
+    **본문에 있는데도 라벨로 남는다.** 그러면 띠가 아래로 자라 선택지를 통째로 삼키고,
+    뒤 관문이 「칸에 선택지 표시가 들어왔다」로 그 문항을 버린다 — 실측(2026-08-19)
+    으로 단 클립을 넣은 뒤 남은 실패 28행 중 **9행**이 이 부류였다.
+
+    이 파일이 이미 적어 둔 문장이 그대로 답이다 — **선택지 번호는 지면 문법이지
+    문항 낱말이 아니다.** 그래서 그 표시가 든 조각은 라벨로 안 본다. 다만
+    **완비 검사(`span_rects`)에는 그대로 남긴다** — 「삼키지 마라」는 「없는 셈 쳐라」가
+    아니다. 칸이 선택지를 반으로 자르면 그 문항은 여전히 버려진다.
+
+    **패턴을 부르는 쪽이 준다.** 지면 문법은 서식마다 다르다 — 기출은 원문자에
+    배점 `[4점]` 까지 있고 RPM 은 원문자뿐이다. 여기서 하나로 못 박으면 둘 중 하나는
+    틀린 목록을 쓴다. 기본이 `None`(끄기)인 이유는 RPM 이 이미 280건을 회수했고 그
+    좌표를 흔들지 않기 위해서다(`thin_pt` 와 같은 이유).
+
     ## `furniture` — 선을 살리면 **쪽 장식도 같이 산다**
 
     단 세로줄(단 사이 구분선)·머리띠 밑줄이 그 부류다. 길이로 자르면 수직선 그림·
@@ -349,6 +390,20 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
     그림은 안 걸린다. `crop-pdf-by-stem.furniture_keys` 가 만든 열쇠 집합을 넘긴다.
     """
     page_area = page.rect.get_area()
+
+    def _t(key: str, n: int = 1) -> None:
+        """`trace` 가 주어졌을 때만 센다 — 판정에는 관여하지 않는다.
+
+        ⚠️ **왜 진단기를 따로 두지 않는가.** 「무엇이 그림을 버렸나」를 세는 코드를
+        옆에 따로 쓰면 그 둘이 갈라진다. 실제로 갈라져 있었다 —
+        `diagnose-no-figure.py` 는 `thin_pt` 를 모르는 채로 두께 0인 획을 전부
+        「버려졌다」로 세어 **「상자 안에 획이 아예 없다」 10행**을 보고했는데,
+        오려내기 쪽은 그 획들을 이미 살리고 있었다(2026-08-19 실측). 그 잘못된 집계가
+        트랙 브리프의 진단이 됐다. **세는 쪽과 고치는 쪽은 같은 코드여야 한다.**
+        """
+        if trace is not None:
+            trace[key] = trace.get(key, 0) + n
+
     raw = page.get_text("rawdict")
 
     def is_page_furniture(r: fitz.Rect) -> bool:
@@ -374,6 +429,24 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
     # 꼭대기가 28pt 밖이었다. 그렇다고 무제한이면 두 문항에 걸친 이미지가 옆 문항을 끌고 온다.
     bleed = fitz.Rect(box.x0 - BOX_BLEED, box.y0 - BOX_BLEED,
                       box.x1 + BOX_BLEED, box.y1 + BOX_BLEED) & page.rect
+    # `bound` 는 **넘어서는 안 되는 울타리**다. `box` 를 좁히는 것만으로는 모자란다 —
+    # 라벨 되찾기·완비 검사가 보는 것은 `box` 가 아니라 `bleed`(±60pt) 라서, 상자를
+    # 선택지 위에서 끊어도 띠는 그대로 선택지까지 자란다(실측 2026-08-19).
+    if bound is not None:
+        bleed = bleed & bound
+
+    def crosses_column(r: fitz.Rect) -> bool:
+        """단(段)을 가로지르는 것은 **이 문항의 그림이 아니다** — 쪽 머리띠·꼬리말이다.
+
+        완비 검사는 「가로지르는 것이 있으면 넓혀 삼키고, 못 삼키면 오려내지 않는다」인데,
+        머리띠는 울타리 밖까지 뻗어 있어 **절대 못 삼킨다.** 그래서 머리띠가 상자에
+        스치기만 해도 그 문항이 통째로 버려진다(실측 `4213-3`: 지면 폭 전체를 덮는
+        띠 이미지 하나 때문에 아래 직사각형 그림을 못 오렸다).
+
+        한 문항의 그림이 단을 가로지를 수는 없다 — 그것이 이 시험지들의 구조다.
+        그래서 «가로지르는 것»은 후보에서도 빼고 완비 검사에서도 뺀다.
+        """
+        return bound is not None and (r.x0 < bound.x0 - 0.5 or r.x1 > bound.x1 + 0.5)
 
     # ── 발문 줄과 그림 라벨을 가른다 ────────────────────────────────────
     # 줄 단위로 본다. span 단위는 너무 짧아(`의 `, `2`) 본문 어디에나 있고,
@@ -381,10 +454,33 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
     label_rects: list[fitz.Rect] = []
     label_text: dict[int, str] = {}
     span_rects: list[fitz.Rect] = []
+    #: 라벨이 **아니라고 판정된** 조각 — 본문에 있는 발문 조각과 지면 문법(선택지·배점).
+    #: 둘 다 「그림이 아니다」라고 이미 가려낸 것들이라, 삼키면 안 되는 것들이다.
+    avoid_spans: list[fitz.Rect] = []
+    #: 글자 줄 전부. 물러설 때 **같은 줄에 걸친 것까지** 같이 피하려고 쓴다 —
+    #: 윗첨자·분수는 제 줄로 따로 잡혀 본줄보다 0.2pt 더 내려온다(실측 `4338-19`).
+    text_lines: list[fitz.Rect] = []
     for b in raw.get("blocks", []):
         if b.get("type") != 0:
             continue
         for ln in b.get("lines", []):
+            # ⚠️ **지면 문법은 줄로 봐야 한다.** 이 시험지들은 배점의 숫자가 사유 영역
+            #    글꼴이라 `[` · `12` · `점]` 이 **서로 다른 span** 으로 쪼개진다.
+            #    span 하나씩 물으면 `[12점]` 은 어느 span 에서도 안 걸리고, 그러면
+            #    그 조각들이 라벨로 남아 칸이 발문 마지막 줄까지 자란다(실측 `3493-15`).
+            line_txt = "".join(
+                c["c"]
+                for sp in ln.get("spans", [])
+                for c in sp.get("chars", [])
+                if "c" in c
+            )
+            line_is_syntax = label_syntax is not None and bool(label_syntax.search(line_txt))
+            # ⚠️ 물러설 때는 **줄 상자**로 물러선다. span 하나만 피하면 같은 줄의
+            #    윗첨자(`PB²` 의 `2`)가 제 줄로 따로 잡혀 0.2pt 남는다 — 실측
+            #    `4338-19` 가 그 0.2pt 때문에 「반으로 잘랐다」로 떨어졌다.
+            ln_rect = fitz.Rect(*ln["bbox"])
+            if not ln_rect.is_empty and not (ln_rect & bleed).is_empty:
+                text_lines.append(ln_rect)
             for sp in ln.get("spans", []):
                 sr = fitz.Rect(*sp["bbox"])
                 # **`box` 가 아니라 `bleed` 로 거른다.** 라벨은 발문 상자 밖에 있을 때가
@@ -417,11 +513,15 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
                 # 라틴 글자·기호만인 조각은 열쇠가 비어(한글+숫자만 남기므로) 라벨로 남는다 —
                 # `A` `P` `x-y=a` 가 그렇고, 이건 본문에 없는 것들이라 옳다.
                 if len(k) >= STEM_LINE_CHARS_SPAN and longest_common_run(k, stem_key) >= STEM_LINE_CHARS_SPAN:
+                    avoid_spans.append(ln_rect)
+                    continue
+                raw_txt = "".join(c["c"] for c in sp.get("chars", []) if "c" in c)
+                if line_is_syntax:
+                    _t("라벨:지면문법(선택지·배점)")
+                    avoid_spans.append(ln_rect)
                     continue
                 label_rects.append(sr)
-                label_text[id(sr)] = "".join(
-                    c["c"] for c in sp.get("chars", []) if "c" in c
-                )
+                label_text[id(sr)] = raw_txt
 
     core: list[fitz.Rect] = []
     # 자르기 **전** 크기도 같이 든다. 잘라 놓은 것만 보면 「칸이 요소를 반으로 잘랐다」를
@@ -441,7 +541,9 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
         if b.get("type") == 0:
             continue
         r = fitz.Rect(*b["bbox"])
-        if is_page_furniture(r):
+        _t("이미지:전체")
+        if is_page_furniture(r) or crosses_column(r):
+            _t("이미지:쪽장식")
             continue
         inter = r & box
         # 겹친 부분이 «그림이라 할 만한 크기»인가를 본다 — 후보가 얼마나 들어왔나가
@@ -453,39 +555,60 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
             # 먼 것은 남의 것이므로 `bleed` 에 걸친 것만 본다.
             if not inter.is_empty and not (r & bleed).is_empty:
                 near_images.append(r)
+                _t("이미지:겹침부족(자르지만마라)")
+            else:
+                _t("이미지:상자밖")
             continue
         core.append(r & bleed)
         core_raw.append(r)
+        _t("이미지:후보")
 
     for d in page.get_drawings():
         r = fitz.Rect(d["rect"])
+        _t("획:전체")
         if r.is_infinite:
+            _t("획:무한")
             continue
         if r.is_empty:
             # 두께 0인 곧은 선 — 부풀려 살린다(`thin_pt`). 0 이면 예전 그대로 버린다.
             if thin_pt <= 0 or (r.x1 - r.x0 <= 0 and r.y1 - r.y0 <= 0):
+                _t("획:두께0버림")
                 continue
+            _t("획:두께0살림")
             r = fitz.Rect(r.x0 - thin_pt, r.y0 - thin_pt,
                           r.x1 + thin_pt, r.y1 + thin_pt)
-        if is_page_furniture(r):
+        if is_page_furniture(r) or crosses_column(r):
+            _t("획:쪽장식")
             continue
         if furniture is not None:
             k = tuple(int(round(v / 3)) for v in (d["rect"][0], d["rect"][1],
                                                   d["rect"][2], d["rect"][3]))
             if k in furniture:
+                _t("획:되풀이장식")
                 continue
-        if (r & box).is_empty or is_inside_text(r):
+        if (r & box).is_empty:
+            _t("획:상자밖")
+            continue
+        if is_inside_text(r):
+            _t("획:글자속")
             continue
         core.append(r & bleed)
         core_raw.append(r)
+        _t("획:후보")
+        if trace is not None:
+            trace.setdefault("후보상자", []).append(
+                [round(v, 1) for v in (r.x0, r.y0, r.x1, r.y1)]
+            )
 
     if not core:
+        _t("버림:후보가없다")
         return None
 
     # 획·이미지만으로 먼저 덩어리를 고른다. 라벨은 «어느 덩어리에 붙었나»로 정해지므로
     # 여기서 같이 넣으면 발문 옆 라벨이 덩어리를 옆으로 늘려 버린다.
     core = largest_cluster(core)
     if not core:
+        _t("버림:군집뒤에남은게없다")
         return None
     out = core[0]
     for r in core[1:]:
@@ -549,6 +672,61 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
         if not grew:
             break
 
+    # ── 발문은 삼키지 말고 **피한다** (`avoid_stem`) ──────────────────────
+    if avoid_stem:
+        # 피할 상자를 **줄 띠**로 넓힌다 — 위·아래로 겹쳐 놓인 글자(윗첨자·분수)가
+        # 제 줄로 따로 잡히기 때문이다. 되풀이해서 닫는다.
+        widened = []
+        for a in avoid_spans:
+            top, bot = a.y0, a.y1
+            grew = True
+            while grew:
+                grew = False
+                for r in text_lines:
+                    if r.y1 > top and r.y0 < bot and (r.y0 < top or r.y1 > bot):
+                        top, bot = min(top, r.y0), max(bot, r.y1)
+                        grew = True
+            widened.append(fitz.Rect(a.x0, top, a.x1, bot))
+        avoid_spans = widened
+
+    for _ in range(LABEL_ROUNDS if avoid_stem else 0):
+        # **되풀이한다.** 한 조각을 피해 물러서면 칸이 달라지므로, 아까는 안 닿던
+        # 조각이 새로 닿는다(실측 `4338-19`: 발문 마지막 줄 오른쪽 끝 글자 하나가
+        # 한 번 물러선 뒤에 걸렸다).
+        moved = False
+        for t in avoid_spans:
+            if (t & out).is_empty:
+                continue
+            # 네 방향으로 한 발씩 물러서 본다. **조건을 달지 않는다** — 「t 가 위쪽에
+            # 있나」를 좌표 비교로 물으면 한 픽셀 차이로 갈린다(실측 `3635-17`:
+            # 103.96 vs 103.93 으로 어긋났다). 물러선 결과가 t 와 안 닿고 그림 조각을
+            # 다 담고 있으면 그게 곧 옳은 방향이다.
+            # 물러설 때 **`PAD` 만큼 더** 물러선다. 오려낼 때 그 여백을 도로 붙이므로
+            # (`PAD` — 획이 딱 붙으면 잘려 보인다), 딱 붙게 물러서면 붙인 여백이
+            # 발문 줄을 다시 스친다. `get_text(clip=…)` 은 **스치기만 해도** 그 줄을
+            # 통째로 돌려주므로 관문이 「칸에 발문이 들어왔다」로 문항을 버린다.
+            cand = [fitz.Rect(out.x0, t.y1 + PAD, out.x1, out.y1),
+                    fitz.Rect(out.x0, out.y0, out.x1, t.y0 - PAD),
+                    fitz.Rect(t.x1 + PAD, out.y0, out.x1, out.y1),
+                    fitz.Rect(out.x0, out.y0, t.x0 - PAD, out.y1)]
+            # **그림 조각을 하나라도 자르면 물러서지 않는다.** 잘린 그림은 지면에서
+            # 티가 안 나므로, 못 피하면 예전처럼 완비 검사가 이 문항을 버리게 둔다.
+            keep = [c for c in cand
+                    if not c.is_empty and (c & t).is_empty
+                    and all(c.contains(r) for r in core)]
+            if keep:
+                out = max(keep, key=lambda c: c.get_area())
+                moved = True
+                _t("발문피함")
+            else:
+                _t("발문못피함")
+                if trace is not None:
+                    trace.setdefault("못피한것", []).append(
+                        [round(v, 1) for v in (t.x0, t.y0, t.x1, t.y1)]
+                    )
+        if not moved:
+            break
+
     # ── 완비 검사 — **아무것도 반으로 자르지 않는다** ────────────────────
     # 지금까지 간격·겹침 임계값을 여섯 번 고쳤고, 고칠 때마다 다른 쪽이 잘렸다
     # (꼭짓점 이름 `D` `C`, 식 꼬리 `=0`, 치수 `16 cm`). 임계값을 더 만지는 대신
@@ -559,7 +737,8 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
     # 그림 라벨이 잘려도 못 잡는다 — 실측 `019fd1da-6321` 의 `3x-2y+12=0` 은 본문에도
     # 같은 식이 있어 발문으로 갈렸고, 그 바람에 꼬리 `0` 이 칸 밖에 남았다.
     # 삼킨 뒤 정말로 발문이 들어왔다면 아래 **발문 침입 검사**가 그 문항을 버린다.
-    edges = span_rects + core_raw + (near_images if clip_images else [])
+    edges = [r for r in span_rects + core_raw + (near_images if clip_images else [])
+             if not crosses_column(r)]
     for _ in range(LABEL_ROUNDS):
         grew = False
         for t in edges:
@@ -574,13 +753,20 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
             break
     for t in edges:
         if not out.contains(t) and not (t & out).is_empty:
+            _t("버림:완비검사(경계를가로지름)")
+            if trace is not None:
+                trace.setdefault("가로지른것", []).append(
+                    [round(v, 1) for v in (t.x0, t.y0, t.x1, t.y1)]
+                )
             return None
 
     # 쪽 밖으로는 못 나간다. 발문 상자로는 자르지 않는다(bleed 참조).
     out = out & page.rect
     # 너무 작으면 그림이 아니라 잡티다(밑줄 한 토막·점 하나).
     if out.is_empty or out.width < 30 or out.height < 20:
+        _t("버림:너무작다")
         return None
+    _t("찾음")
     return out
 
 
