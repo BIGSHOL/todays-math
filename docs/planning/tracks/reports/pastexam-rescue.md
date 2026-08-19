@@ -5,8 +5,8 @@
 원장님 지시: 「n드라이브 데이터들 활용해서 오류들 모두 해결하려고 노력해보고
 **안되는 사항에 대해 보고**」.
 
-> **공유 DB 는 한 행도 바뀌지 않았다.** 전부 게이트 뒤 드라이런까지다.
-> 아래 「대기」는 원장님이 보시고 「적용해라」 하시면 그때 도는 것들이다.
+> **2026-08-19 적용 완료.** 원장님 지시로 공유 DB 에 **77행**을 넣었다.
+> 적용 전후 숫자와 되돌리기 명령은 **§10** 에 있다.
 
 ---
 
@@ -370,3 +370,71 @@ JSON 리포터로 보면 `success: true` · `failed: 0` · 120파일 전부 pass
 3. **`5347-19`·`5070-23`·`5907-12` 는 도구로 더 갈 수 없다** — 원본 화소가 그것뿐이거나
    인라인 배치 결정이 필요하다. 원장님 판단이 필요한 자리다.
 4. **`sourceFile` 없는 8행은 불가**다. 2026-08-14 이전 이관분이라 역추적이 안 된다.
+
+
+---
+
+## 10. 적용 결과 (2026-08-19)
+
+### 적용 전 → 후
+
+| | 전 | 후 |
+|---|---:|---:|
+| **그림 유실** | 444 | **421** |
+| └ 기출(`past_exam`) | 75 | **52** |
+| └ **지금 출제 가능** | 2 | **0** |
+| **본문 오염 (`[그림]` 자국)** | 35 | **13** |
+| 보기 그림 짝이 든 행 | 97 | **114** |
+| 기출 중 그림이 붙은 행 | 7,951 | **7,977** |
+| 출제 제외(잠김) 전체 | — | 702 |
+| 출제 가능(승인) | — | 46,224 |
+
+### 무엇을 넣었나
+
+| 단계 | 행 | 명령 |
+|---|---:|---|
+| ㉠ 그림 되붙이기 (HWP BinData) | 8 | `attach-hwp-figures.mjs --apply` |
+| ㉠ 그림 되붙이기 (한글 PDF 오려내기) | 15 | `--plan=pdf-figure-result-hwp.json --apply` |
+| ㉢ 표 되붙이기 | 3 | `--plan=table-crop-result.json --apply` |
+| `figureDims` 백필 | 26 | `backfill-figure-dimensions.ts --apply` |
+| ㉠ 잠금 해제 (회수분만) | 23 | `apply-missing-figure-lock.ts --revert --recovered` |
+| ㉡ 본문 교체 | 34 | `apply-hwp-replacement.ts --apply` |
+| ㉣㉤ 보기 그림 짝 | 17 | `apply-choice-figure-index.ts --pairs=…-hwp.json --apply` |
+| ㉣㉤ 잠금 해제 (회수분만) | 17 | `apply-choice-figure-discard.ts --revert --recovered` |
+| ㉥ 새로 찾은 유실 잠금 | 2 | `apply-missing-figure-lock.ts` |
+
+D-20: **+43 풀리고 −2 잠긴다. 영향 단원 22개 · 정원(8) 아래로 내려가는 단원 0개.**
+
+### ⚠️ 일부러 안 한 것
+
+- **표 3행의 잠금은 안 풀었다.** 그 행들은 `unusable-discard-lock`(정답번호어긋남, 269행,
+  원장님 확정 「AI로 새로 내자」)이 잠근 것이라 **남의 원장 소관**이다. 그림은 붙었지만
+  본문의 뭉개진 표 글자가 그대로라 아직 못 읽는다 — **본문 손질은 지면 형태라 확정 대기.**
+- **보기 그림 짝 12행은 잠근 채로 뒀다.** 짝을 못 찾은 것을 같이 풀면 「어느 그림이 ①인지
+  모르는 문항」이 지면으로 돌아간다.
+- `5759-5` 본문 교체 — HWP→LaTeX 가 근호를 잘못 닫는다(§2.3).
+- `5181-13` 보기 짝 — 선택지가 「ㄱ ㄴ ㄷ」 짝짓기라 이 컬럼이 담을 값이 아니다.
+
+### 되돌리기 (전부 커밋된 원장이 근거다)
+
+```bash
+# ㉠㉢ 그림 되붙이기 26행  (원장: scripts/qa/reports/figure-attach-ledger.json)
+ALLOW_SHARED_IMPORT=1 node scripts/figure/attach-hwp-figures.mjs --revert
+
+# ㉡ 본문 교체 34행        (백업: scripts/qa/reports/hwp-replace-backup.json)
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-hwp-replacement.ts --restore
+
+# ㉣㉤ 보기 그림 짝 17행   (원장: scripts/qa/reports/choice-figure-index-apply.json)
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-choice-figure-index.ts --revert
+
+# 잠금/해제               (원장: missing-figure-lock.json · choice-figure-discard-lock.json)
+ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-missing-figure-lock.ts --revert
+ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-choice-figure-discard.ts --revert
+```
+
+모두 **지금 값이 자기가 쓴 값일 때만** 되돌린다 — 남의 변경을 덮지 않는다.
+
+### 게이트 (적용 후)
+
+`type-check` 통과 · `lint` 통과(경고 2, 오류 0) · `lint:affordance` 통과 ·
+테스트 **1,993건 · 실패 0 · `success: true`**.
