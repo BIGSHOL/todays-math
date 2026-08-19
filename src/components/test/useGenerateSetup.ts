@@ -102,11 +102,22 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
   /** 「고치기」를 눌러 3열 피커를 펼쳤는가 (S-04 C안 — 평소에는 한 줄이다). */
   const [rangeEditing, setRangeEditing] = useState(false);
   /**
-   * 서버가 범위를 못 냈다(진도 기록 없음). **여기서 지어내지 않는다** —
-   * 예전 기본값(초1 첫 소단원 ~ 미적분2 마지막)이 바로 그 지어냄이었고,
-   * 손대지 않고 출제하면 다섯 학년이 섞인 시험지가 조용히 나왔다.
+   * 기본 범위 조회의 **결과와 그것이 어느 반/학생의 것인지**를 같이 들고 있는다.
+   *
+   * 🔴 적대적 리뷰(2026-08-19): 예전에는 `rangeUnknown` 불리언 하나였다. 그래서
+   *    ⑴ **아직 안 온 것**과 ⑵ **진도가 없는 것**과 ⑶ **조회가 실패한 것**이
+   *    같은 문장(「진도 기록이 없어 범위를 정하지 못했습니다」)으로 나갔다.
+   *    느린 회선에서는 진도가 멀쩡한데 원장이 진도를 기록하러 가고, 500 이 나도
+   *    진도 탓을 한다. **손상은 「모른다」로 말해야 한다.**
+   *
+   * 키를 같이 두는 이유: 로딩 여부를 **파생**시키려는 것이다(`키가 다르면 아직
+   * 안 온 것`). 효과 안에서 `setLoading(true)` 를 동기로 부르면 연쇄 렌더가 되고
+   * ESLint 가 막는다 — 실제로 한 번 막혔다.
    */
-  const [rangeUnknown, setRangeUnknown] = useState(false);
+  const [rangeState, setRangeState] = useState<{
+    key: string;
+    status: "ok" | "none" | "error";
+  } | null>(null);
   const [insufficient, setInsufficient] = useState<InsufficientState | null>(
     null,
   );
@@ -187,6 +198,7 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
   useEffect(() => {
     if (!classId) return;
     let cancelled = false;
+    const key = `${classId}:${studentId}`;
     const query = new URLSearchParams({ classId });
     if (studentId) query.set("studentId", studentId);
     fetch(`/api/tests/default-range?${query.toString()}`)
@@ -198,18 +210,18 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
       .then((body) => {
         if (cancelled) return;
         if (!body.data) {
-          setRangeUnknown(true);
+          setRangeState({ key, status: "none" });
           setRangeStartUnitId("");
           setRangeEndUnitId("");
           return;
         }
-        setRangeUnknown(false);
+        setRangeState({ key, status: "ok" });
         setRangeStartUnitId(body.data.rangeStartUnitId);
         setRangeEndUnitId(body.data.rangeEndUnitId);
       })
       .catch(() => {
         if (cancelled) return;
-        setRangeUnknown(true);
+        setRangeState({ key, status: "error" });
         setRangeStartUnitId("");
         setRangeEndUnitId("");
       });
@@ -217,6 +229,11 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
       cancelled = true;
     };
   }, [classId, studentId]);
+
+  /** 지금 화면이 보고 있는 반/학생의 답이 아직 안 왔는가. */
+  const rangeLoading = rangeState?.key !== `${classId}:${studentId}`;
+  const rangeUnknown = !rangeLoading && rangeState?.status === "none";
+  const rangeError = !rangeLoading && rangeState?.status === "error";
 
   const selectClass = useCallback(
     (nextId: string) => {
@@ -266,9 +283,19 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
         setMid(difficultyRatio.mid);
         setHard(difficultyRatio.hard);
       }
-      if (testType === "review" && (!rangeStartUnitId || !rangeEndUnitId)) {
+      // 범위가 아직 안 왔으면(반을 막 바꿨다) **이전 반의 값이 남아 있다** — 그대로
+      // 보내면 다른 반의 범위로 출제된다. 단원 id 는 반과 무관하게 유효해서 서버도
+      // 막지 않는다(적대적 리뷰 2026-08-19).
+      if (
+        testType === "review" &&
+        (rangeLoading || !rangeStartUnitId || !rangeEndUnitId)
+      ) {
         setInsufficient(null);
-        setSubmitError("진도 기록이 없어 범위를 정하지 못했습니다");
+        setSubmitError(
+          rangeLoading
+            ? "범위를 불러오는 중입니다"
+            : "진도 기록이 없어 범위를 정하지 못했습니다",
+        );
         return;
       }
       if (
@@ -347,6 +374,7 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
       hard,
       rangeStartUnitId,
       rangeEndUnitId,
+      rangeLoading,
       router,
     ],
   );
@@ -405,7 +433,9 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
     rangeStartUnitId,
     rangeEndUnitId,
     rangeEditing,
+    rangeLoading,
     rangeUnknown,
+    rangeError,
     insufficient,
     generatedPendingCount,
     submitError,

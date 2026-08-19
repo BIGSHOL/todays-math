@@ -162,11 +162,13 @@ describe("[T4.3 S-04] 출제 설정 — 폼 골격", () => {
   });
 
   /**
-   * 🔒 열에 높이 상한(260px)이 걸려 있어 **고른 것이 창 밖에 있을 수 있다.**
-   * 학년 열은 16행(초1~미적분2)인데 창은 6행쯤이라, 중2 를 고른 채 열면 화면에는
-   * 초1~초6 만 보인다 — 「아무것도 안 골라진 것」처럼 읽히는 자리다.
+   * 🔒 **페이지를 굴리지 않는다.** 열에 높이 상한(260px)이 걸려 있어 고른 것이 창
+   * 밖에 있을 수 있는데, 그걸 `scrollIntoView` 로 끌어오면 사양상 **문서까지** 굴러
+   * 페이지가 튄다 — 이 작업이 고치려던 「스크롤이 강제된다」 그 증상이다.
+   * 굴리는 것은 **열 상자뿐**이고, 얼마나 굴릴지는 `scrollDeltaToReveal` 이 정한다
+   * (그 계산은 `revealWithin.test.ts` 가 따로 잠근다).
    */
-  it("피커를 열면 지금 고른 것이 보이도록 끌어다 놓는다", async () => {
+  it("피커를 열어도 페이지를 굴리지 않는다", async () => {
     const scrollIntoView = vi.fn();
     const original = (
       Element.prototype as unknown as { scrollIntoView?: unknown }
@@ -179,11 +181,13 @@ describe("[T4.3 S-04] 출제 설정 — 폼 골격", () => {
       const { user } = await renderSetup();
       await user.click(screen.getByRole("radio", { name: "확인테스트" }));
       await screen.findByRole("button", { name: "고치기" });
-      scrollIntoView.mockClear();
 
       await user.click(screen.getByRole("button", { name: "고치기" }));
 
-      expect(scrollIntoView).toHaveBeenCalled();
+      expect(
+        screen.getByRole("group", { name: "범위 선택" }),
+      ).toBeInTheDocument();
+      expect(scrollIntoView).not.toHaveBeenCalled();
     } finally {
       if (original === undefined) {
         delete (Element.prototype as unknown as { scrollIntoView?: unknown })
@@ -268,6 +272,72 @@ describe("[T4.3 S-04] 출제 설정 — 폼 골격", () => {
         `${MOCK_UNITS[1]!.section} ~ ${MOCK_UNITS[1]!.section}`,
       ),
     ).toBeInTheDocument();
+  });
+
+  /**
+   * 🔴 적대적 리뷰(2026-08-19) — **아직 안 온 것과 없는 것을 같이 말했다.**
+   *
+   * 범위를 불러오는 동안 화면은 「진도 기록이 없어 범위를 정하지 못했습니다」를 띄웠다.
+   * 느린 회선에서 원장은 **진도를 기록하러 간다** — 진도는 멀쩡한데.
+   */
+  it("범위를 불러오는 동안에는 진도가 없다고 말하지 않는다", async () => {
+    server.use(
+      http.get("/api/tests/default-range", () => new Promise(() => {})),
+    );
+
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+
+    expect(await screen.findByText("범위를 불러오는 중")).toBeInTheDocument();
+    expect(
+      screen.queryByText("진도 기록이 없어 범위를 정하지 못했습니다"),
+    ).not.toBeInTheDocument();
+  });
+
+  /**
+   * 🔴 적대적 리뷰(2026-08-19) — **반을 바꾼 직후 이전 반의 범위로 출제할 수 있었다.**
+   *
+   * 반이 바뀌면 범위를 다시 묻는데, 답이 오기 전까지 `rangeStartUnitId` 는 **이전 반의
+   * 값**을 그대로 들고 있다. 「출제」가 그때 눌리면 그 값이 그대로 실려 나간다 —
+   * 단원 id 는 반과 무관하게 유효하므로 서버도 막지 않는다. 조용히 틀리는 자리다.
+   */
+  it("반을 바꾼 뒤 범위가 오기 전에는 출제할 수 없다", async () => {
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+    await screen.findByRole("button", { name: "고치기" });
+
+    // 다음 조회는 영원히 안 온다 — 반을 바꾸는 순간부터 「모르는」 상태다.
+    server.use(
+      http.get("/api/tests/default-range", () => new Promise(() => {})),
+    );
+    await user.selectOptions(screen.getByLabelText("반"), CLASS_B_ID);
+
+    expect(await screen.findByText("범위를 불러오는 중")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "출제" })).toBeDisabled();
+  });
+
+  /**
+   * 🔴 같은 뿌리 — **조회 실패도 「진도 없음」으로 읽었다.** 500 이든 회선이 끊겼든
+   * 화면은 진도 탓을 했다. 손상은 「모른다」로 말해야 한다.
+   */
+  it("범위 조회가 실패하면 진도가 아니라 조회를 탓한다", async () => {
+    server.use(
+      http.get(
+        "/api/tests/default-range",
+        () => new HttpResponse("broken", { status: 500 }),
+      ),
+    );
+
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+
+    expect(
+      await screen.findByText("범위를 불러오지 못했습니다"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("진도 기록이 없어 범위를 정하지 못했습니다"),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "출제" })).toBeDisabled();
   });
 
   /**

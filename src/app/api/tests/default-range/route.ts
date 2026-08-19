@@ -6,6 +6,7 @@
  * **다음** 소단원. 확인테스트를 한 번도 안 냈으면 그 반이 나간 진도의 첫 단원부터.
  * 판정 자체는 순수 함수 `resolveDefaultReviewRange` 한 곳에 있다 — 여기서는 조회만 한다.
  */
+import type { TestStatus } from "@prisma/client";
 import type { NextRequest } from "next/server";
 
 import {
@@ -20,6 +21,19 @@ import { requireOwnedClass, requireOwnedStudentInClass } from "@/lib/ownership";
 import { getCurrentProgress } from "@/lib/progressResolver";
 import { serializeProgress } from "@/lib/serializers";
 import { getSessionUser } from "@/lib/session";
+
+/**
+ * **실제로 낸 시험만** 「직전 확인테스트」로 센다.
+ *
+ * 🔴 예전에는 `draft` 도 셌다. 출제를 누르면 그 순간 draft 가 만들어지므로, 검수만
+ *    하고 버려도 다음 기본 범위가 그 끝 **다음**부터가 된다. 끝은 곧 현재 진도라
+ *    시작이 진도보다 뒤가 되고 — 범위가 **현재 진도 한 단원으로 접혔다**(실측 4단원
+ *    → 1단원). 그러면 D-54(단원을 고루)가 통째로 무력해지고, 「진도 기준 자동」이라는
+ *    라벨을 단 채 8문항이 한 단원에서만 나간다. 적대적 리뷰(2026-08-19)에서 잡았다.
+ */
+const GIVEN_TESTS = {
+  status: { in: ["confirmed", "printed"] satisfies TestStatus[] },
+};
 
 /** 「최신」 판정은 `getCurrentProgress` 와 **글자 그대로 같아야 한다**(진도 route 주석 참조). */
 const LATEST_FIRST = [
@@ -92,13 +106,20 @@ export async function GET(request: NextRequest) {
         classId,
         studentId: null,
         testType: "review",
+        ...GIVEN_TESTS,
       },
       orderBy: [{ testDate: "desc" as const }, { createdAt: "desc" as const }],
       take: 1,
     }),
     studentId
       ? db.test.findMany({
-          where: { userId: session.id, classId, studentId, testType: "review" },
+          where: {
+            userId: session.id,
+            classId,
+            studentId,
+            testType: "review",
+            ...GIVEN_TESTS,
+          },
           orderBy: [
             { testDate: "desc" as const },
             { createdAt: "desc" as const },

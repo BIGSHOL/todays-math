@@ -42,6 +42,7 @@ import {
   CLASS_STARVED_ID,
   TEST_CONFIRMED_ID,
   TEST_DRAFT_ID,
+  MOCK_TEST_DRAFT_PROBLEMS,
   TEST_NOT_FOUND_ID,
   TEST_PRINTED_ID,
   MOCK_UNITS,
@@ -234,6 +235,30 @@ describe("[T4.2] PUT /api/tests/{id}/problems/{seq} — 1클릭 교체(중복 �
     const body = testProblemReplaceResponseSchema.parse(await res.json());
     expect(body.data.test.modified).toBe(true);
     expect(body.data.problem.replaced).toBe(true);
+  });
+
+  /**
+   * 🔒 **교체는 같은 단원 안에서만 한다.** 확인테스트에서 이게 새면 **범위 밖 문항**이
+   * 시험지에 들어간다 — 범위를 진도로 정해 놓고(2026-08-19) 교체 한 번에 무너지는 자리다.
+   * 단원 분산(D-54)도 교체가 다른 단원을 끌어오면 흐트러진다.
+   *
+   * 적대적 리뷰에서 「교체는 멀쩡하다」고 적으려다, 그 말을 **잠그는 것이 하나도 없다**는
+   * 것을 알고 붙였다(코드를 읽어 확인한 것과 가드가 있는 것은 다르다).
+   */
+  it("교체는 같은 단원 안에서만 한다 — 범위 밖 문항이 들어오지 않는다", async () => {
+    const original = MOCK_TEST_DRAFT_PROBLEMS[0]!;
+    const res = await replaceTestProblem(
+      jsonRequest(
+        `http://localhost/api/tests/${TEST_DRAFT_ID}/problems/1`,
+        "PUT",
+      ),
+      withIdAndSeq(TEST_DRAFT_ID, 1),
+    );
+
+    expect(res.status).toBe(200);
+    const body = testProblemReplaceResponseSchema.parse(await res.json());
+    expect(body.data.problem.problemId).not.toBe(original.problemId);
+    expect(body.data.problem.problem.unitId).toBe(original.problem.unitId);
   });
 
   it("최근 14일 내 이미 출제된 문제는 교체 후보에서 제외된다(D-20)", async () => {

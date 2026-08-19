@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 
+import { scrollDeltaToReveal } from "@/components/progress/revealWithin";
 import { useUnitTree } from "@/hooks/useUnitTree";
 import type { UnitNode } from "@/lib/units/groupUnits";
 
@@ -126,8 +127,15 @@ export function UnitRangePicker({
 
   return (
     <div className="grid gap-1">
-      {/* 조작 안내는 **피커 우상단**에 둔다 — 눈이 표로 가기 직전에 지나는 자리다. */}
-      <p className="flex justify-end gap-2 text-[10.5px] font-bold tracking-normal text-text-3">
+      {/*
+        조작 안내는 **피커 우상단**에 둔다 — 눈이 표로 가기 직전에 지나는 자리다.
+        `aria-live` 를 두는 이유: 「시작 → 끝」으로 바뀌는 것이 **글자 하나뿐**이라
+        화면을 안 보는 사람에게는 아무 일도 안 일어난 것과 같다(보이는 것은 그대로다).
+      */}
+      <p
+        aria-live="polite"
+        className="flex justify-end gap-2 text-[10.5px] font-bold tracking-normal text-text-3"
+      >
         {mode === "left-right" ? (
           <>
             <span>
@@ -252,16 +260,27 @@ function PickButton({
    * 학년 열은 16행(초1~미적분2)인데 창은 6행쯤이라, 중2 를 고른 채 열면 화면에는
    * 초1~초6 만 보이고 「아무것도 안 골라진 것」처럼 읽힌다. 열릴 때 끌어다 놓는다.
    *
-   * jsdom 에는 `scrollIntoView` 가 없다 — 있는지 보고 부른다(테스트가 죽지 않게).
+   * 🔴 **`scrollIntoView` 를 쓰지 않는다.** 그것은 스크롤 가능한 조상 **전부**를
+   *    굴린다 — 문서까지. 펼침 패널이 화면 아래에 걸쳐 있으면 페이지가 통째로 튀고,
+   *    그건 이 작업이 고치려던 「스크롤이 강제된다」 바로 그 증상이다
+   *    (적대적 리뷰 2026-08-19). 여기서는 **열 상자의 `scrollTop` 만** 건드린다.
    */
   const ref = useRef<HTMLButtonElement>(null);
   const shouldReveal = edge || selected;
   useEffect(() => {
     if (!shouldReveal) return;
     const node = ref.current;
-    if (node && typeof node.scrollIntoView === "function") {
-      node.scrollIntoView({ block: "nearest" });
-    }
+    const container = node?.parentElement;
+    if (!node || !container) return;
+    const containerRect = container.getBoundingClientRect();
+    const nodeRect = node.getBoundingClientRect();
+    const delta = scrollDeltaToReveal({
+      containerTop: containerRect.top,
+      containerHeight: containerRect.height,
+      nodeTop: nodeRect.top,
+      nodeHeight: nodeRect.height,
+    });
+    if (delta !== 0) container.scrollTop += delta;
   }, [shouldReveal]);
 
   return (

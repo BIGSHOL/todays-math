@@ -33,7 +33,9 @@ function RangeField({
   startUnitId,
   endUnitId,
   editing,
+  loading,
   unknown,
+  error,
   onToggleEdit,
   onChangeRange,
 }: {
@@ -41,19 +43,30 @@ function RangeField({
   startUnitId: string;
   endUnitId: string;
   editing: boolean;
+  loading: boolean;
   unknown: boolean;
+  error: boolean;
   onToggleEdit: () => void;
   onChangeRange: (startUnitId: string, endUnitId: string) => void;
 }) {
-  const summary = describeRange(units, startUnitId, endUnitId);
+  const summary = loading ? null : describeRange(units, startUnitId, endUnitId);
+  /**
+   * **아직 안 온 것 · 없는 것 · 못 불러온 것을 갈라 말한다.** 예전에는 셋이 같은
+   * 문장으로 나가서, 느린 회선이나 500 을 원장이 「진도가 없다」로 읽었다.
+   */
+  const headline = loading
+    ? "범위를 불러오는 중"
+    : summary
+      ? summary.text
+      : error
+        ? "범위를 불러오지 못했습니다"
+        : "진도 기록이 없어 범위를 정하지 못했습니다";
 
   return (
     <div className={LABEL_CLASS}>
       범위
       <div className="flex items-baseline gap-3">
-        <span className="text-[12.5px] font-black text-ink">
-          {summary ? summary.text : "진도 기록이 없어 범위를 정하지 못했습니다"}
-        </span>
+        <span className="text-[12.5px] font-black text-ink">{headline}</span>
         <button
           type="button"
           onClick={onToggleEdit}
@@ -79,9 +92,11 @@ function RangeField({
           </span>
         </>
       ) : null}
-      {unknown && !editing ? (
+      {(unknown || error) && !editing ? (
         <span className="text-[10.5px] font-bold tracking-normal text-text-3">
-          진도를 기록하거나 「고치기」로 직접 고르세요
+          {unknown
+            ? "진도를 기록하거나 「고치기」로 직접 고르세요"
+            : "「고치기」로 직접 고르세요"}
         </span>
       ) : null}
       {editing ? (
@@ -240,7 +255,9 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
               startUnitId={form.rangeStartUnitId}
               endUnitId={form.rangeEndUnitId}
               editing={form.rangeEditing}
+              loading={form.rangeLoading}
               unknown={form.rangeUnknown}
+              error={form.rangeError}
               onToggleEdit={() => form.setRangeEditing(!form.rangeEditing)}
               onChangeRange={form.setRange}
             />
@@ -301,7 +318,9 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
             disabled={
               form.busy ||
               (form.testType === "review" &&
-                (!form.rangeStartUnitId || !form.rangeEndUnitId))
+                (form.rangeLoading ||
+                  !form.rangeStartUnitId ||
+                  !form.rangeEndUnitId))
             }
           >
             출제
