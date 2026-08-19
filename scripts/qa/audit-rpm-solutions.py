@@ -58,6 +58,9 @@ from difflib import SequenceMatcher
 
 import pymupdf
 
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
+import rpm_page_text  # noqa: E402  — 좌표째 읽어 쌓인 분수를 되살린다
+
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
@@ -76,11 +79,20 @@ BODY_MIN = 4
 #: ⚠️ 이게 없으면 «그래프 축 라벨»이 풀이로 잡힌다 — 실측 `y 4 2 x -4 -2 2 4 O -2 -4`.
 #: 답이 그래프인 문항은 책이 좌표평면 그림만 싣고 풀이를 안 쓴다.
 BODY_KO_MIN = 2
-#: 같은 줄이 **이만큼 많은 쪽**에 나오면 쪽 장식이다(머리말·꼬리말·판형 번호).
+#: 같은 줄이 **이만큼 많은 쪽**에 나오면 쪽 장식일 수 있다(머리말·꼬리말·판형 번호).
 #: ⚠️ 낱말 목록으로 지우면 그 목록에 없는 서식은 구조적으로 못 본다. 실측으로
 #:    「50 정답 및 풀이 191226」·「본문 104 ~ 111 쪽」·「08 이차함수의 그래프 ⑴67」이
 #:    풀이로 잡혔는데, 셋 다 **여러 쪽에 되풀이된다**. 그게 가르는 성질이다.
 FURNITURE_MIN_PAGES = 3
+#: 그리고 **늘 같은 높이**에 있어야 한다. 판정은 열쇠 전체가 아니라 «열쇠+높이» 묶음마다 한다
+#: — 같은 글이 꼬리말에도 본문에도 나오면(실측 「04 여러 가지 사각형」·「본문 12~19쪽」)
+#: 열쇠 단위로 보면 퍼짐이 커져 **꼬리말까지 통과한다**.
+#: ⚠️ 되풀이만 보면 **풀이가 지워진다.** 수학 해설은 같은 말을 수없이 되풀이한다 —
+#:    실측 2-2 정답 90쪽에서 `∴ x=55`(15쪽) · `2x=14  ∴ x=7`(11쪽) · `답 ④`(8쪽) ·
+#:    `이므로`(13쪽) · `따라서 sABC에서`(8쪽) 가 전부 «장식»으로 걸려 **본문에서
+#:    사라지고 있었다**. 장식으로 걸린 열쇠 174개 중 171개가 본문이었다.
+#:    가르는 성질은 되풀이가 아니라 **자리**다 — 머리말·꼬리말은 쪽마다 같은 y 에 선다.
+FURNITURE_Y_SPREAD = 2.0
 #: 되풀이를 셀 때 숫자는 지운다 — 쪽번호·판형번호만 다른 같은 줄이기 때문이다.
 DIGITS = re.compile(r"\d+")
 #: 우리 DB 가 정답 자리에 넣어 둔 자리 표시자. 값이 아니라 «모른다»는 뜻이다.
@@ -103,40 +115,47 @@ def book_solution_map(pdf: pathlib.Path) -> dict[int, tuple[str, str]]:
     각 단 안에서 읽는 순서대로 이어 붙인다 — 그래야 다음 앵커까지가 그 문항 몫이 된다.
     """
     doc = pymupdf.open(pdf)
+    # 쪽마다 (단, y, x, 글) 줄 목록. **분수는 여기서 이미 되살아난다**(rpm_page_text).
+    per_page = [rpm_page_text.page_lines(doc[pi]) for pi in range(doc.page_count)]
 
     # ── 쪽 장식을 먼저 찾는다 — 여러 쪽에 되풀이되는 줄 ─────────────────
     # ⚠️ **앵커를 장식으로 잡으면 안 된다.** 숫자를 지우는 규칙이라 `0162` 는 빈 문자열이
     #    되고, 빈 문자열은 모든 쪽에 있다 — 처음에 이 가드가 거꾸로 걸려 앵커가 통째로
     #    사라졌다(「번호가 없다」 228건). 그래서 앵커로 시작하는 줄과 빈 열쇠는 뺀다.
-    seen: dict[str, set[int]] = {}
-    for pi in range(doc.page_count):
-        for ln in doc[pi].get_text("text").splitlines():
+    # ⚠️ 장식을 세는 줄과 본문을 읽는 줄은 **같은 것이어야 한다.** 한쪽만 추출기를
+    #    바꾸면 열쇠가 어긋나 장식이 하나도 안 걸러진다.
+    spots: dict[str, list[tuple[int, float]]] = {}
+    for pi, lines in enumerate(per_page):
+        for _col, y, _x, ln in lines:
             t = ln.strip()
             if not t or ANCHOR.fullmatch(t.split(" ")[0]):
                 continue
             k = DIGITS.sub("", t).strip()
             if k:
-                seen.setdefault(k, set()).add(pi)
-    furniture = {k for k, ps in seen.items() if len(ps) >= FURNITURE_MIN_PAGES}
+                spots.setdefault(k, []).append((pi, y))
+    furniture: dict[str, list[float]] = {}  # 열쇠 → 장식으로 판정된 높이들
+    for k, hits in spots.items():
+        hits.sort(key=lambda h: h[1])
+        band: list[tuple[int, float]] = []
+        for hit in hits + [(-1, 1e9)]:
+            if band and hit[1] - band[0][1] > FURNITURE_Y_SPREAD:
+                if len({p for p, _ in band}) >= FURNITURE_MIN_PAGES:
+                    furniture.setdefault(k, []).append(sum(y for _, y in band) / len(band))
+                band = []
+            band.append(hit)
+
+    def is_furniture(k: str, y: float) -> bool:
+        return any(abs(y - c) <= FURNITURE_Y_SPREAD for c in furniture.get(k, ()))
 
     out: dict[int, tuple[str, str]] = {}
-    for pi in range(doc.page_count):
-        page = doc[pi]
-        mid = page.rect.width / 2
-        # (단, y, x, 글자) 로 정렬해 읽는 순서를 만든다.
+    for pi, lines in enumerate(per_page):
         rows: list[tuple[int, float, float, str, bool]] = []
-        for b in page.get_text("dict").get("blocks", []):
-            for ln in b.get("lines", []):
-                txt = "".join(sp.get("text", "") for sp in ln.get("spans", []))
-                if not txt.strip():
-                    continue
-                if not ANCHOR.fullmatch(txt.strip().split(" ")[0]) and DIGITS.sub(
-                    "", txt.strip()
-                ).strip() in furniture:
-                    continue  # 쪽 장식 — 풀이가 아니다
-                x0, y0 = ln["bbox"][0], ln["bbox"][1]
-                first = txt.strip().split(" ")[0]
-                rows.append((0 if x0 < mid else 1, y0, x0, txt, bool(ANCHOR.fullmatch(first))))
+        for col, y0, x0, txt in lines:
+            first = txt.strip().split(" ")[0]
+            is_anchor = bool(ANCHOR.fullmatch(first))
+            if not is_anchor and is_furniture(DIGITS.sub("", txt.strip()).strip(), y0):
+                continue  # 쪽 장식 — 풀이가 아니다
+            rows.append((col, y0, x0, txt, is_anchor))
         rows.sort(key=lambda r: (r[0], r[1], r[2]))
 
         cur: int | None = None

@@ -112,3 +112,6 @@ scripts/classify/reports/loaded-external-ids.json
 
 # HWP → PDF 변환 산출물 (재생성 가능, 저장소에 넣지 않는다)
 .hwp-pdf/
+
+# 임시 조사용 (커밋하지 않는다)
+.probe/
