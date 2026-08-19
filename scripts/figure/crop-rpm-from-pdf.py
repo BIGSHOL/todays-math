@@ -706,8 +706,8 @@ def stem_direction(text: str) -> tuple[str | None, str | None]:
     return hit[0]
 
 
-def span_boxes(raw, region: fitz.Rect,
-               stem_key: str) -> list[tuple[fitz.Rect, bool]]:
+def span_boxes(raw, region: fitz.Rect, stem_key: str,
+               propagate: bool = True) -> list[tuple[fitz.Rect, bool]]:
     """구역에 걸친 **모든** 글자 조각과 「지면 글자인가」 — 판정은 **여기 한 곳뿐**이다.
 
     셋 중 하나면 지면 글자다.
@@ -752,7 +752,12 @@ def span_boxes(raw, region: fitz.Rect,
             # 둘이 그림 **아래**를 지나가서, 벽이 거기서 안 서고 칸이 발문을 삼켰다.
             # 줄로 보면 그림 라벨이 발문 줄에 얹힌 배치에서 라벨을 잃을 수 있는데,
             # 그때는 그 라벨이 그림에 닿아 있으므로 «벽 밖» 검사가 그 문항을 버린다.
-            hit = any(is_text for _, is_text in row)
+            # `propagate=False` 면 줄로 퍼뜨리지 않는다. **지우는 쪽**이 그렇게 쓴다 —
+            # 벽을 세울 때는 줄로 보는 게 옳지만(발문 수식 토막을 잡아야 한다),
+            # **지우는 것은 되돌릴 수 없으므로** 조각이 스스로 지면 글자일 때만 지운다.
+            # 실측 2-2 p75 `0407`: 치수 `12 cm` 의 `cm` 가 소문항 글줄과 한 «줄»로
+            # 묶여 있어, 줄로 퍼뜨리면 그림에서 단위가 지워진다.
+            hit = propagate and any(is_text for _, is_text in row)
             for sr, is_text in row:
                 if (sr & region).is_empty:
                     continue
