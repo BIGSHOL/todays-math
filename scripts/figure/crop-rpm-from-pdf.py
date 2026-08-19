@@ -827,18 +827,15 @@ def stem_wall(page, box: fitz.Rect, stem_key: str, ink: fitz.Rect, axis: str,
     그 방향에서 **처음 만나는 지면 글자** 앞에서 멈춘다. 나란한 글자만 막는다
     (어긋난 글자는 그 방향을 못 막는다) — 그래서 감싸고 흐르는 글자도 제자리에서 멈춘다.
 
-    ## 벽은 글자를 **반으로 가르지 않는다**
+    ## ⛔ 벽을 «글자 사이로 밀어 넣는» 판은 지웠다
 
-    지면 글자의 끝이 곧 빈 자리는 아니다. 그 자리에 다른 조각이 걸쳐 있으면 두 가지다.
-
-    · 걸친 것이 **지면 글자**면 — 벽을 **안으로** 당겨 내보낸다.
-      (실측 `019fd1d7-7a78`: 발문 「일 때, ∠」가 450.8 에서 끝나는데 이어지는 수식
-       `x` 가 [450.4, 456.7] 이라 450.8 이 그 한가운데다.)
-    · 걸친 것이 **그림 재료**면 — 벽을 **밖으로** 밀어 끌어안는다.
-      (실측 `019fd1db-748f`: 꼭짓점 `H` 가 그림 위끝보다 8.9pt 위에 있어, 위 벽을
-       글자 끝에 딱 세우면 그 이름을 반으로 자른다.)
-
-    밀다가 잉크를 침범하거나 `bleed` 를 벗어나면 **가를 자리가 없는** 배치다 — 버린다.
+    벽이 글자를 반으로 가를 때 안팎으로 밀어 맞추는 판을 만들어 돌려 봤다. **변이
+    시험에서 통째로 초록이었다** — 지우고 돌려도 회수 27건이 한 장도 안 바뀐다.
+    조각 상자를 글자에 조이고(`span_rect`) 줄 단위로 지면 글자를 퍼뜨리고 나면
+    벽이 글자 한가운데 서는 일이 없어졌기 때문이다. 그리고 그렇게 서는 배치는
+    밀어서 될 일이 아니었다 — 실측 `019fd1db-748f` 은 꼭짓점 `H` 와 머리글
+    마지막 줄이 1.8pt 겹쳐서, 안팎 두 요구가 맞부딪쳐 벽이 두 값을 오갔다.
+    네모 하나로 못 가르는 배치는 **버리는 쪽**이 맞다(완비 검사가 버린다).
 
     ## 본문이 말한 쪽에 글자가 있어야 한다
 
@@ -871,45 +868,6 @@ def stem_wall(page, box: fitz.Rect, stem_key: str, ink: fitz.Rect, axis: str,
         return None
     if axis == "y" and not blocked[1]:
         return None
-
-    inner = (ink.x0, ink.y0, ink.x1, ink.y1)
-    outer = (bleed.x0, bleed.y0, bleed.x1, bleed.y1)
-    for _ in range(6):
-        moved = False
-        for i in range(4):
-            lo, hi = (0, 2) if i % 2 == 0 else (1, 3)     # 이 가장자리가 사는 축
-            po, ph = (1, 3) if i % 2 == 0 else (0, 2)     # 그와 직각인 축
-            edge = wall[i]
-            # **잉크와 나란한 것만** 본다. 벽 전체 폭으로 보면 그림에서 멀리 떨어진
-            # 조각까지 벽을 밀어, 회수가 13 → 10 으로 줄었다(실측). 멀리 있는 것이
-            # 칸을 가로지르면 `figure_rect` 의 완비 검사가 그때 버린다.
-            cross = [
-                (r, is_text) for r, is_text in spans
-                if r[lo] < edge - 0.01 and edge + 0.01 < r[hi]
-                and r[po] < inner[ph] and r[ph] > inner[po]
-            ]
-            if not cross:
-                continue
-            # **안으로만 당긴다.** 밖으로 밀어 끌어안는 길도 재 봤는데, 그림 라벨과
-            # 발문 줄이 세로로 겹치는 자리에서 두 요구가 맞부딪쳐 벽이 두 값을
-            # 오간다(실측 `019fd1db-748f`: 꼭짓점 `H` 와 머리글 마지막 줄이 1.8pt
-            # 겹친다). 그런 배치는 네모 하나로는 못 가르는 것이지, 밀어서 될 일이
-            # 아니다. 밖으로 미는 판을 얹으니 회수가 **13 → 9 로 줄었다.**
-            #
-            # 내보낸 조각이 그림 재료였다면 `figure_rect` 의 «벽 밖 검사»가 잡는다 —
-            # 그것이 그림에 닿아 있으면 그 문항을 통째로 버린다.
-            edge = (max(r[hi] for r, _ in cross) if i < 2
-                    else min(r[lo] for r, _ in cross))
-            if i < 2 and not (outer[i] <= edge <= inner[i]):
-                return None
-            if i >= 2 and not (inner[i] <= edge <= outer[i]):
-                return None
-            wall[i] = edge
-            moved = True
-        if not moved:
-            break
-    else:
-        return None                                        # 자리가 안 잡힌다
 
     out = fitz.Rect(*wall) & bleed
     if out.is_empty or not out.contains(ink):
@@ -1204,7 +1162,12 @@ def main() -> None:
             out.parent.mkdir(parents=True, exist_ok=True)
             pix = page.get_pixmap(clip=rect, dpi=a.dpi)
             pix.save(str(out))
-            rec = {"problemId": it["problemId"], "publicPath": to_public(out)}
+            # **칸 좌표를 남긴다.** 앞 트랙이 「고치려면 결과에 칸 좌표를 남겨야
+            # 한다」고 적어 둔 자리다(§3.14) — 좌표가 없으면 오려낸 뒤에 「이 칸이
+            # 옆 문항을 덮었나」를 **다시 물을 수가 없다.**
+            rec = {"problemId": it["problemId"], "publicPath": to_public(out),
+                   "칸": [round(v, 2) for v in rect],
+                   "쪽": int(it["page"]), "책": pathlib.Path(pdf).name}
             if widened:
                 # 폴백으로 나온 것은 **따로 표시한다** — 육안 검수에서 이것부터 본다.
                 rec["넓힘폴백"] = True
