@@ -1,0 +1,252 @@
+[
+  {
+    "unitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "$x=0.\\overline{27}$ 일 때, $99x$ 의 값은?\n\n1. $2.7$\n2. $27$\n3. $270$\n4. $0.27$\n5. $99$",
+    "answer": "②",
+    "solution": "$x=0.\\overline{27}$ 이면 $100x=27.\\overline{27}$ 이다. 두 식을 변끼리 빼면 $99x=27$ 이다. 따라서 답은 ②이다.",
+    "메모": "중2 순환소수를 포함한 식의 계산 · 99x 꼴"
+  },
+  {
+    "unitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "순환소수 $0.\\overline{6}$ 의 역수는?\n\n1. $\\frac{2}{3}$\n2. $\\frac{3}{2}$\n3. $\\frac{2}{9}$\n4. $\\frac{6}{10}$\n5. $\\frac{1}{6}$",
+    "answer": "②",
+    "solution": "$0.\\overline{6}=\\frac{6}{9}=\\frac{2}{3}$ 이다. 역수는 분자와 분모를 바꾼 수이므로 $\\frac{3}{2}$ 이다. 따라서 답은 ②이다.",
+    "메모": "중2 순환소수를 포함한 식의 계산 · 역수"
+  },
+  {
+    "unitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "$0.\\overline{5} \\div 0.\\overline{1}$ 의 값은?\n\n1. $0.5$\n2. $1$\n3. $5$\n4. $9$\n5. $45$",
+    "answer": "③",
+    "solution": "$0.\\overline{5}=\\frac{5}{9}$, $0.\\overline{1}=\\frac{1}{9}$ 이므로 $\\frac{5}{9} \\div \\frac{1}{9}=\\frac{5}{9} \\times 9=5$ 이다. 따라서 답은 ③이다.",
+    "메모": "중2 순환소수를 포함한 식의 계산 · 나눗셈"
+  },
+  {
+    "unitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "분수 $\\frac{7}{11}$ 을 순환소수로 나타내면?\n\n1. $0.\\overline{63}$\n2. $0.\\overline{6}$\n3. $0.6\\overline{3}$\n4. $0.\\overline{7}$\n5. $0.\\overline{72}$",
+    "answer": "①",
+    "solution": "$7$ 을 $11$ 로 나누면 $0.636363 \\cdots$ 으로 $63$ 이 되풀이된다. 따라서 $\\frac{7}{11}=0.\\overline{63}$ 이므로 답은 ①이다.",
+    "메모": "중2 순환소수를 포함한 식의 계산 · 분수를 순환소수로"
+  },
+  {
+    "unitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "순환소수 $2.\\overline{45}$ 를 기약분수로 나타내면?\n\n1. $\\frac{27}{11}$\n2. $\\frac{24}{11}$\n3. $\\frac{245}{99}$\n4. $\\frac{49}{20}$\n5. $\\frac{5}{2}$",
+    "answer": "①",
+    "solution": "$x=2.\\overline{45}$ 라 하면 $100x=245.\\overline{45}$ 이다. 변끼리 빼면 $99x=243$ 이므로 $x=\\frac{243}{99}=\\frac{27}{11}$ 이다. 따라서 답은 ①이다.",
+    "메모": "중2 순환소수를 포함한 식의 계산 · 정수 부분 + 두 자리 순환마디"
+  },
+  {
+    "unitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "순환소수 $0.\\overline{9}$ 와 같은 수는?\n\n1. $0.9$\n2. $0.99$\n3. $1$\n4. $\\frac{9}{10}$\n5. $\\frac{99}{100}$",
+    "answer": "③",
+    "solution": "$x=0.\\overline{9}$ 라 하면 $10x=9.\\overline{9}$ 이다. 변끼리 빼면 $9x=9$ 이므로 $x=1$ 이다. 즉 $0.\\overline{9}$ 는 $1$ 과 같은 수이다. 따라서 답은 ③이다.",
+    "메모": "중2 순환소수를 포함한 식의 계산 · 0.999…=1"
+  },
+  {
+    "unitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "순환소수 $0.\\overline{1}$ 을 기약분수로 나타내면?\n\n1. $\\frac{1}{10}$\n2. $\\frac{1}{9}$\n3. $\\frac{1}{11}$\n4. $\\frac{1}{99}$\n5. $\\frac{1}{100}$",
+    "answer": "②",
+    "solution": "$x=0.\\overline{1}$ 이라 하면 $10x=1.\\overline{1}$ 이다. 변끼리 빼면 $9x=1$ 이므로 $x=\\frac{1}{9}$ 이다. 따라서 답은 ②이다.",
+    "메모": "중2 순환소수를 포함한 식의 계산"
+  },
+  {
+    "unitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "$0.\\overline{8}-0.\\overline{2}$ 의 값은?\n\n1. $\\frac{1}{3}$\n2. $\\frac{2}{3}$\n3. $\\frac{6}{10}$\n4. $\\frac{3}{5}$\n5. $\\frac{6}{99}$",
+    "answer": "②",
+    "solution": "$0.\\overline{8}=\\frac{8}{9}$, $0.\\overline{2}=\\frac{2}{9}$ 이므로 차는 $\\frac{8}{9}-\\frac{2}{9}=\\frac{6}{9}=\\frac{2}{3}$ 이다. 따라서 답은 ②이다.",
+    "메모": "중2 순환소수를 포함한 식의 계산 · 뺄셈"
+  },
+  {
+    "unitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+    "difficulty": "easy",
+    "questionType": "서술형",
+    "problemType": "서술형",
+    "content": "순환소수 $0.\\overline{24}$ 를 기약분수로 나타내는 과정을 쓰고 답을 구하시오.",
+    "answer": "$\\frac{8}{33}$",
+    "solution": "$x=0.\\overline{24}$ 라 하면 순환마디가 두 자리이므로 양변에 $100$ 을 곱하여 $100x=24.\\overline{24}$ 를 얻는다. 두 식을 변끼리 빼면 $99x=24$ 이므로 $x=\\frac{24}{99}$ 이고, 분모와 분자를 $3$ 으로 나누면 $\\frac{8}{33}$ 이다.",
+    "메모": "중2 순환소수를 포함한 식의 계산 · 서술형"
+  },
+  {
+    "unitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+    "difficulty": "easy",
+    "questionType": "서술형",
+    "problemType": "서술형",
+    "content": "모든 순환소수가 유리수인 이유를 설명하시오.",
+    "answer": "분수로 나타낼 수 있기 때문이다",
+    "solution": "유리수는 두 정수의 비, 즉 분수 꼴로 나타낼 수 있는 수이다. 순환소수는 $x$ 로 놓고 순환마디의 자릿수만큼 $10$ 의 거듭제곱을 곱한 뒤 원래 식과 빼면 항상 정수를 분자와 분모로 하는 분수로 정리된다. 따라서 모든 순환소수는 유리수이다.",
+    "메모": "중2 순환소수를 포함한 식의 계산 · 서술형(개념)"
+  },
+  {
+    "unitId": "d52a02c4-365a-4768-9cd3-ab4a6e9756a7",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "연립방정식 $x+y=7$, $x-y=1$ 의 해는?\n\n1. $x=3,\\,y=4$\n2. $x=4,\\,y=3$\n3. $x=5,\\,y=2$\n4. $x=6,\\,y=1$\n5. $x=2,\\,y=5$",
+    "answer": "②",
+    "solution": "두 식을 변끼리 더하면 $2x=8$ 에서 $x=4$ 이다. 이를 $x+y=7$ 에 대입하면 $y=3$ 이다. 따라서 답은 ②이다.",
+    "메모": "중2 미지수가 2개인 연립일차방정식 · 가감법"
+  },
+  {
+    "unitId": "d52a02c4-365a-4768-9cd3-ab4a6e9756a7",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "연립방정식 $2x+y=8$, $y=2$ 의 해에서 $x$ 의 값은?\n\n1. $1$\n2. $2$\n3. $3$\n4. $4$\n5. $5$",
+    "answer": "③",
+    "solution": "$y=2$ 를 $2x+y=8$ 에 대입하면 $2x+2=8$ 이다. 즉 $2x=6$ 이므로 $x=3$ 이다. 따라서 답은 ③이다.",
+    "메모": "중2 연립일차방정식 · 대입법"
+  },
+  {
+    "unitId": "d52a02c4-365a-4768-9cd3-ab4a6e9756a7",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "연립방정식 $x+2y=9$, $x-y=3$ 의 해에서 $y$ 의 값은?\n\n1. $1$\n2. $2$\n3. $3$\n4. $4$\n5. $5$",
+    "answer": "②",
+    "solution": "두 식을 변끼리 빼면 $(x+2y)-(x-y)=9-3$ 에서 $3y=6$ 이므로 $y=2$ 이다. 따라서 답은 ②이다.",
+    "메모": "중2 연립일차방정식 · 가감법으로 한 미지수 없애기"
+  },
+  {
+    "unitId": "d52a02c4-365a-4768-9cd3-ab4a6e9756a7",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "다음 중 $x=2$, $y=-1$ 을 해로 갖는 방정식은?\n\n1. $x+y=3$\n2. $x-y=3$\n3. $2x+y=5$\n4. $x+2y=2$\n5. $3x-y=5$",
+    "answer": "②",
+    "solution": "각 식에 $x=2$, $y=-1$ 을 대입해 본다. ②는 $2-(-1)=3$ 으로 성립한다. ①은 $1$, ③은 $3$, ④는 $0$, ⑤는 $7$ 이 되어 모두 성립하지 않는다. 따라서 답은 ②이다.",
+    "메모": "중2 연립일차방정식 · 해의 확인"
+  },
+  {
+    "unitId": "d52a02c4-365a-4768-9cd3-ab4a6e9756a7",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "연립방정식 $3x-y=5$, $x+y=3$ 의 해는?\n\n1. $x=1,\\,y=2$\n2. $x=2,\\,y=1$\n3. $x=3,\\,y=0$\n4. $x=0,\\,y=3$\n5. $x=2,\\,y=-1$",
+    "answer": "②",
+    "solution": "두 식을 변끼리 더하면 $4x=8$ 에서 $x=2$ 이다. 이를 $x+y=3$ 에 대입하면 $y=1$ 이다. 따라서 답은 ②이다.",
+    "메모": "중2 연립일차방정식 · 가감법"
+  },
+  {
+    "unitId": "d52a02c4-365a-4768-9cd3-ab4a6e9756a7",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "연립방정식 $x=2y$, $x+y=9$ 의 해에서 $x$ 의 값은?\n\n1. $3$\n2. $4$\n3. $5$\n4. $6$\n5. $9$",
+    "answer": "④",
+    "solution": "$x=2y$ 를 $x+y=9$ 에 대입하면 $2y+y=9$ 에서 $3y=9$, 즉 $y=3$ 이다. 따라서 $x=2 \\times 3=6$ 이므로 답은 ④이다.",
+    "메모": "중2 연립일차방정식 · 대입법"
+  },
+  {
+    "unitId": "d52a02c4-365a-4768-9cd3-ab4a6e9756a7",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "연립방정식 $2x+3y=12$, $2x-y=4$ 를 풀 때 두 식을 변끼리 빼면 얻어지는 식은?\n\n1. $4y=8$\n2. $2y=8$\n3. $4y=16$\n4. $4x=16$\n5. $2y=16$",
+    "answer": "①",
+    "solution": "$(2x+3y)-(2x-y)=12-4$ 에서 좌변의 $2x$ 는 없어지고 $3y-(-y)=4y$ 가 남는다. 우변은 $8$ 이므로 $4y=8$ 이다. 따라서 답은 ①이다.",
+    "메모": "중2 연립일차방정식 · 가감법의 한 단계"
+  },
+  {
+    "unitId": "d52a02c4-365a-4768-9cd3-ab4a6e9756a7",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "연립방정식 $x+y=5$, $2x+2y=10$ 의 해의 개수는?\n\n1. $0$ 개\n2. $1$ 개\n3. $2$ 개\n4. 무수히 많다\n5. 알 수 없다",
+    "answer": "④",
+    "solution": "두 번째 식의 양변을 $2$ 로 나누면 $x+y=5$ 로 첫 번째 식과 완전히 같아진다. 즉 두 방정식의 그래프가 같은 직선이므로 그 직선 위의 모든 점이 해가 되어 해는 무수히 많다. 따라서 답은 ④이다.",
+    "메모": "중2 연립일차방정식 · 해가 무수히 많은 경우"
+  },
+  {
+    "unitId": "d52a02c4-365a-4768-9cd3-ab4a6e9756a7",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "연립방정식 $x+y=3$, $x+y=5$ 의 해의 개수는?\n\n1. $0$ 개\n2. $1$ 개\n3. $2$ 개\n4. 무수히 많다\n5. 알 수 없다",
+    "answer": "①",
+    "solution": "$x+y$ 의 값이 동시에 $3$ 이면서 $5$ 일 수는 없다. 두 방정식의 그래프는 기울기가 같고 $y$ 절편이 다른 평행한 두 직선이므로 만나지 않는다. 따라서 해는 없으므로 답은 ①이다.",
+    "메모": "중2 연립일차방정식 · 해가 없는 경우"
+  },
+  {
+    "unitId": "99ca37c0-1df4-40b1-bd25-c2b0bbd7fcf1",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "계산",
+    "content": "$\\frac{2}{\\sqrt{3}}$ 의 분모를 유리화하면?\n\n1. $\\frac{2\\sqrt{3}}{3}$\n2. $\\frac{\\sqrt{3}}{3}$\n3. $\\frac{2}{3}$\n4. $2\\sqrt{3}$\n5. $\\frac{3\\sqrt{3}}{2}$",
+    "answer": "①",
+    "solution": "분모와 분자에 $\\sqrt{3}$ 을 곱하면 $\\frac{2}{\\sqrt{3}}=\\frac{2 \\times \\sqrt{3}}{\\sqrt{3} \\times \\sqrt{3}}=\\frac{2\\sqrt{3}}{3}$ 이다. 따라서 답은 ①이다.",
+    "메모": "중3 근호를 포함한 식의 계산 · 분모의 유리화 — 원래 형식이 빈 값"
+  },
+  {
+    "unitId": "99ca37c0-1df4-40b1-bd25-c2b0bbd7fcf1",
+    "difficulty": "mid",
+    "questionType": "서술형",
+    "problemType": "서술형",
+    "content": "$\\sqrt{18}+\\sqrt{8}$ 을 간단히 하는 과정을 쓰고 답을 구하시오.",
+    "answer": "$5\\sqrt{2}$",
+    "solution": "$\\sqrt{18}=\\sqrt{9 \\times 2}=3\\sqrt{2}$ 이고 $\\sqrt{8}=\\sqrt{4 \\times 2}=2\\sqrt{2}$ 이다. 근호 안의 수가 같으므로 계수끼리 더하면 $3\\sqrt{2}+2\\sqrt{2}=5\\sqrt{2}$ 이다.",
+    "메모": "중3 근호를 포함한 식의 계산 · 서술형"
+  },
+  {
+    "unitId": "99ca37c0-1df4-40b1-bd25-c2b0bbd7fcf1",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "$\\sqrt{2} \\times \\sqrt{6}$ 을 간단히 하면?\n\n1. $2\\sqrt{3}$\n2. $\\sqrt{8}$\n3. $3\\sqrt{2}$\n4. $\\sqrt{10}$\n5. $6$",
+    "answer": "①",
+    "solution": "$\\sqrt{a} \\times \\sqrt{b}=\\sqrt{ab}$ 이므로 $\\sqrt{2} \\times \\sqrt{6}=\\sqrt{12}$ 이다. $12=4 \\times 3$ 이므로 $\\sqrt{12}=2\\sqrt{3}$ 이다. 따라서 답은 ①이다.",
+    "메모": "중3 근호를 포함한 식의 계산 · 곱셈"
+  },
+  {
+    "unitId": "3720cee6-c70c-48e9-b0b7-7b008e6787f1",
+    "difficulty": "mid",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "일차방정식 $0.3x-0.5=0.1x+0.7$ 의 해는?\n\n1. $x=2$\n2. $x=4$\n3. $x=6$\n4. $x=8$\n5. $x=10$",
+    "answer": "③",
+    "solution": "양변에 $10$ 을 곱하면 $3x-5=x+7$ 이다. 이항하면 $2x=12$ 이므로 $x=6$ 이다. 따라서 답은 ③이다.",
+    "메모": "중1 일차방정식의 풀이 · 소수 계수"
+  },
+  {
+    "unitId": "172e11d6-b5c4-4f3f-8b4f-dacc43fb4110",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "$a=3$ 일 때, $2a+5$ 의 값은?\n\n1. $8$\n2. $10$\n3. $11$\n4. $13$\n5. $16$",
+    "answer": "③",
+    "solution": "$2a+5$ 에 $a=3$ 을 대입하면 $2 \\times 3+5=6+5=11$ 이다. 따라서 답은 ③이다.",
+    "메모": "중1 문자의 사용과 식의 값 · 식의 값"
+  },
+  {
+    "unitId": "172e11d6-b5c4-4f3f-8b4f-dacc43fb4110",
+    "difficulty": "easy",
+    "questionType": "객관식",
+    "problemType": "개념",
+    "content": "한 개에 $x$ 원인 사탕 $5$ 개의 값을 문자를 사용한 식으로 나타내면?\n\n1. $x+5$\n2. $5x$\n3. $\\frac{x}{5}$\n4. $x-5$\n5. $\\frac{5}{x}$",
+    "answer": "②",
+    "solution": "(전체 값) $=$ (한 개의 값) $\\times$ (개수) 이므로 $x \\times 5=5x$ (원) 이다. 곱셈 기호는 생략하고 수를 문자 앞에 쓴다. 따라서 답은 ②이다.",
+    "메모": "중1 문자의 사용과 식의 값 · 문자로 나타내기"
+  }
+]
