@@ -887,3 +887,79 @@ describe("[S-08] GET /api/problems — 검색이 닿는 칸", () => {
     expect(body.data.map((p) => p.id)).toContain(created.data.id);
   });
 });
+
+/**
+ * 단원 **범위** — 원장님 지시 2026-08-19 「문제은행도 다른거처럼 시작 클릭 끝 클릭으로」.
+ *
+ * 🔴 순서는 **서버가 `Unit.orderIndex` 로** 정한다(D-27 — 전역 연속값). 화면이 계산한
+ *    순서를 믿으면, 단원 시드가 바뀐 뒤 낡은 목록을 든 화면이 조용히 다른 범위를 본다.
+ */
+describe("[S-08] GET /api/problems — 단원 범위", () => {
+  const 목록 = async (qs: string) =>
+    problemListResponseSchema.parse(
+      await (
+        await listProblems(
+          jsonRequest(
+            `http://localhost/api/problems?${qs}&pageSize=100`,
+            "GET",
+          ),
+        )
+      ).json(),
+    );
+
+  const 정렬단원 = [...MOCK_UNITS].sort((a, b) => a.orderIndex - b.orderIndex);
+
+  it("시작·끝 사이 단원만 온다", async () => {
+    const [a, b] = [정렬단원[0]!, 정렬단원[2]!];
+    const body = await 목록(`unitFrom=${a.id}&unitTo=${b.id}`);
+    expect(body.data.length).toBeGreaterThan(0);
+    for (const p of body.data) {
+      const unit = MOCK_UNITS.find((u) => u.id === p.unitId)!;
+      expect(unit.orderIndex).toBeGreaterThanOrEqual(a.orderIndex);
+      expect(unit.orderIndex).toBeLessThanOrEqual(b.orderIndex);
+    }
+  });
+
+  it("거꾸로 넣어도 같은 결과다 — 조용히 0건이 되지 않는다", async () => {
+    const [a, b] = [정렬단원[0]!, 정렬단원[2]!];
+    const 바로 = await 목록(`unitFrom=${a.id}&unitTo=${b.id}`);
+    const 거꾸로 = await 목록(`unitFrom=${b.id}&unitTo=${a.id}`);
+    expect(거꾸로.data.map((p) => p.id).sort()).toEqual(
+      바로.data.map((p) => p.id).sort(),
+    );
+    expect(거꾸로.data.length).toBeGreaterThan(0);
+  });
+
+  it("시작만 주면 그 이후 전부, 끝만 주면 그 이전 전부", async () => {
+    const mid = 정렬단원[2]!;
+    const 이후 = await 목록(`unitFrom=${mid.id}`);
+    const 이전 = await 목록(`unitTo=${mid.id}`);
+    for (const p of 이후.data)
+      expect(
+        MOCK_UNITS.find((u) => u.id === p.unitId)!.orderIndex,
+      ).toBeGreaterThanOrEqual(mid.orderIndex);
+    for (const p of 이전.data)
+      expect(
+        MOCK_UNITS.find((u) => u.id === p.unitId)!.orderIndex,
+      ).toBeLessThanOrEqual(mid.orderIndex);
+  });
+
+  it("없는 단원 id 는 **막는다** — 건너뛰면 필터가 조용히 사라져 전량이 통과한다", async () => {
+    const res = await listProblems(
+      jsonRequest(
+        `http://localhost/api/problems?unitFrom=${NOT_FOUND_ID}`,
+        "GET",
+      ),
+    );
+    expect(res.status).toBe(404);
+    expect(errorResponseSchema.parse(await res.json()).error.code).toBe(
+      "NOT_FOUND",
+    );
+  });
+
+  it("범위는 다른 필터와 **같이** 걸린다 — 서로를 지우지 않는다", async () => {
+    const [a, b] = [정렬단원[0]!, 정렬단원[정렬단원.length - 1]!];
+    const body = await 목록(`unitFrom=${a.id}&unitTo=${b.id}&difficulty=easy`);
+    for (const p of body.data) expect(p.difficulty).toBe("easy");
+  });
+});

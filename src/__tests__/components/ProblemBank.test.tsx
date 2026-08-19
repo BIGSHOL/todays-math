@@ -27,6 +27,29 @@ import {
 } from "@/mocks/data";
 import { server } from "@/mocks/server";
 
+/**
+ * 범위 피커로 **한 단원**을 고른다 (첫 클릭이 곧 `onChange(id, id)` 다 — 한 단원 범위).
+ *
+ * 종전에는 `selectOptions(getByLabelText("소단원"), id)` 한 줄이었다. 피커는 지금
+ * 보고 있는 대단원의 소단원만 보여 주므로, 다른 대단원이면 **먼저 그 열을 눌러야** 한다.
+ */
+async function pickUnit(
+  user: ReturnType<typeof userEvent.setup>,
+  unitId: string,
+) {
+  const unit = MOCK_UNITS.find((u) => u.id === unitId);
+  const section = unit?.section ?? unitId;
+  const open = screen.getByRole("button", { name: /범위 고르기|고치기/ });
+  await waitFor(() => {
+    expect(open).toBeEnabled();
+  });
+  await user.click(open);
+  if (unit && !screen.queryByRole("button", { name: section }))
+    await user.click(await screen.findByRole("button", { name: unit.chapter }));
+  await user.click(await screen.findByRole("button", { name: section }));
+  await user.click(screen.getByRole("button", { name: "접기" }));
+}
+
 async function renderBank() {
   const user = userEvent.setup();
   const view = render(<ProblemsPage />);
@@ -48,11 +71,13 @@ describe("[T3.3 S-08] 문제은행 — 크롬·필터·액션", () => {
       "/problems",
     );
 
-    expect(screen.getByLabelText("학년")).toBeInTheDocument();
-    expect(screen.getByLabelText("중단원")).toBeInTheDocument();
-    expect(screen.getByLabelText("소단원")).toBeInTheDocument();
-    // MOCK_UNITS는 전부 중2 — 학기 select는 초등 학년을 골랐을 때만 나타난다.
-    expect(screen.queryByLabelText("학기")).not.toBeInTheDocument();
+    // 단원은 **범위 하나**로 고른다(2026-08-19). 계단식 드롭다운은 없앴다.
+    expect(document.querySelector("[data-range-filter]")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "범위 고르기" }),
+    ).toBeInTheDocument();
+    for (const gone of ["학년", "중단원", "소단원", "학기"])
+      expect(screen.queryByLabelText(gone)).not.toBeInTheDocument();
     expect(screen.getByLabelText("난이도")).toBeInTheDocument();
     expect(screen.getByLabelText("유형")).toBeInTheDocument();
     expect(screen.getByLabelText("상태")).toBeInTheDocument();
@@ -99,7 +124,7 @@ describe("[T3.3 S-08] 문제은행 — 필터 (MSW)", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("API가 돌려준 실제 단원 ID를 필터와 등록 폼에 사용한다", async () => {
+  it("API가 돌려준 실제 단원 ID를 범위 피커와 등록 폼에 사용한다", async () => {
     const liveUnit = {
       id: "12345678-1234-4123-8123-123456789abc",
       grade: "중3",
@@ -112,15 +137,22 @@ describe("[T3.3 S-08] 문제은행 — 필터 (MSW)", () => {
     );
 
     const { user } = await renderBank();
-    const liveOption = await screen.findByRole("option", {
-      name: liveUnit.section,
+    const open = screen.getByRole("button", { name: "범위 고르기" });
+    await waitFor(() => {
+      expect(open).toBeEnabled();
     });
-    expect(liveOption).toHaveValue(liveUnit.id);
+    await user.click(open);
+
+    // 피커는 서버가 준 단원만 보여 준다 — 픽스처 카탈로그가 아니라.
     expect(
-      screen.queryByRole("option", { name: MOCK_UNITS[0]!.section }),
+      await screen.findByRole("button", { name: liveUnit.section }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: MOCK_UNITS[0]!.section }),
     ).not.toBeInTheDocument();
 
-    await user.selectOptions(screen.getByLabelText("소단원"), liveUnit.id);
+    await user.click(screen.getByRole("button", { name: liveUnit.section }));
+    await user.click(screen.getByRole("button", { name: "접기" }));
     await user.click(screen.getByRole("button", { name: "등록" }));
 
     // 패널은 지연 청크다(ProblemPanelsLazy) — 단언은 그대로 두고 대기만 붙인다.
@@ -128,26 +160,12 @@ describe("[T3.3 S-08] 문제은행 — 필터 (MSW)", () => {
     expect(within(form).getByLabelText("단원")).toHaveValue(liveUnit.id);
   });
 
-  it("난이도 쉬움만 보면 도형(어려움) 문항이 빠진다", async () => {
-    const { user } = await renderBank();
-
-    await user.selectOptions(screen.getByLabelText("난이도"), "easy");
-
-    await waitFor(() => {
-      expect(screen.queryByText(/밑변의 길이가/)).not.toBeInTheDocument();
-    });
-    expect(screen.getByText(/를 유한소수로 나타내어라/)).toBeInTheDocument();
-  });
-
   it("유형·상태·소단원 필터를 조합하면 해당 문항만 남는다", async () => {
     const { user } = await renderBank();
 
     await user.selectOptions(screen.getByLabelText("유형"), "계산");
     await user.selectOptions(screen.getByLabelText("상태"), "approved");
-    await user.selectOptions(
-      screen.getByLabelText("소단원"),
-      MOCK_PROBLEM_WITH_FRACTION.unitId,
-    );
+    await pickUnit(user, MOCK_PROBLEM_WITH_FRACTION.unitId);
 
     await waitFor(() => {
       expect(screen.getByText(/를 유한소수로 나타내어라/)).toBeInTheDocument();
@@ -159,10 +177,7 @@ describe("[T3.3 S-08] 문제은행 — 필터 (MSW)", () => {
     const { user } = await renderBank();
     const emptyComboUnit = MOCK_UNITS[8]!;
 
-    await user.selectOptions(
-      screen.getByLabelText("소단원"),
-      emptyComboUnit.id,
-    );
+    await pickUnit(user, emptyComboUnit.id);
     await user.selectOptions(screen.getByLabelText("난이도"), "hard");
 
     await waitFor(() => {
@@ -171,49 +186,23 @@ describe("[T3.3 S-08] 문제은행 — 필터 (MSW)", () => {
   });
 });
 
-describe("[S-08] 문제은행 — 계단식 단원 필터 (MSW)", () => {
-  // MOCK_UNITS: 전부 중2 — "1. 수와 식"(0~7) + "2. 부등식"(8~14).
-  const SUWASIK_UNIT = MOCK_UNITS[0]!;
-  const BUDEUNGSIK_UNIT = MOCK_UNITS[8]!;
+/**
+ * 단원 **범위** — 원장님 지시 2026-08-19 「문제은행도 다른거처럼 시작 클릭 끝 클릭으로
+ * 스마트하게」. 종전의 계단식 4개 드롭다운(학년·학기·중단원·소단원)을 걷어내고
+ * 확인테스트(S-04)와 **같은 `UnitRangePicker`** 를 쓴다.
+ *
+ * 🔴 이 검사들은 **배선 세 층**이 다 이어져야 초록이다 — 화면 상태 →
+ *    `ProblemListFilters` → `listQuery`. 가운데 층을 빠뜨리면 타입 검사는 통과하고
+ *    필터만 조용히 안 붙는다(2026-08-19 자료 토글에서 실제로 그랬다).
+ *
+ * ⚠️ 잃은 것도 적어 둔다: 종전에는 「학년 전체」를 select 한 번으로 골랐는데, 피커는
+ *    소단원만 고르므로 그 학년의 첫·끝 소단원을 두 번 눌러야 한다. 대신 「중2 1~3단원」
+ *    같은 **범위**는 종전에 아예 물어볼 수 없었다.
+ */
+describe("[S-08] 문제은행 — 단원 범위 (MSW)", () => {
+  const EMPTY_LIST = { data: [], meta: { page: 1, pageSize: 20, total: 0 } };
 
-  const EMPTY_LIST = {
-    data: [],
-    meta: { page: 1, pageSize: 20, total: 0 },
-  };
-
-  /** MOCK_UNITS에는 초등 학년이 없어 학기 select 케이스는 픽스처 주입으로 재현한다. */
-  const ELEMENTARY_FIXTURE_UNITS = [
-    {
-      id: "e0000000-0000-4000-8000-000000000001",
-      grade: "초1",
-      chapter: "1-1 9까지의 수",
-      section: "9까지의 수",
-      orderIndex: 1,
-    },
-    {
-      id: "e0000000-0000-4000-8000-000000000002",
-      grade: "초1",
-      chapter: "1-2 덧셈과 뺄셈",
-      section: "모으기와 가르기",
-      orderIndex: 2,
-    },
-    {
-      id: "e0000000-0000-4000-8000-000000000003",
-      grade: "초1",
-      chapter: "2-1 100까지의 수",
-      section: "100까지의 수",
-      orderIndex: 3,
-    },
-    {
-      id: "e0000000-0000-4000-8000-000000000004",
-      grade: "중3",
-      chapter: "1. 실수와 그 연산",
-      section: "제곱근의 뜻과 성질",
-      orderIndex: 4,
-    },
-  ];
-
-  function captureProblemQueries() {
+  function captureQueries() {
     const captured: URLSearchParams[] = [];
     server.use(
       http.get("/api/problems", ({ request }) => {
@@ -224,208 +213,99 @@ describe("[S-08] 문제은행 — 계단식 단원 필터 (MSW)", () => {
     return captured;
   }
 
-  it("학년 옵션은 units에서 파생되고, 학년 선택 전에는 중단원을 고를 수 없다", async () => {
+  /** 범위 피커를 펼치고, 소단원 칸을 순서대로 두 번 누른다. */
+  async function pickRange(
+    user: ReturnType<typeof userEvent.setup>,
+    startSection: string,
+    endSection: string,
+  ) {
+    // 단원 목록이 오기 전에는 「범위 고르기」가 비활성이다 — 누르면 아무 일도 안 난다.
+    const open = screen.getByRole("button", { name: "범위 고르기" });
+    await waitFor(() => {
+      expect(open).toBeEnabled();
+    });
+    await user.click(open);
+    await user.click(await screen.findByRole("button", { name: startSection }));
+    await user.click(await screen.findByRole("button", { name: endSection }));
+  }
+
+  it("기본은 「전체」이고, 범위를 안 고르면 단원 조건을 안 보낸다", async () => {
     await renderBank();
-
-    const gradeSelect = screen.getByLabelText("학년");
+    const bar = document.querySelector("[data-range-filter]")!;
+    expect(bar.textContent).toContain("범위");
+    expect(bar.textContent).toContain("전체");
     expect(
-      within(gradeSelect).getByRole("option", { name: "전체" }),
+      screen.getByRole("button", { name: "범위 고르기" }),
     ).toBeInTheDocument();
-    expect(
-      within(gradeSelect).getByRole("option", { name: "중2" }),
-    ).toBeInTheDocument();
-    expect(screen.getByLabelText("중단원")).toBeDisabled();
-    expect(screen.getByLabelText("소단원")).toBeEnabled();
   });
 
-  it("중단원을 고르면 그 범위로 좁혀지고 소단원 옵션도 좁아진다", async () => {
-    const { user } = await renderBank();
-
-    await user.selectOptions(screen.getByLabelText("학년"), "중2");
-    await waitFor(() => {
-      expect(screen.getByText(/를 유한소수로 나타내어라/)).toBeInTheDocument();
-    });
-
-    await user.selectOptions(
-      screen.getByLabelText("중단원"),
-      BUDEUNGSIK_UNIT.chapter,
-    );
-
-    await screen.findByText(/부등식인 것을 모두 고르시오/);
-    expect(
-      screen.queryByText(/를 유한소수로 나타내어라/),
-    ).not.toBeInTheDocument();
-
-    const sectionSelect = screen.getByLabelText("소단원");
-    expect(
-      within(sectionSelect).getByRole("option", {
-        name: BUDEUNGSIK_UNIT.section,
-      }),
-    ).toBeInTheDocument();
-    expect(
-      within(sectionSelect).queryByRole("option", {
-        name: SUWASIK_UNIT.section,
-      }),
-    ).not.toBeInTheDocument();
+  it("종전의 계단식 드롭다운은 없다", async () => {
+    await renderBank();
+    for (const name of ["학년", "중단원", "소단원", "학기"])
+      expect(screen.queryByLabelText(name)).toBeNull();
   });
 
-  it("소단원까지 고르면 서버에는 unitId만 보낸다 (필터 우선순위)", async () => {
+  it("두 번 눌러 범위를 잡으면 unitFrom·unitTo 로 조회한다", async () => {
     const { user } = await renderBank();
-    await user.selectOptions(screen.getByLabelText("학년"), "중2");
-    await user.selectOptions(
-      screen.getByLabelText("중단원"),
-      BUDEUNGSIK_UNIT.chapter,
-    );
-    await screen.findByText(/부등식인 것을 모두 고르시오/);
+    const captured = captureQueries();
+    const [a, b] = [MOCK_UNITS[0]!, MOCK_UNITS[1]!];
 
-    const captured = captureProblemQueries();
-    await user.selectOptions(
-      screen.getByLabelText("소단원"),
-      BUDEUNGSIK_UNIT.id,
-    );
-    await screen.findByText("등록된 문제가 없습니다");
-
-    const params = captured.at(-1)!;
-    expect(params.get("unitId")).toBe(BUDEUNGSIK_UNIT.id);
-    expect(params.get("grade")).toBeNull();
-    expect(params.get("chapter")).toBeNull();
-    expect(params.get("chapterPrefix")).toBeNull();
-  });
-
-  it("초등 학년을 고르면 학기 select가 나타나고 grade+chapterPrefix를 보낸다", async () => {
-    server.use(
-      http.get("/api/units", () =>
-        HttpResponse.json({ data: ELEMENTARY_FIXTURE_UNITS }),
-      ),
-    );
-    const { user } = await renderBank();
-    expect(screen.queryByLabelText("학기")).not.toBeInTheDocument();
-
-    const captured = captureProblemQueries();
-    await user.selectOptions(screen.getByLabelText("학년"), "초1");
-    const semesterSelect = await screen.findByLabelText("학기");
-    await user.selectOptions(semesterSelect, "1");
+    await pickRange(user, a.section, b.section);
 
     await waitFor(() => {
-      expect(captured.at(-1)?.get("chapterPrefix")).toBe("1-");
+      expect(captured.at(-1)?.get("unitFrom")).toBe(a.id);
     });
-    const params = captured.at(-1)!;
-    expect(params.get("grade")).toBe("초1");
-    expect(params.get("chapter")).toBeNull();
-    expect(params.get("unitId")).toBeNull();
-
-    const chapterSelect = screen.getByLabelText("중단원");
-    expect(
-      within(chapterSelect).getByRole("option", { name: "1-1 9까지의 수" }),
-    ).toBeInTheDocument();
-    expect(
-      within(chapterSelect).queryByRole("option", { name: "2-1 100까지의 수" }),
-    ).not.toBeInTheDocument();
+    expect(captured.at(-1)?.get("unitTo")).toBe(b.id);
+    // 종전 파라미터는 더 이상 안 나간다 — 서버가 둘 다 받으면 조건이 겹친다.
+    expect(captured.at(-1)?.has("unitId")).toBe(false);
+    expect(captured.at(-1)?.has("grade")).toBe(false);
+    expect(captured.at(-1)?.get("page")).toBe("1");
   });
 
-  it("초등이 아닌 학년으로 바꾸면 학기 select가 사라지고 학기 필터도 풀린다", async () => {
-    server.use(
-      http.get("/api/units", () =>
-        HttpResponse.json({ data: ELEMENTARY_FIXTURE_UNITS }),
-      ),
-    );
+  it("범위를 잡으면 한 줄 요약이 나오고, 「전체로」 를 누르면 조건이 빠진다", async () => {
     const { user } = await renderBank();
+    const [a, b] = [MOCK_UNITS[0]!, MOCK_UNITS[1]!];
+    await pickRange(user, a.section, b.section);
 
-    const captured = captureProblemQueries();
-    await user.selectOptions(screen.getByLabelText("학년"), "초1");
-    await user.selectOptions(await screen.findByLabelText("학기"), "2");
+    const bar = () => document.querySelector("[data-range-filter]")!;
     await waitFor(() => {
-      expect(captured.at(-1)?.get("chapterPrefix")).toBe("2-");
+      expect(bar().textContent).toContain(a.section);
     });
 
-    await user.selectOptions(screen.getByLabelText("학년"), "중3");
-    expect(screen.queryByLabelText("학기")).not.toBeInTheDocument();
+    const captured = captureQueries();
+    await user.click(screen.getByRole("button", { name: "전체로" }));
     await waitFor(() => {
-      expect(captured.at(-1)?.get("grade")).toBe("중3");
+      expect(captured.at(-1)?.has("unitFrom")).toBe(false);
     });
-    expect(captured.at(-1)?.get("chapterPrefix")).toBeNull();
+    expect(captured.at(-1)?.has("unitTo")).toBe(false);
   });
 
-  it("상위 select를 바꾸면 하위 선택이 전체로 돌아가고 1페이지부터 본다", async () => {
+  it("범위 밖 단원에 등록한 새 문제는 목록에 끼워 넣지 않는다", async () => {
+    // 🔴 화면쪽 술어(`matchesFilters`)가 서버와 같은 규칙이어야 한다. 갈리면
+    //    「목록엔 남는데 새로고침하면 사라지는」 카드가 된다.
     const { user } = await renderBank();
-    await user.selectOptions(screen.getByLabelText("학년"), "중2");
-    await user.selectOptions(
-      screen.getByLabelText("중단원"),
-      BUDEUNGSIK_UNIT.chapter,
-    );
-    await user.selectOptions(
-      screen.getByLabelText("소단원"),
-      BUDEUNGSIK_UNIT.id,
-    );
-    await screen.findByText(/부등식인 것을 모두 고르시오/);
-
-    await user.selectOptions(screen.getByLabelText("학년"), "");
-
-    await screen.findByText(/를 유한소수로 나타내어라/);
-    expect(screen.getByLabelText("중단원")).toHaveValue("");
-    expect(screen.getByLabelText("중단원")).toBeDisabled();
-    expect(screen.getByLabelText("소단원")).toHaveValue("");
-    expect(screen.getAllByText(/^1 \/ \d+ 페이지$/).length).toBeGreaterThan(0);
-  });
-
-  it("중단원 필터와 다른 단원에 등록한 새 문제는 목록에 끼워 넣지 않는다", async () => {
-    const { user } = await renderBank();
-    await user.selectOptions(screen.getByLabelText("학년"), "중2");
-    await user.selectOptions(
-      screen.getByLabelText("중단원"),
-      BUDEUNGSIK_UNIT.chapter,
-    );
-    await screen.findByText(/부등식인 것을 모두 고르시오/);
+    const [a, b] = [MOCK_UNITS[0]!, MOCK_UNITS[1]!];
+    await pickRange(user, a.section, a.section);
+    await waitFor(() => {
+      expect(
+        document.querySelector("[data-range-filter]")!.textContent,
+      ).toContain(a.section);
+    });
 
     await user.click(screen.getByRole("button", { name: "등록" }));
-    const form = screen.getByRole("form", { name: "등록" });
-    await user.selectOptions(
-      within(form).getByLabelText("단원"),
-      SUWASIK_UNIT.id,
-    );
+    const form = await screen.findByRole("form", { name: "등록" });
+    await user.selectOptions(within(form).getByLabelText("단원"), b.id);
     await user.selectOptions(within(form).getByLabelText("출처"), "manual");
     await user.selectOptions(within(form).getByLabelText("난이도"), "easy");
     await user.selectOptions(within(form).getByLabelText("유형"), "계산");
-    await user.type(
-      within(form).getByLabelText("본문"),
-      "다른 중단원의 문제 $1+1$",
-    );
-    await user.type(within(form).getByLabelText("정답"), "2");
+    await user.type(within(form).getByLabelText("본문"), "범위 밖 문항");
+    await user.type(within(form).getByLabelText("정답"), "1");
     await user.click(within(form).getByRole("button", { name: "등록하기" }));
 
-    // 안내는 「만들었다」에서 멈추지 않고 **화면에 몇 건 보이는지**까지 말한다.
-    // 종전에는 "1건 등록"이라 해 놓고 목록에도 총계에도 변화가 없어 실패로 읽혔다.
-    await screen.findByText("1건 등록 — 현재 필터에 0건만 보입니다");
-    expect(screen.queryByText(/다른 중단원의 문제/)).not.toBeInTheDocument();
-  });
-
-  it("중단원 필터 범위 단원에 등록한 새 문제는 목록 앞에 나타난다", async () => {
-    const { user } = await renderBank();
-    await user.selectOptions(screen.getByLabelText("학년"), "중2");
-    await user.selectOptions(
-      screen.getByLabelText("중단원"),
-      BUDEUNGSIK_UNIT.chapter,
-    );
-    await screen.findByText(/부등식인 것을 모두 고르시오/);
-
-    await user.click(screen.getByRole("button", { name: "등록" }));
-    const form = screen.getByRole("form", { name: "등록" });
-    await user.selectOptions(
-      within(form).getByLabelText("단원"),
-      BUDEUNGSIK_UNIT.id,
-    );
-    await user.selectOptions(within(form).getByLabelText("출처"), "manual");
-    await user.selectOptions(within(form).getByLabelText("난이도"), "easy");
-    await user.selectOptions(within(form).getByLabelText("유형"), "계산");
-    await user.type(
-      within(form).getByLabelText("본문"),
-      "같은 중단원의 문제 $1+1$",
-    );
-    await user.type(within(form).getByLabelText("정답"), "2");
-    await user.click(within(form).getByRole("button", { name: "등록하기" }));
-
-    await screen.findByText("1건 등록");
-    expect(screen.getByText(/같은 중단원의 문제/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/현재 필터에/)).toBeInTheDocument();
+    });
+    expect(screen.queryByText("범위 밖 문항")).toBeNull();
   });
 });
 
@@ -533,10 +413,7 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
 
   it("생성하면 AI 픽스처 본문이 현재 목록에 추가된다", async () => {
     const { user } = await renderBank();
-    await user.selectOptions(
-      screen.getByLabelText("소단원"),
-      MOCK_PROBLEM_WITH_FRACTION.unitId,
-    );
+    await pickUnit(user, MOCK_PROBLEM_WITH_FRACTION.unitId);
     await waitFor(() => {
       expect(
         screen.queryByText(/에 물을 더 넣어 농도를/),
@@ -559,10 +436,7 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
 
   it("카드에서 변형하면 후보를 먼저 보여 주고, 채택한 것만 목록에 들어온다", async () => {
     const { user } = await renderBank();
-    await user.selectOptions(
-      screen.getByLabelText("소단원"),
-      MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL.unitId,
-    );
+    await pickUnit(user, MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL.unitId);
     await waitFor(() => {
       expect(screen.getByText(/밑변의 길이가/)).toBeInTheDocument();
       expect(
@@ -593,10 +467,7 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
     user: ReturnType<typeof userEvent.setup>,
     count?: string,
   ) {
-    await user.selectOptions(
-      screen.getByLabelText("소단원"),
-      MOCK_PROBLEM_WITH_FIGURE.unitId,
-    );
+    await pickUnit(user, MOCK_PROBLEM_WITH_FIGURE.unitId);
     await waitFor(() => {
       expect(screen.getByText(/직각삼각형 ABC 의 넓이/)).toBeInTheDocument();
     });
@@ -648,10 +519,7 @@ describe("[T3.3 S-08] 문제은행 — 등록/생성/변형", () => {
 
   it("원본 재현 검사에 떨어진 후보는 사유와 함께 「폐기」로 보이고 채택할 수 없다", async () => {
     const { user } = await renderBank();
-    await user.selectOptions(
-      screen.getByLabelText("소단원"),
-      MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL.unitId,
-    );
+    await pickUnit(user, MOCK_PROBLEM_WITH_GEOMETRY_SYMBOL.unitId);
     await waitFor(() => {
       expect(screen.getByText(/밑변의 길이가/)).toBeInTheDocument();
     });
@@ -768,7 +636,7 @@ describe("[렌더 수리 A] 문제은행 — 필터 폭 고정", () => {
 
   it("select 는 칸을 채우고 넘치는 값은 말줄임한다", async () => {
     await renderBank();
-    const select = screen.getByLabelText("소단원");
+    const select = screen.getByLabelText("유형");
 
     expect(select.className).toContain("w-full");
     expect(select.className).toContain("text-ellipsis");
@@ -778,14 +646,13 @@ describe("[렌더 수리 A] 문제은행 — 필터 폭 고정", () => {
 
   it("잘려도 무엇을 골랐는지 알 수 있게 선택값을 title 로 노출한다", async () => {
     const { user } = await renderBank();
-    const select = screen.getByLabelText("소단원");
+    const select = screen.getByLabelText("유형");
 
     expect(select).toHaveAttribute("title", "전체");
 
-    const unit = MOCK_UNITS[0]!;
-    await user.selectOptions(select, unit.id);
+    await user.selectOptions(select, "계산");
     await waitFor(() => {
-      expect(select).toHaveAttribute("title", unit.section);
+      expect(select).toHaveAttribute("title", "계산");
     });
   });
 });

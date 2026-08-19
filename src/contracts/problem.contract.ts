@@ -142,6 +142,22 @@ export const problemFilterQuerySchema = z.strictObject({
   grade: z.string().min(1).optional(),
   chapter: z.string().min(1).optional(),
   chapterPrefix: z.string().min(1).optional(),
+  /**
+   * 단원 **범위** — 시작·끝 소단원 id (원장님 지시 2026-08-19 「문제은행도 다른거처럼
+   * 시작 클릭 끝 클릭으로」). 확인테스트가 쓰는 `UnitRangePicker` 와 같은 손놀림이다.
+   *
+   * ⚠️ **순서는 `Unit.orderIndex` 가 정한다**(D-27 — 전역 연속값이라 학년 경계를 넘는
+   *    범위도 그대로 풀린다). 화면이 보내는 것은 **id 뿐**이고 서버가 그 값을 찾아
+   *    구간으로 바꾼다 — 화면이 계산한 순서를 그대로 믿으면 단원 시드가 바뀐 뒤
+   *    낡은 목록을 든 화면이 **조용히 다른 범위**를 조회한다.
+   *
+   * ⚠️ 하나만 와도 받는다: 시작만이면 「그 이후 전부」, 끝만이면 「그 이전 전부」.
+   *    시작이 끝보다 뒤면 서버가 **정렬한다**(거꾸로 된 범위가 조용히 0건이 되지 않게).
+   */
+  unitFrom: z
+    .uuid({ error: "시작 단원 ID 형식이 올바르지 않습니다." })
+    .optional(),
+  unitTo: z.uuid({ error: "끝 단원 ID 형식이 올바르지 않습니다." }).optional(),
   difficulty: difficultySchema.optional(),
   problemType: problemTypeSchema.optional(),
   source: problemSourceSchema.optional(),

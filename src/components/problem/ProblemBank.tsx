@@ -21,6 +21,9 @@ import { loadUnits } from "@/lib/units/unitApi";
 
 import { useDebounced } from "@/hooks/useDebounced";
 
+import { UnitRangePicker } from "@/components/progress/UnitRangePicker";
+import { describeRange } from "@/components/test/rangeSummary";
+
 import { FieldSelect, FieldText, FIELD_SELECT_WIDTH } from "./FieldSelect";
 import { PROBLEM_TYPES, SOURCE_LABEL, SOURCE_OPTIONS } from "./labels";
 import { ProblemCard } from "./ProblemCardLazy";
@@ -33,8 +36,8 @@ import { ProblemGenerateForm, ProblemRegisterForm } from "./ProblemPanelsLazy";
  */
 type Panel = "register" | "generate" | null;
 
-/** 초등 chapter는 "1-1 9까지의 수" 꼴 — 앞 숫자가 학기. 그 외 학년은 학기 개념이 없다. */
-const SEMESTER_CHAPTER_RE = /^[12]-/;
+/** 마이크로 라벨 — 문제 카드(`ProblemCard`)와 같은 규격 (05 §8.6). */
+const MICRO_LABEL = "text-[10px] font-extrabold tracking-[1.2px]";
 
 /**
  * 목록 다단 배치 (2026-08-17 원장님 지시 "기본 2단, 창 크기 따라 3단 혹은 1단").
@@ -86,20 +89,23 @@ function matchesFilters(
   filters: ProblemListFilters,
   unitById: Map<string, UnitEntity>,
 ): boolean {
-  if (filters.unitId && problem.unitId !== filters.unitId) return false;
-  if (filters.grade || filters.chapter || filters.chapterPrefix) {
+  // 단원 범위(2026-08-19 원장님 지시) — 서버와 **같은 규칙**이어야 한다.
+  // 서버는 `Unit.orderIndex` 구간으로 거르고 거꾸로 온 범위를 정렬한다(D-27).
+  // 여기가 갈리면 등록·변형·승격 직후 「목록엔 남는데 새로고침하면 사라지는」 카드가 생긴다.
+  if (filters.unitFrom || filters.unitTo) {
     const unit = unitById.get(problem.unitId);
     if (!unit) return false;
-    if (filters.grade && unit.grade !== filters.grade) return false;
-    // 서버(route.ts)와 동일: chapter 정확 일치가 있으면 chapterPrefix는 무시.
-    if (filters.chapter) {
-      if (unit.chapter !== filters.chapter) return false;
-    } else if (
-      filters.chapterPrefix &&
-      !unit.chapter.startsWith(filters.chapterPrefix)
-    ) {
-      return false;
-    }
+    const from = filters.unitFrom
+      ? unitById.get(filters.unitFrom)?.orderIndex
+      : undefined;
+    const to = filters.unitTo
+      ? unitById.get(filters.unitTo)?.orderIndex
+      : undefined;
+    const lo =
+      from !== undefined && to !== undefined ? Math.min(from, to) : from;
+    const hi = from !== undefined && to !== undefined ? Math.max(from, to) : to;
+    if (lo !== undefined && unit.orderIndex < lo) return false;
+    if (hi !== undefined && unit.orderIndex > hi) return false;
   }
   return (
     (!filters.difficulty || problem.difficulty === filters.difficulty) &&
@@ -110,10 +116,13 @@ function matchesFilters(
 }
 
 export function ProblemBank() {
-  const [grade, setGrade] = useState("");
-  const [semester, setSemester] = useState("");
-  const [chapter, setChapter] = useState("");
-  const [unitId, setUnitId] = useState("");
+  // 단원 **범위** — 시작·끝을 한 피커에서 두 번 눌러 고른다(원장님 지시 2026-08-19
+  // 「문제은행도 다른거처럼 시작 클릭 끝 클릭으로」). 확인테스트와 **같은 부품**이다.
+  // 종전 4개 드롭다운(학년·학기·중단원·소단원)은 한 단원만 고를 수 있어 「중2 1~3단원」
+  // 같은 범위를 아예 물어볼 수 없었다.
+  const [rangeStart, setRangeStart] = useState<string | null>(null);
+  const [rangeEnd, setRangeEnd] = useState<string | null>(null);
+  const [rangeEditing, setRangeEditing] = useState(false);
   const [difficulty, setDifficulty] = useState("");
   const [problemType, setProblemType] = useState("");
   const [reviewStatus, setReviewStatus] = useState("");
@@ -138,19 +147,11 @@ export function ProblemBank() {
   const [notice, setNotice] = useState<string | null>(null);
   const [panel, setPanel] = useState<Panel>(null);
 
-  // 서버에 보낼 단원 필터 우선순위: 소단원 > 중단원 > 학기 > 학년 (가장 좁은 것 하나만).
-  const filters: ProblemListFilters = useMemo(() => {
-    const unitFilter: ProblemListFilters = unitId
-      ? { unitId }
-      : chapter
-        ? { grade, chapter }
-        : semester
-          ? { grade, chapterPrefix: `${semester}-` }
-          : grade
-            ? { grade }
-            : {};
-    return {
-      ...unitFilter,
+  // 단원은 **범위 하나**로만 좁힌다(시작·끝 소단원 id). 서버가 `orderIndex` 로 푼다.
+  const filters: ProblemListFilters = useMemo(
+    () => ({
+      unitFrom: rangeStart ?? undefined,
+      unitTo: rangeEnd ?? undefined,
       difficulty: (difficulty || undefined) as Difficulty | undefined,
       problemType: (problemType || undefined) as ProblemType | undefined,
       reviewStatus: (reviewStatus || undefined) as ReviewStatus | undefined,
@@ -159,21 +160,20 @@ export function ProblemBank() {
       hasFigure: hasFigure || undefined,
       hasSolution: hasSolution || undefined,
       hasAnswer: hasAnswer || undefined,
-    };
-  }, [
-    unitId,
-    chapter,
-    semester,
-    grade,
-    difficulty,
-    problemType,
-    reviewStatus,
-    source,
-    q,
-    hasFigure,
-    hasSolution,
-    hasAnswer,
-  ]);
+    }),
+    [
+      rangeStart,
+      rangeEnd,
+      difficulty,
+      problemType,
+      reviewStatus,
+      source,
+      q,
+      hasFigure,
+      hasSolution,
+      hasAnswer,
+    ],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -214,7 +214,7 @@ export function ProblemBank() {
     };
   }, []);
 
-  const defaultUnitId = unitId || units[0]?.id || "";
+  const defaultUnitId = rangeStart || units[0]?.id || "";
   const unitActionsDisabled = unitsLoading || units.length === 0;
   const totalPages = Math.max(1, Math.ceil(total / PROBLEM_PAGE_SIZE));
 
@@ -222,46 +222,14 @@ export function ProblemBank() {
     () => new Map(units.map((unit) => [unit.id, unit])),
     [units],
   );
-  // 학년 옵션 — units 등장 순서(=orderIndex 순) 그대로, 중복 제거.
-  const gradeOptions = useMemo(() => {
-    const seen = new Set<string>();
-    const list: string[] = [];
-    for (const unit of units) {
-      if (seen.has(unit.grade)) continue;
-      seen.add(unit.grade);
-      list.push(unit.grade);
-    }
-    return list;
-  }, [units]);
-  // 학기 select는 chapter가 "1-"/"2-"로 시작하는 학년(초등)에서만 보인다.
-  const semesterVisible =
-    grade !== "" &&
-    units.some(
-      (unit) => unit.grade === grade && SEMESTER_CHAPTER_RE.test(unit.chapter),
-    );
-  // 학년(+학기)으로 좁힌 단원 — 중단원/소단원 옵션의 모집단.
-  const scopedUnits = useMemo(
+  /** 지금 범위를 한 줄과 막대로 — 확인테스트와 **같은 순수 함수**를 쓴다. */
+  const rangeSummary = useMemo(
     () =>
-      units.filter(
-        (unit) =>
-          (!grade || unit.grade === grade) &&
-          (!semester || unit.chapter.startsWith(`${semester}-`)),
-      ),
-    [units, grade, semester],
+      rangeStart && rangeEnd
+        ? describeRange(units, rangeStart, rangeEnd)
+        : null,
+    [units, rangeStart, rangeEnd],
   );
-  const chapterOptions = useMemo(() => {
-    const seen = new Set<string>();
-    const list: string[] = [];
-    for (const unit of scopedUnits) {
-      if (seen.has(unit.chapter)) continue;
-      seen.add(unit.chapter);
-      list.push(unit.chapter);
-    }
-    return list;
-  }, [scopedUnits]);
-  const sectionOptions = chapter
-    ? scopedUnits.filter((unit) => unit.chapter === chapter)
-    : scopedUnits;
 
   function startProblemReload() {
     setLoading(true);
@@ -279,40 +247,30 @@ export function ProblemBank() {
     setPage(next);
   }
 
-  // 상위 select를 바꾸면 하위 선택은 전체("")로 되돌리고 1페이지부터 본다.
-  function handleGradeChange(next: string) {
+  /**
+   * 피커가 범위를 알려 오면 그대로 조회한다.
+   *
+   * ⚠️ **여기서 피커를 닫지 않는다.** 첫 클릭도 `onChange(id, id)` 로 온다 —
+   *    「한 단원 범위」이자 「이제 끝을 고르세요」라는 뜻이다(피커는 시작==끝으로
+   *    그 상태를 읽는다). 닫아 버리면 끝을 고를 자리가 사라져 **한 단원밖에 못 고른다.**
+   *    확인테스트도 같은 이유로 열어 둔다 — 접는 것은 「접기」뿐이다.
+   */
+  function handleRangeChange(start: string, end: string) {
     resetToFirstPage();
-    setGrade(next);
-    setSemester("");
-    setChapter("");
-    setUnitId("");
+    setRangeStart(start);
+    setRangeEnd(end);
   }
 
-  function handleSemesterChange(next: string) {
+  function clearRange() {
     resetToFirstPage();
-    setSemester(next);
-    setChapter("");
-    setUnitId("");
-  }
-
-  function handleChapterChange(next: string) {
-    resetToFirstPage();
-    setChapter(next);
-    setUnitId("");
+    setRangeStart(null);
+    setRangeEnd(null);
   }
 
   function toggle(next: Exclude<Panel, null>) {
     setPanel((current) => (current === next ? null : next));
   }
 
-  /**
-   * 새로 만들어진 문항을 목록에 얹고 안내를 띄운다 — **등록·생성·변형이 이 함수 하나**를 쓴다.
-   *
-   * ⚠️ 안내는 「몇 건 만들었나」가 아니라 「그중 몇 건이 지금 화면에 보이나」까지 말한다.
-   *    적대적 리뷰 2026-08-19 실측: 난이도 「한 단계 아래」로 변형하면 결과가 현재 난이도
-   *    필터를 벗어나는데, 화면은 "1건 변형"이라 하고 목록에도 총계에도 아무 변화가 없었다.
-   *    성공했는데 사라진 것처럼 보이면 그건 실패로 읽힌다.
-   */
   const prepend = useCallback(
     (created: ProblemEntity[], label: string) => {
       const matching = created.filter((problem) =>
@@ -406,6 +364,69 @@ export function ProblemBank() {
         </div>
       </div>
 
+      {/*
+        단원 **범위** — 원장님 지시 2026-08-19 「문제은행도 다른거처럼 시작 클릭
+        끝 클릭으로 스마트하게」. 확인테스트(S-04)가 쓰는 `UnitRangePicker` 와
+        `describeRange` 를 **그대로** 쓴다 — 손놀림과 요약이 두 화면에서 갈리지 않게.
+
+        ⚠️ 이 블록은 필터 그리드 **밖**이다. 그리드는 칸이 모두 같은 고정 폭인데
+           (2026-08-17 원장님 "고정된 크기에서 선택만 바뀌도록") 피커는 3열 표라
+           그 칸에 안 들어간다. 접혀 있을 때는 한 줄이므로 자리를 거의 안 먹는다.
+      */}
+      <div className="mt-4" data-range-filter>
+        <div className="flex flex-wrap items-baseline gap-3">
+          <span className={`${MICRO_LABEL} text-text-3`}>범위</span>
+          <span className="text-[12.5px] font-black text-ink">
+            {rangeSummary ? rangeSummary.text : "전체"}
+          </span>
+          {rangeStart ? (
+            <button
+              type="button"
+              onClick={clearRange}
+              className="cursor-pointer text-[12.5px] font-bold text-text-3 underline-offset-4 hover:underline"
+            >
+              전체로
+            </button>
+          ) : null}
+          <button
+            type="button"
+            aria-expanded={rangeEditing}
+            disabled={unitActionsDisabled}
+            onClick={() => setRangeEditing((current) => !current)}
+            className="ml-auto cursor-pointer text-[12.5px] font-bold text-g-blue underline-offset-4 hover:underline disabled:cursor-not-allowed disabled:text-text-3 disabled:no-underline"
+          >
+            {rangeEditing ? "접기" : rangeStart ? "고치기" : "범위 고르기"}
+          </button>
+        </div>
+        {rangeSummary ? (
+          <>
+            {/* 막대는 라벨이 말하는 것을 그림으로 되풀이할 뿐이라 보조기기에서는 숨긴다. */}
+            <div aria-hidden className="mt-1 h-[6px] w-full bg-seg-empty">
+              <div
+                className="h-full bg-g-blue"
+                style={{
+                  marginLeft: `${rangeSummary.offsetPct}%`,
+                  width: `${rangeSummary.widthPct}%`,
+                }}
+              />
+            </div>
+            <span className="text-[10.5px] font-bold tracking-normal text-text-3">
+              {rangeSummary.label}
+            </span>
+          </>
+        ) : null}
+        {rangeEditing ? (
+          <div className="mt-2">
+            <UnitRangePicker
+              units={units}
+              startUnitId={rangeStart}
+              endUnitId={rangeEnd}
+              onChange={handleRangeChange}
+            />
+          </div>
+        ) : null}
+      </div>
+
       <div
         className="mt-4 grid gap-3"
         style={FILTER_GRID_STYLE}
@@ -428,59 +449,6 @@ export function ProblemBank() {
           style={{ gridColumn: "span 2" }}
           value={query}
         />
-        <FieldSelect
-          label="학년"
-          value={grade}
-          disabled={unitsLoading || units.length === 0}
-          onChange={(event) => handleGradeChange(event.target.value)}
-        >
-          <option value="">전체</option>
-          {gradeOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </FieldSelect>
-        {semesterVisible ? (
-          <FieldSelect
-            label="학기"
-            value={semester}
-            onChange={(event) => handleSemesterChange(event.target.value)}
-          >
-            <option value="">전체</option>
-            <option value="1">1학기</option>
-            <option value="2">2학기</option>
-          </FieldSelect>
-        ) : null}
-        <FieldSelect
-          label="중단원"
-          value={chapter}
-          disabled={unitsLoading || units.length === 0 || grade === ""}
-          onChange={(event) => handleChapterChange(event.target.value)}
-        >
-          <option value="">전체</option>
-          {chapterOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </FieldSelect>
-        <FieldSelect
-          label="소단원"
-          value={unitId}
-          disabled={unitsLoading || units.length === 0}
-          onChange={(event) => {
-            resetToFirstPage();
-            setUnitId(event.target.value);
-          }}
-        >
-          <option value="">전체</option>
-          {sectionOptions.map((unit) => (
-            <option key={unit.id} value={unit.id}>
-              {unit.section}
-            </option>
-          ))}
-        </FieldSelect>
         <FieldSelect
           label="난이도"
           value={difficulty}

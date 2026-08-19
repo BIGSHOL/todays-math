@@ -94,12 +94,40 @@ export async function GET(request: NextRequest) {
     grade,
     chapter,
     chapterPrefix,
+    unitFrom,
+    unitTo,
     q,
     hasFigure,
     hasSolution,
     hasAnswer,
     ...filters
   } = parsed.data;
+  // 단원 범위(2026-08-19 원장님 지시) — 화면은 **id 만** 보내고 순서는 여기서 읽는다.
+  // `Unit.orderIndex` 는 전역 연속값이라(D-27) 학년 경계를 넘는 범위도 그대로 풀린다.
+  //
+  // ⚠️ 없는 단원 id 가 오면 **막는다.** 그냥 건너뛰면 필터가 조용히 사라져 전량이
+  //    통과한다 — 「범위를 걸었는데 전부 나온다」가 되고, 화면은 그것을 못 알아챈다.
+  const rangeIds = [unitFrom, unitTo].filter((v): v is string => Boolean(v));
+  const rangeWhere: { unit: { orderIndex: { gte?: number; lte?: number } } }[] =
+    [];
+  if (rangeIds.length > 0) {
+    const found = await db.unit.findMany({
+      where: { id: { in: rangeIds } },
+      select: { id: true, orderIndex: true },
+    });
+    if (found.length !== new Set(rangeIds).size) return notFoundError("소단원");
+    const order = new Map(found.map((u) => [u.id, u.orderIndex]));
+    const from = unitFrom === undefined ? undefined : order.get(unitFrom)!;
+    const to = unitTo === undefined ? undefined : order.get(unitTo)!;
+    // 거꾸로 온 범위는 **정렬한다** — 안 그러면 gte>lte 라 조용히 0건이 된다.
+    const bounds =
+      from !== undefined && to !== undefined
+        ? { gte: Math.min(from, to), lte: Math.max(from, to) }
+        : from !== undefined
+          ? { gte: from }
+          : { lte: to! };
+    rangeWhere.push({ unit: { orderIndex: bounds } });
+  }
   // 계단식 단원 필터(S-08) — problem 컬럼이 아니라 Unit relation으로 거른다.
   // chapter(정확 일치)가 있으면 chapterPrefix(접두 일치)는 무시한다.
   const unitWhere: {
@@ -186,6 +214,7 @@ export async function GET(request: NextRequest) {
       problemVisibleWhere(session.id),
       filters,
       ...(Object.keys(unitWhere).length > 0 ? [{ unit: unitWhere }] : []),
+      ...rangeWhere,
       ...figureWhere,
       ...solutionWhere,
       ...answerWhere,

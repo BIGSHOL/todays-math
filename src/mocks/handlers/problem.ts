@@ -149,6 +149,24 @@ export const problemHandlers: HttpHandler[] = [
     const filtered = ALL_PROBLEMS.filter((p) => {
       if (p.pool === "private" && p.userId !== USER_TEACHER_ID) return false;
       if (filters.unitId && p.unitId !== filters.unitId) return false;
+      // 단원 **범위**(2026-08-19) — 서버(route.ts)와 같은 규칙: `orderIndex` 구간이고
+      // 거꾸로 온 범위는 정렬한다(D-27). 여기가 갈리면 화면 검사만 초록이 된다.
+      if (filters.unitFrom || filters.unitTo) {
+        const unit = UNIT_BY_ID.get(p.unitId);
+        if (!unit) return false;
+        const from = filters.unitFrom
+          ? UNIT_BY_ID.get(filters.unitFrom)?.orderIndex
+          : undefined;
+        const to = filters.unitTo
+          ? UNIT_BY_ID.get(filters.unitTo)?.orderIndex
+          : undefined;
+        const lo =
+          from !== undefined && to !== undefined ? Math.min(from, to) : from;
+        const hi =
+          from !== undefined && to !== undefined ? Math.max(from, to) : to;
+        if (lo !== undefined && unit.orderIndex < lo) return false;
+        if (hi !== undefined && unit.orderIndex > hi) return false;
+      }
       if (filters.grade || filters.chapter || filters.chapterPrefix) {
         const unit = UNIT_BY_ID.get(p.unitId);
         if (!unit) return false;
@@ -318,9 +336,10 @@ export const problemHandlers: HttpHandler[] = [
         originalAnswerRecomputed: verified ? origin.answer : "다른 값",
         figureSpec: drawn ? MOCK_FIGURE_SPEC : null,
         figureSvg: drawn ? MOCK_FIGURE_SVG : null,
-        figureError: figureRequired && !drawn
-          ? "AI 가 본문만으로는 도형을 확정하지 못했습니다."
-          : null,
+        figureError:
+          figureRequired && !drawn
+            ? "AI 가 본문만으로는 도형을 확정하지 못했습니다."
+            : null,
       };
     });
 
@@ -369,7 +388,9 @@ export const problemHandlers: HttpHandler[] = [
       parsed.data.difficultyShift,
     );
     const created = parsed.data.items.map((item, at) => ({
-      ...MOCK_AI_TRANSFORMED_PROBLEMS[at % MOCK_AI_TRANSFORMED_PROBLEMS.length]!,
+      ...MOCK_AI_TRANSFORMED_PROBLEMS[
+        at % MOCK_AI_TRANSFORMED_PROBLEMS.length
+      ]!,
       id: `${MOCK_TRANSFORM_ADOPT_ID_PREFIX}${String(at).padStart(2, "0")}`,
       content: item.content,
       answer: item.answer,

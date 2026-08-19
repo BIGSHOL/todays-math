@@ -27,6 +27,12 @@ export type ProblemListFilters = {
   grade?: string;
   chapter?: string;
   chapterPrefix?: string;
+  /**
+   * 단원 **범위** — 시작·끝 소단원 id (2026-08-19 원장님 지시). 확인테스트와 같은
+   * `UnitRangePicker` 를 쓴다. 순서 계산은 **서버**가 `Unit.orderIndex` 로 한다(D-27).
+   */
+  unitFrom?: string;
+  unitTo?: string;
   /** 그림(이미지 경로 또는 엔진 SVG)이 있는 문항만. 켤 때만 붙인다. */
   /** 본문 검색어. 비면 안 붙인다. */
   q?: string;
@@ -57,6 +63,8 @@ function listQuery(filters: ProblemListFilters, page: number) {
   if (filters.grade) params.set("grade", filters.grade);
   if (filters.chapter) params.set("chapter", filters.chapter);
   if (filters.chapterPrefix) params.set("chapterPrefix", filters.chapterPrefix);
+  if (filters.unitFrom) params.set("unitFrom", filters.unitFrom);
+  if (filters.unitTo) params.set("unitTo", filters.unitTo);
   if (filters.q) params.set("q", filters.q);
   // 계약이 `"true"` 리터럴만 받는다 — 끌 때는 아예 안 붙인다("false" 를 보내면 안 된다).
   //
