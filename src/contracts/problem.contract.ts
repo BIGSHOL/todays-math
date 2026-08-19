@@ -23,6 +23,7 @@
  */
 import { z } from "zod";
 
+import { problemCodeSchema } from "./problemCode.contract";
 import {
   dataResponseSchema,
   difficultySchema,
@@ -80,6 +81,15 @@ export type ProblemUpdateRequest = z.infer<typeof problemUpdateRequestSchema>;
 
 export const problemSchema = z.strictObject({
   id: uuidSchema,
+  /**
+   * 문항 코드 — 원장님이 문항을 지목하는 값 (D-53). 예: `J31402-K7M2`.
+   *
+   * ⚠️ **저장이지 파생이 아니다.** 뜻 부분(학교급·학년·대단원·소단원)은 **부여 당시의
+   *    스냅샷**이라 지금 `unitId` 와 다를 수 있다 — 단원 재배정이 실제로 149건 있었다.
+   *    그래서 화면은 코드 옆에 **현재 단원·출처를 항상 같이** 보여야 한다(D-53).
+   *    코드로 단원을 읽지 마라. 단원은 `unitId` 가 진실이다.
+   */
+  problemCode: problemCodeSchema,
   userId: uuidSchema,
   unitId: uuidSchema,
   source: problemSourceSchema,
@@ -130,7 +140,31 @@ export const problemFilterQuerySchema = z.strictObject({
    * ⚠️ `z.coerce.boolean()` 을 쓰면 `"false"` 도 **참**이 된다(빈 문자열만 거짓).
    * 쿼리스트링은 전부 문자열이라 그 함정에 그대로 걸린다. 그래서 리터럴로 받는다.
    */
+  /**
+   * 본문 검색어(2026-08-19). 대소문자 구분 없이 `content` 안을 찾는다.
+   *
+   * ⚠️ 서버 실측 277~289ms(Seq Scan)다. 화면은 **디바운스**로 타자 중 조회를 막는다
+   * (`useDebounced`). 여기서 길이를 막는 것은 그 다음 방어다.
+   * 빈 검색어는 **아예 안 붙인다** — 붙이면 전량이 통과해 뜻이 없다.
+   */
+  q: z.string().trim().min(1).max(100).optional(),
   hasFigure: z.literal("true").optional(),
+  /**
+   * 해설이 있는 문항만(2026-08-19). 실측 13,909건(29.5%).
+   * `solution` 은 nullable 이고 빈 문자열도 들어 있어 **둘 다** 걸러야 한다.
+   */
+  hasSolution: z.literal("true").optional(),
+  /**
+   * 정답이 있는 문항만(2026-08-19). 실측 45,041건(95.5%).
+   *
+   * ⚠️ `answer` 는 **빈 값이 0건**이다. 「비어 있지 않은가」로 만들면 100% 를
+   * 통과시켜 아무것도 안 거른다. 실제 자리표시자는 **`(정답 없음)` 문자열
+   * 2,111건**이다 — 빈 값이 빈 문자열이 아니라 **글자로 적혀 있다.**
+   * 상수는 `MISSING_ANSWER`(`src/lib/missingAnswer.ts`) 한 곳에 이미 있고,
+   * **출제 자격(`findEligibleProblems`)이 쓰는 바로 그 값**이다. 화면 필터와
+   * 출제 자격이 갈리면 「은행에 보이는데 안 뽑히는」 문항이 생긴다.
+   */
+  hasAnswer: z.literal("true").optional(),
   page: paginationParamsSchema.shape.page,
   pageSize: paginationParamsSchema.shape.pageSize,
 });

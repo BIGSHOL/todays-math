@@ -14,7 +14,9 @@ import {
 } from "@/lib/problem/problemApi";
 import { loadUnits } from "@/lib/units/unitApi";
 
-import { FieldSelect, FIELD_SELECT_WIDTH } from "./FieldSelect";
+import { useDebounced } from "@/hooks/useDebounced";
+
+import { FieldSelect, FieldText, FIELD_SELECT_WIDTH } from "./FieldSelect";
 import { PROBLEM_TYPES } from "./labels";
 import { ProblemCard } from "./ProblemCardLazy";
 import {
@@ -99,7 +101,13 @@ export function ProblemBank() {
   const [difficulty, setDifficulty] = useState("");
   const [problemType, setProblemType] = useState("");
   const [reviewStatus, setReviewStatus] = useState("");
+  // 본문 검색 — 타자 중에는 안 나간다(서버 실측 277~289ms · Seq Scan).
+  // `query` 는 화면이 보는 값, `q` 는 서버로 나가는 값이다.
+  const [query, setQuery] = useState("");
+  const q = useDebounced(query, 400);
   const [hasFigure, setHasFigure] = useState(false);
+  const [hasSolution, setHasSolution] = useState(false);
+  const [hasAnswer, setHasAnswer] = useState(false);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [problems, setProblems] = useState<ProblemEntity[]>([]);
@@ -127,7 +135,10 @@ export function ProblemBank() {
       difficulty: (difficulty || undefined) as Difficulty | undefined,
       problemType: (problemType || undefined) as ProblemType | undefined,
       reviewStatus: (reviewStatus || undefined) as ReviewStatus | undefined,
+      q: q.trim() || undefined,
       hasFigure: hasFigure || undefined,
+      hasSolution: hasSolution || undefined,
+      hasAnswer: hasAnswer || undefined,
     };
   }, [
     unitId,
@@ -137,7 +148,10 @@ export function ProblemBank() {
     difficulty,
     problemType,
     reviewStatus,
+    q,
     hasFigure,
+    hasSolution,
+    hasAnswer,
   ]);
 
   useEffect(() => {
@@ -310,6 +324,23 @@ export function ProblemBank() {
         style={FILTER_GRID_STYLE}
         data-filter-bar
       >
+        {/*
+          본문 검색 — 필터를 **대체하지 않고 겹쳐 쓰는** 물건이다.
+          실측(`id-find-review.md`): 한 구절로 유일 특정은 29.5~33.0% 뿐이지만
+          소단원 필터와 겹치면 **중앙 2행**(한 페이지 안)이 된다.
+          17.4%(8,187행)는 옮겨 적을 한글 구절이 아예 없어 구조적으로 못 찾는다.
+        */}
+        <FieldText
+          aria-label="본문 검색"
+          label="검색"
+          onChange={(event) => {
+            resetToFirstPage();
+            setQuery(event.target.value);
+          }}
+          placeholder="본문에서 찾기"
+          style={{ gridColumn: "span 2" }}
+          value={query}
+        />
         <FieldSelect
           label="학년"
           value={grade}
@@ -405,34 +436,61 @@ export function ProblemBank() {
           <option value="rejected">반려</option>
         </FieldSelect>
         {/*
-          그림 있는 문항은 실측 8,442건(전체의 17.9%)뿐이라, 켜지 않으면 은행을 통째로
-          넘겨야 찾을 수 있었다(원장님 지시 2026-08-18).
+          「자료」 토글 셋 — 그림 · 해설 · 정답 (원장님 지시 2026-08-19).
 
-          ⚠️ 칸 제목 「그림」을 `<label>` 안에 같이 넣으면 체크박스의 **접근 가능한 이름**이
-          「그림그림 있는 문제만」이 돼 이름으로 찾을 수 없다. 제목은 label 밖에 두고
-          label 은 체크박스와 그 글자만 감싼다. 밑선은 select 들과 같은 구조로 맞춘다.
+          만들기 전에 실측으로 셋 다 뜻이 있는지 확인했다 (DB 47,152건):
+            그림  9,448 (20.0%) · 해설 13,909 (29.5%) · 정답 45,041 (95.5%)
+
+          ⚠️ `answer` 는 **빈 값이 0건**이라 「비어 있지 않은가」로 만들면 100% 를
+             통과시켜 아무것도 안 거른다. 실제 자리표시자는 `(정답 없음)` 2,111건이다.
+
+          ⚠️ 묶음은 `fieldset`/`legend` 로 짠다. 낱개 이름은 「그림」 한 글자뿐이라
+             그것만으로는 무엇을 거르는지 모른다 — 묶음 이름이 그 뜻을 진다.
+             (예전에는 제목을 `aria-hidden` 으로 숨겼는데, 그러면 화면 낭독기에
+              묶음 이름이 아예 없다.)
+
+          ⚠️ D-30 — 손가락 커서는 실제로 누르는 것(체크박스와 그 label)에만 준다.
+             묶음 상자 자체에는 주지 않는다.
         */}
-        <div className="flex min-w-0 flex-col gap-1">
+        <div
+          aria-labelledby="filter-assets-label"
+          className="flex min-w-0 flex-col gap-1"
+          role="group"
+          style={{ gridColumn: "span 2" }}
+        >
           <span
-            aria-hidden
             className="text-[10.5px] font-black tracking-[1.5px] text-text-2"
+            id="filter-assets-label"
           >
-            그림
+            자료
           </span>
-          <label className="flex h-11 cursor-pointer items-center gap-2 border border-control bg-white px-3">
-            <input
-              type="checkbox"
-              checked={hasFigure}
-              onChange={(event) => {
-                resetToFirstPage();
-                setHasFigure(event.target.checked);
-              }}
-              className="h-4 w-4 cursor-pointer accent-[var(--blue)]"
-            />
-            <span className="whitespace-nowrap text-[12.5px] text-ink">
-              그림 있는 문제만
-            </span>
-          </label>
+          <div className="flex h-11 items-center gap-4 border border-control bg-white px-3">
+            {(
+              [
+                ["그림", hasFigure, setHasFigure],
+                ["해설", hasSolution, setHasSolution],
+                ["정답", hasAnswer, setHasAnswer],
+              ] as const
+            ).map(([label, checked, setChecked]) => (
+              <label
+                className="flex cursor-pointer items-center gap-1.5"
+                key={label}
+              >
+                <input
+                  checked={checked}
+                  className="h-4 w-4 cursor-pointer accent-[var(--blue)]"
+                  onChange={(event) => {
+                    resetToFirstPage();
+                    setChecked(event.target.checked);
+                  }}
+                  type="checkbox"
+                />
+                <span className="whitespace-nowrap text-[12.5px] text-ink">
+                  {label}
+                </span>
+              </label>
+            ))}
+          </div>
         </div>
       </div>
 

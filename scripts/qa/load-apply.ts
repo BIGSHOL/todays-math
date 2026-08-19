@@ -28,6 +28,10 @@ import { readFile, writeFile } from "node:fs/promises";
 
 import { allowSharedImport } from "../../src/lib/import/classifyDatabaseUrl";
 import { isDirectScript } from "../import/isDirectScript";
+import {
+  syncExamMetadata,
+  type SyncExamResult,
+} from "../../src/lib/import/syncExamMetadata";
 import { inspectDatabaseTargets } from "../import/resolveDbTarget";
 import { corpusFingerprint } from "./load-candidates";
 
@@ -90,7 +94,10 @@ function assertCommitted(file: string): void {
 }
 
 const h8 = (v: unknown): string =>
-  createHash("sha1").update(JSON.stringify(v ?? null)).digest("hex").slice(0, 8);
+  createHash("sha1")
+    .update(JSON.stringify(v ?? null))
+    .digest("hex")
+    .slice(0, 8);
 
 export interface RowSnapshot {
   updatedAt: string;
@@ -98,9 +105,9 @@ export interface RowSnapshot {
 }
 
 /** 기존 행 전량의 컬럼별 지문. 본문을 들고 있지 않고 해시만 남긴다. */
-async function snapshot(
-  prisma: { problem: { findMany: (args: unknown) => Promise<Record<string, unknown>[]> } },
-): Promise<Map<string, RowSnapshot>> {
+async function snapshot(prisma: {
+  problem: { findMany: (args: unknown) => Promise<Record<string, unknown>[]> };
+}): Promise<Map<string, RowSnapshot>> {
   const out = new Map<string, RowSnapshot>();
   for (let skip = 0; ; skip += 4000) {
     const page = (await prisma.problem.findMany({
@@ -137,7 +144,9 @@ export async function runApply(apply: boolean): Promise<void> {
     );
     return;
   }
-  console.log(`대상 DB — ${target.kind} (${target.host ?? "?"}) · ${inspection.selectedSource}`);
+  console.log(
+    `대상 DB — ${target.kind} (${target.host ?? "?"}) · ${inspection.selectedSource}`,
+  );
 
   // ── 조건 1: 커밋된 목록과 재생성본이 같은가 ─────────────────────────────────
   const fresh = JSON.parse(await readFile(IDS_FRESH, "utf8")) as {
@@ -148,7 +157,9 @@ export async function runApply(apply: boolean): Promise<void> {
   };
   let committed: typeof fresh;
   try {
-    committed = JSON.parse(await readFile(IDS_COMMITTED, "utf8")) as typeof fresh;
+    committed = JSON.parse(
+      await readFile(IDS_COMMITTED, "utf8"),
+    ) as typeof fresh;
   } catch {
     throw new Error(
       `${IDS_COMMITTED} 가 없습니다. 넣을 externalId 목록을 **먼저 커밋**해야 합니다(승인 조건 1).`,
@@ -186,8 +197,13 @@ export async function runApply(apply: boolean): Promise<void> {
   const rows = JSON.parse(await readFile(ROWS, "utf8")) as Array<
     Record<string, unknown> & { externalId: string; reviewStatus: string }
   >;
-  if (rows.length !== fresh.총 || rows.some((r) => !freshSet.has(r.externalId))) {
-    throw new Error(`${ROWS} 가 목록과 맞지 않습니다 (행 ${rows.length} vs 목록 ${fresh.총}).`);
+  if (
+    rows.length !== fresh.총 ||
+    rows.some((r) => !freshSet.has(r.externalId))
+  ) {
+    throw new Error(
+      `${ROWS} 가 목록과 맞지 않습니다 (행 ${rows.length} vs 목록 ${fresh.총}).`,
+    );
   }
   const pendingCount = rows.filter((r) => r.reviewStatus === "pending").length;
   if (pendingCount !== committed.출제보류_pending.length) {
@@ -236,6 +252,8 @@ export async function runApply(apply: boolean): Promise<void> {
     );
 
     let inserted = 0;
+    // 콜백 안에서만 채워지므로 홀더에 담는다(그러지 않으면 TS 가 null 로 좁힌다).
+    const examState: { result: SyncExamResult | null } = { result: null };
     if (toInsert.length > 0) {
       await prisma.$transaction(
         async (tx) => {
@@ -243,16 +261,48 @@ export async function runApply(apply: boolean): Promise<void> {
           // ⚠️ `$queryRaw` 로 부르면 반환형 void 를 역직렬화하다 죽는다(원장 §7).
           await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${LOAD_LOCK_KEY}))`;
           for (let i = 0; i < toInsert.length; i += BATCH) {
-            const chunk = toInsert.slice(i, i + BATCH).map((r) => ({ ...r, userId: user.id }));
+            const chunk = toInsert
+              .slice(i, i + BATCH)
+              .map((r) => ({ ...r, userId: user.id }));
+            // exam-wiring: 기출·배선됨 — 적재 직후 syncExamMetadata 로 그 편의 Exam 을 세운다
             const res = await tx.problem.createMany({
               data: chunk as never,
               skipDuplicates: true,
             });
             inserted += res.count;
           }
+          // 기출이 들어왔으면 그 **시험지**(Exam/ExamQuestion)도 함께 세운다.
+          // 이 스크립트는 재실행 가능하므로 배선이 여기에도 있어야 한다 —
+          // 없으면 이 경로로 들어온 편만 조용히 Exam 없이 남는다.
+          const examIds = [
+            ...new Set(
+              toInsert
+                .map((r) => (r as { examId?: string | null }).examId)
+                .filter(
+                  (id): id is string => typeof id === "string" && id.length > 0,
+                ),
+            ),
+          ];
+          examState.result = await syncExamMetadata(
+            tx as unknown as Parameters<typeof syncExamMetadata>[0],
+            examIds,
+          );
         },
         { maxWait: 15_000, timeout: 600_000 },
       );
+    }
+
+    const examSync = examState.result;
+    if (examSync) {
+      // 조용히 넘어가지 않는다 — 확정 못 한 편을 수와 사유로 남긴다.
+      console.log(
+        `기출 시험지(Exam): 신규 ${examSync.inserted} · 갱신 ${examSync.updated}` +
+          ` · 미분류 ${examSync.unclassified.length} · 제외(대비) ${examSync.excluded.length}` +
+          ` · 자연키충돌 ${examSync.collided.length}`,
+      );
+      for (const u of examSync.unclassified.slice(0, 10)) {
+        console.log(`  [미분류] examId=${u.examId} — ${u.reason}`);
+      }
     }
 
     // ── 조건 2: 적재 **후** 스냅샷 + 컬럼별 대조 ──────────────────────────────
@@ -289,12 +339,17 @@ export async function runApply(apply: boolean): Promise<void> {
       넣을행: rows.length,
       이미있어건너뜀: present.size,
       실제INSERT: inserted,
-      pending으로넣은행: rows.filter((r) => r.reviewStatus === "pending").map((r) => r.externalId),
+      pending으로넣은행: rows
+        .filter((r) => r.reviewStatus === "pending")
+        .map((r) => r.externalId),
       총행: { 전: totalBefore, 후: totalAfter, 증가: delta },
       기존행_사라짐: vanished,
       기존행_updatedAt바뀜: updatedAtChanged,
       기존행_컬럼바뀜: Object.fromEntries(
-        Object.entries(changedByCol).map(([c, n]) => [c, { 행: n, 소유: OWNER[c] ?? "(공용)" }]),
+        Object.entries(changedByCol).map(([c, n]) => [
+          c,
+          { 행: n, 소유: OWNER[c] ?? "(공용)" },
+        ]),
       ),
       기존행_하나라도바뀜: touchedRows,
       판정: {
@@ -311,12 +366,18 @@ export async function runApply(apply: boolean): Promise<void> {
       `총행 증가 == INSERT ? ${delta === inserted ? "예" : `아니오 (${delta} vs ${inserted})`}`,
     );
     console.log(`기존 행 사라짐 ${vanished}`);
-    console.log(`\n기존 행 변경 — updatedAt 바뀐 행 ${updatedAtChanged} · 컬럼별:`);
+    console.log(
+      `\n기존 행 변경 — updatedAt 바뀐 행 ${updatedAtChanged} · 컬럼별:`,
+    );
     if (Object.keys(changedByCol).length === 0) {
       console.log("  없음 — 기존 행은 한 컬럼도 안 바뀌었다.");
     } else {
-      for (const [col, n] of Object.entries(changedByCol).sort((a, b) => b[1] - a[1])) {
-        console.log(`  ${col.padEnd(16)} ${String(n).padStart(6)}  ← ${OWNER[col] ?? "(공용)"}`);
+      for (const [col, n] of Object.entries(changedByCol).sort(
+        (a, b) => b[1] - a[1],
+      )) {
+        console.log(
+          `  ${col.padEnd(16)} ${String(n).padStart(6)}  ← ${OWNER[col] ?? "(공용)"}`,
+        );
       }
       console.log(
         "  ↑ 트랙 F 는 기존 행을 UPDATE 하지 않는다. 여기 잡힌 것은 동시에 도는 다른 트랙의 변경이다.",

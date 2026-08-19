@@ -23,7 +23,16 @@ export type ProblemListFilters = {
   chapter?: string;
   chapterPrefix?: string;
   /** 그림(이미지 경로 또는 엔진 SVG)이 있는 문항만. 켤 때만 붙인다. */
+  /** 본문 검색어. 비면 안 붙인다. */
+  q?: string;
   hasFigure?: boolean;
+  /** 해설(`solution`)이 있는 문항만. 켤 때만 붙인다. */
+  hasSolution?: boolean;
+  /**
+   * 정답이 있는 문항만 — `MISSING_ANSWER` 자리표시자를 뺀다. 켤 때만 붙인다.
+   * ⚠️ 「비어 있지 않은가」가 아니다. `answer` 는 빈 값이 0건이다.
+   */
+  hasAnswer?: boolean;
   difficulty?: Difficulty;
   problemType?: ProblemType;
   reviewStatus?: ReviewStatus;
@@ -41,8 +50,16 @@ function listQuery(filters: ProblemListFilters, page: number) {
   if (filters.grade) params.set("grade", filters.grade);
   if (filters.chapter) params.set("chapter", filters.chapter);
   if (filters.chapterPrefix) params.set("chapterPrefix", filters.chapterPrefix);
+  if (filters.q) params.set("q", filters.q);
   // 계약이 `"true"` 리터럴만 받는다 — 끌 때는 아예 안 붙인다("false" 를 보내면 안 된다).
-  if (filters.hasFigure) params.set("hasFigure", "true");
+  //
+  // ⚠️ 켬/끔 토글은 **여기 한 곳에서** 이름을 세어 붙인다. 예전에는 줄마다 손으로
+  // 적었는데, 그러면 토글을 늘릴 때 이 층을 빠뜨려도 타입 검사가 안 잡는다
+  // (2026-08-19 에 실제로 그랬다 — 화면과 API 는 고쳤는데 여기만 안 고쳐 조용히
+  // 안 붙었다). 목록을 손으로 쓰면 세는 쪽과 붙이는 쪽이 같이 눈이 먼다.
+  for (const key of ["hasFigure", "hasSolution", "hasAnswer"] as const) {
+    if (filters[key]) params.set(key, "true");
+  }
   if (filters.difficulty) params.set("difficulty", filters.difficulty);
   if (filters.problemType) params.set("problemType", filters.problemType);
   if (filters.reviewStatus) params.set("reviewStatus", filters.reviewStatus);

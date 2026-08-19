@@ -1,0 +1,9 @@
+
+ RUN  v4.1.10 C:/Users/user/orca/workspaces/testautocreator/adv-figref
+
+
+ Test Files  1 passed (1)
+      Tests  28 passed (28)
+   Start at  01:35:29
+   Duration  5.37s (transform 566ms, setup 1.82s, import 188ms, tests 62ms, environment 3.01s)
+

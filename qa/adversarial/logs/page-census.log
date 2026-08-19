@@ -1,0 +1,11 @@
+warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.
+자동 97건 · 체계적으로 실패할 만한 지면 census
+
+  회전된 쪽                                0 / 97
+  그림이 여러 쪽에 걸침                         0 / 97
+  그림이 두 단에 걸침                          0 / 97
+  그림끼리 겹침                              0 / 97
+  세로로 긴 보기 그림                          3 / 97
+  검수 시트에 안 그려진 그림이 있는 문항               0 / 97
+
+  [세로보기] b6378ee9 대륜중 6번 (5장) · beff02e9 지산중 13번 (1장) · e8b52a39 학산중 15번 (1장)

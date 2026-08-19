@@ -145,8 +145,43 @@ describe("[T7.3] loadExamPaper — Exam/ExamQuestion 적재", () => {
       unitId: string | null;
     };
     expect(q1.topicRaw).toBe(raw);
-    // unitId 매핑은 별도 태스크 — 이 적재기는 항상 null 로 둔다.
+    // 이 코퍼스에는 우리 트리 단원이 없다 — 계약이 준 null 이 그대로 실린다.
     expect(q1.unitId).toBeNull();
+  });
+
+  // ⚠️ 예전엔 `questionFields` 가 unitId·problemId 를 **못박아 null 로** 넣었다.
+  //    그러면 `Exam` 을 채워도 「이 시험지 N번이 문제은행의 어느 행인가」가 영영 안 생긴다.
+  //    호출자가 준 값을 그대로 실어야 한다.
+  it("⭐ unitId·problemId 는 계약이 준 값 그대로 실린다 (못박지 않는다)", async () => {
+    const unitId = "22222222-3333-4444-8555-666666666666";
+    const problemId = "33333333-4444-4555-8666-777777777777";
+    const p = paper({
+      externalExamId: "link-1",
+      questions: [
+        question({ number: 1, unitId, problemId }),
+        question({ number: 2 }),
+        question({ number: 3 }),
+        question({ number: 4 }),
+        question({ number: 5 }),
+      ],
+    });
+
+    await loadExamPaper(prisma, p);
+
+    const exam = await prisma.exam.findUnique({
+      where: { externalExamId: "link-1" },
+    });
+    const rows = (await prisma.examQuestion.findMany({
+      where: { examId: exam!.id },
+    })) as unknown as Array<{
+      number: number;
+      unitId: string | null;
+      problemId: string | null;
+    }>;
+    const first = rows.find((q) => q.number === 1);
+    expect(first?.unitId).toBe(unitId);
+    expect(first?.problemId).toBe(problemId);
+    expect(rows.find((q) => q.number === 2)?.problemId).toBeNull();
   });
 });
 

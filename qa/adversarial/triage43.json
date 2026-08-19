@@ -1,0 +1,756 @@
+[
+ {
+  "id": "10bc6c2c",
+  "school": "압량중",
+  "q": 2,
+  "why": "보기 자리에 그림이 없다 (보기가 글자다)",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "⑤",
+  "objective": true,
+  "nFig": 5,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 24
+ },
+ {
+  "id": "136c3888",
+  "school": "동원중",
+  "q": 17,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉰보기가그림",
+   "㉯다섯없음"
+  ],
+  "type": "단답형",
+  "ans": "③",
+  "objective": true,
+  "nFig": 6,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 82
+ },
+ {
+  "id": "17ab5850",
+  "school": "구암중",
+  "q": 10,
+  "why": "보기 자리에 그림이 없다 (보기가 글자다)",
+  "keys": [
+   "㉰보기가그림",
+   "㉱그림3장이하"
+  ],
+  "type": "객관식",
+  "ans": "⑤",
+  "objective": true,
+  "nFig": 1,
+  "nMark": 12,
+  "filledText": 35,
+  "hasFigMark": true,
+  "len": 1841
+ },
+ {
+  "id": "1ff892d5",
+  "school": "대륜중",
+  "q": 6,
+  "why": "보기 자리에 그림이 없다 (보기가 글자다)",
+  "keys": [
+   "㉰보기가그림",
+   "㉱그림3장이하"
+  ],
+  "type": "객관식",
+  "ans": "③",
+  "objective": true,
+  "nFig": 1,
+  "nMark": 12,
+  "filledText": 35,
+  "hasFigMark": true,
+  "len": 1988
+ },
+ {
+  "id": "2fcb40bd",
+  "school": "효성중",
+  "q": 1,
+  "why": "그림 파일 이름에서 문항 번호를 못 읽는다",
+  "keys": [
+   "㉰보기가그림",
+   "㉲그림없음"
+  ],
+  "type": "객관식",
+  "ans": "④",
+  "objective": true,
+  "nFig": 0,
+  "nMark": 0,
+  "filledText": 6,
+  "hasFigMark": false,
+  "len": 268
+ },
+ {
+  "id": "30fe0201",
+  "school": "황금중",
+  "q": 15,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉰보기가그림",
+   "㉯다섯없음"
+  ],
+  "type": "단답형",
+  "ans": "④",
+  "objective": true,
+  "nFig": 5,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 168
+ },
+ {
+  "id": "39fc58e2",
+  "school": "성당중",
+  "q": 4,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "②",
+  "objective": true,
+  "nFig": 5,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 38
+ },
+ {
+  "id": "4106950f",
+  "school": "포산중",
+  "q": 10,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉰보기가그림",
+   "㉯다섯없음"
+  ],
+  "type": "단답형",
+  "ans": "③",
+  "objective": true,
+  "nFig": 6,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 100
+ },
+ {
+  "id": "435052cb",
+  "school": "학산중",
+  "q": 6,
+  "why": "그림 파일 이름에서 문항 번호를 못 읽는다",
+  "keys": [
+   "㉰보기가그림",
+   "㉲그림없음"
+  ],
+  "type": "객관식",
+  "ans": "⑤",
+  "objective": true,
+  "nFig": 0,
+  "nMark": 0,
+  "filledText": 5,
+  "hasFigMark": false,
+  "len": 221
+ },
+ {
+  "id": "44f8707c",
+  "school": "대진중",
+  "q": 12,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉰보기가그림",
+   "㉯다섯없음"
+  ],
+  "type": "단답형",
+  "ans": "②",
+  "objective": true,
+  "nFig": 6,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 88
+ },
+ {
+  "id": "475a9196",
+  "school": "성광중",
+  "q": 5,
+  "why": "보기 자리에 그림이 없다 (보기가 글자다)",
+  "keys": [
+   "㉰보기가그림",
+   "㉱그림3장이하"
+  ],
+  "type": "객관식",
+  "ans": "⑤",
+  "objective": true,
+  "nFig": 1,
+  "nMark": 5,
+  "filledText": 6,
+  "hasFigMark": true,
+  "len": 260
+ },
+ {
+  "id": "489580f3",
+  "school": "강동중",
+  "q": 14,
+  "why": "보기 자리에 그림이 없다 (보기가 글자다)",
+  "keys": [
+   "㉰보기가그림",
+   "㉱그림3장이하"
+  ],
+  "type": "객관식",
+  "ans": "②",
+  "objective": true,
+  "nFig": 2,
+  "nMark": 3,
+  "filledText": 11,
+  "hasFigMark": true,
+  "len": 1404
+ },
+ {
+  "id": "4d4ade67",
+  "school": "송현여고",
+  "q": 24,
+  "why": "원본에도 보기 마커가 없다",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "36",
+  "objective": false,
+  "nFig": 4,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 333
+ },
+ {
+  "id": "54efb5ae",
+  "school": "중앙고",
+  "q": 7,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉰보기가그림",
+   "㉯다섯없음"
+  ],
+  "type": "단답형",
+  "ans": "③",
+  "objective": true,
+  "nFig": 5,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 79
+ },
+ {
+  "id": "5c472f78",
+  "school": "도원중",
+  "q": 2,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉰보기가그림",
+   "㉯다섯없음"
+  ],
+  "type": "단답형",
+  "ans": "④",
+  "objective": true,
+  "nFig": 5,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 50
+ },
+ {
+  "id": "5d7daad6",
+  "school": "능인중",
+  "q": 7,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉰보기가그림",
+   "㉯다섯없음"
+  ],
+  "type": "단답형",
+  "ans": "①",
+  "objective": true,
+  "nFig": 5,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 56
+ },
+ {
+  "id": "630dadce",
+  "school": "새론중",
+  "q": 10,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉰보기가그림",
+   "㉯다섯없음"
+  ],
+  "type": "단답형",
+  "ans": "③",
+  "objective": true,
+  "nFig": 6,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 101
+ },
+ {
+  "id": "6ea39be1",
+  "school": "구암고",
+  "q": 24,
+  "why": "원본에도 보기 마커가 없다",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "$36$",
+  "objective": false,
+  "nFig": 4,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 391
+ },
+ {
+  "id": "730d9237",
+  "school": "대구여고",
+  "q": 23,
+  "why": "원본에도 보기 마커가 없다",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "5-1. V=(π/3)(8h²-h³)=(π/",
+  "objective": false,
+  "nFig": 4,
+  "nMark": 1,
+  "filledText": 0,
+  "hasFigMark": true,
+  "len": 233
+ },
+ {
+  "id": "8b5928f3",
+  "school": "경운중",
+  "q": 4,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "③",
+  "objective": true,
+  "nFig": 7,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 205
+ },
+ {
+  "id": "8f28d5a3",
+  "school": "정화중",
+  "q": 20,
+  "why": "원본에도 보기 마커가 없다",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "⑴ p=3/5, q=2/5, ⑵ 96/625",
+  "objective": false,
+  "nFig": 5,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 552
+ },
+ {
+  "id": "938608ec",
+  "school": "고산중",
+  "q": 21,
+  "why": "보기 자리에 그림이 없다 (보기가 글자다)",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "⑴ P(1,4), Q(4,4), ⑵ 12, ",
+  "objective": false,
+  "nFig": 5,
+  "nMark": 2,
+  "filledText": 0,
+  "hasFigMark": true,
+  "len": 352
+ },
+ {
+  "id": "9e908f88",
+  "school": "월배중",
+  "q": 13,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉰보기가그림",
+   "㉯다섯없음"
+  ],
+  "type": "단답형",
+  "ans": "①",
+  "objective": true,
+  "nFig": 6,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 90
+ },
+ {
+  "id": "9f3c028b",
+  "school": "경상여고",
+  "q": 17,
+  "why": "원본에도 보기 마커가 없다",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "⑶ 37/6",
+  "objective": false,
+  "nFig": 13,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 672
+ },
+ {
+  "id": "9fb49573",
+  "school": "도원고",
+  "q": 19,
+  "why": "원본에도 보기 마커가 없다",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "⑴ y=1, ⑵ x=-3",
+  "objective": false,
+  "nFig": 4,
+  "nMark": 2,
+  "filledText": 0,
+  "hasFigMark": true,
+  "len": 110
+ },
+ {
+  "id": "acffcd72",
+  "school": "대구국제고",
+  "q": 5,
+  "why": "원본에도 보기 마커가 없다",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "풀이 참조 (벤다이어그램 색칠)",
+  "objective": false,
+  "nFig": 20,
+  "nMark": 5,
+  "filledText": 0,
+  "hasFigMark": true,
+  "len": 655
+ },
+ {
+  "id": "b0c10c1c",
+  "school": "학남중",
+  "q": 17,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉰보기가그림",
+   "㉯다섯없음"
+  ],
+  "type": "단답형",
+  "ans": "③",
+  "objective": true,
+  "nFig": 5,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 96
+ },
+ {
+  "id": "be9b1c36",
+  "school": "학산중",
+  "q": 8,
+  "why": "그림 파일 이름에서 문항 번호를 못 읽는다",
+  "keys": [
+   "㉰보기가그림",
+   "㉲그림없음"
+  ],
+  "type": "객관식",
+  "ans": "①",
+  "objective": true,
+  "nFig": 0,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 139
+ },
+ {
+  "id": "c75f9b32",
+  "school": "달서고",
+  "q": 25,
+  "why": "원본에도 보기 마커가 없다",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "(1) 4개  (2) $(8+4\\sqrt{7",
+  "objective": false,
+  "nFig": 4,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 128
+ },
+ {
+  "id": "c7c5a3c0",
+  "school": "관음중",
+  "q": 5,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "객관식",
+  "ans": "②",
+  "objective": true,
+  "nFig": 4,
+  "nMark": 0,
+  "filledText": 1,
+  "hasFigMark": false,
+  "len": 48
+ },
+ {
+  "id": "c9e49b27",
+  "school": "대진중",
+  "q": 7,
+  "why": "그림 파일 이름에서 문항 번호를 못 읽는다",
+  "keys": [
+   "㉰보기가그림",
+   "㉲그림없음"
+  ],
+  "type": "객관식",
+  "ans": "⑤",
+  "objective": true,
+  "nFig": 0,
+  "nMark": 0,
+  "filledText": 5,
+  "hasFigMark": false,
+  "len": 193
+ },
+ {
+  "id": "cb95a5bc",
+  "school": "경운중",
+  "q": 1,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "①",
+  "objective": true,
+  "nFig": 5,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 69
+ },
+ {
+  "id": "d2fe14b0",
+  "school": null,
+  "q": null,
+  "why": "원본 메타 없음",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": null,
+  "ans": "16.5",
+  "objective": false,
+  "nFig": 4,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 140
+ },
+ {
+  "id": "d61cd998",
+  "school": "소선여중",
+  "q": 2,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "②",
+  "objective": true,
+  "nFig": 5,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 26
+ },
+ {
+  "id": "d624f7b3",
+  "school": "경신중",
+  "q": 13,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "단답형",
+  "ans": "③",
+  "objective": true,
+  "nFig": 6,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 341
+ },
+ {
+  "id": "dd405f78",
+  "school": "대서중",
+  "q": 10,
+  "why": "보기 자리에 그림이 없다 (보기가 글자다)",
+  "keys": [
+   "㉰보기가그림",
+   "㉱그림3장이하"
+  ],
+  "type": "객관식",
+  "ans": "③",
+  "objective": true,
+  "nFig": 1,
+  "nMark": 9,
+  "filledText": 30,
+  "hasFigMark": true,
+  "len": 1827
+ },
+ {
+  "id": "e4a34bbf",
+  "school": "경산여고",
+  "q": 6,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉰보기가그림",
+   "㉯다섯없음"
+  ],
+  "type": "단답형",
+  "ans": "③",
+  "objective": true,
+  "nFig": 5,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 89
+ },
+ {
+  "id": "ea4d5bbb",
+  "school": null,
+  "q": null,
+  "why": "원본 메타 없음",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": null,
+  "ans": "③, ⑤",
+  "objective": true,
+  "nFig": 5,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 68
+ },
+ {
+  "id": "ea9e1f6d",
+  "school": "도원중",
+  "q": 1,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": "서술형",
+  "ans": "③",
+  "objective": true,
+  "nFig": 5,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 51
+ },
+ {
+  "id": "ec8418ab",
+  "school": "포산중",
+  "q": 13,
+  "why": "그림이 HWP 에서 왔다 — PDF 지면 경로 아님",
+  "keys": [
+   "㉰보기가그림",
+   "㉯다섯없음"
+  ],
+  "type": "단답형",
+  "ans": "②",
+  "objective": true,
+  "nFig": 6,
+  "nMark": 0,
+  "filledText": 0,
+  "hasFigMark": false,
+  "len": 69
+ },
+ {
+  "id": "f6c2eb19",
+  "school": "성광고",
+  "q": 14,
+  "why": "보기 자리에 그림이 없다 (보기가 글자다)",
+  "keys": [
+   "㉰보기가그림",
+   "㉱그림3장이하"
+  ],
+  "type": "객관식",
+  "ans": "②",
+  "objective": true,
+  "nFig": 1,
+  "nMark": 3,
+  "filledText": 34,
+  "hasFigMark": true,
+  "len": 3713
+ },
+ {
+  "id": "f6e8d094",
+  "school": "경산중",
+  "q": 23,
+  "why": "보기 자리에 그림이 없다 (보기가 글자다)",
+  "keys": [
+   "㉰보기가그림",
+   "㉱그림3장이하"
+  ],
+  "type": "객관식",
+  "ans": "③",
+  "objective": true,
+  "nFig": 1,
+  "nMark": 3,
+  "filledText": 15,
+  "hasFigMark": true,
+  "len": 435
+ },
+ {
+  "id": "feede2ad",
+  "school": null,
+  "q": null,
+  "why": "원본 메타 없음",
+  "keys": [
+   "㉯다섯없음"
+  ],
+  "type": null,
+  "ans": "③",
+  "objective": true,
+  "nFig": 4,
+  "nMark": 0,
+  "filledText": 2,
+  "hasFigMark": false,
+  "len": 81
+ }
+]

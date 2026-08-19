@@ -1,0 +1,2135 @@
+{
+ "note": "되돌리기 자료. `before` 가 적용 전 DB 값이다. 되돌리려면: ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/apply-choice-figure-index.ts --revert",
+ "generatedFrom": "scripts/qa/reports/choice-figure-pairs.json",
+ "applied": true,
+ "beforeIsInferred": false,
+ "beforeNote": "before 는 DB 에서 읽은 값이다.",
+ "planned": 97,
+ "carriedOver": 0,
+ "skipped": [],
+ "rows": [
+  {
+   "id": "004c7734-c8e0-445d-b425-a9b4ccd092a2",
+   "examId": "5427",
+   "questionNumber": 13,
+   "figureUrls": [
+    "/figures/5427/q13.jpeg",
+    "/figures/5427/q13_1.jpeg",
+    "/figures/5427/q13_2.jpeg",
+    "/figures/5427/q13_3.jpeg",
+    "/figures/5427/q13_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "01b2b2ed-e408-4abf-b6bd-8d07b4440185",
+   "examId": "4116",
+   "questionNumber": 13,
+   "figureUrls": [
+    "/figures/4116/q13.jpeg",
+    "/figures/4116/q13_1.jpeg",
+    "/figures/4116/q13_2.jpeg",
+    "/figures/4116/q13_3.jpeg",
+    "/figures/4116/q13_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "023da415-34f6-4027-8439-aafcb0899c50",
+   "examId": "4320",
+   "questionNumber": 16,
+   "figureUrls": [
+    "/figures/4320/q16.jpeg",
+    "/figures/4320/q16_1.jpeg",
+    "/figures/4320/q16_2.jpeg",
+    "/figures/4320/q16_3.jpeg",
+    "/figures/4320/q16_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "0c932c43-4839-4b79-b521-fe81b903edfd",
+   "examId": "3671",
+   "questionNumber": 11,
+   "figureUrls": [
+    "/figures/3671/q11.jpeg",
+    "/figures/3671/q11_1.png",
+    "/figures/3671/q11_2.png",
+    "/figures/3671/q11_3.png",
+    "/figures/3671/q11_4.png",
+    "/figures/3671/q11_5.png"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "0dbe64f9-bc52-455b-a1fe-241e435b0f41",
+   "examId": "3761",
+   "questionNumber": 13,
+   "figureUrls": [
+    "/figures/3761/q13.jpeg",
+    "/figures/3761/q13_1.jpeg",
+    "/figures/3761/q13_2.jpeg",
+    "/figures/3761/q13_3.jpeg",
+    "/figures/3761/q13_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "0e1ecaf8-3375-4f7b-8250-edb1ea428ff8",
+   "examId": "5193",
+   "questionNumber": 17,
+   "figureUrls": [
+    "/figures/5193/q17.jpeg",
+    "/figures/5193/q17_1.jpeg",
+    "/figures/5193/q17_2.jpeg",
+    "/figures/5193/q17_3.jpeg",
+    "/figures/5193/q17_4.jpeg",
+    "/figures/5193/q17_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "0f4edabc-3172-44d6-b4b9-b0d5a42c5d16",
+   "examId": "5840",
+   "questionNumber": 14,
+   "figureUrls": [
+    "/figures/5840/q14.jpeg",
+    "/figures/5840/q14_1.jpeg",
+    "/figures/5840/q14_2.jpeg",
+    "/figures/5840/q14_3.jpeg",
+    "/figures/5840/q14_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "112867d6-7177-4511-89ac-5c6b8713b512",
+   "examId": "3868",
+   "questionNumber": 4,
+   "figureUrls": [
+    "/figures/3868/q04.jpeg",
+    "/figures/3868/q04_1.jpeg",
+    "/figures/3868/q04_2.jpeg",
+    "/figures/3868/q04_3.jpeg",
+    "/figures/3868/q04_4.jpeg",
+    "/figures/3868/q04_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "11a116c3-7363-4087-87ec-66fd94bff347",
+   "examId": "4291",
+   "questionNumber": 4,
+   "figureUrls": [
+    "/figures/4291/q04.jpeg",
+    "/figures/4291/q04_1.jpeg",
+    "/figures/4291/q04_2.jpeg",
+    "/figures/4291/q04_3.png",
+    "/figures/4291/q04_4.jpeg",
+    "/figures/4291/q04_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "149db9b0-94f7-4d28-9c93-508eda170ede",
+   "examId": "4179",
+   "questionNumber": 12,
+   "figureUrls": [
+    "/figures/4179/q12.jpeg",
+    "/figures/4179/q12_1.jpeg",
+    "/figures/4179/q12_2.jpeg",
+    "/figures/4179/q12_3.jpeg",
+    "/figures/4179/q12_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "1afb2976-0816-4ff8-a047-06204236d780",
+   "examId": "3638",
+   "questionNumber": 11,
+   "figureUrls": [
+    "/figures/3638/q11.jpeg",
+    "/figures/3638/q11_1.jpeg",
+    "/figures/3638/q11_2.jpeg",
+    "/figures/3638/q11_3.jpeg",
+    "/figures/3638/q11_4.jpeg",
+    "/figures/3638/q11_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "1cb9d4bb-8dff-4c10-bf9a-fbcf9a3da104",
+   "examId": "4746",
+   "questionNumber": 8,
+   "figureUrls": [
+    "/figures/4746/q08.png",
+    "/figures/4746/q08_1.png",
+    "/figures/4746/q08_2.jpeg",
+    "/figures/4746/q08_3.png",
+    "/figures/4746/q08_4.png",
+    "/figures/4746/q08_5.png"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "21bf38bc-8faa-4275-b01c-d438c1a2a9e7",
+   "examId": "4219",
+   "questionNumber": 7,
+   "figureUrls": [
+    "/figures/4219/q07.jpeg",
+    "/figures/4219/q07_1.jpeg",
+    "/figures/4219/q07_2.jpeg",
+    "/figures/4219/q07_3.jpeg",
+    "/figures/4219/q07_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "23932b91-1214-4947-8523-f57162546ef5",
+   "examId": "3782",
+   "questionNumber": 2,
+   "figureUrls": [
+    "/figures/3782/q03_1.jpeg",
+    "/figures/3782/q03_2.jpeg",
+    "/figures/3782/q03_3.jpeg",
+    "/figures/3782/q03_4.jpeg",
+    "/figures/3782/q03_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "25cf32d2-2bea-4d0d-a92f-489f1656f1af",
+   "examId": "3632",
+   "questionNumber": 10,
+   "figureUrls": [
+    "/figures/3632/q10.jpeg",
+    "/figures/3632/q10_1.jpeg",
+    "/figures/3632/q10_2.jpeg",
+    "/figures/3632/q10_3.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "why": "발문 0장 + 보기 4장"
+  },
+  {
+   "id": "2704d61d-fb63-4337-a2d6-d2eba05c4ebf",
+   "examId": "4049",
+   "questionNumber": 5,
+   "figureUrls": [
+    "/figures/4049/q05.jpeg",
+    "/figures/4049/q05_1.jpeg",
+    "/figures/4049/q05_2.jpeg",
+    "/figures/4049/q05_3.jpeg",
+    "/figures/4049/q05_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "29856c39-85f3-470b-86f3-feb64e404298",
+   "examId": "3625",
+   "questionNumber": 7,
+   "figureUrls": [
+    "/figures/3625/q07.jpeg",
+    "/figures/3625/q07_1.png",
+    "/figures/3625/q07_2.jpeg",
+    "/figures/3625/q07_3.jpeg",
+    "/figures/3625/q07_4.jpeg",
+    "/figures/3625/q07_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 6장 + 보기 5장"
+  },
+  {
+   "id": "2bb4ce4b-48ab-4d44-9b72-2d2749fd53ec",
+   "examId": "5693",
+   "questionNumber": 11,
+   "figureUrls": [
+    "/figures/5693/q11.png",
+    "/figures/5693/q11_1.jpeg",
+    "/figures/5693/q11_2.jpeg",
+    "/figures/5693/q11_3.jpeg",
+    "/figures/5693/q11_4.jpeg",
+    "/figures/5693/q11_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "2c6f9d66-ca8b-44fb-b567-e5be781b51fa",
+   "examId": "5310",
+   "questionNumber": 16,
+   "figureUrls": [
+    "/figures/5310/q16.jpeg",
+    "/figures/5310/q16_1.jpeg",
+    "/figures/5310/q16_2.jpeg",
+    "/figures/5310/q16_3.png",
+    "/figures/5310/q16_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "2d40cd1e-36ad-467f-85a4-84df9a50653e",
+   "examId": "3854",
+   "questionNumber": 13,
+   "figureUrls": [
+    "/figures/3854/q13.jpeg",
+    "/figures/3854/q13_1.jpeg",
+    "/figures/3854/q13_2.jpeg",
+    "/figures/3854/q13_3.jpeg",
+    "/figures/3854/q13_4.jpeg",
+    "/figures/3854/q13_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "2e7308a0-5c42-4d0f-b53a-e50db471d0b0",
+   "examId": "3494",
+   "questionNumber": 16,
+   "figureUrls": [
+    "/figures/3494/q16.jpeg",
+    "/figures/3494/q16_1.png",
+    "/figures/3494/q16_2.png",
+    "/figures/3494/q16_3.png",
+    "/figures/3494/q16_4.png",
+    "/figures/3494/q16_5.png"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "2fff60a4-a156-4944-8d3a-055d28d3394f",
+   "examId": "3926",
+   "questionNumber": 15,
+   "figureUrls": [
+    "/figures/3926/q15.jpeg",
+    "/figures/3926/q15_1.jpeg",
+    "/figures/3926/q15_2.jpeg",
+    "/figures/3926/q15_3.jpeg",
+    "/figures/3926/q15_4.jpeg",
+    "/figures/3926/q15_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "327062b3-fffd-494b-9e41-3edc623a8c0d",
+   "examId": "4103",
+   "questionNumber": 6,
+   "figureUrls": [
+    "/figures/4103/q06.jpeg",
+    "/figures/4103/q06_1.jpeg",
+    "/figures/4103/q06_2.jpeg",
+    "/figures/4103/q06_3.jpeg",
+    "/figures/4103/q06_4.png",
+    "/figures/4103/q06_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "3405c49a-b491-4881-b2ea-503bee4978d3",
+   "examId": "4783",
+   "questionNumber": 9,
+   "figureUrls": [
+    "/figures/4783/q09.jpeg",
+    "/figures/4783/q09_1.jpeg",
+    "/figures/4783/q09_2.jpeg",
+    "/figures/4783/q09_3.jpeg",
+    "/figures/4783/q09_4.jpeg",
+    "/figures/4783/q09_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "3a88c17a-e46d-4902-8647-dad2038fb7fd",
+   "examId": "4334",
+   "questionNumber": 12,
+   "figureUrls": [
+    "/figures/4334/q12.jpeg",
+    "/figures/4334/q12_1.jpeg",
+    "/figures/4334/q12_2.jpeg",
+    "/figures/4334/q12_3.jpeg",
+    "/figures/4334/q12_4.jpeg",
+    "/figures/4334/q12_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "3ccb023b-2d4f-49cc-ae66-9b206913195a",
+   "examId": "5814",
+   "questionNumber": 15,
+   "figureUrls": [
+    "/figures/5814/q15.jpeg",
+    "/figures/5814/q15_1.jpeg",
+    "/figures/5814/q15_2.jpeg",
+    "/figures/5814/q15_3.jpeg",
+    "/figures/5814/q15_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "40cacb18-b39a-4a6e-8c8d-2aa4c4b9a9ae",
+   "examId": "3776",
+   "questionNumber": 11,
+   "figureUrls": [
+    "/figures/3776/q11.jpeg",
+    "/figures/3776/q11_1.jpeg",
+    "/figures/3776/q11_2.jpeg",
+    "/figures/3776/q11_3.jpeg",
+    "/figures/3776/q11_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "4bfb8f96-95e9-49e3-bfbb-d3ba7734a673",
+   "examId": "4322",
+   "questionNumber": 2,
+   "figureUrls": [
+    "/figures/4322/q02.jpeg",
+    "/figures/4322/q02_1.jpeg",
+    "/figures/4322/q02_2.jpeg",
+    "/figures/4322/q02_3.jpeg",
+    "/figures/4322/q02_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "4d95ea1b-9889-49c9-84e4-8ca10d6d07e4",
+   "examId": "3646",
+   "questionNumber": 1,
+   "figureUrls": [
+    "/figures/3646/q02_1.jpeg",
+    "/figures/3646/q02_2.jpeg",
+    "/figures/3646/q02_3.jpeg",
+    "/figures/3646/q02_4.jpeg",
+    "/figures/3646/q02_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "4e1cc99e-6547-40f4-88e5-89d0bc7c8b67",
+   "examId": "4194",
+   "questionNumber": 10,
+   "figureUrls": [
+    "/figures/4194/q10.jpeg",
+    "/figures/4194/q10_1.jpeg",
+    "/figures/4194/q10_2.jpeg",
+    "/figures/4194/q10_3.jpeg",
+    "/figures/4194/q10_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "4fbcf81a-d999-4899-a58a-c9803b2dc330",
+   "examId": "4376",
+   "questionNumber": 8,
+   "figureUrls": [
+    "/figures/4376/q08.jpeg",
+    "/figures/4376/q08_1.jpeg",
+    "/figures/4376/q08_2.jpeg",
+    "/figures/4376/q08_3.jpeg",
+    "/figures/4376/q08_4.jpeg",
+    "/figures/4376/q08_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "50e01981-a586-429a-b932-b1a11ab5f50b",
+   "examId": "5330",
+   "questionNumber": 16,
+   "figureUrls": [
+    "/figures/5330/q16.jpeg",
+    "/figures/5330/q16_1.jpeg",
+    "/figures/5330/q16_2.jpeg",
+    "/figures/5330/q16_3.jpeg",
+    "/figures/5330/q16_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "54897051-b4f4-46c9-a081-772a9d6972a1",
+   "examId": "3595",
+   "questionNumber": 4,
+   "figureUrls": [
+    "/figures/3595/q04.jpeg",
+    "/figures/3595/q04_1.jpeg",
+    "/figures/3595/q04_2.jpeg",
+    "/figures/3595/q04_3.jpeg",
+    "/figures/3595/q04_4.jpeg",
+    "/figures/3595/q04_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "550fba26-d6b2-447f-9479-d81a9af2cc27",
+   "examId": "4171",
+   "questionNumber": 16,
+   "figureUrls": [
+    "/figures/4171/q16.jpeg",
+    "/figures/4171/q16_1.jpeg",
+    "/figures/4171/q16_2.jpeg",
+    "/figures/4171/q16_3.jpeg",
+    "/figures/4171/q16_4.jpeg",
+    "/figures/4171/q16_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "5730694c-e9b9-492f-8127-66158ad31282",
+   "examId": "3763",
+   "questionNumber": 11,
+   "figureUrls": [
+    "/figures/3763/q11.jpeg",
+    "/figures/3763/q11_1.jpeg",
+    "/figures/3763/q11_2.jpeg",
+    "/figures/3763/q11_3.jpeg",
+    "/figures/3763/q11_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "585bc0c4-856a-4191-8678-3daaa2b1e57e",
+   "examId": "4480",
+   "questionNumber": 16,
+   "figureUrls": [
+    "/figures/4480/q16.jpeg",
+    "/figures/4480/q16_1.jpeg",
+    "/figures/4480/q16_2.png",
+    "/figures/4480/q16_3.jpeg",
+    "/figures/4480/q16_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "5cb64457-5774-4a36-9c3d-e3565785c76d",
+   "examId": "3496",
+   "questionNumber": 16,
+   "figureUrls": [
+    "/figures/3496/q16.jpeg",
+    "/figures/3496/q16_1.jpeg",
+    "/figures/3496/q16_2.jpeg",
+    "/figures/3496/q16_3.jpeg",
+    "/figures/3496/q16_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "647a436f-8985-4cf7-aadb-995900843b2e",
+   "examId": "3820",
+   "questionNumber": 9,
+   "figureUrls": [
+    "/figures/3820/q09.jpeg",
+    "/figures/3820/q09_1.jpeg",
+    "/figures/3820/q09_2.jpeg",
+    "/figures/3820/q09_3.jpeg",
+    "/figures/3820/q09_4.jpeg",
+    "/figures/3820/q09_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "66b21884-1625-4035-8d40-a28189fa5757",
+   "examId": "3702",
+   "questionNumber": 16,
+   "figureUrls": [
+    "/figures/3702/q16.jpeg",
+    "/figures/3702/q16_1.jpeg",
+    "/figures/3702/q16_2.jpeg",
+    "/figures/3702/q16_3.jpeg",
+    "/figures/3702/q16_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "6ada1fbb-f773-417e-ac74-dd2dd4a0504a",
+   "examId": "5481",
+   "questionNumber": 13,
+   "figureUrls": [
+    "/figures/5481/q13.jpeg",
+    "/figures/5481/q13_1.jpeg",
+    "/figures/5481/q13_2.jpeg",
+    "/figures/5481/q13_3.jpeg",
+    "/figures/5481/q13_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "709535bf-ad69-4717-b0b3-93e051dcd16d",
+   "examId": "4017",
+   "questionNumber": 3,
+   "figureUrls": [
+    "/figures/4017/q03.jpeg",
+    "/figures/4017/q03_1.jpeg",
+    "/figures/4017/q03_2.jpeg",
+    "/figures/4017/q03_3.jpeg",
+    "/figures/4017/q03_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "72c39bae-00f9-4c82-a16c-21ab85c75293",
+   "examId": "5243",
+   "questionNumber": 15,
+   "figureUrls": [
+    "/figures/5243/q15.jpeg",
+    "/figures/5243/q15_1.jpeg",
+    "/figures/5243/q15_2.jpeg",
+    "/figures/5243/q15_3.png",
+    "/figures/5243/q15_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "7349d921-941b-4f93-9f83-f57f35d9fd0c",
+   "examId": "3818",
+   "questionNumber": 7,
+   "figureUrls": [
+    "/figures/3818/q07.jpeg",
+    "/figures/3818/q07_1.jpeg",
+    "/figures/3818/q07_2.jpeg",
+    "/figures/3818/q07_3.jpeg",
+    "/figures/3818/q07_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "7413c00b-4be0-4cb6-8125-2602aa3b3868",
+   "examId": "3944",
+   "questionNumber": 6,
+   "figureUrls": [
+    "/figures/3944/q06.jpeg",
+    "/figures/3944/q06_1.jpeg",
+    "/figures/3944/q06_2.jpeg",
+    "/figures/3944/q06_3.jpeg",
+    "/figures/3944/q06_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "768213ed-512f-4d9f-a1c4-fc0e7bb194a3",
+   "examId": "3622",
+   "questionNumber": 10,
+   "figureUrls": [
+    "/figures/3622/q10.jpeg",
+    "/figures/3622/q10_1.jpeg",
+    "/figures/3622/q10_2.jpeg",
+    "/figures/3622/q10_3.jpeg",
+    "/figures/3622/q10_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "76ea6513-cab9-4ccd-ab9a-de2b5dd8354e",
+   "examId": "5189",
+   "questionNumber": 10,
+   "figureUrls": [
+    "/figures/5189/q10.jpeg",
+    "/figures/5189/q10_1.jpeg",
+    "/figures/5189/q10_2.jpeg",
+    "/figures/5189/q10_3.jpeg",
+    "/figures/5189/q10_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "7a887f55-c9fa-4112-ace5-e01e15f4f14e",
+   "examId": "5354",
+   "questionNumber": 14,
+   "figureUrls": [
+    "/figures/5354/q14.jpeg",
+    "/figures/5354/q14_1.jpeg",
+    "/figures/5354/q14_2.jpeg",
+    "/figures/5354/q14_3.jpeg",
+    "/figures/5354/q14_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "7f3987dc-33ef-448e-af37-dfd2152e98de",
+   "examId": "4322",
+   "questionNumber": 11,
+   "figureUrls": [
+    "/figures/4322/q11.jpeg",
+    "/figures/4322/q11_1.jpeg",
+    "/figures/4322/q11_2.jpeg",
+    "/figures/4322/q11_3.jpeg",
+    "/figures/4322/q11_4.jpeg",
+    "/figures/4322/q11_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "82eb5cb8-97b1-4c08-984c-e39df2925f77",
+   "examId": "4064",
+   "questionNumber": 15,
+   "figureUrls": [
+    "/figures/4064/q15.jpeg",
+    "/figures/4064/q15_1.jpeg",
+    "/figures/4064/q15_2.png",
+    "/figures/4064/q15_3.jpeg",
+    "/figures/4064/q15_4.jpeg",
+    "/figures/4064/q15_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "8783fc84-876d-4cca-b8e5-3006c21bff83",
+   "examId": "3919",
+   "questionNumber": 15,
+   "figureUrls": [
+    "/figures/3919/q15.jpeg",
+    "/figures/3919/q15_1.jpeg",
+    "/figures/3919/q15_2.jpeg",
+    "/figures/3919/q15_3.jpeg",
+    "/figures/3919/q15_4.jpeg",
+    "/figures/3919/q15_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "89665766-2a3d-4720-92fc-1779199f7015",
+   "examId": "4825",
+   "questionNumber": 9,
+   "figureUrls": [
+    "/figures/4825/q09.jpeg",
+    "/figures/4825/q09_1.jpeg",
+    "/figures/4825/q09_2.jpeg",
+    "/figures/4825/q09_3.jpeg",
+    "/figures/4825/q09_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "8e83ee7c-010d-4f7d-b4e5-de3ff0ffdeaa",
+   "examId": "5459",
+   "questionNumber": 15,
+   "figureUrls": [
+    "/figures/5459/q15.jpeg",
+    "/figures/5459/q15_1.jpeg",
+    "/figures/5459/q15_2.jpeg",
+    "/figures/5459/q15_3.jpeg",
+    "/figures/5459/q15_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "8e8a6a02-dd31-42e8-ae17-b470fa74c261",
+   "examId": "5755",
+   "questionNumber": 19,
+   "figureUrls": [
+    "/figures/5755/q19.jpeg",
+    "/figures/5755/q19_1.jpeg",
+    "/figures/5755/q19_2.png",
+    "/figures/5755/q19_3.jpeg",
+    "/figures/5755/q19_4.png",
+    "/figures/5755/q19_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "8ef2884b-3233-4586-9667-462acded516f",
+   "examId": "4376",
+   "questionNumber": 14,
+   "figureUrls": [
+    "/figures/4376/q14.jpeg",
+    "/figures/4376/q14_1.jpeg",
+    "/figures/4376/q14_2.jpeg",
+    "/figures/4376/q14_3.jpeg",
+    "/figures/4376/q14_4.jpeg",
+    "/figures/4376/q14_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "8fec0389-902b-460c-b9bf-ee1a32c944c9",
+   "examId": "5599",
+   "questionNumber": 10,
+   "figureUrls": [
+    "/figures/5599/q10.jpeg",
+    "/figures/5599/q10_1.jpeg",
+    "/figures/5599/q10_2.jpeg",
+    "/figures/5599/q10_3.jpeg",
+    "/figures/5599/q10_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "9203143f-e567-4fc1-af29-eb481516d9ba",
+   "examId": "5298",
+   "questionNumber": 10,
+   "figureUrls": [
+    "/figures/5298/q10.jpeg",
+    "/figures/5298/q10_1.jpeg",
+    "/figures/5298/q10_2.jpeg",
+    "/figures/5298/q10_3.jpeg",
+    "/figures/5298/q10_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "95ea2756-1a6c-46fa-aa4c-be1ec01e77f9",
+   "examId": "5624",
+   "questionNumber": 12,
+   "figureUrls": [
+    "/figures/5624/q12.png",
+    "/figures/5624/q12_1.jpeg",
+    "/figures/5624/q12_2.jpeg",
+    "/figures/5624/q12_3.jpeg",
+    "/figures/5624/q12_4.jpeg",
+    "/figures/5624/q12_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "96d5eaef-0423-4de7-9a7a-01f9496a4eda",
+   "examId": "5364",
+   "questionNumber": 2,
+   "figureUrls": [
+    "/figures/5364/q02.jpeg",
+    "/figures/5364/q02_1.jpeg",
+    "/figures/5364/q02_2.png",
+    "/figures/5364/q02_3.jpeg",
+    "/figures/5364/q02_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "99b1d792-a71e-4ce0-b8cc-8c6573694a7c",
+   "examId": "3547",
+   "questionNumber": 12,
+   "figureUrls": [
+    "/figures/3547/q12.jpeg",
+    "/figures/3547/q12_1.jpeg",
+    "/figures/3547/q12_2.jpeg",
+    "/figures/3547/q12_3.jpeg",
+    "/figures/3547/q12_4.jpeg",
+    "/figures/3547/q12_5.png"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "aeb043f9-d27a-4ca4-8bf4-5e715324f117",
+   "examId": "5620",
+   "questionNumber": 13,
+   "figureUrls": [
+    "/figures/5620/q13.jpeg",
+    "/figures/5620/q13_1.jpeg",
+    "/figures/5620/q13_2.jpeg",
+    "/figures/5620/q13_3.jpeg",
+    "/figures/5620/q13_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "b1c73b75-9149-4cbb-a2bc-09b4a014b741",
+   "examId": "3196",
+   "questionNumber": 10,
+   "figureUrls": [
+    "/figures/3196/q10.jpeg",
+    "/figures/3196/q10_1.jpeg",
+    "/figures/3196/q10_2.jpeg",
+    "/figures/3196/q10_3.jpeg",
+    "/figures/3196/q10_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "b37ebedb-bea3-4355-b665-48fc9a0d59b0",
+   "examId": "5690",
+   "questionNumber": 16,
+   "figureUrls": [
+    "/figures/5690/q16.jpeg",
+    "/figures/5690/q16_1.jpeg",
+    "/figures/5690/q16_2.jpeg",
+    "/figures/5690/q16_3.jpeg",
+    "/figures/5690/q16_4.jpeg",
+    "/figures/5690/q16_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "b3c31a20-5810-41f3-94bd-7cc0cb17e280",
+   "examId": "5803",
+   "questionNumber": 11,
+   "figureUrls": [
+    "/figures/5803/q11.jpeg",
+    "/figures/5803/q11_1.jpeg",
+    "/figures/5803/q11_2.jpeg",
+    "/figures/5803/q11_3.jpeg",
+    "/figures/5803/q11_4.jpeg",
+    "/figures/5803/q11_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "b6378ee9-63c9-4a22-8ba7-c96915f51996",
+   "examId": "5220",
+   "questionNumber": 6,
+   "figureUrls": [
+    "/figures/5220/q06.jpeg",
+    "/figures/5220/q06_1.jpeg",
+    "/figures/5220/q06_2.jpeg",
+    "/figures/5220/q06_3.jpeg",
+    "/figures/5220/q06_4.jpeg",
+    "/figures/5220/q06_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "b9abbae7-9025-421d-90a1-e05f91877124",
+   "examId": "4138",
+   "questionNumber": 10,
+   "figureUrls": [
+    "/figures/4138/q10.jpeg",
+    "/figures/4138/q10_1.jpeg",
+    "/figures/4138/q10_2.jpeg",
+    "/figures/4138/q10_3.jpeg",
+    "/figures/4138/q10_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "be44faa5-651f-4f90-8189-513ea60eb88d",
+   "examId": "3936",
+   "questionNumber": 6,
+   "figureUrls": [
+    "/figures/3936/q06.jpeg",
+    "/figures/3936/q06_1.jpeg",
+    "/figures/3936/q06_2.jpeg",
+    "/figures/3936/q06_3.jpeg",
+    "/figures/3936/q06_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "beae2fdb-003e-401e-8e23-faeb4273d9db",
+   "examId": "5275",
+   "questionNumber": 11,
+   "figureUrls": [
+    "/figures/5275/q11.jpeg",
+    "/figures/5275/q11_1.jpeg",
+    "/figures/5275/q11_2.jpeg",
+    "/figures/5275/q11_3.jpeg",
+    "/figures/5275/q11_4.jpeg",
+    "/figures/5275/q11_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "beff02e9-ff9f-41cf-b83c-f38bbee46356",
+   "examId": "5330",
+   "questionNumber": 13,
+   "figureUrls": [
+    "/figures/5330/q13.jpeg",
+    "/figures/5330/q13_1.jpeg",
+    "/figures/5330/q13_2.jpeg",
+    "/figures/5330/q13_3.jpeg",
+    "/figures/5330/q13_4.jpeg",
+    "/figures/5330/q13_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "bfd62666-3dbb-4358-b427-f9b88046e32d",
+   "examId": "5612",
+   "questionNumber": 16,
+   "figureUrls": [
+    "/figures/5612/q16.jpeg",
+    "/figures/5612/q16_1.jpeg",
+    "/figures/5612/q16_2.jpeg",
+    "/figures/5612/q16_3.jpeg",
+    "/figures/5612/q16_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "c1a368df-6142-4c44-9d71-956197ce2cc5",
+   "examId": "5183",
+   "questionNumber": 12,
+   "figureUrls": [
+    "/figures/5183/q12.jpeg",
+    "/figures/5183/q12_1.jpeg",
+    "/figures/5183/q12_2.jpeg",
+    "/figures/5183/q12_3.jpeg",
+    "/figures/5183/q12_4.jpeg",
+    "/figures/5183/q12_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "c569f062-73b0-4e4a-9973-6c6fb3bdade5",
+   "examId": "5671",
+   "questionNumber": 15,
+   "figureUrls": [
+    "/figures/5671/q15.png",
+    "/figures/5671/q15_1.png",
+    "/figures/5671/q15_2.png",
+    "/figures/5671/q15_3.png",
+    "/figures/5671/q15_4.png",
+    "/figures/5671/q15_5.png"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "c8f12802-53f8-4fd7-88db-a7581f05044b",
+   "examId": "4062",
+   "questionNumber": 4,
+   "figureUrls": [
+    "/figures/4062/q04.jpeg",
+    "/figures/4062/q04_1.png",
+    "/figures/4062/q04_2.jpeg",
+    "/figures/4062/q04_3.jpeg",
+    "/figures/4062/q04_4.jpeg",
+    "/figures/4062/q04_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "c9b3f221-cad4-4b77-b1ea-38746129e3ad",
+   "examId": "3660",
+   "questionNumber": 20,
+   "figureUrls": [
+    "/figures/3660/q20.jpeg",
+    "/figures/3660/q20_1.jpeg",
+    "/figures/3660/q20_2.jpeg",
+    "/figures/3660/q20_3.jpeg",
+    "/figures/3660/q20_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "ca03e9ce-9787-4304-9fd2-63986bcd0c1c",
+   "examId": "5769",
+   "questionNumber": 21,
+   "figureUrls": [
+    "/figures/5769/q21.jpeg",
+    "/figures/5769/q21_1.jpeg",
+    "/figures/5769/q21_2.jpeg",
+    "/figures/5769/q21_3.jpeg",
+    "/figures/5769/q21_4.jpeg",
+    "/figures/5769/q21_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "cde6740d-8ba8-46f7-b503-3240e131d6b4",
+   "examId": "3682",
+   "questionNumber": 18,
+   "figureUrls": [
+    "/figures/3682/q18.jpeg",
+    "/figures/3682/q18_1.jpeg",
+    "/figures/3682/q18_2.jpeg",
+    "/figures/3682/q18_3.jpeg",
+    "/figures/3682/q18_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "d5f65efa-7f38-46f1-9036-01663d54eab7",
+   "examId": "3512",
+   "questionNumber": 11,
+   "figureUrls": [
+    "/figures/3512/q11.jpeg",
+    "/figures/3512/q11_1.jpeg",
+    "/figures/3512/q11_2.jpeg",
+    "/figures/3512/q11_3.jpeg",
+    "/figures/3512/q11_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "d8823089-e8eb-40eb-be44-0b447fc7c88f",
+   "examId": "4139",
+   "questionNumber": 17,
+   "figureUrls": [
+    "/figures/4139/q17.jpeg",
+    "/figures/4139/q17_1.jpeg",
+    "/figures/4139/q17_2.jpeg",
+    "/figures/4139/q17_3.jpeg",
+    "/figures/4139/q17_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "e2389eaa-35ac-4812-8573-95a2c39e5915",
+   "examId": "3660",
+   "questionNumber": 13,
+   "figureUrls": [
+    "/figures/3660/q13.jpeg",
+    "/figures/3660/q13_1.jpeg",
+    "/figures/3660/q13_2.jpeg",
+    "/figures/3660/q13_3.jpeg",
+    "/figures/3660/q13_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "e6e78889-d58a-4de6-a989-ce1e719aec4d",
+   "examId": "3498",
+   "questionNumber": 14,
+   "figureUrls": [
+    "/figures/3498/q14.jpeg",
+    "/figures/3498/q14_1.jpeg",
+    "/figures/3498/q14_2.jpeg",
+    "/figures/3498/q14_3.jpeg",
+    "/figures/3498/q14_4.jpeg",
+    "/figures/3498/q14_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "e7154928-a0cc-4242-8362-f61bf9b4028b",
+   "examId": "4164",
+   "questionNumber": 4,
+   "figureUrls": [
+    "/figures/4164/q05_1.jpeg",
+    "/figures/4164/q05_2.jpeg",
+    "/figures/4164/q05_3.jpeg",
+    "/figures/4164/q05_4.jpeg",
+    "/figures/4164/q05_5.jpeg",
+    "/figures/4164/q05_6.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 2장 + 보기 5장"
+  },
+  {
+   "id": "e8b52a39-b0e0-4295-9304-be3de41c2e49",
+   "examId": "5347",
+   "questionNumber": 15,
+   "figureUrls": [
+    "/figures/5347/q15.jpeg",
+    "/figures/5347/q15_1.jpeg",
+    "/figures/5347/q15_2.jpeg",
+    "/figures/5347/q15_3.jpeg",
+    "/figures/5347/q15_4.jpeg",
+    "/figures/5347/q15_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "e8b892a3-252c-4610-bb26-1b604285bb97",
+   "examId": "3517",
+   "questionNumber": 8,
+   "figureUrls": [
+    "/figures/3517/q08.jpeg",
+    "/figures/3517/q08_1.jpeg",
+    "/figures/3517/q08_2.jpeg",
+    "/figures/3517/q08_3.jpeg",
+    "/figures/3517/q08_4.jpeg",
+    "/figures/3517/q08_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "e96289f8-bb92-41cf-8b9f-494954030098",
+   "examId": "4074",
+   "questionNumber": 3,
+   "figureUrls": [
+    "/figures/4074/q03.jpeg",
+    "/figures/4074/q03_1.jpeg",
+    "/figures/4074/q03_2.jpeg",
+    "/figures/4074/q03_3.png",
+    "/figures/4074/q03_4.jpeg",
+    "/figures/4074/q03_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "ee421cc8-b49a-4fa5-90bb-8d275f98ebc1",
+   "examId": "3678",
+   "questionNumber": 15,
+   "figureUrls": [
+    "/figures/3678/q15.jpeg",
+    "/figures/3678/q15_1.jpeg",
+    "/figures/3678/q15_2.jpeg",
+    "/figures/3678/q15_3.jpeg",
+    "/figures/3678/q15_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "f18afa68-8b4f-4779-8e73-ea0c7b9adfc3",
+   "examId": "3958",
+   "questionNumber": 9,
+   "figureUrls": [
+    "/figures/3958/q09.jpeg",
+    "/figures/3958/q09_1.jpeg",
+    "/figures/3958/q09_2.jpeg",
+    "/figures/3958/q09_3.jpeg",
+    "/figures/3958/q09_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "f33b4a64-08fb-4329-8100-3bced8b34875",
+   "examId": "3935",
+   "questionNumber": 17,
+   "figureUrls": [
+    "/figures/3935/q17.jpeg",
+    "/figures/3935/q17_1.jpeg",
+    "/figures/3935/q17_2.jpeg",
+    "/figures/3935/q17_3.jpeg",
+    "/figures/3935/q17_4.jpeg",
+    "/figures/3935/q17_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "f950c8f2-43e9-42b9-bcd5-f01a48363e4d",
+   "examId": "4390",
+   "questionNumber": 19,
+   "figureUrls": [
+    "/figures/4390/q19.jpeg",
+    "/figures/4390/q19_1.jpeg",
+    "/figures/4390/q19_2.jpeg",
+    "/figures/4390/q19_3.jpeg",
+    "/figures/4390/q19_4.jpeg",
+    "/figures/4390/q19_5.png"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "fc437df5-46a1-4616-948e-465b10276279",
+   "examId": "3505",
+   "questionNumber": 15,
+   "figureUrls": [
+    "/figures/3505/q15.jpeg",
+    "/figures/3505/q15_1.jpeg",
+    "/figures/3505/q15_2.jpeg",
+    "/figures/3505/q15_3.jpeg",
+    "/figures/3505/q15_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "fd5bfccc-49e0-4c37-ab9e-438ce3c924e2",
+   "examId": "4213",
+   "questionNumber": 12,
+   "figureUrls": [
+    "/figures/4213/q12.jpeg",
+    "/figures/4213/q12_1.jpeg",
+    "/figures/4213/q12_2.jpeg",
+    "/figures/4213/q12_3.jpeg",
+    "/figures/4213/q12_4.jpeg",
+    "/figures/4213/q12_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "fdd07ed5-4faf-4db0-a3d1-fab3e6f201c5",
+   "examId": "4116",
+   "questionNumber": 12,
+   "figureUrls": [
+    "/figures/4116/q12.jpeg",
+    "/figures/4116/q12_1.jpeg",
+    "/figures/4116/q12_2.jpeg",
+    "/figures/4116/q12_3.jpeg",
+    "/figures/4116/q12_4.jpeg",
+    "/figures/4116/q12_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "fdd7070c-0857-4ec6-8e70-428a77277e45",
+   "examId": "5419",
+   "questionNumber": 12,
+   "figureUrls": [
+    "/figures/5419/q12.png",
+    "/figures/5419/q12_1.jpeg",
+    "/figures/5419/q12_2.jpeg",
+    "/figures/5419/q12_3.jpeg",
+    "/figures/5419/q12_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "fe8e3785-1e97-4002-90d8-ceff3b317620",
+   "examId": "5507",
+   "questionNumber": 15,
+   "figureUrls": [
+    "/figures/5507/q15.jpeg",
+    "/figures/5507/q15_1.jpeg",
+    "/figures/5507/q15_2.jpeg",
+    "/figures/5507/q15_3.jpeg",
+    "/figures/5507/q15_4.png"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "ff07afa8-12fc-40d2-a2b5-e74b18cf26b8",
+   "examId": "5568",
+   "questionNumber": 14,
+   "figureUrls": [
+    "/figures/5568/q14.jpeg",
+    "/figures/5568/q14_1.jpeg",
+    "/figures/5568/q14_2.jpeg",
+    "/figures/5568/q14_3.jpeg",
+    "/figures/5568/q14_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "ff4772d3-01a8-4caa-88db-03816b337c6c",
+   "examId": "5185",
+   "questionNumber": 8,
+   "figureUrls": [
+    "/figures/5185/q08.jpeg",
+    "/figures/5185/q08_1.jpeg",
+    "/figures/5185/q08_2.jpeg",
+    "/figures/5185/q08_3.jpeg",
+    "/figures/5185/q08_4.jpeg",
+    "/figures/5185/q08_5.jpeg"
+   ],
+   "before": [],
+   "after": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 1장 + 보기 5장"
+  },
+  {
+   "id": "ff8aeaf0-0dd0-4588-9a38-1d7a72a5a21c",
+   "examId": "3897",
+   "questionNumber": 7,
+   "figureUrls": [
+    "/figures/3897/q07.jpeg",
+    "/figures/3897/q07_1.jpeg",
+    "/figures/3897/q07_2.jpeg",
+    "/figures/3897/q07_3.jpeg",
+    "/figures/3897/q07_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "ffa21bec-329e-4442-9799-5520cbb8a93c",
+   "examId": "3937",
+   "questionNumber": 10,
+   "figureUrls": [
+    "/figures/3937/q10.jpeg",
+    "/figures/3937/q10_1.jpeg",
+    "/figures/3937/q10_2.jpeg",
+    "/figures/3937/q10_3.jpeg",
+    "/figures/3937/q10_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  },
+  {
+   "id": "ffa7d070-7a4e-4267-9ab9-7c17c7d78a49",
+   "examId": "5529",
+   "questionNumber": 15,
+   "figureUrls": [
+    "/figures/5529/q15.jpeg",
+    "/figures/5529/q15_1.jpeg",
+    "/figures/5529/q15_2.jpeg",
+    "/figures/5529/q15_3.jpeg",
+    "/figures/5529/q15_4.jpeg"
+   ],
+   "before": [],
+   "after": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "why": "발문 0장 + 보기 5장"
+  }
+ ]
+}

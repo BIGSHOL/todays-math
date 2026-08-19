@@ -1,0 +1,89 @@
+
+ RUN  v4.1.10 C:/Users/user/orca/workspaces/testautocreator/adv-figref
+
+ ❯ qa/adversarial/_adv-discard-scope.test.ts (3 tests | 3 failed) 61ms
+     × 43건 전량의 정답이 보기 번호여야 한다 (객관식이 아니면 짝을 물을 수 없다) 53ms
+     × 43건 전량이 그림을 갖고 있어야 한다 (그림이 없으면 짝지을 것이 없다) 1ms
+     × 판정기가 서술형을 «빼라» 고 말하면 안 된다 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  qa/adversarial/_adv-discard-scope.test.ts > 🔴 뺄 43건에 «보기 그림 문항이 아닌 것» 이 섞였다 > 43건 전량의 정답이 보기 번호여야 한다 (객관식이 아니면 짝을 물을 수 없다)
+AssertionError: expected [ '4d4ade67 송현여고 24번 답[36]', …(9) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "4d4ade67 송현여고 24번 답[36]",
++   "6ea39be1 구암고 24번 답[$36$]",
++   "730d9237 대구여고 23번 답[5-1. V=(π/3)(8h²-h³)=(π/3)h²(8-h), 5-2. h=16/3]",
++   "8f28d5a3 정화중 20번 답[⑴ p=3/5, q=2/5, ⑵ 96/625, ⑶ 216/625]",
++   "938608ec 고산중 21번 답[⑴ P(1,4), Q(4,4), ⑵ 12, ⑶ p=6, y=-x^2+20x-96]",
++   "9f3c028b 경상여고 17번 답[⑶ 37/6]",
++   "9fb49573 도원고 19번 답[⑴ y=1, ⑵ x=-3]",
++   "acffcd72 대구국제고 5번 답[풀이 참조 (벤다이어그램 색칠)]",
++   "c75f9b32 달서고 25번 답[(1) 4개  (2) $(8+4\\sqrt{7})\\pi$]",
++   "d2fe14b0 null null번 답[16.5]",
++ ]
+
+ ❯ qa/adversarial/_adv-discard-scope.test.ts:54:26
+     52|       .filter((r) => !CHOICE_ANSWER.test((r.answer ?? "").trim()))
+     53|       .map((r) => `${r.id.slice(0, 8)} ${r.school} ${r.q}번 답[${r.answe…
+     54|     expect(notObjective).toEqual([]);
+       |                          ^
+     55|   });
+     56|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  qa/adversarial/_adv-discard-scope.test.ts > 🔴 뺄 43건에 «보기 그림 문항이 아닌 것» 이 섞였다 > 43건 전량이 그림을 갖고 있어야 한다 (그림이 없으면 짝지을 것이 없다)
+AssertionError: expected [ …(4) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "2fcb40bd 효성중 1번 · 그림 파일 이름에서 문항 번호를 못 읽는다",
++   "435052cb 학산중 6번 · 그림 파일 이름에서 문항 번호를 못 읽는다",
++   "be9b1c36 학산중 8번 · 그림 파일 이름에서 문항 번호를 못 읽는다",
++   "c9e49b27 대진중 7번 · 그림 파일 이름에서 문항 번호를 못 읽는다",
++ ]
+
+ ❯ qa/adversarial/_adv-discard-scope.test.ts:61:22
+     59|       .filter((r) => r.nFig === 0)
+     60|       .map((r) => `${r.id.slice(0, 8)} ${r.school} ${r.q}번 · ${r.why}`…
+     61|     expect(noFigure).toEqual([]);
+       |                      ^
+     62|   });
+     63|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  qa/adversarial/_adv-discard-scope.test.ts > 🔴 뺄 43건에 «보기 그림 문항이 아닌 것» 이 섞였다 > 판정기가 서술형을 «빼라» 고 말하면 안 된다
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ qa/adversarial/_adv-discard-scope.test.ts:87:20
+     85|       true,
+     86|     );
+     87|     expect(d.lock).toBe(false);
+       |                    ^
+     88|   });
+     89| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  01:32:20
+   Duration  5.61s (transform 614ms, setup 1.88s, import 193ms, tests 61ms, environment 3.13s)
+
