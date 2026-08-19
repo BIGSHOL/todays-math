@@ -12,6 +12,7 @@
  * 참조: prisma/schema.prisma Unit 모델, prisma/seed-data/units.ts
  */
 import { CURRICULUM_UNITS } from "../../../prisma/seed-data/units";
+import { buildUnitCodePrefixes } from "@/lib/problemCode";
 import { unitId } from "./ids";
 
 const RANGE_START_ORDER_INDEX = 413; // 중2 "1. 수와 식" 첫 차시(유리수와 소수)
@@ -23,7 +24,14 @@ export interface MockUnit {
   chapter: string;
   section: string;
   orderIndex: number;
+  /** 문항 코드(D-53)의 «뜻» 부분 — 시드 전량에서 계산해 발췌한다(따로 적지 않는다). */
+  problemCodePrefix: string;
 }
+
+/** 시드 전량으로 계산한 단원 코드 — 발췌 구간만 골라 쓴다. DB `unit.problem_code_prefix` 대응. */
+const PREFIX_BY_ORDER_INDEX = new Map(
+  buildUnitCodePrefixes(CURRICULUM_UNITS).map((u) => [u.orderIndex, u.prefix]),
+);
 
 const pickedSeeds = CURRICULUM_UNITS.filter(
   (u) =>
@@ -46,6 +54,7 @@ export const MOCK_UNITS: MockUnit[] = pickedSeeds.map((seed, idx) => ({
   chapter: seed.chapter,
   section: seed.section,
   orderIndex: seed.orderIndex,
+  problemCodePrefix: PREFIX_BY_ORDER_INDEX.get(seed.orderIndex)!,
 }));
 
 // ── 이름 있는 접근자 (테스트 가독성용) ──────────────────────────

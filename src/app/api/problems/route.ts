@@ -23,6 +23,7 @@ import {
   validationError,
 } from "@/lib/apiResponse";
 import { db } from "@/lib/db";
+import { MISSING_ANSWER } from "@/lib/missingAnswer";
 import { DEFAULT_PROBLEM_POOL, problemVisibleWhere } from "@/lib/problemPool";
 import { isPrismaErrorCode } from "@/lib/prismaErrors";
 import { serializeProblem } from "@/lib/serializers";
@@ -92,7 +93,10 @@ export async function GET(request: NextRequest) {
     grade,
     chapter,
     chapterPrefix,
+    q,
     hasFigure,
+    hasSolution,
+    hasAnswer,
     ...filters
   } = parsed.data;
   // 계단식 단원 필터(S-08) — problem 컬럼이 아니라 Unit relation으로 거른다.
@@ -117,12 +121,36 @@ export async function GET(request: NextRequest) {
         },
       ]
     : [];
+  // 「해설 있는 문제만」(2026-08-19) — `solution` 은 nullable 이고 **빈 문자열도
+  // 들어 있다.** null 만 걸러도 빈 해설이 통과하므로 둘 다 본다.
+  const solutionWhere = hasSolution
+    ? [{ AND: [{ solution: { not: null } }, { solution: { not: "" } }] }]
+    : [];
+  // 「정답 있는 문제만」(2026-08-19) — 실측 45,041건(95.5%).
+  //
+  // ⚠️ `answer` 는 **빈 값이 0건**이다. 「비어 있지 않은가」로 만들면 100% 를
+  // 통과시켜 아무것도 안 거른다. 실제 자리표시자는 `MISSING_ANSWER`("(정답 없음)")
+  // 문자열 2,111건이다 — 빈 값이 빈 문자열이 아니라 **글자로 적혀 있다.**
+  //
+  // 이 상수는 **출제 자격(`findEligibleProblems`)이 쓰는 바로 그 값**이다. 화면
+  // 필터가 따로 판정하면 「은행에는 보이는데 출제에는 안 뽑히는」 문항이 생긴다.
+  const answerWhere = hasAnswer
+    ? [{ AND: [{ answer: { not: MISSING_ANSWER } }, { answer: { not: "" } }] }]
+    : [];
+  // 본문 검색(2026-08-19) — `contains` + `insensitive`.
+  // ⚠️ 검색어가 비면 **아예 안 붙인다.** 빈 문자열로 붙이면 전량이 통과해 뜻이 없다.
+  const searchWhere = q
+    ? [{ content: { contains: q, mode: "insensitive" as const } }]
+    : [];
   const where = {
     AND: [
       problemVisibleWhere(session.id),
       filters,
       ...(Object.keys(unitWhere).length > 0 ? [{ unit: unitWhere }] : []),
       ...figureWhere,
+      ...solutionWhere,
+      ...answerWhere,
+      ...searchWhere,
     ],
   };
 

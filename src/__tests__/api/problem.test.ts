@@ -40,6 +40,7 @@ import {
   deleteResponseSchema,
   errorResponseSchema,
 } from "@/contracts/common.contract";
+import { MISSING_ANSWER } from "@/lib/missingAnswer";
 import { db } from "@/lib/db";
 import { findEligibleProblems } from "@/lib/findEligibleProblems";
 import { getSessionUser } from "@/lib/session";
@@ -625,5 +626,159 @@ describe("[T3.1] findEligibleProblems — 출제 가능 풀 조회", () => {
       expect(Array.isArray(row.figureUrls)).toBe(true);
       expect(Array.isArray(row.figureDims)).toBe(true);
     }
+  });
+});
+
+/**
+ * 「자료」 토글 셋 — **서버가 실제로 거르는지** 잠근다 (원장님 지시 2026-08-19).
+ *
+ * ⚠️ 화면 검사(`ProblemBank.test.tsx`)는 **파라미터가 붙는지**만 본다. 그것만으로는
+ *    서버가 그 파라미터를 **읽고 거르는지** 알 수 없다 — 이 저장소는 실제로
+ *    「where 모양만 spy 로 보고 진짜 필터링은 안 잠근」 검사를 만든 적이 있다
+ *    (2026-08-18, 가짜 DB 가 관계 필터를 모르던 건).
+ *
+ * 실측 근거 (DB 47,152건): 그림 9,448(20.0%) · 해설 13,909(29.5%) · 정답 45,041(95.5%).
+ * 셋 다 뜻이 있다.
+ */
+describe("[S-08] GET /api/problems — 자료 토글(그림·해설·정답) 서버 필터", () => {
+  it("hasSolution=true 면 해설이 **있는** 문항만 온다", async () => {
+    const res = await listProblems(
+      jsonRequest(
+        "http://localhost/api/problems?hasSolution=true&pageSize=100",
+        "GET",
+      ),
+    );
+    expect(res.status).toBe(200);
+    const body = problemListResponseSchema.parse(await res.json());
+    expect(body.data.length).toBeGreaterThan(0);
+    for (const p of body.data) {
+      expect(p.solution ?? "").not.toBe("");
+    }
+  });
+
+  it("hasSolution 을 안 붙이면 해설 없는 문항도 온다 — 필터가 항상 켜져 있으면 안 된다", async () => {
+    const res = await listProblems(
+      jsonRequest("http://localhost/api/problems?pageSize=100", "GET"),
+    );
+    const body = problemListResponseSchema.parse(await res.json());
+    expect(body.data.some((p) => (p.solution ?? "") === "")).toBe(true);
+  });
+
+  /**
+   * ⚠️ 여기가 이 필터의 핵심이다. `answer` 는 **빈 값이 0건**이라
+   * 「비어 있지 않은가」로 만들면 100% 를 통과시켜 아무것도 안 거른다.
+   * 실제 자리표시자는 `MISSING_ANSWER`("(정답 없음)") 문자열이다.
+   */
+  it("hasAnswer=true 면 `(정답 없음)` 자리표시자를 뺀다", async () => {
+    const before = problemListResponseSchema.parse(
+      await (
+        await listProblems(
+          jsonRequest("http://localhost/api/problems?pageSize=100", "GET"),
+        )
+      ).json(),
+    );
+    // 픽스처에 자리표시자가 실제로 있어야 이 검사가 무언가를 가른다.
+    expect(before.data.some((p) => p.answer === MISSING_ANSWER)).toBe(true);
+
+    const res = await listProblems(
+      jsonRequest(
+        "http://localhost/api/problems?hasAnswer=true&pageSize=100",
+        "GET",
+      ),
+    );
+    expect(res.status).toBe(200);
+    const body = problemListResponseSchema.parse(await res.json());
+    expect(body.data.length).toBeGreaterThan(0);
+    expect(body.data.every((p) => p.answer !== MISSING_ANSWER)).toBe(true);
+  });
+
+  it("정답 필터는 **출제 자격과 같은 상수**를 쓴다 — 갈리면 「보이는데 안 뽑히는」 문항이 생긴다", () => {
+    // `findEligibleProblems` 가 쓰는 값과 같아야 한다. 다른 문자열을 새로 적으면
+    // 화면과 출제가 서로 다른 문항을 「정답 있음」으로 본다.
+    expect(MISSING_ANSWER).toBe("(정답 없음)");
+  });
+
+  it("셋을 같이 켜도 서로를 지우지 않는다 (AND)", async () => {
+    const res = await listProblems(
+      jsonRequest(
+        "http://localhost/api/problems?hasSolution=true&hasAnswer=true&pageSize=100",
+        "GET",
+      ),
+    );
+    expect(res.status).toBe(200);
+    const body = problemListResponseSchema.parse(await res.json());
+    for (const p of body.data) {
+      expect(p.solution ?? "").not.toBe("");
+      expect(p.answer).not.toBe(MISSING_ANSWER);
+    }
+  });
+
+  it('`hasAnswer=false` 는 계약이 거절한다 — 문자열 "false" 가 참이 되는 함정', async () => {
+    const res = await listProblems(
+      jsonRequest("http://localhost/api/problems?hasAnswer=false", "GET"),
+    );
+    expect(res.status).toBe(400);
+  });
+});
+
+/**
+ * 본문 검색 — **서버가 실제로 거르는지** 잠근다 (원장님 지시 2026-08-19).
+ * 화면 검사는 `q` 가 붙는지만 본다.
+ */
+describe("[S-08] GET /api/problems — 본문 검색", () => {
+  it("q 로 본문을 거른다 — 안 맞는 문항은 안 온다", async () => {
+    const all = problemListResponseSchema.parse(
+      await (
+        await listProblems(
+          jsonRequest("http://localhost/api/problems?pageSize=100", "GET"),
+        )
+      ).json(),
+    );
+    // 픽스처에서 실제로 갈리는 낱말을 고른다 — 안 갈리면 이 검사는 아무것도 안 잠근다.
+    const needle = all.data[0]!.content.slice(0, 4);
+    expect(all.data.some((p) => !p.content.includes(needle))).toBe(true);
+
+    const res = await listProblems(
+      jsonRequest(
+        `http://localhost/api/problems?q=${encodeURIComponent(needle)}&pageSize=100`,
+        "GET",
+      ),
+    );
+    expect(res.status).toBe(200);
+    const body = problemListResponseSchema.parse(await res.json());
+    expect(body.data.length).toBeGreaterThan(0);
+    expect(body.data.length).toBeLessThan(all.data.length);
+    for (const p of body.data) {
+      expect(p.content.toLowerCase()).toContain(needle.toLowerCase());
+    }
+  });
+
+  it("q 는 자료 토글과 **같이** 걸린다 — 서로를 지우지 않는다", async () => {
+    const all = problemListResponseSchema.parse(
+      await (
+        await listProblems(
+          jsonRequest("http://localhost/api/problems?pageSize=100", "GET"),
+        )
+      ).json(),
+    );
+    const needle = all.data[0]!.content.slice(0, 3);
+    const res = await listProblems(
+      jsonRequest(
+        `http://localhost/api/problems?q=${encodeURIComponent(needle)}&hasAnswer=true&pageSize=100`,
+        "GET",
+      ),
+    );
+    const body = problemListResponseSchema.parse(await res.json());
+    for (const p of body.data) {
+      expect(p.content.toLowerCase()).toContain(needle.toLowerCase());
+      expect(p.answer).not.toBe(MISSING_ANSWER);
+    }
+  });
+
+  it("빈 q 는 계약이 거절한다 — 붙이면 전량이 통과해 뜻이 없다", async () => {
+    const res = await listProblems(
+      jsonRequest("http://localhost/api/problems?q=", "GET"),
+    );
+    expect(res.status).toBe(400);
   });
 });

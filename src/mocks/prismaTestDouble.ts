@@ -41,6 +41,7 @@ import {
   MOCK_TEST_RESULT_PROBLEMS,
   MOCK_TESTS,
   MOCK_UNITS,
+  problemCodeSuffix,
   problemId,
   testProblemId,
   USER_TEACHER_ID,
@@ -80,6 +81,8 @@ interface ProgressRow {
 
 interface ProblemRow {
   id: string;
+  /** 문항 코드 (D-53) — 실제 DB 는 BEFORE INSERT 트리거가 붙인다. 여기서는 그 동작을 흉내 낸다. */
+  problemCode: string;
   userId: string;
   unitId: string;
   source: ProblemSource;
@@ -268,6 +271,29 @@ interface ActualExamScoreRow {
 
 const PROBLEM_TYPES: ProblemType[] = ["계산", "개념", "활용", "서술형"];
 
+/**
+ * 문항 코드 부여 — 실제 DB 의 `problem_code_assign` BEFORE INSERT 트리거를 흉내 낸다.
+ *
+ * 실제와 다른 점 하나: **무작위가 아니라 일련번호**다. 테스트가 흔들리면 안 되기 때문이다.
+ * 형식(글자집합·자릿수)은 계약(`PROBLEM_CODE_ALPHABET`)에서 오므로 갈라질 수 없고,
+ * 「겹치면 다시 뽑는가」는 여기서 못 본다 — 그건 실제 DB 에서
+ * `scripts/qa/verify-problem-code-wiring.ts` 가 확인한다.
+ */
+let problemCodeSeq = 1000;
+function assignProblemCode(unitId: string): string {
+  const prefix =
+    unitRows.find((unit) => unit.id === unitId)?.problemCodePrefix ??
+    MOCK_UNITS[0]!.problemCodePrefix;
+  for (let i = 0; i < 100; i += 1) {
+    problemCodeSeq += 1;
+    const code = `${prefix}-${problemCodeSuffix(problemCodeSeq)}`;
+    if (!problemRows.some((row) => row.problemCode === code)) return code;
+  }
+  throw new Error(
+    "[테스트 더블] 문항 코드를 못 만들었다 — 일련번호가 다 겹쳤다.",
+  );
+}
+
 /** 픽스처 30문항만으로는 daily 8문항·교체 후보가 부족하므로 테스트 더블에만 보강한다. */
 function extraEligibleProblems(): ProblemEntity[] {
   const extras: ProblemEntity[] = [];
@@ -275,6 +301,7 @@ function extraEligibleProblems(): ProblemEntity[] {
   const push = (unitId: string, difficulty: Difficulty) => {
     extras.push({
       id: problemId(seq),
+      problemCode: `${unitRows.find((u) => u.id === unitId)?.problemCodePrefix ?? MOCK_UNITS[0]!.problemCodePrefix}-${problemCodeSuffix(seq)}`,
       userId: USER_TEACHER_ID,
       unitId,
       source: "manual",
@@ -357,6 +384,7 @@ function toFixtureProblemRow(
   return {
     ...PROBLEM_SOURCE_META_DEFAULTS,
     ...fixture,
+    problemCode: assignProblemCode(fixture.unitId),
     questionType: null,
     // 이 픽스처는 배점 채점용이라 그림 컬럼이 없다 — DB 기본값(`@default([])`)으로 채운다.
     figureUrls: [],
@@ -586,6 +614,8 @@ function matchesWhere<T extends object>(
         in?: unknown[];
         not?: unknown;
         startsWith?: unknown;
+        contains?: unknown;
+        mode?: unknown;
         isEmpty?: unknown;
         gt?: unknown;
         gte?: unknown;
@@ -600,6 +630,24 @@ function matchesWhere<T extends object>(
       }
       if (typeof obj.startsWith === "string") {
         return typeof value === "string" && value.startsWith(obj.startsWith);
+      }
+
+      // `contains` — 본문 검색(S-08). `mode: "insensitive"` 는 Prisma 가 PostgreSQL 에서
+      // `ILIKE` 로 바꾸는 값이라 **대소문자를 접어서** 견준다. 모드를 무시하고 그냥
+      // `includes` 로 하면 제품이 못 찾는 것을 가짜가 찾아 주는 거짓 초록이 된다.
+      if ("contains" in obj && typeof obj.contains === "string") {
+        const unknown = Object.keys(obj).filter(
+          (k) => k !== "contains" && k !== "mode",
+        );
+        if (unknown.length > 0) {
+          throw new Error(
+            `prismaTestDouble: contains 와 섞인 미지원 연산자 '${unknown.join(",")}'`,
+          );
+        }
+        if (typeof value !== "string") return false;
+        return obj.mode === "insensitive"
+          ? value.toLowerCase().includes(obj.contains.toLowerCase())
+          : value.includes(obj.contains);
       }
 
       // 🔴 범위 연산자를 모르면 이 함수는 `value === {gte: ...}` 로 떨어져 **항상 false**
@@ -967,8 +1015,14 @@ const prismaModels = {
     }: {
       data: Omit<
         ProblemRow,
-        "id" | "createdAt" | "updatedAt" | "pool" | "questionType"
+        | "id"
+        | "problemCode"
+        | "createdAt"
+        | "updatedAt"
+        | "pool"
+        | "questionType"
       > & {
+        problemCode?: string;
         originProblemId?: string | null;
         reviewStatus?: ReviewStatus;
         pool?: "shared" | "private";
@@ -980,6 +1034,7 @@ const prismaModels = {
         id: randomUUID(),
         ...PROBLEM_SOURCE_META_DEFAULTS,
         ...data,
+        problemCode: data.problemCode ?? assignProblemCode(data.unitId),
         questionType: data.questionType ?? null,
         originProblemId: data.originProblemId ?? null,
         reviewStatus: data.reviewStatus ?? "pending",
@@ -1001,8 +1056,14 @@ const prismaModels = {
       data: Array<
         Omit<
           ProblemRow,
-          "id" | "createdAt" | "updatedAt" | "pool" | "questionType"
+          | "id"
+          | "problemCode"
+          | "createdAt"
+          | "updatedAt"
+          | "pool"
+          | "questionType"
         > & {
+          problemCode?: string;
           originProblemId?: string | null;
           reviewStatus?: ReviewStatus;
           pool?: "shared" | "private";
@@ -1016,6 +1077,7 @@ const prismaModels = {
           id: randomUUID(),
           ...PROBLEM_SOURCE_META_DEFAULTS,
           ...item,
+          problemCode: item.problemCode ?? assignProblemCode(item.unitId),
           questionType: item.questionType ?? null,
           originProblemId: item.originProblemId ?? null,
           reviewStatus: item.reviewStatus ?? "pending",
