@@ -30,7 +30,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { readEnvFile } from "../import/readEnvFile";
 import {
-  classifyFigureNeed,
+  classifyFigure,
   MENTIONS_FIGURE_WHERE,
   NO_FIGURE_WHERE,
 } from "../../src/lib/figure/missingFigureRule";
@@ -85,7 +85,7 @@ async function main() {
     },
     select: { externalId: true, content: true },
   });
-  const broken = rows.filter((r) => classifyFigureNeed(r.content) === "유실");
+  const broken = rows.filter((r) => classifyFigure(r.content) === "유실");
   const ids = broken
     .map((r) => r.externalId)
     .filter((v): v is string => Boolean(v) && UUID.test(v!));

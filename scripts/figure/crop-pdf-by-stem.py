@@ -88,6 +88,17 @@ EXAM_SYNTAX = re.compile(r"[①-⑤]|[\[［][^\]］]{0,6}점\s*[\]］]")
 FURNITURE_MIN_PAGES = 2
 #: 되풀이 판정을 위한 좌표 반올림(pt). 쪽마다 1pt 안팎으로 흔들린다.
 FURNITURE_ROUND = 3
+#: 두께 0인 곧은 선을 이만큼 부풀려 «있는 것»으로 본다. `figure_rect` 의 첫 가드
+#: `is_empty` 가 **곧은 선을 전부 버리기** 때문이다 — 실측으로 남은 44행 중 35행이
+#: 「획이 아예 없다」로 떨어졌는데 그 쪽에는 획이 99개 있었다(97개가 두께 0).
+THIN_STROKE_PT = 0.5
+#: 문항 번호 표시(`11.` `12.`). 오려낸 칸이 **다른 문항 번호를 지나** 있으면 그것은
+#: 옆 문항의 그림이다 — 이 저장소가 적어 둔 가장 큰 정밀도 한계가 그 부류다
+#: (16-figure-recovery-ledger §3.3 「옆 문항 그림이 딸려 온다」).
+#: 실측 `4082-11`: 발문은 11번인데 칸이 **12번 상자**를 집었다. 자동 검사 셋(발문 침입·
+#: 선택지 표시·문장)이 전부 통과시켰다 — 그 상자 안에는 한글도 선택지 표시도 없기 때문이다.
+#: 「누구 발문인가」가 아니라 **「번호를 넘었나」**를 물어야 갈린다.
+QNUM = re.compile(r"^\s*(\d{1,2})\s*[.．]\s")
 
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -149,6 +160,33 @@ def stem_box(page, stem: str) -> tuple[fitz.Rect, int] | None:
     return box, anchor.size
 
 
+def crossed_question_number(page, sb: fitz.Rect, fig: fitz.Rect, q: int) -> int | None:
+    """발문과 오려낸 칸 사이(또는 칸 안)에 **다른 문항 번호**가 있으면 그 번호.
+
+    문항 번호는 단(段)의 왼쪽 끝에서 시작한다. 선택지 번호도 `1.` 꼴일 수 있으므로
+    **발문 왼쪽 끝보다 더 왼쪽이거나 같은 줄**만 본다 — 선택지는 들여쓰기가 있다.
+    """
+    top = min(sb.y1, fig.y0)
+    bot = max(fig.y1, sb.y1)
+    for b in page.get_text("dict").get("blocks", []):
+        for ln in b.get("lines", []):
+            r = fitz.Rect(ln["bbox"])
+            if r.y1 <= top or r.y0 >= bot:
+                continue
+            # ⚠️ **같은 단(段)만 본다.** 시험지는 두 단이라, 단을 안 가르면 **옆 단의**
+            #    문항 번호가 걸린다 — 실측으로 멀쩡한 `3195-20` 이 옆 단 18번 때문에
+            #    버려졌다. 가로로 겹치는 줄만 같은 단이다.
+            if r.x1 <= sb.x0 or r.x0 >= sb.x1:
+                continue
+            if r.x0 > sb.x0 + 2:          # 들여쓴 줄은 문항 번호가 아니다
+                continue
+            text = "".join(sp.get("text", "") for sp in ln.get("spans", []))
+            m = QNUM.match(text)
+            if m and int(m.group(1)) != q:
+                return int(m.group(1))
+    return None
+
+
 def furniture_keys(doc) -> set[tuple[int, int, int, int]]:
     """여러 쪽에 **같은 자리 같은 크기**로 되풀이되는 그림틀 = 쪽 장식(머리띠·로고).
 
@@ -161,7 +199,10 @@ def furniture_keys(doc) -> set[tuple[int, int, int, int]]:
                  if b.get("type") != 0]
         rects += [fitz.Rect(d["rect"]) for d in page.get_drawings()]
         for r in rects:
-            if r.is_empty or r.is_infinite:
+            # ⚠️ **두께 0인 선을 여기서 버리면 안 된다.** 단 사이 구분선·머리띠 밑줄이
+            #    바로 그 모양이라, 버리면 「쪽마다 되풀이되는 것」 목록에 안 들어가고
+            #    `thin_pt` 로 선을 살린 순간 그 장식이 그림으로 딸려 온다.
+            if r.is_infinite or (r.x1 - r.x0 <= 0 and r.y1 - r.y0 <= 0):
                 continue
             k = tuple(int(round(v / FURNITURE_ROUND)) for v in (r.x0, r.y0, r.x1, r.y1))
             seen.setdefault(k, set()).add(i)
@@ -182,9 +223,14 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--write", action="store_true")
     ap.add_argument("--limit", type=int)
+    # 입력 PDF 가 둘이다(정본 · 한글이 찍은 것). 같은 이름으로 쓰면 뒤엣것이 앞엣것을
+    # 덮어써서 **무엇을 눈으로 봤는지** 알 수 없게 된다. 그래서 이름을 가른다.
+    ap.add_argument("--plan", default=str(PLAN))
+    ap.add_argument("--result", default=str(RESULT))
+    ap.add_argument("--prefix", default="pdf", help="산출물 이름 앞머리")
     a = ap.parse_args()
 
-    items = json.loads(PLAN.read_text(encoding="utf-8"))["목록"]
+    items = json.loads(pathlib.Path(a.plan).read_text(encoding="utf-8"))["목록"]
     if a.limit:
         items = items[: a.limit]
 
@@ -214,7 +260,11 @@ def main() -> None:
                             sb.x1 + AROUND_PT, sb.y1 + BELOW_PT) & page.rect
             # 상자가 **발문에서 추정한 것**이라 그림이 끝에 살짝만 걸친다 —
             # RPM 처럼 12pt 를 요구하면 실측 44건이 「그림 없음」으로 떨어진다.
-            fig = figure_rect(page, box, stem, min_overlap=4.0)
+            if it["pdf"] not in furniture:
+                furniture[it["pdf"]] = furniture_keys(doc)
+            fig = figure_rect(page, box, stem, min_overlap=4.0,
+                              thin_pt=THIN_STROKE_PT,
+                              furniture=furniture[it["pdf"]])
             if fig is None:
                 fail.append({"externalId": it["externalId"], "이유": "문항 둘레에서 그림을 못 찾았다"})
                 continue
@@ -225,11 +275,14 @@ def main() -> None:
             if run2 >= STEM_INTRUSION_CHARS:
                 fail.append({"externalId": it["externalId"], "이유": f"칸에 발문이 {run2}자 들어왔다"})
                 continue
-            if it["pdf"] not in furniture:
-                furniture[it["pdf"]] = furniture_keys(doc)
             fk = tuple(int(round(v / FURNITURE_ROUND)) for v in (fig.x0, fig.y0, fig.x1, fig.y1))
             if fk in furniture[it["pdf"]]:
                 fail.append({"externalId": it["externalId"], "이유": "쪽마다 되풀이되는 쪽 장식이다"})
+                continue
+            crossed = crossed_question_number(page, sb, fig, int(it["q"]))
+            if crossed is not None:
+                fail.append({"externalId": it["externalId"],
+                             "이유": f"칸이 다른 문항 번호({crossed}번)를 넘었다"})
                 continue
             box_text = page.get_text("text", clip=rect)
             if EXAM_SYNTAX.search(box_text):
@@ -245,7 +298,7 @@ def main() -> None:
                              "이유": f"칸에 문장이 들어왔다 (한 줄 한글 {longest_line}자)"})
                 continue
 
-            out = FIGROOT / it["e"] / f"pdf-q{int(it['q']):02d}.png"
+            out = FIGROOT / it["e"] / f"{a.prefix}-q{int(it['q']):02d}.png"
             url = f"/figures/{it['e']}/{out.name}"
             if a.write:
                 out.parent.mkdir(parents=True, exist_ok=True)
@@ -257,8 +310,9 @@ def main() -> None:
         for d in docs.values():
             d.close()
 
-    RESULT.parent.mkdir(parents=True, exist_ok=True)
-    RESULT.write_text(json.dumps(
+    RESULT_P = pathlib.Path(a.result)
+    RESULT_P.parent.mkdir(parents=True, exist_ok=True)
+    RESULT_P.write_text(json.dumps(
         {"기록": a.write, "대상": len(items), "성공수": len(ok), "실패수": len(fail),
          "실패": fail, "계획": ok}, ensure_ascii=False, indent=1), encoding="utf-8")
     print("── PDF 발문 기준 오려내기 ──", "기록함" if a.write else "드라이런")
@@ -268,7 +322,7 @@ def main() -> None:
         why[f["이유"].split("(")[0].strip()] = why.get(f["이유"].split("(")[0].strip(), 0) + 1
     for k, v in sorted(why.items(), key=lambda kv: -kv[1]):
         print(f"     {k} {v}")
-    print(f"→ {RESULT}")
+    print(f"→ {RESULT_P}")
 
 
 if __name__ == "__main__":

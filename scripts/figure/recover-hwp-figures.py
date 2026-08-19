@@ -31,6 +31,21 @@
    떠 있는 그림은 HWP 문단 흐름에서 **앞 문항** 범위에 걸린다(실측 4321: 12번의
    16점 격자가 11번에 잡혔다). 회수하려는 이미지가 같은 시험지의 다른 문항에 이미
    붙어 있는 그림과 같으면 앵커 어긋남으로 보고 회수하지 않는다.
+
+   ⚠️ **이 가드는 «DB 에 붙어 있는 것이 옳다»를 전제한다.** 그런데 이 저장소가 이미
+   적어 둔 정밀도 한계가 정확히 그 반대다 — PDF 오려내기는 **옆 문항 그림을 딸려
+   담는다**(16-figure-recovery-ledger §3.3). 그러면 손상된 사본이 «HWP 가 틀렸다»는
+   증거로 읽힌다. 2026-08-19 실측: 후보 11행 중 6행이 여기 걸렸고 **여섯 장을 다 열어
+   보니 여섯 다 DB 쪽이 틀렸다**(예: 2622 는 q09.jpeg 가 6번 그림, q09_1.jpeg 가
+   9번 그림 — 한 칸씩 밀려 있었다).
+
+   그렇다고 가드를 끄면 진짜 앵커 어긋남(4321)이 되살아난다. **문턱을 옮기지 말고
+   근거를 하나 더 요구한다** — `--eyecheck` 로 준 파일에 «사람이 열어 보고 회수라고
+   적은 행»만 이 가드를 통과한다. 그 파일에는 무엇을 보고 그렇게 정했는지가 함께 있다.
+
+── `--eyecheck` (2026-08-19) ────────────────────────────────────────────────
+`scripts/qa/hwp-figure-eyecheck.json` — `{판정: {<problemId>: {판정, 근거}}}`.
+`회수` 로 적힌 행만 앵커 가드를 넘어간다. 적혀 있지 않은 행은 예전과 똑같이 버린다.
 """
 from __future__ import annotations
 
@@ -123,6 +138,9 @@ def main() -> None:
                     help="DB 본문 ↔ HWP 발문 유사도 하한 (트랙 D 판정)")
     ap.add_argument("--max-repeat", type=int, default=2,
                     help="같은 이미지가 한 시험지에서 이 횟수를 넘으면 장식으로 본다")
+    ap.add_argument("--eyecheck", default="",
+                    help="사람이 열어 보고 내린 판정 파일. 여기서 «회수» 인 행만 "
+                         "앵커 어긋남 가드를 통과한다 (윗글 참조)")
     args = ap.parse_args()
 
     # 1) 본문 일치 — 트랙 D 판정에서 유사도만 읽는다(파일 in).
@@ -153,6 +171,14 @@ def main() -> None:
             if not f.exists():
                 continue
             attached.setdefault(row["e"], []).append((row["q"], f))
+
+    # 사람이 열어 보고 «회수» 라고 적은 행 — 앵커 가드를 넘어갈 수 있는 것들.
+    cleared: set[str] = set()
+    if args.eyecheck:
+        eye = json.loads(pathlib.Path(args.eyecheck).read_text(encoding="utf-8"))
+        cleared = {k for k, v in (eye.get("판정") or {}).items()
+                   if v.get("판정") == "회수"}
+        print(f"  육안 판정 파일: «회수» {len(cleared)}행 ({args.eyecheck})")
 
     cands = json.loads(CAND.read_text(encoding="utf-8"))
     if args.limit:
@@ -220,9 +246,14 @@ def main() -> None:
                     if t is not None and pearson(mine, t) >= 0.6:
                         clash = other_q
                         break
-                if clash is not None:
+                if clash is not None and c["id"] not in cleared:
                     stat["건너뜀:앵커어긋남"] += 1
                     continue
+                if clash is not None:
+                    # 사람이 열어 보고 «DB 쪽이 잘못 붙은 것» 이라고 확인한 행이다.
+                    stat["앵커가드:사람이통과시킴"] = (
+                        stat.get("앵커가드:사람이통과시킴", 0) + 1
+                    )
             urls.append(url)
             stat["회수장수"] += 1
             if dest.exists():

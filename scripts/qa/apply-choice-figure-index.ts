@@ -36,7 +36,15 @@ import { checkChoiceFigureIndex } from "../../src/lib/problem/choiceFigureIndex"
 
 import { mergeLedgerRows, stillApplied } from "./revertLedger";
 
-const PAIRS = "scripts/qa/reports/choice-figure-pairs.json";
+/**
+ * 회수 경로가 둘이다 — PDF 지면 좌표(`choice_figure_recover.py`)와 **HWP 문단 흐름**
+ * (`recover-choice-index-from-hwp.py`). 산출 모양이 같으므로 붙이는 쪽은 하나만 둔다.
+ * `--pairs=<경로>` 로 고른다.
+ */
+const PAIRS =
+  process.argv
+    .find((a) => a.startsWith("--pairs="))
+    ?.slice("--pairs=".length) ?? "scripts/qa/reports/choice-figure-pairs.json";
 const LEDGER = "scripts/qa/reports/choice-figure-index-apply.json";
 
 const APPLY = process.argv.includes("--apply");

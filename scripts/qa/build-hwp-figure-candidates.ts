@@ -44,6 +44,13 @@ const INDEX = "scripts/figure/hwp-figure-index.json";
 const HWP_DIR = "scripts/qa/reports/hwp";
 const OUT_CAND = "scripts/qa/reports/figure-recover-candidates.json";
 const OUT_ALIGN = "scripts/qa/reports/hwp-figure-align.jsonl";
+/**
+ * **버린 행까지 전부** 적는다. 회수되지 않은 행이 «원본에 없다»인지 «검출이 안 된다»인지
+ * «판정이 안 선다»인지는 뒤 단계가 다시 물어야 하는데, 그 근거(맞춘 HWP 순번·유사도)가
+ * 통과분에만 남아 있으면 **버린 행은 조사 자체가 불가능**해진다.
+ * (CLAUDE.md 2026-08-18 「비교에서 빠진 표본은 반드시 세어 찍어라」)
+ */
+const OUT_ALIGN_ALL = "scripts/qa/reports/hwp-figure-align-all.jsonl";
 
 type Target = {
   id: string;
@@ -109,6 +116,7 @@ function main(): void {
     hwpNumber: number;
   }[] = [];
   const align: string[] = [];
+  const alignAll: string[] = [];
   const skip: Record<string, number> = {};
   const bump = (why: string) => (skip[why] = (skip[why] ?? 0) + 1);
 
@@ -118,6 +126,17 @@ function main(): void {
     const hwpPath = `${HWP_DIR}/${exam}.json`;
     if (!existsSync(hwpPath)) {
       bump("HWP 추출본이 아직 없다");
+      for (const t of rows) {
+        alignAll.push(
+          JSON.stringify({
+            id: t.id,
+            externalId: t.externalId,
+            examId: exam,
+            n: t.questionNumber,
+            why: "HWP 추출본이 아직 없다",
+          }),
+        );
+      }
       continue;
     }
     const qs = (
@@ -135,19 +154,35 @@ function main(): void {
         .sort((a, b) => b.s - a.s);
       const best = scored[0];
       const second = scored[1];
+      const note = (why: string, extra: Record<string, unknown> = {}) =>
+        alignAll.push(
+          JSON.stringify({
+            id: t.id,
+            externalId: t.externalId,
+            examId: exam,
+            n: t.questionNumber,
+            why,
+            sim: Number((best?.s ?? 0).toFixed(3)),
+            margin: Number(((best?.s ?? 0) - (second?.s ?? 0)).toFixed(3)),
+            ...extra,
+          }),
+        );
       if (!best || best.s < MIN_SIM) {
         bump("닮은 HWP 문항이 없다");
+        note("닮은 HWP 문항이 없다");
         continue;
       }
       if (second && best.s - second.s < MIN_MARGIN) {
         // 형제 문항과 못 가른다 — 붙이면 옆 문항 그림이 간다.
         bump("버금과 못 가른다");
+        note("버금과 못 가른다", { hwpNumber: qs[best.i]!.number });
         continue;
       }
       const hwpNumber = qs[best.i]!.number;
       const mine = pics[String(hwpNumber)];
       if (!mine || mine.length === 0) {
         bump("그 HWP 문항에 그림이 없다");
+        note("그 HWP 문항에 그림이 없다", { hwpNumber });
         continue;
       }
       const q = t.questionNumber ?? hwpNumber;
@@ -159,6 +194,7 @@ function main(): void {
         sim: Number(best.s.toFixed(3)),
         hwpNumber,
       });
+      note("후보", { hwpNumber, pics: mine.length });
       align.push(
         JSON.stringify({
           id: t.id,
@@ -182,11 +218,24 @@ function main(): void {
 
   writeFileSync(OUT_CAND, JSON.stringify(cands, null, 1), "utf8");
   writeFileSync(OUT_ALIGN, align.join("\n") + "\n", "utf8");
+  writeFileSync(OUT_ALIGN_ALL, alignAll.join("\n") + "\n", "utf8");
   console.log(`\n대상 ${targets.length}행 · 후보 ${cands.length}행`);
   for (const [why, n] of Object.entries(skip).sort((a, b) => b[1] - a[1])) {
     console.log(`  건너뜀: ${why} ${n}`);
   }
-  console.log(`→ ${OUT_CAND}\n→ ${OUT_ALIGN}`);
+  // 「대상 = 후보 + 건너뜀」이 안 맞으면 조용히 빠진 행이 있다는 뜻이다.
+  const counted = cands.length + Object.values(skip).reduce((a, b) => a + b, 0);
+  if (counted !== targets.length) {
+    throw new Error(
+      `분모가 안 맞는다: 대상 ${targets.length} ≠ 후보+건너뜀 ${counted}`,
+    );
+  }
+  if (alignAll.length !== targets.length) {
+    throw new Error(
+      `전량 기록이 모자란다: 대상 ${targets.length} ≠ 기록 ${alignAll.length}`,
+    );
+  }
+  console.log(`→ ${OUT_CAND}\n→ ${OUT_ALIGN}\n→ ${OUT_ALIGN_ALL}`);
 }
 
 main();
