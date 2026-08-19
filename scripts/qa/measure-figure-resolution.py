@@ -3,6 +3,7 @@
 
     python scripts/qa/measure-figure-resolution.py
     python scripts/qa/measure-figure-resolution.py --json scripts/qa/reports/figure-resolution.json
+    python scripts/qa/measure-figure-resolution.py --dir public/figures-300
 
 원장님 지시 2026-08-19: 「우리 그림 해상도가 낮은것 같은데 전수 검사해보고」.
 
@@ -63,13 +64,16 @@ def bucket(dpi: float) -> str:
 
 
 def main() -> None:
-    if not FIGURE_DIR.is_dir():
-        print(f"그림 디렉터리가 없다: {FIGURE_DIR}")
+    fig_dir = FIGURE_DIR
+    if "--dir" in sys.argv:
+        fig_dir = ROOT / sys.argv[sys.argv.index("--dir") + 1]
+    if not fig_dir.is_dir():
+        print(f"그림 디렉터리가 없다: {fig_dir}")
         sys.exit(1)
 
     rows = []
     broken = []
-    for path in sorted(FIGURE_DIR.rglob("*")):
+    for path in sorted(fig_dir.rglob("*")):
         if path.suffix.lower() not in {".png", ".jpg", ".jpeg", ".gif", ".webp"}:
             continue
         try:
@@ -78,7 +82,7 @@ def main() -> None:
         except Exception as exc:  # 손상 파일도 «세어서 찍는다» — 조용히 빼지 않는다.
             broken.append((str(path.relative_to(ROOT)), repr(exc)[:80]))
             continue
-        rel = path.relative_to(FIGURE_DIR).as_posix()
+        rel = path.relative_to(fig_dir).as_posix()
         rows.append(
             {
                 "path": rel,

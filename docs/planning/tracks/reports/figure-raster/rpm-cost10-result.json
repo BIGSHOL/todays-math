@@ -1,0 +1,50 @@
+{
+ "대상": 10,
+ "성공수": 7,
+ "이미있음": 0,
+ "실패수": 3,
+ "실패": [
+  {
+   "externalId": "019fd1d7-6586-72a9-97f0-925640e07476",
+   "이유": "문항 안에서 그림을 못 찾았다"
+  },
+  {
+   "externalId": "019fd1d7-65d0-7725-8a6c-4b7de7483f85",
+   "이유": "문항 안에서 그림을 못 찾았다"
+  },
+  {
+   "externalId": "019fd1d7-a087-707b-bbf5-4d409e161a72",
+   "이유": "칸에 문장이 들어왔다 (한 줄 한글 17자)"
+  }
+ ],
+ "성공": [
+  {
+   "problemId": "586ce416-6718-46f3-9dd0-5ff8f03c5438",
+   "publicPath": "/figures-300/rpm/019fd1d5-da84-7255-ba76-0c54219d222e/0.png"
+  },
+  {
+   "problemId": "5df78719-2259-4b6c-85c2-cf6d547b9d4f",
+   "publicPath": "/figures-300/rpm/019fd1d7-7b6f-7534-a077-df801389ab71/0.png"
+  },
+  {
+   "problemId": "b412c04b-e66e-4a8a-b462-4675a7b6b71b",
+   "publicPath": "/figures-300/rpm/019fd1d7-7bbc-71f1-874a-eb281290a1fe/0.png"
+  },
+  {
+   "problemId": "772cc209-828c-4039-bbe5-625528df0208",
+   "publicPath": "/figures-300/rpm/019fd1d7-7da1-7614-b63c-4234f053aeee/0.png"
+  },
+  {
+   "problemId": "a65868e6-1879-4e99-875f-911bd3d589d9",
+   "publicPath": "/figures-300/rpm/019fd1d7-7df2-757a-aebb-cd4e81e2ae16/0.png"
+  },
+  {
+   "problemId": "ed71c33d-47f3-4177-8711-7d1fc9bcd627",
+   "publicPath": "/figures-300/rpm/019fd1d7-7fae-757d-bdcf-2bf9445d7919/0.png"
+  },
+  {
+   "problemId": "82566ee4-f180-42a5-bed1-a214f69f0765",
+   "publicPath": "/figures-300/rpm/019fd1d7-a3b6-76fd-a107-11943e8c0234/0.png"
+  }
+ ]
+}
