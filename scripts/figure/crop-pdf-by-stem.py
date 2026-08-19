@@ -51,6 +51,8 @@ longest_common_run = croprpm.longest_common_run
 figure_rect = croprpm.figure_rect
 PAD = croprpm.PAD
 STEM_INTRUSION_CHARS = croprpm.STEM_INTRUSION_CHARS
+#: 원문자 목록은 `crop-rpm-from-pdf.py` 한 곳에서 온다 (거기 주석 참조).
+CIRCLED_ANSWER = croprpm.CIRCLED_ANSWER
 
 PLAN = pathlib.Path("scripts/qa/reports/pdf-figure-plan.json")
 RESULT = pathlib.Path("scripts/qa/reports/pdf-figure-result.json")
@@ -79,7 +81,13 @@ SENTENCE_KO = 12
 #: ⚠️ **숫자로 쓰면 안 된다.** 이 시험지들은 글꼴이 사유 영역으로 인코딩돼 있어
 #:    배점의 `2` 가 문자 `2` 가 아니라 `` 로 나온다(실측). 그래서 대괄호와
 #:    「점」만 보고 그 사이는 **무엇이든** 받는다 — 글자 종류에 기대지 않는다.
-EXAM_SYNTAX = re.compile(r"[①-⑤]|[\[［][^\]］]{0,6}점\s*[\]］]")
+#: ⚠️ 이 관문은 **버리는** 규칙이다 — 넓히면 회수가 줄 뿐 **늘지 않는다.** 그래서
+#:    ①~⑤ 에서 90자로 넓히기 전에 세어 봤다(D-20): 관문까지 온 칸 RPM 4 · 기출 5,
+#:    그중 ①~⑤ **밖** 글자가 나온 칸은 **0개**. 오늘 자료에서는 무손실이고, 넓힌 값은
+#:    「못 가르면 버리는 쪽」(2026-08-18 교훈)으로 앞으로 올 교재를 막는 몫이다.
+EXAM_SYNTAX = re.compile(
+    f"[{re.escape(CIRCLED_ANSWER)}]" + r"|[\[［][^\]］]{0,6}점\s*[\]］]"
+)
 #: 시험지 **머리띠**(학교·학년·과목·학원 로고) 판정. 낱말 목록으로 거르면 그 목록에
 #: 없는 서식은 구조적으로 못 본다. 「쪽 위 + 넓다」로 갈랐더니 **쪽머리에 놓인 진짜
 #: 그림 3건이 같이 걸렸다**(3509-14·3627-15·5466-6) — 위치는 가르는 성질이 아니다.

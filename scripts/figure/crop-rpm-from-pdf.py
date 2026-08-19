@@ -33,6 +33,20 @@ from difflib import SequenceMatcher
 
 import fitz
 
+# ── 원문자 목록은 **한 곳**에서 온다 ──────────────────────────────────────────
+# `scripts/qa/circled-glyphs.json` 은 `src/lib/math/circledNumber.ts` 에서 생성된다
+# (`npx tsx scripts/qa/emit-circled-glyphs.ts`). 손으로 나열하면 세는 쪽과 고치는
+# 쪽이 같이 눈이 먼다 — 실제로 `➀`(U+2780) 계열 43행을 아무도 못 보고 있었다.
+#
+# 이 파일이 목록을 **읽는 유일한 자리**다. `crop-pdf-by-stem.py` 는 이 모듈을 이미
+# 통째로 import 하므로 `croprpm.CIRCLED_ANSWER` 를 쓴다 — 로더가 두 벌이 되면
+# 한쪽만 고쳐도 아무도 모른다.
+CIRCLED_ANSWER = json.loads(
+    (pathlib.Path(__file__).resolve().parent.parent / "qa" / "circled-glyphs.json")
+    .read_text(encoding="utf-8")
+)["정답판독_전체글자"]
+
+
 # `map-figures.py` 의 그림 검출을 그대로 쓴다 — 이미지 블록 + 벡터 획 군집.
 # 검출 규칙을 여기 다시 쓰면 두 곳이 갈라지고, 갈라지면 같이 눈이 먼다.
 _HERE = pathlib.Path(__file__).parent
@@ -66,7 +80,11 @@ NEIGHBOR_OVERLAP = 0.2
 SENTENCE_KO = 12
 #: 시험지 **자신의 서식**. 선택지 번호는 그림에 있을 수 없다 — 낱말 목록이 아니라 지면 문법이다.
 #: 실측: 「③ 7√3」 이 딸려 온 1건, 선택지가 그림인 문항 2건이 이 검사에 걸린다.
-EXAM_SYNTAX = re.compile(r"[①-⑤]")
+#: ⚠️ 이 관문은 **버리는** 규칙이다 — 넓히면 회수가 줄 뿐 **늘지 않는다.** 그래서
+#:    ①~⑤ 에서 90자로 넓히기 전에 세어 봤다(D-20): 관문까지 온 칸 RPM 4 · 기출 5,
+#:    그중 ①~⑤ **밖** 글자가 나온 칸은 **0개**. 오늘 자료에서는 무손실이고, 넓힌 값은
+#:    「못 가르면 버리는 쪽」(2026-08-18 교훈)으로 앞으로 올 교재를 막는 몫이다.
+EXAM_SYNTAX = re.compile(f"[{re.escape(CIRCLED_ANSWER)}]")
 #: **사람이 보고 뺀 것.** 자동 검사가 다 잡지는 못한다 — 이유를 적어 둔다.
 REVIEWED_OUT = {
     "019fd1db-46f3-75f0-8e0e-fd4781b53354":
