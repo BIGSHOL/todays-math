@@ -66,6 +66,8 @@ scripts/qa/reports/*
 !scripts/qa/reports/rpm-solution-audit.json
 # 정답책 글꼴 조사 — 변환기 매핑의 근거. 다시 뽑으려면 정답책 6권이 필요하다.
 !scripts/qa/reports/rpm-glyph-census.json
+# □ 로 무너진 517행의 대조표 — 원장님 판단 근거. 다시 뽑으려면 정답책 6권이 필요하다.
+!scripts/qa/reports/rpm-square-compare.json
 # 문항 코드 원장(D-53) — 컬럼을 드롭했다 다시 만들 때 **같은 코드**를 되살리는 근거다.
 # 코드는 원장님이 종이·대화에 옮겨 적는 값이라 새로 뽑으면 다른 문항을 가리키게 된다.
 !scripts/qa/reports/problem-code-ledger.json.gz
