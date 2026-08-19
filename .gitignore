@@ -71,6 +71,9 @@ scripts/qa/reports/*
 # □ 되살리기 — **되돌리기 원장**. 공유 DB 를 바꾸므로 반드시 커밋된다.
 !scripts/qa/reports/rpm-square-repair-ledger.json
 !scripts/qa/reports/rpm-square-verified.json
+!scripts/qa/reports/rpm-book-fill-ledger.json
+!scripts/qa/reports/rpm-book-fill-verified.json
+!scripts/qa/reports/rpm-number-check.json
 # 문항 코드 원장(D-53) — 컬럼을 드롭했다 다시 만들 때 **같은 코드**를 되살리는 근거다.
 # 코드는 원장님이 종이·대화에 옮겨 적는 값이라 새로 뽑으면 다른 문항을 가리키게 된다.
 !scripts/qa/reports/problem-code-ledger.json.gz

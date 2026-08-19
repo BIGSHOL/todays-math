@@ -63,6 +63,16 @@ ECHO_SIM = 0.6
 #:    답이 그래프인 문항은 책이 그림만 싣고 풀이를 안 쓴다. 답 되풀이 검사로는 못 잡는다
 #:    (우리 답은 LaTeX 서술이고 축 라벨은 맨 숫자라 안 닮는다).
 MEANINGFUL = re.compile(r"[가-힣]{2,}|[=<>≤≥]")
+#: 「전략 …」은 **풀이가 아니라 접근 힌트**다. 그것뿐이면 채우지 않는다.
+STRATEGY = re.compile(r"^\s*전략\s.*?(?:다\.|$)", re.S)
+#: 쪽 머리말이 새어 들어온 자리 — `본문 154~164쪽`. 풀이가 아니다.
+PAGE_REF = re.compile(r"본문\s*\$?\d")
+#: 견줄 한글이 이만큼은 있어야 «같은 문항인가»를 판정할 수 있다.
+MIN_KO_LEN = 8
+MIN_KO_SIM = 0.55
+KO = re.compile(r"[가-힣]+")
+#: 채우고 나서 남는 알맹이가 이만큼도 안 되면 조각이다.
+MIN_BODY = 12
 
 
 def load(name: str, path: str):
@@ -124,13 +134,43 @@ def main() -> None:
         if not raw.strip():
             bump(f"원본에도 {'해설' if s['field'] == 'solution' else '정답'}이 없다")
             continue
-        value = rpmlatex.to_latex(raw)
-        if not MEANINGFUL.search(value):
+        value = rpmlatex.wrap_math(rpmlatex.to_latex(raw))
+        # ⚠️ 이 검사는 **해설에만** 건다. 정답은 `⑤`·`12` 한 글자가 정상이라
+        #    한글도 관계식도 없다 — 정답 자리 71개가 전부 여기서 버려지고 있었다.
+        if s["field"] == "solution" and not MEANINGFUL.search(value):
             bump("풀이가 아니라 그림 라벨이다 (한글도 관계식도 없다)")
             continue
+        if PAGE_REF.search(value):
+            bump("쪽 머리말이 섞였다 (`본문 …쪽`)")
+            continue
+        if s["field"] == "solution":
+            rest = STRATEGY.sub("", value).strip()
+            if len(rest) < MIN_BODY:
+                bump("「전략」 힌트뿐이거나 조각이다")
+                continue
+        # ── 같은 문항인가 — **우리 해설**과 원본 해설의 한글을 견준다 ────────
+        # ⚠️ 번호로 찾은 것만으로는 모른다. 정답을 채울 때 특히 그렇다 —
+        #    빈 칸이라 견줄 것이 없으니 옆 칸(해설)으로 검산해야 한다.
+        ours = "".join(KO.findall(s.get("solution") or ""))
+        theirs = "".join(KO.findall(body))
+        aligned = "견줄 것이 없다"
+        if len(ours) >= MIN_KO_LEN and len(theirs) >= MIN_KO_LEN:
+            if SequenceMatcher(None, ours, theirs).ratio() < MIN_KO_SIM:
+                bump("해설이 안 닮았다 — 다른 문항일 수 있다")
+                continue
+            aligned = "해설 한글이 닮았다"
+        elif s["field"] == "answer":
+            # 견줄 해설이 없다 — 근거를 **학생용 책**에서 따로 가져와야 한다.
+            # `verify-rpm-number.py` 가 그 쪽에 발문과 번호가 함께 있는지 본다.
+            aligned = "번호 검산 필요"
+        else:
+            aligned = "견줄 것이 없다"
         left = RESIDUE.findall(value)
         if left:
             bump("변환 뒤에도 원문 글자가 남는다")
+            continue
+        if ";" in value or re.search(r"\dH", value):
+            bump("분수 약물·순환소수 표시를 못 옮겼다")
             continue
         # 되풀이 검사는 «지금 우리가 가진 값»과 견준다. 정답을 채울 때는 본문과 견준다.
         against = key(s.get("answer") or "") if s["field"] == "solution" else key(s.get("content") or "")
@@ -138,7 +178,8 @@ def main() -> None:
         if kb and against and (kb in against or SequenceMatcher(None, kb, against).ratio() >= ECHO_SIM):
             bump("이미 가진 값을 되풀이한 것")
             continue
-        plan.append({"id": s["id"], "field": s["field"], "book": book, "q": q, "value": value})
+        plan.append({"id": s["id"], "field": s["field"], "book": book, "q": q,
+                     "근거": aligned, "content": s.get("content"), "value": value})
         if a.list and shown < a.list:
             shown += 1
             print(f"\n--- {book[7:10]} #{q} [{s['field']}]\n  {value[:170]}")

@@ -31,8 +31,14 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { renderMathHtml } from "../../src/lib/math/renderMathHtml";
 import { preprocessMathText } from "../../src/lib/math/textPreprocess";
 
-const PLAN = "scripts/qa/reports/rpm-square-repair.json";
-const OUT = "scripts/qa/reports/rpm-square-verified.json";
+const argv = process.argv.slice(2);
+const argOf = (name: string, fallback: string): string => {
+  const at = argv.indexOf(name);
+  return at >= 0 ? (argv[at + 1] ?? fallback) : fallback;
+};
+// 같은 검증기를 두 계획에 쓴다 — □ 되살리기와 빈 자리 채우기.
+const PLAN = argOf("--plan", "scripts/qa/reports/rpm-square-repair.json");
+const OUT = argOf("--out", "scripts/qa/reports/rpm-square-verified.json");
 
 interface PlanRow {
   id: string;
@@ -66,7 +72,7 @@ const countSquare = (s: string | null): number =>
   ((s ?? "").match(/\\square/g) ?? []).length;
 
 function main(): void {
-  const args = process.argv.slice(2);
+  const args = argv;
   const listAt = args.indexOf("--list");
   const list = listAt >= 0 ? Number(args[listAt + 1] ?? 5) : 0;
   const emit = args.includes("--emit");
@@ -78,6 +84,7 @@ function main(): void {
   const rows = plan.목록;
 
   const verdicts = rows.map((r) => {
+    void 0;
     const next = judge(r.value);
     const now = judge(r.current ?? "");
     return {
