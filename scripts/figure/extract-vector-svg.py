@@ -80,10 +80,21 @@ AUX_MM = AUX_W / UNITS_PER_MM
 #: 흰 선은 «지우개»다(배경 위에 칸을 나누려고 덧그린다). 굵히면 내용을 지운다.
 WHITE_LUMA = 0.9
 
-#: 겹쳐 대조 문턱. 아래 §「문턱을 어떻게 정했나」참조.
+# ── 문턱을 **대조군으로** 정했다 (2026-08-19) ────────────────────────────────
+# 「획이 사라졌나」자를 만들었으면 **진짜로 사라진 표본**에 대 봐야 뜻이 있다.
+# 그래서 낸 SVG 의 그릴 요소를 **절반 지운** 대조군 24장을 만들어 견줬다
+# (`.work/ctrl_make.py`):
+#
+#   |                | 획손실 최소 | 중앙  | 최대  | 겹쳐대조 최소 | 중앙  | 최대  |
+#   | 정상본 24장    |      0.000 | 0.005 | 0.061 |        0.007 | 0.018 | 0.033 |
+#   | 절반 지운 24장 |      0.250 | 0.383 | 0.862 |        0.020 | 0.036 | 0.131 |
+#
+# ⚠️ **겹쳐 대조(평균 절대차)만으로는 안 갈린다** — 망가뜨린 것의 최소 0.020 이
+#    멀쩡한 것의 최대 0.033 보다 **작다.** 획 손실 자가 따로 있어야 하는 이유다.
+#: 겹쳐 대조 문턱.
 DIFF_REJECT = 0.05
-#: 원본에 있던 검은 픽셀이 이만큼 넘게 사라지면 버린다.
-INK_LOSS_REJECT = 0.30
+#: 획 손실 문턱 — 정상 최대 0.061 과 망가뜨린 것 최소 0.250 **사이**에 놓는다.
+INK_LOSS_REJECT = 0.15
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -149,18 +160,34 @@ def make_svg(doc, pno, rect, target_mm):
 
 
 def cmp_images(o, m):
-    a = o.convert("L").resize((128, 128), Image.BILINEAR)
-    b = m.convert("L").resize((128, 128), Image.BILINEAR)
-    h = ImageChops.difference(a, b).histogram()
+    """(평균 절대차, 사라진 획 비율, 새로 생긴 획 비율)
+
+    ⚠️ **「획이 사라졌나」를 픽셀 대 픽셀로 세면 안 된다.** 원본은 200dpi 래스터라
+    가는 선이 번져 있고 SVG 는 또렷하다. 같은 선이어도 반 픽셀 어긋나면 «사라졌다»로
+    세어져서, 눈으로 보면 **똑같은 그림**이 「획 손실 54%」로 버려진다(첫 전량 실행에서
+    버린 262건 중 242건이 그랬다 — 표본을 눈으로 보고서야 드러났다).
+
+    그래서 **한 픽셀 부풀린 뒤에 견준다**: 원본에 잉크가 있던 자리 둘레 3×3 안에
+    새 그림의 잉크가 하나도 없을 때만 「사라졌다」로 센다. 이러면 진짜로 없어진 선
+    (칸 하나가 통째로 빠지는 것)은 그대로 걸리고, 굵기·번짐 차이는 안 걸린다.
+    """
+    from PIL import ImageFilter
+    N = 256
+    a = o.convert("L").resize((N, N), Image.BILINEAR)
+    b = m.convert("L").resize((N, N), Image.BILINEAR)
+    h = ImageChops.difference(a.resize((128, 128)), b.resize((128, 128))).histogram()
     mad = sum(i * c for i, c in enumerate(h)) / sum(h) / 255.0
     ab = a.point(lambda v: 255 if v < 160 else 0)
     bb = b.point(lambda v: 255 if v < 160 else 0)
+    ad = ab.filter(ImageFilter.MaxFilter(3))
+    bd = bb.filter(ImageFilter.MaxFilter(3))
     ink_a = sum(1 for v in ab.getdata() if v)
-    lost = sum(1 for x, y in zip(ab.getdata(), bb.getdata()) if x and not y)
-    gained = sum(1 for x, y in zip(ab.getdata(), bb.getdata()) if y and not x)
+    ink_b = sum(1 for v in bb.getdata() if v)
+    lost = sum(1 for x, y in zip(ab.getdata(), bd.getdata()) if x and not y)
+    gained = sum(1 for x, y in zip(bb.getdata(), ad.getdata()) if x and not y)
     return (round(mad, 4),
             round(lost / ink_a, 3) if ink_a else None,
-            round(gained / max(1, ink_a), 3))
+            round(gained / ink_b, 3) if ink_b else None)
 
 
 def main():
