@@ -199,6 +199,18 @@ def main() -> None:
         ):
             taken += 1
 
+    # ㉣-2 mm 를 **통째로** 모르는 문항. 실제 지면은 아는 문항과 모르는 문항이 한 장에
+    # 같이 실려 나간다(문항 13,584개 중 1,497개가 통째로 모른다). 사유가 다르면 모습도
+    # 다를 수 있으니 **사유별로** 하나씩 고른다.
+    unknown_by_reason: dict[str, str] = {}
+    for key, members in sorted(groups.items()):
+        if any(new_mm(m) is not None for m in members):
+            continue
+        reason = (members[0].get("note") or "사유 없음").split(" (")[0][:40]
+        unknown_by_reason.setdefault(reason, key)
+    for reason, key in list(unknown_by_reason.items())[:3]:
+        add(key, "mm 통째로 모름", f"이 문항은 mm 를 하나도 모른다 — {reason}")
+
     # ㉤ 세로로 긴 그림. 문항 열 폭이 아니라 **칸 높이**를 먼저 먹는 부류다.
     tall = sorted(
         (

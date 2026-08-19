@@ -76,10 +76,11 @@ export const ITEMS: PrintCheckItem[] = [
       "그때 이 항목이 **실물 검수 대상**이 된다.",
     status: "대기",
     needs:
-      "값이 들어오기 전에는 `/dev/figure-print-size` 에서 **전후 비교 지면**으로 본다 " +
+      "값이 DB 에 들어오기 전에는 `/dev/figure-print-size` 에서 **전후 비교 지면**으로 본다 " +
       "(같은 문항을 종전 규칙 / 새 규칙으로 나란히 그린다). " +
-      "⚠️ 그 화면의 mm 값은 원장(`scripts/qa/reports/figure-rect-ledger.json`)이 아직 없어 " +
-      "**가정값**이다 — 화면에 그렇게 적어 두었다. 값이 들어오면 같은 화면이 실측으로 바뀐다.",
+      "그 화면은 실측 원장(`scripts/qa/reports/figure-rect-ledger.json`)을 읽는다. " +
+      "원장이 없으면 가정값으로 내려가지 않고 「원장이 없다」고 적고 멈춘다. " +
+      "값이 컬럼에 들어오면 실제 인쇄 화면이 바뀌고 그때 이 항목이 실물 검수 대상이 된다.",
     changedOn: "2026-08-19",
   },
   {
