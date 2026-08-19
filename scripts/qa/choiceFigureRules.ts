@@ -30,16 +30,24 @@
  * (CLAUDE.md 2026-08-18 «판정기는 반대쪽 모집단에 대 보라»).
  */
 
+import {
+  BODY_CHOICE_CLASS,
+  BODY_CHOICE_MARKS,
+} from "../../src/lib/math/circledNumber";
+
 export interface ChoiceFigureRow {
   content: string;
   figureUrls: readonly string[];
 }
 
 /** 제품(`parseProblemContent`)이 보기 마커로 인정하는 것과 같은 모양. */
-const CHOICE_AT_LINE_START =
-  /\n[ \t]*(?:([1-9][0-9]?)[.)][ \t]+|([①②③④⑤⑥⑦⑧⑨⑩])[ \t]*)/g;
+const CHOICE_AT_LINE_START = new RegExp(
+  // 본문 마커라 **일부러 좁다** — `circledNumber.ts` 머리 주석 참조.
+  String.raw`\n[ \t]*(?:([1-9][0-9]?)[.)][ \t]+|([${BODY_CHOICE_CLASS}])[ \t]*)`,
+  "g",
+);
 
-const CIRCLED = "①②③④⑤⑥⑦⑧⑨⑩";
+const CIRCLED = BODY_CHOICE_MARKS.slice(0, 10);
 const FIGURE_MARK = /\[그림\]/g;
 
 export interface ChoiceMarker {

@@ -9,11 +9,36 @@
 set -u
 RULES=scripts/qa/answerChoiceRules.ts
 PRODUCT=src/lib/problem/parseProblemContent.ts
+# 원문자 계열표는 2026-08-19 에 **한 곳**으로 모았다 — 그래서 여기도 표적이 옮겼다.
+CIRCLED=src/lib/math/circledNumber.ts
 TEST=src/__tests__/unit/answerChoiceRules.test.ts
+
+# ── 🔴 죽은 실행이 남긴 변이를 먼저 되돌린다 ──────────────────────────────────
+# 이 스크립트는 파일을 **일부러 망가뜨렸다가** trap 으로 되돌린다. 그런데
+# 타임아웃·강제 종료로 죽으면 trap 이 안 돌아 **변이가 그대로 남는다.**
+# 2026-08-19 에 실제로 그렇게 됐고, 남은 변이가 **내 정상 diff 안에 숨어서**
+# `if (false)` 7곳과 제품 파서의 문턱 하나가 커밋 직전까지 갔다.
+# 그래서 시작할 때 `.bak` 이 있으면 그건 «지난번이 죽었다»는 뜻이므로 먼저 복원한다.
+for _b in "$@" ; do : ; done
+restore_stale() {
+  local stale=0
+  for f in "$@"; do
+    if [ -f "$f.bak" ]; then
+      echo "⚠️ 지난 실행이 죽어 있었다 — 되돌린다: $f"
+      mv -f "$f.bak" "$f"; stale=1
+    fi
+  done
+  [ "$stale" = "1" ] && echo
+  return 0
+}
+
+restore_stale "$RULES" "$PRODUCT" "$CIRCLED"
+
 
 cp "$RULES" "$RULES.bak"
 cp "$PRODUCT" "$PRODUCT.bak"
-trap 'mv -f "$RULES.bak" "$RULES"; mv -f "$PRODUCT.bak" "$PRODUCT"' EXIT
+cp "$CIRCLED" "$CIRCLED.bak"
+trap 'mv -f "$RULES.bak" "$RULES"; mv -f "$PRODUCT.bak" "$PRODUCT"; mv -f "$CIRCLED.bak" "$CIRCLED"' EXIT
 
 tests() {
   npx vitest run "$TEST" >/dev/null 2>&1 && echo PASS || echo FAIL
@@ -27,55 +52,72 @@ if [ "$BASE" != "PASS" ]; then
 fi
 echo
 
-red=0; green=0
-mutate_file() {
-  cp "$RULES.bak" "$RULES"
-  cp "$PRODUCT.bak" "$PRODUCT"
+red=0; green=0; missing=0
+apply() {   # apply <파일> <old> <new> → 0 적용됨 / 3 표적 없음
   python - "$1" "$2" "$3" <<'PY'
 import io,sys,os
 p,old,new=sys.argv[1],sys.argv[2],sys.argv[3]
 s=io.open(p,encoding="utf-8",newline="").read()
-assert old in s, "변이 대상을 못 찾았다: " + old
+if old not in s:
+    sys.stderr.write("표적 없음: " + old[:70] + "
+")
+    raise SystemExit(3)
 out=s.replace(old,new,1)
 tmp=p+".tmp"
 f=io.open(tmp,"w",encoding="utf-8",newline=""); f.write(out); f.close()
 os.replace(tmp,p)
 PY
+}
+
+restore() {
+  cp "$RULES.bak" "$RULES"
+  cp "$PRODUCT.bak" "$PRODUCT"
+  cp "$CIRCLED.bak" "$CIRCLED"
+}
+
+judge() {   # judge <설명>
   t=$(tests)
   if [ "$t" = "$BASE" ]; then
-    green=$((green+1)); echo "🟢 안 바뀜   $4"
+    green=$((green+1)); echo "🟢 안 바뀜   $1"
   else
-    red=$((red+1));    echo "🔴 빨강      $4"
+    red=$((red+1));    echo "🔴 빨강      $1"
   fi
 }
 
-mutate() {
-  cp "$RULES.bak" "$RULES"
-  cp "$PRODUCT.bak" "$PRODUCT"
-  python - "$RULES" "$1" "$2" <<'PY'
-import io,sys,os
-p,old,new=sys.argv[1],sys.argv[2],sys.argv[3]
-s=io.open(p,encoding="utf-8",newline="").read()
-assert old in s, "변이 대상을 못 찾았다: " + old
-out=s.replace(old,new,1)
-tmp=p+".tmp"
-f=io.open(tmp,"w",encoding="utf-8",newline=""); f.write(out); f.close()
-os.replace(tmp,p)
-PY
-  t=$(tests)
-  if [ "$t" = "$BASE" ]; then
-    green=$((green+1)); echo "🟢 안 바뀜   $3"
-  else
-    red=$((red+1));    echo "🔴 빨강      $3"
+mutate_file() {   # 제품 파일을 망가뜨린다
+  restore
+  if ! apply "$1" "$2" "$3"; then
+    missing=$((missing+1)); echo "⛔ 표적 없음  $4   ← 코드가 옮겨졌다. 이건 초록이 아니다."
+    return
   fi
+  judge "$4"
+}
+
+mutate() {   # 판정 규칙 파일을 망가뜨린다
+  restore
+  if ! apply "$RULES" "$1" "$2"; then
+    missing=$((missing+1)); echo "⛔ 표적 없음  $3   ← 코드가 옮겨졌다. 이건 초록이 아니다."
+    return
+  fi
+  judge "$3"
+}
+
+mutate_circled() {   # 원문자 계열표(한 곳)를 망가뜨린다
+  restore
+  if ! apply "$CIRCLED" "$1" "$2"; then
+    missing=$((missing+1)); echo "⛔ 표적 없음  $3   ← 코드가 옮겨졌다. 이건 초록이 아니다."
+    return
+  fi
+  judge "$3"
 }
 
 # ── 원문자 계열 ───────────────────────────────────────────────────────────
-mutate "{ base: 0x2780, size: 10, name: \"sans-circled\" }, // ➀..➉" "" "dingbat ➀ 계열을 뺀다"
-mutate "{ base: 0x2776, size: 10, name: \"negative-circled\" }, // ❶..❿" "" "❶ 계열을 뺀다"
-mutate "{ base: 0x24f5, size: 10, name: \"double-circled\" }, // ⓵..⓾" "" "⓵ 계열을 뺀다"
-mutate "const cp = repairGlyphs(ch).codePointAt(0);" "const cp = ch.codePointAt(0);" "PUA 글리프 복구를 안 한다"
-mutate "if (cp >= f.base && cp < f.base + f.size) return cp - f.base + 1;" "if (cp >= f.base && cp < f.base + f.size) return cp - f.base;" "번호를 1 만큼 밀어 읽는다"
+mutate_circled "{ base: 0x2780, size: 10, name: \"sans-circled\" }, // ➀..➉" "" "dingbat ➀ 계열을 뺀다"
+mutate_circled "{ base: 0x2776, size: 10, name: \"negative-circled\" }, // ❶..❿" "" "❶ 계열을 뺀다"
+mutate_circled "{ base: 0x24f5, size: 10, name: \"double-circled\" }, // ⓵..⓾" "" "⓵ 계열을 뺀다"
+mutate "return circledValueRaw(repairGlyphs(ch));" "return circledValueRaw(ch);" "PUA 글리프 복구를 안 한다"
+mutate_circled "if (cp >= f.base && cp < f.base + f.size) return cp - f.base + 1;" "if (cp >= f.base && cp < f.base + f.size) return cp - f.base;" "번호를 1 만큼 밀어 읽는다"
+mutate_circled "export const BODY_CHOICE_MARKS = Array.from({ length: 15 }" "export const BODY_CHOICE_MARKS = Array.from({ length: 5 }" "본문 보기 마커를 ①..⑤ 로 좁힌다"
 
 # ── 라벨 자 ───────────────────────────────────────────────────────────────
 mutate "return Number(/^(\\d+)/.exec(trimmed)![1]);" "return 1;" "숫자 마커를 전부 1번으로 읽는다"
@@ -116,4 +158,11 @@ echo "  대조의 값은 규모에 있다 — 44,396건 전량에서 «판정 �
 echo "  개발 중 실제로 내 라벨 자의 버그(31,956건 불일치)를 이 대조가 잡았다."
 
 echo
-echo "변이 $((red+green))개 중 빨강 $red · 초록 $green"
+echo "변이 $((red+green+missing))개 중 빨강 $red · 초록 $green · ⛔ 표적 없음 $missing"
+if [ "$missing" -gt 0 ]; then
+  echo
+  echo "⛔ **표적을 못 찾은 변이가 있다.** 초록이 아니라 «시험을 못 했다»는 뜻이다."
+  echo "   코드가 옮겨 갔으면 이 스크립트의 표적도 같이 옮겨라 —"
+  echo "   안 그러면 가드가 통째로 죽어도 이 표는 그대로 초록으로 보인다."
+  exit 1
+fi

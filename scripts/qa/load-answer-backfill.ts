@@ -17,6 +17,7 @@
 import { readdir, readFile } from "node:fs/promises";
 
 import { PrismaClient } from "@prisma/client";
+import { ANSWER_CIRCLED_CLASS } from "../../src/lib/math/circledNumber";
 
 import { parseProblemContent } from "../../src/lib/problem/parseProblemContent";
 import { allowSharedImport } from "../../src/lib/import/classifyDatabaseUrl";
@@ -39,7 +40,8 @@ const SENTINEL = "정답 없음";
 const MAX_ANSWER = 60;
 
 /** `①`~`⑩` 한 글자짜리 객관식 번호 정답. */
-const CIRCLED_ONLY = /^[①②③④⑤⑥⑦⑧⑨⑩]$/;
+// 계열은 `circledNumber.ts` 한 곳에서 온다.
+const CIRCLED_ONLY = new RegExp(`^[${ANSWER_CIRCLED_CLASS}]$`);
 
 interface Solved {
   id: string;

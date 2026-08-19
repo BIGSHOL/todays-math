@@ -20,6 +20,7 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 
 import { PrismaClient } from "@prisma/client";
+import { ANSWER_CIRCLED_CLASS } from "../../src/lib/math/circledNumber";
 
 import { allowSharedImport } from "../../src/lib/import/classifyDatabaseUrl";
 import { inspectDatabaseTargets } from "../import/resolveDbTarget";
@@ -27,7 +28,8 @@ import { inspectDatabaseTargets } from "../import/resolveDbTarget";
 const DIR = "scripts/qa/reports/official-answers";
 const OUT = "scripts/qa/reports/answer-audit.json";
 const SENTINEL = "정답 없음";
-const CIRCLED_ONLY = /^[①②③④⑤⑥⑦⑧⑨⑩]$/;
+// 계열은 `circledNumber.ts` 한 곳에서 온다 — `➀`(U+2780) 계열이 실측 43행이다.
+const CIRCLED_ONLY = new RegExp(`^[${ANSWER_CIRCLED_CLASS}]$`);
 
 interface Official {
   parsed: string | null;

@@ -33,6 +33,7 @@
 import { pathToFileURL } from "node:url";
 
 import { PrismaClient } from "@prisma/client";
+import { ANSWER_CIRCLED_CLASS } from "../../src/lib/math/circledNumber";
 
 import { allowSharedImport } from "../../src/lib/import/classifyDatabaseUrl";
 import { flattenStructured } from "../../src/lib/import/flattenStructured";
@@ -46,7 +47,10 @@ const DEFAULT_POSTGRES_JS =
   "C:\\Creative\\sumaek\\packages\\db\\node_modules\\postgres\\src\\index.js";
 const SENTINEL = "정답 없음";
 /** `①`~`⑩`, 복수 정답은 `②, ⑤` 처럼 쉼표로 잇는다. */
-const MARKER_ONLY = /^[①②③④⑤⑥⑦⑧⑨⑩](\s*,\s*[①②③④⑤⑥⑦⑧⑨⑩])*$/;
+// 계열은 `circledNumber.ts` 한 곳에서 온다.
+const MARKER_ONLY = new RegExp(
+  String.raw`^[${ANSWER_CIRCLED_CLASS}](\s*,\s*[${ANSWER_CIRCLED_CLASS}])*$`,
+);
 
 export const SOURCE_SELECT = `
 SELECT

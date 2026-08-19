@@ -8,9 +8,8 @@
  */
 import { MarkdownRenderer } from "@/components/math/MarkdownRenderer";
 import { fitsTwoColumns } from "@/lib/math/displayWidth";
+import { CHOICE_MARKS } from "@/lib/math/circledNumber";
 import { parseProblemContent } from "@/lib/problem/parseProblemContent";
-
-const CHOICE_MARKS = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"];
 
 export interface ProblemContentProps {
   content: string;

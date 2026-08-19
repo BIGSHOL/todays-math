@@ -10,6 +10,12 @@
  * 이름표 제거)은 따로 빼서 분류에서 별도 갈래로 보고한다.
  */
 
+import {
+  canonicalCircled,
+  circledValueRaw,
+  knownCircledGlyphs,
+} from "../../src/lib/math/circledNumber";
+
 const PUA_LO = 0xf081;
 const PUA_HI = 0xf085;
 const PUA_RANGE = new RegExp(
@@ -154,39 +160,16 @@ export function canon(value: string): string {
  *    `answer` 44행 · `content` 11행 · `solution` 6행 · **합 58행**.
  *    목록에 없는 계열은 0 이 되고, **0 인 줄도 모른다**(CLAUDE.md 2026-08-18).
  * ──────────────────────────────────────────────────────────────────────────── */
-const CIRCLED_FAMILIES = [
-  { base: 0x2460, size: 20 }, // ①..⑳
-  { base: 0x2776, size: 10 }, // ❶..❿
-  { base: 0x2780, size: 10 }, // ➀..➉
-  { base: 0x278a, size: 10 }, // ➊..➓
-  { base: 0x24f5, size: 10 }, // ⓵..⓾
-  { base: 0x3251, size: 15 }, // ㉑..㉟
-  { base: 0x32b1, size: 15 }, // ㊱..㊿
-] as const;
-
-/** 정규형 — 계열이 달라도 같은 번호면 **같은 글자**로 모은다(1..20 밖은 null). */
-function canonicalCircled(n: number): string | null {
-  return n >= 1 && n <= 20 ? String.fromCodePoint(0x2460 + n - 1) : null;
-}
-
 /**
  * 이 글자가 «둘러싼 숫자»면 그 번호, 아니면 0. PUA 잔재는 `repairGlyphs` 가 먼저 편다.
+ *
+ * 계열표 자체는 `src/lib/math/circledNumber.ts` **한 곳**에 있다.
  */
 export function circledValue(ch: string): number {
-  const cp = repairGlyphs(ch).codePointAt(0);
-  if (cp === undefined) return 0;
-  for (const f of CIRCLED_FAMILIES) {
-    if (cp >= f.base && cp < f.base + f.size) return cp - f.base + 1;
-  }
-  return 0;
+  return circledValueRaw(repairGlyphs(ch));
 }
 
-/** 규칙이 아는 원문자 전체 — 테스트·census 가 사정권을 확인하는 데 쓴다. */
-export function knownCircledGlyphs(): string[] {
-  return CIRCLED_FAMILIES.flatMap((f) =>
-    Array.from({ length: f.size }, (_, i) => String.fromCodePoint(f.base + i)),
-  );
-}
+export { knownCircledGlyphs };
 
 /**
  * 원문자 정답의 집합. `③, ④` → `["③","④"]`. NFKC 를 거치지 않는다.
