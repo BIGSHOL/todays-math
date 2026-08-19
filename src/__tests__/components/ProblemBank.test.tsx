@@ -1139,3 +1139,122 @@ describe("[D-22] 문제은행 — 검수 승격 (MSW)", () => {
     ).toBeInTheDocument();
   });
 });
+
+/**
+ * **학년·대단원 열을 누르면 그 무리 전체가 범위**가 된다 (원장님 확정 2026-08-19
+ * 「학년 전체 그렇게 해」).
+ *
+ * 계단식 드롭다운을 걷어내면서 잃었던 손놀림이다 — 종전에는 「중2 전체」가 select
+ * 한 번이었는데, 열이 **이동만** 하게 되자 그 학년의 첫·끝 소단원을 찾아 두 번
+ * 눌러야 했다(D-60 ⚠️).
+ *
+ * ⚠️ 이 동작은 `UnitRangePicker` 안에 있으므로 **확인테스트 범위(S-04)도 같이** 바뀐다.
+ *    한 단원만 고르는 `UnitTreePicker`(진도 기록)는 그대로다 — 그쪽은 `forUnitId` 를
+ *    안 넘기므로 종전 이동만 한다.
+ */
+describe("[S-08] 문제은행 — 무리 전체 고르기 (MSW)", () => {
+  const EMPTY_LIST = { data: [], meta: { page: 1, pageSize: 20, total: 0 } };
+
+  function captureQueries() {
+    const captured: URLSearchParams[] = [];
+    server.use(
+      http.get("/api/problems", ({ request }) => {
+        captured.push(new URL(request.url).searchParams);
+        return HttpResponse.json(EMPTY_LIST);
+      }),
+    );
+    return captured;
+  }
+
+  async function openPicker(user: ReturnType<typeof userEvent.setup>) {
+    const open = screen.getByRole("button", { name: /^범위/ });
+    await waitFor(() => {
+      expect(open).toBeEnabled();
+    });
+    await user.click(open);
+  }
+
+  /** `orderIndex` 순으로 그 무리의 첫·끝. 배열 순서에 기대지 않는다. */
+  const 무리 = (inGroup: (u: (typeof MOCK_UNITS)[number]) => boolean) => {
+    const list = MOCK_UNITS.filter(inGroup)
+      .slice()
+      .sort((a, b) => a.orderIndex - b.orderIndex);
+    return { first: list[0]!, last: list[list.length - 1]! };
+  };
+
+  it("학년을 누르면 그 학년 처음부터 끝까지가 범위가 된다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+    const grade = MOCK_UNITS[0]!.grade;
+    const { first, last } = 무리((u) => u.grade === grade);
+    // 전제: 그 학년에 소단원이 둘 이상이어야 「전체」가 뜻이 있다.
+    expect(first.id).not.toBe(last.id);
+
+    await openPicker(user);
+    await user.click(screen.getByRole("button", { name: grade }));
+
+    await waitFor(() => {
+      expect(captured.at(-1)?.get("unitFrom")).toBe(first.id);
+    });
+    expect(captured.at(-1)?.get("unitTo")).toBe(last.id);
+  });
+
+  it("대단원을 누르면 그 대단원 전체가 범위가 된다", async () => {
+    const { user } = await renderBank();
+    const captured = captureQueries();
+    const { grade, chapter } = MOCK_UNITS[0]!;
+    const { first, last } = 무리(
+      (u) => u.grade === grade && u.chapter === chapter,
+    );
+    expect(first.id).not.toBe(last.id);
+
+    await openPicker(user);
+    await user.click(screen.getByRole("button", { name: chapter }));
+
+    await waitFor(() => {
+      expect(captured.at(-1)?.get("unitFrom")).toBe(first.id);
+    });
+    expect(captured.at(-1)?.get("unitTo")).toBe(last.id);
+  });
+
+  it("학년을 누른 뒤에도 **누른 학년의 첫 대단원**이 펼쳐진 채다", async () => {
+    // 🔴 이동을 같이 저장하지 않으면 다음 렌더에서 `endUnitId`(= 그 학년 마지막
+    //    단원) 기준으로 열이 다시 잡혀 **마지막 대단원**이 열린다 — 누른 곳과 다른
+    //    데가 펼쳐진다.
+    const { user } = await renderBank();
+    const grade = MOCK_UNITS[0]!.grade;
+    const 첫대단원 = MOCK_UNITS.filter((u) => u.grade === grade).sort(
+      (a, b) => a.orderIndex - b.orderIndex,
+    )[0]!.chapter;
+    const 첫소단원 = MOCK_UNITS.find(
+      (u) => u.grade === grade && u.chapter === 첫대단원,
+    )!.section;
+
+    await openPicker(user);
+    await user.click(screen.getByRole("button", { name: grade }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: 첫소단원 }),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("무리를 고른 뒤 소단원을 누르면 **새 시작**이 된다 — 끝으로 붙지 않는다", async () => {
+    const { user } = await renderBank();
+    const grade = MOCK_UNITS[0]!.grade;
+    await openPicker(user);
+    await user.click(screen.getByRole("button", { name: grade }));
+
+    const captured = captureQueries();
+    const 소단원 = MOCK_UNITS[1]!;
+    await user.click(
+      await screen.findByRole("button", { name: 소단원.section }),
+    );
+
+    await waitFor(() => {
+      expect(captured.at(-1)?.get("unitFrom")).toBe(소단원.id);
+    });
+    expect(captured.at(-1)?.get("unitTo")).toBe(소단원.id);
+  });
+});

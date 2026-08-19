@@ -28,16 +28,29 @@ export function useUnitTree(units: UnitNode[], currentUnitId: string | null) {
     [units, grade, chapter],
   );
 
-  function selectGrade(next: string) {
+  /**
+   * 열을 옮긴다.
+   *
+   * `forUnitId` — **바뀐 뒤의** 현재 단원. 브라우즈 상태는 `currentUnitId` 에 매여
+   * 있어서(`active` 판정), 이동과 **동시에** 선택이 바뀌는 경우 지금 값으로 저장하면
+   * 다음 렌더에서 버려진다. 범위 피커의 「학년 전체」가 그 경우다 — 학년을 누르면
+   * 범위가 그 학년 끝 단원으로 옮겨 가므로, 그 id 로 저장해야 이동이 살아남는다.
+   * 안 넘기면 종전대로 지금 값을 쓴다(`UnitTreePicker` 는 이동만 하므로 안 넘긴다).
+   */
+  function selectGrade(next: string, forUnitId?: string | null) {
     setBrowse({
-      unitId: currentUnitId,
+      unitId: forUnitId === undefined ? currentUnitId : forUnitId,
       grade: next,
       chapter: chaptersOf(units, next)[0] ?? "",
     });
   }
 
-  function selectChapter(next: string) {
-    setBrowse({ unitId: currentUnitId, grade, chapter: next });
+  function selectChapter(next: string, forUnitId?: string | null) {
+    setBrowse({
+      unitId: forUnitId === undefined ? currentUnitId : forUnitId,
+      grade,
+      chapter: next,
+    });
   }
 
   return {

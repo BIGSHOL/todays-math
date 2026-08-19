@@ -75,6 +75,37 @@ export function UnitRangePicker({
   const groupTouched = (predicate: (unit: UnitNode) => boolean) =>
     units.some((unit) => predicate(unit) && inRange(unit));
 
+  /**
+   * **학년·대단원 열을 누르면 그 무리 전체가 범위가 된다**
+   * (원장님 확정 2026-08-19 「학년 전체 그렇게 해」).
+   *
+   * 종전에는 열이 **이동만** 했다. 그래서 「중2 전체」를 보려면 그 학년의 첫 소단원과
+   * 끝 소단원을 찾아 두 번 눌러야 했다 — 문제은행이 계단식 드롭다운을 걷어내면서
+   * 잃은 손놀림이 그것이다(D-60).
+   *
+   * ⚠️ 이동도 **같이** 한다. 그냥 두면 다음 렌더에서 `endUnitId` 기준으로 열이
+   *    다시 잡혀 **그 학년의 마지막 대단원**이 열린다 — 누른 곳과 다른 데가 펼쳐진다.
+   *    그래서 바뀐 뒤의 현재 단원(`last.id`)으로 이동을 저장한다.
+   *
+   * ⚠️ 순서는 `orderIndex` 로 정한다. `units` 배열 순서에 기대면 목록을 정렬해 주는
+   *    쪽이 바뀌는 날 조용히 다른 범위가 된다.
+   */
+  const pickGroup = (
+    inGroup: (unit: UnitNode) => boolean,
+    move: (lastId: string) => void,
+  ) => {
+    const members = units
+      .filter(inGroup)
+      .slice()
+      .sort((a, b) => a.orderIndex - b.orderIndex);
+    const first = members[0];
+    const last = members[members.length - 1];
+    if (!first || !last) return;
+    move(last.id);
+    onPickStart?.(first.id);
+    onChange(first.id, last.id);
+  };
+
   const pickSequential = (unitId: string) => {
     const picked = byId.get(unitId);
     if (!picked) return;
@@ -168,7 +199,12 @@ export function UnitRangePicker({
               label={grade}
               selected={tree.grade === grade}
               inRange={groupTouched((unit) => unit.grade === grade)}
-              onClick={() => tree.selectGrade(grade)}
+              onClick={() =>
+                pickGroup(
+                  (unit) => unit.grade === grade,
+                  (lastId) => tree.selectGrade(grade, lastId),
+                )
+              }
             />
           ))}
         </PickerColumn>
@@ -181,7 +217,13 @@ export function UnitRangePicker({
               inRange={groupTouched(
                 (unit) => unit.grade === tree.grade && unit.chapter === chapter,
               )}
-              onClick={() => tree.selectChapter(chapter)}
+              onClick={() =>
+                pickGroup(
+                  (unit) =>
+                    unit.grade === tree.grade && unit.chapter === chapter,
+                  (lastId) => tree.selectChapter(chapter, lastId),
+                )
+              }
             />
           ))}
         </PickerColumn>
