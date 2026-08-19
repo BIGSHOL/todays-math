@@ -124,10 +124,48 @@ EXAM_SYNTAX = re.compile(f"[{re.escape(CIRCLED_ANSWER)}]")
 REVIEWED_OUT = {
     "019fd1db-46f3-75f0-8e0e-fd4781b53354":
         "「보기」 글상자만 잡힌다 — 발문이 가리키는 사각형 ABCD 가 칸 밖이다",
+    # 2026-08-19 넓힘 폴백 18건 육안 검수. **본문 밖 근거로 잘린 것을 알았다** —
+    # 발문이 「8개의 공장」이고 정답이 28 = C(8,2) 인데 오려진 칸에는 공장이 5개뿐이고
+    # 왼쪽 아래가 잘렸다. 잘린 그림은 지면에서 티가 안 난다(2026-08-18 교훈).
+    #
+    # ⚠️ 왜 자동으로 안 걸리나: `figure_rect` 에는 「칸 경계를 가로지르는 것이 있으면
+    # 넓히고, 못 삼키면 오려내지 않는다」는 불변식이 있는데, **이미지는 `min_overlap`
+    # (12pt) 보다 적게 겹치면 후보에서 아예 빠진다.** 후보가 아니면 «가로질렀다»고
+    # 셀 수도 없다. 이 공장 아이콘들은 작은 이미지 조각 여럿이라 그 구멍에 그대로 빠진다.
+    # 고치려면 결과에 **칸 좌표를 남기고** 그 좌표로 이미지 잘림을 따로 재야 한다.
+    "019fd1d7-fe94-778d-9c5e-3739ec3aa6d7":
+        "공장 8개 중 5개만 오려졌고 왼쪽 아래가 잘렸다 — 정답 28=C(8,2) 가 8개를 요구한다",
 }
 #: 계획이 「그림이 아니다」로 짚어 준 자리(번호 배지·발문)가 칸에 이만큼 들어오면 버린다.
 #: 글자 획 하나가 보이기 시작하는 크기다 — 비율이 아니라 **크기**로 잰다.
 INTRUSION_W, INTRUSION_H = 2.0, 4.0
+#: **「오른쪽 그림」 폴백** — 두 단 배치라 `source_coords` 가 글자 열만 덮는 문항이 있다.
+#: 실측(2026-08-19): 「문항 안에서 그림을 못 찾았다」 47건은 **전부 상자 안에 획이 있다**
+#: (획 0개인 문항 0건). 못 찾은 것이지 없는 것이 아니다. 여섯 칸을 지면에서 떠서 보니
+#: 넷은 그림이 상자 안에 그대로 있고, 둘은 「**오른쪽** 그림에서…」인데 상자가 왼쪽
+#: 글자 열만 덮고 있었다. 같은 세로 띠를 쪽 오른쪽 끝까지 넓혀 다시 찾으면 2 → 21건이다.
+#:
+#: ⚠️ **넓힘을 전체에 걸면 안 된다.** 이미 성공한 317건에 같은 넓힘을 대면 좌표가
+#: 달라지는 것 94 · 아예 못 찾게 되는 것 36 — **130건이 망가진다.** 그래서 이것은
+#: 「보통 상자로 못 찾았을 때만」 도는 **폴백**이다. 성공한 문항은 이 길에 들어오지도
+#: 못하므로 손실이 구조적으로 0이다(md5 로 검산한다).
+#:
+#: ⛔ 곁가지로 `thin_pt`(두께 0인 곧은 선 살리기)도 재 봤는데 **47건 중 0건을 얻고**
+#: 이미 회수한 52건의 좌표를 망친다(상자가 글자 열까지 왼쪽으로 벌어진다). 안 쓴다.
+WIDEN_RIGHT_MARGIN = 4.0
+#: 폴백으로 나온 칸에만 대는 가드 둘. **18건 전량을 눈으로 보고** 나온 것이다.
+#:
+#: ⑴ RPM 은 **두 단**이다(지면 623.6pt · 한 단 ≈ 311.8pt). 한 문항의 그림이 두 단을
+#:    가로지를 수는 없으므로, 넓힌 칸이 한 단보다 넓으면 **옆 단을 삼킨 것**이다.
+#:    실측: 나쁜 1건이 336pt 이고 좋은 16건은 최대 104pt — 문턱이 아니라 3배 차이다.
+#:    (`019fd1d7-efa9` 는 팔각형 뒤에 옆 문항 `0477` 의 발문과 그림을 통째로 달고 나왔다.
+#:     기존 «문장 침입» 가드가 못 잡은 이유는 그것이 **한 줄** 한글을 세는데 단이 좁아
+#:     한 줄이 11자였기 때문이다 — `SENTENCE_KO` 는 12다.)
+#:
+#: ⑵ 칸에 남은 글자가 **문항 번호 하나뿐**이면 그림이 아니라 번호 배지다
+#:    (`019fd1d9-9cdf` 는 `0467` 만 오려졌다). 계획이 `avoid` 를 안 준 문항에서 난다.
+COLUMN_W = 311.8
+BADGE_ONLY = re.compile(r"^\d{3,5}$")
 #: 칸 경계에 걸친 요소는 **절반 이상이 안쪽일 때만** 삼킨다 — 그 아래는 남의 것이다.
 CROSS_KEEP = 0.4
 #: 그림이 `source_coords` 밖으로 나가는 것을 이만큼(pt)까지 허용한다.
@@ -534,6 +572,9 @@ def main() -> None:
     ap.add_argument("--out", default=str(RESULT), help="결과 JSON 을 낼 곳")
     ap.add_argument("--content", default="scripts/qa/reports/rpm-crop-content.json",
                     help="DB 본문 — 오려낸 칸에 발문이 딸려 왔는지 보는 근거")
+    # 기본은 꺼짐 — 회수 280건을 다시 흔들지 않는다(`thin_pt` 와 같은 이유).
+    ap.add_argument("--widen-fallback", action="store_true",
+                    help="보통 상자로 **못 찾았을 때만** 띠를 쪽 오른쪽 끝까지 넓혀 다시 찾는다")
     a = ap.parse_args()
 
     plan_path = pathlib.Path(a.plan)
@@ -627,6 +668,15 @@ def main() -> None:
             # 「삼키지 말 것」과 「들어오면 버릴 것」은 **다른 목록**이다 — 계획 주석 참조.
             forbid = [fitz.Rect(*a) for a in it.get("forbid", avoid)]
             fig = figure_rect(page, box, db_key, avoid=avoid)
+            widened = False
+            if fig is None and a.widen_fallback:
+                # 「오른쪽 그림」 — 같은 세로 띠를 쪽 오른쪽 끝까지 넓혀 한 번 더 본다.
+                # **여기 들어오는 것은 이미 실패한 문항뿐**이므로 성공분은 안 흔들린다.
+                wide = fitz.Rect(box.x0, box.y0,
+                                 page.rect.x1 - WIDEN_RIGHT_MARGIN, box.y1) & page.rect
+                if wide.width > box.width + 1:
+                    fig = figure_rect(page, wide, db_key, avoid=avoid)
+                    widened = fig is not None
             if fig is None:
                 fail.append(
                     {"externalId": it["externalId"], "이유": "문항 안에서 그림을 못 찾았다"}
@@ -699,10 +749,26 @@ def main() -> None:
                              "이유": "칸에 지면 글자가 들어왔다 (번호 배지·발문)"})
                 continue
 
+            # ── 폴백으로 나온 칸에만 대는 가드 (상수 주석 참조) ──
+            if widened:
+                if rect.width > COLUMN_W:
+                    fail.append({"externalId": it["externalId"],
+                                 "이유": f"넓힌 칸이 한 단보다 넓다 ({rect.width:.0f}pt)"})
+                    continue
+                bare = "".join(page.get_text("text", clip=rect).split())
+                if BADGE_ONLY.match(bare):
+                    fail.append({"externalId": it["externalId"],
+                                 "이유": f"칸에 문항 번호 배지만 있다 ({bare})"})
+                    continue
+
             out.parent.mkdir(parents=True, exist_ok=True)
             pix = page.get_pixmap(clip=rect, dpi=a.dpi)
             pix.save(str(out))
-            ok.append({"problemId": it["problemId"], "publicPath": to_public(out)})
+            rec = {"problemId": it["problemId"], "publicPath": to_public(out)}
+            if widened:
+                # 폴백으로 나온 것은 **따로 표시한다** — 육안 검수에서 이것부터 본다.
+                rec["넓힘폴백"] = True
+            ok.append(rec)
     finally:
         for d in docs.values():
             d.close()

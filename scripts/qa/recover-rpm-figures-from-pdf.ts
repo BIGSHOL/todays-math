@@ -35,6 +35,7 @@ import { pathToFileURL } from "node:url";
 import { PrismaClient } from "@prisma/client";
 
 import { readEnvFile } from "../import/readEnvFile";
+import { mergeLedgerRows } from "./revertLedger";
 import {
   classifyFigure,
   MENTIONS_FIGURE_WHERE,
@@ -262,6 +263,15 @@ async function fetchSources() {
 }
 
 /** 오려낸 결과를 DB 에 붙인다. **파일이 실재하는 것만.** */
+interface LedgerRow {
+  /** `mergeLedgerRows` 가 겹침을 가르는 열쇠. 옛 원장에는 없어서 `problemId` 로 채운다. */
+  id: string;
+  problemId: string;
+  figureUrls: string[];
+  figureSource: string | null;
+  새경로: string | null;
+}
+
 async function attach() {
   const { readFile } = await import("node:fs/promises");
   // 계획을 두 벌(관문 통과분 · 무리 그림) 돌리면 결과도 두 벌이다.
@@ -307,27 +317,54 @@ async function attach() {
     where: { id: { in: alive.map((r) => r.problemId) } },
     select: { id: true, figureUrls: true, figureSource: true },
   });
-  const byId = new Map(alive.map((r) => [r.problemId, r.publicPath]));
   await mkdir(path.dirname(ATTACH_LEDGER), { recursive: true });
+
+  // 🔴 **덮어쓰지 않고 이어 쓴다.** 이 자는 「붙이기 전 상태」를 적는데, 이미 붙인 뒤
+  // 다시 돌리면 그 «전 상태»가 **이미 붙은 값**이 된다 — 그대로 쓰면 앞서 붙인 것을
+  // 되돌릴 근거가 사라진다. 실측(2026-08-19): 149행 전부 `figureUrls: []` 이던 원장이
+  // 재실행 한 번에 「317행이 이미 있었음」으로 바뀌었다. `revertLedger.ts` 가 시연으로
+  // 잡아 둔 바로 그 사고인데 이 스크립트만 그 헬퍼에 배선되지 않았다.
+  //
+  // 합칠 때 **옛 행이 이긴다** — 「가장 처음의 빈 상태」가 되돌릴 곳이기 때문이다.
+  // (`mergeLedgerRows` 는 새 것을 앞에 두므로 인자 순서를 뒤집어 넘긴다.)
+  let previous: LedgerRow[] = [];
+  try {
+    const raw =
+      (
+        JSON.parse(await readFile(ATTACH_LEDGER, "utf8")) as {
+          행?: Omit<LedgerRow, "id">[];
+        }
+      ).행 ?? [];
+    previous = raw.map((r) => ({ ...r, id: r.problemId }));
+  } catch {
+    /* 원장이 아직 없다 */
+  }
+  const fresh: LedgerRow[] = before.map((b) => ({
+    id: b.id,
+    problemId: b.id,
+    figureUrls: b.figureUrls,
+    figureSource: b.figureSource,
+    새경로: alive.find((r) => r.problemId === b.id)?.publicPath ?? null,
+  }));
+  const ledger = mergeLedgerRows(fresh, previous);
   await writeFile(
     ATTACH_LEDGER,
     JSON.stringify(
       {
         기준: "붙이기 전 상태 — 되돌릴 때 이 값을 그대로 쓴다",
-        건수: before.length,
-        행: before.map((b) => ({
-          problemId: b.id,
-          figureUrls: b.figureUrls,
-          figureSource: b.figureSource,
-          새경로: byId.get(b.id) ?? null,
-        })),
+        누적: "재실행해도 옛 행을 지우지 않는다. 같은 id 면 **먼저 적힌 것**이 이긴다.",
+        건수: ledger.rows.length,
+        행: ledger.rows,
       },
       null,
       1,
     ),
     "utf8",
   );
-  console.log(`되돌리기 원장 ${before.length}행 → ${ATTACH_LEDGER}`);
+  console.log(
+    `되돌리기 원장 ${ledger.rows.length}행 → ${ATTACH_LEDGER}` +
+      ` (새 ${ledger.rows.length - ledger.carried} · 이어받음 ${ledger.carried})`,
+  );
   const dirty = before.filter((b) => b.figureUrls.length > 0);
   if (dirty.length > 0) {
     console.log(
