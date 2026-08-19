@@ -182,6 +182,8 @@ async function runDbChecks(): Promise<Check[]> {
         );
 
         // ── B2. Prisma create (앱 라우트 3곳이 쓰는 길) ──
+        // exam-wiring: 테스트 — 배선 검증용 탐침이다. `source: "manual"` 을 넣고
+        //               트랜잭션째 되돌린다. 기출을 적재하는 경로가 아니다
         const viaPrisma = await tx.problem.create({
           data: {
             userId: user.id,
@@ -201,6 +203,7 @@ async function runDbChecks(): Promise<Check[]> {
         );
 
         // ── B3. createMany 한 문장에 여러 행 (적재 스크립트가 쓰는 길) ──
+        // exam-wiring: 테스트 — 위와 같다. 일괄 삽입에도 코드가 붙는지만 본다
         await tx.problem.createMany({
           data: Array.from({ length: 25 }, (_, i) => ({
             userId: user.id,
