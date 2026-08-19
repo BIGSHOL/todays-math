@@ -38,6 +38,19 @@ import { tokenizeMath } from "../../src/lib/math/segments";
 import { buildHwpContent, type HwpQ } from "./hwpJudgeRules";
 
 const VERDICTS = "scripts/qa/reports/hwp-verdicts.jsonl";
+
+/**
+ * **사람이 눈으로 보고 뺀 것.** 판정은 「교체」인데 실제로 열어 보니 개악인 행이다.
+ * 자동 검사(`H5_렌더열위`)는 KaTeX **실패 수**만 세므로, 「성공적으로 렌더되는 오답」을
+ * 구조적으로 못 잡는다(CLAUDE.md 2026-08-16 「KaTeX 가 초록이라고 지면이 멀쩡한 게 아니다」).
+ * 뺀 이유를 여기 적어 둔다 — 자동 규칙으로 바꿀 수 있게 되면 지운다.
+ */
+const REVIEWED_OUT: Record<string, string> = {
+  "5759-5":
+    "HWP→LaTeX 가 근호를 잘못 닫는다 — `\sqrt{(}-b)^{2}` 는 근호가 여는 괄호 하나만 덮는다. " +
+    "KaTeX 는 이걸 **에러로 보지 않아** 렌더 비교로는 안 걸린다. DB 쪽도 `√(-b)^{2}` 로 " +
+    "온전치 않으므로 «교체가 개선» 이라고 말할 수 없다. 사람이 원본을 보고 정해야 한다.",
+};
 const SNAPSHOT = "scripts/qa/reports/db-content.jsonl";
 const HWP_DIR = "scripts/qa/reports/hwp-latex";
 const BACKUP_DEFAULT = "scripts/qa/reports/hwp-replace-backup.json";
@@ -92,7 +105,9 @@ function mathFail(text: string): { fail: number; total: number } {
   for (const seg of tokenizeMath(text ?? "")) {
     if (seg.type === "text") continue;
     total += 1;
-    if (renderKatexSafe(seg.value, seg.type === "display").includes("math-raw")) {
+    if (
+      renderKatexSafe(seg.value, seg.type === "display").includes("math-raw")
+    ) {
       fail += 1;
     }
   }
@@ -101,9 +116,8 @@ function mathFail(text: string): { fail: number; total: number } {
 
 /** 게이트 — DB 에 붙기 전에 본다. */
 async function gateOrExit(): Promise<boolean> {
-  const { allowSharedImport } = await import(
-    "../../src/lib/import/classifyDatabaseUrl"
-  );
+  const { allowSharedImport } =
+    await import("../../src/lib/import/classifyDatabaseUrl");
   const { inspectDatabaseTargets } = await import("../import/resolveDbTarget");
   const target = (await inspectDatabaseTargets()).selected;
   if (!target.canMigrateOrLoad && !allowSharedImport(target)) {
@@ -136,11 +150,23 @@ async function buildPlan(fixType: boolean): Promise<{
   before: { fail: number; total: number };
   after: { fail: number; total: number };
 }> {
+  const reviewedOut: string[] = [];
   const verdicts = (await readFile(VERDICTS, "utf-8"))
     .split("\n")
     .filter(Boolean)
     .map((l) => JSON.parse(l))
-    .filter((v) => v.id && v.verdict === "교체");
+    .filter((v) => v.id && v.verdict === "교체")
+    .filter((v) => {
+      const why = REVIEWED_OUT[v.externalId ?? ""];
+      if (why) reviewedOut.push(`${v.externalId}: ${why}`);
+      return !why;
+    });
+
+  if (reviewedOut.length) {
+    // 조용히 빼면 표가 「전부 했다」로 읽힌다(CLAUDE.md 2026-08-18).
+    console.log(`사람이 보고 뺀 행 ${reviewedOut.length}`);
+    for (const w of reviewedOut) console.log(`  · ${w}`);
+  }
 
   const wanted = new Map<string, (typeof verdicts)[number]>();
   for (const v of verdicts) wanted.set(v.id, v);
@@ -168,7 +194,8 @@ async function buildPlan(fixType: boolean): Promise<{
     if (!hwpCache.has(v.examId)) {
       hwpCache.set(
         v.examId,
-        JSON.parse(await readFile(`${HWP_DIR}/${v.examId}.json`, "utf-8")).questions ?? [],
+        JSON.parse(await readFile(`${HWP_DIR}/${v.examId}.json`, "utf-8"))
+          .questions ?? [],
       );
     }
     const q = hwpCache.get(v.examId)!.find((x) => x.number === v.hwpNumber);
@@ -198,7 +225,11 @@ async function buildPlan(fixType: boolean): Promise<{
       beforeType: snap.problemType,
       S: v.S,
     };
-    if (fixType && snap.problemType === "서술형" && (q.choices?.length ?? 0) >= 4) {
+    if (
+      fixType &&
+      snap.problemType === "서술형" &&
+      (q.choices?.length ?? 0) >= 4
+    ) {
       entry.problemType = mapProblemType(q.type ?? undefined);
     }
     plan.push(entry);
@@ -240,7 +271,8 @@ async function main(): Promise<void> {
       : BACKUP_DEFAULT;
   // --expect-diff N: DB 와 산출물이 다른 행 수가 N 이 아니면 **멈춘다**(코디네이터 조건).
   const expectDiffIdx = process.argv.indexOf("--expect-diff");
-  const expectDiff = expectDiffIdx >= 0 ? Number(process.argv[expectDiffIdx + 1]) : null;
+  const expectDiff =
+    expectDiffIdx >= 0 ? Number(process.argv[expectDiffIdx + 1]) : null;
 
   // ── 검증 모드: 백업과 현재 DB 를 대조한다 ────────────────────────────
   if (verify) {
@@ -258,7 +290,10 @@ async function main(): Promise<void> {
     const { PrismaClient } = await import("@prisma/client");
     const prisma = new PrismaClient();
     try {
-      const now = await fetchRows(prisma as never, backup.rows.map((r) => r.id));
+      const now = await fetchRows(
+        prisma as never,
+        backup.rows.map((r) => r.id),
+      );
       const t = {
         백업행: backup.rows.length,
         현재조회: now.size,
@@ -269,8 +304,15 @@ async function main(): Promise<void> {
       };
       const otherChanged: Record<string, number> = {};
       const OTHER: Array<keyof BackupRow> = [
-        "answer", "figureUrls", "figureSource", "externalId",
-        "unitId", "score", "difficulty", "reviewStatus", "solution",
+        "answer",
+        "figureUrls",
+        "figureSource",
+        "externalId",
+        "unitId",
+        "score",
+        "difficulty",
+        "reviewStatus",
+        "solution",
         "problemType",
       ];
       for (const b of backup.rows) {
@@ -308,7 +350,10 @@ async function main(): Promise<void> {
             " score · difficulty · reviewStatus · solution · problemType: **전부 0건 변경**",
         );
       } else {
-        console.log("⚠️ 의도 밖 컬럼 변경:", JSON.stringify(Object.fromEntries(others)));
+        console.log(
+          "⚠️ 의도 밖 컬럼 변경:",
+          JSON.stringify(Object.fromEntries(others)),
+        );
       }
     } finally {
       await prisma.$disconnect();
@@ -324,7 +369,10 @@ async function main(): Promise<void> {
     const { PrismaClient } = await import("@prisma/client");
     const prisma = new PrismaClient();
     try {
-      const now = await fetchRows(prisma as never, plan.map((p) => p.id));
+      const now = await fetchRows(
+        prisma as never,
+        plan.map((p) => p.id),
+      );
       let same = 0;
       const differ: PlanRow[] = [];
       for (const p of plan) {
@@ -334,9 +382,17 @@ async function main(): Promise<void> {
         else differ.push(p);
       }
       console.log("── DB 본문 ↔ 현재 HWP 산출물 대조 (읽기 전용) ──");
-      console.log(`계획 ${plan.length}행 · 같음 ${same} · **다름 ${differ.length}**`);
+      console.log(
+        `계획 ${plan.length}행 · 같음 ${same} · **다름 ${differ.length}**`,
+      );
       if (differ.length > 0) {
-        console.log("  다른 행: " + differ.slice(0, 30).map((d) => d.externalId).join(", "));
+        console.log(
+          "  다른 행: " +
+            differ
+              .slice(0, 30)
+              .map((d) => d.externalId)
+              .join(", "),
+        );
       }
     } finally {
       await prisma.$disconnect();
@@ -349,7 +405,8 @@ async function main(): Promise<void> {
   const built = await buildPlan(fixType);
   const { snapshot, missingHwp, before, after } = built;
   let plan = built.plan;
-  const pct = (a: number, b: number) => (b ? ((a * 100) / b).toFixed(2) : "0.00");
+  const pct = (a: number, b: number) =>
+    b ? ((a * 100) / b).toFixed(2) : "0.00";
 
   // ── 쓰기 대상 좁히기 + 멈춤 조건 ────────────────────────────────────
   // 둘 다 **현재 DB 상태**를 봐야 하므로 여기서 한 번 읽는다(쓰기는 아직 없다).
@@ -358,7 +415,10 @@ async function main(): Promise<void> {
     const prisma = new PrismaClient();
     let cur: Map<string, BackupRow>;
     try {
-      cur = await fetchRows(prisma as never, plan.map((p) => p.id));
+      cur = await fetchRows(
+        prisma as never,
+        plan.map((p) => p.id),
+      );
     } finally {
       await prisma.$disconnect();
     }
@@ -366,13 +426,14 @@ async function main(): Promise<void> {
       const c = cur.get(p.id);
       return c != null && c.content !== p.content;
     });
-    console.log(`대조 — 계획 ${plan.length}행 중 DB 와 다름 ${differ.length}행`);
+    console.log(
+      `대조 — 계획 ${plan.length}행 중 DB 와 다름 ${differ.length}행`,
+    );
     if (expectDiff !== null && differ.length !== expectDiff) {
       console.log(
         `
 중단 — 예상 ${expectDiff}행과 다릅니다(실제 ${differ.length}행).
-` +
-          "그 사이 무엇이 바뀌었는지 먼저 확인하세요.",
+` + "그 사이 무엇이 바뀌었는지 먼저 확인하세요.",
       );
       return;
     }
@@ -383,14 +444,21 @@ async function main(): Promise<void> {
         return;
       }
       const applied = new Set(
-        (JSON.parse(await readFile(BACKUP_DEFAULT, "utf-8")) as { rows: BackupRow[] })
-          .rows.map((r) => r.id),
+        (
+          JSON.parse(await readFile(BACKUP_DEFAULT, "utf-8")) as {
+            rows: BackupRow[];
+          }
+        ).rows.map((r) => r.id),
       );
-      const contaminated = differ.filter((p) => BASE64_BLOB.test(cur.get(p.id)!.content));
+      const contaminated = differ.filter((p) =>
+        BASE64_BLOB.test(cur.get(p.id)!.content),
+      );
       plan = contaminated.filter((p) =>
         onlyNewBase64 ? !applied.has(p.id) : applied.has(p.id),
       );
-      const label = onlyNewBase64 ? "--only-new-base64" : "--only-applied-base64";
+      const label = onlyNewBase64
+        ? "--only-new-base64"
+        : "--only-applied-base64";
       const kind = onlyNewBase64 ? "아직 안 넣은 것" : "이미 적재한 것";
       console.log(
         `${label} — 다름 ${differ.length} · 그중 오염 ${contaminated.length}` +
@@ -404,7 +472,10 @@ async function main(): Promise<void> {
     const { PrismaClient } = await import("@prisma/client");
     const prisma = new PrismaClient();
     try {
-      const current = await fetchRows(prisma as never, plan.map((p) => p.id));
+      const current = await fetchRows(
+        prisma as never,
+        plan.map((p) => p.id),
+      );
       await mkdir("scripts/qa/reports", { recursive: true });
       await writeFile(
         BACKUP,
@@ -439,20 +510,29 @@ async function main(): Promise<void> {
   await writeFile(
     PLAN,
     JSON.stringify(
-      plan.map((p) => ({ ...p, content: undefined, contentLen: p.content.length })),
+      plan.map((p) => ({
+        ...p,
+        content: undefined,
+        contentLen: p.content.length,
+      })),
     ),
     "utf-8",
   );
 
   const worse =
-    after.total > 0 && after.fail / after.total > before.fail / Math.max(1, before.total);
+    after.total > 0 &&
+    after.fail / after.total > before.fail / Math.max(1, before.total);
   if (worse) {
-    console.log("\n중단 — 교체 후 KaTeX 실패율이 더 높습니다. 규칙을 먼저 고치세요.");
+    console.log(
+      "\n중단 — 교체 후 KaTeX 실패율이 더 높습니다. 규칙을 먼저 고치세요.",
+    );
     return;
   }
 
   if (!apply) {
-    console.log("\n드라이런 — 변경 없음. 적용하려면 ALLOW_SHARED_IMPORT=1 ... --apply");
+    console.log(
+      "\n드라이런 — 변경 없음. 적용하려면 ALLOW_SHARED_IMPORT=1 ... --apply",
+    );
     return;
   }
 
@@ -477,12 +557,17 @@ async function main(): Promise<void> {
     );
     return;
   }
-  console.log(`백업 확인 — ${BACKUP} · ${backup.rows.length}행 · ${backup.takenAt}`);
+  console.log(
+    `백업 확인 — ${BACKUP} · ${backup.rows.length}행 · ${backup.takenAt}`,
+  );
 
   const { PrismaClient } = await import("@prisma/client");
   const prisma = new PrismaClient();
   try {
-    const current = await fetchRows(prisma as never, plan.map((p) => p.id));
+    const current = await fetchRows(
+      prisma as never,
+      plan.map((p) => p.id),
+    );
     let updated = 0;
     let skippedStale = 0;
     let skippedGone = 0;
@@ -522,7 +607,8 @@ async function main(): Promise<void> {
         },
       });
       updated += 1;
-      if (updated % 500 === 0) console.log(`  … ${updated} 적용`, { flush: true });
+      if (updated % 500 === 0)
+        console.log(`  … ${updated} 적용`, { flush: true });
     }
     console.log(
       `적용 ${updated}행 (그중 내 이전 적재분 재적용 ${reappliedMine})` +
