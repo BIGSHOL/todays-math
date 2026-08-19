@@ -198,3 +198,133 @@ describe("[그림] 표시 크기", () => {
     expect(screen.getByRole("img").className).toContain("max-w-");
   });
 });
+
+/**
+ * 🔴 RED → 🟢 **그림 인쇄 크기 — 픽셀이 아니라 물리 크기(mm)** (2026-08-19 트랙).
+ *
+ * 오늘 지면은 「픽셀 폭이 264.567(=70mm)을 넘으면 70mm, 아니면 픽셀 그대로」뿐이라
+ * **같은 삼각형이 문항마다 다른 크기**로 인쇄된다(원본 가로 41~7,343px).
+ * 원장님 지시(2026-08-19) 「모든 그림이나 도형 크기가 **일관성이 있어야**」.
+ *
+ * 여기서 잠그는 것:
+ *   1. mm 를 모르면 **마크업이 오늘과 한 글자도 다르지 않다**(회귀 0)
+ *   2. mm 를 알면 `width: Xmm` — 그리고 **70mm 를 넘지 않는다**
+ *   3. 인쇄 상한 클래스(`print:max-w-[70mm]`)가 **여전히 붙어 있다**
+ *      (⚠️ 인라인 style 은 Tailwind 를 이긴다. 예전에 카드 폭을 인라인으로 박아
+ *       `print:w-auto` 가 죽어 인쇄가 깨진 적이 있다.)
+ *   4. **치수를 모르면 mm 도 안 쓴다** — 자와 지면이 같이 모른다
+ */
+describe("[그림크기] 지면이 물리 크기로 그린다", () => {
+  const ONE = ["/figures/1/q01.png"];
+
+  it("mm 를 모르면 인라인 style 을 아예 안 붙인다 — 오늘 그대로", () => {
+    render(<ProblemContent content={STEM} figureUrls={ONE} />);
+    expect(screen.getByRole("img").getAttribute("style")).toBeNull();
+  });
+
+  it("치수만 알고 mm 를 모르면 여전히 안 붙인다", () => {
+    render(
+      <ProblemContent
+        content={STEM}
+        figureUrls={ONE}
+        figureDims={[800, 600]}
+      />,
+    );
+    expect(screen.getByRole("img").getAttribute("style")).toBeNull();
+  });
+
+  it("mm 를 알면 `width: Xmm` 로 그린다", () => {
+    render(
+      <ProblemContent
+        content={STEM}
+        figureUrls={ONE}
+        figureDims={[800, 600]}
+        figureSourceMm={[40]}
+      />,
+    );
+    expect(screen.getByRole("img").style.width).toBe("40mm");
+  });
+
+  it("70mm 를 넘는 원본은 70mm 로 잘라서 적는다", () => {
+    render(
+      <ProblemContent
+        content={STEM}
+        figureUrls={ONE}
+        figureDims={[3000, 2000]}
+        figureSourceMm={[150]}
+      />,
+    );
+    expect(screen.getByRole("img").style.width).toBe("70mm");
+  });
+
+  it("인쇄 상한 클래스는 그대로 살아 있다 — 인라인만 믿지 않는다", () => {
+    render(
+      <ProblemContent
+        content={STEM}
+        figureUrls={ONE}
+        figureDims={[800, 600]}
+        figureSourceMm={[40]}
+      />,
+    );
+    expect(screen.getByRole("img").className).toContain("print:max-w-[70mm]");
+  });
+
+  it("치수를 모르면 mm 가 있어도 안 쓴다 — **자와 지면이 같이 모른다**", () => {
+    // 자(`parseFigureDimensions`)가 치수를 모를 때 mm 를 버리는데, 지면만 mm 로
+    // 그리면 자가 재는 지면과 실제 지면이 갈라진다. 같은 함수를 부르므로 같이 모른다.
+    render(
+      <ProblemContent
+        content={STEM}
+        figureUrls={ONE}
+        figureDims={[0, 0]}
+        figureSourceMm={[40]}
+      />,
+    );
+    expect(screen.getByRole("img").getAttribute("style")).toBeNull();
+  });
+
+  it("mm 배열 길이가 어긋나면 통째로 모른다 — 반쪽으로 그리지 않는다", () => {
+    render(
+      <ProblemContent
+        content={STEM}
+        figureUrls={["/figures/1/a.png", "/figures/1/b.png"]}
+        figureDims={[800, 600, 400, 300]}
+        figureSourceMm={[40]}
+      />,
+    );
+    for (const img of screen.getAllByRole("img"))
+      expect(img.getAttribute("style")).toBeNull();
+  });
+
+  it("여러 장이면 **장마다** 제 크기로 그린다", () => {
+    render(
+      <ProblemContent
+        content={STEM}
+        figureUrls={["/figures/1/a.png", "/figures/1/b.png"]}
+        figureDims={[800, 600, 400, 300]}
+        figureSourceMm={[40, 62.5]}
+      />,
+    );
+    const imgs = screen.getAllByRole("img");
+    expect(imgs[0]!.style.width).toBe("40mm");
+    expect(imgs[1]!.style.width).toBe("62.5mm");
+  });
+
+  it("인쇄 템플릿(ProblemBody)이 mm 를 실제로 실어 보낸다 — 배선이 끊기면 아무것도 안 바뀐다", () => {
+    render(
+      <ProblemBody
+        problem={{
+          id: "p1",
+          orderIndex: 1,
+          content: STEM,
+          answer: "$200$",
+          solution: null,
+          figureUrls: ONE,
+          figureDims: [800, 600],
+          figureSourceMm: [40],
+        }}
+      />,
+    );
+    expect(screen.getByRole("img").style.width).toBe("40mm");
+  });
+});
