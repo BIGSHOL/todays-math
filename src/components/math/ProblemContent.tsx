@@ -12,6 +12,23 @@ import { fitsTwoColumns } from "@/lib/math/displayWidth";
 import { CHOICE_MARKS } from "@/lib/math/circledNumber";
 import { parseProblemContent } from "@/lib/problem/parseProblemContent";
 
+/**
+ * 오려 온 그림은 배경이 **순백(#FFFFFF)** 인데 지면은 `--paper-warm`(#FCFCF8) 이다.
+ * 그대로 두면 그림 자리마다 **더 밝은 사각형**이 떠 보인다
+ * (원장님 2026-08-20: 「그림은 배경이 흰색인데, 문제지는 배경이 흰색이 아니라」).
+ *
+ * 곱셈 혼합은 흰색을 곱해도 바탕이 그대로 남으므로 **흰 배경이 사라지고** 검은 획·
+ * 글자는 진하게 남는다. 그림 파일은 하나도 안 건드리고, 되돌릴 때도 이 상수만 지운다.
+ *
+ * ⚠️ **클래스로 건다.** 인라인 `style` 에 넣으면 「mm 를 모르면 `style` 속성이 아예
+ *    없다」는 불변식이 깨진다(`problemFigures.test.tsx`).
+ * ⚠️ 화면(흰 배경)에서는 곱셈이 **아무 일도 안 한다** — 흰색 × 흰색은 흰색이다.
+ *    그래서 문제은행·검수 화면은 오늘 그대로다.
+ * 🔴 인쇄에서 혼합 처리는 프린터·드라이버마다 다를 수 있다 — 실물 검수 대상이다
+ *    (절대 규칙 6, `/dev/print-check`).
+ */
+export const FIGURE_BLEND_CLASS = "mix-blend-multiply";
+
 export interface ProblemContentProps {
   content: string;
   /**
@@ -99,7 +116,7 @@ export function ProblemContent({
         // 발문 뒤 — 스캔 그림과 같은 자리다. 장식 없음(05 §0).
         <div
           data-figure-svg
-          className="mt-3 max-w-[360px] print:max-w-[70mm] [&>svg]:h-auto [&>svg]:w-full print:break-inside-avoid"
+          className={`mt-3 max-w-[360px] print:max-w-[70mm] [&>svg]:h-auto [&>svg]:w-full print:break-inside-avoid ${FIGURE_BLEND_CLASS}`}
           dangerouslySetInnerHTML={{ __html: figureSvg }}
         />
       ) : null}
@@ -119,7 +136,7 @@ export function ProblemContent({
               // 작은 그림은 그대로 두고 큰 것만 줄인다.
               // ⚠️ 상한 클래스는 mm 를 알아도 **그대로 둔다** — mm 를 모르는 그림이
               //    같은 지면에 섞이고, `max-width` 는 인라인 `width` 도 이겨 이중 안전망이다.
-              className="h-auto w-auto max-w-full sm:max-w-[360px] print:max-w-[70mm]"
+              className={`h-auto w-auto max-w-full sm:max-w-[360px] print:max-w-[70mm] ${FIGURE_BLEND_CLASS}`}
               /**
                * 원본 지면에서 그 그림이 차지하던 **물리 폭**. 모르면 `undefined` 라
                * React 가 `style` 속성을 아예 안 만든다 — 마크업이 2026-08-19 이전 그대로다.

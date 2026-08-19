@@ -328,3 +328,41 @@ describe("[그림크기] 지면이 물리 크기로 그린다", () => {
     expect(screen.getByRole("img").style.width).toBe("40mm");
   });
 });
+
+/**
+ * 원장님 지시 2026-08-20: 「그림은 배경이 흰색인데, 문제지는 배경이 흰색이 아니라
+ * 좀 이상한건 있긴하네」.
+ *
+ * 지면은 `--paper-warm`(#FCFCF8) 이고 오려 온 그림은 배경이 순백(#FFFFFF) 이다.
+ * 그래서 그림 자리마다 **더 밝은 사각형**이 떠 보인다. 원장님이 고른 해법은
+ * 「그림을 종이색에 녹인다」 — `mix-blend-mode: multiply` 다.
+ *
+ * 곱셈 혼합은 흰색(1.0)을 곱해도 바탕이 그대로 남으므로 **흰 배경이 사라지고**,
+ * 검은 획·글자는 그대로 진하게 남는다. 그림 파일은 하나도 안 건드린다.
+ *
+ * ⚠️ **클래스로 건다. 인라인 `style` 에 넣지 마라** — 「mm 를 모르면 style 속성이
+ *    아예 없다」는 불변식(아래 「원본 치수를 모르므로…」)이 깨진다.
+ */
+describe("[그림] 흰 배경을 지면 색에 녹인다", () => {
+  it("그림에 곱셈 혼합을 건다", () => {
+    render(
+      <ProblemContent content={STEM} figureUrls={["/figures/2658/q13.png"]} />,
+    );
+    expect(screen.getByRole("img").className).toMatch(/\bmix-blend-multiply\b/);
+  });
+
+  it("도형 SVG 도 같은 규칙을 쓴다 — 한 지면에 섞여 나간다", () => {
+    const { container } = render(
+      <ProblemContent content={STEM} figureSvg="<svg><rect /></svg>" />,
+    );
+    const svgBox = container.querySelector("[data-figure-svg]");
+    expect(svgBox?.className).toMatch(/\bmix-blend-multiply\b/);
+  });
+
+  it("혼합을 인라인 style 로 걸지 않는다 — mm 를 모르면 style 은 여전히 없다", () => {
+    render(
+      <ProblemContent content={STEM} figureUrls={["/figures/2658/q13.png"]} />,
+    );
+    expect(screen.getByRole("img").getAttribute("style")).toBeNull();
+  });
+});
