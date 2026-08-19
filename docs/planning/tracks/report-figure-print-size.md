@@ -282,7 +282,10 @@ parseFigureDimensions(figureCount, figureDims, figureSourceMm)
 | 변이 시험 | 20개 · 잡힘 18 · 동치 2 · **안 잡힘 0** |
 
 새로 넣은 테스트: `figurePrintSize.test.ts`(28) ·
-`printFigureHeight.test.ts`(+15) · `problemFigures.test.tsx`(+9).
+`printFigureHeight.test.ts`(+15) · `problemFigures.test.tsx`(+9) ·
+`printGeometryPin.test.ts`(그림 상한이 **세 곳**에서 한 수인지 — 지면 CSS `70mm` ·
+자의 실측 px `264.567` · 규칙의 `FIGURE_MAX_WIDTH_MM`. 70→71 로 망가뜨려
+빨개지는 것을 확인했다).
 
 **덤 — 남의 가드가 나를 잡았다.** `/dev/print-check` 에 항목을 더하자
 `PrintCheck.test.tsx` 의 「항목 수가 바뀌면 알아차린다」가 18→19 로 빨개졌다.
