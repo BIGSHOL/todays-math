@@ -8,7 +8,9 @@ export interface TestPrintProblem {
   solution: string | null;
   /**
    * 출제 형식 — 객관식 | 단답형 | 서술형 (`Problem.questionType`).
-   * 지면이 「서술형 n」 표시를 붙일지 여기서 갈린다(`assignEssayLabels`).
+   * 지면이 「서술형 n」·「단답형 n」 표시를 붙일지 여기서 갈린다
+   * (`assignSubjectiveLabels`). 원본 시험지의 `서답형` 은 이 컬럼에서 이미
+   * `서술형` 으로 합쳐져 있다 — 원본 표기 자체는 따로 기억한다(원장님 확정 2026-08-19).
    * 본문에 박혀 있던 원본 라벨을 걷어낸 뒤로는 **이 값이 유일한 근거**다.
    */
   questionType?: string | null;
