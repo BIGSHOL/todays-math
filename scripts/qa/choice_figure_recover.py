@@ -51,8 +51,23 @@ _spec.loader.exec_module(mapfig)
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
+# ── 원문자 목록은 **한 곳**에서 온다 ──────────────────────────────────────────
+# `scripts/qa/circled-glyphs.json` 은 `src/lib/math/circledNumber.ts` 에서 생성된다
+# (`npx tsx scripts/qa/emit-circled-glyphs.ts`).
+import json as _json
+import pathlib as _pathlib
 
-CIRCLED = "①②③④⑤"
+_GLYPHS = _json.loads(
+    (_pathlib.Path(__file__).resolve().parent / "circled-glyphs.json").read_text(
+        encoding="utf-8"
+    )
+)
+CIRCLED_BODY = _GLYPHS["본문마커"]   # 지면 보기 마커 — 일부러 좁다
+
+
+# 지면 보기 마커 — `circled-glyphs.json` 한 곳에서 온다.
+# 예전엔 ①..⑤ 만 봐서 보기가 여섯 칸 이상인 문항의 마커를 못 봤다.
+CIRCLED = CIRCLED_BODY
 # 줄머리 `1.` ~ `5.` — 원문자를 안 쓰는 시험지가 있다(실측).
 LINE_MARK = re.compile(r"^\s*([1-5])\s*[.)]\s")
 # 같은 줄로 볼 세로 허용치. 보기 마커는 그림보다 살짝 위에 앉는다.

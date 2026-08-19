@@ -36,6 +36,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 
 import { PrismaClient } from "@prisma/client";
+import { ANSWER_CIRCLED_CLASS } from "../../src/lib/math/circledNumber";
 
 import { convertRpmExtractedRow } from "../../src/lib/import/convertRpm";
 import { flattenStructured } from "../../src/lib/import/flattenStructured";
@@ -57,7 +58,10 @@ const faultPath = (name: string): string =>
   `src/lib/import/_convertRpm.fault.${name}.ts`;
 
 const SENTINEL = "(정답 없음)";
-const MARKER_ONLY = /^[①②③④⑤⑥⑦⑧⑨⑩](\s*,\s*[①②③④⑤⑥⑦⑧⑨⑩])*$/;
+// 계열은 `circledNumber.ts` 한 곳에서 온다.
+const MARKER_ONLY = new RegExp(
+  String.raw`^[${ANSWER_CIRCLED_CLASS}](\s*,\s*[${ANSWER_CIRCLED_CLASS}])*$`,
+);
 const squeeze = (value: string): string => value.replace(/\s+/g, "");
 
 /**
@@ -145,7 +149,8 @@ function sourceChoices(raw: unknown): SourceChoice[] {
   raw.forEach((entry, index) => {
     const record = asRecord(entry);
     if (!record) return;
-    const marker = typeof record.marker === "string" ? record.marker.trim() : "";
+    const marker =
+      typeof record.marker === "string" ? record.marker.trim() : "";
     const order = typeof record.order === "number" ? record.order : index + 1;
     const text = flattenStructured(record.content).content.trim();
     if (!marker || !text) return;
@@ -200,12 +205,36 @@ export function sourceChecks(
     mode,
     samples: [],
   });
-  const noLoss = mk("choice-no-loss", "보기 유실 없음 (변환 후 보기 ≥ 원본 보기)", "exact");
-  const sameCount = mk("choice-count", "원본 보기 개수 = 변환 후 보기 개수", "baseline");
-  const answerFilled = mk("answer-filled", "원본에 정답이 있으면 변환 후에도 있다", "exact");
-  const markerForm = mk("answer-marker-form", "객관식 정답이 보기 번호(①~⑤) 형태", "exact");
-  const markerAlive = mk("choice-marker-alive", "보기 마커 ①~⑤ 가 본문에 살아 있다", "exact");
-  const externalId = mk("external-id", "`externalId` 가 원본 id 로 채워진다", "exact");
+  const noLoss = mk(
+    "choice-no-loss",
+    "보기 유실 없음 (변환 후 보기 ≥ 원본 보기)",
+    "exact",
+  );
+  const sameCount = mk(
+    "choice-count",
+    "원본 보기 개수 = 변환 후 보기 개수",
+    "baseline",
+  );
+  const answerFilled = mk(
+    "answer-filled",
+    "원본에 정답이 있으면 변환 후에도 있다",
+    "exact",
+  );
+  const markerForm = mk(
+    "answer-marker-form",
+    "객관식 정답이 보기 번호(①~⑤) 형태",
+    "exact",
+  );
+  const markerAlive = mk(
+    "choice-marker-alive",
+    "보기 마커 ①~⑤ 가 본문에 살아 있다",
+    "exact",
+  );
+  const externalId = mk(
+    "external-id",
+    "`externalId` 가 원본 id 로 채워진다",
+    "exact",
+  );
   // D-26(RPM 잠금) 폐지(2026-08-14). 잠그면 새 이관분만 출제 풀에서 조용히 빠진다.
   const notLocked = mk(
     "not-locked",
@@ -236,11 +265,19 @@ export function sourceChecks(
 
     notLocked.total += 1;
     if (draft.directUseAllowed) notLocked.passed += 1;
-    else note(notLocked, `${id.slice(0, 8)} directUseAllowed=false — D-26 은 폐지됐다`);
+    else
+      note(
+        notLocked,
+        `${id.slice(0, 8)} directUseAllowed=false — D-26 은 폐지됐다`,
+      );
 
     externalId.total += 1;
     if (draft.externalId === id) externalId.passed += 1;
-    else note(externalId, `${id.slice(0, 8)} externalId=${JSON.stringify(draft.externalId)}`);
+    else
+      note(
+        externalId,
+        `${id.slice(0, 8)} externalId=${JSON.stringify(draft.externalId)}`,
+      );
 
     const answer = asRecord(row.answer);
     const hasSourceAnswer =
@@ -252,14 +289,21 @@ export function sourceChecks(
       if (draft.answer !== SENTINEL && draft.answer.trim()) {
         answerFilled.passed += 1;
       } else {
-        note(answerFilled, `${id.slice(0, 8)} kind=${String(answer?.kind)} → ${JSON.stringify(draft.answer)}`);
+        note(
+          answerFilled,
+          `${id.slice(0, 8)} kind=${String(answer?.kind)} → ${JSON.stringify(draft.answer)}`,
+        );
       }
     }
 
     if (answer?.kind === "multiple_choice") {
       markerForm.total += 1;
       if (MARKER_ONLY.test(draft.answer.trim())) markerForm.passed += 1;
-      else note(markerForm, `${id.slice(0, 8)} 정답=${JSON.stringify(draft.answer.slice(0, 24))}`);
+      else
+        note(
+          markerForm,
+          `${id.slice(0, 8)} 정답=${JSON.stringify(draft.answer.slice(0, 24))}`,
+        );
     }
 
     const choices = sourceChoices(row.choices);
@@ -267,11 +311,19 @@ export function sourceChecks(
       const parsed = parseProblemContent(draft.content);
       noLoss.total += 1;
       if (parsed.choices.length >= choices.length) noLoss.passed += 1;
-      else note(noLoss, `${id.slice(0, 8)} 원본 ${choices.length} → 변환 ${parsed.choices.length}`);
+      else
+        note(
+          noLoss,
+          `${id.slice(0, 8)} 원본 ${choices.length} → 변환 ${parsed.choices.length}`,
+        );
 
       sameCount.total += 1;
       if (parsed.choices.length === choices.length) sameCount.passed += 1;
-      else note(sameCount, `${id.slice(0, 8)} 원본 ${choices.length} → 변환 ${parsed.choices.length}`);
+      else
+        note(
+          sameCount,
+          `${id.slice(0, 8)} 원본 ${choices.length} → 변환 ${parsed.choices.length}`,
+        );
 
       markerAlive.total += 1;
       const content = squeeze(draft.content);
@@ -357,7 +409,8 @@ export async function dbChecks(
     mode: "exact",
     samples: [],
     policyHeld: 0,
-    owedTo: "트랙 B(정답) — `recover-rpm-answers.ts --apply` 로 원본에서 회수 가능",
+    owedTo:
+      "트랙 B(정답) — `recover-rpm-answers.ts --apply` 로 원본에서 회수 가능",
   };
   /**
    * 원본 행 중 우리 DB 에 **키로 닿아 있는** 비율.
@@ -442,16 +495,22 @@ export async function dbChecks(
     const figureUrls = fault.figureBlind ? [] : problem.figureUrls;
     if (figureUrls.length > 0) figureLinked.passed += 1;
     else if (figureLinked.samples.length < 5) {
-      figureLinked.samples.push(`${problem.id.slice(0, 8)} ← 원본 ${externalId.slice(0, 8)}`);
+      figureLinked.samples.push(
+        `${problem.id.slice(0, 8)} ← 원본 ${externalId.slice(0, 8)}`,
+      );
     }
   }
-  for (const row of rows) if (linked.has(String(row.id))) sourceCoverage.passed += 1;
+  for (const row of rows)
+    if (linked.has(String(row.id))) sourceCoverage.passed += 1;
 
   return [externalIdFilled, answerLinked, figureLinked, sourceCoverage];
 }
 
 /** 지난 결함을 되돌리는 치환 — 운영 코드가 아니라 임시 사본에 건다. */
-export const FAULTS: Record<string, { why: string; from: string; to: string; expect: string[] }> = {
+export const FAULTS: Record<
+  string,
+  { why: string; from: string; to: string; expect: string[] }
+> = {
   "choice-id": {
     why: "원본 키가 `choiceId` 인데 `id` 로만 읽던 결함 (정답 4,862건 유실)",
     from: `      id:
@@ -461,7 +520,7 @@ export const FAULTS: Record<string, { why: string; from: string; to: string; exp
     to: `      id: (typeof record.id === "string" && record.id) || String(index),`,
     expect: ["answer-filled", "answer-marker-form"],
   },
-  "relock": {
+  relock: {
     why: "폐지된 D-26 을 되살려 RPM 을 다시 잠그는 회귀 (새 이관분이 출제 풀에서 빠진다)",
     from: `    // D-26 폐지(2026-08-14) — 위 \`convertRpmRow\` 주석 참조. 잠그지 않는다.
     directUseAllowed: true,`,
@@ -476,8 +535,8 @@ export const FAULTS: Record<string, { why: string; from: string; to: string; exp
   },
   "answer-flatten": {
     why: "`flattenStructured` 만으로 정답을 펴던 결함 (`correctChoiceIds`/`accepted` 를 못 봄)",
-    from: "    answer: rpmAnswer(row.answer, choiceList) || \"(정답 없음)\",",
-    to: "    answer: flattenStructured(row.answer).content || \"(정답 없음)\",",
+    from: '    answer: rpmAnswer(row.answer, choiceList) || "(정답 없음)",',
+    to: '    answer: flattenStructured(row.answer).content || "(정답 없음)",',
     expect: ["answer-filled", "answer-marker-form"],
   },
 };
@@ -485,7 +544,11 @@ export const FAULTS: Record<string, { why: string; from: string; to: string; exp
 /** DB 쪽 결함은 소스를 고치는 게 아니라 **그 시절의 DB 상태**를 재현해 본다. */
 export const DB_FAULTS: Record<
   string,
-  { why: string; flag: "externalIdBlind" | "figureBlind" | "answerBlind"; expect: string }
+  {
+    why: string;
+    flag: "externalIdBlind" | "figureBlind" | "answerBlind";
+    expect: string;
+  }
 > = {
   "figure-blind": {
     why: "`diagram_assets` 를 안 봐서 그림이 한 장도 안 붙던 상태 (1,014건)",
@@ -515,7 +578,11 @@ async function loadFaultyConverter(name: string): Promise<ConvertFn> {
     );
   }
   const target = faultPath(name);
-  await writeFile(target, original.replace(lf(fault.from), lf(fault.to)), "utf8");
+  await writeFile(
+    target,
+    original.replace(lf(fault.from), lf(fault.to)),
+    "utf8",
+  );
   const url = pathToFileURL(path.resolve(target)).href;
   const faulty = (await import(url)) as {
     convertRpmExtractedRow: ConvertFn;
@@ -524,7 +591,8 @@ async function loadFaultyConverter(name: string): Promise<ConvertFn> {
 }
 
 function verdict(check: Check, baseline: Baseline | null): "pass" | "fail" {
-  if (check.mode === "exact") return check.passed === check.total ? "pass" : "fail";
+  if (check.mode === "exact")
+    return check.passed === check.total ? "pass" : "fail";
   const previous = baseline?.checks[check.id];
   if (!previous) return "pass";
   // 기준선은 **비율**로 본다 — 원본이 늘어도 품질이 떨어지면 잡아야 한다.
@@ -533,23 +601,34 @@ function verdict(check: Check, baseline: Baseline | null): "pass" | "fail" {
   return now + 1e-9 >= then ? "pass" : "fail";
 }
 
-function printChecks(checks: Check[], baseline: Baseline | null, detail: boolean): boolean {
+function printChecks(
+  checks: Check[],
+  baseline: Baseline | null,
+  detail: boolean,
+): boolean {
   let ok = true;
   for (const check of checks) {
     const state = verdict(check, baseline);
     if (state === "fail") ok = false;
-    const ratio = check.total === 0 ? "—" : `${((check.passed / check.total) * 100).toFixed(2)}%`;
+    const ratio =
+      check.total === 0
+        ? "—"
+        : `${((check.passed / check.total) * 100).toFixed(2)}%`;
     const previous = baseline?.checks[check.id];
     const base =
       check.mode === "baseline" && previous
         ? ` (기준선 ${previous.passed}/${previous.total})`
         : "";
-    const held = check.policyHeld ? ` · 정책상 보류 ${check.policyHeld} 제외` : "";
+    const held = check.policyHeld
+      ? ` · 정책상 보류 ${check.policyHeld} 제외`
+      : "";
     console.log(
       `  ${state === "pass" ? "✔" : "✘"} ${check.label} — ${check.passed}/${check.total} ${ratio}${base}${held}`,
     );
     if (state === "fail" && check.owedTo) {
-      console.log(`      → 미달 ${check.total - check.passed}건은 ${check.owedTo}`);
+      console.log(
+        `      → 미달 ${check.total - check.passed}건은 ${check.owedTo}`,
+      );
     }
     if (detail || state === "fail") {
       for (const sample of check.samples) console.log(`      ${sample}`);
@@ -588,7 +667,9 @@ async function main(): Promise<void> {
 
   const baseline = await loadBaseline();
   if (!baseline) {
-    console.log(`(기준선 없음 — ${BASELINE_PATH}. --update-baseline 으로 만듭니다.)`);
+    console.log(
+      `(기준선 없음 — ${BASELINE_PATH}. --update-baseline 으로 만듭니다.)`,
+    );
   }
 
   if (faultArg) {
@@ -634,7 +715,9 @@ async function main(): Promise<void> {
         );
         if (missed.length > 0) {
           allCaught = false;
-          console.log(`  → ✘ 잡지 못한 검사: ${missed.join(", ")} — 검사가 결함을 못 본다.`);
+          console.log(
+            `  → ✘ 잡지 못한 검사: ${missed.join(", ")} — 검사가 결함을 못 본다.`,
+          );
         } else {
           console.log(`  → 잡음 (${caught.join(", ")})`);
         }
@@ -663,7 +746,9 @@ async function main(): Promise<void> {
     if (!printChecks(dbResults, baseline, detail)) ok = false;
   } catch (error) {
     console.log("\n[적재 결과]");
-    console.log(`  SKIP — 우리 DB 에 붙지 못했습니다: ${(error as Error).message}`);
+    console.log(
+      `  SKIP — 우리 DB 에 붙지 못했습니다: ${(error as Error).message}`,
+    );
     process.exitCode = allowSkip ? process.exitCode : 2;
     if (!allowSkip) {
       await prisma.$disconnect();
@@ -686,7 +771,11 @@ async function main(): Promise<void> {
         ]),
       ),
     };
-    await writeFile(BASELINE_PATH, `${JSON.stringify(next, null, 2)}\n`, "utf8");
+    await writeFile(
+      BASELINE_PATH,
+      `${JSON.stringify(next, null, 2)}\n`,
+      "utf8",
+    );
     console.log(`\n기준선 갱신 — ${BASELINE_PATH}`);
   }
 

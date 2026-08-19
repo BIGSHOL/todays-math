@@ -45,6 +45,26 @@ export const PRINT_ROUTE = "/tests/{시험지id}/print";
 
 export const ITEMS: PrintCheckItem[] = [
   {
+    id: "figure-svg-inline",
+    title:
+      "AI 변형이 새로 그린 도형(SVG)의 지면 배치 — 처음 종이에 나가는 갈래",
+    changed:
+      "`Problem.figureSvg` 가 계약·직렬화·지면에 처음 이어졌다(D-55). 그 전까지는 DB 컬럼만 있고 0건이라 **한 번도 인쇄된 적이 없다.** 스캔 그림(`figureUrls`, `<img>`)과 달리 이쪽은 inline `<svg>` 이고 폭 규칙도 따로다 — 화면 360px / 인쇄 70mm, `[&>svg]:w-full` 로 폭에 맞춰 늘린다.",
+    look: "① 도형이 문항 칸 안에 들어가는가(넘쳐서 다음 문항을 밀거나 겹치지 않는가). ② 선 굵기가 인쇄에서 사라지거나 뭉개지지 않는가 — 벡터라 화면에서 멀쩡해도 종이에서 다르다. ③ 도형 안 글자(꼭짓점 이름·치수)가 읽히는 크기인가. ④ 스캔 그림과 같은 문항에 함께 있을 때 두 그림이 나란히 서는가.",
+    lookFromSource: false,
+    evidence: [
+      "src/components/math/ProblemContent.tsx (figureSvg 블록)",
+      "docs/planning/09-figure-engine-guide.md §0.1",
+      "docs/planning/07-coding-convention.md D-55",
+    ],
+    scale:
+      "지금은 0건 — AI 변형으로 채택한 문항에서만 생긴다. 원본 후보는 그림 문항 9,419건(출제 가능의 20.2%)",
+    needs:
+      "그림 문항을 변형해 도형이 그려진 후보를 채택하고, 그 문항을 시험지에 넣어야 드러난다",
+    status: "대기",
+    changedOn: "2026-08-19",
+  },
+  {
     id: "figures-multi",
     title: "그림 회수 590건 — 다장 문항의 지면 배치",
     changed:
@@ -234,6 +254,22 @@ export const ITEMS: PrintCheckItem[] = [
     changedOn: "2026-08-16",
   },
   {
+    id: "short-answer-badge",
+    title: "「단답형 n」 배지 — 서술형과 **다른 말**이 찍힌다",
+    changed:
+      "종전에는 `questionType` 이 서술형인 문항에만 「서술형 n」을 붙였고 단답형은 아무 표시가 없었다. 원장님 확정(2026-08-19)으로 단답형에는 「단답형 n」을 붙이고, 번호는 유형마다 **따로** 센다(서술형 1·2 / 단답형 1·2).",
+    look: "배지 모양(1px 금색 테두리·10px)은 그대로다. 볼 것은 ㉠ 「단답형」 네 글자가 배지 폭 안에서 안 넘치는가 — 「서술형」보다 글자가 길지 않으니 괜찮아야 한다, ㉡ 한 시험지에 둘이 섞였을 때 번호가 각각 1부터 이어지는가.",
+    lookFromSource: false,
+    evidence: [
+      "src/lib/tests/essayLabels.ts",
+      "src/components/print/templates/JaseupTemplate.tsx:99",
+    ],
+    scale: "questionType='단답형' 763건 (전체 47,152 중 1.6%)",
+    needs: "단답형 문항과 서술형 문항이 **함께** 든 시험지",
+    status: "대기",
+    changedOn: "2026-08-19",
+  },
+  {
     id: "prod-print",
     title: "프로덕션 실물 인쇄 최종 검수 (T6.2)",
     changed: "배포 태스크의 인수 조건. 배포 자체가 미완이라 착수 전이다.",
@@ -250,5 +286,5 @@ export const SAMPLING_PLAN = [
   "8문항짜리 일일테스트 1건(문제지 4장 + 정답지)이면 대부분 한 번에 검증된다.",
   "그림이 2장 이상 붙은 문항을 일부러 넣어야 다장 배치가 드러난다.",
   "정답지 1쪽 정원은 25문항짜리로 뽑아야 「빠른 정답」 상자가 커져 해설이 사라진다.",
-  "서술형 문항이 포함돼야 배지가 찍힌다.",
+  "서술형 문항과 **단답형 문항이 함께** 들어가야 배지 두 갈래가 다 찍힌다.",
 ];

@@ -227,7 +227,9 @@ def largest_cluster(parts: list[fitz.Rect]) -> list[fitz.Rect]:
 
 def figure_rect(page, box: fitz.Rect, stem_key: str = "",
                 min_overlap: float = 12.0,
-                avoid: list[fitz.Rect] | None = None) -> fitz.Rect | None:
+                avoid: list[fitz.Rect] | None = None,
+                thin_pt: float = 0.0,
+                furniture: set | None = None) -> fitz.Rect | None:
     """문항 사각형 **안에서 그림만** 골라 낸다.
 
     `source_coords` 는 문항 블록 전체(발문 + 그림)다. 그대로 오리면 발문이 지면에
@@ -255,6 +257,26 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
        (실측 `019fd1d5-988a`). 그래서 그 규칙은 여기서 안 쓴다.
 
     하나도 없으면 **오려내지 않는다** — 발문 사진을 붙이느니 안 붙이는 게 낫다.
+
+    ## `thin_pt` — **곧은 선은 `is_empty` 다** (2026-08-19)
+
+    `fitz.Rect.is_empty` 는 **폭이나 높이 중 하나만 0이어도** 참이다. 축에 나란한
+    곧은 선은 정확히 그 모양이라, 첫 가드 `if r.is_empty` 가 **선을 전부 버린다.**
+
+    RPM 그림은 곡선·다각형이라 이게 드러나지 않았다. 기출은 다르다 — 실측
+    `3624` 3쪽은 획 99개 중 **97개가 두께 0인 곧은 선**이고, 그 선들이 바로 문항이
+    가리키는 **전개도**(표 칸 테두리)다. 「문항 둘레에서 그림을 못 찾았다」로 떨어진
+    44행 중 35행이 「상자 안에 획이 아예 없다」였는데, 실제로는 획이 가득했다.
+
+    `thin_pt > 0` 이면 두께 0인 획을 그만큼 부풀려 살린다. **RPM 경로는 0을 그대로
+    쓰므로 동작이 한 바이트도 안 바뀐다** — 회수 280건을 다시 흔들지 않기 위해서다.
+
+    ## `furniture` — 선을 살리면 **쪽 장식도 같이 산다**
+
+    단 세로줄(단 사이 구분선)·머리띠 밑줄이 그 부류다. 길이로 자르면 수직선 그림·
+    긴 데이터 표가 같이 죽는다(2026-08-16 배너 사건과 같은 자리). 그래서 길이가 아니라
+    **여러 쪽에 같은 자리로 되풀이되는가**로 가른다 — 서식이 바뀌어도 걸리고 진짜
+    그림은 안 걸린다. `crop-pdf-by-stem.furniture_keys` 가 만든 열쇠 집합을 넘긴다.
     """
     page_area = page.rect.get_area()
     raw = page.get_text("rawdict")
@@ -355,8 +377,21 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
 
     for d in page.get_drawings():
         r = fitz.Rect(d["rect"])
-        if r.is_empty or r.is_infinite or is_page_furniture(r):
+        if r.is_infinite:
             continue
+        if r.is_empty:
+            # 두께 0인 곧은 선 — 부풀려 살린다(`thin_pt`). 0 이면 예전 그대로 버린다.
+            if thin_pt <= 0 or (r.x1 - r.x0 <= 0 and r.y1 - r.y0 <= 0):
+                continue
+            r = fitz.Rect(r.x0 - thin_pt, r.y0 - thin_pt,
+                          r.x1 + thin_pt, r.y1 + thin_pt)
+        if is_page_furniture(r):
+            continue
+        if furniture is not None:
+            k = tuple(int(round(v / 3)) for v in (d["rect"][0], d["rect"][1],
+                                                  d["rect"][2], d["rect"][3]))
+            if k in furniture:
+                continue
         if (r & box).is_empty or is_inside_text(r):
             continue
         core.append(r & bleed)

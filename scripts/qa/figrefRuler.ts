@@ -31,6 +31,7 @@ import {
   type FigureDimension,
 } from "../../src/lib/printOverflow";
 import { JASEUP_MEASURED_PX } from "../../src/lib/printGeometry";
+import { BODY_CHOICE_CLASS } from "../../src/lib/math/circledNumber";
 
 /** 보기 그림 격자의 열 사이 간격 (탐침 CSS `column-gap: 16px`). */
 export const CHOICE_FIG_COL_GAP = 16;
@@ -112,7 +113,10 @@ export function choiceFigureBlockPx(
  * ⚠️ 글자가 남는 보기(`5. 해당되는 그래프가 없다.`)는 **안 지운다** — 그건 실제로
  *    지면에 찍힌다(실측 123건 중 5건).
  */
-const EMPTY_CHOICE_LINE = /^[ \t]*(?:[1-9][0-9]?[.)]|[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮])[ \t]*$/;
+// 본문 마커라 **일부러 좁다** — `circledNumber.ts` 한 곳에서 온다.
+const EMPTY_CHOICE_LINE = new RegExp(
+  String.raw`^[ \t]*(?:[1-9][0-9]?[.)]|[${BODY_CHOICE_CLASS}])[ \t]*$`,
+);
 
 export function stripFigureMarks(text: string): string {
   return text

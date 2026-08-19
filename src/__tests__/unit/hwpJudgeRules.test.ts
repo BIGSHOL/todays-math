@@ -18,6 +18,7 @@ import {
   verdictOf,
   type DbRow,
   type HwpQ,
+  hasFigureProse,
 } from "../../../scripts/qa/hwpJudgeRules";
 
 const dbRow = (over: Partial<DbRow> = {}): DbRow => ({
@@ -47,7 +48,12 @@ const hwpQ = (over: Partial<HwpQ> = {}): HwpQ => ({
 });
 
 /** parseProblemContent 대신 쓰는 최소 분해 — 테스트가 그 모듈에 매이지 않게. */
-const judge = (row: DbRow, hwp: HwpQ, question: string, choices: string[] = []) =>
+const judge = (
+  row: DbRow,
+  hwp: HwpQ,
+  question: string,
+  choices: string[] = [],
+) =>
   judgeSignals({
     row,
     hwp,
@@ -112,7 +118,8 @@ describe("교체해야 하는 것", () => {
 
   it("발문이 `정답` 으로 시작하면 해설지 지면이다 — 접속어가 없어도 잡는다", () => {
     const row = dbRow({
-      content: "[서술형 $1$] 정답 $10x^{2}+13x$ 풀이 $(6x+5)(3x+4)-(4x+5)(2x+4)$",
+      content:
+        "[서술형 $1$] 정답 $10x^{2}+13x$ 풀이 $(6x+5)(3x+4)-(4x+5)(2x+4)$",
     });
     const hwp = hwpQ({
       stem: "가로의 길이가 $6x+5$ 인 직사각형 모양의 밭에 길을 만들 때 길의 넓이를 구하시오.",
@@ -132,7 +139,13 @@ describe("교체해야 하는 것", () => {
       stem: "다음 식을 계산한 값은? $\\frac{4^{2}+4^{2}}{2^{6}+2^{6}}$",
       choices: ["$1$", "$2$", "$3$", "$4$", "$5$"],
     });
-    const sig = judge(row, hwp, "다음 식을 계산한 값은? <상자> ⁄ • $26+26$", ["a", "b", "c", "d", "e"]);
+    const sig = judge(row, hwp, "다음 식을 계산한 값은? <상자> ⁄ • $26+26$", [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e",
+    ]);
     expect(sig.S).toContain("S8_수식뭉갬");
     expect(verdictOf(sig)).toBe("교체");
   });
@@ -144,7 +157,13 @@ describe("교체해야 하는 것", () => {
       stem: "$\\sum _{k=1}^{9}a_{k}=12$ 일 때, $\\sum _{k=1}^{9}(2a_{k}+3)$ 의 값은?",
       choices: ["$18$", "$21$", "$24$", "$27$", "$30$"],
     });
-    const sig = judge(row, hwp, "$_{k=1}^{9}a_{k}=12$ 일 때, 값은? ⁄", ["1", "2", "3", "4", "5"]);
+    const sig = judge(row, hwp, "$_{k=1}^{9}a_{k}=12$ 일 때, 값은? ⁄", [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+    ]);
     expect(sig.H).not.toContain("H1_HWP빈약");
     expect(verdictOf(sig)).toBe("교체");
   });
@@ -183,7 +202,9 @@ describe("교체해야 하는 것", () => {
 
 describe("교체하면 안 되는 것 (개악 방지)", () => {
   it("HWP 보기가 그림이라 빈 껍데기면 보류한다 (3845-2: 사각형 4개가 전부 그림)", () => {
-    const row = dbRow({ content: "다음 사각형 중에서 평행사변형이 아닌 것은? ⁄" });
+    const row = dbRow({
+      content: "다음 사각형 중에서 평행사변형이 아닌 것은? ⁄",
+    });
     const hwp = hwpQ({
       stem: "다음 사각형 중에서 평행사변형이 아닌 것은?",
       choices: ["", "", "", ""],
@@ -196,25 +217,67 @@ describe("교체하면 안 되는 것 (개악 방지)", () => {
   it("DB 에만 보기가 있으면 보류한다 — 넣으면 학생이 고를 대상이 사라진다", () => {
     const row = dbRow({ content: "옳은 것은? ⁄ • 값" });
     const hwp = hwpQ({ stem: "옳은 것은?", choices: [] });
-    const sig = judge(row, hwp, "옳은 것은?", ["3cm", "4cm", "5cm", "6cm", "7cm"]);
+    const sig = judge(row, hwp, "옳은 것은?", [
+      "3cm",
+      "4cm",
+      "5cm",
+      "6cm",
+      "7cm",
+    ]);
     expect(sig.H).toContain("H6_보기손실");
     expect(verdictOf(sig)).toBe("보류");
   });
 
+  /**
+   * ⚠️ **본문은 실제 DB 행이어야 한다**(이 파일 머리말). 예전 픽스처는
+   * `[그림] 원 O 위의 점 P 에서 그은 접선 … 이때 길이는?` 이라는 **지어낸 문장**이었는데,
+   * 그건 «그림 말풀이» 가 아니라 **발문 그 자체**다 — HWP 발문에 같은 말이 있으니
+   * 교체해도 잃는 것이 없다. 그 픽스처로는 H7 이 무엇을 지키는지 시험할 수 없다.
+   * 아래는 실제 행 `4235-13` 의 말풀이다.
+   */
   it("그림이 안 붙은 문항의 `[그림] 말풀이` 는 유일한 단서라 지우지 않는다", () => {
     const row = dbRow({
-      content: "[그림] 원 O 위의 점 P 에서 그은 접선 ⁄ • 이때 길이는?",
+      content:
+        "8개의 반이 승자 진출전 방식으로 축구 경기를 하려고 할 때, 다음과 같이 대진표를 작성하는 경우의 수는? " +
+        "[그림] 8개 팀이 참가하는 승자 진출전(토너먼트) 대진표. 맨 아래에 8개의 자리가 있고 두 자리씩 짝지어 " +
+        "4개의 1회전 경기를 이룬 뒤, 그 승자끼리 2개의 준결승, 다시 그 승자끼리 1개의 결승으로 이어지는 " +
+        "좌우 대칭의 완전 이진 토너먼트 그림이다. ⁄ •",
       figs: 0,
     });
-    const hwp = hwpQ({ stem: "원 O 위의 점 P 에서 그은 접선의 길이는?", choices: [] });
+    const hwp = hwpQ({
+      stem: "8개의 반이 승자 진출전 방식으로 축구 경기를 하려고 할 때, 다음과 같이 대진표를 작성하는 경우의 수는?",
+      choices: [],
+    });
     const sig = judge(row, hwp, row.content);
     expect(sig.H).toContain("H7_그림단서손실");
     expect(verdictOf(sig)).toBe("보류");
   });
 
+  /**
+   * 같은 `[그림]` 인데 뒤에 오는 것이 **지면 머리말**이면 단서가 아니다.
+   * 이걸 단서로 세면 **오염이 심할수록 교체가 막힌다** — 실측 43행 중 29행.
+   * 본문은 실제 행 `5538-6`.
+   */
+  it("`[그림]` 뒤가 지면 머리말이면 막지 않는다", () => {
+    const row = dbRow({
+      content:
+        "다음에서 $x$ 에 대한 일차부등식을 고르면? 1. $3x-1>3x$ ⁄ • " +
+        "[그림] 학원로고2025년 1학기 중간고사성화중 2학년 수학학원 로고성화중 26년 1학기 중간고사 대비 (수학)2",
+      figs: 0,
+    });
+    const hwp = hwpQ({
+      stem: "다음에서 $x$에 대한 일차부등식을 고르면?",
+      choices: ["$3x-1>3x$"],
+    });
+    const sig = judge(row, hwp, row.content);
+    expect(sig.H).not.toContain("H7_그림단서손실");
+  });
+
   it("HWP 에 base64 가 남아 있으면 보류한다 (청소가 빠진 산출물 방어)", () => {
     const b64 = "3igDKxhv5SIHW" + "TBr2sCD82Y".repeat(6);
-    const row = dbRow({ content: "일차함수 $y=ax+b$ 의 그래프에서 $a+b$ 의 값은? ⁄" });
+    const row = dbRow({
+      content: "일차함수 $y=ax+b$ 의 그래프에서 $a+b$ 의 값은? ⁄",
+    });
     const hwp = hwpQ({
       stem: `일차함수 ${b64} $y=ax+b$ 의 그래프에서 $a+b$ 의 값은?`,
       choices: ["$1$", "$2$", "$3$", "$4$", "$5$"],
@@ -242,7 +305,10 @@ describe("교체하면 안 되는 것 (개악 방지)", () => {
     const hwp = hwpQ({
       stem: "$6^{0}×8^{\\frac{2}{3}}$ 의 값은?",
       choices: [
-        "$0$", "$2$", "$4$", "$6$",
+        "$0$",
+        "$2$",
+        "$4$",
+        "$6$",
         "$8$\n2024년 1학기 중간고사\n지수 ~ 삼각함수의 그래프\n달서고 2학년 수학1\n학원로고\n강민구",
       ],
     });
@@ -254,7 +320,9 @@ describe("교체하면 안 되는 것 (개악 방지)", () => {
 
   it("HWP 쪽 렌더가 더 나쁘면 보류한다", () => {
     const row = dbRow({ content: "$(x+2)(x-6)-9$ 를 인수분해한 것은? ⁄" });
-    const hwp = hwpQ({ stem: "$\\left( x+2\\right) \\left( x-6)-9$ 를 인수분해한 것은?" });
+    const hwp = hwpQ({
+      stem: "$\\left( x+2\\right) \\left( x-6)-9$ 를 인수분해한 것은?",
+    });
     const sig = judgeSignals({
       row,
       hwp,
@@ -283,7 +351,8 @@ describe("교체하면 안 되는 것 (개악 방지)", () => {
   });
 
   it("멀쩡한 문항은 손대지 않는다", () => {
-    const stem = "이차방정식 $x^{2}-2x+3=0$ 의 한 근을 $\\alpha$ 라 할 때, 값은?";
+    const stem =
+      "이차방정식 $x^{2}-2x+3=0$ 의 한 근을 $\\alpha$ 라 할 때, 값은?";
     const row = dbRow({ content: stem });
     const hwp = hwpQ({ stem, choices: ["$8$", "$9$", "$10$", "$11$", "$12$"] });
     const sig = judge(row, hwp, stem, ["8", "9", "10", "11", "12"]);
@@ -294,7 +363,8 @@ describe("교체하면 안 되는 것 (개악 방지)", () => {
 describe("소문항 표기 차이", () => {
   it("HWP 가 ⑴ 대신 `(1)` 을 써도 소문항 손실이 아니다 (2952-16)", () => {
     const row = dbRow({
-      content: "[서술형 $1$] 다음 부정적분을 구하시오. ⑴ $(3x^{2}-4x+1)dx$ ⑵ $(x+1)^{3}dx$ ⁄",
+      content:
+        "[서술형 $1$] 다음 부정적분을 구하시오. ⑴ $(3x^{2}-4x+1)dx$ ⑵ $(x+1)^{3}dx$ ⁄",
     });
     const hwp = hwpQ({
       stem:
@@ -338,5 +408,52 @@ describe("buildHwpContent", () => {
       hwpQ({ stem: "값은?", choices: ["$1$", "$2$", "$3$", "$4$", "$5$"] }),
     );
     expect(out).toBe("값은?\n\n1. $1$\n2. $2$\n3. $3$\n4. $4$\n5. $5$");
+  });
+});
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * H7 — `[그림]` 이 **다 단서는 아니다** (2026-08-19, 트랙 기출원본회수)
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+describe("hasFigureProse — 말풀이와 지면 머리말을 가른다", () => {
+  it("`[그림]` 뒤 말풀이는 단서다", () => {
+    expect(
+      hasFigureProse(
+        "다음과 같이 대진표를 작성하는 경우의 수는? [그림] 8개 팀이 참가하는 승자 진출전 대진표. 맨 아래에 8개의 자리가 있고 두 자리씩 짝지어 4개의 1회전 경기를 이룬다.",
+      ),
+    ).toBe(true);
+  });
+
+  /**
+   * ⚠️ 추출기는 **학원 로고·머리띠 이미지** 자리에도 같은 표시를 남긴다.
+   * 그걸 단서로 세면 **오염이 심할수록 교체가 막힌다** — H3 에서 이미 겪은 거꾸로 된
+   * 가드다. 실측: H7 이 걸린 43행 중 29행이 이 부류였다.
+   */
+  it("`[그림]` 뒤 지면 머리말은 단서가 아니다", () => {
+    expect(
+      hasFigureProse(
+        "다음에서 $x$에 대한 일차부등식을 고르면? 1. $3x-1>3x$ [그림] 학원로고2025년 1학기 중간고사성화중 2학년 수학학원 로고성화중 26년 1학기 중간고사 대비 (수학)2",
+      ),
+    ).toBe(false);
+  });
+
+  it("한글이 짧으면 말풀이가 아니다", () => {
+    expect(hasFigureProse("… 값을 구하시오. [ [그림] 난이도] 중")).toBe(false);
+    expect(
+      hasFigureProse("… $a+b$ 의 값은? 1. [그림] [그림] $5$ 2. $11$"),
+    ).toBe(false);
+  });
+
+  /**
+   * ⚠️ **끝맺음만 보면 «본문이 잘린 조각»을 말풀이로 읽는다.** `[그림]` 이 문장 한가운데
+   * 앉아 뒤쪽이 `하시오.` · `이다.)` 로 끝나는 행이 실측 **59건**이다. 그건 발문의
+   * 나머지이지 그림 설명이 아니다 — 한글 길이를 함께 요구해야 갈린다.
+   * 본문은 실제 행 `3837-20`·`4756-13` 의 꼬리다.
+   */
+  it("끝맺음이 있어도 본문 조각이면 말풀이가 아니다", () => {
+    expect(hasFigureProse("… 넓이를 구 [그림] 하시오.")).toBe(false);
+    expect(hasFigureProse("… 점 O [그림] 는 원점이고, $a>1$ 이다.)")).toBe(
+      false,
+    );
   });
 });

@@ -37,6 +37,10 @@ import {
   type DbRow,
   type HwpQ,
 } from "./hwpJudgeRules";
+import {
+  ANSWER_CIRCLED_CLASS,
+  circledValueRaw,
+} from "../../src/lib/math/circledNumber";
 
 const DB = "scripts/qa/reports/db-content.jsonl";
 const HWP_DIR = "scripts/qa/reports/hwp-latex";
@@ -62,7 +66,11 @@ type Align = {
 const normAnswer = (s: string): string =>
   (s ?? "")
     .replace(/\s+/g, "")
-    .replace(/[①②③④⑤]/g, (c) => String("①②③④⑤".indexOf(c) + 1));
+    // 원문자 → 숫자. 계열표는 `circledNumber.ts` **한 곳**에서 온다 —
+    // 예전엔 ①..⑤ 만 봐서 `➂` 로 적힌 정답이 그대로 남아 비교가 어긋났다.
+    .replace(new RegExp(`[${ANSWER_CIRCLED_CLASS}]`, "g"), (c) =>
+      String(circledValueRaw(c)),
+    );
 
 function scoreOffset(
   qs: HwpQ[],
@@ -78,10 +86,17 @@ function scoreOffset(
     const r = rows.get(q.number + off);
     if (!r) continue;
     pairs += 1;
-    const sv = dice(sigKo(q.stem), sigKo(parseProblemContent(r.content).question));
+    const sv = dice(
+      sigKo(q.stem),
+      sigKo(parseProblemContent(r.content).question),
+    );
     sumSim += sv;
     if (sv >= 0.7) strong += 1;
-    if (q.score != null && r.score != null && Math.abs(q.score - r.score) < 0.01) {
+    if (
+      q.score != null &&
+      r.score != null &&
+      Math.abs(q.score - r.score) < 0.01
+    ) {
       scoreEq += 1;
     }
     const a = normAnswer(q.answer ?? "");
@@ -91,8 +106,12 @@ function scoreOffset(
   return { pairs, strong, sumSim, scoreEq, ansEq };
 }
 
-const composite = (m: { strong: number; sumSim: number; scoreEq: number; ansEq: number }) =>
-  m.strong * 2 + m.sumSim + m.scoreEq + m.ansEq;
+const composite = (m: {
+  strong: number;
+  sumSim: number;
+  scoreEq: number;
+  ansEq: number;
+}) => m.strong * 2 + m.sumSim + m.scoreEq + m.ansEq;
 
 function alignExam(qs: HwpQ[], rows: Map<number, DbRow>): Align {
   const at = new Map<number, ReturnType<typeof scoreOffset>>();
@@ -106,7 +125,11 @@ function alignExam(qs: HwpQ[], rows: Map<number, DbRow>): Align {
     if (off === 0) continue;
     const c = composite(m);
     // 오프셋 이동은 **뚜렷한 우위 + 실제 강한 일치**가 둘 다 있을 때만 인정한다.
-    if (c > bestC && c >= c0 * SHIFT_MARGIN + 2 && m.strong >= SHIFT_MIN_STRONG) {
+    if (
+      c > bestC &&
+      c >= c0 * SHIFT_MARGIN + 2 &&
+      m.strong >= SHIFT_MIN_STRONG
+    ) {
       bestOff = off;
       bestC = c;
     }
@@ -119,7 +142,8 @@ function alignExam(qs: HwpQ[], rows: Map<number, DbRow>): Align {
 
   let grade: Align["grade"];
   if (m.strong >= 3 || m.scoreEq + m.ansEq >= 3) grade = "확정";
-  else if (m.pairs >= 3 && bestC >= runnerUp * 1.5 && bestC > 0.5) grade = "정황";
+  else if (m.pairs >= 3 && bestC >= runnerUp * 1.5 && bestC > 0.5)
+    grade = "정황";
   else grade = "근거없음";
 
   return { offset: bestOff, grade, ...m };
@@ -266,17 +290,26 @@ async function main() {
   await writeFile(OUT, lines.join("\n") + "\n", "utf-8");
   await writeFile(SUM, JSON.stringify(sum, null, 1), "utf-8");
 
-  const pct = (a: number, b: number) => (b ? ((a * 100) / b).toFixed(1) : "0.0");
+  const pct = (a: number, b: number) =>
+    b ? ((a * 100) / b).toFixed(1) : "0.0";
   console.log("── D-2 교체 판정 ──");
   console.log(`HWP 추출 ${sum.HWP추출편}편 · DB 행 있는 편 ${sum.DB행있는편}`);
-  console.log(`정렬 근거 — 확정 ${sum.정렬.확정} · 정황 ${sum.정렬.정황} · 근거없음 ${sum.정렬.근거없음} (오프셋 보정 ${sum.오프셋보정편}편)`);
-  console.log(`판정 ${sum.판정행}행 — 교체 ${sum.교체} (${pct(sum.교체, sum.판정행)}%) · ` +
-    `보류 ${sum.보류} (${pct(sum.보류, sum.판정행)}%) · 유지 ${sum.유지} (${pct(sum.유지, sum.판정행)}%)`);
+  console.log(
+    `정렬 근거 — 확정 ${sum.정렬.확정} · 정황 ${sum.정렬.정황} · 근거없음 ${sum.정렬.근거없음} (오프셋 보정 ${sum.오프셋보정편}편)`,
+  );
+  console.log(
+    `판정 ${sum.판정행}행 — 교체 ${sum.교체} (${pct(sum.교체, sum.판정행)}%) · ` +
+      `보류 ${sum.보류} (${pct(sum.보류, sum.판정행)}%) · 유지 ${sum.유지} (${pct(sum.유지, sum.판정행)}%)`,
+  );
   console.log("S 사유:", JSON.stringify(sum.S사유, null, 0));
   console.log("H 사유:", JSON.stringify(sum.H사유, null, 0));
-  console.log(`문항 결손 — HWP 가 더 많은 편 ${sum.문항결손.편} · 초과 문항 ${sum.문항결손.HWP초과문항}`);
-  console.log(`수식 렌더 실패 — DB ${sum.수식.DB실패}/${sum.수식.DB전체} (${pct(sum.수식.DB실패, sum.수식.DB전체)}%) · ` +
-    `HWP ${sum.수식.HWP실패}/${sum.수식.HWP전체} (${pct(sum.수식.HWP실패, sum.수식.HWP전체)}%)`);
+  console.log(
+    `문항 결손 — HWP 가 더 많은 편 ${sum.문항결손.편} · 초과 문항 ${sum.문항결손.HWP초과문항}`,
+  );
+  console.log(
+    `수식 렌더 실패 — DB ${sum.수식.DB실패}/${sum.수식.DB전체} (${pct(sum.수식.DB실패, sum.수식.DB전체)}%) · ` +
+      `HWP ${sum.수식.HWP실패}/${sum.수식.HWP전체} (${pct(sum.수식.HWP실패, sum.수식.HWP전체)}%)`,
+  );
   console.log("→", OUT);
   void args;
 }

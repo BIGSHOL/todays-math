@@ -24,6 +24,7 @@
 import { PrismaClient } from "@prisma/client";
 
 import { isFatal, judgeAnswerChoice } from "./answerChoiceRules";
+import { BODY_CHOICE_MARKS } from "../../src/lib/math/circledNumber";
 
 const prisma = new PrismaClient();
 
@@ -37,7 +38,7 @@ interface Row {
   questionType: string | null;
 }
 
-const CIRCLED_1_15 = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮";
+const CIRCLED_1_15 = BODY_CHOICE_MARKS;
 
 /**
  * R2 — 「바로 앞 마커의 **다음 번호**가 줄 중간에 있으면」 그 앞에서 줄을 나눈다.

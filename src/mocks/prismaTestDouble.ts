@@ -315,6 +315,7 @@ function extraEligibleProblems(): ProblemEntity[] {
       directUseAllowed: true,
       pool: "shared",
       figureUrls: [],
+      figureSvg: null,
       createdAt: "2026-08-01T00:00:00.000Z",
       updatedAt: "2026-08-01T00:00:00.000Z",
     });
@@ -388,6 +389,7 @@ function toFixtureProblemRow(
     questionType: null,
     // 이 픽스처는 배점 채점용이라 그림 컬럼이 없다 — DB 기본값(`@default([])`)으로 채운다.
     figureUrls: [],
+    figureSvg: null,
     figureDims: [],
     createdAt: new Date(fixture.createdAt),
     updatedAt: new Date(fixture.updatedAt),

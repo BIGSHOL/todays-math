@@ -38,6 +38,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { PrismaClient } from "@prisma/client";
 
 import { estimateProblemCount, readSignals } from "./oversizeRules";
+import { ANSWER_CIRCLED_CLASS } from "../../src/lib/math/circledNumber";
 import { mergeLedgerRows, stillApplied } from "./revertLedger";
 
 const prisma = new PrismaClient();
@@ -124,7 +125,10 @@ export function classifyDiscard(content: string): string {
  * 문항이 있어 `③, ⑤` 같은 꼴도 받는다.
  */
 export function isChoiceAnswer(answer: string | null | undefined): boolean {
-  return /^\s*[①-⑩1-5](\s*[,·]\s*[①-⑩1-5])*\s*$/.test((answer ?? "").trim());
+  // 계열은 `circledNumber.ts` 한 곳에서 온다.
+  return new RegExp(
+    String.raw`^\s*[${ANSWER_CIRCLED_CLASS}1-5](\s*[,·]\s*[${ANSWER_CIRCLED_CLASS}1-5])*\s*$`,
+  ).test((answer ?? "").trim());
 }
 
 export function decideDiscard(

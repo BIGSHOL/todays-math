@@ -14,10 +14,16 @@ import { describe, expect, it } from "vitest";
 import { classifyPair } from "../../../scripts/qa/classify-answer-mismatch";
 import {
   canon,
+  circledSet,
+  circledValue,
   hasBrokenGlyph,
   parts,
   repairGlyphs,
 } from "../../../scripts/qa/answer-notation";
+import {
+  circledValue as rulesCircledValue,
+  knownCircledGlyphs as rulesKnownCircledGlyphs,
+} from "../../../scripts/qa/answerChoiceRules";
 
 /** DB 정답 ↔ 공식 정답면. 같은 답을 다르게 적은 것들. */
 const 표기차이: Array<[string, string, string]> = [
@@ -63,7 +69,11 @@ const 진짜오답: Array<[string, string, string]> = [
   ["0", "-10", "3234-18"],
   ["6", "7", "5409-19"],
   ["⑴ x는 7의 배수, ⑵ 61", "⑴ 21의 배수  ⑵ 61", "3644-16 — 7 과 21"],
-  ["⑴ △EBD (RHS 합동), ⑵ 10 cm", "⑴ ∆ABD≡∆EBD,  RHA합동    ⑵", "3879-19 — RHS 와 RHA"],
+  [
+    "⑴ △EBD (RHS 합동), ⑵ 10 cm",
+    "⑴ ∆ABD≡∆EBD,  RHA합동    ⑵",
+    "3879-19 — RHS 와 RHA",
+  ],
 ];
 
 /** 규칙이 헐거우면 여기서 뚫린다. 전부 실측에서 잡은 위험이다. */
@@ -81,9 +91,12 @@ describe("정답 표기 정규화", () => {
     expect(classifyPair(ours, official).verdict).toBe("표기차이");
   });
 
-  it.each(진짜오답)("값이 다르면 흡수하지 않는다: %s ↔ %s (%s)", (ours, official) => {
-    expect(classifyPair(ours, official).verdict).not.toBe("표기차이");
-  });
+  it.each(진짜오답)(
+    "값이 다르면 흡수하지 않는다: %s ↔ %s (%s)",
+    (ours, official) => {
+      expect(classifyPair(ours, official).verdict).not.toBe("표기차이");
+    },
+  );
 
   it.each(흡수금지)("절대 흡수하면 안 된다: %s ↔ %s (%s)", (ours, official) => {
     expect(classifyPair(ours, official).verdict).not.toBe("표기차이");
@@ -120,5 +133,58 @@ describe("canon 의 경계", () => {
   it("NFKC 가 원문자를 숫자로 바꾸므로 개수 세기에 쓰면 안 된다", () => {
     // 이 성질을 잊고 `canon` 위에서 원문자를 세다가 복수정답 갈래가 통째로 죽었다.
     expect(canon("③")).toBe("3");
+  });
+});
+
+/**
+ * 🔴 RED → 🟢 GREEN — 원문자 **계열**을 손으로 나열하지 않는다 (2026-08-19).
+ *
+ * `circledSet` 이 `[①-⑩]` 만 봤다. 그래서 `➀`(U+2780) 계열이 든 행은
+ * **정답 대조에서 「원문자가 없다」로 읽혔다.** 실측(`census-circled-glyphs.ts`,
+ * 분모 47,152건): 손 목록 밖의 글자가 **`answer` 44행 · `content` 11행 ·
+ * `solution` 6행 · 합 58행**.
+ *
+ * 이 저장소에 원문자 목록이 **손으로 열세 벌** 적혀 있다. CLAUDE.md 2026-08-18 —
+ * 「목록을 손으로 쓰면 세는 쪽과 고치는 쪽이 같이 눈이 먼다.」
+ * 목록에 없는 계열은 0 이 되고, **0 인 줄도 모른다.**
+ */
+describe("원문자 계열 — 목록이 아니라 계산으로", () => {
+  it("`➂`(U+2782) 를 셋으로 읽는다 — 예전엔 아예 못 봤다", () => {
+    expect(circledValue("\u2782")).toBe(3);
+  });
+
+  it("계열이 달라도 **같은 답이면 같은 값**이 나온다 — 대조가 새면 안 된다", () => {
+    // `③`(U+2462) · `➂`(U+2782) · `❸`(U+2778) 은 전부 «3번» 이다.
+    expect(circledSet("\u2782")).toEqual(circledSet("③"));
+    expect(circledSet("\u2778")).toEqual(circledSet("③"));
+  });
+
+  it("정규형으로 모은다 — 집합 비교가 글리프 모양에 걸리지 않게", () => {
+    expect(circledSet("\u2782, \u2783")).toEqual(["③", "④"]);
+  });
+
+  it("원문자가 아닌 것은 0 이다", () => {
+    expect(circledValue("3")).toBe(0);
+    expect(circledValue("가")).toBe(0);
+    expect(circledSet("정답은 3 이다")).toEqual([]);
+  });
+
+  it("PUA 잔재는 먼저 펴서 읽는다", () => {
+    // `repairGlyphs` 가 U+F083 → `③` 로 편다. 계열 계산은 그 뒤에 온다.
+    expect(circledSet("\uF083")).toEqual(["③"]);
+  });
+
+  /**
+   * ⚠️ **이 검사가 없으면 두 파일이 조용히 갈라진다.**
+   * `answerChoiceRules.ts` 도 같은 계열표를 들고 있다. 한쪽만 계열을 더하면
+   * 판정기와 대조기가 서로 다른 것을 원문자로 본다.
+   */
+  it("`answerChoiceRules` 와 **같은 계열**을 안다", () => {
+    for (const g of rulesKnownCircledGlyphs()) {
+      expect(
+        circledValue(g),
+        `${g} (U+${g.codePointAt(0)!.toString(16)})`,
+      ).toBe(rulesCircledValue(g));
+    }
   });
 });

@@ -36,10 +36,10 @@ import { PrismaClient } from "@prisma/client";
 
 import { readEnvFile } from "../import/readEnvFile";
 import {
-  classifyFigureNeed,
+  classifyFigure,
   MENTIONS_FIGURE_WHERE,
   NO_FIGURE_WHERE,
-} from "./missingFigureRule";
+} from "../../src/lib/figure/missingFigureRule";
 
 const DEFAULT_SUMAEK_ENV = "C:\\Creative\\sumaek\\.env";
 const DEFAULT_POSTGRES_JS =
@@ -133,7 +133,7 @@ async function targets(): Promise<Map<string, string>> {
   });
   const map = new Map<string, string>();
   for (const r of rows) {
-    if (classifyFigureNeed(r.content) !== "유실") continue;
+    if (classifyFigure(r.content) !== "유실") continue;
     if (r.externalId && UUID.test(r.externalId)) map.set(r.externalId, r.id);
   }
   return map;

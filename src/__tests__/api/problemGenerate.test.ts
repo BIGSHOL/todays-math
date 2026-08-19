@@ -1,9 +1,11 @@
 /**
  * 🟢 GREEN — Phase 3, T3.2 (AI(DeepSeek) API 래퍼 라우트).
  *
- * 단위 테스트(src/__tests__/unit/aiGenerator.test.ts)가 생성/변형 순수 래퍼를 검증하고,
+ * 단위 테스트(src/__tests__/unit/aiGenerator.test.ts)가 생성 순수 래퍼를 검증하고,
  * 이 파일은 HTTP 계층(세션·계약·영속·에러 매핑)만 검증한다.
- * AI SDK는 호출하지 않는다 — generateProblems/transformProblem을 모킹한다.
+ * AI SDK는 호출하지 않는다 — generateProblems를 모킹한다.
+ *
+ * 변형(/transform, /transform/adopt)은 두 단계로 갈라져 src/__tests__/api/problemTransform.test.ts 소유.
  */
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -16,31 +18,20 @@ vi.mock("@/lib/session", () => ({
   })),
 }));
 
-const { mockGenerateProblems, mockTransformProblem } = vi.hoisted(() => ({
+const { mockGenerateProblems } = vi.hoisted(() => ({
   mockGenerateProblems: vi.fn(),
-  mockTransformProblem: vi.fn(),
 }));
 
 vi.mock("@/lib/ai/generator", () => ({
   generateProblems: mockGenerateProblems,
 }));
 
-vi.mock("@/lib/ai/transformer", () => ({
-  transformProblem: mockTransformProblem,
-}));
-
 import { POST as generateProblemsRoute } from "@/app/api/problems/generate/route";
-import { POST as transformProblemsRoute } from "@/app/api/problems/transform/route";
 import { AiGenerationError } from "@/lib/ai/errors";
 import { errorResponseSchema } from "@/contracts/common.contract";
-import {
-  problemGenerateResponseSchema,
-  problemTransformResponseSchema,
-} from "@/contracts/problem.contract";
+import { problemGenerateResponseSchema } from "@/contracts/problem.contract";
 import {
   MOCK_EMPTY_PROBLEM_UNIT,
-  MOCK_PROBLEM_OTHER_USER,
-  MOCK_PROBLEMS,
   NOT_FOUND_ID,
   USER_TEACHER_ID,
 } from "@/mocks/data";
@@ -56,7 +47,6 @@ function jsonRequest(url: string, body?: unknown) {
 
 beforeEach(() => {
   mockGenerateProblems.mockReset();
-  mockTransformProblem.mockReset();
 });
 
 describe("[T3.2] POST /api/problems/generate", () => {
@@ -169,124 +159,6 @@ describe("[T3.2] POST /api/problems/generate", () => {
           jsonRequest("http://localhost/api/problems/generate", {
             unitId: MOCK_EMPTY_PROBLEM_UNIT.id,
             difficulty: "easy",
-            count: 2,
-          }),
-        ),
-      ).rejects.toThrow("묶음 저장 실패");
-
-      expect(createManySpy).toHaveBeenCalledTimes(1);
-      expect(createManySpy.mock.calls[0]![0]!.data).toHaveLength(2);
-      expect(
-        await prismaTestDouble.problem.count({
-          where: { userId: USER_TEACHER_ID },
-        }),
-      ).toBe(before);
-    } finally {
-      createManySpy.mockRestore();
-    }
-  });
-});
-
-describe("[T3.2] POST /api/problems/transform", () => {
-  it("원본이 있으면 201과 transformed/pending 문제를 반환한다", async () => {
-    const origin = MOCK_PROBLEMS[0]!;
-    mockTransformProblem.mockResolvedValueOnce([
-      {
-        unitId: origin.unitId,
-        difficulty: origin.difficulty,
-        problemType: origin.problemType,
-        content: "변형된 문제",
-        answer: "2",
-        solution: null,
-        source: "transformed",
-        originProblemId: origin.id,
-        reviewStatus: "pending",
-      },
-    ]);
-
-    const res = await transformProblemsRoute(
-      jsonRequest("http://localhost/api/problems/transform", {
-        originProblemId: origin.id,
-        count: 1,
-      }),
-    );
-    expect(res.status).toBe(201);
-    const body = problemTransformResponseSchema.parse(await res.json());
-    expect(body.data[0]?.source).toBe("transformed");
-    expect(body.data[0]?.originProblemId).toBe(origin.id);
-    expect(body.data[0]?.reviewStatus).toBe("pending");
-  });
-
-  it("없는 originProblemId는 NOT_FOUND(404)를 반환한다", async () => {
-    const res = await transformProblemsRoute(
-      jsonRequest("http://localhost/api/problems/transform", {
-        originProblemId: NOT_FOUND_ID,
-      }),
-    );
-    expect(res.status).toBe(404);
-    const body = errorResponseSchema.parse(await res.json());
-    expect(body.error.code).toBe("NOT_FOUND");
-  });
-
-  it("타 사용자 원본은 FORBIDDEN(403)을 반환한다", async () => {
-    const res = await transformProblemsRoute(
-      jsonRequest("http://localhost/api/problems/transform", {
-        originProblemId: MOCK_PROBLEM_OTHER_USER.id,
-      }),
-    );
-    expect(res.status).toBe(403);
-    const body = errorResponseSchema.parse(await res.json());
-    expect(body.error.code).toBe("FORBIDDEN");
-  });
-
-  it("변형 실패 응답에 내부 오류 메시지를 노출하지 않는다", async () => {
-    const log = vi.spyOn(console, "error").mockImplementation(() => undefined);
-    mockTransformProblem.mockRejectedValueOnce(
-      new AiGenerationError("upstream request id secret-123"),
-    );
-
-    const res = await transformProblemsRoute(
-      jsonRequest("http://localhost/api/problems/transform", {
-        originProblemId: MOCK_PROBLEMS[0]!.id,
-        count: 1,
-      }),
-    );
-    expect(res.status).toBe(502);
-    const body = errorResponseSchema.parse(await res.json());
-    expect(body.error.message).toBe("AI 문제 변형에 실패했습니다.");
-    expect(JSON.stringify(body)).not.toContain("secret-123");
-    log.mockRestore();
-  });
-
-  it("변형 문제 묶음도 DB 오류 시 일부만 남기지 않는다", async () => {
-    const origin = MOCK_PROBLEMS[0]!;
-    mockTransformProblem.mockResolvedValueOnce(
-      ["첫 번째 변형", "두 번째 변형"].map((content) => ({
-        unitId: origin.unitId,
-        difficulty: origin.difficulty,
-        problemType: origin.problemType,
-        content,
-        answer: "2",
-        solution: null,
-        source: "transformed",
-        originProblemId: origin.id,
-        reviewStatus: "pending",
-      })),
-    );
-    const before = await prismaTestDouble.problem.count({
-      where: { userId: USER_TEACHER_ID },
-    });
-
-    // 생성 쪽과 같은 이유 — 변형 묶음도 한 문장으로 저장된다. 위 주석 참조.
-    const createManySpy = vi
-      .spyOn(prismaTestDouble.problem, "createManyAndReturn")
-      .mockRejectedValueOnce(new Error("묶음 저장 실패"));
-
-    try {
-      await expect(
-        transformProblemsRoute(
-          jsonRequest("http://localhost/api/problems/transform", {
-            originProblemId: origin.id,
             count: 2,
           }),
         ),

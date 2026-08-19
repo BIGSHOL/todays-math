@@ -49,6 +49,8 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 HERE = pathlib.Path(__file__).parent
+sys.path.insert(0, str(HERE))
+import rpm_guards  # noqa: E402  — 두 계획이 **같은 가드**를 쓴다
 #: ⚠️ **지금 DB 값**을 봐야 한다. 옛 스냅숏을 보면 이미 고친 행을 다시 계획에
 #:    올리고, 적용기는 「값이 달라졌다」로 전부 건너뛴다 — 아무것도 안 고쳐진다.
 CENSUS = pathlib.Path("scripts/qa/reports/rpm-damage-census.json")
@@ -184,6 +186,13 @@ def main() -> None:
             # 순환소수 표시 `H` 는 우리 표기(숫자 위 점)로 못 옮겼다 — 안 바꾼다.
             if re.search(r"\dH", value):
                 bump("순환소수 표시를 못 옮겼다")
+                continue
+            if " ".join(value.split()) == " ".join((r.get(field) or "").split()):
+                bump("바뀌는 것이 없다")
+                continue
+            why = rpm_guards.check(value, r.get(field))
+            if why:
+                bump(why)
                 continue
             if field == "solution":
                 nk, ok_ = len(ko(value)), len(our_ko)

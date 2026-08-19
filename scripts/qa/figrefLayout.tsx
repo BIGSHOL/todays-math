@@ -20,6 +20,7 @@
  *    이 파일은 「짝을 알면 어떻게 그리나」만 답한다.
  */
 import { ProblemContent } from "../../src/components/math/ProblemContent";
+import { CHOICE_MARKS } from "../../src/lib/math/circledNumber";
 
 /* ──────────────────────────────────────────────────────────────────────────
  * 시안 목록
@@ -130,8 +131,6 @@ export const PROBE_CSS = `
 /* ──────────────────────────────────────────────────────────────────────────
  * 렌더
  * ────────────────────────────────────────────────────────────────────────── */
-
-const CHOICE_MARKS = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"];
 
 export interface FigrefBodyProps {
   /**

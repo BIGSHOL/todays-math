@@ -6,6 +6,8 @@ import type {
   TestPrintProblem,
 } from "@/components/print/types";
 
+import type { SubjectiveLabel } from "@/lib/tests/essayLabels";
+
 import styles from "../TestPrint.module.css";
 import { BodyContainer } from "./BodyContainer";
 import { ProblemBody } from "./ProblemBody";
@@ -16,11 +18,11 @@ interface JaseupTemplateProps {
   problems: TestPrintProblem[];
   startingNumber: number;
   /**
-   * 문항 id → 서술형 지면 순번. 장 단위로 못 세는 이유는 번호가 **시험지 전체**를
-   * 가로지르기 때문이다(2장 첫 문항이 서술형 3일 수 있다). `TestPrint` 가
+   * 문항 id → 유형 표시(서술형·단답형)와 지면 순번. 장 단위로 못 세는 이유는 번호가
+   * **시험지 전체**를 가로지르기 때문이다(2장 첫 문항이 서술형 3일 수 있다). `TestPrint` 가
    * `useMemo` 로 한 번 만들어 넘긴다 — 매 렌더 새 Map 을 만들면 이 memo 가 죽는다.
    */
-  essayLabels?: ReadonlyMap<string, number>;
+  essayLabels?: ReadonlyMap<string, SubjectiveLabel>;
 }
 
 function formatPrintDate(date: string): string {
@@ -86,7 +88,7 @@ export const JaseupTemplate = memo(function JaseupTemplate({
       <BodyContainer>
         {problems.map((problem, index) => {
           const problemNumber = startingNumber + index;
-          const essayNumber = essayLabels?.get(problem.id);
+          const subjective = essayLabels?.get(problem.id);
           return (
             <article
               className={styles.problemItem}
@@ -96,9 +98,11 @@ export const JaseupTemplate = memo(function JaseupTemplate({
               <div className={styles.questionArea}>
                 <div className={styles.questionNumber}>
                   문 {problemNumber}
-                  {essayNumber ? (
+                  {subjective ? (
+                    // 말은 `questionType` 에서 온다 — 「서술형」/「단답형」을 여기에
+                    // 다시 적으면 유형이 늘 때 지면만 눈이 먼다(원장님 확정 2026-08-19).
                     <span className={styles.essayBadge}>
-                      서술형 {essayNumber}
+                      {subjective.kind} {subjective.n}
                     </span>
                   ) : null}
                 </div>

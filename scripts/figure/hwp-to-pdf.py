@@ -28,7 +28,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import pathlib
+import subprocess
 import re
 import shutil
 import sys
@@ -43,7 +45,30 @@ OUT = pathlib.Path(".hwp-pdf")
 
 
 #: 한 편에 허용하는 시간(초). 넘으면 그 편은 포기하고 다음으로 간다.
-PER_FILE_TIMEOUT = 90
+#: 환경변수 `HWP_PDF_TIMEOUT` 으로 올릴 수 있다 — 90초는 큰 편에서 **변환 중**인 것도
+#: 「대화상자에 걸렸다」로 몰아 버린다(2026-08-19 실측: 16편이 여기서 떨어졌다).
+PER_FILE_TIMEOUT = int(os.environ.get("HWP_PDF_TIMEOUT", "90"))
+
+
+def hwp_pids() -> set[int]:
+    """지금 살아 있는 한글 프로세스 PID.
+
+    ⚠️ **`taskkill /IM Hwp.exe` 를 쓰면 안 된다.** 이 저장소는 오르카 다중 세션이
+    기본이고(CLAUDE.md 9), 다른 세션이 같은 시각에 `extract-hwp-all.py` 로 한글 COM 을
+    쓰고 있다(2026-08-19 실측). 이름으로 죽이면 **남의 배치를 통째로 끊는다** —
+    그쪽은 실패 표시만 남고 이유는 어디에도 안 남는다.
+    그래서 이 실행이 **새로 띄운 것만** 골라 죽인다.
+    """
+    r = subprocess.run(
+        ["tasklist", "/FI", "IMAGENAME eq Hwp.exe", "/FO", "CSV", "/NH"],
+        capture_output=True, text=True,
+    )
+    pids = set()
+    for line in (r.stdout or "").splitlines():
+        parts = [p.strip('" ') for p in line.split('","')]
+        if len(parts) >= 2 and parts[1].isdigit():
+            pids.add(int(parts[1]))
+    return pids
 
 
 def convert(app, src: pathlib.Path, dest: pathlib.Path, work: pathlib.Path) -> None:
@@ -75,8 +100,22 @@ def main() -> None:
         except Exception:  # noqa: BLE001
             pass
         try:
-            # 대화상자를 띄우지 않는다. 그래도 뜨는 것은 배치의 시간제한이 끊는다.
-            app.SetMessageBoxMode(0x20000)
+            # 대화상자를 자동으로 넘긴다. 그래도 뜨는 것은 배치의 시간제한이 끊는다.
+            #
+            # ⚠️ 예전 값 `0x20000` 은 **「예/아니오」 대화상자 하나**만 덮는다
+            # (0x00020000 = MB_YESNO → 아니오). 한글이 실제로 띄우는 것은 그것만이
+            # 아니다 — 확인(MB_OK)·확인/취소·예/아니오/취소·다시시도 가 각각 다른
+            # 비트라, 하나만 켜 두면 나머지는 **그대로 멈춘다.** 2026-08-19 에
+            # 16편이 여기서 시간제한에 걸렸고 「어떤 대화상자인지 사람이 봐야 한다」로
+            # 남아 있었다. 종류를 하나씩 알아내는 대신 **전부** 켠다.
+            app.SetMessageBoxMode(
+                0x00000001  # MB_OK          → 확인
+                | 0x00000010  # MB_OKCANCEL    → 확인
+                | 0x00000400  # MB_ABORTRETRYIGNORE → 무시
+                | 0x00001000  # MB_YESNOCANCEL → 예
+                | 0x00010000  # MB_YESNO       → 예
+                | 0x00100000  # MB_RETRYCANCEL → 재시도
+            )
         except Exception:  # noqa: BLE001
             pass
         w = pathlib.Path(_t.mkdtemp(prefix="hwppdf1_"))
@@ -93,26 +132,36 @@ def main() -> None:
     plan = json.loads(ROWS.read_text(encoding="utf-8"))["편"]
     if a.limit:
         plan = plan[: a.limit]
-    todo = [p for p in plan if not (OUT / f"{p['e']}.pdf").exists()]
+    # ⚠️ **「파일이 있다」를 「변환됐다」로 읽으면 안 된다.** 변환이 중간에 죽으면 0바이트
+    #    파일이 남고, 그러면 다음 실행이 그 편을 «이미 됨» 으로 건너뛴다 — 에러가 아니라
+    #    숫자만 조용히 줄어든다(2026-08-19 실측: `5049.pdf` 0바이트가 그렇게 남아 있었다).
+    def done(e: str) -> bool:
+        f = OUT / f"{e}.pdf"
+        return f.exists() and f.stat().st_size > 0
+
+    todo = [p for p in plan if not done(p["e"])]
     print(f"편 {len(plan)} · 이미 변환됨 {len(plan) - len(todo)} · 할 것 {len(todo)}")
     if not a.write:
         print("드라이런이다. 실제로 찍으려면 --write 를 붙여라.")
         return
 
     OUT.mkdir(exist_ok=True)
-    import subprocess
 
     ok = fail = 0
+    stuck: list[str] = []
     for i, p in enumerate(todo, 1):
         dest = (OUT / f"{p['e']}.pdf").resolve()
+        before = hwp_pids()
         try:
             subprocess.run(
                 [sys.executable, __file__, "--one", p["hwp"], str(dest)],
                 timeout=PER_FILE_TIMEOUT, capture_output=True,
             )
         except subprocess.TimeoutExpired:
-            print(f"  ✗ {p['e']}: {PER_FILE_TIMEOUT}초 초과 — 포기")
-            subprocess.run(["taskkill", "/F", "/IM", "Hwp.exe"], capture_output=True)
+            print(f"  ✗ {p['e']}: {PER_FILE_TIMEOUT}초 초과 — 포기", flush=True)
+            stuck.append(p["e"])
+            for pid in hwp_pids() - before:
+                subprocess.run(["taskkill", "/F", "/PID", str(pid)], capture_output=True)
         if dest.exists() and dest.stat().st_size > 0:
             ok += 1
         else:
@@ -127,6 +176,8 @@ def main() -> None:
         if i % 5 == 0:
             print(f"  {i}/{len(todo)} · 성공 {ok} 실패 {fail}", flush=True)
     print(f"── HWP → PDF ── 성공 {ok} · 실패 {fail} → {OUT}")
+    if stuck:
+        print(f"  시간제한에 걸린 편 {len(stuck)}: {','.join(stuck)}")
 
 
 if __name__ == "__main__":

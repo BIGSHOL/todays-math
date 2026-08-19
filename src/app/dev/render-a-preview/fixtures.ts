@@ -10,6 +10,7 @@ const base = {
   directUseAllowed: true,
   pool: "shared" as const,
   figureUrls: [] as string[],
+  figureSvg: null,
   createdAt: "2026-06-05T10:00:00Z",
   updatedAt: "2026-06-05T10:00:00Z",
 };
