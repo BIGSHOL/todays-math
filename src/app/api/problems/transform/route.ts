@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
     //    PostgreSQL 의 `INSERT ... RETURNING` 이라 **한 문장**으로 넣고 넣은 행을 그대로
     //    돌려준다. 문장이 하나뿐이므로 트랜잭션 래퍼 없이도 전부 아니면 전무다.
     //    반환 순서는 입력 순서 = 응답 순서라 계약(배열)도 그대로다.
+    // exam-wiring: 기출아님 — AI 변형본(source=transformed)만 넣는다. 원본 시험지가 없다
     const created = await db.problem.createManyAndReturn({
       data: drafts.map((draft) => ({
         userId: session.id,

@@ -106,9 +106,30 @@ interface ProblemRow {
   pool: "shared" | "private";
   /** 원본 배점(08-import-ledger.md 이관 메타데이터) — 계약(ProblemEntity)엔 없어 픽스처만 채운다. */
   score: number | null;
+  // ── 원본 역추적 메타데이터 (08-import-ledger.md §3) ──
+  // 계약엔 없고 DB 컬럼에만 있다. `Exam` 적재 배선(syncExamMetadata)이 이 넷을 읽는다 —
+  // 대역에 없으면 select 투영이 던져서 그 배선을 테스트할 수 없다.
+  externalId: string | null;
+  sourceFile: string | null;
+  school: string | null;
+  subject: string | null;
+  examId: string | null;
+  questionNumber: number | null;
+  figureSvg: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
+
+/** 역추적 컬럼의 DB 기본값(전부 NULL). 픽스처·create 가 안 주면 이 값이다. */
+const PROBLEM_SOURCE_META_DEFAULTS = {
+  externalId: null,
+  sourceFile: null,
+  school: null,
+  subject: null,
+  examId: null,
+  questionNumber: null,
+  figureSvg: null,
+} as const;
 
 interface TestResultRow {
   id: string;
@@ -343,6 +364,7 @@ function toProgressRow(entity: ProgressEntity): ProgressRow {
 
 function toProblemRow(entity: ProblemEntity): ProblemRow {
   return {
+    ...PROBLEM_SOURCE_META_DEFAULTS,
     ...entity,
     // ProblemEntity(계약)엔 score가 없다 — 균등 배분 채점 경로(gradeAnswers.ts) 테스트는
     // MOCK_TEST_RESULT_PROBLEMS(score 직접 지정)로 별도 커버한다.
@@ -360,6 +382,7 @@ function toFixtureProblemRow(
   fixture: (typeof MOCK_TEST_RESULT_PROBLEMS)[number],
 ): ProblemRow {
   return {
+    ...PROBLEM_SOURCE_META_DEFAULTS,
     ...fixture,
     problemCode: assignProblemCode(fixture.unitId),
     questionType: null,
@@ -989,6 +1012,7 @@ const prismaModels = {
       const now = new Date();
       const row: ProblemRow = {
         id: randomUUID(),
+        ...PROBLEM_SOURCE_META_DEFAULTS,
         ...data,
         problemCode: data.problemCode ?? assignProblemCode(data.unitId),
         questionType: data.questionType ?? null,
@@ -1031,6 +1055,7 @@ const prismaModels = {
       const rows = data.map((item) => {
         const row: ProblemRow = {
           id: randomUUID(),
+          ...PROBLEM_SOURCE_META_DEFAULTS,
           ...item,
           problemCode: item.problemCode ?? assignProblemCode(item.unitId),
           questionType: item.questionType ?? null,

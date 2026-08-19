@@ -42,6 +42,9 @@ export async function POST(request: NextRequest) {
 
   let created;
   try {
+    // exam-wiring: 기출·원본없음 — 계약이 source=past_exam 도 받지만, 이 경로의 입력에는
+    //   examId·sourceFile·questionNumber 가 **아예 없다**(problemCreateSchema). 원본 시험지를
+    //   가리킬 값이 없으므로 Exam 을 만들 수 없다. 지어내지 않고 비워 둔다.
     created = await db.problem.create({
       data: {
         userId: session.id,

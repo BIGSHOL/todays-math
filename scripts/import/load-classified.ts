@@ -14,6 +14,10 @@ import {
   toLoadRows,
   type ImportLoadRow,
 } from "../../src/lib/import/toLoadRows";
+import {
+  syncExamMetadata,
+  type SyncExamResult,
+} from "../../src/lib/import/syncExamMetadata";
 import type { ImportDraft } from "../../src/lib/import/types";
 import { isDirectScript } from "./isDirectScript";
 import { seedUnitByPlaceholder } from "./loadUnits";
@@ -32,6 +36,8 @@ export interface LoadResult {
   reason: string;
   selectedSource: string;
   selectedKind: string;
+  /** 기출 시험지(`Exam`) 배선 결과. 확정 못 한 편을 **조용히 버리지 않고** 여기 센다. */
+  examSync?: SyncExamResult;
 }
 
 type ClassifiedDraft = ImportDraft & { unitId: string };
@@ -127,6 +133,7 @@ export async function loadClassifiedAtomically(
   inserted: number;
   alreadyPresent: number;
   skippedOversized: number;
+  examSync: SyncExamResult;
 }> {
   return prisma.$transaction(
     async (tx) => {
@@ -191,14 +198,34 @@ export async function loadClassifiedAtomically(
       let inserted = 0;
       for (let i = 0; i < missing.length; i += LOAD_BATCH_SIZE) {
         const chunk = missing.slice(i, i + LOAD_BATCH_SIZE);
+        // exam-wiring: 기출·배선됨 — 적재 직후 syncExamMetadata 로 그 편의 Exam 을 세운다
         const result = await tx.problem.createMany({ data: chunk });
         inserted += result.count;
       }
+
+      // 기출이 들어왔으면 그 **시험지**도 함께 선다. 이게 없으면 「오늘 넣은 데이터에만
+      // 유효한 수리」가 된다 — 그림 치수 때 똑같은 사고를 겪었다(`toLoadRows` figureDims 주석).
+      // 건드린 편만 다시 짓는다(멱등). 원본 문서 제목은 못 읽으므로 파일명·폴더로만 판단하고,
+      // 확정 못 한 편은 `unclassified` 로 세어 로그에 남긴다.
+      const touchedExamIds = [
+        ...new Set(
+          missing
+            .map((row) => row.examId)
+            .filter(
+              (id): id is string => typeof id === "string" && id.length > 0,
+            ),
+        ),
+      ];
+      const examSync = await syncExamMetadata(
+        tx as unknown as Parameters<typeof syncExamMetadata>[0],
+        touchedExamIds,
+      );
 
       return {
         inserted,
         alreadyPresent: rows.length - missing.length,
         skippedOversized: skipped.length,
+        examSync,
       };
     },
     { maxWait: 10_000, timeout: 120_000 },
@@ -296,6 +323,14 @@ export async function runLoadIfLocal(outDir: string): Promise<LoadResult> {
     console.log(
       `[load] inserted=${load.inserted} existing=${load.alreadyPresent} skipped=${load.skippedOversized}`,
     );
+    const sync = load.examSync;
+    console.log(
+      `[load] exam: 신규 ${sync.inserted} · 갱신 ${sync.updated} · 미분류 ${sync.unclassified.length}` +
+        ` · 제외(대비) ${sync.excluded.length} · 자연키충돌 ${sync.collided.length}`,
+    );
+    for (const u of sync.unclassified.slice(0, 10)) {
+      console.log(`       [미분류] examId=${u.examId} — ${u.reason}`);
+    }
     return result;
   } finally {
     await prisma.$disconnect();
