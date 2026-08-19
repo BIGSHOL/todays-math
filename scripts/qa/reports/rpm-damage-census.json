@@ -3,8 +3,8 @@
  "갈래": [
   {
    "갈래": "content: 근호가 혼자 남은 자리",
-   "행": 111,
-   "자리": 419,
+   "행": 100,
+   "자리": 389,
    "id": [
     "2a111463-d526-4e91-a7e5-e41a80c021a3",
     "a5c6b205-5afe-4c87-a552-3828418050f7",
@@ -13,12 +13,8 @@
     "d1d308bd-999c-402e-8b5a-e967c0b21cc0",
     "868aa65c-a7ba-4d9d-8f3e-6ef5ca0752ff",
     "0d66ccdc-ab04-4612-8cdc-91f4b8d3ee88",
-    "2bfacf99-01cb-4ecb-bd0e-59ff664b2be9",
-    "39f2b24d-b9b6-465d-92e0-00de7ba01088",
-    "4cb1bec2-d3bd-48a1-936f-950d059804ff",
     "f318d5ed-6ce8-4cdb-a6fe-8db75bd2ff3a",
     "548515ec-42e2-4a75-9007-3c13506f2165",
-    "b84bf809-4a9c-4859-ad4b-826aa2515fc1",
     "f4205f7f-7f62-4d37-85e1-2ee002b68ebb",
     "51aa0db6-64b5-4efb-a69d-170219027769",
     "0cd89a6f-fe13-425a-8327-0e2b103e4c7d",
@@ -46,7 +42,6 @@
     "1722846f-1a99-44aa-8d75-59d0295767c4",
     "9c0a909c-5acb-4e42-90dd-ce6ae80e44b2",
     "48f346fc-97e5-4c4f-a7f5-395ab20349d1",
-    "7aed8a3d-ae98-46fc-9469-39a722cdfb6c",
     "1daf9fc2-1440-430b-9141-a154aff77e4c",
     "639be4bb-a6e5-46a8-bda6-bd581d87daf5",
     "c98057f7-e5e5-4885-a3cc-2e3164f07827",
@@ -57,7 +52,6 @@
     "aa9e8560-b177-4897-80c3-6c60dad8a12d",
     "6bc4fa99-4c67-4d2a-b11c-5683ba093dfe",
     "2a038bd8-6b25-48e4-86b7-828389fb0936",
-    "8ccce48e-0397-41ff-a912-ff829171fbc3",
     "f87464d1-13f0-4a5d-bf5e-31486871b1c1",
     "42cd7b0d-5c66-488f-8680-6dd341223dd5",
     "71eb1b4d-323d-43d8-b48d-7b9179a5c5b1",
@@ -82,19 +76,15 @@
     "49bec5c8-8390-4f23-b25e-5497ca440179",
     "bff21496-5955-4b5d-8ec7-819d8bcb8496",
     "1f108d27-1936-4d4d-a468-b00dbfb4242b",
-    "2832a403-0033-435b-8c44-24289f57c715",
-    "5916fb32-b992-4198-a4f6-80a0f18fc11d",
     "48a0251d-9995-4d4b-b03f-8df6113c5021",
     "f1732e88-ebdc-4cc3-965b-f7c42d02b141",
     "016e22af-2b2e-44d0-8af9-88f48b7b1a4d",
     "712d7f01-03b9-4f42-be29-ed517b5e680b",
     "c2d2bbd7-7a68-4f8a-bfa3-415b4bd5087a",
-    "2b3b2226-ff53-4a9c-b329-f83a5fc97fcc",
     "1f52f41f-7a08-4771-b51b-e7e0e6b687c1",
     "f68e8366-3bda-4ec6-9a35-3ee46020a543",
     "4d8be05a-9d0d-4c9c-a3b5-c713eebe3a8e",
     "6dd4d26c-ca19-4ee9-bd84-f99c0ee53a19",
-    "19eabf36-272a-46cd-b8e7-98e5250555ed",
     "e05bb1b9-0e01-4d03-8137-e2e959276211",
     "497dd17e-8469-4b0f-9312-52264c291a35",
     "ec3e1d78-d8eb-4b6b-be3e-c8c0a9c908da",
@@ -104,7 +94,6 @@
     "2f5e7b41-fb83-4665-b107-e90a8af8d301",
     "abce16ad-b6ed-4374-85d3-caafae872305",
     "82871686-512b-4366-b30b-67bdf6a16739",
-    "d88ce3c1-d078-4090-be13-915934b78c9a",
     "0ca8a2c2-49be-4e28-89d7-a898a6ade4d3",
     "747d5c30-7d10-4899-bdf1-728afdaf7385",
     "e1a3f45d-7d82-49c7-a87e-12f659924aba",
@@ -121,8 +110,8 @@
   },
   {
    "갈래": "solution: □ 로 무너진 자리",
-   "행": 92,
-   "자리": 724,
+   "행": 90,
+   "자리": 696,
    "id": [
     "19bf48b2-8d7f-446e-b844-fb1d59acde31",
     "8f44baf5-9f22-4a52-8914-0a98e5f2e187",
@@ -136,8 +125,6 @@
     "cec15fd2-475a-4247-a198-f46defafd043",
     "1025fca9-670f-46cd-93b7-0de374ea32b7",
     "9b8b25f9-2bd2-4c13-97c9-0f514a51ce09",
-    "39f2b24d-b9b6-465d-92e0-00de7ba01088",
-    "4cb1bec2-d3bd-48a1-936f-950d059804ff",
     "f318d5ed-6ce8-4cdb-a6fe-8db75bd2ff3a",
     "375b403f-ca17-45e3-b2f3-353f100d7366",
     "5525f375-59a5-40c2-9406-708d14ac5e21",
@@ -145,7 +132,6 @@
     "a45c08a5-fce2-49fc-b783-2e18a3c32142",
     "52ac894d-1639-41f6-bc02-3301a6b7b065",
     "9c73c486-45cb-4316-8304-cf81ad7cf1fc",
-    "b84bf809-4a9c-4859-ad4b-826aa2515fc1",
     "e863c60c-481d-488c-974d-64154a1bd5a7",
     "f4205f7f-7f62-4d37-85e1-2ee002b68ebb",
     "fb1a69c0-3464-4cac-8431-b4324923bc1e",
@@ -161,6 +147,8 @@
     "be350db3-a803-49fe-aae6-81fdc90c56ff",
     "e6dde417-813a-4a6d-9728-6f1ca1a1f96f",
     "37e027fb-f5bc-4abb-bfc8-04efe4f01cea",
+    "39f2b24d-b9b6-465d-92e0-00de7ba01088",
+    "4cb1bec2-d3bd-48a1-936f-950d059804ff",
     "38f9d9ec-3a4b-46fe-a5f7-2967c84f2ed8",
     "44a0f629-f513-4103-a14f-f296234c6294",
     "d956e033-fa95-4df1-a886-830db37520e5",
@@ -173,7 +161,6 @@
     "8337287c-3b82-4b98-93af-6ec8204a8de0",
     "9c2bbebc-d4fe-45d6-9e43-bb2b3b6dc2be",
     "2832a403-0033-435b-8c44-24289f57c715",
-    "5916fb32-b992-4198-a4f6-80a0f18fc11d",
     "278a9154-07e8-42d5-a7af-d2bc279c075d",
     "5bb5c3e4-6e52-4385-88f2-c41e741b9dae",
     "0abe2328-fdf6-419a-81f4-034137c66ef5",
@@ -514,11 +501,6 @@
    "answer": "$\\sin $2$45$",
    "solution": "$\\overline{AC}=$\n\ns\n\n$\\cos ABC\\square60\\degree$\n\n에서\n\n$=2\\square3\\div\\frac{1}{2}=4\\square3$\n\n… 1단계\n\n$2$\n\n$3$\n\n∴ f\n\n$ABCD$\n\n$=$\n\ns\n\n$ABC+$\n\ns\n\n$ACD$\n\n$=\\frac{1}{2}\\frac{1}{2}\\square\\times 2\\square\\square3\\times 4\\square$\n\n$\\square\\square3\\times\\square$\n\n$\\sin \\square$\n\n$60\\frac{1}{2}\\degree+\\frac{1}{2}\\square\\times 4\\square3\\times 4\\square$\n\n$\\square\\frac{\\square}{2}2\\times$"
   },
-  "2bfacf99-01cb-4ecb-bd0e-59ff664b2be9": {
-   "content": "다음 제곱근표에서\n\n$a=7.308$\n\n,\n\n$b=7.155$\n\n를 만족시키는\n\n$\\surd$\n\n$\\surd$\n\n$a+b$\n\n$a$\n\n,\n\n$b$\n\n에 대하여 의 값은?\n\n$\\surd$\n\n① $7.211$\n\n② $7.232$\n\n③ $7.239$\n\n④ $7.280$\n\n⑤ $7.287$",
-   "answer": "7.232",
-   "solution": "(a+b)/2=(7.308+7.155)/2=14.463/2=7.2315≈7.232이다."
-  },
   "1025fca9-670f-46cd-93b7-0de374ea32b7": {
    "content": "오른쪽 그림과 같이 나무의 밑부분과 언\n\n덕이 맞닿은 지점을\n\n$A$\n\n라 하자.\n\n$A$\n\n지점\n\n에서 경사가\n\n$30\\degree$\n\n인 언덕을\n\n$4m$\n\n올라간\n\n$B$\n\n지점에서 나무 꼭대기\n\n$C$\n\n지점을 올려\n\n다본 각의 크기가\n\n$45\\degree$\n\n일 때, 나무의 높\n\n이\n\n$\\overline{AC}$\n\n의 길이를 구하시오.",
    "answer": "… $\\square$3",
@@ -533,16 +515,6 @@
    "content": "다음 식에 대한 설명 중 옳지 않은 것은?\n\n㉠\n\n$3x^{2}y-15xy$\n\n$3xy(x-5)$\n\n$\\square jjjjjj\\square$\n\n㉡\n\n① ㉠의 과정을 인수분해한다고 한다.\n\n② ㉡의 과정을 전개한다고 한다.\n\n③ $3x^{2}y$\n\n,\n\n$-15xy$\n\n의 공통인 인수는\n\n$3xy$\n\n이다.\n\n④ ㉡의 과정에서 결합법칙이 이용된다.\n\n⑤ $3x$\n\n,\n\n$xy$\n\n,\n\n$3(x-5)$\n\n는 모두\n\n$3x^{2}y-15xy$\n\n의 인수이다.",
    "answer": "④",
    "solution": "㉡의 전개 과정에는 분배법칙이 쓰이지 결합법칙이 쓰이지 않으므로 이 설명이 옳지 않다."
-  },
-  "39f2b24d-b9b6-465d-92e0-00de7ba01088": {
-   "content": "부등식\n\n$1.4<\\surd x<2.5$\n\n를 만족시키는\n\n$x$\n\n의 값 중에서 가장\n\n$a$\n\n큰 자연수를\n\n$a$\n\n, 가장 작은 자연수를\n\n$b$\n\n라 할 때,\n\n$\\times n$\n\n이\n\n$\\surd$\n\n한 자리 자연수가 되도록 하는 자연수\n\n$n$\n\n의 값을 모두 구하\n\n시오.",
-   "answer": "$3$, $12$, $27$",
-   "solution": "$1.4<\\square x$\n\n$<2.5$\n\n의 각 변을 제곱하면\n\n$1.96<x<6.25$\n\n이때 가장 큰 자연수\n\n$x$\n\n는\n\n$6$\n\n이므로\n\n$a=6$\n\n가장 작은 자연수\n\n$x$\n\n는\n\n$2$\n\n이므로\n\n$b=2$\n\n$a$\n\n$\\times n$\n\n, 즉\n\n$3n$\n\n이 자연수가 되도록 하는 자연수\n\n$n$\n\n은\n\n$\\square\\frac{\\square}{\\square}$\n\n$\\square$\n\n$3\\times$\n\n(자연수)\n\n$^{2}$\n\n의 꼴이므로\n\n$n=3\\times 1^{2}$\n\n,\n\n$3\\times 2^{2}$\n\n,\n\n$3\\times 3^{2}$\n\n,\n\n$3\\times 4^{2}$\n\n,\n\n$\\cdots$\n\n이때\n\n$3n$\n\n의 값은 각각\n\n$3$\n\n,\n\n$6$\n\n,\n\n$9$\n\n,\n\n$12$\n\n,\n\n$\\cdots$\n\n이므로\n\n$3n$\n\n이 한 자리 자\n\n$\\square$\n\n$\\square$\n\n연수가 되도록 하는 자연수\n\n$n$\n\n의 값은\n\n$3\\times 1^{2}=3$\n\n,\n\n$3\\times 2^{2}=12$\n\n,\n\n$3\\times 3^{2}=27$"
-  },
-  "4cb1bec2-d3bd-48a1-936f-950d059804ff": {
-   "content": "다음 중 옳은 것은?\n\n① $\\surd 5\\surd 6=\\surd 11$\n\n② $-2\\surd 3\\times\\surd 10=-\\surd 60$\n\n$11$\n\n③ $4$\n\n$5\\times7=4$\n\n$35$\n\n④ $\\times28$\n\n$=4$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$\n\n$16$\n\n⑤ $-2$\n\n$\\times 3$\n\n$=-6$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$",
-   "answer": "③",
-   "solution": "①\n\n$5$\n\n$6=5\\times 6=30$\n\n②\n\n$-2$\n\n$3\\times10=-2$\n\n$3\\times 10=-2$\n\n$30$\n\n$\\square$\n\n③\n\n$4$\n\n$5\\times7=4$\n\n$\\times 7=4$\n\n$35$\n\n$\\square$\n\n$\\square$\n\n$\\square^{5}$\n\n$\\square$\n\n$^{2}$\n\n④\n\n$\\times=\\times=4=2$\n\n$\\square\\square\\square \\squareÁ7Á\\square \\square$\n\n$\\square\\square\\frac{28}{11}$\n\n$\\square\\square\\square \\squareÁ7Á\\square \\square\\square$\n\n$\\square\\frac{28}{11}$\n\n$\\square$\n\n⑤\n\n$-2\\square\\square\\frac{16}{15}\\times 3\\square \\frac{5}{8}=(-2\\times 3)\\times\\square\\square\\frac{16}{15}\\times\\frac{5}{8}=-6\\square \\frac{2}{3}$\n\n따라서 옳은 것은 ③이다."
   },
   "f318d5ed-6ce8-4cdb-a6fe-8db75bd2ff3a": {
    "content": "다음 중 실수의 개수를\n\n$a$\n\n, 유리수의 개수를\n\n$b$\n\n라 할 때,\n\n$a-b$\n\n의 값을 구하시오.\n\n$p$\n\n,\n\n$0.523$\n\n,\n\n$0.^{H}4$\n\n,\n\n$0.001$\n\n,\n\n$\\surd$\n\n$\\surd$\n\n$-81$\n\n,\n\n$-2.5$\n\n,　,\n\n$2.1555\\cdots$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd \\frac{16}{49}$",
@@ -583,11 +555,6 @@
    "content": "오른쪽 그림과 같이 건물에서\n\n$15m$\n\n떨\n\n어진\n\n$A$\n\n지점에서 건물의 외벽에 설치된\n\n전광판의 윗부분인\n\n$D$\n\n지점과 아랫부분\n\n인\n\n$C$\n\n지점을 올려다본 각의 크기가 각각\n\n$60\\degree$\n\n,\n\n$45\\degree$\n\n일 때, 이 전광판의 높이\n\n$\\overline{CD}$\n\n의\n\n길이를 구하시오.",
    "answer": "$\\square$… 32",
    "solution": "$\\overline{DB}=15\\tan 60\\degree=15\\times\\square3=15\\square3 (m)$\n\n… 1단계\n\n$\\overline{CB}=15$\n\n$\\tan 45\\degree=15\\times 1=15 (\\square$\n\n$m)$"
-  },
-  "b84bf809-4a9c-4859-ad4b-826aa2515fc1": {
-   "content": "다음 중\n\n$\\surd 3$\n\n과\n\n$4$\n\n사이에 있는 수의 개수를 구하시오.\n\n,\n\n$10+1$\n\n,\n\n$3+2$\n\n,\n\n$5+2$\n\n,\n\n$4-3$\n\n$\\surd \\frac{19}{2}$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$",
-   "answer": "3",
-   "solution": "$1<3<4$\n\n에서\n\n$1<3<2$\n\n이고\n\n$4=16$\n\n이다.\n\n$=9.5$\n\n$\\square$\n\n$^{4}$\n\n$9<10<16$\n\n에서\n\n$3<10<4$\n\n이므로\n\n$^{2}$\n\n$^{2}$\n\n$^{2}$\n\n$4<10+1<5$\n\n$\\square$\n\n$\\square\\square\\square$\n\n$\\square$\n\n$\\square^{2}$\n\n$\\square$\n\n$\\square$\n\n$\\square\\square$\n\n$\\square$\n\n$1<3<2$\n\n이므로\n\n$3<3+2<4$\n\n$4<5<9$\n\n에서\n\n$2<5<3$\n\n이므로\n\n$4<5+2<5$\n\n$1<3<2$\n\n에서\n\n$-2<-3<-1$\n\n이므로\n\n$2<4-3<3$\n\n$19$\n\n따라서\n\n$3$\n\n과\n\n$4$\n\n사이에 있는 수는,\n\n$3+2$\n\n,\n\n$4-3$\n\n의\n\n$3$\n\n개이\n\n$\\square$\n\n$\\square\\square$\n\n$2$\n\n$\\square$\n\n$\\square$\n\n다."
   },
   "cead5cbe-3139-46ef-8a1c-acc6bf2c47a5": {
    "content": "다음 중 계산 결과가 옳지 않은 것은?\n\n① $(-5)\\times (-1.4)=7$\n\n② $\\left(\\square \\square 7\\square \\square \\right)\\times \\left(\\square \\square 1\\square 5\\square \\square \\right)\\square \\square \\frac{2}{3}$\n\n③ $0\\times \\left(\\square \\frac{1}{3}\\right)\\square0$\n\n④ $(+15)\\times\\left(\\square \\square 5\\square \\square \\right)\\times \\left(\\square \\frac{2}{3}\\right)=-8$\n\n⑤ $\\left(\\square \\square 6\\square \\square \\right)\\times \\left(\\square \\square 1\\square 0\\square \\right)\\times \\left(\\square \\square 7\\square \\square \\right)\\square \\frac{1}{14}$",
@@ -864,6 +831,16 @@
    "answer": "③",
    "solution": "전략 지수법칙을 이용하여 $\\square$ 안에 알맞은 수를 구한다. ① $a^{\\square}\\times a^{4}=a^{\\square+4}=a^{7}$이므로 $\\square+4=7$ ∴ $\\square=3$ ② $(a^{6})^{\\square}=a^{6\\times\\square}=a^{18}$이므로 $6\\times\\square=18$ ∴ $\\square=3$ ③ $a^{9}\\div a^{\\square}=a^{9-\\square}=a^{3}$이므로 $9-\\square=3$ ∴ $\\square=6$ ④ $(ab^{2})^{\\square}=a^{\\square}b^{2\\times\\square}=a^{3}b^{6}$이므로 $\\square=3$ ⑤$(\\frac{a\\square}{b})^{4}=\\frac{a\\square\\times4}{b^{4}}=\\frac{a^{12}}{b^{4}}$이므로 $\\square\\times4=12$ ∴ $\\square=3$ 따라서 $\\square$ 안에 알맞은 수가 나머지 넷과 다른 하나는 ③이다."
   },
+  "39f2b24d-b9b6-465d-92e0-00de7ba01088": {
+   "content": "부등식 $1.4<\\sqrt{x}<2.5$를 만족시키는 $x$의 값 중에서 가장 큰 자연수를 $a$, 가장 작은 자연수를 $b$라 할 때,$\\sqrt{\\frac{a}{b}}\\times n$이 한 자리 자연수가 되도록 하는 자연수 $n$의 값을 모두 구하 시오.",
+   "answer": "$3$, $12$, $27$",
+   "solution": "$1.4<\\square x$\n\n$<2.5$\n\n의 각 변을 제곱하면\n\n$1.96<x<6.25$\n\n이때 가장 큰 자연수\n\n$x$\n\n는\n\n$6$\n\n이므로\n\n$a=6$\n\n가장 작은 자연수\n\n$x$\n\n는\n\n$2$\n\n이므로\n\n$b=2$\n\n$a$\n\n$\\times n$\n\n, 즉\n\n$3n$\n\n이 자연수가 되도록 하는 자연수\n\n$n$\n\n은\n\n$\\square\\frac{\\square}{\\square}$\n\n$\\square$\n\n$3\\times$\n\n(자연수)\n\n$^{2}$\n\n의 꼴이므로\n\n$n=3\\times 1^{2}$\n\n,\n\n$3\\times 2^{2}$\n\n,\n\n$3\\times 3^{2}$\n\n,\n\n$3\\times 4^{2}$\n\n,\n\n$\\cdots$\n\n이때\n\n$3n$\n\n의 값은 각각\n\n$3$\n\n,\n\n$6$\n\n,\n\n$9$\n\n,\n\n$12$\n\n,\n\n$\\cdots$\n\n이므로\n\n$3n$\n\n이 한 자리 자\n\n$\\square$\n\n$\\square$\n\n연수가 되도록 하는 자연수\n\n$n$\n\n의 값은\n\n$3\\times 1^{2}=3$\n\n,\n\n$3\\times 2^{2}=12$\n\n,\n\n$3\\times 3^{2}=27$"
+  },
+  "4cb1bec2-d3bd-48a1-936f-950d059804ff": {
+   "content": "다음 중 옳은 것은?\n\n① $\\sqrt{5}\\sqrt{6}=\\sqrt{11}$\n\n② $-2\\sqrt{3}\\times\\sqrt{10}=-\\sqrt{60}$\n\n③ $4\\sqrt{5}\\times\\sqrt{7}=4\\sqrt{35}$\n\n④ $\\sqrt{\\frac{11}{7}}\\times\\sqrt{\\frac{28}{11}}=4$\n\n⑤ $-2\\sqrt{\\frac{16}{15}}\\times3\\sqrt{\\frac{5}{8}}=-6\\sqrt{\\frac{5}{3}}$",
+   "answer": "③",
+   "solution": "①\n\n$5$\n\n$6=5\\times 6=30$\n\n②\n\n$-2$\n\n$3\\times10=-2$\n\n$3\\times 10=-2$\n\n$30$\n\n$\\square$\n\n③\n\n$4$\n\n$5\\times7=4$\n\n$\\times 7=4$\n\n$35$\n\n$\\square$\n\n$\\square$\n\n$\\square^{5}$\n\n$\\square$\n\n$^{2}$\n\n④\n\n$\\times=\\times=4=2$\n\n$\\square\\square\\square \\squareÁ7Á\\square \\square$\n\n$\\square\\square\\frac{28}{11}$\n\n$\\square\\square\\square \\squareÁ7Á\\square \\square\\square$\n\n$\\square\\frac{28}{11}$\n\n$\\square$\n\n⑤\n\n$-2\\square\\square\\frac{16}{15}\\times 3\\square \\frac{5}{8}=(-2\\times 3)\\times\\square\\square\\frac{16}{15}\\times\\frac{5}{8}=-6\\square \\frac{2}{3}$\n\n따라서 옳은 것은 ③이다."
+  },
   "2743512e-f0d1-4fc6-b4bf-0f33f4300340": {
    "content": "$(4x^{5}y)^{3}\\times\\left(-\\frac{3}{4}xy^{3}\\right)^{2}\\times (-x^{2}y)^{4}$\n\n을 계산하면?\n\n① $-36x^{25}y^{13}$\n\n② $-27x^{23}y^{13}$\n\n③ $16x^{25}y^{11}$\n\n④ $27x^{23}y^{13}$\n\n⑤ $36x^{25}y^{13}$",
    "answer": "⑤",
@@ -1004,11 +981,6 @@
    "answer": "③",
    "solution": "$256$의 두 제곱근은 $16,-16$이므로 $a=16,b=-16$. $2(a-b)=2(32)=64$, $64$의 음의 제곱근은 $-8$."
   },
-  "7aed8a3d-ae98-46fc-9469-39a722cdfb6c": {
-   "content": "다음 중 근호를 사용하지 않고 나타낼 수 있는 것은?\n\n① $-2.5$\n\n② $90$\n\n③ $216$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$\n\n⑤ $-1.44$\n\n$\\surd \\frac{18}{49}$\n\n$\\surd$",
-   "answer": "⑤",
-   "solution": "⑤$-\\sqrt{1.44}=-\\sqrt{1.2^{2}}=-1.2$ 따라서 근호를 사용하지 않고 나타낼 수 있는 것은 ⑤이다."
-  },
   "1daf9fc2-1440-430b-9141-a154aff77e4c": {
    "content": "다음 수를 작은 것부터 차례대로 나열할 때, 세 번째에 오\n\n는 수를 구하시오.\n\n$7^{2}$\n\n,\n\n$(-3)^{2}$\n\n,\n\n$-8^{2}$\n\n,\n\n$-(-2)^{2}$\n\n,\n\n$(-6)^{2}$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$",
    "answer": "9",
@@ -1058,11 +1030,6 @@
    "content": "다음 중 가장 큰 수는?\n\n$-$\n\n① $\\surd \\left(\\frac{1}{3}\\right)^{2}$\n\n② $\\surd 2$\n\n③ $\\left(\\frac{1}{3}\\right)^{2}$\n\n④ $-$\n\n⑤ $\\left(\\surd \\right)^{2}$\n\n$\\surd \\frac{1}{16}$",
    "answer": "②",
    "solution": "각 값을 계산하면 $-\\frac13,\\sqrt2(\\approx1.414),\\frac19,-2,\\frac14$ 정도이며 이 중 $\\sqrt2$가 가장 크다."
-  },
-  "8ccce48e-0397-41ff-a912-ff829171fbc3": {
-   "content": "$90$\n\n$=b$\n\n일 때,\n\n$b$\n\n가 자연수가 되도록 하는 가장 작은 자연\n\n$\\surd$\n\n수\n\n$a$\n\n와 그때의\n\n$b$\n\n에 대하여\n\n$ab$\n\n의 값을 구하시오.",
-   "answer": "300",
-   "solution": "90=2×3^2×5이므로 90a가 완전제곱이 되려면 최소 a=2×5=10이고, 이때 b=√900=30이다. ab=10×30=300이다."
   },
   "f87464d1-13f0-4a5d-bf5e-31486871b1c1": {
    "content": "다음 수 중 가장 작은 수를\n\n$m$\n\n, 가장 큰 수를\n\n$n$\n\n이라 할 때,\n\n$m^{2}+n^{2}$\n\n의 값을 구하시오.\n\n$-5$\n\n,\n\n$17$\n\n,\n\n$10$\n\n,\n\n$-8$\n\n,\n\n$4$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$",
@@ -1210,14 +1177,9 @@
    "solution": "따라서\n\n$\\square50\\div\\square\\square\\square15500$\n\n은\n\n$=\\square\\square\\square510\\times50$\n\n의\n\n$\\square\\square10150$\n\n배이다.\n\n$=\\square\\square50\\times\\frac{10}{5}=\\square\\square100=10$"
   },
   "2832a403-0033-435b-8c44-24289f57c715": {
-   "content": "양의 유리수\n\n$a$\n\n,\n\n$b$\n\n에 대하여 다음 식의 값을 구하시오.\n\n$9b$\n\n$10a$\n\n$b$\n\n$\\times\\times\\div5b$\n\n$\\surd a$\n\n$3b$\n\n$\\surd$\n\n$\\surd$\n\n$\\surd$",
+   "content": "양의 유리수 $a, b$에 대하여 다음 식의 값을 구하시오.$\\frac{\\sqrt{9b}}{\\sqrt{a}}\\times\\sqrt{10a} \\times\\sqrt{\\frac{b}{6a}} \\div\\sqrt{\\frac{5b}{a}} \\sqrt{3b}$",
    "answer": "(정답 없음)",
    "solution": "$3$\n\n$b$\n\n$10a$\n\n$b$\n\n$a$\n\n(주어진 식)\n\n$=\\square$\n\n$\\square$\n\n$\\times^{2}$\n\n$^{2}$\n\n$\\times\\square$\n\n$\\square$\n\n$\\times\\square$\n\n$\\square$\n\n$=3$\n\n$=1$\n\n$a$\n\n$\\square \\square$\n\n$3b$\n\n$6a$\n\n$5b$\n\n$\\square$\n\n$\\square$\n\n$\\square$\n\n$^{2}$\n\n$\\square$\n\n$^{2}$\n\n$\\square$\n\n$^{2}$\n\n$\\square \\frac{1}{9}$"
-  },
-  "5916fb32-b992-4198-a4f6-80a0f18fc11d": {
-   "content": "$b$\n\n$2$\n\n$==c$\n\n$6$\n\n일 때,\n\n$abc$\n\n의 값은?\n\n$\\surd \\frac{32}{75}$\n\n$a\\surd \\surd$\n\n$\\surd$\n\n(단,\n\n$a$\n\n,\n\n$b$\n\n는 서로소인 자연수이고,\n\n$c$\n\n는 유리수이다.)\n\n① $\\frac{9}{2}$\n\n② $5$\n\n③ $\\frac{16}{3}$\n\n④ $6$\n\n⑤ $\\frac{20}{3}$",
-   "answer": "③",
-   "solution": "$32$\n\n$2$\n\n$2\\times3$\n\n$6$\n\n$== 4$\n\n$= 4$\n\n$= 4$\n\n$\\square\\square\\frac{32}{75}$\n\n$\\square\\square75$\n\n$5\\square\\square3$\n\n$\\frac{4}{15}5\\square\\square3\\times\\square\\square3$\n\n$15\\square$\n\n따라서\n\n$a=5$\n\n,\n\n$b=4$\n\n,\n\n$c=$\n\n이므로\n\n$abc=5\\times 4\\times\\frac{4}{15}=$"
   },
   "278a9154-07e8-42d5-a7af-d2bc279c075d": {
    "content": "$x^{2}+\\frac{1}{x^{2}}=18$일 때,$x+\\frac{1}{x}$의 값은? (단,$x>0)$\n\n① $3$\n\n② $2\\sqrt{3}$\n\n③ $4$\n\n④ $3\\sqrt{2}$\n\n⑤ $2\\sqrt{5}$",
@@ -1283,11 +1245,6 @@
    "content": "오른쪽 그림과 같이 한 모서리의 길\n\n이가\n\n$3$\n\n인 정육면체에서 ∠\n\n$CEG=x$\n\n라 할 때,\n\n$\\cos x$\n\n의 값은?\n\n$\\surd$\n\n$\\surd \\surd 2$\n\n① $\\frac{1}{3}$\n\n② $6$\n\n③ $\\frac{2}{3}$\n\n④ $2$\n\n$2$",
    "answer": "④",
    "solution": "$\\triangle EFG$에서 $\\overline{EG}=\\sqrt{3^{2}+3^{2}}=\\sqrt{18}=3\\sqrt{2} \\triangle CEG$는$CCGE=90\\degree$인 직각삼각형이므로 $\\overline{CE}=\\sqrt{(3\\sqrt{2})^{2}+3^{2}}=\\sqrt{27}=3\\sqrt{3}$ ∴ $\\cos  x=\\frac{\\overline{EG}}{\\overline{CE}}=\\frac{3\\sqrt{2}}{3\\sqrt{3}}=\\frac{\\sqrt{6}}{3}$"
-  },
-  "2b3b2226-ff53-4a9c-b329-f83a5fc97fcc": {
-   "content": "$a<0$\n\n일 때,\n\n$a^{2}$\n\n을 간단히 하면?\n\n$\\surd \\frac{81}{4}$\n\n① $-\\frac{9}{2}a$\n\n② $-\\frac{9}{4}a$\n\n③ $-\\frac{3}{2}a$\n\n④ $\\frac{3}{2}a$\n\n⑤ $\\frac{9}{2}a$",
-   "answer": "$-\\frac92a$",
-   "solution": "($\\sqrt{\\frac{81}{4}a^2}$로 해석) $a<0$이므로 $\\sqrt{\\frac{81}{4}a^2}=\\frac92|a|=\\frac92(-a)=-\\frac92a$."
   },
   "75bb6a9c-7fb8-48e1-8eb2-5288eee7c7dd": {
    "content": "오른쪽 그림과 같이 ∠\n\n$ABC=90\\degree$\n\n인 직각삼각형\n\n$ABC$\n\n에서\n\n$\\overline{AC}$\n\n⊥\n\n$\\overline{BD}$\n\n이다. ∠\n\n$ABD=x$\n\n라 할\n\n때,\n\n$\\sin x$\n\n의 값은?\n\n$\\surd 10$\n\n① $\\frac{3}{10}$\n\n③ $\\frac{3}{5}$\n\n$\\surd 10$\n\n$3\\surd 10$",
@@ -1363,11 +1320,6 @@
    "content": "다음 그림과 같이 가로의 길이가\n\n$10$\n\n$2cm$\n\n, 세로의 길이가\n\n$\\surd$\n\n$2$\n\n$14cm$\n\n인 직사각형\n\n$ABCD$\n\n가 있다. 직사각형\n\n$ABFE$\n\n$\\surd$\n\n의 넓이가\n\n$24$\n\n$7cm^{2}$\n\n일 때, 직사각형\n\n$EFCD$\n\n의 둘레의 길\n\n$\\surd$\n\n이를 구하시오.\n\n$2$\n\n$1$\n\n$\\surd$",
    "answer": "$(4\\sqrt{14}+8\\sqrt{2}) cm$",
    "solution": "직사각형 $ABFE$의 넓이가$24\\sqrt{7} cm^{2}$이므로 $2\\sqrt{14}\\times\\overline{AE}=24\\sqrt{7}$ ∴ $\\overline{AE}=\\frac{24\\sqrt{7}}{2\\sqrt{14}}=\\frac{12}{\\sqrt{2}}=6\\sqrt{2} (cm)$ ∴$\\overline{ED}=\\overline{AD}-\\overline{AE}=10\\sqrt{2}-6\\sqrt{2}=4\\sqrt{2} (cm)$ 따라서 직사각형 $EFCD$의 둘레의 길이는 $2\\times(2\\sqrt{14}+4\\sqrt{2})=4\\sqrt{14}+8\\sqrt{2} (cm)$"
-  },
-  "19eabf36-272a-46cd-b8e7-98e5250555ed": {
-   "content": "$\\surd$\n\n$\\frac{40a}{3}$\n\n가 자연수가 되도록 하는 가장 작은 자연수\n\n$a$\n\n의 값\n\n을 구하시오.",
-   "answer": "30",
-   "solution": "$\\frac{40a}3$이 자연수이려면 $a$는 $3$의 배수여야 하고, $40a/3$이 완전제곱이 되도록 $a=3\\times10=30$이 가장 작다(검산: $40\\times30/3=400=20^2$)."
   },
   "a3e27179-f07f-489d-af7c-4cc8d328445a": {
    "content": "다음 삼각형의 넓이를 구하시오.\n\n$C$",
@@ -1478,11 +1430,6 @@
    "content": "$a>0$\n\n일 때, 다음 중 그 값이 가장 작은 것은?\n\n$16a^{2}$\n\n① $(-a)^{2}$\n\n② $-(2a)^{2}$\n\n③ $-\\surd$\n\n$\\surd$\n\n$\\surd$\n\n$9$\n\n④ $-a^{2}$\n\n⑤ $-(-3a)^{2}$\n\n$\\surd$\n\n$\\surd$",
    "answer": "⑤",
    "solution": "($\\sqrt{16a^2},\\sqrt{(-a)^2},-\\sqrt{(2a)^2},\\sqrt{9a^2},-\\sqrt{(-3a)^2}$로 해석) $a>0$일 때 각각 $4a,a,-2a,3a,-3a$이므로 가장 작은 값은 $-3a$, 즉 $-\\sqrt{(-3a)^2}$."
-  },
-  "d88ce3c1-d078-4090-be13-915934b78c9a": {
-   "content": "$\\surd$\n\n$\\surd 540$\n\n두 수\n\n$60x$\n\n와 이 모두 자연수가 되도록 하는 두 자\n\n리 자연수\n\n$x$\n\n의 개수는?\n\n① $1$\n\n② $2$\n\n③ $3$\n\n④ $4$\n\n⑤ $5$",
-   "answer": "②",
-   "solution": "($\\sqrt{60x}$와 $\\sqrt{540/x}$ 모두 자연수로 해석) $\\sqrt{60x}$가 자연수이려면 $x=15k^2$, 두 자리에서 $x=15,60$. $\\sqrt{540/x}$가 자연수인 두 자리 $x$는 $15(\\to36),60(\\to9)$. 두 조건을 모두 만족하는 $x$는 $15,60$의 $2$개."
   },
   "7222ccdd-30a1-4a94-a5e6-955d9a201952": {
    "content": "분수 를 소수로나타내면 유한소수가 되고, 기약분수로\n\n$\\square 7]2\\square$\n\n나타내면 이 된다.\n\n$a$\n\n가\n\n$10<a<20$\n\n인 자연수일 때,\n\n$\\frac{1}{b}$\n\n$a+b$\n\n의 값은?\n\n① $20$\n\n② $22$\n\n③ $24$\n\n④ $26$\n\n⑤ $28$",

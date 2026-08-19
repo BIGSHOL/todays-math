@@ -104,6 +104,25 @@ CAP_MIN_W = 0.5
 #: 큰 근호(`!%…^`·`Á°…¤`)를 닫는 자리 — 표식 뒤에 이런 글자가 오면 닫힌 것으로 본다.
 BIG_END = set("=<>,)　 \t")
 
+#: 수식 조판 글꼴. 근호·분수 약물·괄호가 전부 여기 들어 있다 — **근호 전용이 아니다.**
+MATH_FONT = "EHboN"
+#: 그 글꼴에서 **무리 전체를 덮는 근호**를 여는 글자. 폭/글자크기 비율이 **0.790** 이다
+#: (전 12권 실측). 같은 글꼴의 작은 근호 `'`·`"`·`¿` 는 0.570, 숫자·괄호는 0.500,
+#: 분수 약물 `;` 는 0.213 — 겹치지 않는다.
+#: ⚠️ **글꼴을 봐야 갈린다.** `¾` 는 다른 글꼴에서 `≥` 다(2-1 #397 실측). 글자만 보고
+#:    치환하면 $\\sqrt{\\frac34}$ 가 `\geq\frac34` 로 나간다 — 부등호처럼 읽히는 오답이다.
+BIG_OPEN = "®¾"
+#: 근호 안에서 분수 약물을 여닫는 글자. 그 안의 0폭 글자는 **분자 숫자**라 지우면 안 된다.
+FRAC_DELIM = ";:"
+#: **한 글자가 네 뜻**인 자리. 글꼴이 갈라 준다 — 글자만 보면 못 가른다.
+#: 실측 전 12권: `EHyak`=147(≥) · `EHsang`=48(**℃**) · `EHboN`=51(큰 근호).
+#: ⚠️ 전부 `\\geq` 로 뭉뚱그리면 `10℃로 같다` 가 `10\\geq로 같다` 로 나간다.
+BY_FONT = {
+    "¾": {"yak": "\\geq ", "sang": "\\degree C"},
+}
+#: 분수 무리가 닫힌 뒤 근호를 끊는 글자 — 연산자와 괄호.
+AFTER_STOP = set("_Ö+-*/()[]{}")
+
 
 @dataclass
 class Tok:
@@ -338,9 +357,81 @@ def _root_aware_words(page: pymupdf.Page, bars: list) -> list[Tok]:
             # 큰 근호는 겹친다(`Á°(2136)Û`…¤` 안에 `2136`=2√3 이 들어 있다). 그래서 쌓는다.
             big_depth = 0
 
+            def big_group(k: int) -> tuple[str, int]:
+                """`®`·`¾` 가 덮는 **무리**를 읽어 온다. 어디까지인지도 같이 돌려준다.
+
+                실측 네 꼴:
+                  · `®Â;4Á9;이고`      → $\\sqrt{1/49}$   (약물 하나, 한글에서 닫힌다)
+                  · `®É;1!2)1);=`      → $\\sqrt{100/121}$ (`=` 에서 닫힌다)
+                  · `®É:¥4Á:aÛ`=`      → $\\sqrt{81/4·a^2}$ (약물 **뒤까지** 덮는다)
+                  · `¾¨{-¨;8!;}`       → $\\sqrt{-1/8}$    (중괄호로 범위를 준다)
+                """
+                j = k
+                while j < len(chars) and MATH_FONT in chars[j][1] and (
+                    chars[j][2][2] - chars[j][2][0]
+                ) < CAP_MIN_W:
+                    j += 1  # 크기 선택자 — 글자가 아니다
+                braced = j < len(chars) and chars[j][0] == "{" and MATH_FONT in chars[j][1]
+                if braced:
+                    j += 1
+                got, depth, brace, closed = [], 0, 1, False
+                while j < len(chars):
+                    c2, f2, b2 = chars[j]
+                    zero = MATH_FONT in f2 and (b2[2] - b2[0]) < CAP_MIN_W
+                    if braced and c2 == "}" and MATH_FONT in f2 and depth == 0:
+                        brace -= 1
+                        j += 1
+                        if brace == 0:
+                            break
+                        continue
+                    if not braced and depth == 0 and (
+                        c2 in BIG_END or c2.isspace() or "가" <= c2 <= "힣"
+                    ):
+                        break
+                    # ⚠️ 약물이 **닫힌 뒤**에는 연산자에서 멈춘다. 안 그러면 근호가
+                    #    뒤 항까지 삼킨다 — 실측 `4®Â;1ª3;_31226` 이
+                    #    $\sqrt{\frac2{13}\times3\sqrt{26}}$ 가 됐다(원래는
+                    #    $4\sqrt{2/13}\times3\sqrt{26}$). 곧바로 붙는 인수
+                    #    (`®É:¥4Á:aÛ`` 의 `a²`)는 글자·숫자라 그대로 삼킨다.
+                    if not braced and closed and depth == 0 and c2 in AFTER_STOP:
+                        # ⚠️ **어디까지인지 모른다.** 실측으로 둘 다 있다 —
+                        #    `4®Â;1ª3;_3√26` 은 $4\sqrt{2/13}\times3\sqrt{26}$ (밖),
+                        #    `®É;1ª3;_26` 은 $\sqrt{\frac2{13}\times26}$ (안).
+                        #    가르는 것은 그려진 덧줄의 길이인데 글자에 안 남는다.
+                        #    그래서 **접지 않는다** — 표식이 남아 잔재 검사에 걸리고,
+                        #    그 행은 안 쓴다. 틀린 값보다 안 고친 값이 낫다.
+                        return "", k - 1
+                    if c2 in FRAC_DELIM and MATH_FONT in f2:
+                        depth = 1 - depth
+                        closed = closed or depth == 0
+                        got.append(c2)
+                        j += 1
+                        continue
+                    # 약물 밖의 0폭 표식은 덧줄이라 글자가 아니다. 약물 **안**의 0폭은
+                    # 분자 숫자다 — 지우면 분수가 통째로 바뀐다.
+                    if zero and depth == 0:
+                        j += 1
+                        continue
+                    got.append(c2)
+                    j += 1
+                return "".join(got), j
+
             i = 0
             while i < len(chars):
                 ch, font, bb = chars[i]
+                if (
+                    MATH_FONT in font
+                    and ch in BIG_OPEN
+                    and (bb[2] - bb[0]) >= CAP_MIN_W
+                ):
+                    body, nxt = big_group(i + 1)
+                    if body.strip():
+                        push("\\sqrt{", bb)
+                        for c2 in body:
+                            push(c2, None)
+                        push("}", None)
+                        i = nxt
+                        continue
                 if ROOT_FONT in font:
                     w = bb[2] - bb[0]
                     if w >= HOOK_MIN_W:
@@ -374,6 +465,13 @@ def _root_aware_words(page: pymupdf.Page, bars: list) -> list[Tok]:
                     flush()
                     i += 1
                     continue
+                mapped = BY_FONT.get(ch)
+                if mapped:
+                    key = next((k for k in mapped if k in font.lower()), None)
+                    if key:
+                        push(mapped[key], bb)
+                        i += 1
+                        continue
                 # ⚠️ 교재의 `{`·`}` 는 **괄호를 그린 글자**다. 그대로 두면 LaTeX 가
                 #    «묶음»으로 읽어 화면에서 **괄호가 사라진다** — `÷(-⅔y)²` 이
                 #    `÷-⅔y²` 가 된다(실측 1-1 #604·3-1 #192, 통과분의 30%).

@@ -142,9 +142,85 @@ export function canon(value: string): string {
     .trim();
 }
 
-/** 원문자 정답의 집합. `③, ④` → `["③","④"]`. NFKC 를 거치지 않는다. */
+/* ────────────────────────────────────────────────────────────────────────────
+ * 원문자 계열 — **손으로 나열하지 않는다.**
+ *
+ * 유니코드의 «둘러싼 숫자»는 블록마다 «1 의 자리»가 정해져 있고 그 뒤로 1씩 는다.
+ * 그래서 계열의 **시작 코드포인트만** 적고 번호는 계산한다.
+ *
+ * ⚠️ 예전에는 여기가 `[①-⑩]` 한 줄이었다. 그래서 `➀`(U+2780) 계열이 든 행은
+ *    정답 대조에서 **「원문자가 없다」로 읽혔다.** 실측
+ *    (`census-circled-glyphs.ts`, 분모 47,152건): 손 목록 밖 글자가
+ *    `answer` 44행 · `content` 11행 · `solution` 6행 · **합 58행**.
+ *    목록에 없는 계열은 0 이 되고, **0 인 줄도 모른다**(CLAUDE.md 2026-08-18).
+ * ──────────────────────────────────────────────────────────────────────────── */
+const CIRCLED_FAMILIES = [
+  { base: 0x2460, size: 20 }, // ①..⑳
+  { base: 0x2776, size: 10 }, // ❶..❿
+  { base: 0x2780, size: 10 }, // ➀..➉
+  { base: 0x278a, size: 10 }, // ➊..➓
+  { base: 0x24f5, size: 10 }, // ⓵..⓾
+  { base: 0x3251, size: 15 }, // ㉑..㉟
+  { base: 0x32b1, size: 15 }, // ㊱..㊿
+] as const;
+
+/** 정규형 — 계열이 달라도 같은 번호면 **같은 글자**로 모은다(1..20 밖은 null). */
+function canonicalCircled(n: number): string | null {
+  return n >= 1 && n <= 20 ? String.fromCodePoint(0x2460 + n - 1) : null;
+}
+
+/**
+ * 이 글자가 «둘러싼 숫자»면 그 번호, 아니면 0. PUA 잔재는 `repairGlyphs` 가 먼저 편다.
+ */
+export function circledValue(ch: string): number {
+  const cp = repairGlyphs(ch).codePointAt(0);
+  if (cp === undefined) return 0;
+  for (const f of CIRCLED_FAMILIES) {
+    if (cp >= f.base && cp < f.base + f.size) return cp - f.base + 1;
+  }
+  return 0;
+}
+
+/** 규칙이 아는 원문자 전체 — 테스트·census 가 사정권을 확인하는 데 쓴다. */
+export function knownCircledGlyphs(): string[] {
+  return CIRCLED_FAMILIES.flatMap((f) =>
+    Array.from({ length: f.size }, (_, i) => String.fromCodePoint(f.base + i)),
+  );
+}
+
+/**
+ * 원문자 정답의 집합. `③, ④` → `["③","④"]`. NFKC 를 거치지 않는다.
+ *
+ * ⚠️ **정규형으로 모은다.** 이 값은 `classify-answer-mismatch.ts` 에서
+ * `includes` 로 견주므로, `➂` 를 `➂` 인 채로 돌려주면 `③` 과 **안 맞는다** —
+ * 같은 답인데 「공식복수정답」이 아니게 되고 판정이 조용히 갈린다.
+ *
+ * ## 넓힌 것이 정말 정답인지 **세어 봤다** (2026-08-19, 분모 47,152건)
+ *
+ * 손 목록 밖 글자가 든 `answer` **44행**의 모양을 전량 눈으로 봤다:
+ *
+ * | | 건수 | 무엇 |
+ * | --- | ---: | --- |
+ * | 값 전체가 원문자뿐 (= 진짜 정답 번호) | **43** | 전부 `➀`~`➄` 산세리프 계열 |
+ * | 문장 속 원문자 (= **단계 표시**) | **1** | `ad7dca98` — `❶ 컴퍼스, 반지름의 길이 AB, …` |
+ *
+ * 그래서 넓히는 것이 맞다. 다만 **`❶`·`➊`(검은 계열)은 정답 번호가 아니라 단계·라벨로
+ * 쓰인 실측 사례가 있다** — `content` 의 「두 지점 ❶과 ❷사이」(지점 이름) ·
+ * 「➊ $\overline{…}$」(작도 순서) · `solution` 의 「CDOTS ➀#」(연립방정식 라벨).
+ * 이 함수는 예전부터 «문자열 어디든» 보므로 그 부류를 1건 잘못 셀 수 있다.
+ * **더 엄히 하려면 「값 전체가 원문자뿐일 때만」 이라는 모양 열쇠를 쓰면 된다** —
+ * 위 표가 그 열쇠로 센 것이다. 지금 안 바꾸는 이유는 `①` 계열에서 이미 같은
+ * 느슨함으로 51개 검사가 서 있어 **행동 변화의 사정권이 이 수리보다 넓기 때문**이다.
+ */
 export function circledSet(value: string): string[] {
-  return (repairGlyphs(value).match(/[①②③④⑤⑥⑦⑧⑨⑩]/g) ?? []).sort();
+  const out: string[] = [];
+  // PUA 펴기는 `circledValue` 안에서 한 번만 한다 — 여기서 또 부르면 **변이 시험이
+  // 못 가르는 중복**이 된다(글자 단위 치환이라 두 번 불러도 결과가 같다).
+  for (const ch of value) {
+    const g = canonicalCircled(circledValue(ch));
+    if (g) out.push(g);
+  }
+  return out.sort();
 }
 
 /**
@@ -181,7 +257,10 @@ export function stripUnits(value: string): string {
   for (let i = 0; i < 2; i += 1) {
     out = out
       // 괄호로 묶은 단위 — `3√3-3(cm)`, `342(명)`
-      .replace(new RegExp(`(?<=[0-9)πθ√])\\((?:${LATIN_UNIT}|${KOREAN_UNIT})\\)$`), "")
+      .replace(
+        new RegExp(`(?<=[0-9)πθ√])\\((?:${LATIN_UNIT}|${KOREAN_UNIT})\\)$`),
+        "",
+      )
       .replace(new RegExp(`(?<=[0-9)πθ√])${LATIN_UNIT}$`), "")
       .replace(new RegExp(`(?<=[0-9)πθ√])${KOREAN_UNIT}$`), "")
       .trim();
@@ -345,7 +424,8 @@ export function parts(value: string): Map<string, string> {
   const hits = [...t.matchAll(head)];
   for (let i = 0; i < hits.length; i += 1) {
     const start = (hits[i].index ?? 0) + hits[i][0].length;
-    const end = i + 1 < hits.length ? (hits[i + 1].index ?? t.length) : t.length;
+    const end =
+      i + 1 < hits.length ? (hits[i + 1].index ?? t.length) : t.length;
     out.set(hits[i][1], canon(t.slice(start, end)));
   }
   return out;
