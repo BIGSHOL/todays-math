@@ -57,6 +57,17 @@ run "울타리(bound)를 무시한다" "$B" \
         bleed = bleed & bound'
 run "발문에서 물러서지 않는다 (삼켜 버린다)" "$B" \
     'for _ in range(LABEL_ROUNDS if avoid_stem else 0):§for _ in range(0):'
-run "지면 문법을 줄이 아니라 span 으로 본다 (`[4점]` 이 안 걸린다)" "$B" \
+run "지면 문법을 줄이 아니라 span 으로 본다 (「[4점]」 이 안 걸린다)" "$B" \
     'if line_is_syntax:§if label_syntax is not None and label_syntax.search(raw_txt):'
+run "「곧은 선」을 잘림 검사에서 뺀다 (끊긴 선이 지면에 나간다)" "$A" \
+    '        if r.is_empty:
+            if r.x1 - r.x0 <= 0 and r.y1 - r.y0 <= 0:
+                continue                       # 점 — 선이 아니다§        if r.is_empty:
+            if True:
+                continue'
+run "「그림과 발문 사이 앞 문항 선택지」 검사를 끈다 (남의 그림을 물어 온다)" "$A" \
+    'def foreign_choices(page, sb: fitz.Rect, fig: fitz.Rect,
+                    band: tuple[float, float]) -> fitz.Rect | None:§def foreign_choices(page, sb: fitz.Rect, fig: fitz.Rect,
+                    band: tuple[float, float]) -> fitz.Rect | None:
+    return None'
 echo "── 끝 (원본 복구됨) ──"

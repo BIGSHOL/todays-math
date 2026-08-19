@@ -402,6 +402,36 @@ def page_has_question_number(doc, pi: int, q: int) -> bool:
     return any(at.get(k, 0) >= QNUM_MIN_REPEAT for k in here)
 
 
+def foreign_choices(page, sb: fitz.Rect, fig: fitz.Rect,
+                    band: tuple[float, float]) -> fitz.Rect | None:
+    """그림과 발문 **사이**에 있는 앞 문항의 선택지 줄. 없으면 None.
+
+    사다리의 「위까지」 칸은 그림이 발문 **위**에 오는 배치를 위한 것이다(`4235-17`·
+    `4229-24`). 그런데 그 칸은 단 꼭대기까지 열려 있어, 앞 문항의 그림을 그대로
+    물어 올 수 있다 — 실측(2026-08-19) `3627-15` 는 앞 rung 이 「반으로 잘랐다」로
+    떨어지자 **앞 문항 14번의 마방진**을 가져왔다. 살짝 잘린 그림보다 나쁘다.
+
+    거리로 가르지 않는다(실측 2.5·7.1pt 대 142.1pt 로 갈리긴 한다). **구조**로
+    묻는다: 시험지에서 선택지는 발문 **다음**에 온다. 그림과 발문 사이에 선택지
+    줄이 있으면 그 사이에서 문항이 한 번 끝난 것이고, 그림은 앞 문항의 것이다.
+    열쇠는 `choice_floor` 와 **같다** — 줄이 원문자로 시작하고 단 왼쪽 끝에 선다.
+    """
+    if fig.y1 >= sb.y0:                      # 그림이 발문 아래·겹침 — 해당 없음
+        return None
+    lo, hi = band
+    for b in page.get_text("dict").get("blocks", []):
+        for ln in b.get("lines", []):
+            r = fitz.Rect(ln["bbox"])
+            if r.is_empty or r.x1 <= lo or r.x0 >= hi:
+                continue
+            if not (fig.y1 <= r.y0 and r.y1 <= sb.y0):
+                continue
+            txt = "".join(sp.get("text", "") for sp in ln.get("spans", []))
+            if CHOICE_LINE.match(txt) and abs(r.x0 - sb.x0) <= CHOICE_LEFT_PT:
+                return r
+    return None
+
+
 def bisected(page, rect: fitz.Rect, band: tuple[float, float]) -> fitz.Rect | None:
     """오려낼 칸이 **반으로 자르고 있는** 요소. 없으면 None.
 
@@ -426,8 +456,21 @@ def bisected(page, rect: fitz.Rect, band: tuple[float, float]) -> fitz.Rect | No
                 cands.append(fitz.Rect(*sp["bbox"]))
     for d in page.get_drawings():
         r = fitz.Rect(d["rect"])
-        if not r.is_infinite:
-            cands.append(r)
+        if r.is_infinite:
+            continue
+        # ⚠️ **곧은 선은 폭이나 높이가 0이라 `is_empty` 가 참이다.** 그대로 두면 아래
+        #    걸러내기에서 통째로 빠지고, `Rect.__and__` 도 빈 것을 돌려주어 「잘렸다」가
+        #    **구조적으로 0**이 된다 — 획 검출기가 같은 자리에서 선을 전부 버렸던 것과
+        #    같은 함정이다(CLAUDE.md 2026-08-19). `figure_rect` 가 이미 쓰는 방식대로
+        #    부풀려서 **같은 규칙이 두 곳에서 같게 굴게** 한다.
+        #    실측 `3627-15`: 상자를 잇는 선(x263.8~283.1, y718.4)이 칸 밖으로 18.4pt
+        #    나가 있었는데 관문 여섯이 전부 통과시켰다. 지면에는 끊긴 선이 나간다.
+        if r.is_empty:
+            if r.x1 - r.x0 <= 0 and r.y1 - r.y0 <= 0:
+                continue                       # 점 — 선이 아니다
+            r = fitz.Rect(r.x0 - THIN_STROKE_PT, r.y0 - THIN_STROKE_PT,
+                          r.x1 + THIN_STROKE_PT, r.y1 + THIN_STROKE_PT)
+        cands.append(r)
     for r in cands:
         if r.is_empty or r.is_infinite:
             continue
@@ -596,6 +639,9 @@ def locate(cache: Cache, it: dict) -> dict:
         cut = bisected(page, rect, band)
         if cut is not None:
             return rect, f"칸이 무언가를 반으로 잘랐다 {tuple(round(v, 1) for v in cut)}"
+        alien = foreign_choices(page, sb, fig, band)
+        if alien is not None:
+            return rect, f"그림과 발문 사이에 앞 문항 선택지가 있다 (y{alien.y0:.0f})"
         return rect, None
 
     # ── 조이는 규칙은 **폴백으로만** 건다 ────────────────────────────────

@@ -59,13 +59,20 @@ def _furniture(page: fitz.Page) -> None:
     page.draw_rect(fitz.Rect(40, 30, 555, 44), width=0.8)
 
 
-def _net(page: fitz.Page, x0: float, y0: float) -> fitz.Rect:
-    """전개도 비슷한 격자 — 두께 0인 곧은 선으로만 그린다(`thin_pt` 가 살려야 한다)."""
-    for i in range(4):
-        page.draw_line((x0 + i * 30, y0), (x0 + i * 30, y0 + 80), width=0)
+def _net(page: fitz.Page, x0: float, y0: float, w: float = 90.0) -> fitz.Rect:
+    """전개도 비슷한 격자 — 두께 0인 곧은 선으로만 그린다(`thin_pt` 가 살려야 한다).
+
+    `w` 는 단 폭에 견준 그림 너비다. 「발문이 칸에 몇 자 들어왔나」는 **칸이 그 줄을
+    가로로 얼마나 덮느냐**로 정해진다 — `get_text(clip=…)` 이 글자 단위로 자른다.
+    그래서 좁은 그림으로는 그 관문을 잴 수 없다(90pt 로는 8자뿐이었다).
+    실데이터 `4338-19` 의 칸은 단 폭의 대부분(150pt/250pt)을 덮는다.
+    """
+    n = max(2, int(w // 30))
+    for i in range(n + 1):
+        page.draw_line((x0 + i * (w / n), y0), (x0 + i * (w / n), y0 + 80), width=0)
     for j in range(3):
-        page.draw_line((x0, y0 + j * 40), (x0 + 90, y0 + j * 40), width=0)
-    return fitz.Rect(x0, y0, x0 + 90, y0 + 80)
+        page.draw_line((x0, y0 + j * 40), (x0 + w, y0 + j * 40), width=0)
+    return fitz.Rect(x0, y0, x0 + w, y0 + 80)
 
 
 def _filler(page: fitz.Page, base: int) -> None:
@@ -111,10 +118,21 @@ def build_stem_touch() -> tuple[fitz.Document, fitz.Rect, str]:
     page = doc[0]
     page.insert_text((LEFT_X, 100), "17. " + STEM[:28], fontname=KO, fontsize=9)
     page.insert_text((LEFT_X, 148), STEM[28:], fontname=KO, fontsize=9)   # 마지막 줄
-    net = _net(page, LEFT_X + 14, 156)
+    # **발문 마지막 줄에 라틴 짧은 토막**을 둔다. 실데이터 `4338-19` 의 마지막 줄이
+    # 그 모양이다 — `PB` `PC` `QB` `QC` 가 사유 영역 글꼴 사이에 섞여 있다. 발문
+    # 열쇠(`content_key`)는 한글+숫자만 남기므로 이런 토막은 **본문에 없는 글자**로
+    # 보여 라벨로 되찾아지고, 그래서 칸이 발문 줄 높이까지 자란다. 이것이 없으면
+    # 칸이 애초에 발문에 안 닿아 `avoid_stem` 이 가를 자리가 생기지 않는다.
+    page.insert_text((LEFT_X + 100, 154), "PB", fontname="helv", fontsize=8)
+    # 그림은 발문 마지막 줄 **바로 아래**에서 시작한다 — 실데이터 `4338-19` 의 배치다.
+    net = _net(page, LEFT_X, 160, w=230.0)
     # 그림 오른쪽에 붙은 치수 라벨 — 발문 마지막 줄과 **세로로 겹친다.**
-    page.insert_text((LEFT_X + 106, 148), "16cm", fontname="helv", fontsize=8)
-    page.insert_text((LEFT_X, 260), "① 16", fontname=KO, fontsize=9)
+    # ⚠️ 라벨은 **본문에 없는 글자**여야 한다. 처음엔 `16cm` 이었는데 `16` 이 보기
+    #    `1. 16` 에 있어 「본문에 있다」로 걸러졌고, 그래서 칸이 그 높이까지 자라지
+    #    않아 **`avoid_stem` 이 가를 자리가 아예 없었다**(off 와 on 이 같은 칸).
+    #    가드가 아니라 지면이 문제였다 — 실데이터 `4338-19` 는 발문 마지막 줄이
+    #    실제로 칸에 40자 들어온다(그 행은 「발문피하기」 rung 으로만 산다).
+    page.insert_text((LEFT_X, 280), "① 16", fontname=KO, fontsize=9)
     _filler(page, 30)
     _filler(doc[1], 50)
     return doc, net, rpm.content_key(CONTENT)
@@ -199,10 +217,20 @@ def main() -> None:
                   furniture=crop.furniture_keys(d3), label_syntax=crop.EXAM_SYNTAX, bound=b3)
         on = rpm.figure_rect(p3, x3, key3, avoid_stem=True, **kw)
         off = rpm.figure_rect(p3, x3, key3, avoid_stem=False, **kw)
-        check("피하면 발문 줄이 칸에 안 들어온다",
-              on is not None and on.y0 >= net3.y0 - 1, f"on={on}")
-        check("안 피하면 발문 줄을 삼키거나 버린다 (가드가 장식이 아니다)",
-              off is None or off.y0 < net3.y0 - 3, f"off={off}")
+        # **관문이 실제로 쓰는 잣대로 잰다.** y 좌표로 물으면 「몇 pt 물러섰나」라는
+        # 프록시가 되어, 물러서기가 성공했는데도 한두 pt 때문에 빨개진다. 제품이
+        # 버릴지 말지를 정하는 것은 「칸에 발문이 몇 자 들어왔나」다.
+        def intruded(rc):
+            if rc is None:
+                return None
+            r = fitz.Rect(rc.x0 - crop.PAD, rc.y0 - crop.PAD,
+                          rc.x1 + crop.PAD, rc.y1 + crop.PAD) & p3.rect
+            return rpm.longest_common_run(crop.content_key(p3.get_text("text", clip=r)), key3)
+        i_on, i_off = intruded(on), intruded(off)
+        check("피하면 발문이 칸에 안 들어온다",
+              on is not None and i_on < crop.STEM_INTRUSION_CHARS, f"on={on} 발문 {i_on}자")
+        check("안 피하면 발문이 칸에 들어온다 (가드가 장식이 아니다)",
+              off is None or i_off >= crop.STEM_INTRUSION_CHARS, f"off={off} 발문 {i_off}자")
 
     print("\n-- 칸이 무언가를 반으로 잘랐나 --")
     if fig is not None:
@@ -220,6 +248,12 @@ def main() -> None:
     p2.insert_text((LEFT_X, 100), "13. " + STEM[:28], fontname=KO, fontsize=9)
     p2.insert_text((LEFT_X, 112), STEM[28:], fontname=KO, fontsize=9)
     p2.insert_text((LEFT_X + 100, 150), "①", fontname=KO, fontsize=9)   # 그림 «안»
+    # ⚠️ 그림에는 **본문에 없는 글자**가 있어야 한다. 발문 열쇠(`content_key`)는
+    #    한글+숫자만 남기므로 원문자는 아무것도 안 남긴다 — 그러면 쪽 글자열이
+    #    「발문+보기」로 이어져 `stem_box` 가 **보기 줄까지 삼키고**, 그 아래를 보는
+    #    `choice_floor` 는 바닥을 못 찾는다. 실데이터에서는 그림 라벨이 열쇠를
+    #    끊어서 이런 일이 없다 — 대상 36행 전수로 **0행**이었다(2026-08-19 실측).
+    p2.insert_text((LEFT_X + 120, 150), "7", fontname=KO, fontsize=9)   # 그림 라벨
     p2.insert_text((LEFT_X, 400), "① 16", fontname=KO, fontsize=9)      # 진짜 선택지
     g2 = crop.stem_box(p2, stem_key, crop.column_edges(d2)[0])
     check("합성 쪽에서 발문을 잡는다", g2 is not None)
@@ -235,6 +269,42 @@ def main() -> None:
           crop.page_has_question_number(doc, 0, 13))
     check("다른 쪽에는 그 번호가 없다", not crop.page_has_question_number(doc, 1, 13))
     check("없는 번호는 검산이 안 선다", not crop.page_has_question_number(doc, 0, 99))
+
+    print("\n-- 칸이 «곧은 선» 을 반으로 잘랐나 --")
+    # 곧은 선은 폭이나 높이가 0이라 `Rect.is_empty` 가 참이다. 그래서 「잘렸나」를
+    # 묻는 검사에서 통째로 빠지고, 지면에는 끊긴 선이 나간다 — 실측 `3627-15`.
+    d4 = fitz.open()
+    for _ in range(2):
+        _furniture(d4.new_page(width=W, height=H))
+    p4 = d4[0]
+    p4.insert_text((LEFT_X, 100), "21. " + STEM[:28], fontname=KO, fontsize=9)
+    p4.draw_rect(fitz.Rect(LEFT_X + 10, 150, LEFT_X + 70, 200), width=0.6)
+    p4.draw_line((LEFT_X + 70, 175), (LEFT_X + 130, 175), width=0)   # 두께 0 — 이어 주는 선
+    band4 = (2.0, DIV_X - 2)
+    tight = fitz.Rect(LEFT_X + 5, 145, LEFT_X + 90, 205)             # 선을 반으로 자른다
+    whole = fitz.Rect(LEFT_X + 5, 145, LEFT_X + 140, 205)            # 선을 다 담는다
+    check("두께 0인 선을 반으로 자르면 잡아낸다",
+          crop.bisected(p4, tight, band4) is not None, f"={crop.bisected(p4, tight, band4)}")
+    check("다 담으면 안 잡는다",
+          crop.bisected(p4, whole, band4) is None, f"={crop.bisected(p4, whole, band4)}")
+
+    print("\n-- 그림과 발문 사이에 앞 문항 선택지가 있나 --")
+    # 사다리의 「위까지」 칸은 단 꼭대기까지 열려 있어 **앞 문항의 그림**을 물어 올 수
+    # 있다(실측 `3627-15`: 앞 문항 14번의 마방진). 거리로 가르지 않고 구조로 묻는다.
+    p5 = d4[1]
+    p5.draw_rect(fitz.Rect(LEFT_X + 10, 120, LEFT_X + 90, 180), width=0.6)   # 앞 문항 그림
+    p5.insert_text((LEFT_X, 220), "① 16", fontname=KO, fontsize=9)      # 앞 문항 선택지
+    p5.insert_text((LEFT_X, 300), "22. " + STEM[:20], fontname=KO, fontsize=9)
+    fig5 = fitz.Rect(LEFT_X + 10, 120, LEFT_X + 90, 180)
+    sb5 = fitz.Rect(LEFT_X, 291, LEFT_X + 200, 302)
+    check("사이에 선택지 줄이 있으면 남의 그림이다",
+          crop.foreign_choices(p5, sb5, fig5, band4) is not None)
+    near = fitz.Rect(LEFT_X + 10, 255, LEFT_X + 90, 285)   # 선택지 «아래», 발문 바로 위
+    check("선택지가 사이에 없으면 제 그림이다",
+          crop.foreign_choices(p5, sb5, near, band4) is None,
+          f"={crop.foreign_choices(p5, sb5, near, band4)}")
+    check("그림이 발문 아래면 해당 없음",
+          crop.foreign_choices(p5, sb5, fitz.Rect(LEFT_X, 320, LEFT_X + 90, 380), band4) is None)
     _done()
 
 
