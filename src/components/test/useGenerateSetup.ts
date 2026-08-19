@@ -187,7 +187,6 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
   useEffect(() => {
     if (!classId) return;
     let cancelled = false;
-    setRangeEditing(false);
     const query = new URLSearchParams({ classId });
     if (studentId) query.set("studentId", studentId);
     fetch(`/api/tests/default-range?${query.toString()}`)
@@ -231,9 +230,18 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
       );
       setInsufficient(null);
       setSubmitError(null);
+      // 반이 바뀌면 펼쳐 둔 범위 피커를 접는다. **효과가 아니라 여기서** 한다 —
+      // 효과 안의 동기 setState 는 연쇄 렌더가 되고 ESLint 가 막는다.
+      setRangeEditing(false);
     },
     [classes],
   );
+
+  /** 학생을 바꿔도 범위를 다시 묻는다 — 펼침은 같은 이유로 여기서 접는다. */
+  const selectStudent = useCallback((nextId: string) => {
+    setStudentId(nextId);
+    setRangeEditing(false);
+  }, []);
 
   const generate = useCallback(
     async (countOverride?: number) => {
@@ -393,7 +401,7 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
     generatedPendingCount,
     submitError,
     busy,
-    setStudentId,
+    setStudentId: selectStudent,
     setTestType,
     setTestDate,
     setProblemCount,
