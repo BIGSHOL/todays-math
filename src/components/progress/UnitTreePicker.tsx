@@ -14,6 +14,14 @@ type UnitTreePickerProps = {
    * 겹쳐 무엇을 고르는 자리인지 읽히지 않는다. 기본값은 진도 화면(S-07)이 쓰던 그대로다.
    */
   label?: string;
+  /**
+   * 열 하나의 최대 높이(px). 넘으면 그 열만 스크롤한다.
+   *
+   * 진도 화면(S-07)에서는 피커가 **본문**이라 제한이 없다(기본값). 폼 안에 넣으면
+   * 이야기가 다르다 — 학년 열이 16행(초1~미적분2)이라 피커 하나가 750px 이 넘고,
+   * 그 아래 필드가 통째로 화면 밖으로 밀려난다. 그때만 이 값을 준다.
+   */
+  columnMaxHeightPx?: number;
 };
 
 export function UnitTreePicker({
@@ -21,6 +29,7 @@ export function UnitTreePicker({
   currentUnitId,
   onSelect,
   label = "단원 선택",
+  columnMaxHeightPx,
 }: UnitTreePickerProps) {
   const tree = useUnitTree(units, currentUnitId);
 
@@ -30,7 +39,7 @@ export function UnitTreePicker({
       aria-label={label}
       className="grid grid-cols-3 border border-divider"
     >
-      <PickerColumn title="학년">
+      <PickerColumn title="학년" maxHeightPx={columnMaxHeightPx}>
         {tree.grades.map((grade) => (
           <PickButton
             key={grade}
@@ -41,7 +50,7 @@ export function UnitTreePicker({
           />
         ))}
       </PickerColumn>
-      <PickerColumn title="대단원">
+      <PickerColumn title="대단원" maxHeightPx={columnMaxHeightPx}>
         {tree.chapters.map((chapter) => (
           <PickButton
             key={chapter}
@@ -55,7 +64,7 @@ export function UnitTreePicker({
           />
         ))}
       </PickerColumn>
-      <PickerColumn title="소단원">
+      <PickerColumn title="소단원" maxHeightPx={columnMaxHeightPx}>
         {tree.sections.map((unit) => (
           <PickButton
             key={unit.id}
@@ -73,16 +82,27 @@ export function UnitTreePicker({
 function PickerColumn({
   title,
   children,
+  maxHeightPx,
 }: {
   title: string;
   children: ReactNode;
+  maxHeightPx?: number;
 }) {
   return (
     <section className="min-w-0 border-r border-divider last:border-r-0">
       <h2 className="border-b border-divider px-2 py-2 text-[10.5px] font-extrabold tracking-[1.2px] text-text-2">
         {title}
       </h2>
-      <div className="flex flex-col">{children}</div>
+      <div
+        className="flex flex-col"
+        style={
+          maxHeightPx
+            ? { maxHeight: maxHeightPx, overflowY: "auto" }
+            : undefined
+        }
+      >
+        {children}
+      </div>
     </section>
   );
 }

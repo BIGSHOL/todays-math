@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { UnitTreePicker } from "@/components/progress/UnitTreePicker";
+import { UnitRangePicker } from "@/components/progress/UnitRangePicker";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import type { UnitEntity } from "@/contracts/unit.contract";
@@ -16,12 +16,17 @@ const LABEL_CLASS =
 
 /**
  * 확인테스트 범위 — **평소에는 한 줄, 고칠 때만 펼친다**(D-07 확정 2026-08-19:
- * Wire C안 → Hi-fi ④ 범위 막대 → 펼침은 ㈟ 3열 피커 두 벌).
+ * Wire C안 → Hi-fi ④ 범위 막대 → 펼침은 Ⓐ 3열 피커 **한 벌**).
  *
  * 예전에는 소단원 select 두 개가 **735개**를 늘어놓고 기본값이 「초1 첫 소단원 ~
  * 미적분2 마지막」이었다. 원장이 손대지 않으면 전 교육과정이 범위가 되는데
  * **오류도 경고도 안 났다** — 후보가 4만 건이라 정원이 채워지기 때문이다.
  * 이제 기본값은 진도가 정하고(`/api/tests/default-range`), 화면은 그것을 읽어 준다.
+ *
+ * ⚠️ 펼침은 **피커 한 벌**이다(Ⓐ, 2026-08-19 원장님 확정). 시작·끝을 각각 피커로
+ *    두었더니 학년 열이 16행(초1~미적분2)이라 피커 하나가 750px 이 넘고, 두 벌이면
+ *    폼이 통째로 화면 밖으로 밀렸다 — 원장님이 실제 화면에서 잡아 주신 것이다.
+ *    한 벌에서 **두 번 눌러** 범위를 잡고(달력의 기간 선택), 열마다 높이 상한을 준다.
  */
 function RangeField({
   units,
@@ -30,8 +35,7 @@ function RangeField({
   editing,
   unknown,
   onToggleEdit,
-  onSelectStart,
-  onSelectEnd,
+  onChangeRange,
 }: {
   units: UnitEntity[];
   startUnitId: string;
@@ -39,8 +43,7 @@ function RangeField({
   editing: boolean;
   unknown: boolean;
   onToggleEdit: () => void;
-  onSelectStart: (unitId: string) => void;
-  onSelectEnd: (unitId: string) => void;
+  onChangeRange: (startUnitId: string, endUnitId: string) => void;
 }) {
   const summary = describeRange(units, startUnitId, endUnitId);
 
@@ -82,25 +85,13 @@ function RangeField({
         </span>
       ) : null}
       {editing ? (
-        <div className="mt-2 grid gap-4">
-          <div className={LABEL_CLASS}>
-            시작
-            <UnitTreePicker
-              label="범위 시작 소단원"
-              units={units}
-              currentUnitId={startUnitId || null}
-              onSelect={onSelectStart}
-            />
-          </div>
-          <div className={LABEL_CLASS}>
-            끝
-            <UnitTreePicker
-              label="범위 끝 소단원"
-              units={units}
-              currentUnitId={endUnitId || null}
-              onSelect={onSelectEnd}
-            />
-          </div>
+        <div className="mt-2">
+          <UnitRangePicker
+            units={units}
+            startUnitId={startUnitId || null}
+            endUnitId={endUnitId || null}
+            onChange={onChangeRange}
+          />
         </div>
       ) : null}
     </div>
@@ -251,8 +242,7 @@ export function GenerateSetup({ initialClassId, initialStudentId }: Props) {
               editing={form.rangeEditing}
               unknown={form.rangeUnknown}
               onToggleEdit={() => form.setRangeEditing(!form.rangeEditing)}
-              onSelectStart={form.setRangeStartUnitId}
-              onSelectEnd={form.setRangeEndUnitId}
+              onChangeRange={form.setRange}
             />
           ) : null}
 

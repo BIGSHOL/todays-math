@@ -237,6 +237,15 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
     [classes],
   );
 
+  /**
+   * 범위를 **한 번에** 바꾼다. 시작·끝을 따로 setState 하면 그 사이 한 렌더 동안
+   * 거꾸로 된 범위(시작 > 끝)가 실재해, 그때 요약 줄이 엉뚱한 것을 그린다.
+   */
+  const setRange = useCallback((start: string, end: string) => {
+    setRangeStartUnitId(start);
+    setRangeEndUnitId(end);
+  }, []);
+
   /** 학생을 바꿔도 범위를 다시 묻는다 — 펼침은 같은 이유로 여기서 접는다. */
   const selectStudent = useCallback((nextId: string) => {
     setStudentId(nextId);
@@ -408,8 +417,7 @@ export function useGenerateSetup({ initialClassId, initialStudentId }: Props) {
     setEasy,
     setMid,
     setHard,
-    setRangeStartUnitId,
-    setRangeEndUnitId,
+    setRange,
     setRangeEditing,
     selectClass,
     generate,

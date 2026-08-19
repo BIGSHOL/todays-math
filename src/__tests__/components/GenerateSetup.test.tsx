@@ -21,7 +21,6 @@ import {
   MOCK_CLASS_A,
   MOCK_CLASS_B,
   MOCK_PROBLEMS,
-  MOCK_REVIEW_RANGE_END_UNIT,
   MOCK_REVIEW_RANGE_START_UNIT,
   MOCK_STUDENT_1,
   MOCK_TEST_DRAFT,
@@ -117,7 +116,9 @@ describe("[T4.3 S-04] 출제 설정 — 폼 골격", () => {
    * 섞인 시험지가 **오류도 경고도 없이** 나왔다(실측).
    *
    * 확정(2026-08-19, D-07 절차): Wire **C안**(평소 한 줄, 고칠 때만 펼침) →
-   * Hi-fi **④ 범위 막대** → 펼침은 **㈟ 3열 피커 두 벌**(S-07 과 같은 것).
+   * Hi-fi **④ 범위 막대** → 펼침은 **Ⓐ 한 피커에서 두 번 눌러 범위**(달력의 기간
+   * 선택과 같은 손놀림). 두 벌을 세로로 쌓으면 학년 열이 16행이라 폼이 통째로
+   * 화면 밖으로 밀린다 — 원장님이 실제 화면에서 잡아 주신 것이다.
    */
   it("확인테스트면 범위를 한 줄로 보여 준다 — 평단 목록은 없다", async () => {
     const { user } = await renderSetup();
@@ -141,25 +142,61 @@ describe("[T4.3 S-04] 출제 설정 — 폼 골격", () => {
 
     // 평소에는 고를 것이 없다 — 목록도 피커도 안 나온다.
     expect(screen.queryByLabelText("시작 소단원")).not.toBeInTheDocument();
-    expect(screen.queryByRole("group", { name: /범위 시작/ })).toBeNull();
+    expect(screen.queryByRole("group", { name: "범위 선택" })).toBeNull();
   });
 
-  it("「고치기」를 누르면 3열 피커가 시작·끝 두 벌 열린다", async () => {
+  it("「고치기」를 누르면 3열 피커가 **한 벌** 열린다", async () => {
     const { user } = await renderSetup();
     await user.click(screen.getByRole("radio", { name: "확인테스트" }));
     await screen.findByRole("button", { name: "고치기" });
 
     await user.click(screen.getByRole("button", { name: "고치기" }));
 
-    const startPicker = screen.getByRole("group", { name: "범위 시작 소단원" });
-    const endPicker = screen.getByRole("group", { name: "범위 끝 소단원" });
-    // 3열 — 학년 | 대단원 | 소단원 (S-07 UnitTreePicker 그대로)
-    expect(within(startPicker).getByText("학년")).toBeInTheDocument();
-    expect(within(startPicker).getByText("대단원")).toBeInTheDocument();
-    expect(within(endPicker).getByText("소단원")).toBeInTheDocument();
+    const picker = screen.getByRole("group", { name: "범위 선택" });
+    // 3열 — 학년 | 대단원 | 소단원 (S-07 과 같은 문법)
+    expect(within(picker).getByText("학년")).toBeInTheDocument();
+    expect(within(picker).getByText("대단원")).toBeInTheDocument();
+    expect(within(picker).getByText("소단원")).toBeInTheDocument();
+    // 🔒 두 벌이면 폼이 밀린다 — 한 벌뿐인 것을 잠근다.
+    expect(screen.getAllByRole("group", { name: "범위 선택" })).toHaveLength(1);
   });
 
-  it("피커에서 끝을 바꾸면 한 줄과 출제 요청이 함께 바뀐다", async () => {
+  /**
+   * 🔒 열에 높이 상한(260px)이 걸려 있어 **고른 것이 창 밖에 있을 수 있다.**
+   * 학년 열은 16행(초1~미적분2)인데 창은 6행쯤이라, 중2 를 고른 채 열면 화면에는
+   * 초1~초6 만 보인다 — 「아무것도 안 골라진 것」처럼 읽히는 자리다.
+   */
+  it("피커를 열면 지금 고른 것이 보이도록 끌어다 놓는다", async () => {
+    const scrollIntoView = vi.fn();
+    const original = (
+      Element.prototype as unknown as { scrollIntoView?: unknown }
+    ).scrollIntoView;
+    (
+      Element.prototype as unknown as { scrollIntoView: unknown }
+    ).scrollIntoView = scrollIntoView;
+
+    try {
+      const { user } = await renderSetup();
+      await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+      await screen.findByRole("button", { name: "고치기" });
+      scrollIntoView.mockClear();
+
+      await user.click(screen.getByRole("button", { name: "고치기" }));
+
+      expect(scrollIntoView).toHaveBeenCalled();
+    } finally {
+      if (original === undefined) {
+        delete (Element.prototype as unknown as { scrollIntoView?: unknown })
+          .scrollIntoView;
+      } else {
+        (
+          Element.prototype as unknown as { scrollIntoView: unknown }
+        ).scrollIntoView = original;
+      }
+    }
+  });
+
+  it("소단원을 두 번 누르면 시작·끝이 되고 출제 요청도 함께 바뀐다", async () => {
     let body: unknown;
     server.use(
       http.post("/api/tests/generate", async ({ request }) => {
@@ -182,24 +219,55 @@ describe("[T4.3 S-04] 출제 설정 — 폼 골격", () => {
     await screen.findByRole("button", { name: "고치기" });
     await user.click(screen.getByRole("button", { name: "고치기" }));
 
-    const endPicker = screen.getByRole("group", { name: "범위 끝 소단원" });
+    const picker = screen.getByRole("group", { name: "범위 선택" });
+    // 첫 번째 클릭 = 시작 (그 순간 범위는 그 한 단원이다)
     await user.click(
-      within(endPicker).getByRole("button", {
-        name: MOCK_REVIEW_RANGE_END_UNIT.section,
-      }),
+      within(picker).getByRole("button", { name: MOCK_UNITS[1]!.section }),
+    );
+    await screen.findByText(
+      `${MOCK_UNITS[1]!.section} ~ ${MOCK_UNITS[1]!.section}`,
     );
 
+    // 두 번째 클릭 = 끝
+    await user.click(
+      within(picker).getByRole("button", { name: MOCK_UNITS[7]!.section }),
+    );
     await screen.findByText(
-      `${MOCK_UNITS[0]!.section} ~ ${MOCK_REVIEW_RANGE_END_UNIT.section}`,
+      `${MOCK_UNITS[1]!.section} ~ ${MOCK_UNITS[7]!.section}`,
     );
 
     await user.click(screen.getByRole("button", { name: "출제" }));
     await waitFor(() => expect(body).toBeDefined());
     expect(body).toMatchObject({
       testType: "review",
-      rangeStartUnitId: MOCK_UNITS[0]!.id,
-      rangeEndUnitId: MOCK_REVIEW_RANGE_END_UNIT.id,
+      rangeStartUnitId: MOCK_UNITS[1]!.id,
+      rangeEndUnitId: MOCK_UNITS[7]!.id,
     });
+  });
+
+  /**
+   * 🔒 **거꾸로 된 범위를 만들지 않는다.** 끝으로 시작보다 앞을 누르면 그것이 새
+   * 시작이 된다 — 그대로 두면 `resolveRange` 가 정렬해 엉뚱한 범위가 조용히 나간다.
+   */
+  it("끝으로 시작보다 앞을 누르면 그것이 새 시작이 된다", async () => {
+    const { user } = await renderSetup();
+    await user.click(screen.getByRole("radio", { name: "확인테스트" }));
+    await screen.findByRole("button", { name: "고치기" });
+    await user.click(screen.getByRole("button", { name: "고치기" }));
+
+    const picker = screen.getByRole("group", { name: "범위 선택" });
+    await user.click(
+      within(picker).getByRole("button", { name: MOCK_UNITS[7]!.section }),
+    );
+    await user.click(
+      within(picker).getByRole("button", { name: MOCK_UNITS[1]!.section }),
+    );
+
+    expect(
+      await screen.findByText(
+        `${MOCK_UNITS[1]!.section} ~ ${MOCK_UNITS[1]!.section}`,
+      ),
+    ).toBeInTheDocument();
   });
 
   /**
@@ -228,11 +296,12 @@ describe("[T4.3 S-04] 출제 설정 — 폼 골격", () => {
     await screen.findByRole("button", { name: "고치기" });
     await user.click(screen.getByRole("button", { name: "고치기" }));
 
-    const endPicker = screen.getByRole("group", { name: "범위 끝 소단원" });
+    const picker = screen.getByRole("group", { name: "범위 선택" });
     await user.click(
-      within(endPicker).getByRole("button", {
-        name: MOCK_REVIEW_RANGE_END_UNIT.section,
-      }),
+      within(picker).getByRole("button", { name: MOCK_UNITS[1]!.section }),
+    );
+    await user.click(
+      within(picker).getByRole("button", { name: MOCK_UNITS[7]!.section }),
     );
 
     const count = screen.getByLabelText("문항 수");
@@ -241,9 +310,7 @@ describe("[T4.3 S-04] 출제 설정 — 폼 골격", () => {
 
     expect(screen.getByLabelText("문항 수")).toHaveValue(12);
     expect(
-      screen.getByText(
-        `${MOCK_UNITS[0]!.section} ~ ${MOCK_REVIEW_RANGE_END_UNIT.section}`,
-      ),
+      screen.getByText(`${MOCK_UNITS[1]!.section} ~ ${MOCK_UNITS[7]!.section}`),
     ).toBeInTheDocument();
   });
 });

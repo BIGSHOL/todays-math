@@ -2,12 +2,16 @@
 
 import { useState } from "react";
 
+import { UnitRangePicker } from "@/components/progress/UnitRangePicker";
 import { UnitTreePicker } from "@/components/progress/UnitTreePicker";
 import { FIELD_CLASS } from "@/components/test/labels";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
 import {
+  ALL_END,
+  ALL_START,
+  ALL_UNITS,
   HIFI_GRADE_TOTAL,
   HIFI_RANGE_COUNT,
   HIFI_RANGE_END,
@@ -30,9 +34,10 @@ export function RangeHifiClient() {
         <strong className="text-ink">C안</strong>(평소 한 줄, 고칠 때만 펼침) ·
         Hi-fi <strong className="text-ink">④ 범위 막대</strong> · 펼침은{" "}
         <strong className="text-ink">㈟ 3열 피커 두 벌</strong>. 원장님이 ASCII
-        시안에서는 ②를 고르셨다가 <strong className="text-ink">실물 HTML 을
-        보고 ④로 바꾸셨다</strong> — 이 페이지를 만든 이유가 그것이다.
-        아래는 그때 견준 안들을 그대로 남긴 것이다(서체·색·간격은 실제 토큰).
+        시안에서는 ②를 고르셨다가{" "}
+        <strong className="text-ink">실물 HTML 을 보고 ④로 바꾸셨다</strong> —
+        이 페이지를 만든 이유가 그것이다. 아래는 그때 견준 안들을 그대로 남긴
+        것이다(서체·색·간격은 실제 토큰).
       </p>
 
       <Variant
@@ -159,6 +164,50 @@ export function RangeHifiClient() {
         recommended
       >
         <ExpandedPickers />
+      </Variant>
+
+      <h2 className="mt-12 border-t-[3px] border-ink pt-4 text-[15px] font-black">
+        펼침이 너무 길다 — 네 가지 해법 (2026-08-19 원장님 지적)
+      </h2>
+      <p className="mt-2 text-[12.5px] leading-[1.7] text-text-2">
+        실제 데이터에서는 학년 열이 <strong className="text-ink">16행</strong>
+        (초1~미적분2)이라 피커 하나가 750px 이 넘고, 시작·끝 두 벌이면 폼이
+        통째로 화면 밖으로 밀린다. 아래 넷은{" "}
+        <strong className="text-ink">실제 소단원 735개</strong>를 그대로 물려
+        만들었다 — 앞의 시안들은 중2 17개만 써서 이 문제가 안 드러났다.
+      </p>
+
+      <Variant
+        no="Ⓐ"
+        title="한 피커에서 두 번 눌러 범위"
+        note="달력의 기간 선택과 같다. 한 번 누르면 시작, 다시 누르면 끝. 피커가 한 벌이라 높이가 반이고 열마다 스크롤이 붙는다."
+      >
+        <RangeDemoSequential />
+      </Variant>
+
+      <Variant
+        no="Ⓑ"
+        title="좌클릭 = 시작 · 우클릭 = 끝"
+        note="모드가 없어 어느 쪽이든 바로 고친다. 우클릭은 브라우저 메뉴를 막고 받으며, 터치·키보드를 위해 Shift+클릭도 끝으로 받는다. 안내는 우상단."
+        recommended
+      >
+        <RangeDemoLeftRight />
+      </Variant>
+
+      <Variant
+        no="Ⓒ"
+        title="두 벌 그대로, 열만 스크롤"
+        note="지금 구조를 안 바꾸고 각 열에 높이 상한만 준다. 가장 작은 개입이지만 여전히 두 벌이라 세로가 두 배다."
+      >
+        <RangeDemoTwoPickers />
+      </Variant>
+
+      <Variant
+        no="Ⓓ"
+        title="시작 | 끝 탭 전환"
+        note="두 벌을 유지하되 한 번에 하나만 보여 준다. 높이는 한 벌이지만 「지금 어느 쪽을 고치는가」를 늘 확인해야 한다."
+      >
+        <RangeDemoTabs />
       </Variant>
 
       <h2 className="mt-12 border-t-[3px] border-ink pt-4 text-[15px] font-black">
@@ -341,6 +390,133 @@ function FullForm() {
           </Button>
         </div>
       </div>
+    </div>
+  );
+}
+
+/** 범위 요약 한 줄 — 데모마다 같은 것을 쓴다. */
+function RangeLine({ startId, endId }: { startId: string; endId: string }) {
+  const start = ALL_UNITS.find((u) => u.id === startId);
+  const end = ALL_UNITS.find((u) => u.id === endId);
+  const count = ALL_UNITS.filter(
+    (u) =>
+      start &&
+      end &&
+      u.orderIndex >= Math.min(start.orderIndex, end.orderIndex) &&
+      u.orderIndex <= Math.max(start.orderIndex, end.orderIndex),
+  ).length;
+  return (
+    <p className="mb-2 text-[12.5px] font-black text-ink">
+      {start?.section} ~ {end?.section}
+      <span className="ml-2 font-bold text-text-3">소단원 {count}개</span>
+    </p>
+  );
+}
+
+function RangeDemoSequential() {
+  const [start, setStart] = useState(ALL_START.id);
+  const [end, setEnd] = useState(ALL_END.id);
+  return (
+    <div>
+      <RangeLine startId={start} endId={end} />
+      <UnitRangePicker
+        units={ALL_UNITS}
+        startUnitId={start}
+        endUnitId={end}
+        onChange={(s, e) => {
+          setStart(s);
+          setEnd(e);
+        }}
+      />
+    </div>
+  );
+}
+
+function RangeDemoLeftRight() {
+  const [start, setStart] = useState(ALL_START.id);
+  const [end, setEnd] = useState(ALL_END.id);
+  return (
+    <div>
+      <RangeLine startId={start} endId={end} />
+      <UnitRangePicker
+        mode="left-right"
+        units={ALL_UNITS}
+        startUnitId={start}
+        endUnitId={end}
+        onChange={(s, e) => {
+          setStart(s);
+          setEnd(e);
+        }}
+      />
+    </div>
+  );
+}
+
+function RangeDemoTwoPickers() {
+  const [start, setStart] = useState(ALL_START.id);
+  const [end, setEnd] = useState(ALL_END.id);
+  return (
+    <div className="grid gap-4">
+      <RangeLine startId={start} endId={end} />
+      <div className={LABEL_CLASS}>
+        시작
+        <UnitTreePicker
+          label="범위 시작 소단원"
+          units={ALL_UNITS}
+          currentUnitId={start}
+          onSelect={setStart}
+          columnMaxHeightPx={260}
+        />
+      </div>
+      <div className={LABEL_CLASS}>
+        끝
+        <UnitTreePicker
+          label="범위 끝 소단원"
+          units={ALL_UNITS}
+          currentUnitId={end}
+          onSelect={setEnd}
+          columnMaxHeightPx={260}
+        />
+      </div>
+    </div>
+  );
+}
+
+function RangeDemoTabs() {
+  const [start, setStart] = useState(ALL_START.id);
+  const [end, setEnd] = useState(ALL_END.id);
+  const [tab, setTab] = useState<"start" | "end">("start");
+  return (
+    <div className="grid gap-2">
+      <RangeLine startId={start} endId={end} />
+      <div className="flex gap-2">
+        {(
+          [
+            ["start", "시작"],
+            ["end", "끝"],
+          ] as const
+        ).map(([key, text]) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => setTab(key)}
+            className={`min-h-11 cursor-pointer border px-4 text-[12.5px] font-bold ${
+              tab === key
+                ? "border-ink bg-ink text-white"
+                : "border-divider bg-white text-ink"
+            }`}
+          >
+            {text}
+          </button>
+        ))}
+      </div>
+      <UnitTreePicker
+        label={tab === "start" ? "범위 시작 소단원" : "범위 끝 소단원"}
+        units={ALL_UNITS}
+        currentUnitId={tab === "start" ? start : end}
+        onSelect={tab === "start" ? setStart : setEnd}
+        columnMaxHeightPx={260}
+      />
     </div>
   );
 }
