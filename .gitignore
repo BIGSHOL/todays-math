@@ -57,6 +57,11 @@ scripts/qa/reports/*
 # 그림 유실 잠금 원장 — **공유 DB 를 되돌리는 유일한 근거다.**
 # 여기 없으면 다른 컴퓨터에서 790건을 되돌릴 방법이 없다(적대적 리뷰 지적).
 !scripts/qa/reports/missing-figure-lock.json
+# RPM 출처 스냅샷 — **sumaek 을 대신하는 정본이다.** 이게 없으면 다른 컴퓨터에서
+# RPM 의 책·쪽·문항번호를 알 길이 없다(원본 접속은 저장소 밖 두 파일에 의존한다).
+!scripts/qa/reports/rpm-origin.json
+# 그 적재의 되돌리기 근거.
+!scripts/qa/reports/rpm-origin-load.json
 # 문항 코드 원장(D-53) — 컬럼을 드롭했다 다시 만들 때 **같은 코드**를 되살리는 근거다.
 # 코드는 원장님이 종이·대화에 옮겨 적는 값이라 새로 뽑으면 다른 문항을 가리키게 된다.
 !scripts/qa/reports/problem-code-ledger.json.gz
