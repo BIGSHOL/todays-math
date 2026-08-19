@@ -260,9 +260,219 @@
     "/figures/5348/tbl-q08.png"
    ],
    "plan": "scripts/qa/reports/table-crop-result.json"
+  },
+  {
+   "id": "0e1c3fbf-70db-43b6-a344-8a408faa6ee2",
+   "e": "4082",
+   "q": 11,
+   "before": [],
+   "after": [
+    "/figures/4082/pdf-q11.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "18575aa5-8189-40da-9098-8dcd47ed411a",
+   "e": "2085",
+   "q": 15,
+   "before": [],
+   "after": [
+    "/figures/2085/pdf-q15.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "4768cb73-439e-4619-a4b0-338747795ef6",
+   "e": "4338",
+   "q": 19,
+   "before": [],
+   "after": [
+    "/figures/4338/pdf-q19.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "4a3e60b8-02e3-4bdf-bd60-c1a7ee82079d",
+   "e": "3493",
+   "q": 15,
+   "before": [],
+   "after": [
+    "/figures/3493/pdf-q15.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "7c1085f7-ed2d-427e-9c55-225ea3cf8c60",
+   "e": "5236",
+   "q": 17,
+   "before": [],
+   "after": [
+    "/figures/5236/pdf-q17.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "8f529c07-df80-4227-b0f4-1b4f32dcb0e6",
+   "e": "5350",
+   "q": 13,
+   "before": [],
+   "after": [
+    "/figures/5350/pdf-q13.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "9667f03b-0ec2-47f2-b845-1016a96c072e",
+   "e": "3588",
+   "q": 11,
+   "before": [],
+   "after": [
+    "/figures/3588/pdf-q11.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "9ce768bb-5824-4167-9b31-2b2ea3571c49",
+   "e": "3536",
+   "q": 16,
+   "before": [],
+   "after": [
+    "/figures/3536/pdf-q16.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "a43d186d-ad67-45f5-aa49-d237bf5b6deb",
+   "e": "5231",
+   "q": 2,
+   "before": [],
+   "after": [
+    "/figures/5231/pdf-q02.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "bc43425a-e99a-4c91-aa97-a07ddb656f3f",
+   "e": "4068",
+   "q": 18,
+   "before": [],
+   "after": [
+    "/figures/4068/pdf-q18.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "c0a051ed-a7f2-449f-b277-aaf9deddd5f7",
+   "e": "5362",
+   "q": 21,
+   "before": [],
+   "after": [
+    "/figures/5362/pdf-q21.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "c22bd0ce-2f8e-472c-830c-926564501ed4",
+   "e": "3509",
+   "q": 14,
+   "before": [],
+   "after": [
+    "/figures/3509/pdf-q14.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "cf4a5161-6f78-440a-a5d3-3b3be6e30877",
+   "e": "3524",
+   "q": 13,
+   "before": [],
+   "after": [
+    "/figures/3524/pdf-q13.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "de46592c-783a-4e9f-a055-44167012dcc3",
+   "e": "4213",
+   "q": 3,
+   "before": [],
+   "after": [
+    "/figures/4213/pdf-q03.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "e1006bfa-845f-4687-92b2-91ac7e6da6bd",
+   "e": "3530",
+   "q": 13,
+   "before": [],
+   "after": [
+    "/figures/3530/pdf-q13.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "e7d9f04c-d50e-4fb9-b0d1-ebf415d95dbf",
+   "e": "5239",
+   "q": 21,
+   "before": [],
+   "after": [
+    "/figures/5239/pdf-q21.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "e92eff2e-1e28-465b-a6eb-79099fb7608c",
+   "e": "4229",
+   "q": 24,
+   "before": [],
+   "after": [
+    "/figures/4229/pdf-q24.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "f35d19fe-7973-49d9-b3af-73b3aec36e19",
+   "e": "2384",
+   "q": 6,
+   "before": [],
+   "after": [
+    "/figures/2384/pdf-q06.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "f84afca4-e2e3-42e6-bf34-3717d52a1887",
+   "e": "3635",
+   "q": 17,
+   "before": [],
+   "after": [
+    "/figures/3635/pdf-q17.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "9d9b774c-a430-48d7-807e-6a4e3878bfcc",
+   "e": "3284",
+   "q": 15,
+   "before": [],
+   "after": [
+    "/figures/3284/hwppdf-q15.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
+  },
+  {
+   "id": "d75b2650-3edb-46c8-ae65-08eba1726e90",
+   "e": "4973",
+   "q": 2,
+   "before": [],
+   "after": [
+    "/figures/4973/hwppdf-q02.png"
+   ],
+   "plan": "scripts/qa/reports/pdf-figure-attach-plan.json"
   }
  ],
- "기준시각": "2026-08-19T07:13:45.841Z",
+ "기준시각": "2026-08-19T14:56:19.152Z",
  "적용됨": true,
  "되돌리기": "ALLOW_SHARED_IMPORT=1 node scripts/figure/attach-hwp-figures.mjs --revert"
 }
