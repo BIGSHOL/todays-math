@@ -310,22 +310,16 @@ function main(): void {
   );
   const meansOf: Record<Arm, string> = {
     DB: "지금 그대로 — 분모라 0이어야 한다",
-    "DB+R2": "**원본을 안 봐도** 파서만 고치면 산다",
     HWP: "재추출만 한다 (지금 파서 그대로)",
-    "HWP+R2": "재추출 + 파서 — 이 트랙이 낼 수 있는 상한",
   };
   const armNormal: Record<Arm, number> = {
     DB: 0,
-    "DB+R2": 0,
     HWP: 0,
-    "HWP+R2": 0,
   };
   console.log("");
   const armFake: Record<Arm, number> = {
     DB: 0,
-    "DB+R2": 0,
     HWP: 0,
-    "HWP+R2": 0,
   };
   for (const k of ARMS) {
     const normal = details.filter((d) => d.armVerdict[k] === "정상");
@@ -349,14 +343,9 @@ function main(): void {
   // ⚠️ 팔의 판정만 보면 안 된다 — **짝이 아닌 행도 HWP 팔이 «정상»** 이다
   //    (다른 문제의 보기 다섯이 서니까). 실측 3건이 그래서 여기 섞여 18 로 나왔다.
   //    회복으로 세는 것은 가드를 통과한 «완전회복» 뿐이다.
-  const onlyHwp = details.filter(
-    (d) => d.rescue === "완전회복" && d.armVerdict["DB+R2"] !== "정상",
-  ).length;
-  const onlyR2 = details.filter(
-    (d) => d.armVerdict["DB+R2"] === "정상" && d.rescue !== "완전회복",
-  ).length;
+  const onlyHwp = details.filter((d) => d.rescue === "완전회복").length;
   console.log(
-    `\n**원본이 있어야만 사는 것 ${onlyHwp}건** · 파서만으로 되는데 HWP 로는 안 되는 것 ${onlyR2}건`,
+    `\n**재추출이 있어야만 사는 것 ${onlyHwp}건** — R2 는 이미 제품에 있다(D-58), 즉 DB 팔이 곧 현행이다`,
   );
 
   /* 부류별 */
@@ -473,9 +462,7 @@ function main(): void {
   const harmDetail: Detail[] = [];
   const harmByArm: Record<Arm, number> = {
     DB: 0,
-    "DB+R2": 0,
     HWP: 0,
-    "HWP+R2": 0,
   };
   let matchedCounter = 0;
   for (const { r } of 반대쪽) {
@@ -485,10 +472,7 @@ function main(): void {
       const v = d.armVerdict[k];
       if (v && isFatal(v)) harmByArm[k] += 1;
     }
-    if (
-      (d.armVerdict.HWP && isFatal(d.armVerdict.HWP)) ||
-      (d.armVerdict["HWP+R2"] && isFatal(d.armVerdict["HWP+R2"]))
-    ) {
+    if (d.armVerdict.HWP && isFatal(d.armVerdict.HWP)) {
       harmDetail.push(d);
     }
   }

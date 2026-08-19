@@ -45,6 +45,37 @@ export const PRINT_ROUTE = "/tests/{시험지id}/print";
 
 export const ITEMS: PrintCheckItem[] = [
   {
+    id: "inline-choice-repair-r2",
+    title:
+      "R2 — 한 줄에 붙어 있던 보기 다섯이 **처음 지면에 서는** 문항 (D-58)",
+    changed:
+      "`parseProblemContent` 가 줄 중간 보기 마커를 보기 경계로 본다. 그 전까지 이 문항들은 " +
+      "**보기가 0칸**이라 발문만 찍히고 학생이 고를 칸이 아예 없었다. 이제 보기 다섯 칸이 " +
+      "새로 생기므로 **문항 높이가 커진다** — 칸을 넘치거나 다음 문항을 밀 수 있다. " +
+      "실측: 옛 파서와 전량 대조에서 판정이 바뀐 것은 2건뿐이고(둘 다 개선), 잠금이 풀리면 32건이 지면에 새로 선다.",
+    look:
+      "① 보기 다섯이 문항 칸 안에 다 들어가는가 — 다섯째 보기가 잘리거나 다음 장으로 넘어가지 않는가. " +
+      "② 보기가 두 열로 앉을 때 좌우가 겹치지 않는가(원본이 두 열이던 문항들이다). " +
+      "③ 보기 번호 ①②③④⑤ 가 빠짐없이 차례로 찍히는가. " +
+      "④ 발문 끝에 보기 글자가 **남아 있지 않은가** — 잘라 낸 자리가 발문에 다시 보이면 불합격이다.",
+    lookFromSource: false,
+    evidence: [
+      "src/lib/problem/choiceRepairRules.ts (규칙 한 벌)",
+      "src/lib/problem/parseProblemContent.ts (가드: 1..n 이고 n>=4 일 때만 받는다)",
+      "src/__tests__/unit/inlineChoiceRepair.test.ts",
+      "docs/planning/tracks/reports/hwp-rescue.md §2",
+    ],
+    scale:
+      "판정이 바뀌는 문항 32건(현재 전량 `directUseAllowed=false` 로 잠겨 있어 지면에 안 나간다). " +
+      "잠금이 풀리는 순간부터 종이에 나간다 — 그전에 검수해야 한다.",
+    status: "대기",
+    needs:
+      "보기가 한 줄에 붙어 있던 문항이 시험지에 들어가야 한다. 잠금이 풀리기 전에는 " +
+      "`/dev/print-check` 표본이나 mock 문항(`…000002`·`…000025`)으로 봐야 한다 — " +
+      "그 둘이 R2 로 보기 0칸 → 4칸이 된 실제 사례다.",
+    changedOn: "2026-08-19",
+  },
+  {
     id: "figure-svg-inline",
     title:
       "AI 변형이 새로 그린 도형(SVG)의 지면 배치 — 처음 종이에 나가는 갈래",

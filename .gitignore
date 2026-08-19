@@ -98,6 +98,9 @@ scripts/qa/reports/*
 # 보고서의 모든 숫자가 이 파일에서 나오고, 원장님이 «복구냐 AI 냐»를 정하는 근거다.
 # DB 도 N드라이브도 없는 컴퓨터에서 바로 읽혀야 한다 (164KB).
 !scripts/qa/reports/hwp-rescue-ledger.json
+# 정답 표기가 갈리던 5건을 HWP 미주로 확정한 기록 — **되돌릴 근거가 이 파일뿐이다.**
+# 행마다 옛 정답·미주 원문·왜 그 읽기인지를 담는다(일률 규칙이 아니라 목록이다).
+!scripts/qa/reports/ambiguous-answer-ledger.json
 __pycache__/
 
 # 본문 백업(대용량, 되돌리기용)

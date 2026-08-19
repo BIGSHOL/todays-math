@@ -214,14 +214,13 @@ describe("회복 판정 (judgeRescue)", () => {
     expect(r.rescue).toBe("HWP도못살림");
   });
 
-  it("**DB 팔에도** R2 가 걸린다 — 원본 없이 파서만 고쳤을 때의 값", () => {
-    // 이 검사가 없으면 「R2 를 DB 쪽에 안 건다」 변이가 초록이다.
+  it("**제품이 R2 를 이미 건다** — DB 팔이 곧 현행이다 (D-58)", () => {
+    // R2 가 제품 파서에 들어가기 전에는 이 행의 DB 팔이 «보기0칸» 이었다.
     const r = judgeRescue(
       base({ content: 줄중간.content, answer: 줄중간.answer, hwp: 줄중간.hwp }),
     );
-    expect(r.arms.DB?.verdict).toBe("보기0칸");
-    expect(r.arms["DB+R2"]?.verdict).toBe("정상");
-    expect(r.slots["DB+R2"]).toBe(5);
+    expect(r.arms.DB?.verdict).toBe("정상");
+    expect(r.slots.DB).toBe(5);
   });
 
   it("HWP 미주 정답이 **다르면** 근거가 «불일치» 여야 한다", () => {
@@ -242,12 +241,12 @@ describe("회복 판정 (judgeRescue)", () => {
     );
   });
 
-  it("R2 는 **HWP 쪽에도** 걸린다 — 보기 다섯이 한 줄에 붙은 부류", () => {
+  it("R2 는 **HWP 로 지은 본문에도** 걸린다 — 원본도 똑같이 붙어 있다", () => {
     const r = judgeRescue(
       base({ content: 줄중간.content, answer: 줄중간.answer, hwp: 줄중간.hwp }),
     );
-    expect(r.arms.HWP?.verdict).toBe("보기0칸");
-    expect(r.arms["HWP+R2"]?.verdict).toBe("정상");
+    expect(r.arms.HWP?.verdict).toBe("정상");
+    expect(r.slots.HWP).toBe(5);
     expect(r.rescue).toBe("완전회복");
   });
 

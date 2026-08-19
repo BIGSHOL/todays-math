@@ -29,7 +29,7 @@
  * - **못 정하겠으면 안 정한다**: 값으로도 번호로도 읽히고 답이 갈리면 `모호` 를 낸다.
  */
 import { tokenizeMath } from "../../src/lib/math/segments";
-import { parseProblemContent } from "../../src/lib/problem/parseProblemContent";
+import { parseProblemContentLabeled } from "../../src/lib/problem/parseProblemContent";
 
 import { canon, repairGlyphs } from "./answer-notation";
 import {
@@ -134,40 +134,17 @@ export interface ChoiceLabels {
  * 부르는 쪽은 반드시 `미분류` 로 세야 한다 — 0으로 뭉개면 규칙이 새는 줄 모른다.
  */
 export function choiceLabels(raw: string): ChoiceLabels | null {
-  const text = (raw ?? "").replace(/\r\n?/g, "\n");
-  const { masked, formulas } = maskMath(text);
-  const markers = [...masked.matchAll(CHOICE_AT_LINE_START)];
-  const product = parseProblemContent(raw ?? "");
-
-  if (markers.length < 2) {
-    return product.choices.length === 0
-      ? { labels: [], bodies: [], dropped: [], deduped: false }
-      : null;
-  }
-
-  const pairs = markers.map((m, i) => {
-    const start = m.index! + m[0].length;
-    const end = i + 1 < markers.length ? markers[i + 1]!.index! : masked.length;
-    return {
-      label: markerLabel(m[0]),
-      body: collapseWhitespace(unmask(masked.slice(start, end), formulas)),
-    };
-  });
-  const afterDedupe = dedupeRepeatedBlock(pairs);
-  const kept = afterDedupe.filter((p) => p.body.length > 0);
-  const bodies = kept.map((p) => p.body);
-
-  if (
-    bodies.length !== product.choices.length ||
-    bodies.some((b, i) => b !== product.choices[i])
-  ) {
-    return null;
-  }
+  // ⚠️ **파이프라인을 다시 밟지 않는다.** 예전에는 여기서 마커를 다시 찾아 라벨을
+  //    만들고 제품의 `choices` 와 글자 대조를 했다. R2 가 제품에 들어가자(2026-08-19)
+  //    그 두 벌이 갈라져 **전량이 «판정 불가»가 될 뻔했다** — 대조 가드가 잡았다.
+  //    이제 라벨은 제품이 직접 내준다(`parseProblemContentLabeled`). 규칙이 한 벌이라
+  //    갈라질 자리가 없다.
+  const p = parseProblemContentLabeled(raw ?? "");
   return {
-    labels: kept.map((p) => p.label),
-    bodies,
-    dropped: afterDedupe.filter((p) => p.body.length === 0).map((p) => p.label),
-    deduped: afterDedupe.length !== pairs.length,
+    labels: p.labels,
+    bodies: p.choices,
+    dropped: p.dropped,
+    deduped: p.deduped,
   };
 }
 

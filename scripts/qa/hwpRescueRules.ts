@@ -61,8 +61,15 @@ import {
 } from "./hwpJudgeRules";
 import { splitInlineChoiceMarkers } from "./choiceRepairRules";
 
-/** 재 보는 네 갈래. 이름이 곧 「무엇을 했을 때인가」다. */
-export const ARMS = ["DB", "DB+R2", "HWP", "HWP+R2"] as const;
+/**
+ * 재 보는 두 갈래.
+ *
+ * ⚠️ 예전엔 넷이었다(`DB` · `DB+R2` · `HWP` · `HWP+R2`). **R2 가 원장님 확정으로
+ * 제품 파서에 들어가면서**(2026-08-19, D-58) `DB` 가 곧 옛 `DB+R2` 이고
+ * `HWP` 가 곧 옛 `HWP+R2` 다 — 팔을 넷으로 두면 같은 것을 두 번 세게 된다.
+ * 그래서 둘로 접었다. 옛 네 팔의 값은 보고서 §2 에 남아 있다.
+ */
+export const ARMS = ["DB", "HWP"] as const;
 export type Arm = (typeof ARMS)[number];
 
 /** 브리프 §2 ㉡ 가 요구하는 갈래. **HWP 팔(HWP·HWP+R2)의 가장 나은 결과**로 정한다. */
@@ -293,8 +300,8 @@ export function judgeRescue(input: RescueInput): RescueResult {
       figureUrls: input.figureUrls,
     });
 
+  // 제품 파서가 R2 를 안에서 건다(D-58) — 여기서 또 걸지 않는다.
   const db = judge(input.content);
-  const dbR2 = judge(splitInlineChoiceMarkers(input.content));
 
   const matched =
     input.hwp !== null &&
@@ -302,57 +309,38 @@ export function judgeRescue(input: RescueInput): RescueResult {
     input.alignGrade !== "편없음";
 
   const dbFake = choicesLookFake(input.content);
-  const dbR2Fake = choicesLookFake(splitInlineChoiceMarkers(input.content));
 
   if (!matched) {
     return {
       rescue: "대응실패",
-      arms: { DB: db, "DB+R2": dbR2, HWP: null, "HWP+R2": null },
-      slots: {
-        DB: db.labels.length,
-        "DB+R2": dbR2.labels.length,
-        HWP: 0,
-        "HWP+R2": 0,
-      },
+      arms: { DB: db, HWP: null },
+      slots: { DB: db.labels.length, HWP: 0 },
       hwpChoices: 0,
       hwpLen: 0,
       evidence: NO_EVIDENCE,
       pair: null,
-      fake: { DB: dbFake, "DB+R2": dbR2Fake, HWP: false, "HWP+R2": false },
+      fake: { DB: dbFake, HWP: false },
     };
   }
 
   const hwp = input.hwp!;
   const hwpContent = buildHwpContent(hwp);
   const h = judge(hwpContent);
-  const hR2 = judge(splitInlineChoiceMarkers(hwpContent));
 
-  const arms: Record<Arm, Judgement | null> = {
-    DB: db,
-    "DB+R2": dbR2,
-    HWP: h,
-    "HWP+R2": hR2,
-  };
+  const arms: Record<Arm, Judgement | null> = { DB: db, HWP: h };
   const slots: Record<Arm, number> = {
     DB: db.labels.length,
-    "DB+R2": dbR2.labels.length,
     HWP: h.labels.length,
-    "HWP+R2": hR2.labels.length,
   };
 
-  // 근거 대조에 쓸 보기 본문은 **가장 나은 HWP 팔** 의 것이어야 값 비교가 성립한다.
-  const bestHwp = h.verdict === "정상" ? h : hR2;
-  const bestContent =
-    h.verdict === "정상" ? hwpContent : splitInlineChoiceMarkers(hwpContent);
   const evidence = outerEvidence(
     input.answer,
     input.score,
     hwp,
-    bodiesOf(bestContent, bestHwp.labels.length),
-    bestHwp.labels,
+    bodiesOf(hwpContent, h.labels.length),
+    h.labels,
   );
-
-  const best = pickBest(h, hR2);
+  const best = h;
   // 「HWP 파일에 보기 글자가 있는가」 — **두 조각을 다 요구한다.**
   //  ㉠ `_split_choices` 가 ①부터 연속하는 런을 찾았다 (마커가 있다)
   //  ㉡ 그 칸들 안에 **글자가 있다** (비어 있지 않다)
@@ -365,25 +353,20 @@ export function judgeRescue(input: RescueInput): RescueResult {
   const hwpFilled = (hwp.choices ?? []).filter(
     (c) => (c ?? "").trim().length > 0,
   ).length;
-  const hwpR2Content = splitInlineChoiceMarkers(hwpContent);
   const fake: Record<Arm, boolean> = {
     DB: dbFake,
-    "DB+R2": dbR2Fake,
     HWP: choicesLookFake(hwpContent),
-    "HWP+R2": choicesLookFake(hwpR2Content),
   };
   const pair = pairCheck(
     input.content,
     [hwp.stem ?? "", ...(hwp.choices ?? [])].join(" "),
   );
-  const bestIsR2 = best === hR2 && h.verdict !== hR2.verdict;
 
   let rescue: Rescue;
   // 순서가 중요하다: **짝이 아니면 회복을 논할 수 없다.** 이 검사를 뒤에 두면
   // 「정상」이 먼저 잡혀 다른 문제의 본문이 회복으로 세어진다(실측 화원고 18·19).
   if (pair.mismatched) rescue = "문항불일치";
-  else if (best.verdict === "정상" && (bestIsR2 ? fake["HWP+R2"] : fake.HWP))
-    rescue = "보기가짜";
+  else if (best.verdict === "정상" && fake.HWP) rescue = "보기가짜";
   else if (best.verdict === "정상") rescue = "완전회복";
   else if (best.verdict === "미분류") rescue = "대응실패";
   else if (!isFatal(best.verdict)) rescue = "치명탈출";
