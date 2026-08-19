@@ -49,7 +49,9 @@ CONTROL = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
 
 
 #: 삼각형·닮음 기호. 한컴은 `s` 를 △ 로, `~` 를 ∽ 로 쓴다 — **대문자 이름이 뒤따를 때만**.
-TRIANGLE = re.compile(r"\bs(?=[A-Z]{3}\b)")
+# ⚠️ `\b` 를 쓰면 안 된다 — `sABC와` 처럼 뒤에 한글이 오면 한글도 낱말 글자라
+#    경계가 안 생겨 그냥 지나친다(실측 `sACD와`·`sABC에서` 가 안 바뀌었다).
+TRIANGLE = re.compile(r"(?<![A-Za-z])s(?=[A-Z]{3}(?![A-Za-z]))")
 #: `ABÓ` → `\overline{AB}`. 뒤에 붙는 글자라 앞의 대문자 덩어리를 집는다.
 OVERLINE = re.compile(r"([A-Z]{2,3})Ó")
 #: `ABê` 류(직선) — 위선과 같은 자리에 오는 다른 기호.
@@ -61,7 +63,9 @@ ROOT_PILCROW = re.compile(r"'¶(\d+)")
 ROOT_TICK = re.compile(r"'(\d)`(\d)")
 ROOT_ONE = re.compile(r"'\s?(\d+|[a-zA-Z])")
 #: `"Ã…Û`" 꼴의 씌운 근호 — 여는 `Ã` 부터 백틱까지.
-ROOT_BIG = re.compile(r'["¿¹]+Ã?([^`]+)`')
+# ⚠️ 첫 백틱에서 끊으면 안 된다 — `"Ã1Û`+1Û`` 는 `√(1²+1²)` 인데
+#    `√(1²)+1²` 가 된다(실측 `#323`·`#322`). 백틱 뒤에 연산자가 이어지면 계속 삼킨다.
+ROOT_BIG = re.compile(r'["¿¹]+Ã?((?:[^`]+`(?=[-+*/]))*[^`]+)`')
 
 
 def _frac(m: re.Match[str]) -> str:
