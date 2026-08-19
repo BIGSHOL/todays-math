@@ -30,10 +30,10 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { PrismaClient } from "@prisma/client";
 
 import {
-  classifyFigureNeed,
+  classifyFigure,
   MENTIONS_FIGURE_WHERE,
   NO_FIGURE_WHERE,
-} from "./missingFigureRule";
+} from "../../src/lib/figure/missingFigureRule";
 
 const prisma = new PrismaClient();
 
@@ -74,7 +74,7 @@ async function lock() {
     },
     orderBy: { id: "asc" },
   });
-  const broken = rows.filter((r) => classifyFigureNeed(r.content) === "유실");
+  const broken = rows.filter((r) => classifyFigure(r.content) === "유실");
   const todo = broken.filter((r) => r.directUseAllowed);
 
   console.log(
@@ -144,7 +144,7 @@ async function revert() {
           (r) =>
             r.figureUrls.length === 0 &&
             r.figureSvg === null &&
-            classifyFigureNeed(r.content) === "유실",
+            classifyFigure(r.content) === "유실",
         )
         .map((r) => r.id),
     );

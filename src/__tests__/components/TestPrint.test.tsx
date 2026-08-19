@@ -300,6 +300,31 @@ describe("TestPrint — 인쇄 사고 방지", () => {
       expect(container.textContent).not.toContain("서술형");
     });
 
+    // 원장님 확정(2026-08-19): 「[단답형 출제]시에 [단답형]으로」.
+    // 지면에 실제로 그 말이 찍히는지는 **렌더해 봐야** 안다 — 순번 함수만 잠그면
+    // 템플릿이 「서술형」을 그대로 박아 두어도 초록이다.
+    it("⭐ 단답형은 «단답형» 으로 찍고 번호를 서술형과 따로 센다", () => {
+      const both: TestPrintDocument = {
+        ...PRINT_DOCUMENT,
+        problems: PRINT_DOCUMENT.problems.map((problem, index) => ({
+          ...problem,
+          questionType: index % 2 === 0 ? "서술형" : "단답형",
+        })),
+      };
+      const { container } = render(<TestPrint data={both} />);
+      const badges = [...container.querySelectorAll("[data-problem-number]")]
+        .map((el) => el.textContent ?? "")
+        .map((text) => /(서술형|단답형) (\d+)/.exec(text))
+        .map((m) => (m ? `${m[1]} ${m[2]}` : null));
+      expect(badges).toEqual([
+        "서술형 1",
+        "단답형 1",
+        "서술형 2",
+        "단답형 2",
+        "서술형 3",
+      ]);
+    });
+
     it("questionType 을 모르면 서술형이라 단정하지 않는다", () => {
       const unknown: TestPrintDocument = {
         ...PRINT_DOCUMENT,

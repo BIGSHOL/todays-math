@@ -1,20 +1,83 @@
 /**
- * AI 문제 변형 프롬프트 — v1 (2026-08-13, T3.2 최초 작성).
- * 변경 시 버전 문자열과 날짜를 갱신하고 변경 사유를 한 줄로 남긴다.
+ * AI 문제 변형 프롬프트 — v2 (2026-08-19).
+ *
+ * v1 → v2 변경 사유: 원장님이 변형 **방식**(숫자만 / 조건까지)과 **난이도 조정**(원본 유지 /
+ * 한 단계 위·아래)을 화면에서 고르도록 확정(2026-08-19). v1 은 두 축이 "숫자나 조건만
+ * 바꾸라"는 한 문장에 뭉뚱그려져 있어 어느 쪽으로도 지시가 되지 않았다.
  *
  * 설계 원칙(sumaek `packages/core/src/variants/` 참조 — 읽기 전용, 그대로 복사가 아닌
  * 이 프로젝트 규모에 맞춘 재구성): **AI는 정답 사슬에 끼지 않는다.** 새 문제의 answer는
  * AI가 제시하지만 그대로 신뢰하지 않고, AI 스스로 세운 변형 규칙을 원본 문제의 숫자에
  * 되돌려 적용했을 때의 답(`originalAnswerRecomputed`)을 함께 받아 원본의 실제 정답
  * (`origin.answer`)과 일치하는지 검사한다("원본 재현 검사" —
- * src/lib/ai/transformer.ts의 `verifiesOriginalReproduction`). 불일치하는 후보는 폐기한다.
+ * src/lib/ai/transformer.ts의 `verifiesOriginalReproduction`).
  *
- * 대응: src/lib/ai/transformer.ts, POST /api/problems/transform(T3.1)
+ * ⚠️ v2 부터 **검사에 떨어진 후보를 버리지 않는다.** `verified: false` 로 표시해 화면까지
+ *    올려 보내고, 원장님이 사유(재현값 ≠ 원본 정답)를 보고 판단한다 — 걸러 보내면 화면은
+ *    「3개 요청했는데 1개만 왔다」는 사실만 알고 왜인지를 못 본다.
+ *
+ * 대응: src/lib/ai/transformer.ts, POST /api/problems/transform
  */
 import type { Difficulty } from "@/contracts/common.contract";
-import type { ProblemType } from "@/contracts/problem.contract";
+import type {
+  DifficultyShift,
+  ProblemType,
+  TransformMode,
+} from "@/contracts/problem.contract";
 
-export const TRANSFORM_PROMPT_VERSION = "v1";
+export const TRANSFORM_PROMPT_VERSION = "v3";
+
+/**
+ * 도형 스펙 요구 — 원본이 그림에 기대는 문항일 때만 붙인다 (원장님 지시 2026-08-19
+ * "도형 변형이 필요한 부분은 svg 엔진을 이용해 도형도 새로 만들 것").
+ *
+ * ⚠️ **AI 는 원본 그림을 못 본다.** 본문 글자만 본다. 그래서 「본문에 적힌 치수·조건만으로
+ *    다시 그릴 수 있으면 그리고, 아니면 null 을 내라」고 시킨다. 억지로 지어낸 도형은
+ *    본문과 어긋나 못 푸는 문항이 된다 — 못 그리는 것을 **못 그린다고 말하게** 하는 편이 낫다.
+ *
+ * 허용 키는 엔진(`core.figure_scene`)이 강제한다. 목록을 여기 옮겨 적은 것이라 엔진이
+ * 바뀌면 갈라진다 — 그래서 스펙 검증은 여기서 하지 않고 **엔진이 정본**이다(틀리면 예외가 나고
+ * 그 사유가 화면까지 간다). 참조: docs/planning/09-figure-engine-guide.md §1.
+ */
+const FIGURE_SPEC_INSTRUCTION = [
+  "",
+  "[도형] 이 문항은 지면의 그림을 보고 푸는 문항입니다. 변형본에는 원본 그림이 따라가지 않으므로,",
+  "각 배열 원소에 figureSpec 필드를 **하나 더** 넣어 변형된 숫자에 맞는 도형을 새로 정의하십시오.",
+  "",
+  "- 본문에 적힌 치수·각도·조건만으로 도형을 확정할 수 있을 때만 만드십시오.",
+  "- 확정할 수 없으면 반드시 figureSpec 을 null 로 두십시오. **지어내지 마십시오.**",
+  "  (그래프·사진·통계 그림처럼 아래 스키마로 표현할 수 없는 것도 null 입니다.)",
+  "- 좌표는 화면 좌표계입니다(y 가 아래로 증가). 도형 하나가 대략 100~300 크기가 되게 잡으십시오.",
+  "",
+  "figureSpec 스키마 (아래 키 **외에는 쓸 수 없습니다**):",
+  '  {"version": 2,',
+  '   "points":   {"A": [0,0], "B": [160,0],',
+  '                "P": {"type":"on_circle","circle":"c","angle":60},',
+  '                "Q": {"type":"intersection","segments":["AB","CD"]}},',
+  '   "circles":  {"c": {"center":"O","radius":85}},',
+  '   "segments": {"AB": ["A","B"], "CD": {"points":["C","D"],"dash":true}},',
+  '   "angles":   {"a1": {"vertex":"A","points":["B","C"],"label":"60°"}},',
+  '   "dimensions": {"d1": {"points":["A","B"],"label":"8 cm","side":"auto"}},',
+  '   "labels":   {"A":"A","B":"B"}}',
+  "",
+  "- dimensions 의 label 은 필수입니다. 치수는 **변형된 새 숫자**를 적으십시오.",
+  "- 점 이름은 본문에 나오는 이름(A·B·C·O·P…)과 같아야 합니다.",
+].join("\n");
+
+/** 변형 방식별 지시 — 계약의 `transformModeSchema` 와 한 벌이다. */
+const MODE_INSTRUCTION: Record<TransformMode, string> = {
+  numbers:
+    "등장하는 **숫자만** 바꾸십시오. 문장 구조·조건·상황 설정은 원본 그대로 두십시오.",
+  conditions:
+    "숫자뿐 아니라 **조건과 상황 설정까지** 바꾸십시오. 다만 묻는 개념과 풀이 유형(어떤 공식을 어떤 순서로 쓰는가)은 원본과 같아야 합니다.",
+};
+
+/** 난이도 조정별 지시 — 계약의 `difficultyShiftSchema` 와 한 벌이다. */
+const DIFFICULTY_SHIFT_INSTRUCTION: Record<DifficultyShift, string> = {
+  keep: "난이도는 원본과 같은 수준을 유지하십시오.",
+  up: "원본보다 **한 단계 어렵게** 만드십시오 — 계산 단계를 하나 늘리거나 조건을 하나 더 얹는 방식이 적절합니다. 다른 단원의 개념을 끌어오지는 마십시오.",
+  down: "원본보다 **한 단계 쉽게** 만드십시오 — 계산 단계를 줄이거나 조건을 덜어내고, 숫자를 다루기 쉬운 값으로 바꾸십시오.",
+};
 
 export interface TransformPromptInput {
   originContent: string;
@@ -23,14 +86,21 @@ export interface TransformPromptInput {
   problemType: ProblemType;
   difficulty: Difficulty;
   count: number;
+  mode: TransformMode;
+  difficultyShift: DifficultyShift;
+  /** 원본이 그림에 기대는 문항인가 — 참이면 `figureSpec` 을 함께 요구한다. */
+  figureRequired: boolean;
 }
 
 export function buildTransformSystemPrompt(): string {
   return [
     "당신은 한국 중학교 수학 문제의 숫자·조건을 바꿔 변형 문제를 만드는 조교입니다.",
-    "원본 문제의 풀이 구조(개념·유형·난이도)는 그대로 유지하되, 등장하는 숫자나 조건만 바꾸십시오.",
+    "원본 문제가 묻는 개념과 풀이 유형은 그대로 유지하십시오.",
     "반드시 요청받은 개수만큼의 변형을 JSON 배열로만 응답하십시오. 코드펜스나 설명 문장은 절대 덧붙이지 마십시오.",
-    "각 배열 원소는 다음 4개 필드를 가진 객체여야 합니다.",
+    // ⚠️ **필드 개수를 못 박지 않는다.** 그림 문항에서는 사용자 프롬프트가 `figureSpec` 을
+    //    하나 더 요구한다(v3). 여기서 "4개"라고 세어 버리면 두 프롬프트가 **서로 다른 말**을
+    //    하게 된다 — 2026-08-19 실제로 그 상태로 나갔다.
+    "각 배열 원소는 아래 필드를 가진 객체여야 합니다(요청에 따라 필드가 더 붙을 수 있습니다).",
     "- content: 변형된 발문(수식은 $...$ 인라인 LaTeX, \\dfrac 대신 반드시 \\frac 사용).",
     "- answer: 변형된 문제의 정답.",
     "- solution: 변형된 풀이 과정(선택). 제공하지 않으면 null로 두십시오.",
@@ -47,13 +117,21 @@ export function buildTransformUserPrompt({
   problemType,
   difficulty,
   count,
+  mode,
+  difficultyShift,
+  figureRequired,
 }: TransformPromptInput): string {
   return [
     `원본 문제 유형: ${problemType}, 난이도: ${difficulty}`,
     `원본 발문: ${originContent}`,
     `원본 정답: ${originAnswer}`,
     originSolution ? `원본 풀이: ${originSolution}` : "원본 풀이: (없음)",
-    `변형 개수: ${count}개`,
-    "위 원본을 바탕으로 숫자·조건만 바꾼 서로 다른 변형을 JSON 배열로만 응답하십시오.",
+    "",
+    `[변형 방식] ${MODE_INSTRUCTION[mode]}`,
+    `[난이도] ${DIFFICULTY_SHIFT_INSTRUCTION[difficultyShift]}`,
+    figureRequired ? FIGURE_SPEC_INSTRUCTION : "",
+    "",
+    `변형 개수: ${count}개 (서로 달라야 합니다)`,
+    "위 지시에 따라 변형한 결과를 JSON 배열로만 응답하십시오.",
   ].join("\n");
 }

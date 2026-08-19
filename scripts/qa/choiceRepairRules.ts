@@ -8,7 +8,15 @@
  * ⚠️ **제품 코드가 아니다.** R2 는 원장님 확정 대기다(`unusable-problems.md` §8 ㉡).
  * 여기서 흉내만 내고 `parseProblemContent` 는 한 줄도 안 고친다.
  */
-const CIRCLED_1_15 = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮";
+import { BODY_CHOICE_MARKS } from "../../src/lib/math/circledNumber";
+
+/**
+ * ⚠️ **본문 마커는 좁게 둔다.** `circledNumber.ts` 가 «정답 판독은 전 계열,
+ * 본문 마커는 ①..⑮」로 갈라 두었다 — 넓히면 `❶`·`➊` 로 적힌 **규칙 항목·작도
+ * 순서·그래프 라벨**이 보기로 잘려 성한 문항이 깨진다(실측 6행 전량 육안).
+ * 여기서 목록을 새로 쓰지 않고 그 한 곳을 그대로 읽는다.
+ */
+const CIRCLED_1_15 = BODY_CHOICE_MARKS;
 
 /**
  * R2 — 「바로 앞 마커의 **다음 번호**가 줄 중간에 있으면」 그 앞에서 줄을 나눈다.

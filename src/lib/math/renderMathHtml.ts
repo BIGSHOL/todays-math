@@ -5,6 +5,7 @@
  * 수식 밖 텍스트는 HTML 이스케이프한다 (원본 KaTeXInline 은 이스케이프하지 않음).
  */
 import { tokenizeMath } from "./segments";
+import { BODY_CHOICE_CLASS } from "./circledNumber";
 import { decodeHtmlEntities, preprocessMathText } from "./textPreprocess";
 import { renderKatexSafe } from "./katexRender";
 
@@ -19,7 +20,10 @@ const escapeHtml = (s: string): string =>
 const BREAK = "";
 
 // 선택지 시작 표식: `1.`~`19.` 또는 원문자 ①~⑮.
-const CHOICE_MARKER = /(?:[1-9][0-9]?\.[ \t]|[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮])/;
+// 원문자 범위는 `circledNumber.ts` **한 곳**에서 온다(본문 마커라 일부러 좁다).
+const CHOICE_MARKER = new RegExp(
+  String.raw`(?:[1-9][0-9]?\.[ \t]|[${BODY_CHOICE_CLASS}])`,
+);
 
 /**
  * 수식 밖 텍스트 조각의 개행을 레이아웃 규약에 맞게 정규화한다.

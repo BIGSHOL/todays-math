@@ -36,6 +36,10 @@ import {
   type DbRow,
   type HwpQ,
 } from "./hwpJudgeRules";
+import {
+  ANSWER_CIRCLED_CLASS,
+  circledValueRaw,
+} from "../../src/lib/math/circledNumber";
 
 const DB = "scripts/qa/reports/db-content.jsonl";
 const HWP_DIR = "scripts/qa/reports/hwp-latex";

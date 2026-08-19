@@ -64,6 +64,7 @@ import {
   isBrokenByParsedChoices,
   isBrokenByMissingChoices,
 } from "./report-choice-figures";
+import { ANSWER_CIRCLED_CLASS } from "../../src/lib/math/circledNumber";
 
 const prisma = new PrismaClient();
 const OUT_DIR = "docs/planning/tracks/reports/figref";
@@ -86,7 +87,10 @@ interface Row {
  * 정답이 **원문자뿐**이면 객관식이다 — 본문과 **독립인 근거**다.
  * (`question_type` 은 못 쓴다: 정답이 `①` 인데 `서술형` 이라 적힌 행이 36건이다.)
  */
-export const OBJECTIVE_ANSWER = /^[①②③④⑤⑥⑦⑧⑨⑩](?:\s*[,·]\s*[①②③④⑤⑥⑦⑧⑨⑩])*$/;
+// 계열은 `circledNumber.ts` 한 곳에서 온다.
+export const OBJECTIVE_ANSWER = new RegExp(
+  String.raw`^[${ANSWER_CIRCLED_CLASS}](?:\s*[,·]\s*[${ANSWER_CIRCLED_CLASS}])*$`,
+);
 
 /**
  * 높이를 재기 위한 **가정**. 짝을 정하는 규칙이 아니다 (§2 주).

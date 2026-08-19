@@ -7,10 +7,16 @@
  * 화면 출력은 집계 + 대표 사례 몇 줄뿐(토큰 절약 원칙 §4).
  * 사용: node scripts/qa/check-pilot-rows.mjs [--dir scripts/qa/reports/index-batch]
  */
+import { readFileSync } from "node:fs";
 import { readdir, writeFile } from "node:fs/promises";
 
 import { PrismaClient } from "@prisma/client";
 import katex from "katex";
+// ── 원문자 목록은 **한 곳**에서 온다 ────────────────────────────────────────────
+// `scripts/qa/circled-glyphs.json` 은 `src/lib/math/circledNumber.ts` 에서 생성된다.
+const { 본문마커: BODY_MARKS } = JSON.parse(
+  readFileSync(new URL("./circled-glyphs.json", import.meta.url), "utf8"),
+);
 
 const dirArg = process.argv.indexOf("--dir");
 const DIR = dirArg > -1 ? process.argv[dirArg + 1] : "scripts/qa/reports/index-batch";
@@ -70,7 +76,8 @@ const samples = { katex: [], unicode: [] };
 for (const r of rows) {
   if (r.answer && r.answer !== "(정답 없음)") stat.정답보유 += 1;
   if (r.solution) stat.해설보유 += 1;
-  if (!/\n\s*(?:[1-9][.)]|[①②③④⑤])/.test(r.content)) stat.보기없음 += 1;
+  if (!new RegExp(String.raw`\n\s*(?:[1-9][.)]|[${BODY_MARKS}])`).test(r.content))
+    stat.보기없음 += 1;
 
   const runs = mathRuns(r.content);
   const bad = runs.filter((x) => renderFails(x));

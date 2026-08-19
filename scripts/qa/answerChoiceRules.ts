@@ -32,6 +32,10 @@ import { tokenizeMath } from "../../src/lib/math/segments";
 import { parseProblemContent } from "../../src/lib/problem/parseProblemContent";
 
 import { canon, repairGlyphs } from "./answer-notation";
+import {
+  BODY_CHOICE_CLASS,
+  circledValueRaw,
+} from "../../src/lib/math/circledNumber";
 
 /* ────────────────────────────────────────────────────────────────────────────
  * 1. 원문자 — **손으로 나열하지 않는다.** 유니코드의 «둘러싼 숫자» 계열은
@@ -39,30 +43,19 @@ import { canon, repairGlyphs } from "./answer-notation";
  *    시작 코드포인트만 적고 번호는 **계산**한다. 계열을 빠뜨렸는지는
  *    `census-choice-answer.ts` 가 「규칙이 못 읽는 첫 글자」로 드러낸다.
  * ──────────────────────────────────────────────────────────────────────────── */
-const CIRCLED_FAMILIES = [
-  { base: 0x2460, size: 20, name: "circled" }, // ①..⑳
-  { base: 0x2776, size: 10, name: "negative-circled" }, // ❶..❿
-  { base: 0x2780, size: 10, name: "sans-circled" }, // ➀..➉
-  { base: 0x278a, size: 10, name: "negative-sans-circled" }, // ➊..➓
-  { base: 0x24f5, size: 10, name: "double-circled" }, // ⓵..⓾
-] as const;
-
-/** 이 문자가 «둘러싼 숫자»면 그 번호, 아니면 0. PUA 잔재는 정본 규칙이 먼저 편다. */
+/**
+ * 이 문자가 «둘러싼 숫자»면 그 번호, 아니면 0. PUA 잔재는 정본 규칙이 먼저 편다.
+ *
+ * 계열표는 `src/lib/math/circledNumber.ts` **한 곳**에 있다 — 2026-08-19 이전에는
+ * 이 파일과 `answer-notation.ts` 가 각자 들고 있었고, 그래서 한쪽만 고치면
+ * 판정기와 대조기가 서로 다른 것을 원문자로 봤다.
+ */
 export function circledValue(ch: string): number {
-  const cp = repairGlyphs(ch).codePointAt(0);
-  if (cp === undefined) return 0;
-  for (const f of CIRCLED_FAMILIES) {
-    if (cp >= f.base && cp < f.base + f.size) return cp - f.base + 1;
-  }
-  return 0;
+  return circledValueRaw(repairGlyphs(ch));
 }
 
-/** 규칙이 아는 원문자 전체 (테스트·census 가 사정권을 확인하는 데 쓴다). */
-export function knownCircledGlyphs(): string[] {
-  return CIRCLED_FAMILIES.flatMap((f) =>
-    Array.from({ length: f.size }, (_, i) => String.fromCodePoint(f.base + i)),
-  );
-}
+// 규칙이 아는 원문자 전체 — 한 곳에서 그대로 내보낸다.
+export { knownCircledGlyphs } from "../../src/lib/math/circledNumber";
 
 /* ────────────────────────────────────────────────────────────────────────────
  * 2. 살아남은 보기의 «원래 번호» — 제품 파이프라인을 다시 밟는다.
@@ -75,8 +68,11 @@ const MASK_CLOSE = String.fromCharCode(0xe001);
 const UNMASK = new RegExp(MASK_OPEN + "(\\d+)" + MASK_CLOSE, "g");
 
 /** 제품 `parseProblemContent` 의 `CHOICE_AT_LINE_START` 와 같은 규칙. */
-const CHOICE_AT_LINE_START =
-  /\n[ \t]*(?:(?:[1-9][0-9]?)[.)][ \t]+|[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮][ \t]*)/g;
+const CHOICE_AT_LINE_START = new RegExp(
+  // 본문 마커라 **일부러 좁다** — `circledNumber.ts` 머리 주석의 실측 참조.
+  String.raw`\n[ \t]*(?:(?:[1-9][0-9]?)[.)][ \t]+|[${BODY_CHOICE_CLASS}][ \t]*)`,
+  "g",
+);
 
 function maskMath(text: string): { masked: string; formulas: string[] } {
   const formulas: string[] = [];

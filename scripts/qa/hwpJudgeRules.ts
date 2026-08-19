@@ -1,3 +1,7 @@
+import {
+  ANSWER_CIRCLED_CLASS,
+  circledValueRaw,
+} from "../../src/lib/math/circledNumber";
 import { parseProblemContent } from "../../src/lib/problem/parseProblemContent";
 
 /**
@@ -184,6 +188,33 @@ const FRACTION_SLASH = /⁄/;
 const BULLET_IN_MATH = /\$[^$]*•[^$]*\$/;
 /** 순환소수 점이 아포스트로피로 무너진 것 (`1.'9` ← `1.\dot 9`). */
 const MANGLED_REPEAT = /\.'/;
+/**
+ * `[그림]` 뒤에 **말풀이**가 붙어 있나 — 지면 머리말과 가르는 열쇠.
+ *
+ * 말풀이는 문장이다: 「8개 팀이 참가하는 승자 진출전 대진표. 맨 아래에 8개의 자리가
+ * 있고 …이다.」 지면 머리말은 명사구 나열이라 끝맺음이 없다:
+ * 「2025년 1학기 중간고사관천중 1학년 수학학원 로고관천중 26년 …」
+ *
+ * 낱말 목록(`학원 로고`)으로 가르지 않는다 — 머리말이 늘 그 낱말을 쓰지는 않는다.
+ * 실측(H7 이 걸린 43행): 말풀이 14 · 머리말 29 로 갈렸다.
+ */
+const FIGURE_PROSE_END = /(다|요|오)\s*[.。]|이다|한다|있다|없다|였다|된다/;
+/** 말풀이라고 보려면 한글이 이만큼은 있어야 한다 (`crop-pdf-by-stem` 의 문장 기준과 같다). */
+const FIGURE_PROSE_KO = 12;
+
+export function hasFigureProse(content: string): boolean {
+  let i = content.indexOf("[그림]");
+  while (i >= 0) {
+    const from = i + "[그림]".length;
+    const next = content.indexOf("[그림]", from);
+    const tail = content.slice(from, next < 0 ? from + 160 : next);
+    const ko = (tail.match(/[가-힣]/g) ?? []).length;
+    if (ko >= FIGURE_PROSE_KO && FIGURE_PROSE_END.test(tail)) return true;
+    i = next;
+  }
+  return false;
+}
+
 /** 지면 머리말·학원 로고가 본문에 딸려 들어온 것. */
 const PAGE_FURNITURE = /학원\s*로고/;
 /**
@@ -398,9 +429,19 @@ export function judgeSignals(input: JudgeInput): Signals {
 
   // 그림 파일이 안 붙은 문항의 `[그림] 말풀이` 는 **유일한 단서**다(10-handoff §8.5).
   // 그림이 붙어 있으면(figs>0) 이미지가 남으므로 막지 않는다.
+  //
+  // ⚠️ **`[그림]` 이 다 단서가 아니다.** 추출기는 학원 로고·머리띠 «이미지» 자리에도
+  //    같은 표시를 남긴다. 그 뒤에 오는 것은 말풀이가 아니라 지면 머리말이다:
+  //      `… [그림] 2025년 1학기 중간고사관천중 1학년 수학학원 로고관천중 26년 …`
+  //    그걸 «단서»로 세면 **오염이 심할수록 교체가 막힌다** — H3 에서 이미 한 번
+  //    겪은 거꾸로 된 가드다(위 주석). 실측: H7 이 걸린 43행 중 **29행이 이 부류**다.
+  //
+  //    가르는 성질은 길이도 `학원 로고` 도 아니다(머리말이 늘 그 낱말을 쓰는 건 아니다).
+  //    **말풀이는 문장이고 머리말은 명사구 나열이다** — 끝맺음이 있나로 가른다.
+  //    실측 43행에서 이 열쇠가 14(말풀이) / 29(머리말)로 깨끗이 갈랐다.
   if (
     row.figs === 0 &&
-    row.content.includes("[그림]") &&
+    hasFigureProse(row.content) &&
     !hwpContent.includes("[그림]")
   ) {
     H.push("H7_그림단서손실");
@@ -461,7 +502,11 @@ export type Align = {
 export const normAnswer = (s: string): string =>
   (s ?? "")
     .replace(/\s+/g, "")
-    .replace(/[①②③④⑤]/g, (c) => String("①②③④⑤".indexOf(c) + 1));
+    // 원문자 → 숫자. 계열표는 `circledNumber.ts` **한 곳**에서 온다 —
+    // 예전엔 ①..⑤ 만 봐서 `➂` 로 적힌 정답이 그대로 남아 비교가 어긋났다.
+    .replace(new RegExp(`[${ANSWER_CIRCLED_CLASS}]`, "g"), (c) =>
+      String(circledValueRaw(c)),
+    );
 
 export function scoreOffset(
   qs: HwpQ[],
