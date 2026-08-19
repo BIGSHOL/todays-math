@@ -91,6 +91,18 @@ describe("parseExamFileName — 파일명 구조 파싱", () => {
     ).toMatchObject({ subjectRaw: "확통", publisher: "미래엔" });
   });
 
+  // 변이 시험(2026-08-19)에서 「둘이어도 첫 것을 쓴다」가 **살아남았다** — 규칙은 맞는데
+  // 이 픽스처가 없었다. 실코퍼스 2,703편에는 이런 파일이 0건이지만, 생기면 어느 쪽이
+  // 그 시험지의 시점인지 알 수 없으므로 고르면 안 된다.
+  it("⭐ 기간 토큰이 둘이면 null — 어느 쪽인지 고르지 않는다", () => {
+    expect(
+      parseExamFileName("[화원고][2][25-1-중간][25-2-기말][미래엔] (완료).hwp"),
+    ).toBeNull();
+    expect(
+      parseExamFileName("[대륜고][1][공수1][24-1-중간][24-1-기말] (완료).PDF"),
+    ).toBeNull();
+  });
+
   it("기간 토큰이 없으면 null — 지어내지 않는다", () => {
     expect(parseExamFileName("[정화중][1][비상] (완료).hwp")).toBeNull();
     expect(parseExamFileName("")).toBeNull();
@@ -341,6 +353,32 @@ describe("decideExamIdentity — 셋을 맞대어 정한다", () => {
         unitGrades: { 중1: 20 },
       },
       header: parseExamHeader(["2023년 1학기 중간고사", "월배중 1학년 수학"]),
+    });
+    expect(d.status).toBe("미분류");
+  });
+
+  // 변이 시험에서 「폴더 투표에 전 항목을 세게 한다」가 살아남았다. 실제 코퍼스로 재 보니
+  // 두 변이가 **2편에서 갈렸고**, 그 2편은 폴더가 «둘이 합의한 학기»를 반박하는 경우였다.
+  // 그런 폴더 이름은 그 시험지의 시점이 아니라 **묶음의 이름**이라(실측: 25-2 기말 시험지가
+  // `2025년 1학기 기말고사 모음/` 아래 있다) 회차만 골라 믿을 근거가 없다.
+  it("⭐ 폴더가 «둘이 합의한 항목»을 반박하면 심판에서 뺀다 → 미분류 (실측 2편)", () => {
+    const sourceFile = IN(
+      "2025 기출모음\\2025년 1학기 기말고사 모음\\pdf\\중2",
+      "[소선여중][2][25-2-기말][미래엔] (완료).PDF",
+    );
+    // ⚠️ 셋업부터 못 박는다 — 경로가 깨져 폴더가 아무 말도 못 하면 이 테스트는
+    //    «엉뚱한 이유로» 초록이 된다(실제로 한 번 그랬다: `\2025` 가 8진 이스케이프였다).
+    expect(parseFolderPeriod(sourceFile)).toEqual({
+      year: 2025,
+      semester: 1,
+      round: "기말",
+    });
+
+    const d = decideExamIdentity({
+      group: { examId: "5500", sourceFile, unitGrades: { 중2: 20 } },
+      // 파일명 2025-2-기말 · 제목 2025-2-중간 — 다투는 항목은 회차뿐이고
+      // 폴더는 회차를 「기말」이라 하지만 **학기를 1이라 한다**(둘 다 2라고 한다).
+      header: parseExamHeader(["2025년 2학기 중간고사", "소선여중 2학년 수학"]),
     });
     expect(d.status).toBe("미분류");
   });

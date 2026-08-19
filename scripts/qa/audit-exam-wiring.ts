@@ -35,9 +35,23 @@ import { join } from "node:path";
 import { isDirectScript } from "../import/isDirectScript";
 
 const ROOTS = ["src", "scripts", "e2e", "prisma"];
+/**
+ * 감사기 **자기 테스트**만 뺀다. 그 파일은 감사기를 시험하려고 가짜 호출 문자열을
+ * 담고 있어서(일부러 «배선됨이라 적어 놓고 안 부르는» 픽스처도 있다) 세면 제품 표가
+ * 거짓말을 한다. 이건 «경로 목록»이 아니라 **자기 참조 하나**를 빼는 것이다.
+ */
+const SELF_TEST = "examWiringAudit.test.ts";
 const EXTS = [".ts", ".tsx", ".mjs", ".js"];
-/** 호출 지점을 찾는 열쇠. `db.problem.create`·`tx.problem.createMany` 등을 모두 잡는다. */
-const CALL = /\.problem\.(create|createMany|createManyAndReturn|upsert)\s*\(/g;
+/**
+ * 호출 지점을 찾는 열쇠. `db.problem.create`·`tx.problem.createMany` 등을 모두 잡는다.
+ *
+ * ⚠️ **줄 단위로 찾으면 안 된다.** 포매터가 `.problem` 과 `.create(` 사이를 줄바꿈으로
+ * 가르면 그 지점이 **조용히 사라진다**(2026-08-19 실제 발생: prettier 가
+ * `syncExamMetadata.test.ts` 를 그렇게 접자 호출 지점이 10 → 9 로 줄었다).
+ * 감사기가 못 보는 경로는 「없는 경로」가 되므로, 파일 전체에서 공백·줄바꿈을 넘겨 찾는다.
+ */
+const CALL =
+  /\.problem\s*\.\s*(create|createMany|createManyAndReturn|upsert)\s*\(/g;
 
 export type WiringVerdict =
   | "기출·배선됨"
@@ -94,10 +108,30 @@ export function classifyFile(file: string, source: string): WiringSite[] {
   const wired = /syncExamMetadata/.test(source);
   const lines = source.split(/\r?\n/);
 
-  for (let i = 0; i < lines.length; i += 1) {
-    CALL.lastIndex = 0;
-    const m = CALL.exec(lines[i]!);
-    if (!m) continue;
+  // 줄 시작 오프셋 — 매치 위치를 줄 번호로 되돌리는 데 쓴다.
+  const lineStart: number[] = [];
+  {
+    let at = 0;
+    for (const l of lines) {
+      lineStart.push(at);
+      at += l.length + 1;
+    }
+  }
+  const lineOf = (offset: number): number => {
+    let lo = 0;
+    let hi = lineStart.length - 1;
+    while (lo < hi) {
+      const mid = Math.ceil((lo + hi) / 2);
+      if (lineStart[mid]! <= offset) lo = mid;
+      else hi = mid - 1;
+    }
+    return lo;
+  };
+
+  CALL.lastIndex = 0;
+  let m: RegExpExecArray | null;
+  while ((m = CALL.exec(source)) !== null) {
+    const i = lineOf(m.index);
 
     let declared: WiringVerdict | null = null;
     let reason = "";
@@ -129,7 +163,7 @@ export function classifyFile(file: string, source: string): WiringSite[] {
     sites.push({
       file: file.split("\\").join("/"),
       line: i + 1,
-      call: m[0],
+      call: m[0].replace(/\s+/g, ""),
       verdict,
       note,
     });
@@ -147,7 +181,11 @@ export function auditCodePaths(): WiringSite[] {
     } catch {
       continue;
     }
-    if (!source.includes(".problem.")) continue;
+    // 사전 필터도 **같은 열쇠**를 써야 한다. `.problem.` 문자열로 거르면
+    // 포매터가 갈라 놓은 호출이 여기서 먼저 탈락해 감사기가 못 본다.
+    if (file.endsWith(SELF_TEST)) continue;
+    CALL.lastIndex = 0;
+    if (!CALL.test(source)) continue;
     sites.push(...classifyFile(file, source));
   }
   return sites;
