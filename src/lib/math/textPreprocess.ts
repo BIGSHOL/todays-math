@@ -439,10 +439,19 @@ export const cleanMalformedLatex = (s: string): string =>
     // 물결표 / 근사 등호 (`\approx`, `≈`) → `=` — 사용자 보고: 물결표 금지.
     .replace(/\\approx\b/g, "=")
     .replace(/≈/g, "=")
-    // 빈 분수 `\frac{a}{}` → `\frac{a}{1}` (KaTeX parse error 방지)
-    .replace(/\\frac\{([^{}]*)\}\{\}/g, "\\frac{$1}{1}")
-    // 빈 분수 `\frac{}{b}` → `\frac{0}{$1}` (드물지만 발생)
-    .replace(/\\frac\{\}\{([^{}]*)\}/g, "\\frac{0}{$1}")
+    // 🔴 빈 분수는 **빈 자리로 남긴다**(□). 숫자를 넣지 않는다.
+    //
+    // 예전에는 `\frac{a}{}`→`\frac{a}{1}` · `\frac{}{b}`→`\frac{0}{b}` 였다.
+    // KaTeX parse error 를 막으려던 것인데, **들어온 자료에 대고 쓰면 숫자를
+    // 지어낸다** — 기출 `87\frac{}{2}`(정답 87/2)가 종이에 `87·0/2` 로 찍혔다.
+    // 실측 79자리 / 47문항, 전부 학생 지면에 나가던 값이다(2026-08-21).
+    //
+    // 이 저장소가 여러 번 적은 자리다: **「그럴듯한 숫자」가 □ 보다 나쁘다.**
+    // □ 는 스스로 「깨졌다」고 말해 주지만 `0/2` 는 아무 말도 안 한다.
+    // 자료 쪽 73자리는 `scripts/qa/repair-empty-frac.ts` 가 되살렸고, 분자가
+    // 아예 없는 5문항은 출제에서 뺐다(`reject-empty-frac.ts`).
+    .replace(/\\frac\{([^{}]*)\}\{\}/g, "\\frac{$1}{\\square}")
+    .replace(/\\frac\{\}\{([^{}]*)\}/g, "\\frac{\\square}{$1}")
     // escaped delimiter typo: `\left\(` / `\left\)` 같이 escape 된 `(` `)` →
     // 그냥 `\left(` `\left)`. 모델이 자주 over-escape 함.
     .replace(/\\left\\\(/g, "\\left(")

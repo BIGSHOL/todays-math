@@ -240,3 +240,9 @@ scripts/qa/reports/svg-compare-blocked/
 # 「거짓」이라 했는지**가 여기에만 있다. 이게 없으면 다음 사람이 같은 9건을
 # 다시 확대해서 다시 본다(그림 파일은 재생성되므로 판정만 남기면 된다).
 !scripts/qa/reports/svg-agy-flags-verdict.txt
+
+# 빈 분수 되살리기·제외 원장 — **되돌리기가 이 파일 하나를 읽는다.** 커밋 안 되면
+# 이 컴퓨터에서만 되돌릴 수 있다(2026-08-18 에 실제로 그랬다).
+!scripts/qa/reports/empty-frac-repair.json
+!scripts/qa/reports/empty-frac-reject.json
+!scripts/qa/reports/lim-arrow-repair.json

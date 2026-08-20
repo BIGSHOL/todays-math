@@ -130,11 +130,24 @@ describe("[KaTeX] 전처리 — preprocessMathText", () => {
     expect(inner).not.toMatch(/\\dot\{A\}/);
   });
 
-  it("\\left\\left 와 빈 분수를 정리한다", () => {
+  it("\\left\\left 를 정리한다", () => {
     expect(cleanMalformedLatex("\\left\\left(x\\right\\right)")).not.toContain(
       "\\left\\left",
     );
-    expect(cleanMalformedLatex("\\frac{a}{}")).toContain("\\frac{a}{1}");
+  });
+
+  /**
+   * 🔴 예전에는 `\frac{a}{}`→`\frac{a}{1}` · `\frac{}{b}`→`\frac{0}{b}` 였다.
+   *    들어온 자료에 대고 쓰면 **숫자를 지어낸다** — 기출 `87\frac{}{2}`(정답
+   *    87/2)가 종이에 `87·0/2` 로 찍혔다(실측 79자리 / 47문항, 2026-08-21).
+   *    「그럴듯한 숫자」가 □ 보다 나쁘다 — □ 는 스스로 깨졌다고 말해 준다.
+   */
+  it("🔴 빈 분수에 **숫자를 넣지 않는다** — □ 로 남긴다", () => {
+    expect(cleanMalformedLatex("\\frac{a}{}")).toBe("\\frac{a}{\\square}");
+    expect(cleanMalformedLatex("87\\frac{}{2}")).toBe("87\\frac{\\square}{2}");
+    // 0 도 1 도 새로 나타나면 안 된다.
+    expect(cleanMalformedLatex("\\frac{}{2}")).not.toMatch(/\\frac\{0\}/);
+    expect(cleanMalformedLatex("\\frac{a}{}")).not.toMatch(/\{1\}/);
   });
 });
 

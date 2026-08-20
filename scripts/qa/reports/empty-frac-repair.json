@@ -1,0 +1,587 @@
+{
+ "note": "되돌리기 자료. before 가 고치기 전 값이다. 되돌리기: ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/repair-empty-frac.ts --revert --apply",
+ "규칙": "scripts/qa/emptyFracRules.ts",
+ "rows": [
+  {
+   "id": "c735f4e7-03ea-4d28-9060-9bb0933906b7",
+   "code": "HAL0201-V6WW",
+   "before": {
+    "content": "$\\sin ^{2}1°+\\sin ^{2}2°+\\sin ^{2}3°+\\,\\cdots \\,+\\sin ^{2}89°+\\sin ^{2}90°$의 값은?\n\n1. $87\\frac{}{2}$\n2. $44$\n3. $\\frac{89}{2}$\n4. $45$\n5. $\\frac{91}{2}$"
+   },
+   "after": {
+    "content": "$\\sin ^{2}1°+\\sin ^{2}2°+\\sin ^{2}3°+\\,\\cdots \\,+\\sin ^{2}89°+\\sin ^{2}90°$의 값은?\n\n1. $\\frac{87}{2}$\n2. $44$\n3. $\\frac{89}{2}$\n4. $45$\n5. $\\frac{91}{2}$"
+   },
+   "fixes": [
+    "pull-numerator: 87\\frac{}{2} → \\frac{87}{2}"
+   ]
+  },
+  {
+   "id": "fcdf285f-b2cf-4238-9d4e-8c0a6d94deb4",
+   "code": "HAL0204-ZC5V",
+   "before": {
+    "content": "$\\sin \\theta +\\cos \\theta =\\frac{5}{4}$일 때, $\\sin \\theta -\\cos \\theta $의 값은?\n$\\left( 단,~0<\\theta <\\frac{\\pi}{4}\\right)$\n\n1. $-\\frac{3}{4}$\n2. $-\\frac{\\sqrt{7}}{4}$\n3. $-\\sqrt{5}\\frac{}{4}$\n4. $\\frac{\\sqrt{5}}{4}$\n5. $\\frac{\\sqrt{7}}{4}$"
+   },
+   "after": {
+    "content": "$\\sin \\theta +\\cos \\theta =\\frac{5}{4}$일 때, $\\sin \\theta -\\cos \\theta $의 값은?\n$\\left( 단,~0<\\theta <\\frac{\\pi}{4}\\right)$\n\n1. $-\\frac{3}{4}$\n2. $-\\frac{\\sqrt{7}}{4}$\n3. $-\\frac{\\sqrt{5}}{4}$\n4. $\\frac{\\sqrt{5}}{4}$\n5. $\\frac{\\sqrt{7}}{4}$"
+   },
+   "fixes": [
+    "pull-numerator: \\sqrt{5}\\frac{}{4} → \\frac{\\sqrt{5}}{4}"
+   ]
+  },
+  {
+   "id": "0129fdcd-8f19-42e3-99a1-5e3137ebf721",
+   "code": "HAL0205-HPWH",
+   "before": {
+    "content": "그림과 같이 두 직선 $y=2x$와 $y=x$가 이루는 예각의 크기를 $\\theta$라 할 때, $\\cos \\theta$의 값은?\n\n1. $\\frac{\\sqrt{10}}{10}$\n2. $\\frac{\\sqrt{10}}{6}$\n3. $\\frac{\\sqrt{10}}{5}$\n4. $\\frac{\\sqrt{10}}{4}$\n5. $3\\sqrt{10}\\frac{}{10}$"
+   },
+   "after": {
+    "content": "그림과 같이 두 직선 $y=2x$와 $y=x$가 이루는 예각의 크기를 $\\theta$라 할 때, $\\cos \\theta$의 값은?\n\n1. $\\frac{\\sqrt{10}}{10}$\n2. $\\frac{\\sqrt{10}}{6}$\n3. $\\frac{\\sqrt{10}}{5}$\n4. $\\frac{\\sqrt{10}}{4}$\n5. $\\frac{3\\sqrt{10}}{10}$"
+   },
+   "fixes": [
+    "pull-numerator: 3\\sqrt{10}\\frac{}{10} → \\frac{3\\sqrt{10}}{10}"
+   ]
+  },
+  {
+   "id": "b349fa69-c0a8-4344-8dbe-8a1ccdec28fb",
+   "code": "HAL0205-UJCK",
+   "before": {
+    "content": "그림과 같이 한 변의 길이가 $6$인 정삼각형 $\\mathrm{ABC}$에서 선분 $\\mathrm{AC}$를 $1:2$로 내분하는 점을 $\\mathrm{P}$, 선분 $\\mathrm{AC}$를 $2:1$로 내분하는 점을 $\\mathrm{Q}$라 하자. 삼각형 $\\mathrm{PBQ}$의 외접원의 반지름의 길이는?\n\n1. $7\\sqrt{3}\\frac{}{9}$\n2. $14\\sqrt{3}\\frac{}{9}$\n3. $2\\sqrt{3}$\n4. $7\\sqrt{3}\\frac{}{3}$\n5. $14\\sqrt{3}\\frac{}{3}$"
+   },
+   "after": {
+    "content": "그림과 같이 한 변의 길이가 $6$인 정삼각형 $\\mathrm{ABC}$에서 선분 $\\mathrm{AC}$를 $1:2$로 내분하는 점을 $\\mathrm{P}$, 선분 $\\mathrm{AC}$를 $2:1$로 내분하는 점을 $\\mathrm{Q}$라 하자. 삼각형 $\\mathrm{PBQ}$의 외접원의 반지름의 길이는?\n\n1. $\\frac{7\\sqrt{3}}{9}$\n2. $\\frac{14\\sqrt{3}}{9}$\n3. $2\\sqrt{3}$\n4. $\\frac{7\\sqrt{3}}{3}$\n5. $\\frac{14\\sqrt{3}}{3}$"
+   },
+   "fixes": [
+    "pull-numerator: 7\\sqrt{3}\\frac{}{9} → \\frac{7\\sqrt{3}}{9}",
+    "pull-numerator: 14\\sqrt{3}\\frac{}{9} → \\frac{14\\sqrt{3}}{9}",
+    "pull-numerator: 7\\sqrt{3}\\frac{}{3} → \\frac{7\\sqrt{3}}{3}",
+    "pull-numerator: 14\\sqrt{3}\\frac{}{3} → \\frac{14\\sqrt{3}}{3}"
+   ]
+  },
+  {
+   "id": "cf42e1ed-2c7d-4ec7-9130-1d7ea776c3a4",
+   "code": "HAL0208-UWT3",
+   "before": {
+    "content": "양수 $\\theta$가 다음 조건을 만족시킨다고 하자.\n(가) $\\sin \\theta \\,\\tan \\,\\theta >0$, $\\cos \\theta \\,\\tan \\,\\theta \\,<0$(나) 좌표평면에서 각 $\\theta$를 나타내는 동경과 $3\\theta$를 나타내는 동경이 서로 $y$축에 대하여 대칭이다.\n$\\theta$의 최솟값을 $\\alpha$라 할 때, $\\sin \\alpha -\\cos \\alpha \\frac{}{\\tan \\alpha }$의 값은? (단, 좌표평면에서 시초선은 원점에서 $x$축의 양의 방향으로 정한다.)\n\n1. $-2\\sqrt{2}$\n2. $-\\sqrt{2}$\n3. $0$\n4. $\\sqrt{2}$\n5. $2\\sqrt{2}$"
+   },
+   "after": {
+    "content": "양수 $\\theta$가 다음 조건을 만족시킨다고 하자.\n(가) $\\sin \\theta \\,\\tan \\,\\theta >0$, $\\cos \\theta \\,\\tan \\,\\theta \\,<0$(나) 좌표평면에서 각 $\\theta$를 나타내는 동경과 $3\\theta$를 나타내는 동경이 서로 $y$축에 대하여 대칭이다.\n$\\theta$의 최솟값을 $\\alpha$라 할 때, $\\frac{\\sin \\alpha -\\cos \\alpha }{\\tan \\alpha }$의 값은? (단, 좌표평면에서 시초선은 원점에서 $x$축의 양의 방향으로 정한다.)\n\n1. $-2\\sqrt{2}$\n2. $-\\sqrt{2}$\n3. $0$\n4. $\\sqrt{2}$\n5. $2\\sqrt{2}$"
+   },
+   "fixes": [
+    "pull-numerator: \\sin \\alpha -\\cos \\alpha \\frac{}{\\tan \\alpha } → \\frac{\\sin \\alpha -\\cos \\alpha }{\\tan \\alpha }"
+   ]
+  },
+  {
+   "id": "8151a34d-5f6f-4ea9-8b07-a49199fd8739",
+   "code": "HAL0212-63TE",
+   "before": {
+    "content": "원에 내접하는 사각형 $\\mathrm{A}BCD\\mathit{}$에서 $\\frac{}{line}\\mathrm{A}B\\mathit{\\,}=2$, $\\frac{}{line}\\mathrm{B}C\\mathit{\\,}=3$, $\\frac{}{line}\\mathrm{C}D\\mathit{\\,}=3$, $\\frac{}{line}\\mathrm{D}A\\mathit{\\,}=4$일 때, 사각형 $\\mathrm{A}BCD\\mathit{}$의 넓이를 풀이 과정과 함께 쓰시오. (단, 브라마굽타 공식 등 교육과정 외 풀이법으로 풀지 마시오.)\n[$6$점, 부분 점수 있음]"
+   },
+   "after": {
+    "content": "원에 내접하는 사각형 $\\mathrm{A}BCD\\mathit{}$에서 $\\overline{\\mathrm{AB}}=2$, $\\overline{\\mathrm{BC}}=3$, $\\overline{\\mathrm{CD}}=3$, $\\overline{\\mathrm{DA}}=4$일 때, 사각형 $\\mathrm{A}BCD\\mathit{}$의 넓이를 풀이 과정과 함께 쓰시오. (단, 브라마굽타 공식 등 교육과정 외 풀이법으로 풀지 마시오.)\n[$6$점, 부분 점수 있음]"
+   },
+   "fixes": [
+    "overline: \\frac{}{line}\\mathrm{A}B\\mathit{\\,} → \\overline{\\mathrm{AB}}",
+    "overline: \\frac{}{line}\\mathrm{B}C\\mathit{\\,} → \\overline{\\mathrm{BC}}",
+    "overline: \\frac{}{line}\\mathrm{C}D\\mathit{\\,} → \\overline{\\mathrm{CD}}",
+    "overline: \\frac{}{line}\\mathrm{D}A\\mathit{\\,} → \\overline{\\mathrm{DA}}"
+   ]
+  },
+  {
+   "id": "cb942f8f-47d2-4ccd-bf7c-6a8fa49e1f1f",
+   "code": "HAL0212-GKS3",
+   "before": {
+    "content": "반지름 길이가 $2\\sqrt{3}$인 원이 삼각형 $\\mathrm{A}BC\\mathit{}$에 내접하고 있다. 원이 선분 $\\mathrm{B}C\\mathit{}$와 만나는 점을 $\\mathrm{D}\\mathit{}$라 하고 $\\frac{}{line}\\mathrm{B}D\\mathit{\\,}=10$, $\\frac{}{line}\\mathrm{D}C\\mathit{\\,}=6$일 때, 삼각형 $\\mathrm{A}BC\\mathit{}$의 둘레의 길이는?\n\n1. $38$\n2. $39$\n3. $40$\n4. $41$\n5. $42$"
+   },
+   "after": {
+    "content": "반지름 길이가 $2\\sqrt{3}$인 원이 삼각형 $\\mathrm{A}BC\\mathit{}$에 내접하고 있다. 원이 선분 $\\mathrm{B}C\\mathit{}$와 만나는 점을 $\\mathrm{D}\\mathit{}$라 하고 $\\overline{\\mathrm{BD}}=10$, $\\overline{\\mathrm{DC}}=6$일 때, 삼각형 $\\mathrm{A}BC\\mathit{}$의 둘레의 길이는?\n\n1. $38$\n2. $39$\n3. $40$\n4. $41$\n5. $42$"
+   },
+   "fixes": [
+    "overline: \\frac{}{line}\\mathrm{B}D\\mathit{\\,} → \\overline{\\mathrm{BD}}",
+    "overline: \\frac{}{line}\\mathrm{D}C\\mathit{\\,} → \\overline{\\mathrm{DC}}"
+   ]
+  },
+  {
+   "id": "0a9b73f9-4a08-4bc6-9903-24e0dbaa8add",
+   "code": "HAL0212-GNR8",
+   "before": {
+    "solution": "$3$$\\triangle \\mathrm{ABC}=\\frac{1}{2}\\times 3\\times 4\\sin B=4\\sqrt{2}$$\\sin B=\\frac{2\\sqrt{2}}{3}$$\\sin ^{2}B+\\cos ^{2}B=1$이므로 $\\cos ^{2}B=1-\\sin ^{2}B$ $=\\frac{1}{9}$$\\therefore \\cos B=\\frac{1}{3}$($B$는 예각)$\\triangle \\mathrm{ABC}$에서 코사인법칙에 의하여$\\overline{\\mathrm{AC}}^{2}=3^{2}+4^{2}-2\\times 3\\times 4\\cos B$   $=17$$\\therefore \\overline{\\mathrm{AC}}=\\sqrt{17}$원에 내접하는 사각형에서 마주보는 두각의 합은 $\\pi$이므로 $\\triangle \\mathrm{ACD}$에서 $\\angle \\mathrm{D}=\\mathit{\\pi }-\\angle \\mathrm{B}$이고 코사인법칙에 의하여 $\\cos \\left( \\pi -\\angle B\\right) =\\frac{2^{2}+\\overline{\\mathrm{AD}\\mathit{^{2}}}-\\left( \\sqrt{17}\\right) ^{2}}{2\\times 2\\times \\overline{\\mathrm{AD}\\mathit{}}}$$\\overline{\\mathrm{AD}}^{2}-13\\frac{}{4\\overline{\\mathrm{AD}}}=-\\frac{1}{3}$$\\therefore \\overline{\\mathrm{AD}}=3$이다."
+   },
+   "after": {
+    "solution": "$3$$\\triangle \\mathrm{ABC}=\\frac{1}{2}\\times 3\\times 4\\sin B=4\\sqrt{2}$$\\sin B=\\frac{2\\sqrt{2}}{3}$$\\sin ^{2}B+\\cos ^{2}B=1$이므로 $\\cos ^{2}B=1-\\sin ^{2}B$ $=\\frac{1}{9}$$\\therefore \\cos B=\\frac{1}{3}$($B$는 예각)$\\triangle \\mathrm{ABC}$에서 코사인법칙에 의하여$\\overline{\\mathrm{AC}}^{2}=3^{2}+4^{2}-2\\times 3\\times 4\\cos B$   $=17$$\\therefore \\overline{\\mathrm{AC}}=\\sqrt{17}$원에 내접하는 사각형에서 마주보는 두각의 합은 $\\pi$이므로 $\\triangle \\mathrm{ACD}$에서 $\\angle \\mathrm{D}=\\mathit{\\pi }-\\angle \\mathrm{B}$이고 코사인법칙에 의하여 $\\cos \\left( \\pi -\\angle B\\right) =\\frac{2^{2}+\\overline{\\mathrm{AD}\\mathit{^{2}}}-\\left( \\sqrt{17}\\right) ^{2}}{2\\times 2\\times \\overline{\\mathrm{AD}\\mathit{}}}$$\\frac{\\overline{\\mathrm{AD}}^{2}-13}{4\\overline{\\mathrm{AD}}}=-\\frac{1}{3}$$\\therefore \\overline{\\mathrm{AD}}=3$이다."
+   },
+   "fixes": [
+    "pull-numerator: \\overline{\\mathrm{AD}}^{2}-13\\frac{}{4\\overline{\\mathrm{AD}}} → \\frac{\\overline{\\mathrm{AD}}^{2}-13}{4\\overline{\\mathrm{AD}}}"
+   ]
+  },
+  {
+   "id": "d41511bb-f08a-472d-b1c9-a50e1df939de",
+   "code": "HAL0212-LJ7P",
+   "before": {
+    "content": "$\\frac{}{line}\\mathrm{A}B\\mathit{\\,}=3$, $\\frac{}{line}\\mathrm{B}C\\mathit{\\,}=6$인 삼각형 $\\mathrm{A}BC\\mathit{}$가 있다. 선분 $\\mathrm{A}C\\mathit{}$ 위의 점 $\\mathrm{D}\\mathit{}$에 대하여 세 점 $\\mathrm{A}\\mathit{}$, $\\mathrm{B}\\mathit{}$, $\\mathrm{D}\\mathit{}$를 지나는 원을 $C$라 하고, 원 $C$가 선분 $\\mathrm{B}C\\mathit{}$와 만나는 점 중 $\\mathrm{B}\\mathit{}$가 아닌 점을 $\\mathrm{E}\\mathit{}$라 하자. 점 $\\mathrm{B}\\mathit{}$를 포함하지 않는 두 호 $\\mathrm{A}D\\mathit{}$, $\\mathrm{D}E\\mathit{}$의 길이가 같고 $\\frac{}{line}\\mathrm{B}D\\mathit{\\,}=\\sqrt{14}$일 때, 원 $C$의 넓이는? (단, $\\frac{}{line}\\mathrm{A}C\\mathit{\\,}<\\frac{}{line}\\mathrm{B}C\\mathit{\\,}$이고, 점 $\\mathrm{D}\\mathit{}$는 점 $\\mathrm{A}\\mathit{}$도 아니고 점 $\\mathrm{C}\\mathit{}$도 아니다.)\n\n1. $\\frac{5}{2}\\pi$\n2. $3\\pi$\n3. $\\frac{7}{2}\\pi$\n4. $4\\pi$\n5. $\\frac{9}{2}\\pi$"
+   },
+   "after": {
+    "content": "$\\overline{\\mathrm{AB}}=3$, $\\overline{\\mathrm{BC}}=6$인 삼각형 $\\mathrm{A}BC\\mathit{}$가 있다. 선분 $\\mathrm{A}C\\mathit{}$ 위의 점 $\\mathrm{D}\\mathit{}$에 대하여 세 점 $\\mathrm{A}\\mathit{}$, $\\mathrm{B}\\mathit{}$, $\\mathrm{D}\\mathit{}$를 지나는 원을 $C$라 하고, 원 $C$가 선분 $\\mathrm{B}C\\mathit{}$와 만나는 점 중 $\\mathrm{B}\\mathit{}$가 아닌 점을 $\\mathrm{E}\\mathit{}$라 하자. 점 $\\mathrm{B}\\mathit{}$를 포함하지 않는 두 호 $\\mathrm{A}D\\mathit{}$, $\\mathrm{D}E\\mathit{}$의 길이가 같고 $\\overline{\\mathrm{BD}}=\\sqrt{14}$일 때, 원 $C$의 넓이는? (단, $\\overline{\\mathrm{AC}}<\\overline{\\mathrm{BC}}$이고, 점 $\\mathrm{D}\\mathit{}$는 점 $\\mathrm{A}\\mathit{}$도 아니고 점 $\\mathrm{C}\\mathit{}$도 아니다.)\n\n1. $\\frac{5}{2}\\pi$\n2. $3\\pi$\n3. $\\frac{7}{2}\\pi$\n4. $4\\pi$\n5. $\\frac{9}{2}\\pi$"
+   },
+   "fixes": [
+    "overline: \\frac{}{line}\\mathrm{A}B\\mathit{\\,} → \\overline{\\mathrm{AB}}",
+    "overline: \\frac{}{line}\\mathrm{B}C\\mathit{\\,} → \\overline{\\mathrm{BC}}",
+    "overline: \\frac{}{line}\\mathrm{B}D\\mathit{\\,} → \\overline{\\mathrm{BD}}",
+    "overline: \\frac{}{line}\\mathrm{A}C\\mathit{\\,} → \\overline{\\mathrm{AC}}",
+    "overline: \\frac{}{line}\\mathrm{B}C\\mathit{\\,} → \\overline{\\mathrm{BC}}"
+   ]
+  },
+  {
+   "id": "458aeda9-2ad0-4cac-ad37-e1a36266e4e9",
+   "code": "HAL0212-T7QL",
+   "before": {
+    "solution": "풀이 참조$ⅰ)$ $n=1$일 때,  $\\frac{1}{1\\times 3}=\\frac{1}{2\\times 1+1}$로 성립한다.$ⅱ)$ $n=k$일 때 성립한다고 하면 $\\frac{1}{1\\times 3}+\\frac{1}{3\\times 5}+\\frac{1}{5\\times 7}+\\,\\cdots \\,+\\frac{1}{(2k-1)(2k+1)}=\\frac{k}{2k+1}$양변에 $\\frac{1}{\\left( 2k+1\\right) \\left( 2k+3\\right)}$을 더하면,$\\frac{1}{1\\times 3}+\\frac{1}{3\\times 5}+\\,\\cdots \\,+\\frac{1}{(2k-1)(2k+1)}+\\frac{1}{(2k+1)(2k+3)}$  $=\\frac{k}{2k+1}+\\frac{1}{(2k+1)(2k+3)}$  $=\\frac{k(2k+3)+1}{(2k+1)(2k+3)}$  $=k+\\frac{1}{2k+3}$ $\\therefore$ $n=k+1$일 때도 성립한다.$ⅰ)$과 $ⅱ)$에 의해 모든 자연수 $n$에 대하여 등식$\\frac{1}{1\\times 3}+\\frac{1}{3\\times 5}+\\frac{1}{5\\times 7}+\\,\\cdots \\,+\\frac{1}{(2n-1)(2n+1)}=\\frac{n}{2n+1}$이성립한다.18.  풀이 참조$a^{2}=16+25-40\\cos 60°=21$$\\sqrt{21}\\frac{}{\\left( \\frac{\\sqrt{3}}{2}\\right)}=2\\sqrt{7}=2R_{1}$이므로 외접원 넓이는 $7\\pi$$b^{2}=9+25-30\\cos 60°=19$$\\frac{\\sqrt{19}}{\\left( \\frac{\\sqrt{3}}{2}\\right)}=\\frac{2\\sqrt{19}}{\\sqrt{3}}=2R_{2}$이므로 외접원 넓이는 $\\frac{19}{3}\\pi$$7\\pi$$>$$\\frac{19}{3}\\pi$이므로 지아가 이긴다."
+   },
+   "after": {
+    "solution": "풀이 참조$ⅰ)$ $n=1$일 때,  $\\frac{1}{1\\times 3}=\\frac{1}{2\\times 1+1}$로 성립한다.$ⅱ)$ $n=k$일 때 성립한다고 하면 $\\frac{1}{1\\times 3}+\\frac{1}{3\\times 5}+\\frac{1}{5\\times 7}+\\,\\cdots \\,+\\frac{1}{(2k-1)(2k+1)}=\\frac{k}{2k+1}$양변에 $\\frac{1}{\\left( 2k+1\\right) \\left( 2k+3\\right)}$을 더하면,$\\frac{1}{1\\times 3}+\\frac{1}{3\\times 5}+\\,\\cdots \\,+\\frac{1}{(2k-1)(2k+1)}+\\frac{1}{(2k+1)(2k+3)}$  $=\\frac{k}{2k+1}+\\frac{1}{(2k+1)(2k+3)}$  $=\\frac{k(2k+3)+1}{(2k+1)(2k+3)}$  $=k+\\frac{1}{2k+3}$ $\\therefore$ $n=k+1$일 때도 성립한다.$ⅰ)$과 $ⅱ)$에 의해 모든 자연수 $n$에 대하여 등식$\\frac{1}{1\\times 3}+\\frac{1}{3\\times 5}+\\frac{1}{5\\times 7}+\\,\\cdots \\,+\\frac{1}{(2n-1)(2n+1)}=\\frac{n}{2n+1}$이성립한다.18.  풀이 참조$a^{2}=16+25-40\\cos 60°=21$$\\frac{\\sqrt{21}}{\\left( \\frac{\\sqrt{3}}{2}\\right)}=2\\sqrt{7}=2R_{1}$이므로 외접원 넓이는 $7\\pi$$b^{2}=9+25-30\\cos 60°=19$$\\frac{\\sqrt{19}}{\\left( \\frac{\\sqrt{3}}{2}\\right)}=\\frac{2\\sqrt{19}}{\\sqrt{3}}=2R_{2}$이므로 외접원 넓이는 $\\frac{19}{3}\\pi$$7\\pi$$>$$\\frac{19}{3}\\pi$이므로 지아가 이긴다."
+   },
+   "fixes": [
+    "pull-numerator: \\sqrt{21}\\frac{}{\\left( \\frac{\\sqrt{3}}{2}\\right)} → \\frac{\\sqrt{21}}{\\left( \\frac{\\sqrt{3}}{2}\\right)}"
+   ]
+  },
+  {
+   "id": "1ece5685-5a97-4439-800e-e8c5ca6015d4",
+   "code": "HAL0213-7LEC",
+   "before": {
+    "solution": "풀이참조$\\mathrm{\\angle }A,~\\angle B,~\\angle C$의 대변을 각각 $a,~b,~c$라 하면,$b^{2}+c^{2}-a^{2}\\frac{}{2}bc:\\frac{a^{2}+c^{2}-b^{2}}{2}ac=b:a$$\\frac{b(a^{2}+c^{2}-b^{2})}{2}ac=\\frac{a(b^{2}+c^{2}-a^{2})}{2}bc$$a^{4}-b^{4}-c^{2}(a^{2}-b^{2})=0$$(a^{2}-b^{2})(a^{2}+b^{2}-c^{2})=0$따라서, $a=b$ 또는 $c^{2}=a^{2}+b^{2}$따라서, $\\mathrm{\\overline{BC}}=\\overline{AC}$인 이등변 삼각형 또는 $\\mathrm{\\overline{AB}}$가 빗변인 직각 삼각형"
+   },
+   "after": {
+    "solution": "풀이참조$\\mathrm{\\angle }A,~\\angle B,~\\angle C$의 대변을 각각 $a,~b,~c$라 하면,$\\frac{b^{2}+c^{2}-a^{2}}{2bc}:\\frac{a^{2}+c^{2}-b^{2}}{2ac}=b:a$$\\frac{b(a^{2}+c^{2}-b^{2})}{2ac}=\\frac{a(b^{2}+c^{2}-a^{2})}{2bc}$$a^{4}-b^{4}-c^{2}(a^{2}-b^{2})=0$$(a^{2}-b^{2})(a^{2}+b^{2}-c^{2})=0$따라서, $a=b$ 또는 $c^{2}=a^{2}+b^{2}$따라서, $\\mathrm{\\overline{BC}}=\\overline{AC}$인 이등변 삼각형 또는 $\\mathrm{\\overline{AB}}$가 빗변인 직각 삼각형"
+   },
+   "fixes": [
+    "손수리: $b^{2}+c^{2}-a^{2}\\frac{}{2}bc:\\frac{a^{2}+c^{2}-b^{2}}{2}ac=b:a$ → $\\frac{b^{2}+c^{2}-a^{2}}{2bc}:\\frac{a^{2}+c^{2}-b^{2}}{2ac}=b:a$",
+    "손수리: $\\frac{b(a^{2}+c^{2}-b^{2})}{2}ac=\\frac{a(b^{2}+c^{2}-a^{2})}{2}bc$ → $\\frac{b(a^{2}+c^{2}-b^{2})}{2ac}=\\frac{a(b^{2}+c^{2}-a^{2})}{2bc}$"
+   ]
+  },
+  {
+   "id": "0fae5722-d5d3-4df2-82c8-556955d40734",
+   "code": "HM10207-QBBK",
+   "before": {
+    "solution": "$9\\sqrt{3}\\frac{}{4}$원점을 지나는 직선을 $y=mx$라고 두자. $y=x^{2}(3-x)$의 그래프와의 교점에서, $mx=x^{2}(3-x)$이므로 $x(x^{2}-3x+m)=0$이다.두 교점의 $x$좌표를 $p$, $q$라고 두면, $p+q=3$, $pq=m$점 $\\mathrm{P}$, $\\mathrm{Q}$, $\\mathrm{O}$가 한 직선 위에 있으므로 삼각형 $\\mathrm{APQ}$에서 미변 $\\mathrm{PQ}$를 직선 $y=mx$로 보면, 넓이 $S$는$\\frac{1}{2}\\times \\left| \\mathrm{\\overline{PQ}}\\right| \\times (\\mathrm{A}(3,~0)에서~직선까지의~거리)$이므로$\\mathrm{\\overline{PQ}}^{2}=\\mathit{(}p-q)^{2}+(mp-mq)^{2}=(p-q)^{2}(1+m^{2})$$\\mathrm{\\overline{|}}PQ|=\\mathit{|}p-q|\\sqrt{1+m^{2}}$높이$=\\frac{|3m|}{\\sqrt{m^{2}+1}}$즉 $S=3\\frac{m}{2}|p-q|=3\\frac{m}{2}\\sqrt{9-4m}$$S>0$이므로 $S^{2}$이 최대일 때, $S$도 최대이다.$S^{2}=\\frac{9}{4}(9m^{2}-4m^{3})$이므로 괄호 안의 $9m^{2}-4m^{3}$의 최댓값을 구한다.미분하면, $18m-12m^{2}=6m(3-2m)$이므로 $m=\\frac{3}{2}$일 때 최댓값을 가진다.$\\therefore \\frac{9\\sqrt{3}}{4}$"
+   },
+   "after": {
+    "solution": "$\\frac{9\\sqrt{3}}{4}$원점을 지나는 직선을 $y=mx$라고 두자. $y=x^{2}(3-x)$의 그래프와의 교점에서, $mx=x^{2}(3-x)$이므로 $x(x^{2}-3x+m)=0$이다.두 교점의 $x$좌표를 $p$, $q$라고 두면, $p+q=3$, $pq=m$점 $\\mathrm{P}$, $\\mathrm{Q}$, $\\mathrm{O}$가 한 직선 위에 있으므로 삼각형 $\\mathrm{APQ}$에서 미변 $\\mathrm{PQ}$를 직선 $y=mx$로 보면, 넓이 $S$는$\\frac{1}{2}\\times \\left| \\mathrm{\\overline{PQ}}\\right| \\times (\\mathrm{A}(3,~0)에서~직선까지의~거리)$이므로$\\mathrm{\\overline{PQ}}^{2}=\\mathit{(}p-q)^{2}+(mp-mq)^{2}=(p-q)^{2}(1+m^{2})$$\\mathrm{\\overline{|}}PQ|=\\mathit{|}p-q|\\sqrt{1+m^{2}}$높이$=\\frac{|3m|}{\\sqrt{m^{2}+1}}$즉 $S=3\\frac{m}{2}|p-q|=3\\frac{m}{2}\\sqrt{9-4m}$$S>0$이므로 $S^{2}$이 최대일 때, $S$도 최대이다.$S^{2}=\\frac{9}{4}(9m^{2}-4m^{3})$이므로 괄호 안의 $9m^{2}-4m^{3}$의 최댓값을 구한다.미분하면, $18m-12m^{2}=6m(3-2m)$이므로 $m=\\frac{3}{2}$일 때 최댓값을 가진다.$\\therefore \\frac{9\\sqrt{3}}{4}$"
+   },
+   "fixes": [
+    "pull-numerator: 9\\sqrt{3}\\frac{}{4} → \\frac{9\\sqrt{3}}{4}"
+   ]
+  },
+  {
+   "id": "e6d40da8-7b15-401a-853b-925f9dc68ae5",
+   "code": "HM20101-MYZF",
+   "before": {
+    "content": "오른쪽 그림과 같이 한 변의 길이가\n\n$2$\n\n인 정사각형 ABCD에서 변 AB의 중점을 E, 변 CD의 중점을 F라 하자. 선분 AD 위의 양 끝 점이 아닌 임의의 점 P에 대하여 선분 BP와 선분 EF의 교점을 G, 선분 CP와 선분 EF의 교점을 H라 하자.\n\n$∠$\n\nBGE\n\n$=α$\n\n라 할 때, lim\n\n$α→\\frac{π}{2}\\frac{}{\\frac{π}{2}-α}$\n\nAP의 값은?\n\n[그림]\n\n1. $1$\n2. $2$\n3. $3$\n4. $4$\n5. $5$"
+   },
+   "after": {
+    "content": "오른쪽 그림과 같이 한 변의 길이가\n\n$2$\n\n인 정사각형 ABCD에서 변 AB의 중점을 E, 변 CD의 중점을 F라 하자. 선분 AD 위의 양 끝 점이 아닌 임의의 점 P에 대하여 선분 BP와 선분 EF의 교점을 G, 선분 CP와 선분 EF의 교점을 H라 하자.\n\n$∠$\n\nBGE\n\n$=α$\n\n라 할 때, lim\n\n$α→\\frac{\\frac{π}{2}}{\\frac{π}{2}-α}$\n\nAP의 값은?\n\n[그림]\n\n1. $1$\n2. $2$\n3. $3$\n4. $4$\n5. $5$"
+   },
+   "fixes": [
+    "pull-numerator: \\frac{π}{2}\\frac{}{\\frac{π}{2}-α} → \\frac{\\frac{π}{2}}{\\frac{π}{2}-α}"
+   ]
+  },
+  {
+   "id": "335d06fc-c733-4d87-9243-3b3e93187aff",
+   "code": "HM20102-YNZM",
+   "before": {
+    "content": "그림과 같이 반지름의 길이가 $1$이고 중심각의 크기가 $45°$인 부채꼴 $\\mathrm{A}_{0}A_{1}B_{1}$이 있다. 점 $\\mathrm{A}_{1}$에서 선분 $\\mathrm{A}_{0}B_{1}$에 내린 수선의 발을 $\\mathrm{B}_{2}$라 하고, 선분 $\\mathrm{A}_{0}A_{1}$ 위의 $\\mathrm{\\overline{A_{1}B_{2}}}=\\overline{A_{1}A_{2}}$인 점 $\\mathrm{A}_{2}$에 대하여 중심각의 크기가 $45°$인 부채꼴 $\\mathrm{A}_{1}A_{2}B_{2}$를 그린다.\n점 $\\mathrm{A}_{2}$에서 선분 $\\mathrm{A}_{1}B_{2}$에 내린 수선의 발을 $\\mathrm{B}_{3}$이라 하고, 선분 $\\mathrm{A}_{1}A_{2}$ 위의 $\\mathrm{\\overline{A_{2}B_{3}}}=\\overline{A_{2}A_{3}}$인 점 $\\mathrm{A}_{3}$에 대하여 중심각의 크기가 $45°$인 부채꼴 $\\mathrm{A}_{2}A_{3}B_{3}$을 그린다.\n이와 같은 과정을 계속하여 점 $\\mathrm{A}_{\\mathit{n}}$에서 선분 $\\mathrm{A}_{\\mathit{n}-1\\mathrm{}B_{\\mathit{n}}}$에 내린 수선의 발을 $\\mathrm{B}_{\\mathit{n}+1}$이라 하고, 선분 $\\mathrm{A}_{\\mathit{n}-1}\\mathrm{A}_{\\mathit{n}}$ 위의 $\\mathrm{\\overline{A_{\\mathit{n}}\\mathrm{B}_{\\mathit{n}}}}=\\mathrm{\\overline{A_{\\mathit{n}}\\mathrm{A}_{\\mathit{n}+1}}}$인 점 $\\mathrm{A}_{\\mathit{n}+1}$에 대하여 중심각의 크기가 $45°$인 부채꼴 $\\mathrm{A}_{\\mathit{n}}\\mathrm{A}_{\\mathit{n}+1}\\mathrm{B}_{\\mathit{n}+1}$을 그린다. 부챼꼴 $\\mathrm{A}_{\\mathit{n}-1}\\mathrm{A}_{\\mathit{n}}\\mathrm{B}_{\\mathit{n}}$의 호 $\\mathrm{A}_{\\mathit{n}}\\mathrm{B}_{\\mathit{n}}$의 길이를 $l_{n}$이라 할 때, $\\sum _{n=1}^{\\infty _{}}\\,l_{n}$의 값은?\n\n1. $(2+\\sqrt{2})\\pi \\frac{}{4}$\n2. $(2+\\sqrt{2})\\pi \\frac{}{2}$\n3. $2+\\sqrt{2}\\pi$\n4. $(2+\\sqrt{2})\\pi$\n5. $2(2+\\sqrt{2})\\pi$"
+   },
+   "after": {
+    "content": "그림과 같이 반지름의 길이가 $1$이고 중심각의 크기가 $45°$인 부채꼴 $\\mathrm{A}_{0}A_{1}B_{1}$이 있다. 점 $\\mathrm{A}_{1}$에서 선분 $\\mathrm{A}_{0}B_{1}$에 내린 수선의 발을 $\\mathrm{B}_{2}$라 하고, 선분 $\\mathrm{A}_{0}A_{1}$ 위의 $\\mathrm{\\overline{A_{1}B_{2}}}=\\overline{A_{1}A_{2}}$인 점 $\\mathrm{A}_{2}$에 대하여 중심각의 크기가 $45°$인 부채꼴 $\\mathrm{A}_{1}A_{2}B_{2}$를 그린다.\n점 $\\mathrm{A}_{2}$에서 선분 $\\mathrm{A}_{1}B_{2}$에 내린 수선의 발을 $\\mathrm{B}_{3}$이라 하고, 선분 $\\mathrm{A}_{1}A_{2}$ 위의 $\\mathrm{\\overline{A_{2}B_{3}}}=\\overline{A_{2}A_{3}}$인 점 $\\mathrm{A}_{3}$에 대하여 중심각의 크기가 $45°$인 부채꼴 $\\mathrm{A}_{2}A_{3}B_{3}$을 그린다.\n이와 같은 과정을 계속하여 점 $\\mathrm{A}_{\\mathit{n}}$에서 선분 $\\mathrm{A}_{\\mathit{n}-1\\mathrm{}B_{\\mathit{n}}}$에 내린 수선의 발을 $\\mathrm{B}_{\\mathit{n}+1}$이라 하고, 선분 $\\mathrm{A}_{\\mathit{n}-1}\\mathrm{A}_{\\mathit{n}}$ 위의 $\\mathrm{\\overline{A_{\\mathit{n}}\\mathrm{B}_{\\mathit{n}}}}=\\mathrm{\\overline{A_{\\mathit{n}}\\mathrm{A}_{\\mathit{n}+1}}}$인 점 $\\mathrm{A}_{\\mathit{n}+1}$에 대하여 중심각의 크기가 $45°$인 부채꼴 $\\mathrm{A}_{\\mathit{n}}\\mathrm{A}_{\\mathit{n}+1}\\mathrm{B}_{\\mathit{n}+1}$을 그린다. 부챼꼴 $\\mathrm{A}_{\\mathit{n}-1}\\mathrm{A}_{\\mathit{n}}\\mathrm{B}_{\\mathit{n}}$의 호 $\\mathrm{A}_{\\mathit{n}}\\mathrm{B}_{\\mathit{n}}$의 길이를 $l_{n}$이라 할 때, $\\sum _{n=1}^{\\infty _{}}\\,l_{n}$의 값은?\n\n1. $\\frac{(2+\\sqrt{2})\\pi }{4}$\n2. $\\frac{(2+\\sqrt{2})\\pi }{2}$\n3. $2+\\sqrt{2}\\pi$\n4. $(2+\\sqrt{2})\\pi$\n5. $2(2+\\sqrt{2})\\pi$"
+   },
+   "fixes": [
+    "pull-numerator: (2+\\sqrt{2})\\pi \\frac{}{4} → \\frac{(2+\\sqrt{2})\\pi }{4}",
+    "pull-numerator: (2+\\sqrt{2})\\pi \\frac{}{2} → \\frac{(2+\\sqrt{2})\\pi }{2}"
+   ]
+  },
+  {
+   "id": "4641e971-b9ba-4a60-ad8b-1ec15f6d745e",
+   "code": "HM20206-P7SG",
+   "before": {
+    "content": "함수\n\n$f(x)=x$\n\nln\n\n$√x$\n\n에 대하여 lim\n\n$h→0\\frac{}{hf(√e+4h)-f(√e-4h)}=kf(e)$\n\n를 만족시키는 상수\n\n$k$\n\n의 값은?\n\n1. $\\frac{1}{3}$\n2. $\\frac{1}{2}$\n3. $\\frac{4}{3}$\n4. $2$\n5. $4$"
+   },
+   "after": {
+    "content": "함수\n\n$f(x)=x$\n\nln\n\n$√x$\n\n에 대하여 lim\n\n$h→\\frac{0}{hf(√e+4h)-f(√e-4h)}=kf(e)$\n\n를 만족시키는 상수\n\n$k$\n\n의 값은?\n\n1. $\\frac{1}{3}$\n2. $\\frac{1}{2}$\n3. $\\frac{4}{3}$\n4. $2$\n5. $4$"
+   },
+   "fixes": [
+    "pull-numerator: 0\\frac{}{hf(√e+4h)-f(√e-4h)} → \\frac{0}{hf(√e+4h)-f(√e-4h)}"
+   ]
+  },
+  {
+   "id": "68809e86-60b9-490b-b00f-6167445b1a8b",
+   "code": "HM20207-Z8GC",
+   "before": {
+    "content": "매개변수 $t$로 나타낸 함수 $x=\\frac{1}{1+t^{2}}$, $y=\\frac{t}{1+t^{2}}$에 대하여 $t=2$일 때, $\\frac{dy}{dx}$의 값은?\n\n1. $-\\frac{3}{4}$\n2. $-\\frac{1}{4}$\n3. $\\frac{1}{4}$\n4. $3\\frac{}{4}$\n5. $5\\frac{}{4}$"
+   },
+   "after": {
+    "content": "매개변수 $t$로 나타낸 함수 $x=\\frac{1}{1+t^{2}}$, $y=\\frac{t}{1+t^{2}}$에 대하여 $t=2$일 때, $\\frac{dy}{dx}$의 값은?\n\n1. $-\\frac{3}{4}$\n2. $-\\frac{1}{4}$\n3. $\\frac{1}{4}$\n4. $\\frac{3}{4}$\n5. $\\frac{5}{4}$"
+   },
+   "fixes": [
+    "pull-numerator: 3\\frac{}{4} → \\frac{3}{4}",
+    "pull-numerator: 5\\frac{}{4} → \\frac{5}{4}"
+   ]
+  },
+  {
+   "id": "6fe75fdf-ca09-457e-bc18-aa9e896e0231",
+   "code": "HPS0102-3WU3",
+   "before": {
+    "solution": "$181$소수는 $2$, $3$, $5$이고 합성수는 $4$, $6$이므로소수선택하지 않음, 합성수 선택하지 않음 $(1,~1,~1,~1)$ : $1$가지소수선택하지 않음, 합성수 두 번 선택 $(4,~6,~1,~1)$ : $4\\frac{!}{2}\\neq 12$가지 $(4,~4,~1,~1)$ : $4\\frac{!}{2!\\times 2!}=6$가지 $(6,~6,~1,~1)$ : $4\\frac{!}{2!\\times 2!}=6$가지소수 한 번, 합성수 선택하지 않음 $3\\times 4=12$가지소수 한 번, 합성수 두 번 $(2,~4,~6,~1)$ : $4\\neq 24$가지 $(3,~4,~6,~1)$ : $4\\neq 24$가지 $(5,~4,~6,~1)$ : $4\\neq 24$가지 $(2,~4,~4,~1)$ : $4!\\frac{}{2}\\neq 12$가지 $(3,~4,~4,~1)$ : $4!\\frac{}{2}\\neq 12$가지 $(5,~4,~4,~1)$ : $4!\\frac{}{2}\\neq 12$가지 $(2,~6,~6,~1)$ : $4!\\frac{}{2}\\neq 12$가지 $(3,~6,~6,~1)$ : $4!\\frac{}{2}\\neq 12$가지 $(5,~6,~6,~1)$ : $4!\\frac{}{2}\\neq 12$가지$\\therefore ~1+(12+6+6)+(12)+(72+72)=181$가지"
+   },
+   "after": {
+    "solution": "$181$소수는 $2$, $3$, $5$이고 합성수는 $4$, $6$이므로소수선택하지 않음, 합성수 선택하지 않음 $(1,~1,~1,~1)$ : $1$가지소수선택하지 않음, 합성수 두 번 선택 $(4,~6,~1,~1)$ : $4\\frac{!}{2}\\neq 12$가지 $(4,~4,~1,~1)$ : $4\\frac{!}{2!\\times 2!}=6$가지 $(6,~6,~1,~1)$ : $4\\frac{!}{2!\\times 2!}=6$가지소수 한 번, 합성수 선택하지 않음 $3\\times 4=12$가지소수 한 번, 합성수 두 번 $(2,~4,~6,~1)$ : $4\\neq 24$가지 $(3,~4,~6,~1)$ : $4\\neq 24$가지 $(5,~4,~6,~1)$ : $4\\neq 24$가지 $(2,~4,~4,~1)$ : $\\frac{4!}{2}\\neq 12$가지 $(3,~4,~4,~1)$ : $\\frac{4!}{2}\\neq 12$가지 $(5,~4,~4,~1)$ : $\\frac{4!}{2}\\neq 12$가지 $(2,~6,~6,~1)$ : $\\frac{4!}{2}\\neq 12$가지 $(3,~6,~6,~1)$ : $\\frac{4!}{2}\\neq 12$가지 $(5,~6,~6,~1)$ : $\\frac{4!}{2}\\neq 12$가지$\\therefore ~1+(12+6+6)+(12)+(72+72)=181$가지"
+   },
+   "fixes": [
+    "pull-numerator: 4!\\frac{}{2} → \\frac{4!}{2}",
+    "pull-numerator: 4!\\frac{}{2} → \\frac{4!}{2}",
+    "pull-numerator: 4!\\frac{}{2} → \\frac{4!}{2}",
+    "pull-numerator: 4!\\frac{}{2} → \\frac{4!}{2}",
+    "pull-numerator: 4!\\frac{}{2} → \\frac{4!}{2}",
+    "pull-numerator: 4!\\frac{}{2} → \\frac{4!}{2}"
+   ]
+  },
+  {
+   "id": "d5155d1c-ba31-4e2e-b3fd-cfa8bc80c154",
+   "code": "HPS0302-E3ZQ",
+   "before": {
+    "solution": "$200.8$$\\frac{10}{400}=\\frac{25}{1000}=0.025$기록은 작은값이 상위이므로 상위$10$위 이내에 들어가기 위한 기록값을 $x$라 하면 $x-240\\frac{}{20}=-1.96$, $x=200.8$"
+   },
+   "after": {
+    "solution": "$200.8$$\\frac{10}{400}=\\frac{25}{1000}=0.025$기록은 작은값이 상위이므로 상위$10$위 이내에 들어가기 위한 기록값을 $x$라 하면 $\\frac{x-240}{20}=-1.96$, $x=200.8$"
+   },
+   "fixes": [
+    "pull-numerator: x-240\\frac{}{20} → \\frac{x-240}{20}"
+   ]
+  },
+  {
+   "id": "d16376e9-2881-4bac-a687-b9fd6a97da33",
+   "code": "HPS0302-ZDPT",
+   "before": {
+    "solution": "$241$$a-2+b+3\\frac{}{2}=m$, $a+b+1=2m$$Y=\\frac{1}{3}X+1$일 때 $\\mathrm{E}(\\mathit{Y})=\\frac{1}{3}\\mathrm{E}(\\mathit{X})+1$이므로 $\\mathrm{E}(\\mathit{Y})=41$을 대입하면 $\\mathrm{E}(\\mathit{X})=120$,  $\\mathrm{V}(\\mathit{Y})=\\frac{1}{9}\\mathrm{V}(\\mathit{X})$이므로 $\\mathrm{V}(\\mathit{Y})=\\frac{4}{9}$을 대입하면 $\\mathrm{V}(\\mathit{X})=4$$a+b+1=2m$에 $\\mathrm{E}(\\mathit{X})=120$를 대입하면 $a+b=239$$a+b+\\sigma =239+2=241$"
+   },
+   "after": {
+    "solution": "$241$$\\frac{a-2+b+3}{2}=m$, $a+b+1=2m$$Y=\\frac{1}{3}X+1$일 때 $\\mathrm{E}(\\mathit{Y})=\\frac{1}{3}\\mathrm{E}(\\mathit{X})+1$이므로 $\\mathrm{E}(\\mathit{Y})=41$을 대입하면 $\\mathrm{E}(\\mathit{X})=120$,  $\\mathrm{V}(\\mathit{Y})=\\frac{1}{9}\\mathrm{V}(\\mathit{X})$이므로 $\\mathrm{V}(\\mathit{Y})=\\frac{4}{9}$을 대입하면 $\\mathrm{V}(\\mathit{X})=4$$a+b+1=2m$에 $\\mathrm{E}(\\mathit{X})=120$를 대입하면 $a+b=239$$a+b+\\sigma =239+2=241$"
+   },
+   "fixes": [
+    "pull-numerator: a-2+b+3\\frac{}{2} → \\frac{a-2+b+3}{2}"
+   ]
+  },
+  {
+   "id": "715d1c49-618f-41fb-9e74-a2daa1f966d1",
+   "code": "HPS0304-D9C2",
+   "before": {
+    "solution": "$\\frac{25}{32}$$\\mathrm{\\overline{OP}}$의 길이를 확률변수 $X$라 할 때,$X$$3\\sqrt{2}$$2\\sqrt{5}$$\\sqrt{26}$6합계$\\mathrm{P}\\left( \\mathit{X}=x\\right)$$\\frac{5}{16}$$15\\frac{}{32}$$\\frac{3}{16}$$\\frac{1}{32}$$1$$X=\\,3\\sqrt{2}$가 되는 경우는 앞면 3번, 뒷면 3번으로 확률은 $_{6}\\mathrm{C}_{3}\\left( \\frac{1}{2}\\right) ^{3}\\left( \\frac{1}{2}\\right) ^{3}\\,=\\,\\frac{5}{16}$이며$X=\\,2\\sqrt{5}$가 되는 경우는 앞면 2번, 뒷면 4번 또는 앞면 4번 뒷면 2번인 경우로 확률은 $_{6}\\mathrm{C}_{4}\\left( \\frac{1}{2}\\right) ^{4}\\left( \\frac{1}{2}\\right) ^{2}+_{6}\\mathrm{C}_{2}\\left( \\frac{1}{2}\\right) ^{2}\\left( \\frac{1}{2}\\right) ^{4}=\\,\\frac{15}{32}$$X=\\sqrt{26}$이 되는 경우는 앞면 1번, 뒷면 5번 또는 앞면 5번 뒷면 1번인 경우로 확률은$_{6}\\mathrm{C}_{1}\\left( \\frac{1}{2}\\right) ^{1}\\left( \\frac{1}{2}\\right) ^{5}+_{6}\\mathrm{C}_{5}\\left( \\frac{1}{2}\\right) ^{5}\\left( \\frac{1}{2}\\right) ^{1}=\\,\\frac{3}{16}$$X=6$이 되는 경우는 앞면 6번 또는 뒷면 6번으로 $_{6}\\mathrm{C}_{6}\\left( \\frac{1}{2}\\right) ^{6}+_{6}\\mathrm{C}_{0}\\left( \\frac{1}{2}\\right) ^{6}=\\,\\frac{1}{32}$이다. 그러므로 $\\mathrm{P}(\\mathit{X}\\,\\leq 5)\\,=\\,\\frac{5}{16}+\\,\\frac{15}{32}\\,=\\,\\frac{25}{32}$"
+   },
+   "after": {
+    "solution": "$\\frac{25}{32}$$\\mathrm{\\overline{OP}}$의 길이를 확률변수 $X$라 할 때,$X$$3\\sqrt{2}$$2\\sqrt{5}$$\\sqrt{26}$6합계$\\mathrm{P}\\left( \\mathit{X}=x\\right)$$\\frac{5}{16}$$\\frac{15}{32}$$\\frac{3}{16}$$\\frac{1}{32}$$1$$X=\\,3\\sqrt{2}$가 되는 경우는 앞면 3번, 뒷면 3번으로 확률은 $_{6}\\mathrm{C}_{3}\\left( \\frac{1}{2}\\right) ^{3}\\left( \\frac{1}{2}\\right) ^{3}\\,=\\,\\frac{5}{16}$이며$X=\\,2\\sqrt{5}$가 되는 경우는 앞면 2번, 뒷면 4번 또는 앞면 4번 뒷면 2번인 경우로 확률은 $_{6}\\mathrm{C}_{4}\\left( \\frac{1}{2}\\right) ^{4}\\left( \\frac{1}{2}\\right) ^{2}+_{6}\\mathrm{C}_{2}\\left( \\frac{1}{2}\\right) ^{2}\\left( \\frac{1}{2}\\right) ^{4}=\\,\\frac{15}{32}$$X=\\sqrt{26}$이 되는 경우는 앞면 1번, 뒷면 5번 또는 앞면 5번 뒷면 1번인 경우로 확률은$_{6}\\mathrm{C}_{1}\\left( \\frac{1}{2}\\right) ^{1}\\left( \\frac{1}{2}\\right) ^{5}+_{6}\\mathrm{C}_{5}\\left( \\frac{1}{2}\\right) ^{5}\\left( \\frac{1}{2}\\right) ^{1}=\\,\\frac{3}{16}$$X=6$이 되는 경우는 앞면 6번 또는 뒷면 6번으로 $_{6}\\mathrm{C}_{6}\\left( \\frac{1}{2}\\right) ^{6}+_{6}\\mathrm{C}_{0}\\left( \\frac{1}{2}\\right) ^{6}=\\,\\frac{1}{32}$이다. 그러므로 $\\mathrm{P}(\\mathit{X}\\,\\leq 5)\\,=\\,\\frac{5}{16}+\\,\\frac{15}{32}\\,=\\,\\frac{25}{32}$"
+   },
+   "fixes": [
+    "pull-numerator: 15\\frac{}{32} → \\frac{15}{32}"
+   ]
+  },
+  {
+   "id": "f4279f19-a164-4571-b9dd-875fb38de6f4",
+   "code": "HPS0306-V4RB",
+   "before": {
+    "solution": "$0.07$초콜릿 한 개의 무게를 $X$라 하면 $X$는 정규분포 $\\mathrm{N}\\,\\left( 30,~2^{2}\\right)$을 따르고, $4$개가 들어있는 상자의 평균 무게 $\\overline{X}$는 정규분포 $\\mathrm{N}\\,\\left( 30,~1^{2}\\right)$을 따른다.상자의 무게가 $116.64$이하이면 $4$개의 평균 $\\frac{}{line}X$가 $29.16$이하여야 한다. 상자가 불량품일 확률은 $\\mathrm{P}\\,\\left( \\mathit{\\overline{X}}\\,\\leq 29.16\\right) =\\mathrm{P}\\,\\left( \\mathit{Z}\\leq \\frac{29.16-30}{1}\\right) =\\mathrm{P}\\,\\left( \\mathit{Z}\\leq \\mathit{-}0.84\\right) =0.2$$2500$개의 상자 중 불량품의 개수 $W$는 이항분포 $\\mathrm{B}\\,\\left( 2500,~0.2\\right)$를 따르므로 $\\mathrm{E}\\left( \\mathit{W}\\right) =2500\\times 0.2=500$이고 $\\mathrm{V}\\left( \\mathit{W}\\right) =500\\times 0.8=400=20^{2}$ $W$는 정규분포 $N\\,\\left( 500,~20^{2}\\right)$을 따른다.불량품인 상자가 $470$개 이하일 확률은$\\mathrm{P}\\left( \\mathit{W}\\leq 470\\right) =\\mathrm{P}\\left( \\mathit{Z}\\leq \\frac{470-500}{20}\\right) =\\mathrm{P}\\left( \\mathit{Z}\\leq \\mathit{-}1.5\\right) =0.07$"
+   },
+   "after": {
+    "solution": "$0.07$초콜릿 한 개의 무게를 $X$라 하면 $X$는 정규분포 $\\mathrm{N}\\,\\left( 30,~2^{2}\\right)$을 따르고, $4$개가 들어있는 상자의 평균 무게 $\\overline{X}$는 정규분포 $\\mathrm{N}\\,\\left( 30,~1^{2}\\right)$을 따른다.상자의 무게가 $116.64$이하이면 $4$개의 평균 $\\overline{X}$가 $29.16$이하여야 한다. 상자가 불량품일 확률은 $\\mathrm{P}\\,\\left( \\mathit{\\overline{X}}\\,\\leq 29.16\\right) =\\mathrm{P}\\,\\left( \\mathit{Z}\\leq \\frac{29.16-30}{1}\\right) =\\mathrm{P}\\,\\left( \\mathit{Z}\\leq \\mathit{-}0.84\\right) =0.2$$2500$개의 상자 중 불량품의 개수 $W$는 이항분포 $\\mathrm{B}\\,\\left( 2500,~0.2\\right)$를 따르므로 $\\mathrm{E}\\left( \\mathit{W}\\right) =2500\\times 0.2=500$이고 $\\mathrm{V}\\left( \\mathit{W}\\right) =500\\times 0.8=400=20^{2}$ $W$는 정규분포 $N\\,\\left( 500,~20^{2}\\right)$을 따른다.불량품인 상자가 $470$개 이하일 확률은$\\mathrm{P}\\left( \\mathit{W}\\leq 470\\right) =\\mathrm{P}\\left( \\mathit{Z}\\leq \\frac{470-500}{20}\\right) =\\mathrm{P}\\left( \\mathit{Z}\\leq \\mathit{-}1.5\\right) =0.07$"
+   },
+   "fixes": [
+    "overline: \\frac{}{line}X → \\overline{X}"
+   ]
+  },
+  {
+   "id": "340d5fdf-e74c-480e-9f08-df69ae116a16",
+   "code": "HPS0307-YHWG",
+   "before": {
+    "solution": "$a=490.2,~n=64$표본의 크기가 $n$, 표본평균 $\\frac{}{line}x=500$, 모표준편차 $\\sigma =40$모평균 $m$에 대한 $95%$ 신뢰구간은 $500-1.96\\times \\frac{40}{\\sqrt{n}}\\leq m\\leq 500+1.96\\times \\frac{40}{\\sqrt{n}}$주어진 신뢰구간의 상한이 $509.8$이므로$500+\\frac{78.4}{\\sqrt{n}}=509.8$ $\\frac{78.4}{\\sqrt{n}}=9.8$, $n=64$$a$의 값은 $500-9.8$이므로 $a=490.2$"
+   },
+   "after": {
+    "solution": "$a=490.2,~n=64$표본의 크기가 $n$, 표본평균 $\\overline{x}=500$, 모표준편차 $\\sigma =40$모평균 $m$에 대한 $95%$ 신뢰구간은 $500-1.96\\times \\frac{40}{\\sqrt{n}}\\leq m\\leq 500+1.96\\times \\frac{40}{\\sqrt{n}}$주어진 신뢰구간의 상한이 $509.8$이므로$500+\\frac{78.4}{\\sqrt{n}}=509.8$ $\\frac{78.4}{\\sqrt{n}}=9.8$, $n=64$$a$의 값은 $500-9.8$이므로 $a=490.2$"
+   },
+   "fixes": [
+    "overline: \\frac{}{line}x → \\overline{x}"
+   ]
+  },
+  {
+   "id": "f84afca4-e2e3-42e6-bf34-3717d52a1887",
+   "code": "J10201-NG7U",
+   "before": {
+    "solution": "정답 $(1)$ $2$ $(2)$ $5\\frac{}{4}$ $(3)$ $\\frac{7}{2}$풀이$(1)$ 전개도를 접어 정육면체를 만들었을 때, $\\frac{7}{3}$과 $-\\frac{1}{3}$이 적힌 면이 마주 보고 있으므로 마주 보는 면에 적힌 두 수의 합은 $\\frac{7}{3}+\\left( -\\frac{1}{3}\\right) =2$ $(2)$ ㉠과 마주 보는 면은 $\\frac{3}{4}$가 적힌 면이다.㉠$+$$\\frac{3}{4}$$=2$㉠$=2-\\frac{3}{4}=\\frac{8}{4}-\\frac{3}{4}=\\frac{5}{4}$$(3)$ ㉡과 마주 보는 면은 $-\\frac{3}{2}$가 적힌 면이다.㉡$+$$\\left( -\\frac{3}{2}\\right)$$=2$㉡$=2+\\frac{3}{2}=\\frac{4}{2}+\\frac{3}{2}=\\frac{7}{2}$"
+   },
+   "after": {
+    "solution": "정답 $(1)$ $2$ $(2)$ $\\frac{5}{4}$ $(3)$ $\\frac{7}{2}$풀이$(1)$ 전개도를 접어 정육면체를 만들었을 때, $\\frac{7}{3}$과 $-\\frac{1}{3}$이 적힌 면이 마주 보고 있으므로 마주 보는 면에 적힌 두 수의 합은 $\\frac{7}{3}+\\left( -\\frac{1}{3}\\right) =2$ $(2)$ ㉠과 마주 보는 면은 $\\frac{3}{4}$가 적힌 면이다.㉠$+$$\\frac{3}{4}$$=2$㉠$=2-\\frac{3}{4}=\\frac{8}{4}-\\frac{3}{4}=\\frac{5}{4}$$(3)$ ㉡과 마주 보는 면은 $-\\frac{3}{2}$가 적힌 면이다.㉡$+$$\\left( -\\frac{3}{2}\\right)$$=2$㉡$=2+\\frac{3}{2}=\\frac{4}{2}+\\frac{3}{2}=\\frac{7}{2}$"
+   },
+   "fixes": [
+    "pull-numerator: 5\\frac{}{4} → \\frac{5}{4}"
+   ]
+  },
+  {
+   "id": "82f067c4-dda6-4c4b-9eb9-e616d474ea05",
+   "code": "J10306-AYT8",
+   "before": {
+    "solution": "$a=\\frac{7}{24}$$3x-\\frac{2}{3}=x-\\frac{a}{4}=1$의 해는 $x=-3a+\\frac{20}{9}...①$$2x+1=5x+a$의 해는 $x=\\frac{-a+1}{3}...②$$①의~해가~②$의 해의 $9$배가 될 때 조건에 맞는 방정식을 세우면 $-3a+20\\frac{}{9}=\\frac{-a+1}{3}\\times 9$, $-3a+20=-27a+27$이 식을 정리하면 $24a=7$, 따라서 $a=\\frac{7}{24}$"
+   },
+   "after": {
+    "solution": "$a=\\frac{7}{24}$$3x-\\frac{2}{3}=x-\\frac{a}{4}=1$의 해는 $x=-3a+\\frac{20}{9}...①$$2x+1=5x+a$의 해는 $x=\\frac{-a+1}{3}...②$$①의~해가~②$의 해의 $9$배가 될 때 조건에 맞는 방정식을 세우면 $\\frac{-3a+20}{9}=\\frac{-a+1}{3}\\times 9$, $-3a+20=-27a+27$이 식을 정리하면 $24a=7$, 따라서 $a=\\frac{7}{24}$"
+   },
+   "fixes": [
+    "pull-numerator: -3a+20\\frac{}{9} → \\frac{-3a+20}{9}"
+   ]
+  },
+  {
+   "id": "5dda78e8-b093-418d-be10-af738f3a0303",
+   "code": "J20402-BW6T",
+   "before": {
+    "content": "직사각형 $\\mathrm{A}BCD\\mathit{}$에서 점 $\\mathrm{P}\\mathit{}$는 점 $\\mathrm{A}\\mathit{}$를 출발하여 점 $\\mathrm{B}\\mathit{}$까지 $\\frac{}{line}\\mathrm{A}B\\mathit{\\,}$를 따라 $1$초에 $\\mathrm{3}\\,cm$씩 움직이고, 점 $\\mathrm{Q}\\mathit{}$는 점 $\\mathrm{C}\\mathit{}$를 출발하여 점 $\\mathrm{D}\\mathit{}$까지 $\\frac{}{line}\\mathrm{C}D\\mathit{\\,}$를 따라 $1$초에 $\\mathrm{2}\\,cm$씩 움직인다. 점 $\\mathrm{P}\\mathit{,}~\\mathrm{Q}\\mathit{}$가 각각 점 $\\mathrm{A}\\mathit{,}~\\mathrm{C}\\mathit{}$를 동시에 출발한 지 $x$초 후의 사다리꼴 $\\mathrm{D}PBQ\\mathit{}$의 넓이를 $y\\mathrm{\\,}cm^{2}$라고 할 때, 사다리꼴 $\\mathrm{D}PBQ\\mathit{}$의 넓이가 $80\\mathrm{\\,}cm^{2}$가 되는 것은 점 $\\mathrm{P}\\mathit{,}~\\mathrm{Q}\\mathit{}$가 각각 점 $\\mathrm{A}\\mathit{,}~\\mathrm{C}\\mathit{}$를 동시에 출발한 지 몇 초 후인지 구하고 그 과정을 자세히 서술하시오.",
+    "solution": "$4$점 $\\mathrm{P}\\mathit{}$는 점 $\\mathrm{A}\\mathit{}$를 출발하여 점 $\\mathrm{B}\\mathit{}$까지 $\\frac{}{line}\\mathrm{A}B\\mathit{\\,}$를 따라 $1$초에 $\\mathrm{3}\\,cm$씩 움직이므로 $\\overline{\\mathrm{AP}\\mathit{\\,}}=3x\\mathrm{\\,}cm$, 점 $\\mathrm{Q}\\mathit{}$는 점 $\\mathrm{C}\\mathit{}$를 출발하여 점 $\\mathrm{D}\\mathit{}$까지 $\\frac{}{line}\\mathrm{C}D\\mathit{\\,}$를 따라 $1$초에 $\\mathrm{2}\\,cm$씩 움직이므로 $\\overline{\\mathrm{QC}\\mathit{\\,}}=2x\\mathrm{\\,}cm$사다리꼴 $\\mathrm{D}PBQ\\mathit{}$의 넓이는 $y&=\\frac{1}{2}\\left( 18-2x+18-3x\\right) \\times 10#&=-25x+180$$80=-25x+180$$x=4$"
+   },
+   "after": {
+    "content": "직사각형 $\\mathrm{A}BCD\\mathit{}$에서 점 $\\mathrm{P}\\mathit{}$는 점 $\\mathrm{A}\\mathit{}$를 출발하여 점 $\\mathrm{B}\\mathit{}$까지 $\\overline{\\mathrm{AB}}$를 따라 $1$초에 $\\mathrm{3}\\,cm$씩 움직이고, 점 $\\mathrm{Q}\\mathit{}$는 점 $\\mathrm{C}\\mathit{}$를 출발하여 점 $\\mathrm{D}\\mathit{}$까지 $\\overline{\\mathrm{CD}}$를 따라 $1$초에 $\\mathrm{2}\\,cm$씩 움직인다. 점 $\\mathrm{P}\\mathit{,}~\\mathrm{Q}\\mathit{}$가 각각 점 $\\mathrm{A}\\mathit{,}~\\mathrm{C}\\mathit{}$를 동시에 출발한 지 $x$초 후의 사다리꼴 $\\mathrm{D}PBQ\\mathit{}$의 넓이를 $y\\mathrm{\\,}cm^{2}$라고 할 때, 사다리꼴 $\\mathrm{D}PBQ\\mathit{}$의 넓이가 $80\\mathrm{\\,}cm^{2}$가 되는 것은 점 $\\mathrm{P}\\mathit{,}~\\mathrm{Q}\\mathit{}$가 각각 점 $\\mathrm{A}\\mathit{,}~\\mathrm{C}\\mathit{}$를 동시에 출발한 지 몇 초 후인지 구하고 그 과정을 자세히 서술하시오.",
+    "solution": "$4$점 $\\mathrm{P}\\mathit{}$는 점 $\\mathrm{A}\\mathit{}$를 출발하여 점 $\\mathrm{B}\\mathit{}$까지 $\\overline{\\mathrm{AB}}$를 따라 $1$초에 $\\mathrm{3}\\,cm$씩 움직이므로 $\\overline{\\mathrm{AP}\\mathit{\\,}}=3x\\mathrm{\\,}cm$, 점 $\\mathrm{Q}\\mathit{}$는 점 $\\mathrm{C}\\mathit{}$를 출발하여 점 $\\mathrm{D}\\mathit{}$까지 $\\overline{\\mathrm{CD}}$를 따라 $1$초에 $\\mathrm{2}\\,cm$씩 움직이므로 $\\overline{\\mathrm{QC}\\mathit{\\,}}=2x\\mathrm{\\,}cm$사다리꼴 $\\mathrm{D}PBQ\\mathit{}$의 넓이는 $y&=\\frac{1}{2}\\left( 18-2x+18-3x\\right) \\times 10#&=-25x+180$$80=-25x+180$$x=4$"
+   },
+   "fixes": [
+    "overline: \\frac{}{line}\\mathrm{A}B\\mathit{\\,} → \\overline{\\mathrm{AB}}",
+    "overline: \\frac{}{line}\\mathrm{C}D\\mathit{\\,} → \\overline{\\mathrm{CD}}",
+    "overline: \\frac{}{line}\\mathrm{A}B\\mathit{\\,} → \\overline{\\mathrm{AB}}",
+    "overline: \\frac{}{line}\\mathrm{C}D\\mathit{\\,} → \\overline{\\mathrm{CD}}"
+   ]
+  },
+  {
+   "id": "68a7771c-47fa-4976-9726-ca790bb062b9",
+   "code": "J20402-SZL6",
+   "before": {
+    "content": "제$4$사분면을 지나지 않는 일차함수 $y=\\,-\\,ax\\,-\\,b$와 $y=4x\\,+\\,4$의 그래프는 서로 평행하고, $x$축과 만나는 점을 각각 $\\mathrm{P}\\mathit{,}~\\mathrm{Q}\\mathit{}$라 한다. $\\frac{}{line}\\mathrm{P}Q\\mathit{\\,}$의 길이가 $2$일 때, 상수 $a,~b$에 대하여 $a\\,-\\,b$의 값은?\n\n1. $-\\,16$\n2. $-\\,4$\n3. $4$\n4. $8$\n5. $16$"
+   },
+   "after": {
+    "content": "제$4$사분면을 지나지 않는 일차함수 $y=\\,-\\,ax\\,-\\,b$와 $y=4x\\,+\\,4$의 그래프는 서로 평행하고, $x$축과 만나는 점을 각각 $\\mathrm{P}\\mathit{,}~\\mathrm{Q}\\mathit{}$라 한다. $\\overline{\\mathrm{PQ}}$의 길이가 $2$일 때, 상수 $a,~b$에 대하여 $a\\,-\\,b$의 값은?\n\n1. $-\\,16$\n2. $-\\,4$\n3. $4$\n4. $8$\n5. $16$"
+   },
+   "fixes": [
+    "overline: \\frac{}{line}\\mathrm{P}Q\\mathit{\\,} → \\overline{\\mathrm{PQ}}"
+   ]
+  },
+  {
+   "id": "acb76c48-b388-467e-bf32-72bebb0019d6",
+   "code": "J30301-V6LY",
+   "before": {
+    "content": "이차방정식 $0.2x\\left( x+0.1\\right) =0.5x+1$의 해는?\n\n1. $\\frac{3+-\\sqrt{29}}{4}$\n2. $\\frac{3+-\\sqrt{89}}{4}$\n3. $\\frac{6+-\\sqrt{161}}{5}$\n4. $\\frac{-3+-\\sqrt{89}}{8}$\n5. $-6+-\\sqrt{161}\\frac{}{10}$"
+   },
+   "after": {
+    "content": "이차방정식 $0.2x\\left( x+0.1\\right) =0.5x+1$의 해는?\n\n1. $\\frac{3+-\\sqrt{29}}{4}$\n2. $\\frac{3+-\\sqrt{89}}{4}$\n3. $\\frac{6+-\\sqrt{161}}{5}$\n4. $\\frac{-3+-\\sqrt{89}}{8}$\n5. $\\frac{-6+-\\sqrt{161}}{10}$"
+   },
+   "fixes": [
+    "pull-numerator: -6+-\\sqrt{161}\\frac{}{10} → \\frac{-6+-\\sqrt{161}}{10}"
+   ]
+  },
+  {
+   "id": "c3e2b336-ad2f-4470-83e0-1985cb684c97",
+   "code": "J30503-437G",
+   "before": {
+    "content": "정삼각형 $\\mathrm{ABC}$에서 $\\overline{\\mathrm{AB}}$의 중점을 $\\mathrm{D}$, $\\overline{\\mathrm{CD}}$의 중점을 $\\mathrm{E}$라고 하자. $\\angle \\mathrm{EBC}$의 크기를 $\\theta$라고 할 때, $\\sin \\theta $의 값은?\n\n1. $\\frac{\\sqrt{21}}{14}$\n2. $2\\sqrt{5}\\frac{}{11}$\n3. $\\frac{1}{2}$\n4. $3\\sqrt{3}\\frac{}{10}$\n5. $\\frac{4\\sqrt{2}}{17}$"
+   },
+   "after": {
+    "content": "정삼각형 $\\mathrm{ABC}$에서 $\\overline{\\mathrm{AB}}$의 중점을 $\\mathrm{D}$, $\\overline{\\mathrm{CD}}$의 중점을 $\\mathrm{E}$라고 하자. $\\angle \\mathrm{EBC}$의 크기를 $\\theta$라고 할 때, $\\sin \\theta $의 값은?\n\n1. $\\frac{\\sqrt{21}}{14}$\n2. $\\frac{2\\sqrt{5}}{11}$\n3. $\\frac{1}{2}$\n4. $\\frac{3\\sqrt{3}}{10}$\n5. $\\frac{4\\sqrt{2}}{17}$"
+   },
+   "fixes": [
+    "pull-numerator: 2\\sqrt{5}\\frac{}{11} → \\frac{2\\sqrt{5}}{11}",
+    "pull-numerator: 3\\sqrt{3}\\frac{}{10} → \\frac{3\\sqrt{3}}{10}"
+   ]
+  },
+  {
+   "id": "62c1bbff-1590-45d7-b480-a97cb62acd27",
+   "code": "J30503-4REU",
+   "before": {
+    "content": "$\\triangle \\mathrm{ABC}$는 정삼각형이다. $\\mathrm{\\overline{AC}}$의 중점을 $\\mathrm{D}$, $\\mathrm{\\overline{BD}}$의 중점을 $\\mathrm{E}$, $\\mathrm{\\angle }BCE=\\angle \\mathit{x}$라 할 때, $\\sin x$의 값을 구하면?\n\n1. $\\frac{\\sqrt{21}}{14}$\n2. $\\frac{\\sqrt{3}}{5}$\n3. $\\frac{\\sqrt{3}}{3}$\n4. $3\\sqrt{7}\\frac{}{14}$\n5. $5\\sqrt{7}\\frac{}{14}$"
+   },
+   "after": {
+    "content": "$\\triangle \\mathrm{ABC}$는 정삼각형이다. $\\mathrm{\\overline{AC}}$의 중점을 $\\mathrm{D}$, $\\mathrm{\\overline{BD}}$의 중점을 $\\mathrm{E}$, $\\mathrm{\\angle }BCE=\\angle \\mathit{x}$라 할 때, $\\sin x$의 값을 구하면?\n\n1. $\\frac{\\sqrt{21}}{14}$\n2. $\\frac{\\sqrt{3}}{5}$\n3. $\\frac{\\sqrt{3}}{3}$\n4. $\\frac{3\\sqrt{7}}{14}$\n5. $\\frac{5\\sqrt{7}}{14}$"
+   },
+   "fixes": [
+    "pull-numerator: 3\\sqrt{7}\\frac{}{14} → \\frac{3\\sqrt{7}}{14}",
+    "pull-numerator: 5\\sqrt{7}\\frac{}{14} → \\frac{5\\sqrt{7}}{14}"
+   ]
+  },
+  {
+   "id": "e127e687-c45d-4cb9-858c-ca9d3fa9da50",
+   "code": "J30503-8LBA",
+   "before": {
+    "content": "$\\angle \\mathrm{B}\\mathit{=}90°$인 직각삼각형 $\\mathrm{ABC}\\,$에서 $\\overline{\\mathrm{BC}\\mathit{}}=10\\mathrm{\\,}\\,cm\\mathit{\\,}$이다. $\\tan \\,A\\,=\\frac{5}{4}\\,$일 때, $\\frac{}{line}\\mathrm{AC}\\mathit{}\\,$의 길이는?\n\n1. $\\frac{\\sqrt{41}}{2}\\,\\,\\mathrm{cm}$\n2. $\\sqrt{41}\\mathit{\\,}\\,\\mathrm{cm}\\mathit{}$\n3. $\\frac{3\\sqrt{41}}{2}\\,\\,\\mathrm{cm}$\n4. $2\\sqrt{41}\\,\\,\\mathrm{cm}$\n5. $\\frac{5\\sqrt{41}}{2}\\,\\,\\mathrm{cm}$"
+   },
+   "after": {
+    "content": "$\\angle \\mathrm{B}\\mathit{=}90°$인 직각삼각형 $\\mathrm{ABC}\\,$에서 $\\overline{\\mathrm{BC}\\mathit{}}=10\\mathrm{\\,}\\,cm\\mathit{\\,}$이다. $\\tan \\,A\\,=\\frac{5}{4}\\,$일 때, $\\overline{\\mathrm{AC}}\\,$의 길이는?\n\n1. $\\frac{\\sqrt{41}}{2}\\,\\,\\mathrm{cm}$\n2. $\\sqrt{41}\\mathit{\\,}\\,\\mathrm{cm}\\mathit{}$\n3. $\\frac{3\\sqrt{41}}{2}\\,\\,\\mathrm{cm}$\n4. $2\\sqrt{41}\\,\\,\\mathrm{cm}$\n5. $\\frac{5\\sqrt{41}}{2}\\,\\,\\mathrm{cm}$"
+   },
+   "fixes": [
+    "overline: \\frac{}{line}\\mathrm{AC}\\mathit{} → \\overline{\\mathrm{AC}}"
+   ]
+  },
+  {
+   "id": "4043aa69-97a5-48c2-a53e-1c295590636b",
+   "code": "J30503-CB35",
+   "before": {
+    "content": "$\\mathrm{\\angle }C=\\mathit{90}°$인 직각삼각형 $\\mathrm{ABC}$에서 $\\sin \\,A=\\frac{2}{3}$일 때, $\\cos \\,A\\times \\tan \\,A$의 값은?(단, $0°<\\mathrm{\\angle }A<\\mathit{90}°$)\n\n1. $\\frac{1}{3}$\n2. $\\frac{2}{3}$\n3. $1$\n4. $4\\sqrt{5}\\frac{}{3}$\n5. $\\frac{10}{3}$"
+   },
+   "after": {
+    "content": "$\\mathrm{\\angle }C=\\mathit{90}°$인 직각삼각형 $\\mathrm{ABC}$에서 $\\sin \\,A=\\frac{2}{3}$일 때, $\\cos \\,A\\times \\tan \\,A$의 값은?(단, $0°<\\mathrm{\\angle }A<\\mathit{90}°$)\n\n1. $\\frac{1}{3}$\n2. $\\frac{2}{3}$\n3. $1$\n4. $\\frac{4\\sqrt{5}}{3}$\n5. $\\frac{10}{3}$"
+   },
+   "fixes": [
+    "pull-numerator: 4\\sqrt{5}\\frac{}{3} → \\frac{4\\sqrt{5}}{3}"
+   ]
+  },
+  {
+   "id": "ef22cdf0-071f-462c-804a-ce7ef1936c24",
+   "code": "J30503-G985",
+   "before": {
+    "content": "그림과 같이 $\\angle \\mathrm{A}\\mathit{=}90°$인 직각삼각형 $\\mathrm{ABC}\\,$에서 $\\frac{}{line}\\mathrm{AB}\\mathit{}=3$, $\\frac{}{line}\\mathrm{AC}\\mathit{}=5\\,$이다. 변 $\\mathrm{AB}$ 위의 점 $\\mathrm{D}\\,$에서 변 $\\mathrm{BC}\\,$에 내린 수선의 발을 $\\mathrm{E}\\mathit{}$, $\\angle \\mathrm{BDE}\\mathit{=}x°$라고 할 때, $\\sin \\,x°$의 값은?\n\n1. $\\frac{\\sqrt{34}}{34}$\n2. $\\frac{\\sqrt{34}}{17}$\n3. $\\frac{3\\sqrt{34}}{3}$\n4. $\\frac{2\\sqrt{34}}{17}$\n5. $\\frac{5\\sqrt{34}}{34}$"
+   },
+   "after": {
+    "content": "그림과 같이 $\\angle \\mathrm{A}\\mathit{=}90°$인 직각삼각형 $\\mathrm{ABC}\\,$에서 $\\overline{\\mathrm{AB}}=3$, $\\overline{\\mathrm{AC}}=5\\,$이다. 변 $\\mathrm{AB}$ 위의 점 $\\mathrm{D}\\,$에서 변 $\\mathrm{BC}\\,$에 내린 수선의 발을 $\\mathrm{E}\\mathit{}$, $\\angle \\mathrm{BDE}\\mathit{=}x°$라고 할 때, $\\sin \\,x°$의 값은?\n\n1. $\\frac{\\sqrt{34}}{34}$\n2. $\\frac{\\sqrt{34}}{17}$\n3. $\\frac{3\\sqrt{34}}{3}$\n4. $\\frac{2\\sqrt{34}}{17}$\n5. $\\frac{5\\sqrt{34}}{34}$"
+   },
+   "fixes": [
+    "overline: \\frac{}{line}\\mathrm{AB}\\mathit{} → \\overline{\\mathrm{AB}}",
+    "overline: \\frac{}{line}\\mathrm{AC}\\mathit{} → \\overline{\\mathrm{AC}}"
+   ]
+  },
+  {
+   "id": "85373d4c-8d7b-4773-87fa-19c23a9a2df8",
+   "code": "J30503-H3CV",
+   "before": {
+    "content": "다음 그림과 같이 $\\angle \\mathrm{B}=90°$ 인 직각삼각형 $\\mathrm{ABC}$에서 $\\mathrm{\\overline{AC}}$의 중점을 $\\mathrm{M}$이라 하자. $\\mathrm{\\overline{AC}}=9$, $\\mathrm{\\overline{BC}}=6$이고, $\\mathrm{\\angle }ABM=\\mathit{x}$라 할 때, $\\frac{\\sin x}{\\tan x}$의 값은?\n\n1. $\\frac{\\sqrt{3}}{2}$\n2. $\\frac{2}{3}$\n3. $\\frac{\\sqrt{5}}{3}$\n4. $2\\sqrt{5}\\frac{}{5}$\n5. $3\\sqrt{5}\\frac{}{5}$"
+   },
+   "after": {
+    "content": "다음 그림과 같이 $\\angle \\mathrm{B}=90°$ 인 직각삼각형 $\\mathrm{ABC}$에서 $\\mathrm{\\overline{AC}}$의 중점을 $\\mathrm{M}$이라 하자. $\\mathrm{\\overline{AC}}=9$, $\\mathrm{\\overline{BC}}=6$이고, $\\mathrm{\\angle }ABM=\\mathit{x}$라 할 때, $\\frac{\\sin x}{\\tan x}$의 값은?\n\n1. $\\frac{\\sqrt{3}}{2}$\n2. $\\frac{2}{3}$\n3. $\\frac{\\sqrt{5}}{3}$\n4. $\\frac{2\\sqrt{5}}{5}$\n5. $\\frac{3\\sqrt{5}}{5}$"
+   },
+   "fixes": [
+    "pull-numerator: 2\\sqrt{5}\\frac{}{5} → \\frac{2\\sqrt{5}}{5}",
+    "pull-numerator: 3\\sqrt{5}\\frac{}{5} → \\frac{3\\sqrt{5}}{5}"
+   ]
+  },
+  {
+   "id": "7e2a0fbe-b4dd-4456-a822-d3577d39e664",
+   "code": "J30503-HK6B",
+   "before": {
+    "content": "함수 $f(x)=\\sin \\,x-\\cos \\,x$라 할 때, $2f(45°)+f(60°)$의 값은?\n\n1. $0$\n2. $\\sqrt{3}-1\\frac{}{2}$\n3. $\\frac{\\sqrt{2}}{2}$\n4. $\\frac{\\sqrt{3}}{2}$\n5. $\\sqrt{2}+\\sqrt{3}\\frac{}{2}$"
+   },
+   "after": {
+    "content": "함수 $f(x)=\\sin \\,x-\\cos \\,x$라 할 때, $2f(45°)+f(60°)$의 값은?\n\n1. $0$\n2. $\\frac{\\sqrt{3}-1}{2}$\n3. $\\frac{\\sqrt{2}}{2}$\n4. $\\frac{\\sqrt{3}}{2}$\n5. $\\frac{\\sqrt{2}+\\sqrt{3}}{2}$"
+   },
+   "fixes": [
+    "pull-numerator: \\sqrt{3}-1\\frac{}{2} → \\frac{\\sqrt{3}-1}{2}",
+    "pull-numerator: \\sqrt{2}+\\sqrt{3}\\frac{}{2} → \\frac{\\sqrt{2}+\\sqrt{3}}{2}"
+   ]
+  },
+  {
+   "id": "788c0ba7-f700-4261-ae1d-aa6232958538",
+   "code": "J30503-JGLV",
+   "before": {
+    "content": "$\\angle \\mathrm{B}=90°$인 직각삼각형 $\\mathrm{ABC}$에서 $\\sin \\,A=\\frac{\\sqrt{5}}{5}$일 때, $\\tan \\,A$의 값은?\n\n1. $\\frac{1}{2}$\n2. $\\frac{\\sqrt{2}}{2}$\n3. $2\\sqrt{5}\\frac{}{5}$\n4. $2$\n5. $\\sqrt{5}$"
+   },
+   "after": {
+    "content": "$\\angle \\mathrm{B}=90°$인 직각삼각형 $\\mathrm{ABC}$에서 $\\sin \\,A=\\frac{\\sqrt{5}}{5}$일 때, $\\tan \\,A$의 값은?\n\n1. $\\frac{1}{2}$\n2. $\\frac{\\sqrt{2}}{2}$\n3. $\\frac{2\\sqrt{5}}{5}$\n4. $2$\n5. $\\sqrt{5}$"
+   },
+   "fixes": [
+    "pull-numerator: 2\\sqrt{5}\\frac{}{5} → \\frac{2\\sqrt{5}}{5}"
+   ]
+  },
+  {
+   "id": "3136b1c1-9faf-42ed-a044-df8992b2a0ad",
+   "code": "J30503-LNCC",
+   "before": {
+    "content": "$\\tan \\,A=4$일 때, $\\sin \\,A-\\,\\cos \\,A$의 값은? (단, $0\\,°<A<90\\,°$)\n\n1. $\\frac{\\sqrt{17}}{17}$\n2. $2\\sqrt{17}\\frac{}{17}$\n3. $3\\sqrt{17}\\frac{}{17}$\n4. $4\\sqrt{17}\\frac{}{17}$\n5. $5\\sqrt{17}\\frac{}{17}$"
+   },
+   "after": {
+    "content": "$\\tan \\,A=4$일 때, $\\sin \\,A-\\,\\cos \\,A$의 값은? (단, $0\\,°<A<90\\,°$)\n\n1. $\\frac{\\sqrt{17}}{17}$\n2. $\\frac{2\\sqrt{17}}{17}$\n3. $\\frac{3\\sqrt{17}}{17}$\n4. $\\frac{4\\sqrt{17}}{17}$\n5. $\\frac{5\\sqrt{17}}{17}$"
+   },
+   "fixes": [
+    "pull-numerator: 2\\sqrt{17}\\frac{}{17} → \\frac{2\\sqrt{17}}{17}",
+    "pull-numerator: 3\\sqrt{17}\\frac{}{17} → \\frac{3\\sqrt{17}}{17}",
+    "pull-numerator: 4\\sqrt{17}\\frac{}{17} → \\frac{4\\sqrt{17}}{17}",
+    "pull-numerator: 5\\sqrt{17}\\frac{}{17} → \\frac{5\\sqrt{17}}{17}"
+   ]
+  },
+  {
+   "id": "0d92a0ca-c29a-43d8-b76c-780aaf3ff1ef",
+   "code": "J30503-NVCX",
+   "before": {
+    "content": "그림과 같이 밑면이 정사각형이고, 옆면이 정삼각형인 사각뿔의 한 모서리의 길이가 $4\\,\\mathrm{cm}$이다. $\\mathrm{\\overline{CD}},~\\overline{BE}$의 중점을 각각 $\\mathrm{M},~N$이라 하고 $\\angle \\mathrm{AMN}=\\mathit{x}\\,°$라고 할 때, $\\sin \\,x\\,°\\times \\,\\tan \\,x\\,°$의 값은?\n\n1. $\\frac{\\sqrt{3}}{3}$\n2. $\\frac{\\sqrt{6}}{3}$\n3. $2\\sqrt{3}\\frac{}{3}$\n4. $\\sqrt{3}$\n5. $2$"
+   },
+   "after": {
+    "content": "그림과 같이 밑면이 정사각형이고, 옆면이 정삼각형인 사각뿔의 한 모서리의 길이가 $4\\,\\mathrm{cm}$이다. $\\mathrm{\\overline{CD}},~\\overline{BE}$의 중점을 각각 $\\mathrm{M},~N$이라 하고 $\\angle \\mathrm{AMN}=\\mathit{x}\\,°$라고 할 때, $\\sin \\,x\\,°\\times \\,\\tan \\,x\\,°$의 값은?\n\n1. $\\frac{\\sqrt{3}}{3}$\n2. $\\frac{\\sqrt{6}}{3}$\n3. $\\frac{2\\sqrt{3}}{3}$\n4. $\\sqrt{3}$\n5. $2$"
+   },
+   "fixes": [
+    "pull-numerator: 2\\sqrt{3}\\frac{}{3} → \\frac{2\\sqrt{3}}{3}"
+   ]
+  },
+  {
+   "id": "7fe693cd-f4ad-4af8-a138-cc45ec800b8b",
+   "code": "J30503-SVVE",
+   "before": {
+    "content": "다음 그림과 같은 직각삼각형 $\\mathrm{ABC}$에서 $\\mathrm{sinA}\\times \\mathrm{tanB}$ 의 값은?\n\n1. $\\frac{\\sqrt{11}}{5}$\n2. $2\\sqrt{3}\\frac{}{5}$\n3. $\\frac{\\sqrt{13}}{5}$\n4. $\\frac{\\sqrt{14}}{5}$\n5. $\\frac{\\sqrt{15}}{5}$"
+   },
+   "after": {
+    "content": "다음 그림과 같은 직각삼각형 $\\mathrm{ABC}$에서 $\\mathrm{sinA}\\times \\mathrm{tanB}$ 의 값은?\n\n1. $\\frac{\\sqrt{11}}{5}$\n2. $\\frac{2\\sqrt{3}}{5}$\n3. $\\frac{\\sqrt{13}}{5}$\n4. $\\frac{\\sqrt{14}}{5}$\n5. $\\frac{\\sqrt{15}}{5}$"
+   },
+   "fixes": [
+    "pull-numerator: 2\\sqrt{3}\\frac{}{5} → \\frac{2\\sqrt{3}}{5}"
+   ]
+  },
+  {
+   "id": "19e6cb8d-2d8e-4dd1-b571-ef98c6748512",
+   "code": "J30503-TA3N",
+   "before": {
+    "content": "$0°<A<90°$이고, $\\tan A=\\frac{1}{2}$일 때, $\\sin A\\times \\cos A+\\cos ^{2}A\\frac{}{(\\cos A+\\sin A)\\times (\\cos A-\\sin A)}$의 값은?\n\n1. $2\\sqrt{5}$\n2. $\\sqrt{5}$\n3. $1$\n4. $2$\n5. $\\frac{\\sqrt{5}}{5}$"
+   },
+   "after": {
+    "content": "$0°<A<90°$이고, $\\tan A=\\frac{1}{2}$일 때, $\\frac{\\sin A\\times \\cos A+\\cos ^{2}A}{(\\cos A+\\sin A)\\times (\\cos A-\\sin A)}$의 값은?\n\n1. $2\\sqrt{5}$\n2. $\\sqrt{5}$\n3. $1$\n4. $2$\n5. $\\frac{\\sqrt{5}}{5}$"
+   },
+   "fixes": [
+    "pull-numerator: \\sin A\\times \\cos A+\\cos ^{2}A\\frac{}{(\\cos A+\\sin A)\\times (\\cos A-\\sin A)} → \\frac{\\sin A\\times \\cos A+\\cos ^{2}A}{(\\cos A+\\sin A)\\times (\\cos A-\\sin A)}"
+   ]
+  },
+  {
+   "id": "e7d4fdcc-eb47-4d3e-b99f-75eb2bbd049c",
+   "code": "J30701-GW2N",
+   "before": {
+    "content": "$5$개의 자료 $x$, $y$, $8$, $4$, $5$의 평균이 $5$이고, 분산이 $14$일 때 $5$개의 자료 $x$, $3$, $5$, $y$, $9$의 표준편차는?\n\n1. $2\\sqrt{30}\\frac{}{5}$\n2. $4\\sqrt{10}\\frac{}{5}$\n3. $3$\n4. $2\\sqrt{3}$\n5. $4$"
+   },
+   "after": {
+    "content": "$5$개의 자료 $x$, $y$, $8$, $4$, $5$의 평균이 $5$이고, 분산이 $14$일 때 $5$개의 자료 $x$, $3$, $5$, $y$, $9$의 표준편차는?\n\n1. $\\frac{2\\sqrt{30}}{5}$\n2. $\\frac{4\\sqrt{10}}{5}$\n3. $3$\n4. $2\\sqrt{3}$\n5. $4$"
+   },
+   "fixes": [
+    "pull-numerator: 2\\sqrt{30}\\frac{}{5} → \\frac{2\\sqrt{30}}{5}",
+    "pull-numerator: 4\\sqrt{10}\\frac{}{5} → \\frac{4\\sqrt{10}}{5}"
+   ]
+  },
+  {
+   "id": "fa1c53f6-d24b-4f04-bd42-d2be87031811",
+   "code": "J30701-Q87W",
+   "before": {
+    "solution": "정답 평균: $12$, 중앙값: $7$, 최빈값: $4$, 대푯값으로 중앙값이 적절하다.풀이) 평균: $4+8+9+4+10+5+6+9+61+4\\frac{}{10}$$=12$중앙값: $7$, 최빈값: $4$대푯값으로 중앙값이 적절한 이유: $61$과 같이 다른 자료의 값들보다 지나치게 큰 값이 있으므로 평균 $12$는 $61$을 제외한 다른 모든 자료의 값들보다 크다. 따라서 평균은 자료를 대표하기에 적절하지 않고, 중앙값이 더 적절하다."
+   },
+   "after": {
+    "solution": "정답 평균: $12$, 중앙값: $7$, 최빈값: $4$, 대푯값으로 중앙값이 적절하다.풀이) 평균: $\\frac{4+8+9+4+10+5+6+9+61+4}{10}$$=12$중앙값: $7$, 최빈값: $4$대푯값으로 중앙값이 적절한 이유: $61$과 같이 다른 자료의 값들보다 지나치게 큰 값이 있으므로 평균 $12$는 $61$을 제외한 다른 모든 자료의 값들보다 크다. 따라서 평균은 자료를 대표하기에 적절하지 않고, 중앙값이 더 적절하다."
+   },
+   "fixes": [
+    "pull-numerator: 4+8+9+4+10+5+6+9+61+4\\frac{}{10} → \\frac{4+8+9+4+10+5+6+9+61+4}{10}"
+   ]
+  },
+  {
+   "id": "c132dd99-4d5e-4f5e-8b96-66c845b73fec",
+   "code": "J30701-V63J",
+   "before": {
+    "solution": "정답 $15$[풀이]$3(x_{1}+x_{2}+x_{3}+x_{4})-24=24\\times 4$이므로$x_{1}+x_{2}+x_{3}+x_{4}=40$, 평균 $m$의 값은 $10$이다.평균이 $10$이므로 분산을 구하는 식은 다음과 같다.$(x_{1}-10)^{2}+(x_{2}-10)^{2}+(x_{3}-10)^{2}+(x_{4}-10)^{2}\\frac{}{4}$처음에 주어진 네 수의 표준편차가 $\\sqrt{6}$, 즉 분산이 $6$이므로$(3x_{1}-6-24)^{2}+(3x_{2}-6-24)^{2}+(3x_{3}-6-24)^{2}+(3x_{4}-6-24)^{2}\\frac{}{4}=6$$9\\left\\{ (x_{1}-10)^{2}+(x_{2}-10)^{2}+(x_{3}-10)^{2}+(x_{4}-10)^{2}\\right\\} =24$$(x_{1}-10)^{2}+(x_{2}-10)^{2}+(x_{3}-10)^{2}+(x_{4}-10)^{2}=\\frac{8}{3}$이다.위의 식을 처음의 분산을 구하는 식에 대입하면,$(x_{1}-10)^{2}+(x_{2}-10)^{2}+(x_{3}-10)^{2}+(x_{4}-10)^{2}\\frac{}{4}=\\frac{\\frac{8}{3}}{~~4~~}=\\frac{2}{3}$즉, $n=\\frac{2}{3}$$\\frac{m}{n}=\\frac{10}{~~\\frac{2}{3}~~}=15$**다른풀이**$x_{1}$, $x_{2}$, $x_{3}$, $x_{4}$의 평균을 $m$이라고 하면, 처음 주어진 네 수는 각각의 값을 $3$배하고 $6$을 뺐으므로, 평균도 $3m-6$과 같다. $3m-6=24$, $m=10$분산은 편차 제곱의 평균이므로 배수의 제곱에 영향을 받는다. 처음 주어진 네 수의 분산이 $6$이고, 값을 $3$배하였으므로 분산은 $n$의 $9$배가 된다.$x_{1}$, $x_{2}$, $x_{3}$, $x_{4}$ 의 분산을 $n$이라고 하면 식은 다음과 같다. $n\\times 9=6$, $n=\\frac{2}{3}$"
+   },
+   "after": {
+    "solution": "정답 $15$[풀이]$3(x_{1}+x_{2}+x_{3}+x_{4})-24=24\\times 4$이므로$x_{1}+x_{2}+x_{3}+x_{4}=40$, 평균 $m$의 값은 $10$이다.평균이 $10$이므로 분산을 구하는 식은 다음과 같다.$\\frac{(x_{1}-10)^{2}+(x_{2}-10)^{2}+(x_{3}-10)^{2}+(x_{4}-10)^{2}}{4}$처음에 주어진 네 수의 표준편차가 $\\sqrt{6}$, 즉 분산이 $6$이므로$\\frac{(3x_{1}-6-24)^{2}+(3x_{2}-6-24)^{2}+(3x_{3}-6-24)^{2}+(3x_{4}-6-24)^{2}}{4}=6$$9\\left\\{ (x_{1}-10)^{2}+(x_{2}-10)^{2}+(x_{3}-10)^{2}+(x_{4}-10)^{2}\\right\\} =24$$(x_{1}-10)^{2}+(x_{2}-10)^{2}+(x_{3}-10)^{2}+(x_{4}-10)^{2}=\\frac{8}{3}$이다.위의 식을 처음의 분산을 구하는 식에 대입하면,$\\frac{(x_{1}-10)^{2}+(x_{2}-10)^{2}+(x_{3}-10)^{2}+(x_{4}-10)^{2}}{4}=\\frac{\\frac{8}{3}}{~~4~~}=\\frac{2}{3}$즉, $n=\\frac{2}{3}$$\\frac{m}{n}=\\frac{10}{~~\\frac{2}{3}~~}=15$**다른풀이**$x_{1}$, $x_{2}$, $x_{3}$, $x_{4}$의 평균을 $m$이라고 하면, 처음 주어진 네 수는 각각의 값을 $3$배하고 $6$을 뺐으므로, 평균도 $3m-6$과 같다. $3m-6=24$, $m=10$분산은 편차 제곱의 평균이므로 배수의 제곱에 영향을 받는다. 처음 주어진 네 수의 분산이 $6$이고, 값을 $3$배하였으므로 분산은 $n$의 $9$배가 된다.$x_{1}$, $x_{2}$, $x_{3}$, $x_{4}$ 의 분산을 $n$이라고 하면 식은 다음과 같다. $n\\times 9=6$, $n=\\frac{2}{3}$"
+   },
+   "fixes": [
+    "pull-numerator: (x_{1}-10)^{2}+(x_{2}-10)^{2}+(x_{3}-10)^{2}+(x_{4}-10)^{2}\\frac{}{4} → \\frac{(x_{1}-10)^{2}+(x_{2}-10)^{2}+(x_{3}-10)^{2}+(x_{4}-10)^{2}}{4}",
+    "pull-numerator: (3x_{1}-6-24)^{2}+(3x_{2}-6-24)^{2}+(3x_{3}-6-24)^{2}+(3x_{4}-6-24)^{2}\\frac{}{4} → \\frac{(3x_{1}-6-24)^{2}+(3x_{2}-6-24)^{2}+(3x_{3}-6-24)^{2}+(3x_{4}-6-24)^{2}}{4}",
+    "pull-numerator: (x_{1}-10)^{2}+(x_{2}-10)^{2}+(x_{3}-10)^{2}+(x_{4}-10)^{2}\\frac{}{4} → \\frac{(x_{1}-10)^{2}+(x_{2}-10)^{2}+(x_{3}-10)^{2}+(x_{4}-10)^{2}}{4}"
+   ]
+  }
+ ]
+}

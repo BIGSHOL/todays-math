@@ -1,0 +1,35 @@
+{
+ "note": "되돌리기 자료. 되돌리기: ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/reject-empty-frac.ts --revert --apply",
+ "rows": [
+  {
+   "id": "59b5a187-b713-4f3d-806a-dc6b6713a9c1",
+   "code": "HM10101-WRTA",
+   "before": "approved",
+   "왜": "빈 분수 1자리 — 분자가 DB 에 없다"
+  },
+  {
+   "id": "d3ee024c-e942-497e-a4f2-dbf1ca383730",
+   "code": "HM10201-SAEQ",
+   "before": "approved",
+   "왜": "빈 분수 1자리 — 분자가 DB 에 없다"
+  },
+  {
+   "id": "42223e0c-4a61-46b4-920e-ad88dddcd8bb",
+   "code": "HM20101-CF7Z",
+   "before": "approved",
+   "왜": "빈 분수 1자리 — 분자가 DB 에 없다"
+  },
+  {
+   "id": "a1f823ea-f799-4845-bc5e-d05759df6c6f",
+   "code": "HM20102-YRQP",
+   "before": "approved",
+   "왜": "빈 분수 1자리 — 분자가 DB 에 없다"
+  },
+  {
+   "id": "874dc090-7841-489c-90d4-79ed2ad3c61f",
+   "code": "J30203-KHXR",
+   "before": "approved",
+   "왜": "빈 분수 1자리 — 분자가 DB 에 없다"
+  }
+ ]
+}
