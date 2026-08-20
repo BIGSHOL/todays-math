@@ -246,14 +246,13 @@ async function main() {
   assertHeightCacheFresh(heightsPath, {
     kind: firstPage ? "first" : "continuation",
     rows: heights.length,
-    rowsHash: measuredRowsHash(
-      rows.map((r) => ({
-        id: r.id,
-        content: r.content,
-        figureUrls: r.figureUrls,
-        questionType: r.questionType,
-      })),
-    ),
+    /**
+     * ⚠️ **행을 통째로 넘긴다.** 예전에는 여기서 컬럼을 골라 담았는데, 지문에
+     *    `figureDims`·`figureSourceMm` 이 늘어난 것을 이쪽이 몰라서 **재자마자
+     *    「캐시가 낡았다」**로 멈췄다(2026-08-20). 지문이 무엇을 보는지는
+     *    `heightCacheManifest` 한 곳이 정한다 — 부르는 쪽이 옮겨 적지 않는다.
+     */
+    rowsHash: measuredRowsHash(rows),
     slotPx: slot,
   });
   const dimsSource = noDims
