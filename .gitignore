@@ -207,3 +207,5 @@ public/figures-backup-300swap/
 !scripts/qa/reports/rpm-stem-sheet.json
 scripts/qa/reports/svg-compare/
 scripts/qa/reports/svg-compare-blocked/
+# SVG 채택 차단 목록 — 적용 스크립트가 이걸 읽는다. PNG 시트는 커밋하지 않는다.
+!scripts/qa/reports/svg-blocklist.txt
