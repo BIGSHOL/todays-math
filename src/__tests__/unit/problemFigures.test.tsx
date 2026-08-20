@@ -366,3 +366,55 @@ describe("[그림] 흰 배경을 지면 색에 녹인다", () => {
     expect(screen.getByRole("img").getAttribute("style")).toBeNull();
   });
 });
+
+/**
+ * 단계 3 — `figureUrls` 가 **벡터 SVG 경로**로 바뀌어도 지면이 같은 규칙을 쓰는가.
+ *
+ * 앞 세션이 「`<img src="*.svg">` 가 나온다」를 80/80 확인했지만 그건 **별도
+ * 하니스**였다. 제품 컴포넌트가 실제로 그러는지는 확인한 적이 없다 —
+ * 「제품 함수를 그대로 부른다」와 「제품이 실제로 그렇게 그린다」는 다른 말이다.
+ */
+describe("[그림] 벡터 SVG 경로도 같은 규칙으로 그린다", () => {
+  const SVG = ["/figures-svg/1318/q10.svg"];
+
+  it("`.svg` 도 같은 `<img>` 로 나간다 — 확장자만 다르다", () => {
+    render(<ProblemContent content={STEM} figureUrls={SVG} />);
+    expect(screen.getByRole("img").getAttribute("src")).toBe(
+      "/figures-svg/1318/q10.svg",
+    );
+  });
+
+  /**
+   * 🔴 SVG 는 `width="70.000mm"` 를 **박아** 들고 있다 — 원본 크기가 아니라
+   *    인쇄 상한이다. 인라인 style 이 그것을 이겨야 작은 그림이 안 부푼다.
+   */
+  it("mm 를 알면 인라인 `width` 가 SVG 내장 70mm 를 이긴다", () => {
+    render(
+      <ProblemContent
+        content={STEM}
+        figureUrls={SVG}
+        figureDims={[238, 58]}
+        figureSourceMm={[32.5]}
+      />,
+    );
+    // jsdom 이 `32.50mm` 를 `32.5mm` 로 정규화한다 — 마크업에는 두 자리로 적힌다.
+    expect(screen.getByRole("img").style.width).toBe("32.5mm");
+  });
+
+  it("여러 장이 전부 SVG 여도 순서·짝이 그대로다", () => {
+    render(
+      <ProblemContent
+        content={STEM}
+        figureUrls={["/figures-svg/1/a.svg", "/figures-svg/1/b.svg"]}
+        figureDims={[200, 100, 300, 100]}
+        figureSourceMm={[40, 60]}
+      />,
+    );
+    const imgs = screen.getAllByRole("img");
+    expect(imgs.map((i) => i.getAttribute("src"))).toEqual([
+      "/figures-svg/1/a.svg",
+      "/figures-svg/1/b.svg",
+    ]);
+    expect(imgs.map((i) => i.style.width)).toEqual(["40mm", "60mm"]);
+  });
+});

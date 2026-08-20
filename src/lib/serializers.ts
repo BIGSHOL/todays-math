@@ -7,6 +7,7 @@ import type {
   Class as ClassRow,
   Problem as ProblemRow,
   ProblemAnswer as ProblemAnswerRow,
+  ProblemReport as ProblemReportRow,
   Progress as ProgressRow,
   Student as StudentRow,
   Test as TestRow,
@@ -21,6 +22,8 @@ import type {
   StudentEntity,
 } from "@/contracts/class.contract";
 import type { ProblemEntity, ProblemType } from "@/contracts/problem.contract";
+import type { ProblemReportEntity } from "@/contracts/problemReport.contract";
+import type { ReviewLogEntity } from "@/contracts/review.contract";
 import type { TestEntity, TestProblemItem } from "@/contracts/test.contract";
 import type {
   AnalysisReportEntity,
@@ -163,6 +166,47 @@ export function serializeAnalysisReport(
       { correct: number; total: number }
     >,
     recommendedUnits: row.recommendedUnits,
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+/**
+ * 문항 신고 행 → 계약 엔티티.
+ *
+ * 신고자가 탈퇴하면 `reporterId` 가 NULL 이 된다(ON DELETE SET NULL) — 기록은 남는다.
+ * 지우면 「몇 건이 있었나」가 거짓이 되기 때문이다.
+ */
+export function serializeProblemReport(
+  row: ProblemReportRow,
+): ProblemReportEntity {
+  return {
+    id: row.id,
+    problemId: row.problemId,
+    reporterId: row.reporterId,
+    reason: row.reason,
+    note: row.note,
+    status: row.status,
+    resolutionNote: row.resolutionNote,
+    resolvedAt: row.resolvedAt ? row.resolvedAt.toISOString() : null,
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+/** 검수 기록 한 줄. */
+export function serializeReviewLog(row: {
+  id: string;
+  problemId: string;
+  reviewerId: string | null;
+  verdict: "pass" | "unsure" | "defect";
+  note: string | null;
+  createdAt: Date;
+}): ReviewLogEntity {
+  return {
+    id: row.id,
+    problemId: row.problemId,
+    reviewerId: row.reviewerId,
+    verdict: row.verdict,
+    note: row.note,
     createdAt: row.createdAt.toISOString(),
   };
 }

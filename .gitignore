@@ -113,6 +113,11 @@ scripts/qa/reports/*
 # 적용 전/후가 있다. 이게 없으면 치수를 되돌릴 방법이 없다.
 !scripts/qa/reports/figure-swap-plan.json
 !scripts/qa/reports/figure-swap-ledger.json
+# SVG 채택 되돌리기 원장 — figureUrls 의 **옛 경로**가 여기에만 있다.
+!scripts/qa/reports/figure-svg-adopt.json
+# 단계 3 허용 목록 — 「눈으로 본 시트」가 여기 적혀 있다. 이게 없으면 무엇을
+# 근거로 채택했는지 다음 사람이 못 센다.
+!scripts/qa/reports/svg-whitelist.txt
 # 보기 그림 짝을 못 찾아 **출제에서 뺀** 문항 원장 — 행마다 이전 상태와 사유.
 # 영구 삭제가 아니라 되살릴 수 있어야 하고, 그 근거가 이 파일뿐이다.
 !scripts/qa/reports/choice-figure-discard-lock.json
@@ -205,3 +210,14 @@ public/figures-backup-300swap/
 # (칸 그림 `rpm-stem-sheet/` 9MB 는 재생성 가능하므로 안 넣는다.)
 !scripts/qa/reports/rpm-stem-sheet-decision.json
 !scripts/qa/reports/rpm-stem-sheet.json
+
+# 「무리 짝짓기 검수 시트」 — 같은 이유로 커밋한다. 판정이 «덩어리 3» 처럼 **번호로**
+# 적혀 있어서, 그 번호가 무엇을 가리키는지는 시트에만 있다 — 시트가 없으면 판정이
+# 뜻을 잃는다. (띠 그림 `rpm-pair-sheet/` 는 재생성 가능하므로 안 넣는다.)
+!scripts/qa/reports/rpm-pair-decision.json
+!scripts/qa/reports/rpm-pair-sheet.json
+
+# 「쪽 장식 제외」로 새로 오린 18건의 판정 — **사람이 무엇을 보고 「쓴다」고 했는지**가
+# 여기에만 있다. 붙이는 쪽(`apply-rpm-furniture.py`)이 이 파일을 읽어 대상을 좁히므로,
+# 없으면 다른 컴퓨터에서 그 실행이 **멈춘다**(조용히 전량을 붙이지 않게 일부러 그렇게 했다).
+!scripts/qa/reports/rpm-furniture-decision.json

@@ -112,6 +112,37 @@ function collectConsts(sf) {
 }
 
 /**
+ * 상수 **참조**만 남기고 글자(문자열 리터럴)는 지운다.
+ *
+ * 🔴 이걸 안 하면 클래스 이름 안의 낱말을 상수로 착각한다. 실제로 상수 이름이
+ *    `base` 일 때 `className="text-base"` 가 그 상수로 펼쳐져, cursor-pointer 를
+ *    쓰지도 않은 `<h1>` 이 위반으로 잡혔다(2026-08-20). **오탐은 가드를 죽인다** —
+ *    사람이 규칙을 꺼 버리면 진짜 결함이 그대로 나간다.
+ *
+ * 템플릿 문자열은 `${...}` **안만** 남긴다. 거기가 진짜 참조 자리다.
+ *
+ * @param {string} src
+ * @returns {string}
+ */
+function stripLiterals(src) {
+  return src
+    .replace(/"(?:[^"\\]|\\.)*"/g, " ")
+    .replace(/'(?:[^'\\]|\\.)*'/g, " ")
+    .replace(/`(?:[^`\\]|\\.)*`/g, (lit) => {
+      const refs = [];
+      const re = /\$\{([^}]*)\}/g;
+      let m;
+      while ((m = re.exec(lit)) !== null) refs.push(m[1]);
+      return ` ${refs.join(" ")} `;
+    });
+}
+
+/** 정규식 특수문자를 막는다 — 식별자에 `$` 가 들어갈 수 있다. */
+function escapeRe(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
  * @param {string} raw
  * @param {Map<string, string>} consts
  * @param {Set<string>} [seen]
@@ -119,9 +150,11 @@ function collectConsts(sf) {
  */
 function expandClass(raw, consts, seen = new Set()) {
   let out = raw;
+  // 펼칠지는 **참조 자리**에서만 판단하고, 결과에는 원본을 그대로 남긴다.
+  const refs = stripLiterals(raw);
   for (const [name, text] of consts) {
     if (seen.has(name)) continue;
-    if (new RegExp(`\\b${name}\\b`).test(raw)) {
+    if (new RegExp(`\\b${escapeRe(name)}\\b`).test(refs)) {
       seen.add(name);
       out += ` ${expandClass(text, consts, seen)}`;
     }

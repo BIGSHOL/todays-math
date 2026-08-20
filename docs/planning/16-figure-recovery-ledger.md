@@ -20,6 +20,9 @@
 
 ---
 
+> **이어받는 사람은 [`tracks/brief-handoff-20260820.md`](tracks/brief-handoff-20260820.md)
+> 를 먼저 읽어라** — 남은 103건의 쪼갬·다음 한 걸음·원장님 결정 대기 2건이 거기 있다.
+
 ## 1. 지금 상태 확인 — 이 명령 하나
 
 ```bash
@@ -28,7 +31,7 @@ npx tsx scripts/qa/report-missing-figures.ts --list   # 대상 전량
 npx tsx scripts/qa/report-missing-figures.ts --json   # scripts/qa/reports/missing-figures.json
 ```
 
-판정 규칙은 `scripts/qa/missingFigureRule.ts` **하나뿐**이다.
+판정 규칙은 `src/lib/figure/missingFigureRule.ts` **하나뿐**이다.
 세는 쪽과 잠그는 쪽이 같은 파일을 읽는다 — 목록을 양쪽에 각각 쓰면 둘이 같이 눈이 먼다
 (CLAUDE.md 2026-08-18).
 
@@ -40,13 +43,13 @@ npx tsx scripts/qa/report-missing-figures.ts --json   # scripts/qa/reports/missi
 
 ---
 
-## 2. 현재값 (2026-08-20 실측 — RPM **본문방향 27 + 검수 시트 42** 적용 후)
+## 2. 현재값 (2026-08-20 실측 — RPM **쪽 장식 제외 18** 적용 후)
 
 | 구분 | 건수 | 비고 |
 |------|-----:|------|
-| **그림 유실** | **167** | 본문이 그림을 지목하는데 그림이 없다 |
+| **그림 유실** | **103** | 본문이 그림을 지목하는데 그림이 없다 |
 | └ 그중 지금 출제 가능 | **0** | 전량 `directUseAllowed=false` 로 잠금 |
-| └ RPM 교재본(`transformed`) | 134 | **69건 회수·적용 완료** — §3.15·§3.16. 203 − 69 = 134 |
+| └ RPM 교재본(`transformed`) | 70 | **133건 회수·적용 완료** — §3.15~§3.18. 203 − 133 = 70 |
 | └ 기출(`past_exam`) | 31 | 옆 트랙이 21행 더 적용 (52 → 31) |
 | └ 자작(`manual`) | 2 | 그림 없이는 못 푸는 자작 문항 |
 | 본문 오염 (`[그림]` 자국) | 13 | 유실이 아니라 **머리말·학원 로고가 딸려 온 자국**. 별개 결함 — §4.3 |
@@ -95,6 +98,8 @@ npx tsx scripts/qa/report-missing-figures.ts --json   # scripts/qa/reports/missi
 | 2026-08-19 | **RPM 무리 그림** — 지면의 `[0004~0006]` 표시로 띠를 잡아 오려 냄. **적용 완료** | **149** | 272 | §3.13 |
 | 2026-08-20 | **RPM 본문방향** — 발문이 적어 둔 자리(「오른쪽 그림」·「아래 그림」)로 갈라 오려 냄. **적용 완료** | **27** | 209 | §3.15 |
 | 2026-08-20 | **RPM 검수 시트** — 네모 하나로 못 가르는 44건을 **사람이 보고** 골라 냄. **적용 완료** | **42** | 167 | §3.16 |
+| 2026-08-20 | **RPM 무리 짝짓기** — 띠도 덩어리도 찾았는데 «누구 것»인지만 몰랐다. 무리 18개를 사람이 봄. **적용 완료** | **46** | 121 | §3.17 |
+| 2026-08-20 | **RPM 쪽 장식 제외** — 「그림을 못 찾았다」 36건 중 **18건이 측면 색인 탭 때문**이었다. 되풀이로 가려 뺌. **적용 완료** | **18** | 103 | §3.18 |
 | 2026-08-19 | **RPM 「오른쪽 그림」 폴백** — 못 찾았을 때만 띠를 오른쪽 끝까지 넓혀 재검출. **적용 완료** | **15** | 257 | §3.14 |
 
 누적 **590건 회수**(기출 745 → 174). RPM 은 회수분을 **되돌려** 681로 돌아왔다 — 아래 §3.4.
@@ -550,15 +555,162 @@ ALLOW_UNIT_FIX=1     npx tsx scripts/qa/apply-missing-figure-lock.ts --revert --
 
 보고서: [`tracks/reports/rpm-stem-split.md`](tracks/reports/rpm-stem-split.md) §9
 
-### 남은 242건 (RPM 203 · 기출 52 · manual 2 중 RPM 몫)
+### 3.17 RPM **무리 짝짓기** — 46건 (2026-08-20)
+
+§4.4 가 「사람이 보고 짝을 정하는 검수 시트가 필요하다」로 막아 둔 자리다. 이 46건은
+**원본도 있고 띠도 찾았고 덩어리도 찾았다.** 못 한 것은 **짝짓기 하나**였다 —
+「그림이 2개인데 소문항이 3개」(24건) · 「소문항이 격자로 놓여 한 축으로 못 가름」(22건).
+
+```bash
+python scripts/figure/plan-rpm-group-figures.py            # 띠·덩어리·소문항을 잰다
+python scripts/figure/sheet-rpm-group-pair.py              # 무리마다 띠 한 장 + 소문항 발문
+python scripts/figure/sheet-rpm-group-pair.py --probe <무리키>   # 좌표 지도(네모를 직접 그릴 때)
+#   ↑ 판정을 scripts/qa/reports/rpm-pair-decision.json 에 **사유와 함께** 적는다
+python scripts/figure/sheet-rpm-group-pair.py --emit       # 판정대로 계획
+python scripts/figure/crop-rpm-from-pdf.py        --plan scripts/qa/reports/rpm-pair-crop-plan.json        --out  scripts/qa/reports/rpm-crop-result-pair.json --thin-pt 0.5
+npx tsx scripts/qa/report-rpm-figure-attach-impact.ts --result scripts/qa/reports/rpm-crop-result-pair.json
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/recover-rpm-figures-from-pdf.ts --attach        --result scripts/qa/reports/rpm-crop-result-pair.json
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/backfill-figure-dimensions.ts --apply
+ALLOW_UNIT_FIX=1     npx tsx scripts/qa/apply-missing-figure-lock.ts --revert --recovered
+```
+
+| | |
+|---|---|
+| 대상 | **46행 · 무리 18개** (짝짓기만 못 한 부류 전량) |
+| 회수 | **46/46.** 자동 덩어리 번호 그대로 24 · **사람이 네모를 그린 것 22** |
+| 눈으로 확인 | **고유 그림 22장 전량**(46행이 무리 공용을 나눠 쓴다). 남의 발문·선택지·번호 배지 **0** |
+| 판정 기록 | `scripts/qa/reports/rpm-pair-decision.json` (**커밋된다**, 46건 전부 사유 포함) |
+| D-20 | 덮어써서 잃는 것 **0/46** · 붙여도 잠긴 채 남을 것 **0/46** · 영향 단원 16개 전부 증가 |
+| 되돌리기 | `rpm-figure-attach-ledger.json` **279행** (46행 전부 `figureUrls: []`) |
+| 시험·변이 | `python scripts/qa/test-rpm-group-pair.py` · `bash scripts/qa/mutate-rpm-group-pair.sh` (**변이 8개 전부 빨강**) |
+| 손실 | **0.** 옛 계획 121행을 HEAD 코드와 대조 — **다른 것 0건**(새 동작은 전부 꺼짐 기본) |
+| 결과 | RPM 유실 134 → **88** · 전체 167 → **121** |
+
+#### 막고 있던 것은 원본이 아니라 **우리 코드 넷**이었다
+
+넷 다 「자동으로 고를 때는 옳은 규칙」인데, **사람이 네모를 그려 준 자리에서 거꾸로**
+걸렸다. 그래서 끄지 않고 **옵트인**으로 만들었다 — 켜지 않으면 한 바이트도 안 바뀐다.
+
+| 무엇이 막았나 | 어떻게 드러났나 | 어떻게 풀었나 |
+|---|---|---|
+| **곧은 선은 `is_empty` 다** — `plan-rpm-group-figures.py` 의 `Page.parts` 도 `crop` 의 `figure_rect` 도 두께 0인 획을 첫 줄에서 버린다 | 1-2 p11 `[0030~0033]` 의 가로 직선 **216.6~301.9pt** 가 통째로 안 보여, 사람이 그린 네모가 **222.8~295.0 으로 줄며 선을 양끝에서 잘랐다** | `--thin-pt` (기본 0=꺼짐). ⚠️ **회수한 RPM 계획에는 켜지 마라** — §3.14 가 이미 재 봤다(얻는 것 0, 좌표 52건 훼손) |
+| **`bleed`(±60pt) 가 울타리를 넘는다** | 격자 무리에서 사람이 「이 칸」이라 해도 60pt 가 **옆 칸을 끌고 온다.** 2-2 p41 `0198` 은 칸이 배지에 물려 버려졌고, `0202~0205` 는 「(단, 점 O는…)」 줄까지 자랐다 | 계획이 `bound` 를 주면 그 밖으로 안 자라고 **결과도 그 안으로 자른다.** 22행 중 **7행**의 좌표가 실제로 달라졌다 |
+| **「30×20 보다 작으면 잡티」** | 1-2 p9 의 반직선 `A B C` 는 **83×12.6pt** 다 — 한 줄짜리 그림은 원래 낮다 | 부르는 쪽이 문턱을 넘긴다. 울타리를 그은 행만 (8,8) |
+| **「글자 블록에 잠긴 획은 수식 부속」** | 2-2 p41 `0201` 은 치수 라벨(`10 cm`·`x cm`·`y cm`)이 **한 글자 블록**으로 묶여 평행사변형을 덮었고, 획 **12개가 전부** 버려졌다 | 울타리를 그은 자리에서만 끈다. 면적 비율로는 분수 가로줄과 안 갈린다 |
+
+그리고 **「옆 문항 상자를 덮었다」 가드가 무리 공용 그림에는 거꾸로다** — 형제들의 좌표
+상자와 겹치는 것이 정상이다(3-2 p12 `[0001~0006]`: 삼각형 하나를 여섯이 나눠 쓴다).
+계획이 `siblings` 를 넘겨 그 형제만 빼고 센다. 근거는 짐작이 아니라 **지면에 인쇄된
+무리 표시** `[0001~0006]` 다. 이 가드 하나로 8행이 떨어지고 있었다.
+
+> **다시 적는다 — 「곧은 선은 `is_empty`」는 이 저장소에서 세 번째다.**
+> 2026-08-19 에 기출 획 검출기(`figure_rect`)에서 한 번, 같은 날 그 가드를 잡으라고
+> 만든 `bisected` 안에서 또 한 번, 그리고 여기 무리 계획에서 세 번째다. **`fitz` 로
+> 획을 훑는 코드를 새로 쓸 때는 `is_empty` 를 먼저 의심하라.**
+
+#### 눈으로 봐야 갈리는 것 하나 — **badge 조각 vs 잘린 라벨**
+
+`0198` 은 치수 `7 cm` 가 번호 배지 `0198`(…94.1pt)과 **0.9pt 겹친다**. 배지를 다 빼면
+`7` 의 왼끝 1.1pt 가 잘리고, `7` 을 다 담으면 배지 `8` 의 초록 조각이 그림에 들어온다.
+**둘 다 실제로 떠서 보고** 배지 조각이 없는 쪽을 골랐다(글자는 여전히 `7` 로 읽힌다).
+자동으로는 못 고르는 자리다 — 판정과 근거를 `rpm-pair-decision.json` 에 남겼다.
+
+보고서: [`tracks/reports/rpm-group-pair.md`](tracks/reports/rpm-group-pair.md)
+
+### 3.18 RPM **쪽 장식 제외** — 18건 (2026-08-20)
+
+§3.17 뒤에 남은 RPM 88건 중 **52건**이 「자기 상자로 오리기」 경로의 잔여였다.
+그 사유를 세니 **35건이 「문항 안에서 그림을 못 찾았다」**다. 「없다」를 적기 전에
+지면을 봤다 — **획은 가득했다.** 진단기를 따로 쓰지 않고 제품 함수(`figure_rect`)를
+`trace` 와 함께 불러 세었더니, 36행 중 **29행이 「칸 경계를 가로지르는 것이 있다」**
+로 버려지고 있었고 그 가로지르는 것이 **17행에서 똑같은 51×28pt 짜리 하나**였다.
+
+떠 보니 **측면 색인 탭**(`04 다각형`)이었다. 쪽 오른쪽 여백에 찍히는 장식이라
+「단을 가로지른다」에도 「쪽을 덮는다」에도 안 걸리고, 「오른쪽 그림」 문항의
+`bleed`(±60pt) 안에 들어와 **삼킬 수도 없다**(울타리 밖까지 뻗는다).
+
+```bash
+python scripts/figure/probe-rpm-nofig.py           # 왜 못 찾았나 — 제품 함수를 trace 로 부른다
+python scripts/figure/crop-rpm-from-pdf.py --plan scripts/qa/reports/rpm-crop-plan-gated.json        --out scripts/qa/reports/rpm-crop-result-furn-gated.json        --widen-fallback --stem-split --furniture --thin-pt 0.5
+python scripts/figure/crop-rpm-from-pdf.py --plan scripts/qa/reports/rpm-group-crop-plan.json        --out scripts/qa/reports/rpm-crop-result-furn-group.json --stem-split --furniture --thin-pt 0.5
+python scripts/figure/apply-rpm-furniture.py --emit   # ← 붙일 것만 남긴다(판정 없으면 멈춘다)
+npx tsx scripts/qa/report-rpm-figure-attach-impact.ts --result scripts/qa/reports/rpm-crop-result-furn.json
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/recover-rpm-figures-from-pdf.ts --attach        --result scripts/qa/reports/rpm-crop-result-furn.json
+ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/backfill-figure-dimensions.ts --apply
+ALLOW_UNIT_FIX=1     npx tsx scripts/qa/apply-missing-figure-lock.ts --revert --recovered
+```
+
+| | |
+|---|---|
+| 대상 | 「자기 상자」 경로 잔여 **52건** (그중 「그림을 못 찾았다」 36) |
+| 회수 | **18/18.** 새로 오린 21칸 중 이미 그림이 있던 3칸은 안 건드렸다 |
+| 눈으로 확인 | **21칸 전량** — 오린 그림 + **지면 맥락**(칸을 빨강으로) 넉 장 |
+| 판정 기록 | `scripts/qa/reports/rpm-furniture-decision.json` (**커밋된다**, 18건 전부 사유) |
+| D-20 | 덮어써서 잃는 것 **0/18** · 붙여도 잠긴 채 남을 것 **0/18** · 영향 단원 10개 |
+| 되돌리기 | `rpm-figure-attach-ledger.json` **297행** (18행 전부 `figureUrls: []`) |
+| 시험·변이 | `python scripts/qa/test-rpm-furniture.py` · `bash scripts/qa/mutate-rpm-furniture.sh` (**변이 8개 전부 빨강**) |
+| 손실 | **0.** 회수분 계획 121행(관문 73 · 무리 48)과 짝짓기 46행을 켬/끔으로 돌려 대조 — **잃은 것 0 · 좌표 달라진 것 3**(≤0.6pt, 두께 0 선을 살린 만큼) |
+| 결과 | RPM 유실 88 → **70** · 전체 121 → **103** |
+
+보고서: [`tracks/reports/rpm-furniture.md`](tracks/reports/rpm-furniture.md)
+
+#### 「없다」를 적기 전에 **제품 함수를 trace 로 불러라**
+
+「문항 안에서 그림을 못 찾았다」는 **한 문장에 두 가지**가 섞여 있다 — 「후보가
+아예 없다」(7행)와 「후보는 있는데 완비 검사가 버렸다」(29행)다. 다음 수가 완전히
+다른데 사유 문자열은 같다. 진단기를 따로 만들면 그 둘이 또 갈라지므로
+(2026-08-19 `diagnose-no-figure.py` 가 그랬다) **제품 함수에 이미 있는 `trace`**
+를 쓴다. 그 한 번으로 「17행이 같은 51×28pt 하나에 걸렸다」가 바로 보였다.
+
+#### `--thin-pt` 는 **혼자 켜면 안 된다** — `--furniture` 와 짝이다
+
+§3.14 는 「회수한 RPM 계획에 `--thin-pt` 를 켜지 마라(얻는 것 0 · 좌표 52건 훼손)」로
+막아 뒀다. 그 측정은 **장식 제외가 꺼진 상태**였다. 선을 살리면 단 사이 구분선·
+머리띠 밑줄도 같이 살아나 띠가 그리로 자라기 때문이다 — `figure_rect` 의 주석이
+이미 「선을 살리면 쪽 장식도 같이 산다」라고 적어 둔 자리다. **둘을 같이** 켜서
+다시 재니 회수분에서 **잃은 것 0 · 달라진 것 3**(≤0.6pt)이었다.
+
+그리고 그 짝이 실제로 값을 했다: 장식만 켰을 때 새로 오린 23칸 중 하나
+(`a7ce23a1`)는 **x축이 양끝에서 잘려** 있었다. 축이 두께 0인 선이라 완비 검사가
+**볼 수 없었기** 때문이다. `--thin-pt 0.5` 를 같이 켜자 그 칸은 «발문이 들어왔다»로
+**제대로 떨어졌다.** 잘린 그림은 지면에서 티가 안 난다 — 안 붙이는 게 낫다.
+
+#### 「이미있음」은 「같은 것이 이미 있다」가 아니다
+
+오려내기는 낼 파일이 이미 있으면 건너뛰고 **성공으로 센다.** 그런데 그 파일은
+다른 설정으로 돈 예전 실행이 남긴 것일 수 있다 — 실측 3건이 지금 오릴 칸과
+**다른 그림**이었다(하나는 예전 것이 오히려 성했다: 산점도의 가로축 이름
+「달리기(초)」가 들어 있었다). 그러면 **눈으로 본 것과 붙는 것이 갈라진다.**
+그래서 그 사실을 결과 행에 `"이미있음": true` 로 남긴다.
+
+#### 넓게 돈 결과를 **처리 대상으로 물려받지 않는다**
+
+오려내기는 계획 전량을 돌므로 결과의 `성공` 87건 중 **69건은 이미 그림이 붙어
+있는 행**이다. 그대로 `--attach` 에 넘기면 붙이는 쪽이 `figureUrls` 를 **덮어쓴다**
+(그 스크립트는 경고만 하고 덮는다). D-20 집계가 「덮어써서 잃는 것 69건」으로
+잡아 줬다. `apply-rpm-furniture.py` 가 **지금 유실인 행만** 남기고, 뺀 것을 세어
+찍고, 분모가 안 맞으면 멈춘다. 2026-08-18 「43이 433」과 같은 자리다.
+
+### 남은 RPM 70건 — 무엇이 남았나 (2026-08-20 실측)
+
+> 세는 명령: `npx tsx scripts/qa/report-missing-figures.ts --json` 뒤,
+> 그 목록을 `rpm-group-plan-report.json` 의 사유와 맞대면 그대로 나온다.
 
 | 사유 | 건수 | 다음 수 |
 |---|---:|---|
-| 그림 못 찾음 (남은 것) | 28 | 칸 좌표를 남기고 이미지 잘림을 재야 한다 |
-| 발문과 붙어 못 가름 | 62 | 발문 줄을 덮고 오리기 + 육안 필수 |
-| 짝 못 정함 · 검사가 버림 | 69 | **검수 시트** — 자동으로 밀면 틀린 그림이 붙는다 |
-| 무리 표시 없는 지면 | 29 | 실측으로 추가 회수 **0** |
-| 이관 이력 없음 | 4 | **불가** |
+| 「자기 상자」 경로 잔여 | 34 | 아래로 쪼갠다 — **검수 시트**(§3.16 과 같은 길)로 사람이 네모를 그려야 한다 |
+| └ 칸에 지면 글자·선택지·문장이 들어왔다 | 10 | 네모를 그리고 지면 글자를 지운다 |
+| └ 완비 검사가 버렸다(무언가 칸을 가로지른다) | 9 | 무엇이 가로지르는지 `probe-rpm-nofig.py` 로 본다 |
+| └ 칸에 발문이 들어왔다 | 7 | 본문방향으로도 못 가른 부류 |
+| └ 후보가 아예 없다 | 5 | 원본 지면을 떠서 봐야 한다 |
+| └ 그 밖(칸이 한 단보다 넓다 · 너무 작다 · 사람이 뺌) | 3 | 개별 판단 |
+| 무리 표시 없는 지면 | 29 | 실측으로 추가 회수 **0** — 서식이 `[0004~0006]` 을 안 찍는다 |
+| 띠 안에 덩어리 없음 | 3 | 원본 지면을 떠서 봐야 한다 |
+| 이관 이력 없음 | 4 | **불가** (`externalId` 가 없다) |
+
+> ⚠️ **옛 표(「남은 242건」)는 분모가 달랐다.** 그때는 RPM 203 기준이고 지금은 70 이다.
+> 사유 이름도 그 사이 갈라졌다 — 「그림 못 찾음」이 실은 **「후보가 아예 없다」와
+> 「완비 검사가 버렸다」 둘**이었다(§3.18).
 
 원장님 지시(2026-08-19): **15개정은 안 쓴다. 22개정으로 쓴다.**
 

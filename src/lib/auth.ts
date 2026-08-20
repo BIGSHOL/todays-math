@@ -25,6 +25,7 @@ import type {} from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 
 import { authLoginRequestSchema } from "@/contracts/auth.contract";
+import type { UserRole } from "@/contracts/problemReport.contract";
 import { db } from "@/lib/db";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -61,7 +62,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        return { id: user.id, email: user.email, name: user.name };
+        // 역할을 여기서 실어 보낸다 — 미들웨어가 DB 를 안 읽고 판정할 수 있게.
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        };
       },
     }),
   ],
@@ -69,12 +76,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user && typeof token.id === "string") {
         session.user.id = token.id;
+        session.user.role = token.role === "reviewer" ? "reviewer" : "director";
       }
       return session;
     },
@@ -87,12 +96,18 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
+      role: UserRole;
     } & DefaultSession["user"];
+  }
+  interface User {
+    role?: UserRole;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
     id?: string;
+    /** 로그인 시점의 역할 사본. «참»은 DB 의 user.role 이다 — 바꾸면 재로그인해야 한다. */
+    role?: UserRole;
   }
 }

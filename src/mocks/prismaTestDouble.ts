@@ -156,6 +156,32 @@ interface ProblemAnswerRow {
   sequence: number;
 }
 
+/**
+ * 문항 신고. 신고자가 탈퇴하면 `reporterId` 가 null 이 된다 — **기록은 남는다.**
+ * 지우면 「몇 건이 있었나」가 거짓이 된다.
+ */
+interface ProblemReportRow {
+  id: string;
+  problemId: string;
+  reporterId: string | null;
+  reason: "figure" | "content" | "answer" | "solution" | "unit" | "other";
+  note: string | null;
+  status: "open" | "resolved" | "dismissed";
+  resolutionNote: string | null;
+  resolvedAt: Date | null;
+  resolvedById: string | null;
+  createdAt: Date;
+}
+
+interface ProblemReviewLogRow {
+  id: string;
+  problemId: string;
+  reviewerId: string | null;
+  verdict: "pass" | "unsure" | "defect";
+  note: string | null;
+  createdAt: Date;
+}
+
 interface AnalysisReportRow {
   id: string;
   testResultId: string;
@@ -457,6 +483,8 @@ let testProblemRows: TestProblemRow[] = [];
 let testResultRows: TestResultRow[] = [];
 let problemAnswerRows: ProblemAnswerRow[] = [];
 let analysisReportRows: AnalysisReportRow[] = [];
+let problemReportRows: ProblemReportRow[] = [];
+let problemReviewLogRows: ProblemReviewLogRow[] = [];
 let examRows: ExamRow[] = [];
 let examQuestionRows: ExamQuestionRow[] = [];
 let predictionRunRows: PredictionRunRow[] = [];
@@ -520,6 +548,8 @@ export function resetPrismaTestDouble() {
   testResultRows = [];
   problemAnswerRows = [];
   analysisReportRows = [];
+  problemReportRows = [];
+  problemReviewLogRows = [];
   examRows = [];
   examQuestionRows = [];
   predictionRunRows = [];
@@ -551,7 +581,10 @@ function prismaKnownError(
  *    `row["unit"]` 이 undefined 라 늘 false 가 된다. 조회가 조용히 빈 배열이 되는
  *    자리라, 아는 관계만 여기 등록하고 모르는 것은 아래에서 던진다.
  */
-type RelationResolvers<T> = Record<string, (row: T) => object | null>;
+type RelationResolvers<T> = Record<
+  string,
+  (row: T) => object | object[] | null
+>;
 
 function matchesWhere<T extends object>(
   row: T,
@@ -608,6 +641,32 @@ function matchesWhere<T extends object>(
     const resolveRelation = relations[key];
     if (resolveRelation) {
       const related = resolveRelation(row);
+
+      /**
+       * **여럿 관계**(`reviewLogs: { none: {...} }`). 실제 Prisma 는 `none`·`some`·
+       * `every` 를 받는다. 모르는 것을 조용히 통과시키면 「안 본 것만」 대기열이
+       * 가짜에서는 전량을 내고 제품에서는 안 내는 거짓 초록이 된다.
+       */
+      if (Array.isArray(related)) {
+        const spec = cond as Record<string, unknown>;
+        const keys = Object.keys(spec);
+        const unknown = keys.filter(
+          (k) => !["none", "some", "every"].includes(k),
+        );
+        if (unknown.length > 0) {
+          throw new Error(
+            `prismaTestDouble: 여럿 관계 '${key}' 에서 지원하지 않는 조건 '${unknown.join(",")}'`,
+          );
+        }
+        return keys.every((k) => {
+          const inner = spec[k] as Record<string, unknown>;
+          const hits = related.filter((r) => matchesWhere(r, inner));
+          if (k === "none") return hits.length === 0;
+          if (k === "some") return hits.length > 0;
+          return hits.length === related.length;
+        });
+      }
+
       if (related === null) return false;
       return matchesWhere(related, cond as Record<string, unknown>);
     }
@@ -736,6 +795,9 @@ const PROBLEM_RELATIONS = {
     row.unitId === null
       ? null
       : (unitRows.find((unit) => unit.id === row.unitId) ?? null),
+  /** 검수 대기열이 「내가 아직 안 본 것」을 `{ none: { reviewerId } }` 로 묻는다. */
+  reviewLogs: (row: { id: string }) =>
+    problemReviewLogRows.filter((log) => log.problemId === row.id),
 };
 
 function paginate<T>(rows: T[], skip = 0, take?: number): T[] {
@@ -778,6 +840,19 @@ function applySelect<T extends object>(
     }
     return projected;
   });
+}
+
+/** 신고 조회 — 준 조건만 견준다(빠뜨린 필드는 안 거른다). */
+function matchReports(
+  where?: Partial<
+    Pick<ProblemReportRow, "problemId" | "reporterId" | "reason" | "status">
+  >,
+) {
+  return problemReportRows.filter((row) =>
+    Object.entries(where ?? {}).every(
+      ([k, v]) => row[k as keyof ProblemReportRow] === v,
+    ),
+  );
 }
 
 function hydrateTestProblems(
@@ -1473,6 +1548,109 @@ const prismaModels = {
       return problemAnswerRows.filter((row) => matchesWhere(row, where));
     },
   },
+  problemReviewLog: {
+    async create({
+      data,
+    }: {
+      data: {
+        problemId: string;
+        reviewerId?: string | null;
+        verdict: ProblemReviewLogRow["verdict"];
+        note?: string | null;
+      };
+    }) {
+      const row: ProblemReviewLogRow = {
+        id: randomUUID(),
+        problemId: data.problemId,
+        reviewerId: data.reviewerId ?? null,
+        verdict: data.verdict,
+        note: data.note ?? null,
+        createdAt: new Date(),
+      };
+      problemReviewLogRows.push(row);
+      return row;
+    },
+    async findMany({
+      where,
+    }: {
+      where?: Partial<
+        Pick<ProblemReviewLogRow, "problemId" | "reviewerId" | "verdict">
+      >;
+    } = {}) {
+      return problemReviewLogRows.filter(
+        (row) =>
+          (where?.problemId === undefined ||
+            row.problemId === where.problemId) &&
+          (where?.reviewerId === undefined ||
+            row.reviewerId === where.reviewerId) &&
+          (where?.verdict === undefined || row.verdict === where.verdict),
+      );
+    },
+    async count({
+      where,
+    }: {
+      where?: Partial<
+        Pick<ProblemReviewLogRow, "problemId" | "reviewerId" | "verdict">
+      >;
+    } = {}) {
+      return (await prismaModels.problemReviewLog.findMany({ where })).length;
+    },
+  },
+
+  problemReport: {
+    async create({
+      data,
+    }: {
+      data: {
+        problemId: string;
+        reporterId?: string | null;
+        reason: ProblemReportRow["reason"];
+        note?: string | null;
+      };
+    }) {
+      const row: ProblemReportRow = {
+        id: randomUUID(),
+        problemId: data.problemId,
+        reporterId: data.reporterId ?? null,
+        reason: data.reason,
+        note: data.note ?? null,
+        status: "open",
+        resolutionNote: null,
+        resolvedAt: null,
+        resolvedById: null,
+        createdAt: new Date(),
+      };
+      problemReportRows.push(row);
+      return row;
+    },
+    async findFirst({
+      where,
+    }: {
+      where?: Partial<
+        Pick<ProblemReportRow, "problemId" | "reporterId" | "reason" | "status">
+      >;
+    } = {}) {
+      return matchReports(where)[0] ?? null;
+    },
+    async findMany({
+      where,
+    }: {
+      where?: Partial<
+        Pick<ProblemReportRow, "problemId" | "reporterId" | "reason" | "status">
+      >;
+    } = {}) {
+      return matchReports(where);
+    },
+    async count({
+      where,
+    }: {
+      where?: Partial<
+        Pick<ProblemReportRow, "problemId" | "reporterId" | "reason" | "status">
+      >;
+    } = {}) {
+      return matchReports(where).length;
+    },
+  },
   analysisReport: {
     async create({
       data,
@@ -1632,6 +1810,12 @@ export function seedActualExamScores(rows: ActualExamScoreRow[]) {
   actualExamScoreRows.push(...rows);
 }
 
+/**
+ * 🔴 **여기 안 적으면 트랜잭션 되돌리기가 그 표를 안 되돌린다.** 오류도 안 난다 —
+ *    실패한 트랜잭션이 남긴 행이 그대로 살아서, 「원자성」을 보는 테스트가
+ *    조용히 거짓이 된다. 실제로 problem_report 를 넣고 여기 안 적었다(2026-08-20).
+ *    `prismaTestDoubleSnapshot.test.ts` 가 이 파일을 읽어 빠진 배열을 잡는다.
+ */
 function snapshotRows() {
   return structuredClone({
     classRows,
@@ -1646,6 +1830,10 @@ function snapshotRows() {
     analysisReportRows,
     examRows,
     examQuestionRows,
+    problemReportRows,
+    problemReviewLogRows,
+    predictionRunRows,
+    actualExamScoreRows,
   });
 }
 
@@ -1662,6 +1850,10 @@ function restoreRows(snapshot: ReturnType<typeof snapshotRows>) {
   analysisReportRows = snapshot.analysisReportRows;
   examRows = snapshot.examRows;
   examQuestionRows = snapshot.examQuestionRows;
+  problemReportRows = snapshot.problemReportRows;
+  problemReviewLogRows = snapshot.problemReviewLogRows;
+  predictionRunRows = snapshot.predictionRunRows;
+  actualExamScoreRows = snapshot.actualExamScoreRows;
 }
 
 export const prismaTestDouble = {

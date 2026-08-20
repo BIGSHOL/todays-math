@@ -169,8 +169,11 @@ export async function assertFigureColumns(prisma: PrismaClient): Promise<void> {
     const col = `"${c.column}"`;
     const sql =
       c.type === "ARRAY"
-        ? `SELECT EXISTS (SELECT 1 FROM ${t}, unnest(${col}) AS v WHERE v LIKE '/figures/%') AS hit`
-        : `SELECT EXISTS (SELECT 1 FROM ${t} WHERE ${col} LIKE '/figures/%') AS hit`;
+        ? // ⚠️ `'/figures/%'` 가 아니라 `'/figures%'` 다. 앞의 것은 `/figures-svg/…`
+          //    를 **안 본다** — 벡터만 담은 컬럼이 생기면 그 컬럼은 이 검사에서
+          //    구조적으로 0이 된다. 훑는 경로에서 겪은 것과 **같은 눈멂**이다.
+          `SELECT EXISTS (SELECT 1 FROM ${t}, unnest(${col}) AS v WHERE v LIKE '/figures%') AS hit`
+        : `SELECT EXISTS (SELECT 1 FROM ${t} WHERE ${col} LIKE '/figures%') AS hit`;
     const [row] = (await prisma.$queryRawUnsafe(sql)) as Array<{
       hit: boolean;
     }>;

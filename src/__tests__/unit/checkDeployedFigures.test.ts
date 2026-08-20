@@ -131,3 +131,18 @@ describe("어느 디렉터리를 보나 — 미리 정하지 않는다", () => {
     expect(() => treeFigureFiles("없는참조-zzz")).toThrow(/읽을 수 없다/);
   });
 });
+
+describe("거짓 경보도 결함이다", () => {
+  /**
+   * 밀 때마다 수백 건이 빨갛게 나오면 다음 사람은 훅을 우회한다. 그때부터
+   * **진짜 결함도 같이 안 보인다** — 침묵하는 가드와 결과가 같다.
+   * 그래서 「빠진 것을 잡는가」뿐 아니라 **「있는 것을 없다고 하는가」**도 못 박는다.
+   */
+  it("🔴 배포본에 있는 SVG 를 «없다»고 하면 안 된다", () => {
+    const present = new Set(["public/figures-svg/rpm/a/0.svg"]);
+    const rows = [
+      { code: "A", figureUrls: ["/figures-svg/rpm/a/0.svg"], ok: true },
+    ];
+    expect(brokenRows(rows, present)).toHaveLength(0);
+  });
+});

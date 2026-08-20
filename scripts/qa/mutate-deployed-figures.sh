@@ -8,7 +8,15 @@ cp "$F" "$F.bak"
 trap 'mv "$F.bak" "$F"' EXIT
 
 fail=0
+# ⚠️ 변이가 **적용도 안 됐는데** 초록이 나오면 그건 «가드가 장식»이 아니라
+#    치환 문자열이 빗나간 것이다. 2026-08-20 에 실제로 그랬다 —
+#    안쪽 python 이 따옴표 때문에 죽었는데 출력은 「🟢 초록 ← 가드가 아니다」였고,
+#    하마터면 멀줦한 가드를 고치러 갈 뻔했다. 둘이 같으면 판정하지 않고 멈춘다.
 run() {
+  if cmp -s "$F" "$F.bak"; then
+    echo "🔴 변이가 안 먹혔다 — $1  ← 치환 문자열을 고쳐라. 이건 판정이 아니다"
+    fail=1; cp "$F.bak" "$F"; return
+  fi
   if npx vitest run "$T" >/dev/null 2>&1; then
     echo "🟢 초록 — $1  ← 가드가 아니다"; fail=1
   else

@@ -83,6 +83,39 @@ AXIS_EVEN = 2.5
 NUMERIC = re.compile(r"^[0-9]+$")
 _HANGUL = re.compile(r"[가-힣]")
 
+#: 쪽 장식(머리띠·로고·**측면 색인 탭**) 판정 — 낱말이 아니라 **되풀이**로 가른다.
+#: 서식이 바뀌어도 걸리고, 진짜 그림은 한 번만 나오므로 안 걸린다.
+#: ⚠️ **여기 한 곳에만 둔다.** `crop-pdf-by-stem.py` 는 이 모듈을 이미 통째로
+#:    import 하므로 거기서 `croprpm.furniture_keys` 를 쓴다 — 두 벌이 되면
+#:    한쪽만 고쳐도 아무도 모른다(`CIRCLED_ANSWER` 와 같은 이유).
+FURNITURE_MIN_PAGES = 2
+#: 되풀이 판정을 위한 좌표 반올림(pt). 쪽마다 1pt 안팎으로 흔들린다.
+#: ⚠️ `figure_rect` 의 열쇠 계산도 **이 값을 쓴다.** 예전엔 거기에 `3` 이 손으로
+#:    적혀 있어, 이 값을 고치면 세는 쪽과 거르는 쪽이 조용히 갈라졌다.
+FURNITURE_ROUND = 3
+
+
+def furniture_keys(doc) -> set[tuple[int, int, int, int]]:
+    """여러 쪽에 **같은 자리 같은 크기**로 되풀이되는 그림틀 = 쪽 장식(머리띠·로고).
+
+    낱말이 아니라 되풀이로 가른다 — 서식이 바뀌어도 걸리고, 진짜 그림은 안 걸린다.
+    """
+    seen: dict[tuple[int, int, int, int], set[int]] = {}
+    for i in range(doc.page_count):
+        page = doc[i]
+        rects = [fitz.Rect(b["bbox"]) for b in page.get_text("rawdict").get("blocks", [])
+                 if b.get("type") != 0]
+        rects += [fitz.Rect(d["rect"]) for d in page.get_drawings()]
+        for r in rects:
+            # ⚠️ **두께 0인 선을 여기서 버리면 안 된다.** 단 사이 구분선·머리띠 밑줄이
+            #    바로 그 모양이라, 버리면 「쪽마다 되풀이되는 것」 목록에 안 들어가고
+            #    `thin_pt` 로 선을 살린 순간 그 장식이 그림으로 딸려 온다.
+            if r.is_infinite or (r.x1 - r.x0 <= 0 and r.y1 - r.y0 <= 0):
+                continue
+            k = tuple(int(round(v / FURNITURE_ROUND)) for v in (r.x0, r.y0, r.x1, r.y1))
+            seen.setdefault(k, set()).add(i)
+    return {k for k, pages in seen.items() if len(pages) >= FURNITURE_MIN_PAGES}
+
 
 def span_rect(sp, tight: bool = False) -> fitz.Rect:
     """조각(span)의 상자. `tight` 면 **보이는 글자에 바짝 조인다.**
@@ -352,6 +385,8 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
                 label_syntax: re.Pattern | None = None,
                 bound: fitz.Rect | None = None,
                 avoid_stem: bool = False,
+                min_size: tuple[float, float] = (30.0, 20.0),
+                drop_inside_text: bool = True,
                 trace: dict | None = None,
                 limit: fitz.Rect | None = None,
                 ink_out: list[fitz.Rect] | None = None) -> fitz.Rect | None:
@@ -481,7 +516,17 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
     ]
 
     def is_inside_text(r: fitz.Rect) -> bool:
-        """글자 블록에 거의 잠겨 있으면 수식 부속이다(분수 가로줄·근호 등)."""
+        """글자 블록에 거의 잠겨 있으면 수식 부속이다(분수 가로줄·근호 등).
+
+        ⚠️ **글자가 그림을 감싸고 흐르면 거꾸로 걸린다.** 실측 2-2 p41 `0201` 은
+        치수 라벨(`10 cm`·`x cm`·`y cm`)이 한 글자 블록 `[183.8,713.9,290.7,752.7]`
+        으로 묶여 평행사변형을 통째로 덮었고, 획 12개가 **전부** 여기서 버려졌다.
+        면적 비율로는 분수 가로줄과 안 갈린다(둘 다 «블록 안»이다). 그래서 문턱을
+        옮기는 대신, **사람이 「이 칸이 그림이다」라고 울타리를 그은 자리에서는
+        이 가드를 끈다** — 그 판단이 곧 이 가드가 대신하던 것이다.
+        """
+        if not drop_inside_text:
+            return False
         for t in text_blocks:
             inter = r & t
             if not inter.is_empty and inter.get_area() >= r.get_area() * 0.8:
@@ -673,8 +718,9 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
             _t("획:쪽장식")
             continue
         if furniture is not None:
-            k = tuple(int(round(v / 3)) for v in (d["rect"][0], d["rect"][1],
-                                                  d["rect"][2], d["rect"][3]))
+            k = tuple(int(round(v / FURNITURE_ROUND))
+                      for v in (d["rect"][0], d["rect"][1],
+                                d["rect"][2], d["rect"][3]))
             if k in furniture:
                 _t("획:되풀이장식")
                 continue
@@ -882,8 +928,17 @@ def figure_rect(page, box: fitz.Rect, stem_key: str = "",
 
     # 쪽 밖으로는 못 나간다. 발문 상자로는 자르지 않는다(bleed 참조).
     out = out & page.rect
+    # **울타리가 있으면 그 밖으로는 한 pt 도 안 나간다.** `bleed` 를 좁히는 것만으로는
+    # 모자란다 — 라벨 되찾기·완비 검사가 자란 뒤 `PAD` 가 다시 밀어내서, 실측
+    # 2-2 p41 `0198` 은 울타리 96 을 줬는데 93.2 가 나와 번호 배지에 물렸다.
+    if bound is not None:
+        out = out & bound
     # 너무 작으면 그림이 아니라 잡티다(밑줄 한 토막·점 하나).
-    if out.is_empty or out.width < 30 or out.height < 20:
+    # ⚠️ **한 줄짜리 그림은 원래 낮다** — 실측 1-2 p9 `[0014~0017]` 의 반직선
+    #    `A B C` 는 83×12.6pt 라 기본 문턱(30×20)에 걸린다. 그 문턱은 «자동으로
+    #    골랐을 때 잡티를 거른다»는 뜻이지 «그림이 이보다 크다»는 뜻이 아니므로,
+    #    사람이 네모를 그려 준 자리에서는 부르는 쪽이 낮춰 준다.
+    if out.is_empty or out.width < min_size[0] or out.height < min_size[1]:
         _t("버림:너무작다")
         return None
     _t("찾음")
@@ -1097,6 +1152,25 @@ def main() -> None:
     ap.add_argument("--stem-split", action="store_true",
                     help="칸에 **발문이 들어왔을 때만** 본문이 말하는 축(「오른쪽 그림」·"
                          "「아래 그림」)으로 상자를 갈라 다시 찾는다")
+    # 기본은 0(꺼짐) — 켜지 않으면 동작이 한 바이트도 안 바뀐다.
+    # ⚠️ **혼자 켜지 마라 — `--furniture` 와 짝이다.** 선을 살리면 쪽 장식(단 사이
+    #    구분선·머리띠 밑줄)도 같이 살아나 띠가 그리로 자란다. 2026-08-19 에 혼자
+    #    켰다가 얻는 것 0건에 이미 회수한 52건의 좌표가 왼쪽 글자 열까지 벌어졌다(§3.14).
+    #    2026-08-20 에 **둘을 같이** 켜서 다시 재니 회수분 121행 중 좌표가 달라진 것
+    #    3건(≤0.6pt)·잃은 것 0건이고, 못 오리던 21행을 새로 오렸다.
+    #    켤 자리는
+    #    **선으로 그린 그림이 든 새 계획**이다 — 실측 1-2 p11 `[0030~0033]` 의
+    #    가로 직선(216.6~301.9pt)이 `is_empty` 라 통째로 안 보여, 사람이 그린 네모가
+    #    222.8~295.0 으로 **줄어들며 선을 양끝에서 잘랐다.**
+    ap.add_argument("--thin-pt", type=float, default=0.0,
+                    help="두께 0인 곧은 선을 이만큼 부풀려 살린다 (0=예전 그대로)")
+    # 기본은 꺼짐 — 켜지 않으면 동작이 한 바이트도 안 바뀐다(`thin_pt` 와 같은 이유).
+    # ⚠️ 켜기 전에 **무엇을 깎는지 세라.** 되풀이 판정은 「같은 자리에 두 번 나오면
+    #    장식」이라, 같은 그림을 두 쪽에 실은 교재에서는 진짜 그림도 걸릴 수 있다.
+    #    실측(2026-08-20): 이미 회수한 RPM 계획 전량에 켜 봤을 때 좌표가 달라진 것
+    #    **0건**이었다. 다른 책에 켤 때는 그 검산을 다시 하라.
+    ap.add_argument("--furniture", action="store_true",
+                    help="여러 쪽에 되풀이되는 획(머리띠·측면 색인 탭)을 그림에서 뺀다")
     a = ap.parse_args()
 
     plan_path = pathlib.Path(a.plan)
@@ -1143,6 +1217,8 @@ def main() -> None:
         print("   → 문서 docs/planning/16-figure-recovery-ledger.md §4.1 참조")
 
     docs: dict[str, fitz.Document] = {}
+    # 쪽 장식 열쇠는 **책 단위로 한 번만** 잰다 — 쪽마다 다시 재면 책 전체를 훑는다.
+    furn: dict[str, set] = {}
     ok: list[dict] = []
     fail: list[dict] = []
     skipped = 0
@@ -1155,9 +1231,15 @@ def main() -> None:
                 continue
             out = pathlib.Path(it["out"])
             if out.exists() and out.stat().st_size > 0:
+                # ⚠️ **「이미있음」은 「같은 것이 이미 있다」가 아니다.** 그 파일은 다른
+                #    설정으로 돈 예전 실행이 남긴 것일 수 있다 — 실측(2026-08-20) 3건이
+                #    지금 오릴 칸과 **다른 그림**이었다(하나는 예전 것이 더 성했다).
+                #    그런데 결과에는 「성공」으로만 적혀, 눈으로 본 것과 붙는 것이
+                #    조용히 갈라진다. 그래서 **그 사실을 결과에 남긴다.**
                 skipped += 1
                 ok.append(
-                    {"problemId": it["problemId"], "publicPath": to_public(out)}
+                    {"problemId": it["problemId"], "publicPath": to_public(out),
+                     "이미있음": True}
                 )
                 continue
 
@@ -1167,6 +1249,8 @@ def main() -> None:
                 continue
             if pdf not in docs:
                 docs[pdf] = fitz.open(pdf)
+                if a.furniture:
+                    furn[pdf] = furniture_keys(docs[pdf])
             doc = docs[pdf]
 
             page_index = int(it["page"]) - 1
@@ -1186,6 +1270,19 @@ def main() -> None:
                 continue
 
             db_key = content_key(content.get(it["problemId"], ""))
+            # ── 사람이 그린 네모는 «찾을 자리»가 아니라 **울타리**다 ──────────
+            # `figure_rect` 는 `box` 를 **찾기 시작할 자리**로 보고 ±`BOX_BLEED`(60pt)
+            # 까지 자란다. 자동 좌표에는 그게 맞다(정사각뿔 꼭대기가 28pt 밖이었다).
+            # 그런데 격자로 놓인 무리에서 사람이 «이 칸이다»라고 그려 주면, 그 60pt 가
+            # **옆 칸 그림을 끌고 온다** — 실측 1-2 p45 `0282` 는 칸 글자가 라벨뿐인데도
+            # 「지면 글자가 들어왔다」로 떨어졌다(자란 칸이 답칸 줄까지 내려갔다).
+            # 계획이 `bound` 를 주면 그 밖으로는 자라지 않는다. 없으면 예전 그대로.
+            bound = fitz.Rect(*it["bound"]) & page.rect if it.get("bound") else None
+            # ── 같은 무리의 형제는 «옆 문항»이 아니다 ─────────────────────
+            # 무리 공용 그림은 형제들의 좌표 상자와 **겹치는 것이 정상**이다
+            # (실측 3-2 p12 `[0001~0006]`: 삼각형 하나를 여섯이 나눠 쓴다).
+            # 근거는 짐작이 아니라 **지면에 인쇄된 무리 표시** `[0001~0006]` 다.
+            siblings = set(it.get("siblings", []))
             avoid = [fitz.Rect(*a) for a in it.get("avoid", [])]
             # 「삼키지 말 것」과 「들어오면 버릴 것」은 **다른 목록**이다 — 계획 주석 참조.
             forbid = [fitz.Rect(*a) for a in it.get("forbid", avoid)]
@@ -1197,6 +1294,10 @@ def main() -> None:
                 갈라지면 같이 눈이 먼다(이 파일이 여러 번 값을 치른 자리다).
                 """
                 fig = figure_rect(page, search, db_key, avoid=avoid, limit=limit,
+                                  thin_pt=a.thin_pt, bound=bound,
+                                  furniture=furn.get(pdf),
+                                  min_size=(8.0, 8.0) if bound else (30.0, 20.0),
+                                  drop_inside_text=bound is None,
                                   ink_out=ink_out)
                 if fig is None:
                     return None, "문항 안에서 그림을 못 찾았다"
@@ -1254,6 +1355,8 @@ def main() -> None:
                 clash = None
                 for b in by_page.get((pathlib.Path(pdf).name, int(it["page"])), []):
                     if b["problemId"] == it["problemId"]:
+                        continue
+                    if b["externalId"] in siblings:
                         continue
                     other = fitz.Rect(*b["rect"])
                     inter = other & rect

@@ -133,3 +133,58 @@ describe("[D-30] 저장소 — 현재 src UI에 거짓 어포던스가 없다", 
     expect(findings).toEqual([]);
   });
 });
+
+describe("[D-30] 가드가 헛짚지 않는다 — 오탐은 가드를 죽인다", () => {
+  // 🔴 실제로 났다(2026-08-20): 상수 이름이 `base` 인데 검사기가 클래스 문자열
+  //    안의 **`text-base`** 를 그 상수로 보고 펼쳤다. 그 상수에 cursor-pointer 가
+  //    있어서 애먼 <h1> 이 위반으로 잡혔다.
+  //    오탐이 쌓이면 사람이 가드를 끈다 — 그러면 진짜 결함이 나간다.
+  it("클래스 이름 안의 낱말을 상수로 착각하지 않는다 (text-base ↔ const base)", () => {
+    const findings = scanTsx(
+      "Header.tsx",
+      `const base = "cursor-pointer rounded px-3";
+      export function Header() {
+        return (
+          <div>
+            <h1 className="text-base font-semibold">제목</h1>
+            <button type="button" className={base + " border"}>누름</button>
+          </div>
+        );
+      }`,
+    );
+    expect(findings.map((f) => f.rule)).not.toContain("false-pointer");
+  });
+
+  it("그래도 상수를 통한 진짜 위반은 여전히 잡는다", () => {
+    const findings = scanTsx(
+      "Card.tsx",
+      `const base = "cursor-pointer rounded";
+      export function Card() {
+        return <article className={base}>카드</article>;
+      }`,
+    );
+    expect(findings.map((f) => f.rule)).toContain("false-pointer");
+  });
+
+  it("템플릿 문자열의 ${} 안에 있는 상수도 잡는다", () => {
+    const findings = scanTsx(
+      "Card.tsx",
+      `const hot = "cursor-pointer";
+      export function Card() {
+        return <article className={\`grid \${hot}\`}>카드</article>;
+      }`,
+    );
+    expect(findings.map((f) => f.rule)).toContain("false-pointer");
+  });
+
+  it("템플릿 문자열의 **글자** 부분은 상수로 안 읽는다", () => {
+    const findings = scanTsx(
+      "Card.tsx",
+      `const base = "cursor-pointer";
+      export function Card() {
+        return <article className={\`text-base p-2\`}>카드</article>;
+      }`,
+    );
+    expect(findings.map((f) => f.rule)).not.toContain("false-pointer");
+  });
+});

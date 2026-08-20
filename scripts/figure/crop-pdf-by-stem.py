@@ -100,9 +100,10 @@ EXAM_SYNTAX = re.compile(
 #: 그림 3건이 같이 걸렸다**(3509-14·3627-15·5466-6) — 위치는 가르는 성질이 아니다.
 #: 가르는 성질은 **되풀이**다: 머리띠는 여러 쪽에 같은 자리 같은 크기로 나온다.
 #: 그림은 한 번만 나온다.
-FURNITURE_MIN_PAGES = 2
-#: 되풀이 판정을 위한 좌표 반올림(pt). 쪽마다 1pt 안팎으로 흔들린다.
-FURNITURE_ROUND = 3
+#: ⚠️ **정의는 `crop-rpm-from-pdf.py` 한 곳에 있다.** 여기서 다시 적으면 두 벌이
+#:    되고, 두 벌이 되면 한쪽만 고쳐도 아무도 모른다(`CIRCLED_ANSWER` 와 같은 이유).
+FURNITURE_MIN_PAGES = croprpm.FURNITURE_MIN_PAGES
+FURNITURE_ROUND = croprpm.FURNITURE_ROUND
 #: 두께 0인 곧은 선을 이만큼 부풀려 «있는 것»으로 본다. `figure_rect` 의 첫 가드
 #: `is_empty` 가 **곧은 선을 전부 버리기** 때문이다 — 실측으로 남은 44행 중 35행이
 #: 「획이 아예 없다」로 떨어졌는데 그 쪽에는 획이 99개 있었다(97개가 두께 0).
@@ -514,27 +515,8 @@ def crossed_question_number(page, sb: fitz.Rect, fig: fitz.Rect, q: int) -> int 
     return None
 
 
-def furniture_keys(doc) -> set[tuple[int, int, int, int]]:
-    """여러 쪽에 **같은 자리 같은 크기**로 되풀이되는 그림틀 = 쪽 장식(머리띠·로고).
-
-    낱말이 아니라 되풀이로 가른다 — 서식이 바뀌어도 걸리고, 진짜 그림은 안 걸린다.
-    """
-    seen: dict[tuple[int, int, int, int], set[int]] = {}
-    for i in range(doc.page_count):
-        page = doc[i]
-        rects = [fitz.Rect(b["bbox"]) for b in page.get_text("rawdict").get("blocks", [])
-                 if b.get("type") != 0]
-        rects += [fitz.Rect(d["rect"]) for d in page.get_drawings()]
-        for r in rects:
-            # ⚠️ **두께 0인 선을 여기서 버리면 안 된다.** 단 사이 구분선·머리띠 밑줄이
-            #    바로 그 모양이라, 버리면 「쪽마다 되풀이되는 것」 목록에 안 들어가고
-            #    `thin_pt` 로 선을 살린 순간 그 장식이 그림으로 딸려 온다.
-            if r.is_infinite or (r.x1 - r.x0 <= 0 and r.y1 - r.y0 <= 0):
-                continue
-            k = tuple(int(round(v / FURNITURE_ROUND)) for v in (r.x0, r.y0, r.x1, r.y1))
-            seen.setdefault(k, set()).add(i)
-    return {k for k, pages in seen.items() if len(pages) >= FURNITURE_MIN_PAGES}
-
+#: 쪽 장식 열쇠 — **정의는 `crop-rpm-from-pdf.py` 에 있다**(위 상수와 같은 이유).
+furniture_keys = croprpm.furniture_keys
 
 def pick_page(doc, stem: str) -> tuple[int, int]:
     """본문과 가장 길게 겹치는 쪽. (쪽 index, 겹친 길이)"""

@@ -412,6 +412,32 @@ export const ITEMS: PrintCheckItem[] = [
     changedOn: "2026-08-19",
   },
   {
+    id: "figure-svg-adopt",
+    title:
+      "그림 716문항을 **벡터 SVG 로** 바꿨다 — 종이에서 선이 연하지 않은가",
+    changed:
+      "래스터 그림을 벡터 SVG 로 갈아 끼웠다(716문항 · 727자리). " +
+      "인쇄 폭(mm)은 안 바꿨고, 높이는 비율을 따라 최대 1.85% 움직인다.",
+    look:
+      "화면에서 벡터가 또렷한 것은 확인했다. 종이에서는 **선이 너무 가늘어 " +
+      "흐릴 수 있다** — 래스터보다 일관되게 가늘고 연했다. 특히 눈금·해칭·점선이 " +
+      "학생 자리에서 보이는지. 그림 높이가 조금 변했으니 칸을 넘치는 문항이 " +
+      "생겼는지도 같이 본다.",
+    lookFromSource: false,
+    evidence: [
+      "scripts/qa/adopt-figure-svg.ts",
+      "scripts/qa/reports/svg-whitelist.txt",
+      "scripts/qa/reports/figure-svg-adopt.json",
+    ],
+    scale:
+      "716문항 / 727자리. 채택 후보 1,576자리 중 **눈으로 본 810자리**에서만 골랐다 " +
+      "— 나머지 766자리는 아직 래스터다(검수 미완).",
+    needs:
+      "그림이 붙은 문항이 여러 개 든 시험지. 가는 선(눈금·해칭)이 있는 도형을 일부러 넣을 것",
+    status: "대기",
+    changedOn: "2026-08-20",
+  },
+  {
     id: "prod-print",
     title: "프로덕션 실물 인쇄 최종 검수 (T6.2)",
     changed: "배포 태스크의 인수 조건. 배포 자체가 미완이라 착수 전이다.",

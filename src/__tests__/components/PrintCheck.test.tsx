@@ -35,7 +35,7 @@ describe("실물 출력 검수 목록 — 데이터", () => {
     // 17: short-answer-badge 추가 (2026-08-19 — 단답형에 「단답형 n」 배지가
     //     처음 지면에 나간다. 원장님 확정: 서답형은 서술형으로 합치고 단답형은 그대로).
     // 16: figure-svg-inline 추가 (D-55, 2026-08-19 — figureSvg 가 처음 지면에 나간다)
-    expect(ITEMS.length).toBe(21);
+    expect(ITEMS.length).toBe(22);
   });
 
   /**
