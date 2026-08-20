@@ -189,3 +189,54 @@ describe("[parseProblemContent] 세부 문항 줄바꿈", () => {
     expect(boxLines.join(" ")).toContain("다항식 B는 상수항이");
   });
 });
+
+/**
+ * 초등 기입 칸 · 세로셈 블록 (2026-08-20 원장님, /dev/cube-scrape).
+ * collapse 가 개행을 녹이므로 자리를 되살리지 않으면
+ * `각 (　　) 각의 꼭짓점 (　　)` 와 `계산해 보세요. 265` 가 한 문단이다.
+ */
+describe("[parseProblemContent] 기입 칸·세로셈 줄바꿈", () => {
+  it("각·각의 꼭짓점·각의 변을 각각 문단으로 세운다", () => {
+    const raw =
+      "그림을 보고 각, 꼭짓점, 변을 쓰세요.\n\n각 (　　)  \n각의 꼭짓점 (　　)  \n각의 변 (　　)";
+    const paras = parseProblemContent(raw).question.split(/\n\s*\n/);
+    expect(paras).toHaveLength(4);
+    expect(paras[0]).toContain("그림을 보고");
+    expect(paras[1]!.startsWith("각 (")).toBe(true);
+    expect(paras[2]!.startsWith("각의 꼭짓점")).toBe(true);
+    expect(paras[3]!.startsWith("각의 변")).toBe(true);
+  });
+
+  it("빈칸이 하나뿐이면 나누지 않는다", () => {
+    const raw = "빈칸 (　　) 에 알맞은 수를 쓰세요.";
+    expect(parseProblemContent(raw).question).not.toContain("\n\n");
+  });
+
+  it("세로셈 display 수식은 발문 다음 문단이다", () => {
+    const raw =
+      "계산해 보세요.\n\n$$\\begin{array}{r} 265 \\\\ +413 \\\\ \\hline \\end{array}$$";
+    const paras = parseProblemContent(raw).question.split(/\n\s*\n/);
+    expect(paras).toHaveLength(2);
+    expect(paras[0]).toBe("계산해 보세요.");
+    expect(paras[1]!.startsWith("$$")).toBe(true);
+    expect(paras[1]).toContain("\\begin{array}");
+  });
+
+  it("인라인 가로셈은 한 문장으로 둔다", () => {
+    const raw = "계산해 보세요.\n\n$126+745$";
+    expect(parseProblemContent(raw).question).toBe(
+      "계산해 보세요. $126+745$",
+    );
+  });
+
+  it("문장 속 네모 빈칸은 (1)(2) 와 같이 있어도 단어를 쪼개지 않는다", () => {
+    const raw =
+      "보기에서 고르세요.\n\n(1) 자의 길이는 약 $\\square$입니다.\n\n(2) 우리 집에서 이모 댁까지의 거리는 약 $\\square$입니다.";
+    const question = parseProblemContent(raw).question;
+    expect(question).toContain("우리 집에서 이모 댁까지의 거리");
+    expect(question.split(/\n\s*\n/).some((p) => p.startsWith("(2) 우리 집"))).toBe(
+      true,
+    );
+  });
+});
+

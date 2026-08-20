@@ -154,4 +154,33 @@ describe("[D-55] ProblemCard — 도형 SVG", () => {
     );
     expect(container.querySelector("[data-figure-svg]")).toBeNull();
   });
+
+  it("작은 viewBox 위젯은 140, 각·상자 연쇄는 240 이다", () => {
+    const small =
+      '<svg viewBox="0 0 140 126" xmlns="http://www.w3.org/2000/svg">' +
+      '<rect x="0" y="0" width="10" height="10"/></svg>';
+    const mid =
+      '<svg viewBox="0 0 229 117" xmlns="http://www.w3.org/2000/svg">' +
+      '<line x1="0" y1="0" x2="10" y2="10"/></svg>';
+
+    const compact = render(
+      <ProblemCard
+        problem={{ ...MOCK_PROBLEM_WITH_FRACTION, figureSvg: small }}
+      />,
+    );
+    const compactFrame = compact.container.querySelector("[data-figure-svg]");
+    expect(compactFrame).toHaveAttribute("data-figure-size", "compact");
+    expect(compactFrame?.className).toContain("max-w-[140px]");
+
+    compact.unmount();
+    const midCard = render(
+      <ProblemCard
+        problem={{ ...MOCK_PROBLEM_WITH_FRACTION, figureSvg: mid }}
+      />,
+    );
+    const midFrame = midCard.container.querySelector("[data-figure-svg]");
+    expect(midFrame).toHaveAttribute("data-figure-size", "mid");
+    expect(midFrame?.className).toContain("max-w-[240px]");
+  });
 });
+

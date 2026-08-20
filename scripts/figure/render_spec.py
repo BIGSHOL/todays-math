@@ -48,16 +48,21 @@ def main() -> None:
     if not os.path.isdir(engine):
         fail(f"도형 엔진을 찾을 수 없습니다: {engine}")
     sys.path.insert(0, engine)
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
     try:
-        from core.figure_scene import render_figure_spec
         from core.figure_quality import sanitize_svg
+        from core.figure_scene import render_figure_spec
+        from elementary import render_elementary
     except Exception as exc:  # 엔진 자체를 못 불러온 경우 — 설정 문제다.
         fail(f"도형 엔진을 불러오지 못했습니다: {type(exc).__name__}")
         return
 
     try:
-        svg = render_figure_spec(spec)
+        if isinstance(spec, dict) and spec.get("version") == "elem-1":
+            svg = render_elementary(spec)
+        else:
+            svg = render_figure_spec(spec)
     except Exception as exc:
         # FigureSpecError/GeometryValidationError 는 **스펙이 틀렸다**는 뜻이라
         # 사유를 그대로 보여 주는 편이 낫다(원장님이 보고 판단한다). 길이는 자른다.

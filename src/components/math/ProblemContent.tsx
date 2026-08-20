@@ -7,6 +7,10 @@
  * 보기 마커가 없는 문항(OCR 유실 등)은 지문만 렌더한다 — 임의로 쪼개지 않는다.
  */
 import { MarkdownRenderer } from "@/components/math/MarkdownRenderer";
+import {
+  figureSvgFrameClass,
+  figureSvgSize,
+} from "@/lib/figure/figureSvgFrame";
 import { fitsTwoColumns } from "@/lib/math/displayWidth";
 import { CHOICE_MARKS } from "@/lib/math/circledNumber";
 import { parseProblemContent } from "@/lib/problem/parseProblemContent";
@@ -69,9 +73,11 @@ export function ProblemContent({
       <MarkdownRenderer content={question} />
       {figureSvg ? (
         // 발문 뒤 — 스캔 그림과 같은 자리다. 장식 없음(05 §0).
+        // 작은·중간 viewBox 는 360 으로 늘리지 않는다. 근거는 figureSvgFrame.ts.
         <div
           data-figure-svg
-          className="mt-3 max-w-[360px] print:max-w-[70mm] [&>svg]:h-auto [&>svg]:w-full print:break-inside-avoid"
+          data-figure-size={figureSvgSize(figureSvg)}
+          className={figureSvgFrameClass(figureSvg)}
           dangerouslySetInnerHTML={{ __html: figureSvg }}
         />
       ) : null}

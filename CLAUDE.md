@@ -13,9 +13,9 @@
 | `docs/planning/04-database-design.md` | ERD 9개 엔티티 |
 | `docs/planning/05-design-system.md` | 디자인 — **`[협의 필요]` 항목은 미확정!** |
 | `docs/planning/06-tasks.md` | 태스크 목록 (M0~M6, 21개) — `/orchestrate`가 사용 |
-| `docs/planning/07-coding-convention.md` | 컨벤션, 도메인 용어 SSOT, Decision Log D-01~36 |
-| `docs/planning/09-figure-engine-guide.md` | **도형 SVG 엔진 사용 지침** — testchanger 엔진 호출법,<br>2계층 구조, 실제로 낸 오류 재발 금지 목록. 도형 작업 전 필독 |
-| `docs/planning/10-handoff.md` | **인수인계 — 다른 컴퓨터에서 이어할 때 여기부터.**<br>환경 준비·저장소 밖 의존물·다음 할 일·확인 대기 항목 (2026-08-15) |
+| `docs/planning/07-coding-convention.md` | 컨벤션, 도메인 용어 SSOT, Decision Log D-01~61 |
+| `docs/planning/09-figure-engine-guide.md` | **도형 SVG 엔진 사용 지침** — testchanger 호출법, elem-1(D-61),<br>재발 금지 §4. **초등·큐브 그림 작업 전 필독** |
+| `docs/planning/10-handoff.md` | **인수인계 — 이어할 때 여기부터.** 지금 일은 §9 큐브 (2026-08-21) |
 | `docs/planning/11-score-predictor.md` | **기출 예상 점수 판독기 설계 SSOT** — 실측 근거·엔진 계층<br>·backtest 결과·배점 보정기(§10). '오늘의 시험' 작업 전 필독 |
 | `docs/planning/12-discard-candidates.md` | 폐기 후보 문항 목록 (`build-discard-list.ts` 가 생성) |
 | `docs/planning/15-remaining-defects-review.md` | 적대적 리뷰 잔여 결함 해결 방안 검토 — 우선순위·원장님 결정 대기 항목 |
@@ -851,3 +851,19 @@ docker compose up -d # 로컬 PostgreSQL
   (2) **가드를 끄지 말고 근거를 더해라.** 끄면 원래 막던 것이 돌아온다.
   (3) 「없다·못 찾았다」를 적기 전에 **원본 지면을 한 번 렌더해 봐라.** 표본 4/4 에서
   그림은 지면에 **있었다.** 「원본에 없다」와 「검출이 안 된다」는 다음 수가 다르다.
+
+### [2026-08-21] 엔진이 정규화되지 않으면 문항마다 같은 결함이 다시 난다 (초등 그림, D-61)
+- **상황**: 큐브 3-1 진도북을 `/dev/cube-scrape` 에 그렸다. 합격 16 뒤에는 무작위 20을
+  세 번 골랐다. 매번 그림이 「심각」했고, 원장님이 「엔진이 아직 정규화가 안 되어서
+  자꾸 이렇게 되나?」고 하셨다.
+- **문제**: FigureSpec v2 좌표를 **문항마다** 맞춰 가/나 라벨·사다리꼴 분할·곱셈표를
+  그렸다. 다음 문항에서 라벨이 다시 뜨고, 사다리꼴 두 대각선은 넓이가 달라 분수에
+  못 쓰고, 표 viewBox 를 키우니 숫자가 본문보다 작아졌다. 피자를 오리면 쪽 배경이 남았다.
+- **원인**: 초등 위젯은 엔진 A 스키마에 없다. 없는 축을 좌표 일회성으로 메우면
+  **규칙이 코드에 안 남는다.** 고친 한 장은 되고 다음 장은 같은 구멍이 열린다.
+- **해결**: `elem-1` kind 에 불변식을 넣는다(D-61). `namedShapes` 라벨은 도형 아래,
+  `table` viewBox ≤240, `trapFour` 는 합동인 직각삼각형 넷(정점 6, 두 대각선 금지),
+  치수는 `measured()`, 피자는 `fracPie`. 테스트가 무작위 20 스펙이 그 kind 인지도 잠근다.
+- **교훈**: **같은 그림이 두 번 나오면 좌표를 고치지 말고 종류를 만들어라.** 그리고
+  분수 도형은 「칸 수」가 아니라 **넓이**가 같아야 한다 — 대각선 분할은 칸이 넷이어도
+  위·아래가 다르다. 원본 지면을 한 장 렌더하고 맞춘다.
