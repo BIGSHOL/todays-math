@@ -168,12 +168,41 @@ if ((APPLY || REVERT) && process.env.ALLOW_SHARED_IMPORT !== "1") {
   process.exit(1);
 }
 
-interface LedgerRow {
+export interface LedgerRow {
   id: string;
   beforeUrls: string[];
   beforeDims: number[];
   afterUrls: string[];
   afterDims: number[];
+}
+
+/**
+ * 되돌리기 원장은 **누적**한다.
+ *
+ * 🔴 2차 채택이 1차 원장을 통째로 덮어쓰면 **1차 716행의 되돌리기 자료가
+ *    사라진다.** `--revert` 는 이 파일 **하나만** 읽고 돌기 때문이다.
+ *    (git 에는 남지만, 되돌리기는 「지금 파일」을 보는 명령이다 —
+ *     2026-08-18 「되돌리기가 이 컴퓨터에만 있었다」와 같은 자리다.)
+ *
+ * 같은 문항이 두 번 나오면 **처음의 before** 와 **마지막의 after** 를 남긴다.
+ * 마지막 before 를 쓰면 1차가 만든 SVG 경로로 되돌아가 **아무것도 안 되돌린
+ * 것**이 된다.
+ */
+export function mergeLedgerRows(
+  prev: readonly LedgerRow[],
+  next: readonly LedgerRow[],
+): LedgerRow[] {
+  const byId = new Map<string, LedgerRow>(prev.map((r) => [r.id, r]));
+  for (const r of next) {
+    const old = byId.get(r.id);
+    byId.set(
+      r.id,
+      old
+        ? { ...r, beforeUrls: old.beforeUrls, beforeDims: old.beforeDims }
+        : r,
+    );
+  }
+  return [...byId.values()];
 }
 
 async function main() {
@@ -293,19 +322,34 @@ async function main() {
     process.exit(1);
   }
 
-  // 되돌리기 원장을 **DB 보다 먼저** 쓴다.
+  // 되돌리기 원장을 **DB 보다 먼저** 쓴다. 그리고 **앞선 회차를 지우지 않는다.**
   mkdirSync(path.dirname(LEDGER), { recursive: true });
+  const prevLedger = existsSync(LEDGER)
+    ? (JSON.parse(readFileSync(LEDGER, "utf-8")) as {
+        rows?: LedgerRow[];
+        runs?: unknown[];
+      })
+    : {};
+  const merged = mergeLedgerRows(prevLedger.rows ?? [], rows);
+  if (merged.length < (prevLedger.rows?.length ?? 0)) {
+    console.error("🔴 누적 원장이 줄었다 — 앞선 회차를 잃는다. 멈춘다.");
+    process.exit(1);
+  }
   writeFileSync(
     LEDGER,
     JSON.stringify(
       {
         note:
-          "되돌리기 자료. before* 가 적용 전 값이다. " +
+          "되돌리기 자료. before* 가 **맨 처음** 적용 전 값이다. 회차가 누적된다. " +
           "되돌리기: ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/adopt-figure-svg.ts --revert --apply",
+        runs: [
+          ...(prevLedger.runs ?? []),
+          { blocklist: BLOCKFILE, whitelist: ALLOWFILE, added: rows.length },
+        ],
         blocklist: BLOCKFILE,
         whitelist: ALLOWFILE,
         applied: false,
-        rows,
+        rows: merged,
       },
       null,
       1,
@@ -313,7 +357,7 @@ async function main() {
     "utf-8",
   );
   console.log(
-    `\n되돌리기 원장 → ${LEDGER} (${rows.length}행) — DB 보다 먼저 썼다`,
+    `\n되돌리기 원장 → ${LEDGER} (이번 ${rows.length}행 · 누적 ${merged.length}행) — DB 보다 먼저 썼다`,
   );
 
   let n = 0;

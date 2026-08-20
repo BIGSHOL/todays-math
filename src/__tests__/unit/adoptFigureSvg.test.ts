@@ -14,8 +14,10 @@ import { describe, expect, it } from "vitest";
 
 import {
   decideAdoption,
+  mergeLedgerRows,
   readPathList,
   type FigureSlot,
+  type LedgerRow,
 } from "../../../scripts/qa/adopt-figure-svg";
 
 const slot = (over: Partial<FigureSlot> = {}): FigureSlot => ({
@@ -202,5 +204,47 @@ describe("가드는 **저장할 값**을 본다 (반올림 뒤 비율)", () => {
     ]);
     expect(d.ok).toBe(true);
     if (d.ok) expect(d.dims).toEqual([750, 300]);
+  });
+});
+
+describe("되돌리기 원장은 **회차를 누적한다**", () => {
+  const row = (id: string, before: string, after: string): LedgerRow => ({
+    id,
+    beforeUrls: [before],
+    beforeDims: [100, 50],
+    afterUrls: [after],
+    afterDims: [10, 5],
+  });
+
+  /**
+   * 🔴 2차 채택이 1차 원장을 덮어쓰면 **1차의 되돌리기 자료가 사라진다.**
+   *    `--revert` 는 이 파일 하나만 읽고 돈다 — 덮어쓰는 순간 1차는
+   *    되돌릴 수 없다. 파괴적 작업의 되돌리기 파일은 이 저장소가 이미
+   *    두 번 놓친 자리다(2026-08-18).
+   */
+  it("🔴 앞선 회차의 행이 남는다 — 덮어쓰면 안 된다", () => {
+    const first = [row("a", "/figures/1.png", "/figures-svg/1.svg")];
+    const second = [row("b", "/figures/2.png", "/figures-svg/2.svg")];
+    const got = mergeLedgerRows(first, second);
+    expect(got.map((r) => r.id).sort()).toEqual(["a", "b"]);
+  });
+
+  /**
+   * 🔴 같은 문항이 두 회차에 걸치면 **처음의 before** 를 남겨야 한다.
+   *    마지막 before 를 쓰면 1차가 만든 SVG 경로로 되돌아가서
+   *    「되돌렸다」고 하면서 아무것도 안 되돌린 것이 된다.
+   */
+  it("🔴 두 번 나온 문항은 **맨 처음** before 로 되돌아간다", () => {
+    const first = [row("a", "/figures/1.png", "/figures-svg/1.svg")];
+    const second = [row("a", "/figures-svg/1.svg", "/figures-svg/1b.svg")];
+    const [got] = mergeLedgerRows(first, second);
+    expect(got!.beforeUrls).toEqual(["/figures/1.png"]); // 래스터 원본
+    expect(got!.beforeDims).toEqual([100, 50]);
+    expect(got!.afterUrls).toEqual(["/figures-svg/1b.svg"]); // 마지막 값
+  });
+
+  it("앞선 원장이 비어 있으면 이번 것만 남는다", () => {
+    const second = [row("b", "/figures/2.png", "/figures-svg/2.svg")];
+    expect(mergeLedgerRows([], second)).toEqual(second);
   });
 });
