@@ -20,6 +20,9 @@
 
 ---
 
+> **이어받는 사람은 [`tracks/brief-handoff-20260820.md`](tracks/brief-handoff-20260820.md)
+> 를 먼저 읽어라** — 남은 103건의 쪼갬·다음 한 걸음·원장님 결정 대기 2건이 거기 있다.
+
 ## 1. 지금 상태 확인 — 이 명령 하나
 
 ```bash
@@ -28,7 +31,7 @@ npx tsx scripts/qa/report-missing-figures.ts --list   # 대상 전량
 npx tsx scripts/qa/report-missing-figures.ts --json   # scripts/qa/reports/missing-figures.json
 ```
 
-판정 규칙은 `scripts/qa/missingFigureRule.ts` **하나뿐**이다.
+판정 규칙은 `src/lib/figure/missingFigureRule.ts` **하나뿐**이다.
 세는 쪽과 잠그는 쪽이 같은 파일을 읽는다 — 목록을 양쪽에 각각 쓰면 둘이 같이 눈이 먼다
 (CLAUDE.md 2026-08-18).
 
