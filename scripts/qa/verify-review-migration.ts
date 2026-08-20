@@ -77,6 +77,21 @@ async function main() {
   const problems: string[] = [];
   const notes: string[] = [];
 
+  // 이미 적용된 뒤에 돌리면 `CREATE TYPE` 이 「이미 있다」로 죽는다 — 그러면
+  // 다음 사람은 **SQL 이 틀린 줄 안다.** 검증은 적용 **전에만** 뜻이 있으므로
+  // 그 사실을 분명히 말하고 끝낸다.
+  const [{ n: already }] = await prisma.$queryRawUnsafe<{ n: bigint }[]>(
+    `SELECT count(*) AS n FROM information_schema.tables WHERE table_name = 'problem_report'`,
+  );
+  if (Number(already) > 0) {
+    console.log(
+      "이 마이그레이션은 **이미 적용되어 있다** — 검증은 적용 전에만 뜻이 있다.\n" +
+        "다시 검증하려면 `prisma migrate resolve --rolled-back` 등으로 되돌린 뒤에 돌려라.",
+    );
+    await prisma.$disconnect();
+    return;
+  }
+
   try {
     await prisma.$transaction(
       async (tx) => {
