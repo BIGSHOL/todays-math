@@ -1,0 +1,13 @@
+{
+ "note": "되돌리기 자료.",
+ "applied": true,
+ "rows": [
+  {
+   "id": "d384d610-aec5-4987-9f35-f03a6dd5cd10",
+   "code": "HC20207-MV4Q",
+   "beforeStatus": "approved",
+   "afterStatus": "rejected",
+   "reportId": "8205dc83-533e-44dc-970d-3a228032ca60"
+  }
+ ]
+}
