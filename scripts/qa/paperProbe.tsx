@@ -102,6 +102,21 @@ export interface SlotInput {
   id: string;
   content: string;
   figureUrls?: string[];
+  /**
+   * 그림 **원본 픽셀 치수** `[w1,h1,…]` — 비율의 근거.
+   * ⚠️ 제품 인쇄 경로(`ProblemBody` → `PaperProblemView`)가 넘기는 값이다.
+   *    여기서 안 넘기면 탐침만 다른 지면을 그린다.
+   */
+  figureDims?: number[];
+  /**
+   * 그림 **원본 지면 물리 폭(mm)** — 「얼마로 그린다」의 근거.
+   *
+   * 🔴 이걸 안 넘기면 그림이 `w-auto max-w-[70mm]`, 곧 **원본 픽셀 크기**로 그려진다.
+   *    제품은 mm 로 못 박으므로 지면이 갈린다 — 2026-08-20 에 실제로 그랬고,
+   *    갈아 끼운 그림 1,249문항 중 519건의 높이가 −313 ~ +661px 어긋났다.
+   *    `paperProbeParity.test.tsx` 가 잠근다.
+   */
+  figureSourceMm?: number[];
   /** 「서술형 n」 배지 번호. 없으면 배지를 안 그린다. */
   essayNumber?: number | null;
 }
@@ -114,6 +129,8 @@ export function renderSlot(row: SlotInput, number: number): string {
       figureUrls={(row.figureUrls ?? []).map((url) =>
         url.startsWith("/") ? FIGURE_ROOT + url : url,
       )}
+      figureDims={row.figureDims}
+      figureSourceMm={row.figureSourceMm}
       className="problemText"
       // 인쇄 지면은 지연 로딩을 쓰지 않는다(PaperProblemView 와 같다).
       deferFigures={false}
