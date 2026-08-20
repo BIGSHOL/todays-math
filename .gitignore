@@ -231,3 +231,7 @@ public/figures-backup-300swap/
 # 여기에만 있다. 붙이는 쪽(`apply-rpm-furniture.py`)이 이 파일을 읽어 대상을 좁히므로,
 # 없으면 다른 컴퓨터에서 그 실행이 **멈춘다**(조용히 전량을 붙이지 않게 일부러 그렇게 했다).
 !scripts/qa/reports/rpm-furniture-decision.json
+scripts/qa/reports/svg-compare/
+scripts/qa/reports/svg-compare-blocked/
+# SVG 채택 차단 목록 — 적용 스크립트가 이걸 읽는다. PNG 시트는 커밋하지 않는다.
+!scripts/qa/reports/svg-blocklist.txt

@@ -1,0 +1,21 @@
+# SVG 채택 차단 목록 — 비교 시트 1,576장을 눈으로 보고 결함으로 판정한 것만.
+# 왼쪽 래스터(정본) 대비 오른쪽 SVG. 비율 가드는 이미 통과한 자리다.
+# 적용 스크립트는 # 줄을 건너뛰고 경로만 읽는다.
+
+# 0263: A반 상자그림에 정본에 없는 왼쪽 수염이 생겼다(최솟값이 12가 아니라 10처럼 보인다)
+public/figures-svg/rpm/019fd1de-f2d3-76b7-82b1-300a41924328/0.svg
+
+# 0485: 좌표평면의 축 이름 x·y 와 양축 끝 화살표가 잘렸다
+public/figures-svg/rpm/019fd1d6-da5a-708c-940f-077b63f918c4/0.svg
+
+# 1152: 평행사변형 ABCD에서 꼭짓점 P에서 C로 내려가는 선분 PC가 빠졌다
+public/figures-svg/rpm/019fd1db-406a-77ea-80f1-e14386b4d9f6/0.svg
+
+# 1193: 산점도에서 점 (7,9)·(8,9) 가 빠져 정본보다 점이 적다
+public/figures-svg/rpm/019fd1de-f386-75f8-baff-3b3d79ed2975/0.svg
+
+# 1410: 전혀 다른 그림이다. 정본은 원 O·현 AC·36°·호 BC=14cm, SVG는 내접 사각형 ABCD·80°·70°·x
+public/figures-svg/rpm/019fd1de-adb1-72bf-9301-269199a229cf/0.svg
+
+# 1524: 원뿔 세 토막 A·B·C 중 C의 주황 채움이 빠져 흰 면으로 남았다
+public/figures-svg/rpm/019fd1db-9880-76f3-b981-b3487777a680/0.svg
