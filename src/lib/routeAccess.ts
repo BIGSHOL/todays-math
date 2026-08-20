@@ -2,7 +2,8 @@
  * 역할 게이트 — 「검수 계정이 어디까지 갈 수 있나」를 **한 곳에서** 정한다.
  *
  * 대응 계약: src/contracts/problemReport.contract.ts (`userRoleSchema`)
- * 부르는 곳: src/middleware.ts (화면·API 를 통틀어 여기 하나로 지난다)
+ * 부르는 곳: src/proxy.ts (화면·API 를 통틀어 여기 하나로 지난다)
+ *            ⚠️ Next 16 이 `middleware` 를 `proxy` 로 바꿨다. 둘 다 있으면 서버가 안 뜬다.
  *
  * 🔴 **허용 목록이다. 차단 목록이 아니다.**
  *    차단 목록으로 하면 새 라우트를 적는 걸 잊었을 때 검수 계정에게 **열린다** —

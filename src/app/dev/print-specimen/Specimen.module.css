@@ -1,0 +1,277 @@
+/**
+ * 실물 검수 견본지 — **A4 그대로**.
+ *
+ * 지면 값은 `print/tokens.ts` 의 `PAPER_CSS_VARIABLES` 를 그대로 받는다.
+ * 여기서 색·글꼴을 다시 적으면 견본과 시험지가 갈라진다.
+ */
+
+.shell {
+  min-height: 100vh;
+  background: #c9c9c7;
+  padding: 24px 28px 64px;
+}
+
+.toolbar {
+  width: min(100%, var(--a4-width));
+  margin: 0 auto 24px;
+  border-top: 3px solid #161616;
+  border-bottom: 1px solid #c2c2c0;
+  background: #ececea;
+  padding: 14px 18px;
+  font-family: var(--paper-font-sans);
+  color: #161616;
+}
+
+.toolbar h1 {
+  margin: 2px 0 6px;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.toolbar p {
+  margin: 0 0 4px;
+  font-size: 12px;
+  color: #4a4a48;
+  line-height: 1.6;
+}
+
+.printButton {
+  min-height: 44px;
+  margin-top: 10px;
+  border: 1px solid #161616;
+  background: #161616;
+  color: #fff;
+  padding: 0 18px;
+  font-family: var(--paper-font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.page {
+  width: var(--a4-width);
+  min-height: var(--a4-height);
+  box-sizing: border-box;
+  background: var(--paper-warm);
+  color: var(--paper-ink);
+  font-family: var(--paper-font-serif);
+  padding: 14mm 12mm;
+  box-shadow: 0 14px 40px rgb(0 0 0 / 25%);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.pageHead {
+  border-bottom: 1px solid var(--paper-gold);
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pageTitle {
+  font-family: var(--paper-font-sans);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.pageNo {
+  font-family: var(--paper-font-sans);
+  font-size: 10px;
+  color: var(--paper-gold);
+  letter-spacing: 0.14em;
+}
+
+.lead {
+  font-family: var(--paper-font-sans);
+  font-size: 10.5px;
+  line-height: 1.65;
+  margin: 0 0 10px;
+}
+
+.lead strong {
+  font-weight: 800;
+}
+
+/* 판정 칸 — 원장님이 종이에 직접 적는 자리. */
+.verdict {
+  border: 1px solid var(--paper-ink);
+  padding: 5px 8px;
+  font-family: var(--paper-font-sans);
+  font-size: 10px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin: 8px 0 12px;
+}
+
+.tick {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--paper-ink);
+  vertical-align: -1px;
+  margin-right: 4px;
+}
+
+/* ── 자 ── 인쇄기가 배율을 건드리면 아래 판정이 전부 무효다. */
+.rulerWrap {
+  /* 0 눈금 글자가 translateX(-50%) 로 왼쪽으로 나가므로 그만큼 들여 둔다. */
+  margin: 6px 0 14px;
+  padding-left: 4mm;
+}
+
+.ruler {
+  position: relative;
+  width: 100mm;
+  height: 9mm;
+  border-left: 0.3mm solid var(--paper-ink);
+  border-right: 0.3mm solid var(--paper-ink);
+  border-bottom: 0.3mm solid var(--paper-ink);
+}
+
+.tickMark {
+  position: absolute;
+  bottom: 0;
+  width: 0.2mm;
+  background: var(--paper-ink);
+}
+
+.tickLabel {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-family: var(--paper-font-sans);
+  font-size: 7px;
+  color: var(--paper-ink);
+}
+
+/* ── 짝 비교 ── */
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6mm;
+  border-top: 1px solid var(--paper-gold);
+  padding: 5px 0 9px;
+  break-inside: avoid;
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cellLabel {
+  font-family: var(--paper-font-sans);
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--paper-ink);
+}
+
+.cellNote {
+  font-family: var(--paper-font-sans);
+  font-size: 8px;
+  color: var(--paper-gold);
+  letter-spacing: 0.02em;
+}
+
+/* 그림 자리 — 폭은 인라인 style 이 mm 로 준다(제품과 같은 함수). */
+.figBox img,
+.figBox svg {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+.blend {
+  mix-blend-mode: multiply;
+}
+
+/* 배경 대비를 눈에 보이게 — 지면색 위에 흰 사각형이 뜨는지 본다. */
+.warmField {
+  background: var(--paper-warm);
+  padding: 3mm;
+  border: 0.2mm dashed var(--paper-gold);
+}
+
+.rowHead {
+  font-family: var(--paper-font-sans);
+  font-size: 9.5px;
+  font-weight: 700;
+  margin: 10px 0 2px;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  .shell {
+    background: #fff;
+    padding: 0;
+  }
+
+  .toolbar {
+    display: none;
+  }
+
+  .pages {
+    gap: 0;
+  }
+
+  .page {
+    box-shadow: none;
+    break-after: page;
+  }
+
+  .page:last-child {
+    break-after: auto;
+  }
+}
+
+/**
+ * 기준 색표 — 「이어진다」가 무엇인지 눈이 먼저 알아야 판정이 된다.
+ * 지면색과 순백을 나란히 두면 그림 배경이 **어느 쪽인지** 바로 보인다.
+ * (색표가 없으면 두 칸이 똑같아 보여 아무 판정도 못 한다 — 실제로 그랬다.)
+ */
+.swatchRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 4px 0 8px;
+}
+
+.swatchLabel {
+  font-family: var(--paper-font-sans);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.swatchWarm,
+.swatchWhite {
+  display: inline-block;
+  width: 12mm;
+  height: 5mm;
+  border: 0.2mm solid var(--paper-ink);
+}
+
+.swatchWarm {
+  background: var(--paper-warm);
+}
+
+.swatchWhite {
+  background: var(--paper-color);
+}

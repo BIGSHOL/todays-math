@@ -1,0 +1,60 @@
+{
+ "note": "되돌리기 자료. beforeUnitId 가 옮기기 전 단원이다. 되돌리기: ALLOW_UNIT_FIX=1 npx tsx scripts/qa/apply-basic-figure-unit-fix.ts --revert --apply",
+ "evidence": "RPM 중학 1-2 학생용.pdf p9 · 01 기본도형 / 01-1 점, 선, 면",
+ "rows": [
+  {
+   "id": "f32838fc-a2fc-4001-b1d7-cb3f1a3ac4e3",
+   "code": "HC20101-6S66",
+   "beforeUnitId": "06f6b496-b5a5-40ca-939b-8595d11c7387",
+   "afterUnitId": "91b815cc-6fcd-4d22-898c-17f127ed010a"
+  },
+  {
+   "id": "1211ce43-197d-4b2d-a3fc-85c6e2be5aa3",
+   "code": "HC20101-6XH4",
+   "beforeUnitId": "06f6b496-b5a5-40ca-939b-8595d11c7387",
+   "afterUnitId": "91b815cc-6fcd-4d22-898c-17f127ed010a"
+  },
+  {
+   "id": "7e75d40c-fcaa-49f5-855b-add2cbe26b8b",
+   "code": "HC20101-9DU5",
+   "beforeUnitId": "06f6b496-b5a5-40ca-939b-8595d11c7387",
+   "afterUnitId": "91b815cc-6fcd-4d22-898c-17f127ed010a"
+  },
+  {
+   "id": "d366c719-ec0b-451c-8e55-e93145ce26e8",
+   "code": "HC20101-E5YU",
+   "beforeUnitId": "06f6b496-b5a5-40ca-939b-8595d11c7387",
+   "afterUnitId": "91b815cc-6fcd-4d22-898c-17f127ed010a"
+  },
+  {
+   "id": "f92a1e3d-9aaa-447a-bb78-55031518ce12",
+   "code": "HC20101-GDA6",
+   "beforeUnitId": "06f6b496-b5a5-40ca-939b-8595d11c7387",
+   "afterUnitId": "91b815cc-6fcd-4d22-898c-17f127ed010a"
+  },
+  {
+   "id": "127ec652-6ab4-4254-897e-d41edbc224ef",
+   "code": "HC20101-QDCK",
+   "beforeUnitId": "06f6b496-b5a5-40ca-939b-8595d11c7387",
+   "afterUnitId": "91b815cc-6fcd-4d22-898c-17f127ed010a"
+  },
+  {
+   "id": "35d1d96c-db7d-4382-8c3c-015bfc4f2125",
+   "code": "HC20101-QSJ6",
+   "beforeUnitId": "06f6b496-b5a5-40ca-939b-8595d11c7387",
+   "afterUnitId": "91b815cc-6fcd-4d22-898c-17f127ed010a"
+  },
+  {
+   "id": "ab2623a7-194d-432e-8c2c-6c059eaa0e65",
+   "code": "HC20101-UZDW",
+   "beforeUnitId": "06f6b496-b5a5-40ca-939b-8595d11c7387",
+   "afterUnitId": "91b815cc-6fcd-4d22-898c-17f127ed010a"
+  },
+  {
+   "id": "97083736-fc4a-409e-9503-0c415647e83b",
+   "code": "HC20101-V69H",
+   "beforeUnitId": "06f6b496-b5a5-40ca-939b-8595d11c7387",
+   "afterUnitId": "91b815cc-6fcd-4d22-898c-17f127ed010a"
+  }
+ ]
+}

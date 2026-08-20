@@ -1,7 +1,13 @@
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 
-import { ITEMS, PRINT_ROUTE, SAMPLING_PLAN } from "./items";
+import {
+  ITEMS,
+  PRINT_ROUTE,
+  SAMPLING_PLAN,
+  SPECIMEN_ITEM_IDS,
+  SPECIMEN_ROUTE,
+} from "./items";
 import { PrintCheckList } from "./PrintCheckList";
 
 /**
@@ -81,6 +87,15 @@ export default async function PrintCheckPage() {
         <p className="mt-2 text-[12.5px] leading-[1.75] text-text-2">
           전부 <code className="bg-side px-1">{PRINT_ROUTE}</code> 한 화면에서
           나온다. 출제한 시험지를 열고 인쇄하면 된다.
+        </p>
+        <p className="mt-2 border-l-[3px] border-ink pl-3 text-[12.5px] leading-[1.75] text-ink">
+          다만 <strong>그림 관련 {SPECIMEN_ITEM_IDS.length}건</strong>(
+          {SPECIMEN_ITEM_IDS.join(" · ")})은 한 시험지에 다 안 나온다 — 서로
+          다른 문항이라 몇 장을 뽑아도 같이 찍힐 보장이 없다. 그 넷은{" "}
+          <a className="underline" href={SPECIMEN_ROUTE}>
+            <code className="bg-side px-1">{SPECIMEN_ROUTE}</code>
+          </a>{" "}
+          견본지에서 한 번에 판정한다. 첫 장의 100mm 자가 인쇄 배율을 지킨다.
         </p>
         <ul className="mt-2 flex flex-col gap-1">
           {SAMPLING_PLAN.map((line) => (

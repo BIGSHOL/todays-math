@@ -43,6 +43,23 @@ export interface PrintCheckItem {
 /** 검수는 전부 이 화면에서 뽑는다. 시험지 id 는 출제할 때마다 다르다. */
 export const PRINT_ROUTE = "/tests/{시험지id}/print";
 
+/**
+ * 그림 관련 넷은 **한 시험지에 다 안 나온다** — 벡터로 바뀐 문항 · mm 를 아는 문항 ·
+ * 배경이 흰 그림 · 재크롭본이 서로 다른 문항이라, 시험지를 몇 장 뽑아도 넷이 같이
+ * 찍힐 보장이 없다. 그래서 넷을 한 장에 모은 **견본지**를 따로 둔다.
+ *
+ * 첫 장에 100mm 자가 있다 — 인쇄 배율이 100% 가 아니면 아래 판정이 전부 무효다.
+ */
+export const SPECIMEN_ROUTE = "/dev/print-specimen";
+
+/** 견본지가 대신 판정해 주는 항목들. */
+export const SPECIMEN_ITEM_IDS = [
+  "figure-print-size-mm",
+  "figure-svg-adopt",
+  "figure-blend-multiply",
+  "figure-raster-300dpi",
+] as const;
+
 export const ITEMS: PrintCheckItem[] = [
   {
     id: "figure-raster-300dpi",
