@@ -51,6 +51,7 @@ import argparse
 import importlib.util
 import json
 import pathlib
+import re
 import shutil
 import sys
 
@@ -72,6 +73,8 @@ RESULTS = (
 )
 CONTENT = pathlib.Path("scripts/qa/reports/rpm-crop-content.json")
 BOXES = pathlib.Path("scripts/qa/reports/rpm-question-boxes.json")
+MISSING = pathlib.Path("scripts/qa/reports/missing-figures.json")
+
 SHEET = pathlib.Path("scripts/qa/reports/rpm-stem-sheet.json")
 SHOTS = pathlib.Path("scripts/qa/reports/rpm-stem-sheet")
 DECISION = pathlib.Path("scripts/qa/reports/rpm-stem-sheet-decision.json")
@@ -94,6 +97,37 @@ MASK_CHOICE_MAX = 2
 #: 형제의 좌표 상자가 공용 그림을 가로질러 놓인다(보고서 §5.1 실측).
 SIBLING_GAP = 3
 MASK_STEM_MAX = crop.STEM_INTRUSION_CHARS
+
+
+#: 이 시트가 하는 일은 **하나**다 — 벽 안에 들어온 «지면 글자»를 지우고 다시 오린다.
+#: 그러니 대상도 그 하나로 정한다: **칸에 지면 글자가 들어와서** 버려진 행.
+#:
+#: 처음엔 「본문방향」이 든 사유만 봤는데, 그건 가르는 성질이 아니라 **한 갈래의
+#: 이름**이었다. 같은 결함이 「칸에 발문이 15자 들어왔다」·「칸에 선택지 번호가
+#: 들어왔다」·「칸에 문장이 들어왔다」로도 적힌다 — 지우는 규칙은 셋 다 같다.
+#:
+#: 반대로 이 시트가 **못 고치는** 것은 넣지 않는다:
+#:   · 「문항 안에서 그림을 못 찾았다」  — 지울 글자가 아니라 후보가 없다
+#:   · 「사람이 뺐다 …」                — 사람이 이미 보고 뺐다
+#:   · 「넓힌 칸이 한 단보다 넓다」      — 칸 자체가 틀렸다
+_STEM_IN_BOX = re.compile(r"칸에 (발문|지면 글자|선택지 번호|문장)")
+
+
+def wants_sheet(reason: str) -> bool:
+    """이 사유를 이 시트로 고칠 수 있나 — **지우면 되는 것만** 참이다."""
+    return bool(_STEM_IN_BOX.search(reason))
+
+
+def load_missing() -> set[str]:
+    """**지금 그림이 없는** RPM 행. 시트의 첫 관문이다.
+
+    🔴 넓힌 모집단을 그대로 처리 대상으로 물려받으면 안 된다(2026-08-18: 43이 433).
+       이미 그림이 붙은 행을 시트에 올리면 (ㄱ) 눈이 헛수고를 하고
+       (ㄴ) 붙이는 쪽은 **경고만 하고 덮어쓴다** — 멀쩡한 그림이 사라진다.
+    """
+    mf = json.loads(MISSING.read_text(encoding="utf-8"))
+    return {r["externalId"] for r in mf["목록"]
+            if r["source"] == "transformed" and r["externalId"]}
 
 
 def masked_figure(page, box: pymupdf.Rect, stem_key: str, avoid: list[pymupdf.Rect],
@@ -293,14 +327,29 @@ def build(dpi: int) -> None:
         shutil.rmtree(SHOTS)
     SHOTS.mkdir(parents=True, exist_ok=True)
     rows = []
+    missing = load_missing()
+    # 분모를 먼저 센다 — 「넓혔다」가 「범위가 샜다」가 되지 않게.
+    tally = {"전체 실패": 0, "지금 유실이 아니다": 0,
+             "이 시트로 못 고치는 사유": 0, "계획에 없다": 0, "시트에 올린다": 0}
     for _tag, res_path, plan_path in RESULTS:
         res = json.loads(pathlib.Path(res_path).read_text(encoding="utf-8"))
         plan = {i["externalId"]: i for i in
                 json.loads(pathlib.Path(plan_path).read_text(encoding="utf-8"))["목록"]}
         docs: dict[str, pymupdf.Document] = {}
         for f in res["실패"]:
-            if "본문방향" not in f["이유"]:
+            tally["전체 실패"] += 1
+            # ⚠️ 순서가 규칙의 일부다. **지금 유실인가**를 먼저 묻는다 —
+            #    이미 그림이 붙은 행은 사유가 무엇이든 시트에 올리지 않는다.
+            if f["externalId"] not in missing:
+                tally["지금 유실이 아니다"] += 1
                 continue
+            if not wants_sheet(f["이유"]):
+                tally["이 시트로 못 고치는 사유"] += 1
+                continue
+            if f["externalId"] not in plan:
+                tally["계획에 없다"] += 1
+                continue
+            tally["시트에 올린다"] += 1
             it = plan[f["externalId"]]
             docs.setdefault(it["pdf"], pymupdf.open(it["pdf"]))
             page = docs[it["pdf"]][int(it["page"]) - 1]
@@ -383,9 +432,16 @@ def build(dpi: int) -> None:
         for d in docs.values():
             d.close()
 
+    # 넓힌 대상이 어디서 얼마나 걸러졌나 — 조용히 늘거나 줄면 여기서 드러난다.
+    print("── 대상 고르기 ──")
+    for k, v in tally.items():
+        print(f"   {v:5d}  {k}")
+    if tally["전체 실패"] != sum(v for k, v in tally.items() if k != "전체 실패"):
+        raise SystemExit("🔴 분모가 안 맞는다 — 범위가 샜다.")
+
     goers = [r for r in rows if any(not c["막힘"] for c in r.get("후보", []))]
     SHEET.write_text(json.dumps({
-        "기준": "본문방향으로 못 가른 행 — 같은 벽 안에서 지면 글자를 지우고 오려 본 것",
+        "기준": "**지금 유실**이면서 «칸에 지면 글자가 들어와» 버려진 행 — 그 글자를 지우고 오려 본 것",
         "대상": len(rows),
         "볼것": len(goers),
         "칸": sum(len(r.get("후보", [])) for r in rows),
