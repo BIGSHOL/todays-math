@@ -1,0 +1,766 @@
+{
+  "note": "중2 J20108 재배정. 되돌리기: ALLOW_UNIT_FIX=1 npx tsx scripts/classify/apply-polynomial-unit-fix.ts --revert",
+  "applied": true,
+  "rows": [
+    {
+      "id": "d3f4355a-fc7d-403d-8188-cdd125c66caf",
+      "code": "J20104-6943",
+      "fromUnitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+      "fromUnit": "J20104",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "그림에서 곱셈 또는 나눗셈을 하여 빈칸에 알맞은 식을 써넣을 때, $($ B $+$ C $)÷$ A를 계산한 식은? [그림] 1. $y^{2}$"
+    },
+    {
+      "id": "8173c729-e038-4b65-b550-82ba92b084a5",
+      "code": "J20104-86SX",
+      "fromUnitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+      "fromUnit": "J20104",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(12x^{2}y^{3}-4xy)÷4xy$ 를 계산하면? 1. $3xy^{2}$ 2. $8xy^{2}$ 3. $3xy^{2}-1$ 4. $8x"
+    },
+    {
+      "id": "e244b2b6-c4f3-47cd-9f92-4e4c31cfc5e4",
+      "code": "J20104-BTWH",
+      "fromUnitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+      "fromUnit": "J20104",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(12x^{2}y-6xy^{2})÷(-3xy)$ 를 계산하면? 1. $-4x+2y$ 2. $-3x+y$ 3. $2x+3y$ 4. $3x-y$ "
+    },
+    {
+      "id": "b7c9122d-39b6-4a3c-843e-d2c3382acee1",
+      "code": "J20104-LA85",
+      "fromUnitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+      "fromUnit": "J20104",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$2x(x+4)-(3x^{2}+ax-5)$ 를 계산했을 때, $x$ 의 계수와 상수항의 차가 $3$ 이다. 이 때 가능한 상수 $a$ 의 값을 "
+    },
+    {
+      "id": "b5ae1d50-cf90-4fcf-8e58-6332f27f6312",
+      "code": "J20104-S4DV",
+      "fromUnitId": "b00ee45e-4eec-4b9d-a3ee-f592d25ec10d",
+      "fromUnit": "J20104",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "식 $2y(x-8y)-(15x^{2}y+20xy^{2})÷5x$ 를 계산하였을 때, $y^{2}$ 의 계수는? 1. $-20$ 2. $-12$ "
+    },
+    {
+      "id": "30402bd4-1a50-4b03-9ea1-e7385ccabe2c",
+      "code": "J20106-5PHN",
+      "fromUnitId": "044e4b67-5014-444d-8177-8efc976e3152",
+      "fromUnit": "J20106",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다음을 만족시키는 자연수 $a,~b$에 대하여 $b\\left( 3ab-a\\right) +\\left( 16a^{2}b^{2}-12a^{3}b^{3"
+    },
+    {
+      "id": "431387eb-884e-43b7-bd66-4d5167231882",
+      "code": "J20106-6RHR",
+      "fromUnitId": "044e4b67-5014-444d-8177-8efc976e3152",
+      "fromUnit": "J20106",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$a=2$, $b=-1$일 때, $\\left( 2a^{2}b-6ab^{2}\\right) \\div 2ab-\\left( 3b^{2}-2ab\\righ"
+    },
+    {
+      "id": "3f00dfe7-a439-4eba-a749-3b01f03f72b6",
+      "code": "J20106-7KCD",
+      "fromUnitId": "044e4b67-5014-444d-8177-8efc976e3152",
+      "fromUnit": "J20106",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$x=1$, $y=2$일 때, 식 $2y(x+8y)-(15x^{2}y+10xy^{2})\\div 5x$의 값은? 1. $54$ 2. $56$ 3."
+    },
+    {
+      "id": "eb2f74ea-362e-4dfc-8c91-0f5ceb32786a",
+      "code": "J20106-EM9B",
+      "fromUnitId": "044e4b67-5014-444d-8177-8efc976e3152",
+      "fromUnit": "J20106",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "두 식 A $=3a(a-b)$ , B $=(6a^{2}b^{2}-a^{3}b)÷\\frac{1}{2}ab$ 에 대하여 다음 물음에 답하시오. ⑴ "
+    },
+    {
+      "id": "cf635f67-c1c5-4676-a81b-26a9bdc89171",
+      "code": "J20106-YDQQ",
+      "fromUnitId": "044e4b67-5014-444d-8177-8efc976e3152",
+      "fromUnit": "J20106",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "표의 가로, 세로, 대각선에 놓인 세 다항식의 합이 모두 같을 때, 식 $A$, $B$에 대하여 $A-B$를 계산한 다항식은? $-5x(2x-1"
+    },
+    {
+      "id": "91e8a7cf-3e06-4798-92d7-508b8796828f",
+      "code": "J20107-2MYV",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다음 $\\square ~~~~$ 안에 알맞은 식을 구하시오. (단, 풀이 과정을 자세히 쓰시오.) $6\\left( x-1\\right) +2x\\l"
+    },
+    {
+      "id": "96f40234-01c5-4a8c-87ac-9c37e856e273",
+      "code": "J20107-2NSB",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "식 $(2x-4y)×(-\\frac{2}{3}x)-(4x^{2}y^{2}+12xy^{2}-8y^{2})÷(2y)^{2}$ 을 계산하였을 때, $x"
+    },
+    {
+      "id": "7f45de03-4210-455f-b516-958f51d7b894",
+      "code": "J20107-2RM6",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다음 식을 간단히 하였을 때, $a$ 의 계수와 $ab$ 의 계수의 곱은? <상자> 3ab-[$a-2$\\{$a+2b$($3-a$)-b\\}] 1."
+    },
+    {
+      "id": "c9f4824d-a484-4ee1-a434-d4209d884c01",
+      "code": "J20107-3K5Y",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "3a($a-2b+3c$)를 바르게 전개한 것은? 1. $6a-6ab+6ac$ 2. $6a+6ab+9ac$ 3. $3a^{2}+6ab+9ac$ 4"
+    },
+    {
+      "id": "898b96c1-ed15-4b4c-8258-82373145f829",
+      "code": "J20107-3L2Z",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다음 식을 계산하는 풀이 과정과 답을 쓰시오. $\\left( 6x^{2}y+12xy^{3}-9y^{2}\\right) \\div \\frac{3}{2"
+    },
+    {
+      "id": "a94821ac-2273-45ba-93b0-9760ee6cf379",
+      "code": "J20107-42WB",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "두 식 $A,B$ 가 $A=(3x+xy)B=(4x-6y)×\\frac{×(-y}{2}2y)-(3x^{2}y-4x^{2}y^{2})÷+9(x_{2}"
+    },
+    {
+      "id": "c626e093-836a-430b-9f38-a6f64afd65cd",
+      "code": "J20107-43SJ",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(2x-y)-(20xy-35y^{2})÷5y$ 를 간단히 계산한 식은? (단, $y≠0$ ) 1. $6x-8y$ 2. $6x+6y$ 3. $-"
+    },
+    {
+      "id": "efeb8e1c-c85b-4698-86a2-4c143696f3c8",
+      "code": "J20107-44XS",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다항식 $-2x(x^{2}-3x+2)$ 를 전개한 것은? 1. $x^{2}-6x+2$ 2. $2x^{2}-6x+4$ 3. $2x^{3}-6x^{"
+    },
+    {
+      "id": "2f9e2403-f551-48d1-a3d4-4371457faefe",
+      "code": "J20107-4AKZ",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(8x^{2}+4x)\\div (-2x)+(-2x^{2}y+y)\\,\\div \\frac{y}{3}$를 계산하였을 때, $x^{2}$의 계수는? 1"
+    },
+    {
+      "id": "1871dca9-aa18-4c6c-b582-c38d7c20d2de",
+      "code": "J20107-5DG9",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(6xy^{2}-8x^{2}y)÷2xy-\\frac{8x^{2}y-14xy^{2}}{2xy}$ 를 간단히 한 것은?(단, $x≠0,y≠0$ ) "
+    },
+    {
+      "id": "bd057bcb-0e37-48b4-a052-692d49276ce6",
+      "code": "J20107-6G5K",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "A $=(16x^{3}y^{2}-20x^{4})÷(-2x^{3})$ , B $=(6x^{2}y-4xy^{3})÷(-\\frac{2}{3}xy)$ "
+    },
+    {
+      "id": "8a38130e-2968-4a45-8d07-941ab6c6e2c0",
+      "code": "J20107-6GLR",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "식 $3x(3x-1)+(24x^{2}y-6xy)÷(-3y)$ 를 간단히 한 것은? 1. $x^{2}-1$ 2. $x^{2}-5x$ 3. $x^{"
+    },
+    {
+      "id": "f25c579b-bbb8-4c0d-8791-52696e92b3e9",
+      "code": "J20107-6PFB",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다음의 식을 계산하시오. (단, 풀이 과정을 서술하시오.) ⑴ $3(x^{2}+5x+3)-4(x^{2}+2x-1)$ ⑵ $3x^{2}-xy-\\{"
+    },
+    {
+      "id": "1fd1efdb-22bf-4033-b231-2dadd207ca20",
+      "code": "J20107-6QCM",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$5x(3x-2y)-(4x^{2}y-2xy^{2})÷\\frac{2}{3}y$ 를 간단히 하였을 때, $x^{2}$ 의 계수를 $a, xy$ 의 "
+    },
+    {
+      "id": "9ecdf5e9-ddca-4771-91ed-87f6788140b0",
+      "code": "J20107-6XAR",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$3x(2x-3)+(-3x^{2}y+xy+2y)÷\\frac{1}{2}y$ 를 계산하려고 한다. 물음에 답하시오. ⑴ $3x(2x-3)$ 를 계산"
+    },
+    {
+      "id": "2f8ea2b5-3071-46db-aec1-41c71a3bf33f",
+      "code": "J20107-75W7",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$x=-3$ , $y=\\frac{1}{6}$ 일 때, $\\frac{1}{3}x(12xy-9y)-(8x^{2}y^{2}-6xy^{2})\\div ("
+    },
+    {
+      "id": "2da3a634-15a6-4651-8a2f-d033681a6ee4",
+      "code": "J20107-7Z3C",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$3x(3x-1)+(18x^{2}y-9xy)÷(-\\frac{3}{2}y)$ 를 간단히 한 식에서 $x^{2}$ 의 계수를 $a$ , $x$ 의 "
+    },
+    {
+      "id": "e11d3243-b3b0-4970-999c-3a326c15460a",
+      "code": "J20107-879P",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$x=1$ , $y=-\\frac{1}{3}$ 이고, $A=12x(\\frac{2}{3}x+2)-\\{x(x^{2}y+5xy)-2x^{3}y\\}÷xy"
+    },
+    {
+      "id": "5f971f57-ba0f-4b7d-af19-8f4ef0f3c7e2",
+      "code": "J20107-8RQW",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$15x(\\frac{2}{3}x+2)-\\{x(x^{2}y+5xy)-2x^{3}y\\}÷xy=ax^{2}+bx$ 일 때, 상수 $a,b$ 에 대하여"
+    },
+    {
+      "id": "4264bfed-b8fa-4a67-81d5-1fd7a8800104",
+      "code": "J20107-9KCG",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다항식 $4x^{2}+3x-2-3x(x-2)$ 을 간단히 하였을 때, $x$ 의 계수와 상수항의 합은? 1. $6$ 2. $7$ 3. $8$ 4"
+    },
+    {
+      "id": "d58c2ba7-93a5-4df7-81a7-6b5c7457b771",
+      "code": "J20107-9VCS",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$x=\\frac{8}{7}$ , $y=-2$ 일 때, 식 $2x-\\{3y+(8y^{2}-6xy)÷4y\\}$ 의 값을 구하려고 한다. 그 풀이 과"
+    },
+    {
+      "id": "2db7b809-ff81-4a70-be49-501a1148263e",
+      "code": "J20107-A9YJ",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(9x^{2}y-3x^{2}y^{2})÷(-3xy)-x(3-2y)$ 을 간단히 한 식은? 1. $-6x+3xy$ 2. $-6x-xy$ 3. $"
+    },
+    {
+      "id": "9eb2d8a4-9792-49b0-90b0-eee604827847",
+      "code": "J20107-AMAQ",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$-2x^{2}-[x-2\\{x+3x(2x-1)-4\\}]$ 을 계산하였을 때, $x^{2}$ 의 계수와 상수항의 합은? [ $4$ 1. $-1$ "
+    },
+    {
+      "id": "f09a37d3-20cc-49b2-bf56-d129aae74cec",
+      "code": "J20107-ANGH",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$-2a\\left( 3a\\,+\\,2\\right) \\,+\\,a\\left( 5a\\,+\\,3\\right) \\,$을 계산하면? 1. $-a^{2}\\,-"
+    },
+    {
+      "id": "c752a0ab-5f37-4eb4-8a0f-9408809430f4",
+      "code": "J20107-APEV",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$b(6a+9ab)+(24a^{2}b^{3}-8a^{2}b^{4})÷4ab^{2}$ 을 계산하면? 1. $6ab+7ab^{2}$ 2. $12ab"
+    },
+    {
+      "id": "8091b46e-d4bd-4e93-b4a5-2f2aef701a78",
+      "code": "J20107-AU6Z",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$2x(x-3y)+(16xy^{2}-12x^{2}y)÷(-4y)$ 을 옳게 계산한 것은? 1. $5x^{2}-10xy$ 2. $-x^{2}+2x"
+    },
+    {
+      "id": "1ffca987-f561-4a69-bb31-178a5773ad0b",
+      "code": "J20107-BAEU",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "식 $x(8x-2)+(54x^{2}y-18xy)÷(-6y)$ 를 간단히 하였을 때, $x^{2}$ 의 계수를 $a$ , $x$ 의 계수를 $b$"
+    },
+    {
+      "id": "2b284666-7e42-47ae-bcc5-e5e6bf81979e",
+      "code": "J20107-BGH7",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$3x(3x-2y)-(4x^{4}y-8x^{3}y^{2})\\div \\frac{2}{3}x^{2}y$를 바르게 계산한 것은? 1. $3x^{2}+"
+    },
+    {
+      "id": "7b6b01ae-c213-4a56-b11c-258a377cab3c",
+      "code": "J20107-BJMS",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(10a^{2}b-8ab^{2})\\div (-2a)-(ab^{2}-b^{3})\\div\\frac{1}{3}$ $b$ 를 계산하면? ① $-8ab"
+    },
+    {
+      "id": "68933542-3025-4409-bd5b-80ddfc1b4c64",
+      "code": "J20107-C5EH",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다항식을 바르게 계산하시오. (단, 풀이과정을 상세히 쓰시오.) ⑴ $(4a+5b)-(3a-2b)$ ⑵ $2x(x-3)-x(3x+4)$ ⑶ $("
+    },
+    {
+      "id": "59066892-e24a-4188-a3c0-c60ba3933127",
+      "code": "J20107-CB5Q",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "세 다항식 $A,B,C$ 에 대하여 $A=B=C=\\frac{(3x^{2}+4x-2)-(x12xy_{2}-5xy-4y_{2}}{2y2x+y-\\{x"
+    },
+    {
+      "id": "d014322c-7b86-4284-91aa-519ec8a567bc",
+      "code": "J20107-D8M8",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$\\left( 8a-6a^{2}\\right) \\div \\left( -2a\\right) +\\left( 36a^{3}-27a^{2}\\right) \\"
+    },
+    {
+      "id": "f89887ad-33ef-4a7e-a1cd-d07ce58a9c68",
+      "code": "J20107-D9UR",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다음 식을 계산하시오.(단, 풀이과정을 자세히 쓰시오.) <상자> a($3a+2b-1$)-($9ab2-6a2b$)÷3b • ...."
+    },
+    {
+      "id": "c90b657f-4778-49dd-9add-f61ab72cf3ca",
+      "code": "J20107-DNWD",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$3y(x^{2}+2x+3)$ 을 전개하여 간단히 하였을 때, $y$ 의 계수를 $A$ 라 하고, $-4x(x-5y-9)$ 을 전개하여 간단히 "
+    },
+    {
+      "id": "d3eb2eca-8870-41c7-a10d-aac69707c844",
+      "code": "J20107-DP4L",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "세 다항식 $\\mathrm{A}$, $\\mathrm{B}$, $\\mathrm{C}$가 다음과 같을 때, $\\frac{\\mathrm{2A-3B-1"
+    },
+    {
+      "id": "3070fb16-8d50-4a75-a781-24db8d750031",
+      "code": "J20107-EN7M",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$-x^{2}-[x-2\\{x+2x(3-x)-1\\}]$ 을 바르게 계산한 것은? [ $4$ 1. $-5x^{2}+13x-2$ 2. $-5x^{2}"
+    },
+    {
+      "id": "5a5c8e8b-1649-4817-857c-bd807f31cc1c",
+      "code": "J20107-EPKT",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "식 $6x(\\frac{2}{3}x+2)-\\{x(x^{2}y+9xy)-2x^{3}y\\}÷xy$ 를 간단히 하면 $ax^{2}+bx$ 일 때, 상수"
+    },
+    {
+      "id": "a9c92478-6705-4deb-b30c-513f0c6e34cd",
+      "code": "J20107-EPQX",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "두 식 $A=-2x+y,B=3x+5y$ 에 대하여 $ax(2A+B)-2y(A-B)=mx^{2}+3xy+ny^{2}$ 이다. 이때 $m+n$ 의 "
+    },
+    {
+      "id": "921d065f-e82a-46b8-acb6-3326ff100226",
+      "code": "J20107-FBMH",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "식 $\\left( 3x^{2}y-9xy^{3}-6y^{2}\\right) \\div 3y-5x\\left( 2x-y^{2}\\right)$을 계산하면?"
+    },
+    {
+      "id": "54181f63-e5c9-4fec-a97a-5fa46645598a",
+      "code": "J20107-FVQG",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$x(2x+y-1)-2x(\\frac{1}{2}x-y+7)$ 을 계산했을 때, $x^{2}$ 의 계수와 $x$ 의 계수의 합은? 1. $-14$ "
+    },
+    {
+      "id": "aba38295-afdc-414c-952e-bdce363d8e88",
+      "code": "J20107-G5DS",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다항식 $(x^{2}+6x^{3})÷(-2x)^{2}-\\frac{2}{3}\\{(3x)^{2}-x+3\\}$ 을 간단히 정리하면 $ax^{2}+bx"
+    },
+    {
+      "id": "e2eef690-a15f-48aa-bcda-2e15199f14bc",
+      "code": "J20107-H8RA",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$2x(8x-1)-3x×()=7x^{2}+4x$ 일 때, 안에 들어갈 알맞은 다항식은? 1. $3x-2$ 2. $3x+2$ 3. $3x+5$ 4"
+    },
+    {
+      "id": "c6ec47e5-4dec-463e-b98c-b4be4925c60f",
+      "code": "J20107-J5P8",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$-5x(4x-2y+1)$을 전개한 식의 $x^{2}$의 계수를 $a$, $4x(-x+3y+2)$를 전개한 식의 $x$의 계수를 $b$라 할 때"
+    },
+    {
+      "id": "2f724bba-4a18-4fad-a68c-81a06a130561",
+      "code": "J20107-JKYX",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(16x^{2}-40xy)÷(-8x)-(2y^{2}-3xy)×\\frac{2}{y}$ 를 간단히 하면 $ax^{2}+by^{2}+cxy+dx+e"
+    },
+    {
+      "id": "a15777c7-2027-4d95-b101-75b1cd21652d",
+      "code": "J20107-JPUA",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(2x+3y)×(-5x)-(x^{2}y^{3}-2xy^{4}+4x^{3}y^{2})÷xy^{2}$ 를 간단히 하면? 1. $-14x^{2}-1"
+    },
+    {
+      "id": "cfac54a2-57f6-4fa4-81dd-51f2cd3c8b8e",
+      "code": "J20107-JSCK",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다음 식을 계산하시오. $x(-x+1)+3x(x-4)$"
+    },
+    {
+      "id": "1d6179f5-4535-4ade-88ba-879f54ce5875",
+      "code": "J20107-KQLW",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다음을 계산하는 풀이 과정과 답을 쓰시오. (단, $x\\neq 0$) [총$5$점] $\\left( 5x^{2}+xy\\right) \\div \\fr"
+    },
+    {
+      "id": "2215081b-5bfc-49a3-8e95-d81989428df5",
+      "code": "J20107-KWAT",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(-x+2y-3)÷(-\\frac{1}{3})+(4x^{2}y-6xy^{2}+2xy)÷2xy=ax+by+c$ 일 때, 상수 $a,b,c$ 에 대"
+    },
+    {
+      "id": "2b02373d-a799-4a4c-b05d-4c34afd0e1d6",
+      "code": "J20107-LCFA",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다음 식을 계산하시오. $(6x^{2}y+3xy)\\div 3xy$"
+    },
+    {
+      "id": "82a7f779-4959-4c16-a31c-bc8fcc6da113",
+      "code": "J20107-LCW6",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$\\{5xy-x(2x+y)\\}÷(-\\frac{1}{2}x)$ 를 계산하면? [ $4$ 1. $x-2y$ 2. $-2x+4y$ 3. $2x-4y$"
+    },
+    {
+      "id": "0d6f4072-2773-49b9-b484-b7e8cc98e5d9",
+      "code": "J20107-MHER",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$\\frac{12a^{2}b-9ab^{2}}{3a}-2b(2a-5b)$ 를 계산했을 때, $b^{2}$ 의 계수는? 1. $7$ 2. $4$ 3"
+    },
+    {
+      "id": "affd3762-cd85-442e-a2fb-97f030ba370a",
+      "code": "J20107-N32T",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "식 $5a-[0.'9b-2\\{5a+(8b^{2}-6ab)÷4b\\}-b]$ 의 계산과정과 답을 쓰시오. [ $8$ 중"
+    },
+    {
+      "id": "c999e0c2-3023-4687-9639-50452588a6e1",
+      "code": "J20107-NFBT",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다음 중 계산이 과정이 틀린 식의 기호와 옳은 답을 구하시오. ㉠ $-\\left( 12xy^{2}-45y^{2}\\right) \\div 3y=-\\"
+    },
+    {
+      "id": "908df307-2ee0-4f4d-b0ce-534abd7922ce",
+      "code": "J20107-NUBS",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$3(x^{2}-2x-3)-2(4x^{2}+ax-5)-x(x-3)$ 을 계산했을 때, $x$ 의 계수와 상수항의 합이 $8$ 이다. 상수 $a$"
+    },
+    {
+      "id": "58e1cd0e-ea27-4bd5-b204-4d346e462d22",
+      "code": "J20107-P3FN",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$2x(3x+4y)-(6x^{2}y-3xy)÷\\frac{3}{2}x$ 을 계산하였을 때, $x^{2}$ 의 계수를 $a$ , $xy$ 의 계수를"
+    },
+    {
+      "id": "def047a8-2b16-4d5a-9824-9f9dfeaa1d3c",
+      "code": "J20107-PBF4",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다음 식을 계산하시오. $(21a^{2}-14ab+35a)\\div(-7a)$"
+    },
+    {
+      "id": "0a4b4a69-0df9-41c7-8999-58f1272ffa87",
+      "code": "J20107-PM6L",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$xy(3x-5)-(4x^{3}y-6x^{2}y)÷2x$ 를 간단히 나타낸 것으로 옳은 것은? 1. $-x^{2}y-2xy$ 2. $-x^{2}"
+    },
+    {
+      "id": "98b71745-d859-4ef8-b612-9591e12dde2e",
+      "code": "J20107-PSFX",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$a=-1,b=3$ 일 때, $(6a^{2}-3ab)÷3a-(5ab+10ab^{2})÷(-5b)$ 의 값은? 1. $-12$ 2. $-10$ 3"
+    },
+    {
+      "id": "bc3ed3bf-994b-451f-8c5d-22e344960347",
+      "code": "J20107-Q42K",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$3x^{2}-\\{x-2x(4-x)-1\\}$ 을 옳게 계산한 것은? [ $4$ 1. $7x^{2}+6x-2$ 2. $-5x^{2}+3x-4$ 3"
+    },
+    {
+      "id": "2a9f4be7-7070-4d44-9ed2-91eed392725e",
+      "code": "J20107-QDVV",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$3x(2x-y)-\\left( 6x^{3}-3x^{2}y\\right) \\div (-3x)$를 간단히 하였을 때, $x^{2}$의 계수와 $xy$"
+    },
+    {
+      "id": "f7c95d99-63e1-4b3e-86f7-ac05e28426c4",
+      "code": "J20107-QQ2J",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$-3x(2x-y)-(x+3y)(-4x)$ 를 간단히 했을 때, $x^{2}$ 의 계수는 $a,xy$ 의 계수는 $b$ 이다. 이 때 $ab$ "
+    },
+    {
+      "id": "1366097a-d01a-4406-85f5-d6af10f90c65",
+      "code": "J20107-QTSQ",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$2x(x-2y)+3y(2x-3y)$ 를 간단히 했을 때, $y^{2}$ 의 계수와 $xy$ 의 계수의 합은? 1. $-7$ 2. $-5$ 3."
+    },
+    {
+      "id": "74188b36-d2dd-4972-91f2-828c6031f465",
+      "code": "J20107-REEV",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "A $=(12x^{2}-6xy)÷2x$ , B $=(35xy-40y^{2})×\\frac{1}{5y}$ 일 때, A $-$ B의 값을 구하시오. "
+    },
+    {
+      "id": "067e5151-59bf-40cb-a1e8-8013de935b01",
+      "code": "J20107-RUSS",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(6x+3y)\\div 3+(14y^{2}-7xy)\\div 7y$를 계산하면 $ax+by$가 된다고 할 때, $a+b$의 값은? (단, $a,~"
+    },
+    {
+      "id": "02cfe552-1b3e-4078-93bf-9bcc01da78bb",
+      "code": "J20107-RXSL",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "식 $x(2x+y+1)-3x(\\frac{1}{3}x-y+2)$ 을 계산했을 때, $x^{2}$ 의 계수와 $x$ 의 계수를 더하면? 1. $-4"
+    },
+    {
+      "id": "6e735690-8980-408b-a7d3-7be9766b4b51",
+      "code": "J20107-RZS5",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "세 식 $A,B,C$ 가 $A=x^{2}-4x+3$ , $B=(2x^{3}y^{2}-6x^{2}y^{2}+10xy^{2})÷2xy^{2}$ , "
+    },
+    {
+      "id": "05ae1580-1ecd-4e3e-a969-51b64659af31",
+      "code": "J20107-SEQK",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$4x\\left( -2y+3\\right) +\\left( 12x^{2}y-6xy-9x^{2}\\right) \\div 3x$를 계산한 식에서 $xy$"
+    },
+    {
+      "id": "730c3ce9-7e51-436f-9597-e226bc150b3b",
+      "code": "J20107-SZUM",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "2x($3x-2y$)-(-$6xy+4xy^{2}$) \\div \\frac{2}{3}y를 계산하면? 1. $6x^{2}-10xy+9x$ 2. $6x"
+    },
+    {
+      "id": "0b31c36f-7127-401a-a13b-b95c4e5bf9f4",
+      "code": "J20107-T9AU",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "계산 결과가 서로 같은 학생을 바르게 짝지은 것은? 갑 을 $-2x(5x-3)$ $-5x(2x-3)$ 병 정 $(5x^{3}-3x^{2})\\di"
+    },
+    {
+      "id": "a16b975c-8701-432d-ad5c-7f2f472197fc",
+      "code": "J20107-TNSV",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(3x^{2}y+6xy^{3}-3y^{2})÷\\frac{3}{2}y-x(x-2y^{2})$ 을 계산하시오. <조건>◦ 단답형이므로 정답만 적을"
+    },
+    {
+      "id": "85bd16f0-6c54-4395-9e53-a90ecd91f59c",
+      "code": "J20107-TV6S",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$2x(4x-7)-(4x^{3}-2x^{2})÷2x$ 를 계산하시오. < 조 건>○풀이 과정과 답을 적을 것."
+    },
+    {
+      "id": "12631372-0cd8-41a0-a525-63a8dba39be4",
+      "code": "J20107-U472",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(10x^{2}-8x)÷(-2x)=ax+b$ 이다. 정수 $a,b$ 에 대해 $a+b$ 의 값은? 1. $-20$ 2. $-9$ 3. $-1$"
+    },
+    {
+      "id": "43c79810-7450-40d9-b407-f48a2ff9e642",
+      "code": "J20107-UNE8",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$2a(3a-2b+4)+4a(a-b+1)$을 계산했을 때, $a^{2}$의 계수와 $ab$의 계수의 합을 구하면? 1. $2$ 2. $1$ 3."
+    },
+    {
+      "id": "3bbe9e39-b81d-489b-b6a4-dfd62ea99863",
+      "code": "J20107-VT8G",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다항식 $2x(3x-1)-x(2x+3)$ 을 계산하였을 때, $x^{2}$ 의 계수와 $x$ 의 계수의 합은? 1. $-1$ 2. $0$ 3. "
+    },
+    {
+      "id": "d957597d-4e62-4750-aa50-5f27cd037590",
+      "code": "J20107-WM3G",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(9x^{3}y-3x^{2}y^{2})÷\\frac{3}{2}xy-3x(x-5y)$ 을 계산하면? 1. $3x^{2}+13xy$ 2. $3x^{"
+    },
+    {
+      "id": "132d5a2e-95d6-4c2a-b639-df2f239e1e1d",
+      "code": "J20107-WUY3",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다음 식을 계산하면? (단, $xy\\neq 0$) $(9x^{3}y^{3}-18x^{4}y^{2})\\div \\left( \\frac{3}{2}xy"
+    },
+    {
+      "id": "f23af5f5-259c-4cc6-a5af-d528e27a6602",
+      "code": "J20107-WWBL",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "다음 식을 전개하시오. $-4x(2x-y-3)$"
+    },
+    {
+      "id": "15526a19-8955-44ff-8e58-89094cb9fd6f",
+      "code": "J20107-X24H",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(-2x^{2}+5x-8)+a(x^{2}-3x+4)$ 를 계산했을 때, $x^{2}$ 의 계수와 상수항이 같다. 상수항의 값은? 1. $-8$"
+    },
+    {
+      "id": "b11da8e2-8a0c-4a96-b1a0-499e0865512f",
+      "code": "J20107-X9H2",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$4x(-3x-y)+(18x^{2}-21x^{2}y)÷(-3x)=Ax^{2}+Bxy-Cx$ 일 때, $A-B+C$ 의 값은? (단, $A$ , "
+    },
+    {
+      "id": "68a2a622-b848-4227-91e9-82e5fc98eeb5",
+      "code": "J20107-XBM5",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "식 ($4a^{2}-6ab$) \\div 2a - ($15ab+5b^{2}$) \\div 5b를 계산하면? 1. $5a-2b$ 2. $5a-4b$ "
+    },
+    {
+      "id": "20f093f0-f781-4e82-8b57-36173aebdcc1",
+      "code": "J20107-YBLH",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$(4x^{3}y^{3}-12x^{2}y^{3})÷(-xy)^{2}-(x-3)×(-2y)$ 의 계산 결과는? 1. $-6xy-9y$ 2. $-6"
+    },
+    {
+      "id": "d3037fa4-7139-4561-9689-15ccda4612c9",
+      "code": "J20107-YEXQ",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$A,~B$가 다음과 같이 주어졌을 때, $A-B$ 구하고, 그 풀이 과정을 서술하시오. $A=(18ab^{2}-15b^{3})÷(-3b^{2}"
+    },
+    {
+      "id": "89a56f18-ce02-44e2-a6e9-16c97fe7510f",
+      "code": "J20107-YPGH",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$2x(x+2y)-(4x^{2}y-5y^{3})÷\\frac{1}{3}y$을 계산하였을 때, $x^{2}$의 계수와 $y^{2}$의 계수의 합은?"
+    },
+    {
+      "id": "290a2bd5-6564-4bc0-b92f-948fe10c1ad5",
+      "code": "J20107-ZRXW",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "$-3x(1-2x)+(25x^{2}y-10xy)÷5y$ 를 계산한 식은? 1. $-5x$ 2. $10x^{2}-6x$ 3. $10x^{2}+6x"
+    },
+    {
+      "id": "65d7fec6-bdc5-48ca-9998-b80635c8a9ff",
+      "code": "J20107-ZWN6",
+      "fromUnitId": "71261bd2-bd55-4202-afae-57f8b11c0fe7",
+      "fromUnit": "J20107",
+      "toUnitId": "839c2c6c-9ca5-48a5-9139-8973559f0624",
+      "head": "두 다항식 A $,$ B가 다음과 같을 때, A $-[$ B $-\\{x^{2}-(x-$ C $)\\}]=-2x^{2}-x+8y+7$ 을 만족시키는"
+    }
+  ]
+}
