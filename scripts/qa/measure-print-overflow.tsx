@@ -191,6 +191,23 @@ async function main() {
     `문항 ${rows.length.toLocaleString()}건 · ${kind} 장 · ${media} 매체`,
   );
 
+  /**
+   * ⚠️ **홀수면 마지막 장이 한 문항이 되고 그 칸은 두 배(997px)다.**
+   *    그러면 `singleSlot` 이 「칸이 2가지다 — 지면이 바뀌었다」로 멈춘다. 지면은
+   *    안 바뀌었는데도 그렇다 — **문항 수가 홀수인 것뿐**이다. 28분을 다 쓰고 마지막
+   *    한 줄에서 전부 버려진다(2026-08-20 실제 발생: 중복 372건을 지워 47,049가 됐다).
+   *
+   *    `verify()` 는 이 함정을 알고 채워 넣는데(§짝수로 맞춘다) **전수 경로에는 그게
+   *    없었다.** 같은 규칙이 두 곳에 있으면 한쪽만 고쳐도 아무도 모른다 —
+   *    그래서 여기서도 같은 방식으로 채운다: 앞의 한 문항을 **한 번 더** 재고,
+   *    잰 뒤 그 덧댄 줄만 버린다.
+   */
+  const padded = rows.length % 2 === 1 ? [...rows, rows[0]!] : rows;
+  if (padded.length !== rows.length)
+    console.log(
+      "문항 수가 홀수라 마지막 장이 한 문항이 된다 — 앞의 한 문항을 덧대 짝을 맞춘다(잰 뒤 버린다).",
+    );
+
   const browser = await chromium.launch();
   const page = await browser.newPage({
     viewport: { width: 1000, height: 1200 },
@@ -199,13 +216,18 @@ async function main() {
 
   let all: Measured[];
   try {
-    all = await measureRows(page, rows, kind, (done) =>
-      process.stdout.write(`\r측정 ${done}/${rows.length}`),
+    all = await measureRows(page, padded, kind, (done) =>
+      process.stdout.write(`\r측정 ${done}/${padded.length}`),
     );
   } finally {
     await browser.close();
   }
   console.log("");
+
+  // 덧댄 줄을 버린다 — 맨 끝 하나다(앞의 문항을 한 번 더 잰 것).
+  if (padded.length !== rows.length) all = all.slice(0, -1);
+  if (all.length !== rows.length)
+    throw new Error(`잰 줄 ${all.length} ≠ 문항 ${rows.length} — 멈춘다.`);
 
   const byId = new Map(rows.map((r) => [r.id, r]));
   const slot = singleSlot(all);
