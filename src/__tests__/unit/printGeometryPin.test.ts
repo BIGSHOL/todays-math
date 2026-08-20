@@ -110,7 +110,13 @@ describe("[적대④] 지면 상수는 지면 원문에서 나온다", () => {
   });
 
   it("그림 묶음 여백은 `mt-3`·`gap-4` 그대로다", () => {
-    expect(problemContent).toContain("mt-3 flex flex-wrap items-start gap-4");
+    // 2026-08-20 에 `justify-center` 가 들어왔다(원장님 지시: 「그림이 문제 중앙
+    // 정렬 되면 좋겠네」). **가로** 배치라 `mt-3`(위 여백)·`gap-4`(장 사이)는
+    // 안 바뀐다 — 아래 두 상수와 여전히 한 수다. 문자열을 통째로 못 박아 두는
+    // 이유가 이것이다: 여백이 아닌 변경이어도 **한 번은 사람이 보게** 만든다.
+    expect(problemContent).toContain(
+      "mt-3 flex flex-wrap items-start justify-center gap-4",
+    );
     expect(JASEUP_MEASURED_PX.figureBlockTop).toBe(spacing(3));
     expect(JASEUP_MEASURED_PX.figureGap).toBe(spacing(4));
   });

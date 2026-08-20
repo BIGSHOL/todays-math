@@ -14,6 +14,7 @@ import {
 import { figureWidthStyle, parseFigureDimensions } from "@/lib/figurePrintSize";
 import { fitsTwoColumns } from "@/lib/math/displayWidth";
 import { CHOICE_MARKS } from "@/lib/math/circledNumber";
+import { hideFigureMarker } from "@/lib/problem/figureMarker";
 import { parseProblemContent } from "@/lib/problem/parseProblemContent";
 
 /**
@@ -88,8 +89,17 @@ export function ProblemContent({
   className = "",
   deferFigures = true,
 }: ProblemContentProps) {
-  const { question, choices } = parseProblemContent(content);
+  const { question: rawQuestion, choices } = parseProblemContent(content);
   const figures = figureUrls ?? [];
+  /**
+   * 그림이 붙어 있는데 발문에 `[그림]` 자국이 남은 문항이 3,951건 있다
+   * (원장님 2026-08-20). 그림은 바로 아래 그려지므로 그 글자는 군더더기다.
+   * **자(`estimateProblemPx`)도 같은 함수를 부른다** — 한쪽만 고치면 높이가 갈라진다.
+   */
+  const question = hideFigureMarker(
+    rawQuestion,
+    figures.length > 0 || Boolean(figureSvg),
+  );
   /**
    * 🔴 **넘침 판정과 같은 함수**다(`printOverflow` 도 이걸 부른다). 규칙이 두 벌이 되면
    * 자가 재는 지면과 실제 지면이 갈라지는데, 그건 아무도 모르게 어긋난다.
@@ -124,14 +134,18 @@ export function ProblemContent({
           data-figure-size={figureSvgSize(figureSvg)}
           // 크기 등급은 figureSvgFrame(초등 트랙), 곱셈 혼합은 지면 배경 때문이다
           // (원장님 2026-08-20). 둘은 서로 다른 것을 고친다 — 한쪽만 남기지 말 것.
-          className={`${figureSvgFrameClass(figureSvg)} ${FIGURE_BLEND_CLASS}`}
+          // `mx-auto` — 원장님 지시(2026-08-20): 「그림이 문제 중앙 정렬 되면 좋겠네」.
+          // 크기 등급이 정한 max-width 안에서 **칸 가운데**로 놓는다.
+          className={`mx-auto ${figureSvgFrameClass(figureSvg)} ${FIGURE_BLEND_CLASS}`}
           dangerouslySetInnerHTML={{ __html: figureSvg }}
         />
       ) : null}
       {figures.length > 0 ? (
         // 발문 뒤·보기 앞 — 원본 지면 순서 그대로.
         // 장식 없음(05 §0: 유리·그림자·그라데이션 금지). 그림 자체가 내용이다.
-        <div className="mt-3 flex flex-wrap items-start gap-4 print:break-inside-avoid">
+        // `justify-center` — 원장님 지시(2026-08-20): 「그림이 문제 중앙 정렬 되면
+        // 좋겠네」. 여러 장이면 줄마다 가운데로 모인다(원본 순서는 그대로).
+        <div className="mt-3 flex flex-wrap items-start justify-center gap-4 print:break-inside-avoid">
           {figures.map((url, index) => (
             // 원본 비율·자연 크기를 그대로 써야 인쇄물이 원본 시험지와 같아진다.
             // next/image 는 리사이즈·포맷 변환을 하므로 여기선 쓰지 않는다.

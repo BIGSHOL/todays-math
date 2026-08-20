@@ -42,6 +42,7 @@ import {
 } from "@/lib/figurePrintSize";
 import { displayWidth, fitsTwoColumns } from "@/lib/math/displayWidth";
 import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
+import { hideFigureMarker } from "@/lib/problem/figureMarker";
 import { paginateAnswerKey } from "@/lib/printLayout";
 import { packProblems } from "@/lib/printPack";
 import {
@@ -266,7 +267,10 @@ export function estimateProblemPx(
   content: string,
   figures: readonly (FigureDimensionType | null)[] = [],
 ): number {
-  const { question, choices } = parseProblemContent(content);
+  const { question: rawQuestion, choices } = parseProblemContent(content);
+  // 조판이 안 그리는 `[그림]` 자국을 자도 안 센다 — **같은 함수**를 부른다.
+  // 한쪽만 고치면 높이가 갈라지고, 갈라진 것은 아무도 못 본다(2026-08-18).
+  const question = hideFigureMarker(rawQuestion, figures.length > 0);
   const { line, boxChrome, fixedChrome } = JASEUP_MEASURED_PX;
 
   // 문항번호와 정답란은 본문과 무관하게 늘 붙는다 — 실측 62.5px = 3.08줄.
