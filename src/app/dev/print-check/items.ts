@@ -45,6 +45,41 @@ export const PRINT_ROUTE = "/tests/{시험지id}/print";
 
 export const ITEMS: PrintCheckItem[] = [
   {
+    id: "figure-raster-300dpi",
+    title: "그림 1,344장을 **300dpi 재크롭본**으로 바꿨다",
+    changed:
+      "원본 시험지 PDF 에서 그림을 **다시 오려** 픽셀을 촘촘하게 만들었다(대체로 1.5배). " +
+      "**지면 크기는 안 바뀐다** — 앞서 물리 폭(mm)을 넣어 두었기 때문에 픽셀이 늘어도 " +
+      "그리는 크기가 그대로다(실측 1,641자리 전부 0px 변화). 바뀌는 것은 **또렷함뿐**이다. " +
+      "이 무리의 150dpi 미만이 879 → 418 로 줄었다. " +
+      "파일을 바꾸면서 DB 의 픽셀 치수(`figure_dims`)도 같은 실행에서 고쳤다 — " +
+      "하나만 하면 넘침 판정이 옛 픽셀로 재고 지면은 새 파일을 그린다.",
+    look:
+      "① 바뀐 그림의 **선·글자·눈금이 종전보다 또렷한가.** 이게 이 변경의 유일한 목적이다. " +
+      "② 그림이 종전과 **같은 크기**로 나오는가 — 커지거나 작아졌으면 그건 결함이다(0건이어야 한다). " +
+      "③ 다시 오리면서 **가장자리가 잘리거나** 옆 문항 글자가 딸려 들어오지 않았는가. " +
+      "④ 안 바꾼 그림(가로가 안 늘어 그대로 둔 11,383장)과 **한 지면에 섞여** 있을 때 " +
+      "또렷함 차이가 눈에 거슬리지 않는가. " +
+      "⑤ 사진처럼 흐릿한 그림이 남아 있는가 — 그건 원본이 스캔이라 다시 오려도 안 나아진다(벡터가 다음 수다).",
+    lookFromSource: false,
+    evidence: [
+      "scripts/qa/swap-figure-files.ts (고르는 규칙 · 되돌리기)",
+      "scripts/qa/survey-figure-swap.py (계획 만들기)",
+      "src/__tests__/unit/swapFigureFiles.test.ts",
+      "scripts/qa/mutate-swap.sh (가드 5개 · 5개 다 빨강)",
+      "scripts/qa/reports/figure-swap-ledger.json (되돌리기 원장 1,344행)",
+      "docs/planning/tracks/report-figure-apply.md",
+    ],
+    scale:
+      "계획 13,911장 중 **1,344장**만 바꿨다(문항 1,249건). 나머지는 사유를 다 세어 두었다 — " +
+      "가로가 안 늘어 이득이 0 인 것 11,383 · **아무 문항도 안 쓰는 고아 파일 1,172** " +
+      "(371개 시험지 폴더가 통째로 고아다) · 확장자가 달라져 URL 을 바꿔야 하는 것 11 · " +
+      "지면 폭이 달라지는 것 1(mm 를 몰라 폭이 아직 픽셀에서 나오는 그림이라 뺐다).",
+    status: "대기",
+    needs: "실물 출력",
+    changedOn: "2026-08-20",
+  },
+  {
     id: "figure-print-size-mm",
     title: "그림 크기를 **픽셀이 아니라 물리 크기(mm)** 로 정한다",
     changed:
