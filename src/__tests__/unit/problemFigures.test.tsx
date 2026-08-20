@@ -12,6 +12,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { ProblemContent } from "@/components/math/ProblemContent";
+import { fallbackSourceMm } from "@/lib/figurePrintSize";
 import { PaperProblemView } from "@/components/print/PaperProblemView";
 import { ProblemBody } from "@/components/print/templates/ProblemBody";
 import { serializeProblem } from "@/lib/serializers";
@@ -207,7 +208,11 @@ describe("[그림] 표시 크기", () => {
  * 원장님 지시(2026-08-19) 「모든 그림이나 도형 크기가 **일관성이 있어야**」.
  *
  * 여기서 잠그는 것:
- *   1. mm 를 모르면 **마크업이 오늘과 한 글자도 다르지 않다**(회귀 0)
+ *   1. **픽셀조차 모르면** 마크업이 오늘과 한 글자도 다르지 않다(회귀 0)
+ *   1-b. **픽셀은 아는데 mm 를 모르면 픽셀에서 환산한다**(2026-08-20).
+ *      예전에는 그때도 style 을 안 붙여 CSS 상한(70mm)이 걸렸는데, 상한은 곧
+ *      **최대 크기**라 「모르는 그림」이 「아는 그림의 85%」보다 크게 나갔다.
+ *      원장님이 종이에서 「그림이 너무 거대해」로 찾아 주셨다.
  *   2. mm 를 알면 `width: Xmm` — 그리고 **70mm 를 넘지 않는다**
  *   3. 인쇄 상한 클래스(`print:max-w-[70mm]`)가 **여전히 붙어 있다**
  *      (⚠️ 인라인 style 은 Tailwind 를 이긴다. 예전에 카드 폭을 인라인으로 박아
@@ -222,15 +227,34 @@ describe("[그림크기] 지면이 물리 크기로 그린다", () => {
     expect(screen.getByRole("img").getAttribute("style")).toBeNull();
   });
 
-  it("치수만 알고 mm 를 모르면 여전히 안 붙인다", () => {
+  it("치수만 알고 mm 를 모르면 **픽셀에서 환산해** 그린다 — 예전엔 상한(=최대)이었다", () => {
+    // 400px 스캔본 → 400/253*25.4 = 40.16mm. 상한(70)에서 뚜렷이 떨어져 있어야
+    // 「환산했다」와 「그냥 70을 박았다」가 갈린다 — 상한에 걸리는 폭으로 재면
+    // 옛 동작과 새 동작이 같은 값을 내서 이 검사가 아무것도 못 가른다.
     render(
       <ProblemContent
         content={STEM}
         figureUrls={ONE}
-        figureDims={[800, 600]}
+        figureDims={[400, 300]}
       />,
     );
-    expect(screen.getByRole("img").getAttribute("style")).toBeNull();
+    expect(screen.getByRole("img").style.width).toBe(
+      `${fallbackSourceMm(400, ONE[0]).toFixed(2)}mm`,
+    );
+  });
+
+  it("RPM(벡터)은 같은 픽셀이라도 **다른 크기**로 환산된다 — 72dpi 다", () => {
+    const rpm = ["/figures/rpm/019fd1d7-abc/0.png"];
+    render(
+      <ProblemContent content={STEM} figureUrls={rpm} figureDims={[100, 80]} />,
+    );
+    expect(screen.getByRole("img").style.width).toBe(
+      `${fallbackSourceMm(100, rpm[0]).toFixed(2)}mm`,
+    );
+    // 같은 100px 이 스캔본이면 더 작다(253dpi) — 경로가 실제로 갈라야 한다.
+    expect(fallbackSourceMm(100, rpm[0])).toBeGreaterThan(
+      fallbackSourceMm(100, ONE[0]),
+    );
   });
 
   it("mm 를 알면 `width: Xmm` 로 그린다", () => {
@@ -283,17 +307,27 @@ describe("[그림크기] 지면이 물리 크기로 그린다", () => {
     expect(screen.getByRole("img").getAttribute("style")).toBeNull();
   });
 
-  it("mm 배열 길이가 어긋나면 통째로 모른다 — 반쪽으로 그리지 않는다", () => {
+  it("mm 배열 길이가 어긋나면 **한 장도** 그 값을 안 쓴다 — 반쪽으로 그리지 않는다", () => {
+    // 어긋난 배열은 어느 그림에 붙는지 알 수 없다. 그래서 40mm 는 **버린다.**
+    // (2026-08-20 부터 그 뒤는 «아무것도 안 그린다»가 아니라 «픽셀에서 환산»이다.)
+    const urls = ["/figures/1/a.png", "/figures/1/b.png"];
     render(
       <ProblemContent
         content={STEM}
-        figureUrls={["/figures/1/a.png", "/figures/1/b.png"]}
+        figureUrls={urls}
         figureDims={[800, 600, 400, 300]}
         figureSourceMm={[40]}
       />,
     );
-    for (const img of screen.getAllByRole("img"))
-      expect(img.getAttribute("style")).toBeNull();
+    const imgs = screen.getAllByRole("img");
+    // jsdom 은 `70.00mm` 를 `70mm` 로 줄여 적는다 — 글자가 아니라 **수**로 견준다.
+    const mm = (i: HTMLElement) => Number.parseFloat(i.style.width);
+    expect(imgs.map(mm)).toEqual([
+      Number(fallbackSourceMm(800, urls[0]).toFixed(2)),
+      Number(fallbackSourceMm(400, urls[1]).toFixed(2)),
+    ]);
+    // 🔴 어긋난 40mm 가 어느 장에도 새면 안 된다.
+    for (const img of imgs) expect(mm(img)).not.toBe(40);
   });
 
   it("여러 장이면 **장마다** 제 크기로 그린다", () => {

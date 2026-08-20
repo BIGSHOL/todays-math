@@ -14,6 +14,7 @@ import { describe, expect, it } from "vitest";
 
 import type { TestPrintProblem } from "@/components/print/types";
 import { packProblems } from "@/lib/printPack";
+import { cssPxToMm } from "@/lib/figurePrintSize";
 import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
 import {
   assessOverflowRisk,
@@ -319,6 +320,7 @@ describe("[적대③-B] 장을 아는 판정", () => {
       figureUrls: ["/f.png"],
       // 21줄짜리 문항 — 첫 장 한계(19)는 넘고 이어지는 장 한계(23)는 안 넘는다.
       figureDims: [200, 330],
+      figureSourceMm: [cssPxToMm(200)],
     });
 
   it("같은 문항이 첫 장에서는 경고, 이어지는 장에서는 무경고다", () => {
@@ -343,6 +345,7 @@ describe("[적대③-B] 장을 아는 판정", () => {
           content: "짧은 발문이다.",
           figureUrls: ["/f.png"],
           figureDims: [200, 1200],
+          figureSourceMm: [cssPxToMm(200)],
         }),
       ),
     );
@@ -434,6 +437,7 @@ describe("[적대④-B] 칸은 «그 장에 몇 개인가»로 갈린다", () =>
       content: "짧은 발문이다.",
       figureUrls: ["/f.png"],
       figureDims: [200, 500],
+      figureSourceMm: [cssPxToMm(200)],
     });
 
   it("한계 넷 모두 제 칸 높이에서 나온다", () => {
@@ -479,6 +483,7 @@ describe("[적대④-B] 칸은 «그 장에 몇 개인가»로 갈린다", () =>
         content: "짧은 발문이다.",
         figureUrls: ["/f.png"],
         figureDims: [200, 1234],
+        figureSourceMm: [cssPxToMm(200)],
       }),
     ]);
     expect(risks).toHaveLength(1);

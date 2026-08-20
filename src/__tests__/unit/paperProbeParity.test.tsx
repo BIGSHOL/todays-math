@@ -20,7 +20,7 @@
 import { describe, expect, it } from "vitest";
 
 import { renderSlot } from "../../../scripts/qa/paperProbe";
-import { figureWidthStyle } from "../../lib/figurePrintSize";
+import { fallbackSourceMm, figureWidthStyle } from "../../lib/figurePrintSize";
 
 const FIGURE = "/figures/probe/x.png";
 
@@ -56,7 +56,10 @@ describe("탐침 지면이 제품 지면과 같은 것을 그린다", () => {
     expect(html).toContain("width:70.00mm");
   });
 
-  it("mm 를 모르면 style 을 아예 안 만든다 — 2026-08-19 이전 지면 그대로", () => {
+  it("mm 를 몰라도 탐침과 제품이 **같은 폭**을 그린다 — 픽셀에서 환산", () => {
+    // 2026-08-20 에 「모르면 상한(70mm)」이 「모르면 픽셀에서 환산」으로 바뀌었다.
+    // 여기서 지키는 것은 그 규칙 자체가 아니라 **탐침이 제품과 같다**는 것이다 —
+    // 갈라지면 높이 캐시가 딴 지면을 재고, 그건 아무도 모르게 어긋난다.
     const html = renderSlot(
       {
         id: "p1",
@@ -66,7 +69,10 @@ describe("탐침 지면이 제품 지면과 같은 것을 그린다", () => {
       },
       1,
     );
-    expect(html).not.toContain('mm"');
+    const expected = figureWidthStyle(fallbackSourceMm(400, FIGURE))!.width;
+    expect(html).toContain(`width:${expected}`);
     expect(html).toContain("<img");
+    // 🔴 상한을 그대로 박은 것이 아니어야 한다 — 그러면 옛 동작과 못 가른다.
+    expect(expected).not.toBe("70.00mm");
   });
 });

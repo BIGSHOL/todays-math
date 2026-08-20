@@ -5,7 +5,11 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 
 import { db } from "@/lib/db";
-import { figurePrintWidthMm, figureWidthStyle } from "@/lib/figurePrintSize";
+import {
+  fallbackSourceMm,
+  figurePrintWidthMm,
+  figureWidthStyle,
+} from "@/lib/figurePrintSize";
 import { PAPER_CSS_VARIABLES } from "@/components/print/tokens";
 
 import styles from "./Specimen.module.css";
@@ -195,6 +199,45 @@ export default async function PrintSpecimenPage() {
     mmPool.filter((r) => r.mm >= 40 && r.mm <= 48)[0],
     mmPool.filter((r) => r.mm >= 70)[0],
   ].filter(Boolean) as { problemCode: string; url: string; mm: number }[];
+
+  /**
+   * mm 를 **모르는** 자리 — 예전엔 전부 70mm(상한, 곧 최대)로 그렸다.
+   * 이제 픽셀에서 환산한다. 종이에서 전후를 나란히 놓아 원장님이 고르시게 한다.
+   * 픽셀이 큰 쪽부터 — 크게 그려지던 것이 가장 크게 달라진다.
+   */
+  // 🔴 `rasterPool` 은 `figureSourceMm: { isEmpty: false }` 로 뽑은 것이라
+  //    **아는 것만** 들어 있다. 모르는 자리는 따로 물어야 한다 — 안 그러면
+  //    이 절이 조용히 빈다(2026-08-21 에 실제로 그랬다).
+  const unknownPool = (await db.problem.findMany({
+    where: {
+      reviewStatus: "approved",
+      directUseAllowed: true,
+      figureSourceMm: { isEmpty: true },
+      NOT: { figureUrls: { isEmpty: true } },
+    },
+    select: {
+      id: true,
+      problemCode: true,
+      figureUrls: true,
+      figureDims: true,
+      figureSourceMm: true,
+    },
+    take: 3000,
+    orderBy: { id: "asc" },
+  })) as ProblemFigure[];
+
+  const unknownRows = unknownPool
+    .flatMap((p) =>
+      p.figureUrls.map((url, i) => ({
+        problemCode: p.problemCode,
+        url,
+        px: p.figureDims?.[i * 2] ?? 0,
+      })),
+    )
+    .filter((r) => r.px > 0 && onDisk(r.url))
+    .sort((a, b) => b.px - a.px)
+    .slice(0, 4)
+    .map((r) => ({ ...r, mm: fallbackSourceMm(r.px, r.url) }));
 
   const vars = PAPER_CSS_VARIABLES as unknown as React.CSSProperties;
 
@@ -420,6 +463,60 @@ export default async function PrintSpecimenPage() {
             </div>
           ))}
           <Verdict what="가장 거친 것도 글자·눈금이 읽히는가" />
+        </section>
+
+        {/* ── 5장 — mm 를 모르는 그림, 전후 ─────────────────── */}
+        <section className={styles.page}>
+          <header className={styles.pageHead}>
+            <span className={styles.pageTitle}>
+              ⑤ mm 를 모르는 그림 — 왼쪽이 옛것(늘 70mm), 오른쪽이 새것
+            </span>
+            <span className={styles.pageNo}>SPECIMEN 5</span>
+          </header>
+
+          <p className={styles.lead}>
+            원본 시험지에서 그 그림이 몇 mm 였는지 <strong>모르는</strong>{" "}
+            자리가 1,650 있다. 예전에는 그런 자리를 전부{" "}
+            <strong>70mm(상한, 곧 최대)</strong> 로 그렸다 — 그런데 mm 를{" "}
+            <strong>아는</strong> 8,549자리의 중앙은 47.3mm 이고 상한에 걸린
+            것은 14.5% 뿐이다. 즉{" "}
+            <strong>모르는 것이 아는 것의 85%보다 크게</strong> 그려지고
+            있었다(원장님 지적: 「그림이 너무 거대해」).
+            <br />
+            이제 <strong>픽셀에서 환산</strong>한다 — RPM 은 72dpi, 스캔본은
+            253dpi. 둘 다 mm 를 아는 자리에서 잰 값이다. 환산 결과의 중앙은
+            44.8mm 로 아는 값의 중앙과 맞는다.
+            <br />
+            <strong>보실 것:</strong> 오른쪽이 <strong>읽을 만한 크기</strong>
+            인가. 너무 작아 눈금·라벨이 안 보이면 불합격이다 — 그러면
+            바닥값(지금 28mm)을 올린다.
+          </p>
+
+          {unknownRows.map((r) => (
+            <div key={r.url} className={styles.pair}>
+              <div className={`${styles.cell} ${styles.figBox}`}>
+                <span className={styles.cellLabel}>
+                  옛것 · 70.0mm (늘 최대)
+                </span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={r.url} alt="" style={figureWidthStyle(70)} />
+                <span className={styles.cellNote}>
+                  {r.problemCode} · 원본 {r.px}px
+                </span>
+              </div>
+              <div className={`${styles.cell} ${styles.figBox}`}>
+                <span className={styles.cellLabel}>
+                  새것 · {figurePrintWidthMm(r.mm).toFixed(1)}mm
+                </span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={r.url} alt="" style={figureWidthStyle(r.mm)} />
+                <span className={styles.cellNote}>
+                  {r.px}px ÷ {Math.round((r.px / r.mm) * 25.4)}dpi
+                </span>
+              </div>
+            </div>
+          ))}
+          <Verdict what="새 크기가 읽을 만한가 (너무 작으면 바닥값을 올린다)" />
         </section>
       </div>
     </div>

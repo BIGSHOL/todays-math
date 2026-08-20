@@ -28,6 +28,7 @@ import {
   seatCapacitiesFor,
   selectProblems,
 } from "@/lib/generator/selectProblems";
+import { cssPxToMm } from "@/lib/figurePrintSize";
 import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
 import { assessOverflowRisk, assessSeat } from "@/lib/printOverflow";
 
@@ -35,6 +36,14 @@ import { assessOverflowRisk, assessSeat } from "@/lib/printOverflow";
  * 그림 하나로 높이를 정확히 만든다. 폭 200px 은 인쇄 상한(264.567px)보다 좁아
  * 축소가 없으므로 묶음 높이는 `figureBlockTop(12) + h` 다. 본문 한 줄까지 더하면
  * 문항 높이는 **94.8125 + h** — 실측 칸과 바로 견줄 수 있다.
+ *
+ * 🔴 **크기를 픽스처가 직접 말한다**(`figureSourceMm`). 예전에는 안 적었는데,
+ *    그때는 「mm 를 모르면 70mm(상한=최대)」라 200px 이 그대로 200px 로 그려졌다.
+ *    2026-08-20 에 그 기본값이 **픽셀에서 환산**으로 바뀌면서(모르면 최대가 아니라
+ *    실제 크기) 같은 픽스처가 20mm 짜리 작은 그림이 되어 「안 들어가는 문항」이
+ *    통째로 «들어가는 문항»으로 미끄러졌다 — 이 파일 7건이 그래서 빨개졌다.
+ *    여기서 재려는 것은 **선정 정책**이지 기본값이 아니므로, 기본값에 기대지 않게
+ *    그 시절의 폭을 mm 로 못 박는다: `cssPxToMm(200) = 52.9166…mm` → 다시 200px.
  */
 const withFigureHeight = (
   id: string,
@@ -49,6 +58,7 @@ const withFigureHeight = (
   content: "짧은 발문이다.",
   figureUrls: h > 0 ? ["/f.png"] : [],
   figureDims: h > 0 ? [200, h] : [],
+  figureSourceMm: h > 0 ? [cssPxToMm(200)] : [],
   ...over,
 });
 

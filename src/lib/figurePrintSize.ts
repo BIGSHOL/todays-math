@@ -193,10 +193,66 @@ export function parseFigureSourceMm(
  * 그래서 「어느 그림이 mm 를 쓰는가」가 두 벌이 될 수 없다 — 한쪽만 mm 로 그리면
  * 자가 재는 지면과 실제 지면이 갈라지는데, 그건 아무도 모르게 어긋난다.
  */
+/**
+ * mm 를 **모를 때** 픽셀에서 환산할 dpi.
+ *
+ * 🔴 왜 필요한가: 예전 기본값은 「모르면 70mm」였다 — 상한, 곧 **최대 크기**다.
+ *    그런데 mm 를 아는 8,549자리의 인쇄 폭 중앙은 **47.3mm** 이고 상한에 걸린 것은
+ *    14.5% 뿐이다. 즉 «모르는 것»이 «아는 것의 85%»보다 크게 그려지고 있었다 —
+ *    크기 일관성이 목표인데 정반대다. 원장님이 종이에서 「그림이 너무 거대해」로
+ *    찾아 주셨다(2026-08-20).
+ *
+ * 값은 **데이터에서 나왔다.** mm 를 아는 자리에서 「가로 픽셀 ÷ 인쇄 폭」을 재니
+ *    · RPM(`/figures/rpm/…`, PDF 에서 오려 낸 것) — **72**dpi 에 뭉쳐 있다(±20% 안 81%)
+ *    · 기출 스캔본                                 — 흩어져 있고 중앙 **253**dpi
+ * 상한(70mm)에 걸린 자리는 뺐다 — 그 mm 는 원본 크기가 아니라 **잘린 값**이라
+ * 환산의 근거가 못 된다(넣으면 dpi 가 위로 끌려간다).
+ *
+ * 환산 결과의 중앙은 **44.8mm** 로 아는 값의 중앙(47.3mm)과 맞는다 — 눈금이 맞았다.
+ *
+ * 2026-08-21 재측정(공유 DB 는 다른 트랙이 계속 바꾼다): 그림 자리 11,077 중
+ * mm 를 아는 9,312 · 모르는 1,765(문항 1,565). 모르는 자리의 **73.5%(1,297)**
+ * 가 예전에는 상한(=최대)으로 그려지고 있었다. 환산 중앙 43.1mm ↔ 아는 값
+ * 중앙 45.9mm — 눈금은 그대로 맞는다. 환산 뒤에도 상한에 걸리는 자리 444.
+ */
+export const FALLBACK_DPI = { vector: 72, scan: 253 } as const;
+
+/**
+ * 환산 폭의 **바닥**. 아는 자리의 10% 분위(28.2mm)에서 왔다 —
+ * 이보다 작으면 종이에서 눈금·라벨을 못 읽는다. 문턱이 아니라 **읽힘의 한계**다.
+ */
+export const FALLBACK_MIN_MM = 28;
+
+/**
+ * 이 그림이 **벡터에서 온 것인가**(72dpi) 스캔본인가(253dpi).
+ *
+ * 경로가 곧 출처다 — 실측으로 `transformed` 1,862자리가 **전부** `/figures/rpm/`
+ * 아래이고, `past_exam` 9,215자리는 **하나도** 거기 없다. 그래서 `source` 컬럼을
+ * 컴포넌트까지 끌고 오지 않아도 된다(끌고 오면 계약이 넓어지고, 넓어진 계약은 샌다).
+ */
+export function figureFallbackDpi(url: string | undefined): number {
+  if (url && /^\/figures(-svg)?\/rpm\//.test(url)) return FALLBACK_DPI.vector;
+  return FALLBACK_DPI.scan;
+}
+
+/** mm 를 모를 때 픽셀에서 환산한 폭. 상한·바닥은 여기서 건다. */
+export function fallbackSourceMm(
+  widthPx: number,
+  url: string | undefined,
+): number {
+  const mm = (widthPx / figureFallbackDpi(url)) * MM_PER_INCH;
+  return Math.min(FIGURE_MAX_WIDTH_MM, Math.max(FALLBACK_MIN_MM, mm));
+}
+
 export function parseFigureDimensions(
   figureCount: number,
   flat: readonly number[] | null | undefined,
   sourceMmFlat?: readonly number[] | null,
+  /**
+   * 그림 경로 — **mm 를 모를 때만** 쓴다(벡터인지 스캔인지 가른다).
+   * 안 주면 예전 그대로 «모른다»로 둔다 — 부르는 쪽을 한꺼번에 안 고쳐도 된다.
+   */
+  urls?: readonly string[] | null,
 ): (FigureDimension | null)[] {
   if (figureCount <= 0) return [];
   const unknown = (): (FigureDimension | null)[] =>
@@ -211,7 +267,10 @@ export function parseFigureDimensions(
     if (!Number.isFinite(width) || !Number.isFinite(height)) return null;
     if (width <= 0 || height <= 0) return null;
     const mm = sourceMm[index];
-    return mm == null ? { width, height } : { width, height, sourceMm: mm };
+    if (mm != null) return { width, height, sourceMm: mm };
+    // 모르면 **최대**가 아니라 픽셀에서 환산한다. 경로를 모르면 예전 그대로.
+    if (!urls) return { width, height };
+    return { width, height, sourceMm: fallbackSourceMm(width, urls[index]) };
   });
 }
 

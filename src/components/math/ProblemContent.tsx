@@ -106,10 +106,14 @@ export function ProblemContent({
    * 모르는 자리는 `sourceMm` 이 없어 `figureWidthStyle` 이 `undefined` 를 돌려주고,
    * 그러면 React 가 `style` 속성 자체를 안 만든다 — 마크업이 오늘 그대로다.
    */
+  // 경로를 같이 넘긴다 — mm 를 **모를 때** 벡터(72dpi)인지 스캔(253dpi)인지
+  // 가르는 데만 쓴다. 「모르면 최대(70mm)」였던 기본값을 고치는 자리다
+  // (원장님 2026-08-20: 「그림이 너무 거대해」). **자도 같이 넘긴다.**
   const placements = parseFigureDimensions(
     figures.length,
     figureDims,
     figureSourceMm,
+    figures,
   );
   /**
    * 2열은 **들어갈 때만** 쓴다 (원장님 지적: "보기가 보기내에서 두줄처리되잖아").

@@ -537,10 +537,13 @@ export function assessSeat(
   slotPx: number,
 ): SeatAssessment {
   const figureCount = problem.figureUrls?.length ?? 0;
+  // 🔴 조판과 **같은 인자**를 넘긴다. 경로를 한쪽만 넘기면 그림 폭이 갈라지고,
+  //    갈라진 것은 아무도 못 본다 — 지면은 멀쩡하고 자만 틀린다.
   const figures = parseFigureDimensionsRule(
     figureCount,
     problem.figureDims,
     problem.figureSourceMm,
+    problem.figureUrls,
   );
   const px = estimateProblemPx(problem.content, figures);
   const lines = estimateProblemLines(problem.content, figures);

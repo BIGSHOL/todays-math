@@ -27,6 +27,7 @@
  */
 import { describe, expect, it } from "vitest";
 
+import { cssPxToMm } from "@/lib/figurePrintSize";
 import type { SelectableProblem } from "@/lib/generator/balanceDifficulty";
 import { selectProblems } from "@/lib/generator/selectProblems";
 import { assessOverflowRisk } from "@/lib/printOverflow";
@@ -60,6 +61,10 @@ const tall = (
   problem(id, unitId, {
     figureUrls: ["/f.png"],
     figureDims: [200, 600],
+    // 🔴 크기를 픽스처가 직접 말한다 — 「mm 를 모르면 70mm(최대)」였던 기본값이
+    //    2026-08-20 에 「픽셀에서 환산」으로 바뀌었다. 그때 폭을 mm 로 못 박는다
+    //    (`cssPxToMm(200)` → 다시 200px). 여기서 재는 것은 **선정 정책**이다.
+    figureSourceMm: [cssPxToMm(200)],
     ...over,
   });
 
@@ -72,6 +77,7 @@ const asPrint = (problems: SelectableProblem[]) =>
     solution: null,
     figureUrls: p.figureUrls,
     figureDims: p.figureDims,
+    figureSourceMm: p.figureSourceMm,
   }));
 
 describe("[확인테스트] 범위 안 단원을 고루 훑는다", () => {
@@ -101,10 +107,7 @@ describe("[확인테스트] 범위 안 단원을 고루 훑는다", () => {
 
       expect(problems).toHaveLength(4);
       const units = new Set(problems.map((p) => p.unitId));
-      expect(
-        units.size,
-        `시드 ${seed}: 단원 ${[...units].join(",")}`,
-      ).toBe(4);
+      expect(units.size, `시드 ${seed}: 단원 ${[...units].join(",")}`).toBe(4);
     }
   });
 

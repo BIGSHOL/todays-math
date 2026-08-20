@@ -463,6 +463,35 @@ export const ITEMS: PrintCheckItem[] = [
     changedOn: "2026-08-20",
   },
   {
+    id: "figure-fallback-mm",
+    title:
+      "mm 를 **모르는** 그림 1,565문항 — 「모르면 최대(70mm)」를 픽셀 환산으로 바꿨다",
+    changed:
+      "원본 지면의 물리 폭(mm)을 모르는 그림 1,765자리는 인라인 폭을 안 붙여 " +
+      "CSS 상한(70mm)이 걸렸다 — 상한은 곧 **최대 크기**다. 그래서 그중 1,297자리" +
+      "(73.5%)가 «아는 그림»보다 크게 나갔다. 이제 가로 픽셀에서 dpi 로 환산한다" +
+      "(RPM 벡터 72dpi · 기출 스캔 253dpi, 바닥 28mm · 상한 70mm).",
+    look:
+      "**작아진 쪽이 문제다.** 환산 중앙이 43.1mm 라 예전보다 최대 40% 가까이 " +
+      "줄어든 그림이 있다 — 눈금 숫자·꼭짓점 이름·치수가 학생 자리에서 읽히는지 " +
+      "종이에 대고 본다. 특히 바닥(28mm)에 걸린 작은 그림. 반대로 아직 상한에 " +
+      "걸리는 444자리는 예전과 같은 크기다.",
+    lookFromSource: false,
+    evidence: [
+      "src/lib/figurePrintSize.ts",
+      "src/__tests__/unit/figureFallbackMm.test.ts",
+      "src/app/dev/print-specimen/page.tsx",
+    ],
+    scale:
+      "그림 자리 11,077 중 mm 를 모르는 **1,765자리 / 1,565문항**. " +
+      "환산 중앙 43.1mm 는 mm 를 아는 9,312자리의 중앙(45.9mm)과 맞는다 — 눈금이 맞았다.",
+    needs:
+      "**`/dev/print-specimen` 5쪽짜리 견본**을 그대로 뽑으면 된다 — ⑤장에 " +
+      "같은 그림의 전(70mm)·후(환산)가 나란히 있다. 100mm 자가 정말 100mm 인지 먼저 확인할 것.",
+    status: "대기",
+    changedOn: "2026-08-21",
+  },
+  {
     id: "prod-print",
     title: "프로덕션 실물 인쇄 최종 검수 (T6.2)",
     changed: "배포 태스크의 인수 조건. 배포 자체가 미완이라 착수 전이다.",
