@@ -62,5 +62,15 @@ check 200 GET /api/problems  "문제은행"
 check 200 GET /api/units     "단원"
 check 200 GET "/api/review/queue?key=pending&limit=3" "대기열"
 
+# 🔴 **그림**. 2026-08-20 에 이게 빠져 있어 검수 계정은 문항 그림을 하나도 못 받았다
+#    (307 리다이렉트, 에러 없음 — 빈칸을 보고 판정하게 된다). 단위 테스트는 `auth` 를
+#    모킹하므로 「진짜 요청이 정적 파일까지 이 관문을 지나는가」를 구조적으로 못 본다.
+FIG=$(find public/figures -name '*.png' 2>/dev/null | head -1 | sed 's|^public||')
+if [ -n "$FIG" ]; then
+  check 200 GET "$FIG" "문항 그림"
+else
+  echo "  ⚠️ public/figures 에 png 가 없어 그림 검사를 건너뛴다"
+fi
+
 rm -f "$JAR"
 if [ "$fail" = 0 ]; then echo "역할 게이트 실물 확인 통과"; else echo "🔴 실패가 있다"; exit 1; fi

@@ -52,6 +52,21 @@ const REVIEWER_RULES: readonly Rule[] = [
   },
   { methods: ["GET"], path: "/api/review/queue", why: "다음에 볼 문항" },
   { methods: ["GET"], path: "/api/units", why: "단원 이름" },
+  /**
+   * 🔴 **그림 파일.** 이게 빠져 있어서 검수 계정은 문항 그림을 **하나도 못 봤다**
+   *    (2026-08-20 에 실제로 그랬다 — 견본지를 만들다 307 리다이렉트로 드러났다).
+   *    검수 화면은 그림을 보고 판정하는 자리다. 그림이 안 오면 검수자는 **빈칸을
+   *    보고 「문제 없다」를 누른다** — 막힌 것보다 나쁘다. 아무 에러도 안 난다.
+   *
+   *    `proxy.ts` 의 matcher 가 `_next/static` 만 빼므로 `public/` 밑 파일도
+   *    이 관문을 지난다. 「정적 파일이니까 알아서 나가겠지」가 틀렸다.
+   */
+  {
+    methods: ["GET"],
+    path: "/figures/**",
+    why: "문항 그림 — 이게 없으면 검수를 못 한다",
+  },
+  { methods: ["GET"], path: "/figures-svg/**", why: "벡터 문항 그림" },
   { methods: ["GET"], path: "/review/**", why: "검수 화면" },
   { methods: ["GET"], path: "/login", why: "로그인 화면" },
 ];

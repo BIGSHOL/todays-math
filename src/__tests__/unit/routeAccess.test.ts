@@ -116,7 +116,7 @@ describe("검수 계정이 할 수 있는 일의 목록", () => {
    *    빨개져서, 「검수 계정에게 무엇을 더 열어 줬는가」가 리뷰에 보인다.
    *    (권한이 조용히 넓어지는 것을 막는 유일한 장치다.)
    */
-  it("열 가지뿐이다", () => {
+  it("열두 가지뿐이다", () => {
     expect(REVIEWER_CAPABILITIES).toEqual([
       "* /api/auth/**",
       "GET /api/problems",
@@ -126,8 +126,36 @@ describe("검수 계정이 할 수 있는 일의 목록", () => {
       "POST /api/problems/{id}/review",
       "GET /api/review/queue",
       "GET /api/units",
+      // 2026-08-20 에 **읽기 둘**을 열었다. 이게 없으면 검수 계정은 문항 그림을
+      // 하나도 못 받아 빈칸을 보고 판정하게 된다(307 리다이렉트, 에러 없음).
+      "GET /figures/**",
+      "GET /figures-svg/**",
       "GET /review/**",
       "GET /login",
     ]);
+  });
+});
+
+describe("🔴 검수자가 **볼 수 있어야** 하는 것 — 막는 것만 시험하면 안 된다", () => {
+  /**
+   * 이 결함은 실제로 났다(2026-08-20). 역할 게이트를 넣으면서 **막을 것**만 세고
+   * **지나가야 할 것**은 안 셌다. `proxy.ts` 의 matcher 는 `_next/static` 만
+   * 빼므로 `public/` 밑 그림 파일도 이 관문을 지난다 — 허용 목록에 없으면 307 이다.
+   *
+   * 그리고 이 결함은 **조용하다.** 검수 화면은 에러 없이 그냥 그림 자리가 빈다.
+   * 검수자는 빈칸을 보고 「문제 없다」를 누른다 — 막힌 것보다 나쁘다.
+   */
+  it.each([
+    "/figures/4434/q05.png",
+    "/figures/rpm/019fd1d7-da72-77fc-b35b-441b5e06ffed/0.png",
+    "/figures-svg/rpm/019fd1db-e23d-7787-85b9-08d4c53b49d9/0.svg",
+    "/figures/3635/pdf-q17.jpeg",
+  ])("검수자가 그림 %s 를 받을 수 있다", (p) => {
+    expect(routeAccessFor("reviewer", "GET", p)).toBe("allow");
+  });
+
+  it("그림 경로라도 **쓰기**는 못 한다 — 읽기만 열었다", () => {
+    expect(routeAccessFor("reviewer", "POST", "/figures/a.png")).toBe("deny");
+    expect(routeAccessFor("reviewer", "DELETE", "/figures/a.png")).toBe("deny");
   });
 });
