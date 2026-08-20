@@ -45,6 +45,13 @@ s=s.replace('  { table: \"problem\", column: \"figure_urls\" },','  { table: \"p
 io.open(p,'w',encoding='utf-8',newline='\n').write(s)"
 run "그림 URL 컬럼 목록이 조용히 달라진다"
 
+# ⑤ public/figures 만 훑는다 (2026-08-20 에 벡터 719건이 이 밖에 있었다)
+python -c "
+import io;p='$F';s=io.open(p,encoding='utf-8').read()
+s=s.replace('ref, \"--\", \"public\"', 'ref, \"--\", \"public/figures\"')
+io.open(p,'w',encoding='utf-8',newline='\n').write(s)"
+run "public/figures 만 훑는다 (figures-svg 를 못 본다)"
+
 echo
 [ "$fail" = 0 ] && echo "전부 빨강 — 가드가 실제로 지킨다." || echo "🔴 초록인 변이가 있다 — 위를 볼 것."
 exit "$fail"

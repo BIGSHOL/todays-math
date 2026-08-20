@@ -17,6 +17,8 @@ import { packProblems } from "@/lib/printPack";
 import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
 import {
   assessOverflowRisk,
+  estimateProblemPx,
+  OVERFLOW_MARGIN_PX,
   OVERFLOW_LINE_LIMIT,
   OVERFLOW_LINE_LIMIT_FIRST_PAGE,
   OVERFLOW_LINE_LIMIT_SOLO,
@@ -35,6 +37,16 @@ const problem = (over: Partial<TestPrintProblem> = {}): TestPrintProblem => ({
 });
 
 /**
+ * **확실히 높은 본문.** 전각 1,400자는 열 안에서 25줄 남짓(추정 570px)이라
+ * 가장 큰 반쪽 칸(이어지는 장 484px)도 넘는다. 「길다」를 폭이 아니라 **높이**로
+ * 적는다 — 2026-08-20 부터 판정이 보는 것이 그것이기 때문이다.
+ *
+ * (문단을 여러 개 이어 붙이는 방식은 못 쓴다 — `parseProblemContent` 가 개행을
+ *  녹여 한 줄로 만든다. 자가 세는 것과 다른 것을 세게 된다.)
+ */
+const TALL_CONTENT = "가".repeat(1400);
+
+/**
  * 문항 칸은 «그 장에 몇 개인가»로 갈린다 — 혼자면 두 배다(`flex: 1 1 0%`).
  * 그래서 «보통 자리»(장에 두 문항)를 보려면 **짝을 채워야** 한다.
  * 혼자 놓이는 자리는 아래 [적대④-B] 에서 따로 잠근다.
@@ -49,14 +61,53 @@ describe("[T2] 인쇄 넘침 위험 판정", () => {
     expect(assessOverflowRisk([problem(), problem()])).toEqual([]);
   });
 
-  it("본문이 길면 경고하고 **인쇄 번호**로 가리킨다", () => {
+  it("칸을 넘을 만큼 높으면 경고하고 **인쇄 번호**로 가리킨다", () => {
     const risks = assessOverflowRisk([
       problem(),
-      problem({ content: "가".repeat(OVERFLOW_WIDTH_LIMIT) }),
+      problem({ content: TALL_CONTENT }),
     ]);
     expect(risks).toHaveLength(1);
     expect(risks[0].number).toBe(2); // 배열 위치가 아니라 지면에 찍히는 번호
-    expect(risks[0].reasons).toContain("본문이 길다");
+  });
+
+  /**
+   * 🔴 **폭은 넘침을 못 가른다** (2026-08-20, 전수 47,049건).
+   *
+   * 폭 규칙(`> 530`)만 걸리는 문항 337건 중 **실제로 넘친 것은 3건**이다. 그리고
+   * 문턱을 옮겨도 안 갈린다 — 헛것 쪽 폭이 981·967·962 로 **진짜 넘침(683·677)보다
+   * 크다.** 겹치는 축에 문턱을 놓으면 어느 쪽으로 옮겨도 한쪽이 틀린다
+   * (CLAUDE.md 2026-08-18: 문턱을 여러 번 고치게 되면 축이 틀린 것이다).
+   *
+   * 게다가 이 규칙이 **먼저** 걸려서 「본문이 길다」로 사유를 덮었다 — 원장이
+   * 지면에서 손볼 곳(그림·상자)을 가리키지 못했다.
+   *
+   * 전수 성적 (실측 넘침 1,518)
+   * ```
+   * 폭 || 줄 || 장수   경고 2,224  헛것 726  놓침 20   재현율 98.7%  정밀도 67.4%
+   * 높이 || 장수       경고 1,954  헛것 454  놓침 18   재현율 98.8%  정밀도 76.8%
+   * ```
+   * 경고도 놓침도 **둘 다** 줄어든다.
+   */
+  it("폭이 넓기만 하고 칸에 들어가면 경고하지 않는다", () => {
+    // 전각 300자 — 폭 600(>530)이지만 열 안에서 10줄 남짓이라 칸(484px)에 든다.
+    const wideButShort = "가".repeat(300);
+    expect(
+      assessOverflowRisk(paired(problem({ content: wideButShort }))),
+    ).toEqual([]);
+  });
+
+  it("사유는 **손볼 곳**을 가리킨다 — 폭이 덮지 않는다", () => {
+    const risks = assessOverflowRisk(
+      paired(
+        problem({
+          content: "가".repeat(OVERFLOW_WIDTH_LIMIT),
+          figureUrls: ["/a.png"],
+          figureDims: [400, 900],
+        }),
+      ),
+    );
+    expect(risks[0].reasons.join()).not.toContain("본문이 길다");
+    expect(risks[0].reasons.join()).toMatch(/그림이 크다|배치가 높다/);
   });
 
   /**
@@ -88,12 +139,15 @@ describe("[T2] 인쇄 넘침 위험 판정", () => {
   });
 
   it("사유가 겹치면 둘 다 적는다 — 어디를 손봐야 할지 알아야 한다", () => {
-    const risks = assessOverflowRisk([
-      problem({
-        content: "가".repeat(OVERFLOW_WIDTH_LIMIT),
-        figureUrls: ["/a.svg", "/b.svg"],
-      }),
-    ]);
+    const risks = assessOverflowRisk(
+      paired(
+        problem({
+          content: TALL_CONTENT,
+          // 치수를 모르는 그림 두 장 — 높이 규칙과 장수 규칙에 같이 걸린다.
+          figureUrls: ["/a.svg", "/b.svg"],
+        }),
+      ),
+    );
     expect(risks[0].reasons).toHaveLength(2);
   });
 
@@ -106,21 +160,26 @@ describe("[T2] 인쇄 넘침 위험 판정", () => {
     expect(assessOverflowRisk([problem({ content: mathHeavy })])).toEqual([]);
   });
 
-  it("한글이 많으면 원문 글자 수가 적어도 경고한다 — 전각은 두 배 폭이다", () => {
-    // 원문 300자(<500)지만 전각이라 지면 폭은 600.
+  /**
+   * 「전각은 두 배 폭」이라는 사실은 여전히 참이고, 그것을 아는 자리는 `displayWidth`
+   * 다 — 높이 추정이 그 함수로 줄 수를 센다. 달라진 것은 **폭을 곧바로 경고로
+   * 바꾸지 않는다**는 것뿐이다. 폭은 높이를 통해서만 판정에 들어온다.
+   */
+  it("한글이 많아도 칸에 들면 경고하지 않는다 — 폭은 높이를 거쳐서만 본다", () => {
     const hangul = "가".repeat(300);
     expect(hangul.length).toBeLessThan(500);
+    expect(assessOverflowRisk(paired(problem({ content: hangul })))).toEqual(
+      [],
+    );
+  });
+
+  it("같은 한글이 칸을 넘을 만큼 많아지면 경고한다", () => {
     expect(
-      assessOverflowRisk([problem({ content: hangul })])[0]?.reasons,
-    ).toContain("본문이 길다");
+      assessOverflowRisk(paired(problem({ content: TALL_CONTENT }))),
+    ).toHaveLength(1);
   });
 
   it("경계값은 경고하지 않는다 — 딱 한계까지는 들어간다", () => {
-    expect(
-      assessOverflowRisk([
-        problem({ content: "가".repeat(OVERFLOW_WIDTH_LIMIT / 2) }),
-      ]),
-    ).toEqual([]);
     expect(
       assessOverflowRisk([
         problem({
@@ -423,5 +482,44 @@ describe("[적대④-B] 칸은 «그 장에 몇 개인가»로 갈린다", () =>
       }),
     ]);
     expect(risks).toHaveLength(1);
+  });
+});
+
+/**
+ * 🔴 **여유(`OVERFLOW_MARGIN_PX`)를 잠그는 자리.**
+ *
+ * 이 값이 없으면(0이면) 「추정으로는 들어가는데 실제로는 조금 넘는」 문항이 조용히
+ * 통과한다. 자 자신의 오차 분포가 근거다 — 전수 47,049건에서 `추정 − 실측` 의 p05 가
+ * **−19px** 이라, 추정이 칸에 한 줄 안쪽까지 왔으면 실제로는 넘을 수 있다.
+ * 같은 캐시로 전수 채점: 여유 0 → 놓침 88 · 여유 한 줄 → 놓침 **18**.
+ *
+ * (변이 시험에서 이 자리가 비어 있던 것을 찾았다 — 여유를 0으로 바꿔도 28개 테스트가
+ *  전부 초록이었다. 상수는 **망가뜨려 봐야** 지켜지는 줄 안다.)
+ */
+describe("여유 — 추정이 칸에 들어가도 «한 줄 안쪽»이면 경고한다", () => {
+  // 전각 1,110자 → 추정 468.8px. 이어지는 장 칸 484px 에 «들어간다»고 나오지만
+  // 여유(20.3px) 안쪽이다.
+  const NEAR_EDGE = "가".repeat(1110);
+
+  it("이 픽스처는 추정으로는 칸에 들어간다 — 그래서 여유가 없으면 안 걸린다", () => {
+    const px = estimateProblemPx(NEAR_EDGE);
+    expect(px).toBeLessThanOrEqual(JASEUP_MEASURED_PX.continuationSlot);
+    expect(px).toBeGreaterThan(
+      JASEUP_MEASURED_PX.continuationSlot - OVERFLOW_MARGIN_PX,
+    );
+  });
+
+  it("그래도 경고한다", () => {
+    const risks = assessOverflowRisk([
+      problem({ id: "채움1", content: "" }),
+      problem({ id: "채움2", content: "" }),
+      problem({ id: "경계", content: NEAR_EDGE }),
+      problem({ id: "채움3", content: "" }),
+    ]);
+    expect(risks.map((r) => r.problemId)).toContain("경계");
+  });
+
+  it("여유는 **한 줄 높이**다 — 손으로 고른 숫자가 아니다", () => {
+    expect(OVERFLOW_MARGIN_PX).toBe(JASEUP_MEASURED_PX.line);
   });
 });

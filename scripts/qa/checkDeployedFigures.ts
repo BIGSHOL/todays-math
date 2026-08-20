@@ -116,7 +116,14 @@ export function treeFigureFiles(ref: string): Set<string> {
   try {
     raw = execFileSync(
       "git",
-      ["ls-tree", "-r", "-l", "--full-name", ref, "--", "public/figures"],
+      /**
+       * ⚠️ **`public` 전체를 본다 — `public/figures` 만 보면 안 된다.**
+       *    2026-08-20 에 다른 트랙이 719문항을 `/figures-svg/…` 벡터로 갈아 끼웠다.
+       *    경로를 좁혀 두면 그 719건이 «배포에 없다»로 **전부 거짓 경고**가 되고,
+       *    반대로 새 디렉터리가 진짜로 안 밀렸을 때는 아무 말도 못 한다.
+       *    DB 가 무엇을 가리킬지 우리가 미리 정하지 않는다.
+       */
+      ["ls-tree", "-r", "-l", "--full-name", ref, "--", "public"],
       { encoding: "utf8", maxBuffer: 1024 * 1024 * 64 },
     );
   } catch {

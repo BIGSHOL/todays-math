@@ -19,6 +19,7 @@ import {
   brokenRows,
   figureRepoPath,
   presentFilesFromLsTree,
+  treeFigureFiles,
 } from "../../../scripts/qa/checkDeployedFigures";
 
 describe("figureRepoPath — DB 의 URL 을 저장소 경로로", () => {
@@ -108,5 +109,25 @@ describe("presentFilesFromLsTree — 배포본에 «실제로 있는» 것만", 
 
   it("빈 줄·머리글은 조용히 흘린다", () => {
     expect(presentFilesFromLsTree("\n\n").size).toBe(0);
+  });
+});
+
+describe("어느 디렉터리를 보나 — 미리 정하지 않는다", () => {
+  /**
+   * 2026-08-20: 다른 트랙이 719문항을 `/figures-svg/…` 벡터로 갈아 끼웠다.
+   * 검사가 `public/figures` 만 훑고 있었다면 그 719건이 통째로 **거짓 경고**가 되고,
+   * 반대로 새 디렉터리가 진짜로 안 밀린 날에는 아무 말도 못 한다.
+   * DB 가 무엇을 가리킬지는 DB 가 정한다 — 검사는 `public` 전체를 본다.
+   */
+  it("`public/figures` 밖의 그림도 «있는 것»으로 센다", () => {
+    const files = treeFigureFiles("HEAD");
+    expect([...files].some((f) => f.startsWith("public/figures/"))).toBe(true);
+    expect([...files].some((f) => f.startsWith("public/figures-svg/"))).toBe(
+      true,
+    );
+  });
+
+  it("읽을 수 없는 참조는 **멈춘다** — 「확인 못 했다」를 «괜찮다»로 넘기지 않는다", () => {
+    expect(() => treeFigureFiles("없는참조-zzz")).toThrow(/읽을 수 없다/);
   });
 });
