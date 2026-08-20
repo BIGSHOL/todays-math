@@ -45,6 +45,12 @@ const REVIEWER_RULES: readonly Rule[] = [
     path: "/api/problems/{id}/review-status",
     why: "검수 판정 — 검수 콘솔의 본체다",
   },
+  {
+    methods: ["POST"],
+    path: "/api/problems/{id}/review",
+    why: "통과·판단 못 하겠다·신고 — 검수 콘솔의 본체다",
+  },
+  { methods: ["GET"], path: "/api/review/queue", why: "다음에 볼 문항" },
   { methods: ["GET"], path: "/api/units", why: "단원 이름" },
   { methods: ["GET"], path: "/review/**", why: "검수 화면" },
   { methods: ["GET"], path: "/login", why: "로그인 화면" },

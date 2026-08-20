@@ -23,6 +23,7 @@ import type {
 } from "@/contracts/class.contract";
 import type { ProblemEntity, ProblemType } from "@/contracts/problem.contract";
 import type { ProblemReportEntity } from "@/contracts/problemReport.contract";
+import type { ReviewLogEntity } from "@/contracts/review.contract";
 import type { TestEntity, TestProblemItem } from "@/contracts/test.contract";
 import type {
   AnalysisReportEntity,
@@ -187,6 +188,25 @@ export function serializeProblemReport(
     status: row.status,
     resolutionNote: row.resolutionNote,
     resolvedAt: row.resolvedAt ? row.resolvedAt.toISOString() : null,
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+/** 검수 기록 한 줄. */
+export function serializeReviewLog(row: {
+  id: string;
+  problemId: string;
+  reviewerId: string | null;
+  verdict: "pass" | "unsure" | "defect";
+  note: string | null;
+  createdAt: Date;
+}): ReviewLogEntity {
+  return {
+    id: row.id,
+    problemId: row.problemId,
+    reviewerId: row.reviewerId,
+    verdict: row.verdict,
+    note: row.note,
     createdAt: row.createdAt.toISOString(),
   };
 }

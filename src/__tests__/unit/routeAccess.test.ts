@@ -31,6 +31,9 @@ const 원장_전용 = [
   ["GET", "/classes"],
   ["GET", "/tests/new"],
   ["GET", "/dev/print-check"],
+  // `/api/review/queue` 만 열었다 — 그 아래를 통째로 연 것이 아니다.
+  ["POST", "/api/review/queue"],
+  ["GET", "/api/review/reports"],
 ] as const;
 
 /** 검수 계정이 실제로 하는 일. */
@@ -113,13 +116,15 @@ describe("검수 계정이 할 수 있는 일의 목록", () => {
    *    빨개져서, 「검수 계정에게 무엇을 더 열어 줬는가」가 리뷰에 보인다.
    *    (권한이 조용히 넓어지는 것을 막는 유일한 장치다.)
    */
-  it("여덟 가지뿐이다", () => {
+  it("열 가지뿐이다", () => {
     expect(REVIEWER_CAPABILITIES).toEqual([
       "* /api/auth/**",
       "GET /api/problems",
       "GET /api/problems/{id}",
       "POST /api/problems/{id}/reports",
       "PATCH /api/problems/{id}/review-status",
+      "POST /api/problems/{id}/review",
+      "GET /api/review/queue",
       "GET /api/units",
       "GET /review/**",
       "GET /login",
