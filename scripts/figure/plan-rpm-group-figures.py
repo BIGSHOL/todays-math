@@ -360,6 +360,46 @@ def clusters(
     return out
 
 
+def guard_boxes(
+    pg: "Page",
+    rect: pymupdf.Rect,
+    badges: list[pymupdf.Rect],
+    stem_key: str,
+) -> tuple[list[list[float]], list[list[float]]]:
+    """오려내기에게 넘길 **삼키지 말 것**(`avoid`)과 **들어오면 버릴 것**(`forbid`).
+
+    ⑴ `avoid` — 번호 배지 + 둘레의 발문 낱말. 안 막으면 `crop-rpm-from-pdf.py` 의
+       라벨 되찾기가 도로 넣고, 완비 검사가 「상자에 걸친 발문 줄」을 통째로 삼킨다.
+    ⑵ `forbid` — 번호 배지 + **한글이 든** 발문 낱말만. ⚠️ 「본문에 있으면 발문」
+       규칙은 각도값에서 거꾸로 걸린다 — 추출기가 그림의 `105°` 를 본문에 같이 넣어
+       두어서 그림 라벨이 «발문»으로 잡히고, 그것을 버리는 근거로 쓰면 멀쩡한 그림이
+       통째로 버려진다(실측 다각형 3건). 버릴 근거는 «지면 문장»이고 문장엔 한글이 있다.
+
+    **한 곳에만 둔다** — 계획을 만드는 자리가 셋(자기 상자·무리·검수 시트)이라
+    각자 쓰면 셋이 갈라지고, 갈라지면 같이 눈이 먼다.
+    """
+    near = pymupdf.Rect(
+        rect.x0 - BOX_BLEED, rect.y0 - BOX_BLEED,
+        rect.x1 + BOX_BLEED, rect.y1 + BOX_BLEED,
+    ) & pg.rect
+    avoid = badges + [
+        sr
+        for sr, stxt in pg.spans
+        if not (sr & near).is_empty and pg.is_stem_span(sr, stxt, stem_key)
+    ]
+    forbid = badges + [
+        sr
+        for sr, stxt in pg.spans
+        if not (sr & near).is_empty
+        and HANGUL.search(stxt)
+        and pg.is_stem_span(sr, stxt, stem_key)
+    ]
+    return (
+        [[b.x0, b.y0, b.x1, b.y1] for b in avoid],
+        [[b.x0, b.y0, b.x1, b.y1] for b in forbid],
+    )
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--emit", action="store_true")
@@ -470,10 +510,7 @@ def main() -> None:
                         for r, txt in pg.lines
                         if txt.strip() in printed_on_page
                     ]
-                    near = pymupdf.Rect(
-                        rect.x0 - BOX_BLEED, rect.y0 - BOX_BLEED,
-                        rect.x1 + BOX_BLEED, rect.y1 + BOX_BLEED,
-                    ) & pg.rect
+                    avoid, forbid = guard_boxes(pg, rect, badges, stem_key)
                     emitted.append(
                         {
                             "problemId": row["problemId"],
@@ -481,27 +518,8 @@ def main() -> None:
                             "pdf": row["pdf"],
                             "page": db_page + page_off[book],
                             "rect": [rect.x0, rect.y0, rect.x1, rect.y1],
-                            "avoid": [
-                                [b.x0, b.y0, b.x1, b.y1]
-                                for b in badges
-                                + [
-                                    sr
-                                    for sr, stxt in pg.spans
-                                    if not (sr & near).is_empty
-                                    and pg.is_stem_span(sr, stxt, stem_key)
-                                ]
-                            ],
-                            "forbid": [
-                                [b.x0, b.y0, b.x1, b.y1]
-                                for b in badges
-                                + [
-                                    sr
-                                    for sr, stxt in pg.spans
-                                    if not (sr & near).is_empty
-                                    and HANGUL.search(stxt)
-                                    and pg.is_stem_span(sr, stxt, stem_key)
-                                ]
-                            ],
+                            "avoid": avoid,
+                            "forbid": forbid,
                             "out": row["out"],
                             "무리": "-",
                             "짝짓기": "추출기기록",
@@ -561,6 +579,63 @@ def main() -> None:
                     fail(row, "무리의 문항 상자가 없다")
                     continue
 
+                # ── 띠 안의 잉크 조각·번호 배지 ─────────────────────────
+                # **축과 무관한 값이라 축 결정 앞에서 한 번만 잰다.** 격자 배치라
+                # 축을 못 정해도 이 둘은 있어야 한다 — 검수 시트가 그것을 보여 준다.
+                parts = [
+                    r
+                    for r in pg.parts
+                    if not (r & band).is_empty
+                    and (r & band).get_area() >= r.get_area() * 0.5
+                ]
+                # 라벨을 먼저 되찾고 **그 다음에** 크기를 잰다 (MIN_FIG_H 주석 참조).
+                # **문항 번호 배지는 절대 라벨이 아니다** — 실측 `0803` 이 원뿔에
+                # 0pt 로 붙어 있어 그대로 오려졌다. 지면이 인쇄한 번호를 근거로 막는다.
+                badges = [
+                    r
+                    for r, txt in pg.lines
+                    if txt.strip() in printed_on_page and not (r & band).is_empty
+                ]
+
+                def blobs(ax: str) -> list[pymupdf.Rect]:
+                    grown = [
+                        pg.grow_labels(c, badges, stem_key) & band
+                        for c in clusters(parts, ax)
+                    ]
+                    return [
+                        c
+                        for c in grown
+                        if c.width >= MIN_FIG_W and c.height >= MIN_FIG_H
+                    ]
+
+                def geom(ax: str | None) -> dict:
+                    """**검수 시트가 볼 것** — 못 가른 무리의 띠·덩어리·소문항 자리.
+
+                    자동으로 못 짝지은 것을 사람이 보고 정할 수 있게, 사유만이 아니라
+                    **무엇을 보고 못 정했는지**를 좌표째로 남긴다. 규칙을 시트에 다시
+                    쓰지 않기 위한 것이다 — 찾는 쪽은 여기 하나뿐이다.
+                    """
+                    out = {
+                        "책": book,
+                        "쪽": db_page + page_off[book],
+                        "무리": f"{grp['lo']:04d}~{grp['hi']:04d}",
+                        "띠": [band.x0, band.y0, band.x1, band.y1],
+                        "소문항": [
+                            {
+                                "id": m["id"],
+                                "인쇄번호": str(m.get("printed") or ""),
+                                "상자": list(m["rect"]),
+                                "나": m["id"] == row["externalId"],
+                            }
+                            for m in members
+                        ],
+                    }
+                    for a2 in (["y", "x"] if ax is None else [ax]):
+                        out[f"덩어리{a2}"] = [
+                            [c.x0, c.y0, c.x1, c.y1] for c in blobs(a2)
+                        ]
+                    return out
+
                 # **가르는 축은 소문항이 어떻게 놓였는지가 정한다.**
                 # 세로로 늘어선 무리는 세로로, 가로로 나란한 무리(실측 1-2 p121
                 # `0802/0803`)는 가로로 갈라야 한다. 축을 하나로 고정하면 나란한
@@ -579,7 +654,11 @@ def main() -> None:
                 if len(members) == 1:
                     axis = "y"
                 elif yov and xov:
-                    fail(row, "소문항이 격자로 놓인 무리 — 한 축으로 못 가른다")
+                    fail(
+                        row,
+                        "소문항이 격자로 놓인 무리 — 한 축으로 못 가른다",
+                        geom(None),
+                    )
                     continue
                 elif yov:
                     axis = "x"
@@ -593,29 +672,9 @@ def main() -> None:
                     else (lambda b: (b["rect"][0], b["rect"][1]))
                 )
 
-                parts = [
-                    r
-                    for r in pg.parts
-                    if not (r & band).is_empty
-                    and (r & band).get_area() >= r.get_area() * 0.5
-                ]
-                # 라벨을 먼저 되찾고 **그 다음에** 크기를 잰다 (MIN_FIG_H 주석 참조).
-                # **문항 번호 배지는 절대 라벨이 아니다** — 실측 `0803` 이 원뿔에
-                # 0pt 로 붙어 있어 그대로 오려졌다. 지면이 인쇄한 번호를 근거로 막는다.
-                badges = [
-                    r
-                    for r, txt in pg.lines
-                    if txt.strip() in printed_on_page and not (r & band).is_empty
-                ]
-                grown = [
-                    pg.grow_labels(c, badges, stem_key) & band
-                    for c in clusters(parts, axis)
-                ]
-                cl = [
-                    c for c in grown if c.width >= MIN_FIG_W and c.height >= MIN_FIG_H
-                ]
+                cl = blobs(axis)
                 if not cl:
-                    fail(row, "띠 안에서 그림 덩어리를 못 찾았다")
+                    fail(row, "띠 안에서 그림 덩어리를 못 찾았다", geom(axis))
                     continue
 
                 if len(cl) == 1:
@@ -644,7 +703,8 @@ def main() -> None:
                         fail(
                             row,
                             "덩어리 수는 맞는데 차례가 안 맞는다",
-                            {"덩어리": len(cl), "문항": len(members), "축": axis},
+                            {"덩어리": len(cl), "문항": len(members), "축": axis,
+                             **geom(axis)},
                         )
                         continue
                     rect, how = c, "소문항별"
@@ -652,14 +712,12 @@ def main() -> None:
                     fail(
                         row,
                         "덩어리 수와 소문항 수가 다르다",
-                        {"덩어리": len(cl), "문항": len(members)},
+                        {"덩어리": len(cl), "문항": len(members), "축": axis,
+                         **geom(axis)},
                     )
                     continue
 
-                near = pymupdf.Rect(
-                    rect.x0 - BOX_BLEED, rect.y0 - BOX_BLEED,
-                    rect.x1 + BOX_BLEED, rect.y1 + BOX_BLEED,
-                ) & pg.rect
+                avoid, forbid = guard_boxes(pg, rect, badges, stem_key)
                 emitted.append(
                     {
                         "problemId": row["problemId"],
@@ -672,36 +730,8 @@ def main() -> None:
                         # 0 이 아닌 책이 들어오면 이 가정이 틀리므로 멈춘다.)
                         "rect": [rect.x0, rect.y0, rect.x1, rect.y1],
                         # 오려내기가 **다시 삼키지 못하게** 번호 배지 자리를 같이 넘긴다.
-                        # 여기서만 막으면 `crop-rpm-from-pdf.py` 의 라벨 되찾기가 도로 넣는다.
-                        # ⑴ `avoid` — **삼키지 말 것.** 번호 배지 + 둘레의 발문 낱말.
-                        #    안 막으면 완비 검사가 「상자에 걸친 발문 줄」을 통째로 삼킨다.
-                        "avoid": [
-                            [b.x0, b.y0, b.x1, b.y1]
-                            for b in badges
-                            + [
-                                sr
-                                for sr, stxt in pg.spans
-                                if not (sr & near).is_empty
-                                and pg.is_stem_span(sr, stxt, stem_key)
-                            ]
-                        ],
-                        # ⑵ `forbid` — **칸에 들어오면 버릴 것.** 번호 배지 + 한글이 든
-                        #    발문 낱말만. ⚠️ 「본문에 있으면 발문」 규칙은 각도값에서
-                        #    거꾸로 걸린다 — 추출기가 그림의 `105°` 를 본문에 같이 넣어
-                        #    두어서 그림 라벨이 «발문»으로 잡히고, 그것을 버리는 근거로
-                        #    쓰면 멀쩡한 그림이 통째로 버려진다(실측 다각형 3건).
-                        #    버릴 근거로 삼는 것은 «지면 문장»이고, 문장에는 한글이 있다.
-                        "forbid": [
-                            [b.x0, b.y0, b.x1, b.y1]
-                            for b in badges
-                            + [
-                                sr
-                                for sr, stxt in pg.spans
-                                if not (sr & near).is_empty
-                                and HANGUL.search(stxt)
-                                and pg.is_stem_span(sr, stxt, stem_key)
-                            ]
-                        ],
+                        "avoid": avoid,
+                        "forbid": forbid,
                         "out": row["out"],
                         "무리": f"{grp['lo']:04d}~{grp['hi']:04d}",
                         "짝짓기": how,

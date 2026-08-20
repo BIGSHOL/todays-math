@@ -205,3 +205,9 @@ public/figures-backup-300swap/
 # (칸 그림 `rpm-stem-sheet/` 9MB 는 재생성 가능하므로 안 넣는다.)
 !scripts/qa/reports/rpm-stem-sheet-decision.json
 !scripts/qa/reports/rpm-stem-sheet.json
+
+# 「무리 짝짓기 검수 시트」 — 같은 이유로 커밋한다. 판정이 «덩어리 3» 처럼 **번호로**
+# 적혀 있어서, 그 번호가 무엇을 가리키는지는 시트에만 있다 — 시트가 없으면 판정이
+# 뜻을 잃는다. (띠 그림 `rpm-pair-sheet/` 는 재생성 가능하므로 안 넣는다.)
+!scripts/qa/reports/rpm-pair-decision.json
+!scripts/qa/reports/rpm-pair-sheet.json
