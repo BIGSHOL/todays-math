@@ -119,6 +119,8 @@ scripts/qa/reports/*
 !scripts/qa/reports/basic-figure-unit-fix.json
 # 날 LaTeX 문항 제외 되돌리기 원장 — 고친 뒤 되돌릴 근거가 여기에만 있다.
 !scripts/qa/reports/latex-leak-reject.json
+# 글자 오독 되돌리기 원장 — 본문을 바꾼 유일한 근거다.
+!scripts/qa/reports/glyph-misdecode.json
 # 단계 3 허용 목록 — 「눈으로 본 시트」가 여기 적혀 있다. 이게 없으면 무엇을
 # 근거로 채택했는지 다음 사람이 못 센다.
 !scripts/qa/reports/svg-whitelist.txt
