@@ -153,7 +153,11 @@ function Stat({
   return (
     <div className="flex gap-1.5">
       <dt className="text-text-2">{label}</dt>
-      <dd className={warn ? "font-semibold text-red-text" : "font-semibold"}>
+      <dd
+        className={
+          warn ? "font-semibold text-[var(--red-text)]" : "font-semibold"
+        }
+      >
         {value}
       </dd>
     </div>
@@ -202,9 +206,11 @@ function Badges({ r }: { r: Row }) {
       {r.figureUrls.length > 0 ? (
         <span>· 그림 {r.figureUrls.length}</span>
       ) : null}
-      {!r.solution ? <span className="text-red-text">· 해설 없음</span> : null}
+      {!r.solution ? (
+        <span className="text-[var(--red-text)]">· 해설 없음</span>
+      ) : null}
       {!r.directUseAllowed ? (
-        <span className="text-red-text">· 출제 제외</span>
+        <span className="text-[var(--red-text)]">· 출제 제외</span>
       ) : null}
     </div>
   );
@@ -242,7 +248,7 @@ function WireA({ rows, counts }: { rows: Row[]; counts: Counts }) {
           <span className="text-text-2">정답</span> {r.answer}
         </p>
         {!r.solution ? (
-          <p className="mt-1 text-sm text-red-text">
+          <p className="mt-1 text-sm text-[var(--red-text)]">
             해설이 없다 — 답이 맞는지 이 화면에서 검산할 수 없다 (
             {n(counts.noSolution)}건이 이렇다)
           </p>
@@ -500,10 +506,14 @@ function WireD({ rows }: { rows: Row[] }) {
                     {r.problemCode}
                   </span>
                   {!r.solution ? (
-                    <span className="text-xs text-red-text">해설 없음</span>
+                    <span className="text-xs text-[var(--red-text)]">
+                      해설 없음
+                    </span>
                   ) : null}
                   {!r.directUseAllowed ? (
-                    <span className="text-xs text-red-text">출제 제외</span>
+                    <span className="text-xs text-[var(--red-text)]">
+                      출제 제외
+                    </span>
                   ) : null}
                 </div>
                 <div className="mt-2 min-w-0 overflow-x-auto">
