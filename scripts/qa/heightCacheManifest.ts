@@ -128,41 +128,49 @@ function figureFilesFingerprint(urls: readonly string[]): string {
   return parts.join(",");
 }
 
+/**
+ * 지면 높이를 바꾸는 «그림 크기의 근거». 그림 파일 바이트로는 못 본다 —
+ * `figureSourceMm` 은 **DB 컬럼**이라, 다시 적재하면 그림 파일은 한 바이트도 안 바뀌는데
+ * 지면 폭이 달라진다. `figureDims` 는 비율이라 높이를 직접 정한다.
+ * (2026-08-20: 제품은 mm 로 폭을 못 박는데 탐침은 그 값을 안 넘겨 지면이 갈렸다.)
+ */
+function figureSizeBasis(row: {
+  figureDims?: readonly number[] | null;
+  figureSourceMm?: readonly number[] | null;
+}): string {
+  return `${(row.figureDims ?? []).join(",")}|${(row.figureSourceMm ?? []).join(",")}`;
+}
+
+/** 지문이 보는 문항 한 줄. 지면 높이를 바꾸는 것만 담는다. */
+export interface DigestRow {
+  content: string | null;
+  figureUrls: readonly string[];
+  figureDims?: readonly number[] | null;
+  figureSourceMm?: readonly number[] | null;
+  questionType?: string | null;
+}
+
 export function measuredRowsHash(
-  rows: ReadonlyArray<{
-    id: string;
-    content: string | null;
-    figureUrls: readonly string[];
-    questionType?: string | null;
-  }>,
+  rows: ReadonlyArray<DigestRow & { id: string }>,
 ): string {
   const parts: string[] = [];
   for (const row of [...rows].sort((a, b) => (a.id < b.id ? -1 : 1))) {
     parts.push(
-      `${row.id}\u0000${row.content ?? ""}\u0000${figureFilesFingerprint(row.figureUrls)}\u0000${row.questionType ?? ""}\u0001`,
+      `${row.id}\u0000${row.content ?? ""}\u0000${figureFilesFingerprint(row.figureUrls)}\u0000${figureSizeBasis(row)}\u0000${row.questionType ?? ""}\u0001`,
     );
   }
   return sha256(parts);
 }
 
 /** 문항 하나의 본문 지문 — 짧게 자른다(4만 건 × 12자 ≈ 1MB). */
-export function rowDigest(row: {
-  content: string | null;
-  figureUrls: readonly string[];
-  questionType?: string | null;
-}): string {
+export function rowDigest(row: DigestRow): string {
   return sha256([
-    `${row.content ?? ""} ${figureFilesFingerprint(row.figureUrls)} ${row.questionType ?? ""}`,
+    `${row.content ?? ""} ${figureFilesFingerprint(row.figureUrls)} ${figureSizeBasis(row)} ${row.questionType ?? ""}`,
   ]).slice(0, 12);
 }
 
 export function rowDigests(
-  rows: ReadonlyArray<{
-    id: string;
-    content: string | null;
-    figureUrls: readonly string[];
-    questionType?: string | null;
-  }>,
+  rows: ReadonlyArray<DigestRow & { id: string }>,
 ): Record<string, string> {
   const out: Record<string, string> = {};
   for (const row of rows) out[row.id] = rowDigest(row);
@@ -175,18 +183,89 @@ export function rowDigests(
  */
 export function changedRowIds(
   manifest: HeightCacheManifest | null,
-  rows: ReadonlyArray<{
-    id: string;
-    content: string | null;
-    figureUrls: readonly string[];
-    questionType?: string | null;
-  }>,
+  rows: ReadonlyArray<DigestRow & { id: string }>,
 ): string[] | null {
   const before = manifest?.rowDigests;
   if (!before) return null;
   return rows
     .filter((row) => before[row.id] !== rowDigest(row))
     .map((row) => row.id);
+}
+
+/**
+ * 재는 **동안** 발밑이 바뀌었는지 보려고 앞뒤로 찍는 지문.
+ *
+ * ## 왜 «끝난 뒤 한 번»으로는 모자란가
+ *
+ * `buildHeightCacheManifest` 는 캐시를 **다 쓴 뒤** 지문을 찍는다. 그러면 「지금
+ * 상태」는 정확히 적히지만, **재는 28분 사이에 바뀐 것**은 구조적으로 못 본다 —
+ * 앞부분은 옛 지면으로, 뒷부분은 새 지면으로 그려 놓고 지문에는 «새 지면»만 적힌다.
+ * 캐시는 그대로 «싱싱함»으로 통과한다. 실패가 침묵하는 경로다.
+ *
+ * 2026-08-20 에 실제로 그랬다: 전수 측정(13:37~14:05) 중 **13:54 에** 다른 세션의
+ * 병합이 그림 1,344장을 갈아 끼웠다. 그중 796장은 300dpi 확대가 아니라 **다시 오려서
+ * 가로세로 비율이 달라졌고**(296×574 → 1003×153 같은 것), 그러면 mm 를 알아도
+ * 높이가 바뀐다(폭을 mm 로 못 박아도 높이는 비율을 따라간다). 걸린 문항 1,218건.
+ *
+ * 그래서 렌더 **전후로** 같은 지문을 찍고, 다르면 캐시를 **쓰지 않고 멈춘다.**
+ */
+export interface GroundStamp {
+  inputsHash: string;
+  rowsHash: string;
+  rowDigests: Record<string, string>;
+}
+
+export function stampGround(
+  rows: ReadonlyArray<DigestRow & { id: string }>,
+): GroundStamp {
+  return {
+    inputsHash: pageInputsHash(),
+    rowsHash: measuredRowsHash(rows),
+    rowDigests: rowDigests(rows),
+  };
+}
+
+/**
+ * 앞뒤 지문이 다르면 **무엇이** 움직였는지 적어서 돌려준다. 안 움직였으면 `null` —
+ * 「모른다」와 「안 움직였다」를 뭉개지 않으려고 사유를 문장으로 남긴다.
+ */
+export function describeGroundMove(
+  before: GroundStamp,
+  after: GroundStamp,
+): string | null {
+  const reasons: string[] = [];
+  if (before.inputsHash !== after.inputsHash)
+    reasons.push("지면 원문(CSS·렌더 컴포넌트·폭 계산)이 바뀌었다");
+
+  const added = Object.keys(after.rowDigests).filter(
+    (id) => !(id in before.rowDigests),
+  );
+  const removed = Object.keys(before.rowDigests).filter(
+    (id) => !(id in after.rowDigests),
+  );
+  if (added.length > 0)
+    reasons.push(`문항 ${added.length.toLocaleString()}건이 새로 생겼다`);
+  if (removed.length > 0)
+    reasons.push(`문항 ${removed.length.toLocaleString()}건이 사라졌다`);
+
+  const moved = Object.keys(before.rowDigests).filter(
+    (id) =>
+      id in after.rowDigests && before.rowDigests[id] !== after.rowDigests[id],
+  );
+  if (moved.length > 0)
+    reasons.push(
+      `문항 ${moved.length.toLocaleString()}건의 본문·그림이 바뀌었다` +
+        ` (예: ${moved.slice(0, 3).join(", ")})`,
+    );
+
+  /**
+   * 위 셋이 다 조용한데 합계만 다르면 그것도 움직인 것이다 — 문항별 지문은 12자로
+   * 잘라 쓰므로 합계가 더 예민하다. 「사유를 못 짚겠다」를 «안 움직였다»로 읽지 않는다.
+   */
+  if (reasons.length === 0 && before.rowsHash !== after.rowsHash)
+    reasons.push("문항 지문 합계가 바뀌었다 — 무엇인지는 못 짚었다");
+
+  return reasons.length > 0 ? reasons.join(" · ") : null;
 }
 
 export function buildHeightCacheManifest(input: {

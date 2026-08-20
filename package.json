@@ -26,7 +26,8 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "check:figures": "tsx scripts/qa/checkDeployedFigures.ts"
   },
   "prisma": {
     "seed": "node prisma/seed.ts"

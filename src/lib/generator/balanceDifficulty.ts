@@ -19,12 +19,12 @@ import type { ShortfallItem } from "@/contracts/test.contract";
 /**
  * 출제 엔진이 문항에 대해 **실제로 읽는 것 전부**.
  *
- * 앞의 다섯은 배분·자격이 읽고, 뒤의 셋은 **지면**이 읽는다(⑷, 2026-08-18 원장님 확정).
+ * 앞의 다섯은 배분·자격이 읽고, 뒤의 넷은 **지면**이 읽는다(⑷, 2026-08-18 · mm 은 2026-08-20).
  * 예전에는 뒤의 셋이 아예 없어서 출제 엔진이 「이 문항이 칸에 안 들어간다」를
  * **구조적으로 알 수가 없었다** — 25문항 시험지의 89%에 넘침 경고가 떴다
  * (적대적 리뷰 ④ §8 G). 판정은 아는데 고르는 쪽이 못 보던 자리다.
  *
- * 뒤의 셋이 **선택(optional)인 이유**: 이 셋 없이 부르는 호출부(단위 테스트·
+ * 뒤의 넷이 **선택(optional)인 이유**: 이 넷 없이 부르는 호출부(단위 테스트·
  * 지면과 무관한 조합)를 그대로 두기 위해서다. 없으면 엔진은 그 문항의 높이를
  * 「모른다」로 받고 **후순위**로 돌린다 — 「모른다」를 «들어간다»로 세면 정책이
  * 조용히 꺼지기 때문이다(`selectProblems` 의 `risksTightSeat` 주석 참조).
@@ -43,6 +43,12 @@ export interface SelectableProblem {
   figureUrls?: string[];
   /** `figureUrls` 와 같은 순서로 짝지은 원본 치수 `[w1,h1,…]`. 짝이 어긋나면 «모른다». */
   figureDims?: number[];
+  /**
+   * `figureUrls` 와 같은 순서·같은 길이의 원본 지면 물리 폭(mm).
+   * 자와 지면이 쓰는 `parseFigureDimensions` 의 세 번째 인자.
+   * 없으면 오늘처럼 픽셀로 잰다. **넘기지 않으면 출제만 옛 크기로 고른다.**
+   */
+  figureSourceMm?: number[];
 }
 
 export interface SubstitutionRecord {

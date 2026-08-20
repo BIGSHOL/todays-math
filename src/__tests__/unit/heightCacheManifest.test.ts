@@ -30,10 +30,12 @@ import { describe, expect, it } from "vitest";
 import {
   assertHeightCacheFresh,
   buildHeightCacheManifest,
+  describeGroundMove,
   heightCacheProblems,
   manifestPathFor,
   measuredRowsHash,
   pageInputsHash,
+  stampGround,
 } from "../../../scripts/qa/heightCacheManifest";
 
 const NOW = {
@@ -276,5 +278,117 @@ describe("[d-affordable] 덧입힌 배치도 지문이 본다", () => {
         overlay: "cap=cap45;layout=base",
       }),
     ).toEqual([]);
+  });
+});
+
+describe("[2026-08-20] 재는 **동안** 발밑이 바뀌면 멈춘다", () => {
+  /**
+   * 왜 이게 따로 필요한가: 지문은 지금까지 **끝난 뒤 한 번**만 찍었다. 전수 측정은
+   * 28분이 걸리는데, 그 사이 다른 세션이 main 에 병합하면 앞부분은 옛 그림으로,
+   * 뒷부분은 새 그림으로 그려진다. 그런데 지문은 **끝난 뒤**에 찍히므로 «새 그림
+   * 상태»만 적히고 캐시는 조용히 «싱싱함»으로 통과한다.
+   *
+   * 2026-08-20 에 실제로 그랬다 — 측정 13:37~14:05 중 13:54 에 그림 1,344장이
+   * 병합으로 바뀌었고(796장은 **가로세로 비율까지** 달라졌다), 1,218문항이 걸렸다.
+   * 그때의 캐시는 섞인 것인데 지문은 아무 말도 안 했다.
+   */
+  const rows = [
+    { id: "a", content: "가", figureUrls: [], questionType: null },
+    { id: "b", content: "나", figureUrls: [], questionType: null },
+  ];
+
+  it("아무것도 안 바뀌면 «안 움직였다»", () => {
+    const before = stampGround(rows);
+    expect(describeGroundMove(before, stampGround(rows))).toBeNull();
+  });
+
+  it("문항 본문이 바뀌면 어느 문항인지까지 말한다", () => {
+    const before = stampGround(rows);
+    const after = stampGround([rows[0]!, { ...rows[1]!, content: "다" }]);
+    const moved = describeGroundMove(before, after);
+    expect(moved).toMatch(/본문·그림/);
+    expect(moved).toContain("b");
+  });
+
+  it("그림 **파일의 바이트**가 바뀌어도 잡는다 — URL 은 한 글자도 안 바뀐다", () => {
+    const dir = path.join(process.cwd(), "public", "figures", "__ground__");
+    const file = path.join(dir, "g.png");
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(file, "작은 그림");
+    const withFigure = [
+      {
+        id: "a",
+        content: "가",
+        figureUrls: ["/figures/__ground__/g.png"],
+        questionType: null,
+      },
+    ];
+    const before = stampGround(withFigure);
+    writeFileSync(file, "훨씬 더 큰 300dpi 그림으로 바꿔치기");
+    try {
+      expect(describeGroundMove(before, stampGround(withFigure))).toMatch(
+        /본문·그림/,
+      );
+    } finally {
+      unlinkSync(file);
+    }
+  });
+
+  it("문항이 늘거나 줄어도 잡는다", () => {
+    const before = stampGround(rows);
+    expect(describeGroundMove(before, stampGround([rows[0]!]))).toMatch(
+      /사라졌다/,
+    );
+    expect(
+      describeGroundMove(
+        before,
+        stampGround([
+          ...rows,
+          { id: "c", content: "다", figureUrls: [], questionType: null },
+        ]),
+      ),
+    ).toMatch(/새로 생겼다/);
+  });
+
+  it("지면 원문이 바뀌면 잡는다", () => {
+    const before = stampGround(rows);
+    const after = { ...stampGround(rows), inputsHash: "다른-지면" };
+    expect(describeGroundMove(before, after)).toMatch(/지면 원문/);
+  });
+});
+
+describe("[2026-08-20] 지문이 **그림 크기 근거**도 본다", () => {
+  /**
+   * 제품 지면은 `figureSourceMm` 으로 그림 폭을 mm 로 못 박고, `figureDims` 로 비율을
+   * 잡는다. 둘 중 하나만 바뀌어도 **지면 높이가 바뀐다.** 그런데 지문은 본문·그림
+   * 파일·유형만 봤다 — DB 의 mm 를 다시 적재하면 캐시는 거짓이 되는데 아무 말도 안 한다.
+   * 그림 파일은 한 바이트도 안 바뀌므로 파일 지문으로도 못 잡는다.
+   */
+  const base = {
+    id: "a",
+    content: "본문",
+    figureUrls: ["/figures/없는것.png"],
+    questionType: null,
+  };
+
+  it("mm 가 바뀌면 지문이 바뀐다", () => {
+    const before = measuredRowsHash([{ ...base, figureSourceMm: [40] }]);
+    expect(measuredRowsHash([{ ...base, figureSourceMm: [55] }])).not.toBe(
+      before,
+    );
+  });
+
+  it("원본 픽셀 치수가 바뀌면 지문이 바뀐다 — 비율이 곧 높이다", () => {
+    const before = measuredRowsHash([{ ...base, figureDims: [400, 300] }]);
+    expect(measuredRowsHash([{ ...base, figureDims: [400, 900] }])).not.toBe(
+      before,
+    );
+  });
+
+  it("문항별 지문도 같이 본다 — 어느 문항인지 집어낼 수 있어야 한다", () => {
+    const rows = [{ ...base, figureSourceMm: [40] }];
+    const before = stampGround(rows);
+    const after = stampGround([{ ...base, figureSourceMm: [41] }]);
+    expect(describeGroundMove(before, after)).toMatch(/본문·그림/);
   });
 });

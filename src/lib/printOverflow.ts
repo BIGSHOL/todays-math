@@ -35,6 +35,11 @@
  *    `scripts/qa/eval-overflow-rules.ts` 가 이 판정을 그 실측과 대조해 채점한다.
  */
 import type { TestPrintProblem } from "@/components/print/types";
+import {
+  type FigureDimension as FigureDimensionType,
+  figurePrintWidthPx,
+  parseFigureDimensions as parseFigureDimensionsRule,
+} from "@/lib/figurePrintSize";
 import { displayWidth, fitsTwoColumns } from "@/lib/math/displayWidth";
 import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
 import { paginateAnswerKey } from "@/lib/printLayout";
@@ -83,11 +88,13 @@ export const OVERFLOW_FIGURE_LIMIT = 2;
  * 그림 높이 — 인자에 없던 것 (적대적 리뷰 ③ §2)
  * ──────────────────────────────────────────────────────────────────────── */
 
-/** 그림 한 장의 **원본** 치수. 인쇄 폭 상한을 적용하기 전 값이다. */
-export interface FigureDimension {
-  width: number;
-  height: number;
-}
+/**
+ * 그림 한 장의 **원본** 치수(+ 알면 원본 지면 물리 폭 mm). 인쇄 폭 상한 적용 전 값이다.
+ *
+ * 정의는 `figurePrintSize.ts` 에 있다 — 「얼마로 그린다」를 자와 지면이 **같은 함수**로
+ * 정하기 때문이다. 여기서는 예전 import 경로를 지키려고 다시 내보낸다.
+ */
+export type { FigureDimension } from "@/lib/figurePrintSize";
 
 /**
  * 치수를 모르는 그림 한 장이 먹는다고 **가정**하는 높이.
@@ -103,30 +110,11 @@ export const UNKNOWN_FIGURE_HEIGHT_PX = 207;
 const UNKNOWN_FIGURE_WIDTH_PX = JASEUP_MEASURED_PX.figureMaxWidth;
 
 /**
- * DB 의 평탄 배열(`problem.figure_dims` = `[w1,h1,w2,h2,…]`)을 그림 수에 맞춰 짝짓는다.
- *
- * ⚠️ **손상된 입력은 «작은 그림»이 아니라 «모른다»로 받는다.** 길이가 안 맞으면
- *    어느 그림에 붙는 값인지 알 수 없으므로 전부 `null` 이다. 짝은 맞는데 값이
- *    0·음수·NaN 이면 그 자리만 `null` 이다. 여기서 0을 그대로 흘리면 넘치는
- *    문항이 «높이 0» 으로 읽힌다(CLAUDE.md 2026-08-16).
+ * DB 의 평탄 배열(`problem.figure_dims`)을 그림 수에 맞춰 짝짓는다.
+ * 규칙은 `figurePrintSize.ts` 한 곳에 있다 — 자(여기)와 지면(`ProblemContent`)이
+ * **같은 함수**를 부른다. 예전 import 경로를 지키려고 다시 내보낸다.
  */
-export function parseFigureDimensions(
-  figureCount: number,
-  flat: readonly number[] | null | undefined,
-): (FigureDimension | null)[] {
-  if (figureCount <= 0) return [];
-  const unknown = (): (FigureDimension | null)[] =>
-    Array.from({ length: figureCount }, () => null);
-  if (!flat || flat.length !== figureCount * 2) return unknown();
-
-  return Array.from({ length: figureCount }, (_, index) => {
-    const width = flat[index * 2]!;
-    const height = flat[index * 2 + 1]!;
-    if (!Number.isFinite(width) || !Number.isFinite(height)) return null;
-    if (width <= 0 || height <= 0) return null;
-    return { width, height };
-  });
-}
+export { parseFigureDimensions } from "@/lib/figurePrintSize";
 
 /**
  * 그림 묶음이 문항 칸에서 먹는 **세로 픽셀**.
@@ -140,13 +128,17 @@ export function parseFigureDimensions(
  *
  * 폭 상한(264.57px)이 문항 열(363.5px)보다 좁으므로 한 장이 혼자 넘쳐 줄어드는
  * 일은 없다 — flex 축소를 따로 세지 않는 근거다.
+ *
+ * ⚠️ **폭은 `figurePrintWidthPx` 한 함수가 정한다.** 지면 컴포넌트가 붙이는 인라인
+ *    `width: Xmm` 도 같은 함수에서 나온다 — 규칙이 두 벌이 되면 한쪽만 옮겨도
+ *    아무도 모른다(CLAUDE.md 2026-08-18). `sourceMm` 이 없으면 그 함수는
+ *    `min(원본 픽셀, 264.567)` 을 그대로 돌려주므로 **오늘 값과 한 값**이다.
  */
 export function estimateFigureBlockPx(
-  figures: readonly (FigureDimension | null)[],
+  figures: readonly (FigureDimensionType | null)[],
 ): number {
   if (figures.length === 0) return 0;
-  const { problemColumn, figureMaxWidth, figureGap, figureBlockTop } =
-    JASEUP_MEASURED_PX;
+  const { problemColumn, figureGap, figureBlockTop } = JASEUP_MEASURED_PX;
 
   let total = figureBlockTop;
   let rowWidth = 0;
@@ -154,8 +146,12 @@ export function estimateFigureBlockPx(
   let rows = 0;
 
   for (const figure of figures) {
-    const scale = figure ? Math.min(1, figureMaxWidth / figure.width) : 1;
-    const width = figure ? figure.width * scale : UNKNOWN_FIGURE_WIDTH_PX;
+    // 비율은 원본 픽셀에서, 크기는 (알면) mm 에서 온다 — 출처가 다른 두 근거다.
+    const printedWidth = figure
+      ? figurePrintWidthPx(figure)
+      : UNKNOWN_FIGURE_WIDTH_PX;
+    const scale = figure ? printedWidth / figure.width : 1;
+    const width = printedWidth;
     const height = figure ? figure.height * scale : UNKNOWN_FIGURE_HEIGHT_PX;
 
     const wouldBe = rowWidth === 0 ? width : rowWidth + figureGap + width;
@@ -268,7 +264,7 @@ function choicesBlockPx(items: readonly string[]): number {
  */
 export function estimateProblemPx(
   content: string,
-  figures: readonly (FigureDimension | null)[] = [],
+  figures: readonly (FigureDimensionType | null)[] = [],
 ): number {
   const { question, choices } = parseProblemContent(content);
   const { line, boxChrome, fixedChrome } = JASEUP_MEASURED_PX;
@@ -359,7 +355,7 @@ export function estimateProblemPx(
  */
 export function estimateProblemLines(
   content: string,
-  figures: readonly (FigureDimension | null)[] = [],
+  figures: readonly (FigureDimensionType | null)[] = [],
 ): number {
   return Math.ceil(
     estimateProblemPx(content, figures) / JASEUP_MEASURED_PX.line,
@@ -371,6 +367,19 @@ export function estimateProblemLines(
  * 출제(⑷·⑸-c)가 자리마다 다른 칸을 볼 때도 같은 함수를 쓴다 — 「한 숫자를 두 곳이
  * 쓰게 한다」(리뷰 §A). 손으로 고른 숫자가 하나라도 끼면 지면을 다시 재도 한쪽만 따라온다.
  */
+/**
+ * 넘침 경고의 **여유** — 추정 높이가 칸에 이만큼 다가오면 「넘칠 수 있다」로 본다.
+ *
+ * **맞춘 값이 아니라 유도한 값이다: 한 줄 높이(20.3125px).** 근거는 자 자신의
+ * 오차 분포다 — 전수 47,049건에서 `estimateProblemPx − 실측` 의 p05 가 **−19px**,
+ * 곧 95%의 문항에서 실제 높이는 추정보다 19px 이상 크지 않다. 한 줄이 그 꼬리를
+ * 덮으면서 지면에서 뜻이 분명한 유일한 단위다(「한 줄만큼 아슬아슬하면 경고」).
+ *
+ * ⚠️ 자를 고치면 이 값을 **다시 유도하라.** 숫자를 손으로 옮기면, 자가 좋아져도
+ *    여유만 옛날 오차를 덮고 있게 된다.
+ */
+export const OVERFLOW_MARGIN_PX = JASEUP_MEASURED_PX.line;
+
 export function lineLimitFor(slotPx: number): number {
   return Math.floor(slotPx / JASEUP_MEASURED_PX.line);
 }
@@ -481,22 +490,35 @@ export function seatCapacities(problemCount: number): number[] {
 
 /** 판정이 문항 하나에서 보는 것 전부. 출제도 **이것을** 본다. */
 export interface SeatAssessment {
-  /** 본문 표시폭이 한계를 넘는가 (`OVERFLOW_WIDTH_LIMIT`). */
-  wide: boolean;
-  /** 추정 줄 수와 그 자리의 한계. */
+  /**
+   * 추정 높이가 칸에서 `OVERFLOW_MARGIN_PX` 안쪽까지 왔는가 — **판정의 본체**다.
+   *
+   * 2026-08-20 이전에는 여기 대신 「본문 표시폭 > 530」(`wide`)이 앞에 있었다.
+   * 전수 47,049건에서 그 규칙만 걸리는 337건 중 실제로 넘친 것은 **3건**이었고,
+   * 헛것 쪽 폭(981·967·962)이 진짜 넘침(683·677)보다 **커서** 문턱을 옮겨도
+   * 안 갈렸다 — 겹치는 축이었다. 게다가 그 규칙이 먼저 걸려 사유를 「본문이 길다」로
+   * 덮어, 원장이 지면에서 손볼 곳(그림·상자)을 못 가리켰다.
+   */
+  tooTall: boolean;
+  /** 추정 높이(px)와 그 자리의 칸 높이. */
+  px: number;
+  slotPx: number;
+  /** 추정 줄 수와 그 자리의 한계. 사람이 읽는 값이다 — 판정은 px 로 한다. */
   lines: number;
   limit: number;
   /** 그림 묶음이 먹는 세로 — 사유가 «그림»을 가리킬지 가른다. */
   figurePx: number;
   /** 치수를 모르는데 그림이 여러 장 — 안전망 규칙. */
   manyFigures: boolean;
-  /** 셋 중 하나라도 걸리면 참. 지면에서 겹칠 위험이 있다는 뜻이다. */
+  /** 둘 중 하나라도 걸리면 참. 지면에서 겹칠 위험이 있다는 뜻이다. */
   risky: boolean;
 }
 
 /** 판정이 읽는 것 — 문항 전체가 아니라 이 셋뿐이다. */
 export type SeatProblem = Pick<TestPrintProblem, "content"> &
-  Partial<Pick<TestPrintProblem, "figureUrls" | "figureDims">>;
+  Partial<
+    Pick<TestPrintProblem, "figureUrls" | "figureDims" | "figureSourceMm">
+  >;
 
 /**
  * 문항 하나를 **높이 `slotPx` 인 칸**에 놓았을 때의 판정.
@@ -511,21 +533,33 @@ export function assessSeat(
   slotPx: number,
 ): SeatAssessment {
   const figureCount = problem.figureUrls?.length ?? 0;
-  const figures = parseFigureDimensions(figureCount, problem.figureDims);
+  const figures = parseFigureDimensionsRule(
+    figureCount,
+    problem.figureDims,
+    problem.figureSourceMm,
+  );
+  const px = estimateProblemPx(problem.content, figures);
   const lines = estimateProblemLines(problem.content, figures);
   const limit = lineLimitFor(slotPx);
-  const wide = displayWidth(problem.content) > OVERFLOW_WIDTH_LIMIT;
+  /**
+   * 🔴 **px 를 직접 견준다.** 줄 수로 견주면 `ceil` 이 최대 한 줄을 삼켜, 칸을
+   *    20px 안쪽으로 넘는 문항이 조용히 통과한다. 같은 캐시로 전수 채점:
+   *    줄 수 규칙 놓침 24 · px 규칙 놓침 **18**.
+   */
+  const tooTall = px > slotPx - OVERFLOW_MARGIN_PX;
   // 장수 규칙은 **치수를 모를 때만** 쓰는 안전망이다. 치수를 알면 높이 규칙이
   // 같은 문항을 이미 본다 — 실측으로 「장수만 걸리는」 39건은 한 건도 안 넘쳤다.
   const manyFigures =
     figureCount >= OVERFLOW_FIGURE_LIMIT && figures.some((f) => f === null);
   return {
-    wide,
+    tooTall,
+    px,
+    slotPx,
     lines,
     limit,
     figurePx: estimateFigureBlockPx(figures),
     manyFigures,
-    risky: wide || lines > limit || manyFigures,
+    risky: tooTall || manyFigures,
   };
 }
 
@@ -551,10 +585,11 @@ export function assessOverflowRisk(
     const capacity = capacities[index]!;
     const seat = assessSeat(problem, capacity);
 
-    if (seat.wide) reasons.push("본문이 길다");
-    // 폭 총합이 못 보는 배치(그림·상자·보기 1열)를 줄 수로 따로 본다.
-    // 같은 문항이 둘 다에 걸리면 사유를 겹쳐 적지 않는다 — 원장이 읽을 문장이다.
-    if (!reasons.length && seat.lines > seat.limit) {
+    /**
+     * 사유는 **손볼 곳**을 가리켜야 한다. 예전에는 「본문이 길다」(폭 규칙)가 **먼저**
+     * 걸려 그림·상자 사유를 덮었다 — 그 규칙은 2026-08-20 에 빠졌다(SeatAssessment 주석).
+     */
+    if (seat.tooTall) {
       // 높이의 절반 넘게가 그림이면 원장이 지면에서 찾을 것도 그림이다.
       // 사유가 가리키는 곳이 틀리면 경고가 있어도 지나친다(리뷰 §3).
       const figureLines = seat.figurePx / JASEUP_MEASURED_PX.line;
@@ -574,13 +609,12 @@ export function assessOverflowRisk(
       const onFirstPage =
         capacity === JASEUP_MEASURED_PX.firstPageSlot ||
         capacity === JASEUP_MEASURED_PX.soloFirstPageSlot;
-      const continuationLimit = lineLimitFor(
-        alone
-          ? JASEUP_MEASURED_PX.soloContinuationSlot
-          : JASEUP_MEASURED_PX.continuationSlot,
-      );
+      // 이어지는 장에 놓았을 때의 칸 — 「뒤로 옮기면 된다」가 참일 때만 그렇게 적는다.
+      const continuationSlot = alone
+        ? JASEUP_MEASURED_PX.soloContinuationSlot
+        : JASEUP_MEASURED_PX.continuationSlot;
       reasons.push(
-        onFirstPage && seat.lines <= continuationLimit
+        onFirstPage && seat.px <= continuationSlot - OVERFLOW_MARGIN_PX
           ? `${what} · 첫 장은 칸이 좁다`
           : what,
       );

@@ -27,6 +27,7 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { FIGURE_MAX_WIDTH_MM, mmToCssPx } from "@/lib/figurePrintSize";
 import { JASEUP_GEOMETRY, JASEUP_MEASURED_PX } from "@/lib/printGeometry";
 import {
   UNKNOWN_FIGURE_HEIGHT_PX,
@@ -93,9 +94,19 @@ describe("[적대④] 지면 상수는 지면 원문에서 나온다", () => {
     );
   });
 
-  it("그림 상한은 `print:max-w-[70mm]` 그대로다", () => {
+  /**
+   * 그림 상한은 이제 **세 곳**에 있다 — 지면 CSS(mm) · 자의 실측 px · 크기 규칙의 mm.
+   * 셋이 갈라지면 「지면은 70mm 로 자르는데 자는 다른 데서 자르는」 상태가 되고,
+   * 그건 아무도 모르게 어긋난다(2026-08-19 그림 인쇄 크기 트랙).
+   */
+  it("그림 상한은 `print:max-w-[70mm]` 그대로다 — mm 와 px 가 **한 수**다", () => {
     expect(problemContent).toContain("print:max-w-[70mm]");
     expect(JASEUP_MEASURED_PX.figureMaxWidth).toBeCloseTo((70 * 96) / 25.4, 3);
+    expect(FIGURE_MAX_WIDTH_MM).toBe(70);
+    expect(mmToCssPx(FIGURE_MAX_WIDTH_MM)).toBeCloseTo(
+      JASEUP_MEASURED_PX.figureMaxWidth,
+      3,
+    );
   });
 
   it("그림 묶음 여백은 `mt-3`·`gap-4` 그대로다", () => {

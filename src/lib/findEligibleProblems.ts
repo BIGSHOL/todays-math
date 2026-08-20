@@ -84,10 +84,15 @@ export async function findEligibleProblems(
       difficulty: true,
       problemType: true,
       directUseAllowed: true,
-      // ── 지면을 보기 위한 셋 (⑷) ────────────────────────────────────────
+      // ── 지면을 보기 위한 넷 (⑷ · mm 은 2026-08-20) ─────────────────────
+      // 엔진(`risksTightSeat`)이 이 넷으로 「칸에 들어가나」를 본다. 하나라도
+      // 빠지면 그 문항의 높이를 «모른다»로 받아 **후순위**로 돌린다.
+      // `figureSourceMm` 은 컬럼(20260819120000)이 있어야 한다 — 없는 DB 에
+      // 이걸 SELECT 하면 출제 조회가 통째로 죽는다.
       content: true,
       figureUrls: true,
       figureDims: true,
+      figureSourceMm: true,
     },
   });
 
@@ -102,5 +107,6 @@ export async function findEligibleProblems(
     content: row.content,
     figureUrls: row.figureUrls,
     figureDims: row.figureDims,
+    figureSourceMm: row.figureSourceMm,
   }));
 }

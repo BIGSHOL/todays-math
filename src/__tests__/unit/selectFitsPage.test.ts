@@ -29,7 +29,7 @@ import {
   selectProblems,
 } from "@/lib/generator/selectProblems";
 import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
-import { assessOverflowRisk } from "@/lib/printOverflow";
+import { assessOverflowRisk, assessSeat } from "@/lib/printOverflow";
 
 /**
  * 그림 하나로 높이를 정확히 만든다. 폭 200px 은 인쇄 상한(264.567px)보다 좁아
@@ -74,6 +74,7 @@ const asPrint = (problems: SelectableProblem[]): TestPrintProblem[] =>
     solution: null,
     figureUrls: p.figureUrls ?? [],
     figureDims: p.figureDims ?? [],
+    figureSourceMm: p.figureSourceMm,
   }));
 
 const pick = (
@@ -249,6 +250,34 @@ describe("[⑷] 「모른다」는 «안 넘친다»로 미끄러지지 않는�
         { ...known, figureDims: [200, 207] },
         JASEUP_MEASURED_PX.continuationSlot,
       ),
+    );
+  });
+
+  it("mm 가 있으면 출제 후순위가 그 크기를 본다 — 안 넘기면 판정과 갈라진다", () => {
+    // 500px 그림은 이어지는 장(484px)을 넘친다. 원본이 20mm 면 인쇄 폭이
+    // 75.6px 로 줄어 같은 그림이 칸에 들어간다. 제품 assessSeat 와 같아야 한다.
+    const pixelTall = withFigureHeight("tall-px", 500);
+    const withMm: SelectableProblem = {
+      ...pixelTall,
+      id: "tall-mm",
+      figureSourceMm: [20],
+    };
+    expect(risksTightSeat(pixelTall, JASEUP_MEASURED_PX.continuationSlot)).toBe(
+      true,
+    );
+    expect(risksTightSeat(withMm, JASEUP_MEASURED_PX.continuationSlot)).toBe(
+      false,
+    );
+    expect(risksTightSeat(withMm, JASEUP_MEASURED_PX.continuationSlot)).toBe(
+      assessSeat(
+        {
+          content: withMm.content ?? "",
+          figureUrls: withMm.figureUrls,
+          figureDims: withMm.figureDims,
+          figureSourceMm: withMm.figureSourceMm,
+        },
+        JASEUP_MEASURED_PX.continuationSlot,
+      ).risky,
     );
   });
 

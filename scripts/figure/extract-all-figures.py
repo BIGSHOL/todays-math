@@ -54,9 +54,28 @@ def main() -> None:
         "--match-dir",
         help="이 디렉토리에 `<examId>.json` 이 있는 편만 — 실제로 이관한 편만 뽑을 때",
     )
+    ap.add_argument(
+        "--dpi",
+        type=int,
+        default=CLIP_DPI,
+        help="xref 가 없을 때 클립 렌더 DPI. 기본은 CLIP_DPI(200).",
+    )
+    ap.add_argument(
+        "--manifest",
+        default=str(MANIFEST),
+        help="대장을 쓸 경로. 기본은 기존 figure-manifest.json. "
+        "다른 출력 디렉터리로 다시 자를 때 기존 대장을 덮지 않으려면 여기를 바꿔라.",
+    )
+    ap.add_argument(
+        "--png",
+        action="store_true",
+        help="네이티브 추출도 PNG 로 저장한다. 선 그림 JPEG 링잉을 더 만들지 않으려는 것.",
+    )
     a = ap.parse_args()
 
     outroot = pathlib.Path(a.out)
+    manifest_path = pathlib.Path(a.manifest)
+    clip_dpi = a.dpi
 
     # (examId, PDF 경로) 목록. 두 출처가 있다.
     #  - 기본: exam_index + `db/pages/<eid>/src.pdf` 로컬 캐시 (A단계분)
@@ -92,8 +111,8 @@ def main() -> None:
         exams = exams[: a.limit]
 
     manifest = {}
-    if MANIFEST.exists():
-        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 
     stat = collections.Counter()
     bytes_total = 0
@@ -120,15 +139,23 @@ def main() -> None:
                 # 원본 이미지가 잡히면 그대로(무손실). 안 잡히면 그 영역을 렌더한다 —
                 # 이미지가 폼 XObject 안에 있거나 벡터로 그려진 그림이 이 경우다.
                 if f["xref"]:
-                    info = doc.extract_image(f["xref"])
-                    data, ext = info["image"], info["ext"]
+                    stat["네이티브"] += 1
+                    if a.png:
+                        pix = fitz.Pixmap(doc, f["xref"])
+                        if pix.n - pix.alpha > 3:
+                            pix = fitz.Pixmap(fitz.csRGB, pix)
+                        data, ext = pix.tobytes("png"), "png"
+                    else:
+                        info = doc.extract_image(f["xref"])
+                        data, ext = info["image"], info["ext"]
                 else:
                     x0, y0, x1, y1 = f["rect"]
                     pix = doc[f["page"]].get_pixmap(
-                        clip=fitz.Rect(x0, y0, x1, y1), dpi=CLIP_DPI
+                        clip=fitz.Rect(x0, y0, x1, y1), dpi=clip_dpi
                     )
                     data, ext = pix.tobytes("png"), "png"
                     stat["클립 렌더"] += 1
+                    stat["xref 못찾음"] += 1
                 name = f"q{num:02d}" + (f"_{i}" if i else "") + f".{ext}"
                 dest = outroot / key / name
                 dest.parent.mkdir(parents=True, exist_ok=True)
@@ -138,7 +165,10 @@ def main() -> None:
                     dest.write_bytes(data)
                     stat["새로 뽑음"] += 1
                 bytes_total += dest.stat().st_size
-                paths.append(f"/figures/{key}/{name}")
+                # out 이 public/figures-300 이면 경로도 /figures-300/... 로 적는다.
+                # 하드코딩 /figures/ 는 새 디렉터리 대장이 옛 경로를 가리키게 만든다.
+                url_root = outroot.name
+                paths.append(f"/{url_root}/{key}/{name}")
             if paths:
                 entry[str(num)] = paths
         doc.close()
@@ -148,7 +178,8 @@ def main() -> None:
             stat["편"] += 1
             stat["문항"] += len(entry)
 
-    MANIFEST.write_text(
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(
         json.dumps(manifest, ensure_ascii=False, indent=0), encoding="utf-8"
     )
 
@@ -161,10 +192,15 @@ def main() -> None:
         "파일 새로 %d · 기존 %d · 총 %.1f MB"
         % (stat["새로 뽑음"], stat["건너뜀:이미있음"], bytes_total / 1048576)
     )
+    # 네이티브/폴백은 올리기만 하고 안 찍히던 값이다(§15). 확장자로 나누지 마라.
+    print(
+        "  네이티브 %d · 클립 렌더(xref 없음) %d"
+        % (stat["네이티브"], stat["클립 렌더"])
+    )
     for k in ("그림없음:편", "xref 못찾음", "실패:편"):
         if stat[k]:
             print("  %-14s %d" % (k, stat[k]))
-    print("→ %s · 대장 %s" % (outroot, MANIFEST))
+    print("→ %s · 대장 %s" % (outroot, manifest_path))
 
 
 if __name__ == "__main__":

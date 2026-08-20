@@ -10,6 +10,7 @@
  *   npx tsx scripts/qa/measure-print-overflow.tsx --json out.json
  *   npx tsx scripts/qa/measure-print-overflow.tsx --verify out.json --take 2000
  *   npx tsx scripts/qa/measure-print-overflow.tsx --verify out.json --repair
+ *   npx tsx scripts/qa/measure-print-overflow.tsx --only ids.json --json probe.json
  *
  * `--json` 은 높이 캐시와 함께 **지문**(`out.manifest.json`)을 남긴다. 지면 CSS·
  * `displayWidth`·본문이 바뀌면 캐시는 거짓이 되는데, 채점기가 그걸 볼 방법이
@@ -34,9 +35,11 @@ import type { TestPrintProblem } from "../../src/components/print/types";
 import {
   buildHeightCacheManifest,
   changedRowIds,
+  describeGroundMove,
   measuredRowsHash,
   readHeightCacheManifest,
   rowDigests,
+  stampGround,
   writeHeightCacheManifest,
 } from "./heightCacheManifest";
 import {
@@ -56,6 +59,8 @@ interface Row {
   content: string;
   figureUrls: string[];
   figureDims: number[] | null;
+  /** 그림 원본 지면 물리 폭(mm). 제품 지면이 이걸로 폭을 못 박는다 — 탐침도 같이 받아야 한다. */
+  figureSourceMm: number[] | null;
   questionType: string | null;
 }
 
@@ -92,6 +97,9 @@ async function measureRows(
             id: row.id,
             content: row.content ?? "",
             figureUrls: row.figureUrls,
+            // 제품 인쇄 경로가 넘기는 것과 **같은 것**을 넘긴다(paperProbeParity.test).
+            figureDims: row.figureDims ?? undefined,
+            figureSourceMm: row.figureSourceMm ?? undefined,
             essayNumber: row.questionType === "서술형" ? 1 : null,
           },
           i + j + 1,
@@ -158,10 +166,27 @@ function singleSlot(measured: Measured[]): number {
   return distinct[0]!;
 }
 
-async function fetchRows(take: number): Promise<Row[]> {
+/**
+ * `only` 는 **그 문항들만** 잰다. 왜 필요한가: 다른 트랙이 그림을 갈아 끼우면
+ * 「그 갈아 끼운 문항들의 높이가 정말 그대로인가」를 물어야 하는데, 전수 28분을
+ * 다시 쓰지 않고 물으려면 **같은 자로** 그 부분만 재야 한다. 하네스를 따로 만들면
+ * 자가 재는 지면과 실제 지면이 갈라진다(2026-08-18: 자에 넣는 입력이 조판과 다르면
+ * 그대로 놓침이 된다). 그래서 새로 만들지 않고 이 경로에 조건만 하나 더 둔다.
+ */
+async function fetchRows(
+  take: number,
+  only?: readonly string[],
+): Promise<Row[]> {
+  if (only)
+    return (await prisma.$queryRawUnsafe(
+      `SELECT id, content, figure_urls AS "figureUrls", figure_dims AS "figureDims",
+              figure_source_mm AS "figureSourceMm", question_type AS "questionType"
+         FROM problem WHERE id = ANY($1::uuid[]) ORDER BY id`,
+      only as string[],
+    )) as Row[];
   return (await prisma.$queryRawUnsafe(
     `SELECT id, content, figure_urls AS "figureUrls", figure_dims AS "figureDims",
-            question_type AS "questionType"
+            figure_source_mm AS "figureSourceMm", question_type AS "questionType"
        FROM problem ORDER BY id ${take > 0 ? `LIMIT ${take}` : ""}`,
   )) as Row[];
 }
@@ -172,6 +197,10 @@ async function main() {
     return i >= 0 ? process.argv[i + 1] : undefined;
   };
   const take = Number(arg("--take") ?? 0);
+  const onlyPath = arg("--only");
+  const only = onlyPath
+    ? (JSON.parse(readFileSync(onlyPath, "utf8")) as string[])
+    : undefined;
   const outPath = arg("--json");
   const verifyPath = arg("--verify");
   const media = process.argv.includes("--screen") ? "screen" : "print";
@@ -186,10 +215,40 @@ async function main() {
       process.argv.includes("--repair"),
     );
 
-  const rows = await fetchRows(take);
+  const rows = await fetchRows(take, only);
+  if (only && rows.length !== only.length)
+    throw new Error(
+      `--only 로 ${only.length}건을 달라 했는데 ${rows.length}건이 왔다 — 사라진 문항이 있다. 멈춘다.`,
+    );
   console.log(
-    `문항 ${rows.length.toLocaleString()}건 · ${kind} 장 · ${media} 매체`,
+    `문항 ${rows.length.toLocaleString()}건 · ${kind} 장 · ${media} 매체${only ? " · --only" : ""}`,
   );
+
+  /**
+   * ⚠️ **홀수면 마지막 장이 한 문항이 되고 그 칸은 두 배(997px)다.**
+   *    그러면 `singleSlot` 이 「칸이 2가지다 — 지면이 바뀌었다」로 멈춘다. 지면은
+   *    안 바뀌었는데도 그렇다 — **문항 수가 홀수인 것뿐**이다. 28분을 다 쓰고 마지막
+   *    한 줄에서 전부 버려진다(2026-08-20 실제 발생: 중복 372건을 지워 47,049가 됐다).
+   *
+   *    `verify()` 는 이 함정을 알고 채워 넣는데(§짝수로 맞춘다) **전수 경로에는 그게
+   *    없었다.** 같은 규칙이 두 곳에 있으면 한쪽만 고쳐도 아무도 모른다 —
+   *    그래서 여기서도 같은 방식으로 채운다: 앞의 한 문항을 **한 번 더** 재고,
+   *    잰 뒤 그 덧댄 줄만 버린다.
+   */
+  const padded = rows.length % 2 === 1 ? [...rows, rows[0]!] : rows;
+  if (padded.length !== rows.length)
+    console.log(
+      "문항 수가 홀수라 마지막 장이 한 문항이 된다 — 앞의 한 문항을 덧대 짝을 맞춘다(잰 뒤 버린다).",
+    );
+
+  /**
+   * ⚠️ **재기 전에 발밑을 찍는다.** 전수는 28분이 걸리고, 그 사이 다른 세션이 main 에
+   *    병합하면 앞부분은 옛 지면, 뒷부분은 새 지면으로 그려진다. 지문은 **끝난 뒤**
+   *    찍히므로 «새 지면»만 적히고 캐시는 조용히 통과한다 — 실패가 침묵한다.
+   *    (2026-08-20 실제 발생: 13:54 병합이 그림 1,344장을 갈아 끼웠고 796장은 비율까지
+   *     달라졌다. 1,218문항이 섞인 채로 캐시에 들어갔는데 지문은 아무 말도 안 했다.)
+   */
+  const groundBefore = stampGround(rows);
 
   const browser = await chromium.launch();
   const page = await browser.newPage({
@@ -199,13 +258,31 @@ async function main() {
 
   let all: Measured[];
   try {
-    all = await measureRows(page, rows, kind, (done) =>
-      process.stdout.write(`\r측정 ${done}/${rows.length}`),
+    all = await measureRows(page, padded, kind, (done) =>
+      process.stdout.write(`\r측정 ${done}/${padded.length}`),
     );
   } finally {
     await browser.close();
   }
   console.log("");
+
+  /**
+   * 🔴 **재는 동안 발밑이 안 움직였는지.** 움직였으면 이 캐시는 «앞뒤가 다른 지면»을
+   *    섞어 잰 것이라 통째로 못 쓴다. 여기서 멈추지 않으면 그 섞인 값이 지문의
+   *    축복을 받고 그대로 재현율 보고서가 된다. 28분을 버리는 것이 아까워도,
+   *    조용히 틀린 캐시가 훨씬 비싸다.
+   */
+  const groundAfter = stampGround(await fetchRows(take, only));
+  const moved = describeGroundMove(groundBefore, groundAfter);
+  if (moved)
+    throw new Error(
+      `재는 동안 발밑이 바뀌었다 — ${moved}. 이 측정은 앞뒤가 다른 지면을 섞어 잰 것이라 버린다. 저장소가 조용해지면 다시 재라.`,
+    );
+
+  // 덧댄 줄을 버린다 — 맨 끝 하나다(앞의 문항을 한 번 더 잰 것).
+  if (padded.length !== rows.length) all = all.slice(0, -1);
+  if (all.length !== rows.length)
+    throw new Error(`잰 줄 ${all.length} ≠ 문항 ${rows.length} — 멈춘다.`);
 
   const byId = new Map(rows.map((r) => [r.id, r]));
   const slot = singleSlot(all);
@@ -232,6 +309,8 @@ async function main() {
       // ⚠️ 치수를 안 넘기면 이 요약만 «전부 모른다»로 채점된다 — 판정이 실제로 보는
       //    것과 달라져 「놓침」이 부풀려 보인다(적대적 리뷰 ④에서 실제로 그랬다).
       figureDims: row.figureDims ?? undefined,
+      // ⚠️ mm 를 안 넘기면 판정만 «모른다»로 재서 지면과 갈린다.
+      figureSourceMm: row.figureSourceMm ?? undefined,
     };
     // ⚠️ 판정은 «그 장에 몇 개인가»로 칸을 고른다. 지면은 두 문항으로 그렸으므로
     //    판정에도 짝을 채워 넣어야 같은 칸을 본다(혼자면 칸이 두 배다).
@@ -258,6 +337,7 @@ async function main() {
           parseFigureDimensions(
             row.figureUrls.length,
             row.figureDims ?? undefined,
+            row.figureSourceMm ?? undefined,
           ),
         ),
       });
@@ -377,6 +457,9 @@ async function verify(
     `대조 ${picked.length.toLocaleString()}건 (고른 표본 ${spread.length.toLocaleString()} + 바뀐 문항 ${(picked.length - spread.length).toLocaleString()}) / 캐시 ${cached.length.toLocaleString()}건 · ${kind} 장 · ${media} 매체`,
   );
 
+  // 표본 대조도 재는 동안 발밑이 움직이면 뜻이 없다 — 전수와 같은 자를 쓴다.
+  const groundBefore = stampGround(rows);
+
   const browser = await chromium.launch();
   const page = await browser.newPage({
     viewport: { width: 1000, height: 1200 },
@@ -391,6 +474,15 @@ async function verify(
     await browser.close();
   }
   console.log("");
+
+  const movedDuring = describeGroundMove(
+    groundBefore,
+    stampGround(await fetchRows(0)),
+  );
+  if (movedDuring)
+    throw new Error(
+      `대조하는 동안 발밑이 바뀌었다 — ${movedDuring}. 이 대조는 뜻이 없다. 저장소가 조용해지면 다시 하라.`,
+    );
 
   /**
    * 다른 것을 **두 갈래로** 가른다.

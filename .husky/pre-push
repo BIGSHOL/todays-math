@@ -1,0 +1,21 @@
+# 밀면 그대로 production 이 된다 (Vercel — TRD D-12: 배포가 git push 한 번).
+#
+# 공유 DB(D-31)는 즉시 최신인데 **그림 파일은 밀어야 간다.** 그래서 문항을 이관하거나
+# 그림을 회수하면, 코드를 한 줄도 안 고쳐도 production 의 그림 자리가 빈다.
+# 500 도 안 나고 로그도 안 남는다 — 2026-08-20 에 원장님이 화면에서 찾아 주실 때까지
+# 90문항이 그렇게 있었다.
+#
+# 그래서 «미는 그 커밋» 이 DB 가 가리키는 그림을 다 갖고 있는지 여기서 본다.
+# (밀고 난 뒤의 origin/main 이 곧 그 커밋이다.)
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in refs/heads/main) ;; *) continue ;; esac
+  case "$local_sha" in *[!0]*) ;; *) continue ;; esac   # 브랜치 삭제는 건너뛴다
+
+  echo "▸ 미는 커밋에 그림이 다 있는지 확인 ($local_sha)"
+  if ! npx tsx scripts/qa/checkDeployedFigures.ts --ref "$local_sha"; then
+    echo ""
+    echo "🔴 이대로 밀면 production 에서 그림 자리가 빈다."
+    echo "   빠진 그림을 커밋해서 같이 밀거나, 왜 없는지 확인하라(문서 16 그림 회수 원장)."
+    exit 1
+  fi
+done

@@ -38,8 +38,7 @@ import { parseProblemContent } from "../../src/lib/problem/parseProblemContent";
 import { JASEUP_MEASURED_PX } from "../../src/lib/printGeometry";
 import {
   OVERFLOW_FIGURE_LIMIT,
-  OVERFLOW_LINE_LIMIT,
-  OVERFLOW_LINE_LIMIT_FIRST_PAGE,
+  OVERFLOW_MARGIN_PX,
   OVERFLOW_WIDTH_LIMIT,
   assessOverflowRisk,
   estimateFigureBlockPx,
@@ -123,6 +122,11 @@ interface Row {
   content: string;
   figureUrls: string[];
   figureDims: number[] | null;
+  /**
+   * 그림 원본 지면 물리 폭(mm). 제품 지면은 이걸로 폭을 못 박으므로 **채점도 같이 봐야
+   * 한다** — 안 보면 판정만 «모른다»로 재서 지면과 갈린다(2026-08-20).
+   */
+  figureSourceMm: number[] | null;
   solution: string | null;
   questionType: string | null;
 }
@@ -178,7 +182,8 @@ async function main() {
   const heights = JSON.parse(readFileSync(heightsPath, "utf8")) as Height[];
   const rows = (await prisma
     .$queryRawUnsafe(
-      `SELECT id, content, figure_urls AS "figureUrls", figure_dims AS "figureDims", solution,
+      `SELECT id, content, figure_urls AS "figureUrls", figure_dims AS "figureDims",
+              figure_source_mm AS "figureSourceMm", solution,
               question_type AS "questionType"
        FROM problem ORDER BY id`,
     )
@@ -186,7 +191,8 @@ async function main() {
       async () =>
         // figure_dims 컬럼이 아직 없는 시점에도 돌아야 한다 (마이그레이션 전 측정).
         (await prisma.$queryRawUnsafe(
-          `SELECT id, content, figure_urls AS "figureUrls", NULL::int[] AS "figureDims", solution,
+          `SELECT id, content, figure_urls AS "figureUrls", NULL::int[] AS "figureDims",
+                NULL::double precision[] AS "figureSourceMm", solution,
                 question_type AS "questionType"
          FROM problem ORDER BY id`,
         )) as Row[],
@@ -200,6 +206,14 @@ async function main() {
     if (pairs.some((p) => !p)) return undefined; // 한 장이라도 모르면 통째로 모른다
     return pairs.flatMap((p) => p!);
   };
+
+  /**
+   * 그림의 **물리 폭(mm)**. 제품 지면은 이걸로 폭을 못 박으므로 자도 같이 봐야 한다.
+   * `--no-dims`(전부 «모른다»로 보기)일 때는 mm 도 «모른다» — 안 그러면 그 팔이
+   * 반쪽만 모르는 상태가 되어 무엇을 재는지 알 수 없다.
+   */
+  const sourceMmFor = (row: Row): number[] | undefined =>
+    noDims ? undefined : (row.figureSourceMm ?? undefined);
 
   const byId = new Map(rows.map((r) => [r.id, r]));
   const missingRows = heights.filter((h) => !byId.has(h.pid)).length;
@@ -239,14 +253,13 @@ async function main() {
   assertHeightCacheFresh(heightsPath, {
     kind: firstPage ? "first" : "continuation",
     rows: heights.length,
-    rowsHash: measuredRowsHash(
-      rows.map((r) => ({
-        id: r.id,
-        content: r.content,
-        figureUrls: r.figureUrls,
-        questionType: r.questionType,
-      })),
-    ),
+    /**
+     * ⚠️ **행을 통째로 넘긴다.** 예전에는 여기서 컬럼을 골라 담았는데, 지문에
+     *    `figureDims`·`figureSourceMm` 이 늘어난 것을 이쪽이 몰라서 **재자마자
+     *    「캐시가 낡았다」**로 멈췄다(2026-08-20). 지문이 무엇을 보는지는
+     *    `heightCacheManifest` 한 곳이 정한다 — 부르는 쪽이 옮겨 적지 않는다.
+     */
+    rowsHash: measuredRowsHash(rows),
     slotPx: slot,
   });
   const dimsSource = noDims
@@ -262,7 +275,16 @@ async function main() {
   for (const h of heights) {
     const row = byId.get(h.pid)!;
     if (row.figureUrls.length === 0) continue;
-    const dims = parseFigureDimensions(row.figureUrls.length, flatDimsFor(row));
+    /**
+     * ⚠️ **mm 를 같이 넘긴다.** 안 넘기면 이 검산만 «픽셀로 그린 지면»을 모형화하고
+     *    실측은 «mm 로 그린 지면»이라, 있지도 않은 편차가 나온다 — 2026-08-20 에
+     *    실제로 중앙 +47.8px 이 찍혔다. mm 를 넘기면 남는 것은 `mt-3` 마진뿐이다.
+     */
+    const dims = parseFigureDimensions(
+      row.figureUrls.length,
+      flatDimsFor(row),
+      sourceMmFor(row),
+    );
     if (dims.some((d) => d === null)) continue;
     withDims += 1;
     // 실측 rect 는 `mt-3` 마진을 뺀 값이다 — 모형에서도 빼고 견준다.
@@ -315,7 +337,9 @@ async function main() {
     const row = byId.get(h.pid)!;
     const content = row.content ?? "";
     const flat = flatDimsFor(row);
-    const dims = parseFigureDimensions(row.figureUrls.length, flat);
+    // ⚠️ mm 를 같이 넘긴다 — 제품 지면이 폭을 mm 로 못 박기 때문이다.
+    const sourceMm = sourceMmFor(row);
+    const dims = parseFigureDimensions(row.figureUrls.length, flat, sourceMm);
     const problem: TestPrintProblem = {
       id: row.id,
       orderIndex: 0,
@@ -324,6 +348,7 @@ async function main() {
       solution: row.solution,
       figureUrls: row.figureUrls,
       figureDims: flat,
+      figureSourceMm: sourceMm,
     };
     /**
      * 판정이 **장을 보게 된 뒤로**(리뷰 §11-2) 문항 하나만 넘기면 늘 «첫 장 1번»이
@@ -348,6 +373,9 @@ async function main() {
       overflows: h.neededPx > h.availPx,
       excess: h.neededPx - h.availPx,
       width: displayWidth(content),
+      // 판정의 본체 — 2026-08-20 부터 줄 수가 아니라 이 px 를 칸과 견준다.
+      px: estimateProblemPx(content, dims),
+      slot: h.availPx,
       lines: estimateProblemLines(content, dims),
       legacyLines: legacyLines(content),
       figures: row.figureUrls.length,
@@ -359,16 +387,18 @@ async function main() {
     };
   });
 
-  const warnedAt = (limit: number) => (g: (typeof graded)[number]) =>
-    g.width > OVERFLOW_WIDTH_LIMIT || g.lines > limit || g.countRule;
+  /**
+   * 제품 규칙의 거울 — 「추정 높이가 칸에서 여유 안쪽까지 왔는가」. 훑는 손잡이도
+   * 줄 수 한계가 아니라 **여유(px)** 다. 제품이 그것으로 판정하기 때문이다.
+   */
+  const warnedAt = (marginPx: number) => (g: (typeof graded)[number]) =>
+    g.px > g.slot - marginPx || g.countRule;
 
-  /** 제품이 이 장에서 실제로 쓰는 한계. 채점기가 다른 값을 쓰면 검산에서 걸린다. */
-  const productLimit = firstPage
-    ? OVERFLOW_LINE_LIMIT_FIRST_PAGE
-    : OVERFLOW_LINE_LIMIT;
+  /** 제품이 실제로 쓰는 여유. 채점기가 다른 값을 쓰면 아래 검산에서 걸린다. */
+  const productMargin = OVERFLOW_MARGIN_PX;
 
   /* ── 자 검산 ② 채점기가 제품과 한 건도 다르지 않은가 ─────────────────────── */
-  const drift = graded.filter((g) => warnedAt(productLimit)(g) !== g.product);
+  const drift = graded.filter((g) => warnedAt(productMargin)(g) !== g.product);
   if (drift.length > 0)
     throw new Error(
       `채점기가 제품과 ${drift.length}건 다르다 — 규칙을 옮겨 적었다는 뜻이다. 예: ${drift[0]!.pid}`,
@@ -391,7 +421,7 @@ async function main() {
   );
   console.log("현행 제품 규칙");
   report(
-    `한계 ${productLimit}`,
+    `여유 ${productMargin}px`,
     score(graded.map((g) => ({ overflows: g.overflows, warned: g.product }))),
   );
 
@@ -418,26 +448,27 @@ async function main() {
   );
 
   if (sweep.length > 0) {
-    console.log("\n한계값 훑기 (폭·그림 장수 규칙은 그대로)");
-    for (const limit of sweep) {
-      const w = warnedAt(limit);
+    console.log(
+      "\n여유(px) 훑기 — 「칸에서 이만큼 안쪽이면 경고」 (장수 규칙은 그대로)",
+    );
+    for (const margin of sweep) {
+      const w = warnedAt(margin);
       report(
-        `한계 ${limit}`,
+        `여유 ${margin}px`,
         score(graded.map((g) => ({ overflows: g.overflows, warned: w(g) }))),
       );
     }
   }
 
   /* ── 규칙별 기여 — «이 규칙이 없으면 무엇을 놓치나» ─────────────────────── */
-  const limit = Number(arg("--at") ?? productLimit);
+  const margin = Number(arg("--at") ?? productMargin);
   const byRule = (g: (typeof graded)[number]) => ({
-    width: g.width > OVERFLOW_WIDTH_LIMIT,
-    lines: g.lines > limit,
+    height: g.px > g.slot - margin,
     count: g.countRule,
   });
   console.log(`
-규칙별 기여 (줄 수 한계 ${limit})`);
-  for (const name of ["width", "lines", "count"] as const) {
+규칙별 기여 (여유 ${margin}px)`);
+  for (const name of ["height", "count"] as const) {
     const only = graded.filter((g) => {
       const r = byRule(g);
       return r[name] && !Object.entries(r).some(([k, v]) => k !== name && v);

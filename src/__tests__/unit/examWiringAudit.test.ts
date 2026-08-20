@@ -59,6 +59,33 @@ describe("classifyFile — 호출 지점 발견", () => {
     expect(classifyFile("x.ts", src)[0]?.verdict).toBe("기출·배선됨");
   });
 
+  it("⭐ 「되돌리기」라 적어 놓고 exam_question 링크를 안 되돌리면 거짓말로 잡는다", () => {
+    // 그 컬럼에는 FK 가 없다 — 끊겨도 오류가 안 난다. 그래서 표시만 믿으면 안 된다.
+    const src = [
+      "// exam-wiring: 되돌리기 — 되돌린다고 적어만 뒀다",
+      "await prisma.problem.create({ data: {} });",
+    ].join("\n");
+    expect(classifyFile("x.ts", src)[0]?.verdict).toBe("되돌리기·링크없음");
+  });
+
+  it("링크를 실제로 되돌리면 「되돌리기」로 인정한다", () => {
+    const src = [
+      "// exam-wiring: 되돌리기 — 원장 그대로 되살린다",
+      "await prisma.problem.create({ data: {} });",
+      "await prisma.examQuestion.updateMany({ where: {}, data: {} });",
+    ].join("\n");
+    expect(classifyFile("x.ts", src)[0]?.verdict).toBe("되돌리기");
+  });
+
+  it("「되돌리기」는 syncExamMetadata 를 요구하지 않는다 — 편을 다시 지으면 안 된다", () => {
+    const src = [
+      "// exam-wiring: 되돌리기 — 편은 지운 적이 없다",
+      "await prisma.problem.create({ data: {} });",
+      "await prisma.examQuestion.update({ where: {}, data: {} });",
+    ].join("\n");
+    expect(classifyFile("x.ts", src)[0]?.verdict).not.toBe("기출·배선없음");
+  });
+
   it("줄 번호를 호출이 시작한 줄로 낸다", () => {
     const src = [
       "a",
@@ -74,7 +101,10 @@ describe("auditCodePaths — 저장소 전수", () => {
   it("⭐ 기출을 넣는 경로 중 배선 없는 곳이 하나도 없다", () => {
     const sites = auditCodePaths();
     const bad = sites.filter(
-      (s) => s.verdict === "기출·배선없음" || s.verdict === "판단불가",
+      (s) =>
+        s.verdict === "기출·배선없음" ||
+        s.verdict === "되돌리기·링크없음" ||
+        s.verdict === "판단불가",
     );
     expect(bad.map((s) => `${s.file}:${s.line} ${s.verdict}`)).toEqual([]);
   });

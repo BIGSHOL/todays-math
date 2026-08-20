@@ -139,7 +139,9 @@ describe("TestPrint — 인쇄 사고 방지", () => {
     ...PRINT_DOCUMENT,
     problems: [
       PRINT_DOCUMENT.problems[0],
-      { ...PRINT_DOCUMENT.problems[1], content: "가".repeat(600) },
+      // 전각 1,400자 — 추정 570px 로 첫 장 칸(405px)을 확실히 넘는다.
+      // (600자=286px 는 2026-08-20 부터 안 걸린다. 폭이 아니라 **높이**로 판정한다.)
+      { ...PRINT_DOCUMENT.problems[1], content: "가".repeat(1400) },
     ],
   };
 
@@ -147,7 +149,9 @@ describe("TestPrint — 인쇄 사고 방지", () => {
     render(<TestPrint data={longDoc} />);
     const warning = screen.getByRole("status");
     expect(warning).toHaveTextContent("2번");
-    expect(warning).toHaveTextContent("본문이 길다");
+    // 사유는 **손볼 곳**을 가리킨다. 예전의 「본문이 길다」(폭 규칙)는 그림·상자
+    // 사유를 덮기만 했고 실측에서 337건 중 3건만 진짜였다 — 2026-08-20 에 뺐다.
+    expect(warning.textContent).toMatch(/배치가 높다|그림이 크다/);
   });
 
   /**
