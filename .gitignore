@@ -109,6 +109,10 @@ scripts/qa/reports/*
 !scripts/qa/reports/figure-source-mm-apply.json
 # 그림 적용 트랙 단계 0 측정 — 보고서가 인용하는 분모·출제 영향.
 !scripts/qa/reports/figure-apply-stage0.json
+# 300dpi 바꿔치기 계획과 **되돌리기 원장** — 원장에 문항별 figure_dims 의
+# 적용 전/후가 있다. 이게 없으면 치수를 되돌릴 방법이 없다.
+!scripts/qa/reports/figure-swap-plan.json
+!scripts/qa/reports/figure-swap-ledger.json
 # 보기 그림 짝을 못 찾아 **출제에서 뺀** 문항 원장 — 행마다 이전 상태와 사유.
 # 영구 삭제가 아니라 되살릴 수 있어야 하고, 그 근거가 이 파일뿐이다.
 !scripts/qa/reports/choice-figure-discard-lock.json
@@ -159,6 +163,10 @@ scripts/classify/reports/loaded-external-ids.json
 # (다중 세션이 git add -A 로 쓸어 담지 못하게 막는다.)
 public/figures-300/
 public/figures-300-enhanced/
+# 바꿔치기(단계 2)로 밀려난 **옛 파일**의 보관소. git 이 public/figures 를 추적하므로
+# 되돌리기의 진짜 근거는 이력이다 — 이건 곁다리 안전망이라 커밋하지 않는다
+# (커밋하면 같은 그림이 저장소에 두 벌 쌓인다).
+public/figures-backup-300swap/
 
 # RPM 원본 교재 PDF (내려받은 것 — 저장소에 넣지 않는다)
 .rpm-src/
