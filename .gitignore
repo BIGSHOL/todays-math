@@ -235,3 +235,8 @@ scripts/qa/reports/svg-compare/
 scripts/qa/reports/svg-compare-blocked/
 # SVG 채택 차단 목록 — 적용 스크립트가 이걸 읽는다. PNG 시트는 커밋하지 않는다.
 !scripts/qa/reports/svg-blocklist.txt
+
+# 「안티그래비티가 건 결함 9건을 확대해서 대조한 판정」 — **사람이 무엇을 보고
+# 「거짓」이라 했는지**가 여기에만 있다. 이게 없으면 다음 사람이 같은 9건을
+# 다시 확대해서 다시 본다(그림 파일은 재생성되므로 판정만 남기면 된다).
+!scripts/qa/reports/svg-agy-flags-verdict.txt
