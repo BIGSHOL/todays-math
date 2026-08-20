@@ -18,6 +18,7 @@ import {
   FIGURE_URL_COLUMNS,
   brokenRows,
   figureRepoPath,
+  figureRoots,
   presentFilesFromLsTree,
 } from "../../../scripts/qa/checkDeployedFigures";
 
@@ -108,5 +109,50 @@ describe("presentFilesFromLsTree — 배포본에 «실제로 있는» 것만", 
 
   it("빈 줄·머리글은 조용히 흘린다", () => {
     expect(presentFilesFromLsTree("\n\n").size).toBe(0);
+  });
+});
+
+describe("figureRoots — 훑을 뿌리를 **손으로 적지 않는다**", () => {
+  /**
+   * 🔴 이걸 손으로 박아서 실제로 당했다(2026-08-20). pathspec 이
+   *    `public/figures` 하나라 `public/figures-svg/…` 를 git 이 **아예 안 봤고**,
+   *    SVG 로 바꾼 멀쩡한 716문항이 「배포에 없다」로 나왔다.
+   *    git pathspec 은 경로 «조각» 단위다 — 접두사처럼 생겼다고 덮지 않는다.
+   */
+  it("🔴 `/figures-svg/…` 는 `public/figures` 가 **안 덮는** 딴 뿌리다", () => {
+    expect(
+      figureRoots(["/figures/rpm/a/0.png", "/figures-svg/rpm/a/0.svg"]),
+    ).toEqual(["public/figures", "public/figures-svg"]);
+  });
+
+  it("새 뿌리가 생기면 저절로 따라온다 — 다음에 또 눈이 멀지 않게", () => {
+    expect(figureRoots(["/figures-3d/x/0.glb"])).toEqual(["public/figures-3d"]);
+  });
+
+  it("바깥 주소는 뿌리를 만들지 않는다", () => {
+    expect(
+      figureRoots(["https://x/y.png", "data:image/png;base64,AA"]),
+    ).toEqual([]);
+  });
+
+  it("같은 뿌리는 한 번만", () => {
+    expect(figureRoots(["/figures/a/1.png", "/figures/b/2.png"])).toEqual([
+      "public/figures",
+    ]);
+  });
+});
+
+describe("거짓 경보도 결함이다", () => {
+  /**
+   * 밀 때마다 수백 건이 빨갛게 나오면 다음 사람은 훅을 우회한다.
+   * 그때부터 **진짜 결함도 같이 안 보인다** — 침묵하는 가드와 결과가 같다.
+   * 그래서 「있는 파일을 없다고 하지 않는가」를 가드로 못 박는다.
+   */
+  it("🔴 배포본에 있는 SVG 를 «없다»고 하면 안 된다", () => {
+    const present = new Set(["public/figures-svg/rpm/a/0.svg"]);
+    const rows = [
+      { code: "A", figureUrls: ["/figures-svg/rpm/a/0.svg"], ok: true },
+    ];
+    expect(brokenRows(rows, present)).toHaveLength(0);
   });
 });

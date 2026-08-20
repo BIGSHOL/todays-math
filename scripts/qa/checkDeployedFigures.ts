@@ -110,13 +110,40 @@ export function presentFilesFromLsTree(raw: string): Set<string> {
   return files;
 }
 
+/**
+ * **훑을 뿌리 디렉터리를 DB 의 URL 에서 뽑는다.**
+ *
+ * 🔴 여기를 손으로 적으면 안 된다. 처음엔 pathspec 을 `public/figures` 하나로
+ *    박아 뒀는데, SVG 채택이 `/figures-svg/…` 를 쓰기 시작하자 git 이 그 뿌리를
+ *    **아예 안 봐서** 멀쩡한 716문항이 「배포에 없다」로 나왔다(2026-08-20).
+ *    git pathspec 은 경로 «조각» 단위라 `public/figures` 는 `public/figures-svg`
+ *    를 **안 덮는다** — 접두사처럼 생겨서 덮을 것 같지만 아니다.
+ *
+ * 그리고 이 부류는 침묵보다 나쁘다. 밀 때마다 716건이 빨갛게 나오면 다음 사람은
+ * 훅을 우회하고, 그때부터 진짜 결함도 같이 안 보인다. **거짓 경보는 가드를 끈다.**
+ */
+export function figureRoots(urls: Iterable<string>): string[] {
+  const roots = new Set<string>();
+  for (const url of urls) {
+    const repoPath = figureRepoPath(url);
+    if (!repoPath) continue;
+    const seg = repoPath.split("/");
+    if (seg.length >= 2 && seg[1]) roots.add(`${seg[0]}/${seg[1]}`);
+  }
+  return [...roots].sort();
+}
+
 /** git 트리에 실제로 들어 있는 그림 파일(크기 0 제외). */
-export function treeFigureFiles(ref: string): Set<string> {
+export function treeFigureFiles(
+  ref: string,
+  roots: readonly string[],
+): Set<string> {
+  if (roots.length === 0) return new Set();
   let raw: string;
   try {
     raw = execFileSync(
       "git",
-      ["ls-tree", "-r", "-l", "--full-name", ref, "--", "public/figures"],
+      ["ls-tree", "-r", "-l", "--full-name", ref, "--", ...roots],
       { encoding: "utf8", maxBuffer: 1024 * 1024 * 64 },
     );
   } catch {
@@ -162,8 +189,8 @@ export async function assertFigureColumns(prisma: PrismaClient): Promise<void> {
     const col = `"${c.column}"`;
     const sql =
       c.type === "ARRAY"
-        ? `SELECT EXISTS (SELECT 1 FROM ${t}, unnest(${col}) AS v WHERE v LIKE '/figures/%') AS hit`
-        : `SELECT EXISTS (SELECT 1 FROM ${t} WHERE ${col} LIKE '/figures/%') AS hit`;
+        ? `SELECT EXISTS (SELECT 1 FROM ${t}, unnest(${col}) AS v WHERE v LIKE '/figures%') AS hit`
+        : `SELECT EXISTS (SELECT 1 FROM ${t} WHERE ${col} LIKE '/figures%') AS hit`;
     const [row] = (await prisma.$queryRawUnsafe(sql)) as Array<{
       hit: boolean;
     }>;
@@ -195,15 +222,19 @@ async function main(): Promise<void> {
          FROM problem WHERE array_length(figure_urls, 1) > 0`,
     )) as FigureRow[];
 
+    const allUrls = rows.flatMap((r) => r.figureUrls);
+    const roots = figureRoots(allUrls);
     const where = useLocal ? "내 작업 트리" : `배포본(${ref})`;
     const present = useLocal
-      ? localFigureFiles(rows.flatMap((r) => r.figureUrls))
-      : treeFigureFiles(ref);
+      ? localFigureFiles(allUrls)
+      : treeFigureFiles(ref, roots);
     const broken = brokenRows(rows, present);
 
     console.log(
       `그림을 쓰는 문항 ${rows.length.toLocaleString()}건 · 대조 대상 ${where}`,
     );
+    // 무엇을 훑었는지 찍는다 — 뿌리를 놓치면 그 아래가 통째로 «없다»가 된다.
+    console.log(`   훑은 뿌리: ${roots.join(" · ")}`);
     if (broken.length === 0) {
       console.log("✅ 빠진 그림 없음.");
       return;

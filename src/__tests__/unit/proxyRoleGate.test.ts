@@ -38,6 +38,19 @@ function req(method: string, path: string) {
   return new NextRequest(`http://localhost${path}`, { method });
 }
 
+/**
+ * 부르는 자리를 한곳에 모은다.
+ *
+ * `proxy` 의 타입은 Auth.js 가 붙인 것이라 `(req, ctx)` 를 받고 `void` 도 낼 수
+ * 있다고 되어 있다. 여기서는 위의 목이 그 자리를 대신하므로 실제로는 늘
+ * `Response` 다 — 그 좁히기를 **한 군데서만** 한다. 검사마다 캐스팅을 흩뿌리면
+ * 나중에 진짜 `void` 가 새도 아무도 못 본다.
+ */
+async function run(method: string, path: string): Promise<Response> {
+  const call = proxy as unknown as (r: NextRequest) => Promise<Response>;
+  return await call(req(method, path));
+}
+
 beforeEach(() => {
   session.mockReset();
 });
@@ -68,26 +81,26 @@ describe("관문은 하나다", () => {
 describe("역할 게이트 관문", () => {
   it("로그인 안 했으면 여기서 판정하지 않는다 — 각 라우트가 401 을 낸다", async () => {
     session.mockReturnValue(null);
-    const res = await proxy(req("GET", "/api/tests"));
+    const res = await run("GET", "/api/tests");
     expect(res.status).toBe(200);
     expect(res.headers.get("location")).toBeNull();
   });
 
   it("원장은 지나간다", async () => {
     session.mockReturnValue({ user: { id: "u1", role: "director" } });
-    const res = await proxy(req("POST", "/api/tests/generate"));
+    const res = await run("POST", "/api/tests/generate");
     expect(res.status).toBe(200);
   });
 
   it("🔴 role 이 없는 토큰은 원장이다 — 기존 로그인이 잠기면 안 된다", async () => {
     session.mockReturnValue({ user: { id: "u1" } });
-    const res = await proxy(req("POST", "/api/tests/generate"));
+    const res = await run("POST", "/api/tests/generate");
     expect(res.status).toBe(200);
   });
 
   it("🔴 검수 계정이 원장 API 를 부르면 403 **JSON** 이다", async () => {
     session.mockReturnValue({ user: { id: "u2", role: "reviewer" } });
-    const res = await proxy(req("POST", "/api/tests/generate"));
+    const res = await run("POST", "/api/tests/generate");
     expect(res.status).toBe(403);
     expect(res.headers.get("content-type")).toContain("application/json");
     const body = (await res.json()) as { error: { code: string } };
@@ -96,7 +109,7 @@ describe("역할 게이트 관문", () => {
 
   it("🔴 검수 계정이 원장 화면에 들어가면 검수 콘솔로 되돌린다", async () => {
     session.mockReturnValue({ user: { id: "u2", role: "reviewer" } });
-    const res = await proxy(req("GET", "/classes"));
+    const res = await run("GET", "/classes");
     expect(res.status).toBe(307);
     expect(new URL(res.headers.get("location") ?? "").pathname).toBe("/review");
   });
@@ -109,14 +122,14 @@ describe("역할 게이트 관문", () => {
       ["POST", "/api/problems/p1/reports"],
       ["PATCH", "/api/problems/p1/review-status"],
     ] as const) {
-      const res = await proxy(req(m, p));
+      const res = await run(m, p);
       expect(res.status, `${m} ${p}`).toBe(200);
     }
   });
 
   it("되돌릴 때 원래 질의 문자열을 끌고 가지 않는다", async () => {
     session.mockReturnValue({ user: { id: "u2", role: "reviewer" } });
-    const res = await proxy(req("GET", "/tests/new?classId=c1&grade=3"));
+    const res = await run("GET", "/tests/new?classId=c1&grade=3");
     expect(new URL(res.headers.get("location") ?? "").search).toBe("");
   });
 });
