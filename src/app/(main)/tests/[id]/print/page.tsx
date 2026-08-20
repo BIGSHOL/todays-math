@@ -56,6 +56,10 @@ export default async function TestPrintPage({ params }: TestPrintPageProps) {
           // 그림 원본 치수 — 넘침 판정이 그림 높이를 계산하는 유일한 근거다.
           // 판정은 브라우저에서 돌아 이미지 파일을 읽을 수 없다(printOverflow.ts).
           figureDims: item.problem.figureDims,
+          // 원본 지면에서 그 그림이 차지하던 **물리 폭(mm)** — 「얼마로 그린다」의
+          // 유일한 근거다. 비면 «모른다»라 오늘처럼 픽셀로 그린다(회귀 0).
+          // 자(printOverflow)와 지면(ProblemContent)이 같은 함수로 읽는다.
+          figureSourceMm: item.problem.figureSourceMm,
         })),
       }}
     />
