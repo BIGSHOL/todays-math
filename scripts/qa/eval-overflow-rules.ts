@@ -123,6 +123,11 @@ interface Row {
   content: string;
   figureUrls: string[];
   figureDims: number[] | null;
+  /**
+   * 그림 원본 지면 물리 폭(mm). 제품 지면은 이걸로 폭을 못 박으므로 **채점도 같이 봐야
+   * 한다** — 안 보면 판정만 «모른다»로 재서 지면과 갈린다(2026-08-20).
+   */
+  figureSourceMm: number[] | null;
   solution: string | null;
   questionType: string | null;
 }
@@ -178,7 +183,8 @@ async function main() {
   const heights = JSON.parse(readFileSync(heightsPath, "utf8")) as Height[];
   const rows = (await prisma
     .$queryRawUnsafe(
-      `SELECT id, content, figure_urls AS "figureUrls", figure_dims AS "figureDims", solution,
+      `SELECT id, content, figure_urls AS "figureUrls", figure_dims AS "figureDims",
+              figure_source_mm AS "figureSourceMm", solution,
               question_type AS "questionType"
        FROM problem ORDER BY id`,
     )
@@ -186,7 +192,8 @@ async function main() {
       async () =>
         // figure_dims 컬럼이 아직 없는 시점에도 돌아야 한다 (마이그레이션 전 측정).
         (await prisma.$queryRawUnsafe(
-          `SELECT id, content, figure_urls AS "figureUrls", NULL::int[] AS "figureDims", solution,
+          `SELECT id, content, figure_urls AS "figureUrls", NULL::int[] AS "figureDims",
+                NULL::double precision[] AS "figureSourceMm", solution,
                 question_type AS "questionType"
          FROM problem ORDER BY id`,
         )) as Row[],
@@ -315,7 +322,9 @@ async function main() {
     const row = byId.get(h.pid)!;
     const content = row.content ?? "";
     const flat = flatDimsFor(row);
-    const dims = parseFigureDimensions(row.figureUrls.length, flat);
+    // ⚠️ mm 를 같이 넘긴다 — 제품 지면이 폭을 mm 로 못 박기 때문이다.
+    const sourceMm = row.figureSourceMm ?? undefined;
+    const dims = parseFigureDimensions(row.figureUrls.length, flat, sourceMm);
     const problem: TestPrintProblem = {
       id: row.id,
       orderIndex: 0,
@@ -324,6 +333,7 @@ async function main() {
       solution: row.solution,
       figureUrls: row.figureUrls,
       figureDims: flat,
+      figureSourceMm: sourceMm,
     };
     /**
      * 판정이 **장을 보게 된 뒤로**(리뷰 §11-2) 문항 하나만 넘기면 늘 «첫 장 1번»이
