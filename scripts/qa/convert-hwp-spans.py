@@ -154,6 +154,14 @@ def _segment(word: str) -> "list[str] | None":
     # 🔴 어휘 토큰이 하나도 없으면 그냥 변수 이름이다 — 찢지 않는다(`abc`).
     if not any(len(p) >= 2 for p in pieces):
         return None
+    # 🔴 **전부 대문자면 기하 라벨과 구분되지 않는다** — 조각 중에 두 글자 이하가
+    #    있으면 찢지 않는다. `rm COF` 의 `COF` 가 `C`+`OF` 로 찢겨
+    #    `\mathrm{C}OF` 가 나왔다(실측 16자리). 2026-08-18 의 `∠GEF` → `∠\geq F`
+    #    와 같은 부류이고, 그때 쓴 규율도 같다 — **키워드 그 자체일 때만 허용.**
+    #    `LEFTRIGHT` 처럼 조각이 전부 온전한 키워드면 그대로 가른다.
+    #    소문자·섞임은 이 규칙을 안 탄다(`piRIGHT` 는 `\pi \right` 로 갈라야 한다).
+    if word.isupper() and any(len(p) < 3 for p in pieces):
+        return None
     # 홑글자가 셋 이상이면 낱말을 산산조각 낸 것이다 — 그것도 안 한다.
     if lone > 2:
         return None
@@ -178,8 +186,20 @@ def _unglue_vocab(body: str) -> str:
 
     out = _WORD.sub(rep, body)
     # 숫자에 붙은 것(`log2`)은 낱말 규칙이 못 본다 — 토큰 뒤 숫자만 띄운다.
+    #
+    # 🔴 여기는 **두 글자도 뗀다.** 위 `_segment` 가 두 글자를 안 쓰는 이유는
+    #    「낱말 **안**을 가를 때 `in`·`of` 가 멀쩡한 변수 이름을 찢기 때문」이고,
+    #    그 이유는 **숫자 앞에서는 성립하지 않는다** — 낱말 경계에서 토큰 바로
+    #    뒤가 숫자면 가를 자리가 하나뿐이다. 같은 문턱을 물려받았다가
+    #    `ln2`·`ln108` 이 영영 안 갈라졌다(실측 잔재 1위 `ln` 103자리).
+    #    분모가 다르면 같은 숫자가 다른 것을 가리킨다(CLAUDE.md 2026-08-17).
+    #
+    #    전수 실측(본문+해설, 변환 대상 덩어리): 두 글자로 넓혀 새로 걸리는 자리는
+    #    `ln` 120 · `of` 3 · `it` 2 · `RM` 2 · `mu` 1 = 128 이고, 이 중 둘은
+    #    base64 덩어리가 통째로 `$…$` 안에 든 문항 두 개(별건 결함)다.
+    #    나머지는 전부 진짜다(`RM5cm` · `=it4m` · `sqrt4 of4`).
     for t in _GLUE_SORTED:
-        if len(t) < 3:
+        if len(t) < 2:
             continue
         out = re.sub(r"(?<![A-Za-z\\])" + re.escape(t) + r"(?=[0-9])", t + " ", out)
     return out
@@ -234,6 +254,13 @@ PROBE = [
     "piRIGHT )",
     "log2",
     "TRIANGLE ABC",
+    # 🔴 대문자 라벨은 안 찢고(`COF`), 숫자 앞은 두 글자도 뗀다(`ln2`).
+    #    이 둘이 없으면 두 규칙 중 어느 쪽을 뒤집어도 산출물이 그대로다.
+    "rm COF",
+    "triangle rm AOF",
+    "5 ln2",
+    "e ^{ln108} =108",
+    "RM5cm ^{2}",
 ]
 
 

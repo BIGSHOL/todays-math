@@ -51,7 +51,7 @@ async function main(): Promise<void> {
   const 나쁜: Record<string, string[]> = {
     "빈 분수가 늘었다": [],
     "붉은 자리가 늘었다": [],
-    "잔재가 남았다": [],
+    "잔재가 늘었다": [],
   };
   for (const r of l.rows) {
     let bad = false;
@@ -63,8 +63,19 @@ async function main(): Promise<void> {
       나쁜["붉은 자리가 늘었다"]!.push(r.code);
       bad = true;
     }
-    if (residueRuns(r.after).length > 0) {
-      나쁜["잔재가 남았다"]!.push(r.code);
+    /**
+     * 🔴 **「남았나」가 아니라 「늘었나」를 묻는다.**
+     *
+     * 판정 단위를 행 → 덩어리로 옮긴 뒤(2026-08-21), 한 행이 **일부만** 고쳐진
+     * 채 남는 것이 정상이 됐다 — 못 고치는 덩어리는 날 글자 그대로 둔다.
+     * 그런데 이 감사는 「고친 뒤 잔재가 0인가」를 묻고 있었다. 그대로 뒀으면
+     * **멀쩡하게 좋아진 81행을 되돌릴** 뻔했다.
+     *
+     * 감사의 질문은 언제나 **「우리가 나쁘게 만들었나」**다. 분모가 바뀌면 같은
+     * 숫자가 다른 것을 가리킨다(CLAUDE.md 2026-08-17).
+     */
+    if (residueRuns(r.after).length > residueRuns(r.before).length) {
+      나쁜["잔재가 늘었다"]!.push(r.code);
       bad = true;
     }
     if (bad) 되돌릴것.push(r);

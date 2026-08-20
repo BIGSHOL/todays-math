@@ -36,13 +36,11 @@ import path from "node:path";
 
 import { PrismaClient } from "@prisma/client";
 
-import { renderMathHtml } from "../../src/lib/math/renderMathHtml";
 import { isDirectScript } from "../import/isDirectScript";
-import { judgeSpan, residueRuns, scopeOf } from "./solutionHwpScope";
+import { judgeSpan, scopeOf } from "./solutionHwpScope";
+import { MASK_KEY as KEY, spliceAccepted } from "./spanGuards";
 
 const LEDGER = "scripts/qa/reports/solution-hwp-repair.json";
-/** 감출 때 쓰는 사적 영역 열쇠 — 결과에 남으면 변환이 삼킨 것이다. */
-const KEY = /[-]/u;
 
 interface LedgerRow {
   id: string;
@@ -52,22 +50,28 @@ interface LedgerRow {
   spans: number;
 }
 
-const 한글 = (s: string) => (s.match(/[가-힣]/g) ?? []).join("");
 /**
- * 수를 **개수까지** 센다.
+ * 되돌리기 원장을 **누적**한다 — 덮어쓰면 앞 회차를 되돌릴 수 없다.
  *
- * 🔴 집합으로 세면 같은 수가 또 있을 때 손실이 구조적으로 안 보인다 —
- *    `\frac{1}{2}+\frac{1}{2}` 에서 하나가 사라져도 집합은 그대로다.
+ * 🔴 이 스크립트는 이미 4,562행을 바꿔 놓았다. 두 번째 판이 원장을 통째로
+ *    쓰면 그 4,562행의 되돌리기 자료가 **사라진다** — `--revert` 는 이 파일
+ *    **하나만** 읽고 돌기 때문이다(CLAUDE.md 2026-08-20).
+ *
+ * 같은 문항이 두 번 나오면 **처음의 `before`** 와 **마지막의 `after`** 를 남긴다.
+ * 마지막 `before` 를 쓰면 1차가 만든 값으로 되돌아가 「되돌렸다고 하면서
+ * 아무것도 안 되돌린 것」이 된다.
  */
-const 수 = (s: string): Map<string, number> => {
-  const m = new Map<string, number>();
-  for (const n of s.match(/\d+/g) ?? []) m.set(n, (m.get(n) ?? 0) + 1);
-  return m;
-};
-const 붉은가 = (s: string) => {
-  const html = renderMathHtml(s);
-  return html.includes("katex-error") || html.includes("#cc0000");
-};
+export function mergeLedgerRows(
+  prev: readonly LedgerRow[],
+  next: readonly LedgerRow[],
+): LedgerRow[] {
+  const byId = new Map<string, LedgerRow>(prev.map((r) => [r.id, r]));
+  for (const r of next) {
+    const old = byId.get(r.id);
+    byId.set(r.id, old ? { ...r, before: old.before } : r);
+  }
+  return [...byId.values()];
+}
 
 /** 파이썬 정본 변환기를 **한 번에** 부른다 — 행마다 부르면 기동 비용이 지배한다. */
 function convertSpans(bodies: string[]): (string | null)[] {
@@ -175,92 +179,65 @@ async function main(): Promise<void> {
       perRow.set(p.row, a);
     });
 
+    /**
+     * 🔴 **판정 단위는 «행» 이 아니라 «덩어리» 다.**
+     *
+     * 처음엔 행 단위였다. 그러면 덩어리 하나가 걸릴 때 **그 행의 멀쩡한
+     * 덩어리 전부가 같이 버려진다** — 실측으로 107행이 그렇게 버려졌고,
+     * 그 안에 「변환 대상인데 안 고쳐진」 문항이 102개였다.
+     * 못 바꾸는 덩어리는 원래 글자 그대로 두면 되므로 **잃는 것이 없다.**
+     */
+    let 버린덩어리 = 0;
+    let 바꾼덩어리 = 0;
     for (const [ri, ps] of perRow) {
       const r = rows[ri]!;
       const before = r.solution ?? "";
-      let after = before;
-      let ok = true;
-      // 뒤에서부터 갈아 끼워야 앞 자리 오프셋이 안 흔들린다.
-      for (const p of [...ps].sort((a, b) => b.start - a.start)) {
-        const outBody = (p as Piece & { out?: string | null }).out;
-        if (outBody == null) {
-          ok = false;
-          break;
-        }
-        after =
-          after.slice(0, p.start) + "$" + outBody + "$" + after.slice(p.end);
+      const { after, 바꾼수, 버림 } = spliceAccepted(
+        before,
+        ps.map((p) => ({
+          start: p.start,
+          end: p.end,
+          body: p.body,
+          out: (p as Piece & { out?: string | null }).out ?? null,
+        })),
+      );
+      for (const b of 버림) {
+        버린이유[b.why] = (버린이유[b.why] ?? 0) + 1;
+        버린덩어리++;
+        b.남은?.forEach((k) => (남은키워드[k] = (남은키워드[k] ?? 0) + 1));
       }
-      const 버린다 = (why: string) => {
-        버린이유[why] = (버린이유[why] ?? 0) + 1;
-      };
-      if (!ok) {
-        버린다("변환 실패");
-        continue;
+      if (표본.length < SAMPLE && 바꾼수 > 0) {
+        const p = ps.find(
+          (q) => (q as Piece & { out?: string | null }).out != null,
+        );
+        if (p)
+          표본.push(
+            `${r.problemCode}\n     전 ${p.body.replace(/\s+/g, " ").slice(0, 110)}` +
+              `\n     후 ${String((p as Piece & { out?: string }).out)
+                .replace(/\s+/g, " ")
+                .slice(0, 110)}`,
+          );
       }
-      if (after === before) {
-        버린다("바뀐 것 없음");
-        continue;
-      }
+      if (바꾼수 === 0) continue;
+      바꾼덩어리 += 바꾼수;
+      // 마지막 그물 — 덩어리를 갈아 끼우다 열쇠가 새면 그 행은 통째로 버린다.
       if (KEY.test(after)) {
-        버린다("🔴 감춘 열쇠가 남았다");
+        버린이유["🔴 행에 감춘 열쇠가 남았다"] =
+          (버린이유["🔴 행에 감춘 열쇠가 남았다"] ?? 0) + 1;
         continue;
       }
-      if (한글(after) !== 한글(before)) {
-        버린다("🔴 한글이 달라졌다");
-        continue;
-      }
-      const 후수 = 수(after);
-      for (const [n, c] of 수(before))
-        if ((후수.get(n) ?? 0) < c) {
-          ok = false;
-          break;
-        }
-      if (!ok) {
-        버린다("🔴 수를 잃었다");
-        continue;
-      }
-      // 🔴 결과 검사는 `scopeOf` 가 아니라 `residueRuns` 다 — `scopeOf` 의
-      //    「역슬래시가 있으면 LaTeX」 규칙을 결과에 대면 **구조적으로 0**이 된다.
-      const 남은 = residueRuns(after);
-      if (남은.length > 0) {
-        남은.forEach((k) => (남은키워드[k] = (남은키워드[k] ?? 0) + 1));
-        버린다("잔재가 남았다");
-        continue;
-      }
-      // 🔴 빈 분수가 **새로 생기면** 변환이 인자를 삼킨 것이다 —
-      //    `LE pi over` 처럼 끝이 잘린 조각에서 실제로 `\\frac{\\pi}{}` 가 나온다.
-      //    지면은 이제 그것을 □ 로 그리므로 조용하지 않지만, 애초에 안 만드는 게 낫다.
-      const 빈분수 = (s: string) =>
-        (s.match(/\\frac\{[^{}]*\}\{\}|\\frac\{\}/g) ?? []).length;
-      if (빈분수(after) > 빈분수(before)) {
-        버린다("🔴 빈 분수가 생겼다");
-        continue;
-      }
-      if (붉은가(after) && !붉은가(before)) {
-        버린다("🔴 붉어졌다");
-        continue;
-      }
-
       ledger.push({
         id: r.id,
         code: r.problemCode,
         before,
         after,
-        spans: ps.length,
+        spans: 바꾼수,
       });
-      if (표본.length < SAMPLE) {
-        const p = ps[0]!;
-        표본.push(
-          `${r.problemCode}\n     전 ${p.body.replace(/\s+/g, " ").slice(0, 110)}` +
-            `\n     후 ${String((p as Piece & { out?: string }).out)
-              .replace(/\s+/g, " ")
-              .slice(0, 110)}`,
-        );
-      }
     }
 
     console.log(
-      `  🔴 고칠 문항 ${ledger.length.toLocaleString()} · 버린 행 ${(perRow.size - ledger.length).toLocaleString()}`,
+      `  🔴 고칠 문항 ${ledger.length.toLocaleString()} / 후보 행 ${perRow.size.toLocaleString()}` +
+        ` · 바꾼 덩어리 ${바꾼덩어리.toLocaleString()} · 버린 덩어리 ${버린덩어리.toLocaleString()}`,
     );
     for (const [k, v] of Object.entries(버린이유).sort((a, b) => b[1] - a[1]))
       console.log(`     ${k}: ${v}`);
@@ -279,17 +256,29 @@ async function main(): Promise<void> {
     }
     if (ledger.length === 0) return;
 
+    // 🔴 **누적**한다. 이 판의 계획만 쓰면 앞 회차를 못 되돌린다.
+    const 옛행: LedgerRow[] = existsSync(LEDGER)
+      ? ((JSON.parse(readFileSync(LEDGER, "utf-8")) as { rows?: LedgerRow[] })
+          .rows ?? [])
+      : [];
+    const merged = mergeLedgerRows(옛행, ledger);
+    if (merged.length < 옛행.length) {
+      console.error(
+        `🔴 원장이 줄어든다 (${옛행.length} → ${merged.length}) — 멈춘다.`,
+      );
+      process.exit(1);
+    }
     mkdirSync(path.dirname(LEDGER), { recursive: true });
     writeFileSync(
       LEDGER,
       JSON.stringify(
         {
           note:
-            "되돌리기 자료. before 가 고치기 전 값이다. " +
+            "되돌리기 자료. before 가 **처음** 고치기 전 값이다(회차를 누적한다). " +
             "되돌리기: ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/repair-solution-hwp.ts --revert --apply",
           변환기:
             "testchanger/core/hwpeq_to_latex.py (+ scripts/qa/convert-hwp-spans.py 의 구멍 막기)",
-          rows: ledger,
+          rows: merged,
         },
         null,
         1,
@@ -297,7 +286,7 @@ async function main(): Promise<void> {
       "utf-8",
     );
     console.log(
-      `\n되돌리기 원장 → ${LEDGER} (${ledger.length}행) — DB 보다 먼저 썼다`,
+      `\n되돌리기 원장 → ${LEDGER} (이번 ${ledger.length}행 · 이어받은 ${merged.length - ledger.length}행 · 합 ${merged.length}행) — DB 보다 먼저 썼다`,
     );
 
     let n = 0;

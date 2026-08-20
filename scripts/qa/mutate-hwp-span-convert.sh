@@ -58,4 +58,26 @@ io.open(p, "w", encoding="utf-8").write(s.replace(old, "    out = body  # 변이
 PY
 run "어휘 떼어내기 끄기"
 
+# ④ 「전부 대문자면 안 찢는다」를 뺀다 → `rm COF` 가 `\mathrm{C}OF` 가 되어야 한다
+python - "$F" <<'PY'
+import io, sys
+p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
+old = "    if word.isupper() and any(len(p) < 3 for p in pieces):"
+assert old in s, "앵커 없음"
+io.open(p, "w", encoding="utf-8").write(
+    s.replace(old, "    if False and any(len(p) < 3 for p in pieces):  # 변이", 1)
+)
+PY
+run "대문자 라벨 보호 제거"
+
+# ⑤ 숫자 앞 떼기를 다시 「세 글자 이상」으로 → `ln2` 가 안 갈라져야 한다
+python - "$F" <<'PY'
+import io, sys
+p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
+old = "        if len(t) < 2:"
+assert old in s, "앵커 없음"
+io.open(p, "w", encoding="utf-8").write(s.replace(old, "        if len(t) < 3:  # 변이", 1))
+PY
+run "숫자 앞 두 글자 떼기 제거"
+
 cmp -s "$F" "$BAK" && echo "원본 복구 확인 ok" || echo "🔴 복구 실패 — $BAK 를 보라"
