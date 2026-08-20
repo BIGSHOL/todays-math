@@ -61,6 +61,17 @@ export type Adoption =
 export function decideAdoption(
   slots: readonly FigureSlot[],
   blocklist: ReadonlySet<string> = new Set(),
+  /**
+   * 주어지면 **이 목록에 있는 자리만** 채택한다. 빈 집합은 「아무것도 안 본다」는
+   * 뜻이지 「목록이 없다」가 아니다 — 목록이 없으면 `undefined` 다.
+   *
+   * 🔴 왜 뒤집었나: 전량 검수가 중간에 끊겼다. 그때 「결함만 뺀다」로 두면
+   *    **안 본 자리가 조용히 들어온다.** 안 본 자리에 무엇이 있는지는 정의상
+   *    모르고, 실제로 본 구간에서 「전혀 다른 그림」이 나왔다 — 수치 가드를
+   *    전부 통과한 채로. 그러니 「못 본 것」은 결함이 아니라 **아직 근거가
+   *    없는 것**이고, 근거 없이 지면에 내보내지 않는다.
+   */
+  whitelist?: ReadonlySet<string>,
 ): Adoption {
   if (slots.length === 0) return { ok: false, why: "그림이 없다" };
   const urls: string[] = [];
@@ -69,6 +80,8 @@ export function decideAdoption(
     if (!s.svgExists) return { ok: false, why: `SVG 가 없다: ${s.url}` };
     if (blocklist.has(s.svgPath))
       return { ok: false, why: `검수에서 결함으로 판정됐다: ${s.svgPath}` };
+    if (whitelist && !whitelist.has(s.svgPath))
+      return { ok: false, why: `눈으로 안 본 자리다: ${s.svgPath}` };
     if (s.sourceMm == null || !(s.sourceMm > 0))
       return {
         ok: false,
@@ -79,7 +92,15 @@ export function decideAdoption(
     if (!s.svgViewBox || !(s.svgViewBox[0] > 0) || !(s.svgViewBox[1] > 0))
       return { ok: false, why: `viewBox 를 못 읽는다: ${s.svgPath}` };
     const rRas = s.rasterDims[0] / s.rasterDims[1];
-    const rSvg = s.svgViewBox[0] / s.svgViewBox[1];
+    // 🔴 **저장할 값**으로 잰다. `figure_dims` 는 Int[] 라 반올림해서 들어가는데,
+    //    viewBox 가 74×29 처럼 작으면 반올림만으로 비율이 3% 흔들린다. 반올림 전
+    //    값으로 재면 「2% 안」이라는 보장이 지면에서는 거짓이 된다 — 세는 쪽과
+    //    쓰는 쪽이 다른 값을 보는 그 자리다.
+    const w = Math.round(s.svgViewBox[0]);
+    const h = Math.round(s.svgViewBox[1]);
+    if (!(w > 0) || !(h > 0))
+      return { ok: false, why: `반올림하면 0 이 된다: ${s.svgPath}` };
+    const rSvg = w / h;
     const diff = Math.abs(rSvg - rRas) / rRas;
     if (diff > RATIO_TOLERANCE)
       return {
@@ -89,9 +110,28 @@ export function decideAdoption(
     urls.push(s.svgUrl);
     // 치수는 **SVG 의 viewBox** 에서 온다. 래스터 치수를 그대로 두면 자는 래스터
     // 비율로 재고 브라우저는 SVG 비율로 그려 **높이가 갈라진다.**
-    dims.push(Math.round(s.svgViewBox[0]), Math.round(s.svgViewBox[1]));
+    dims.push(w, h);
   }
   return { ok: true, urls, dims };
+}
+
+/**
+ * 경로 목록 파일을 읽는다 — 차단 목록·허용 목록이 **같은 함수**를 쓴다.
+ *
+ * 🔴 줄 끝 주석(`경로  # 1390`)을 반드시 떼야 한다. 안 떼면 그 줄은 어떤
+ *    경로와도 안 맞아 **가드가 조용히 안 먹는다** — 차단 목록이었으면
+ *    결함 SVG 가 그대로 지면에 나간다(에러가 아니라 숫자만 달라진다).
+ *    실제로 허용 목록에서 「바꿀 것 0」으로 드러났다.
+ */
+export function readPathList(text: string): Set<string> {
+  const BSLASH = String.fromCharCode(92);
+  const out = new Set<string>();
+  for (const line of text.split(/[\r\n]+/)) {
+    const t = line.replace(/[ \t]+#.*$/, "").trim();
+    if (!t || t.startsWith("#")) continue;
+    out.add(t.split(BSLASH).join("/"));
+  }
+  return out;
 }
 
 /** SVG 머리에서 `viewBox` 만 읽는다 (파일 전체를 파싱하지 않는다). */
@@ -116,6 +156,10 @@ const REVERT = process.argv.includes("--revert");
 const BLOCKFILE = process.argv
   .find((a) => a.startsWith("--blocklist="))
   ?.slice("--blocklist=".length);
+/** 주면 **이 목록에 있는 자리만** 채택한다 (눈으로 본 것만). */
+const ALLOWFILE = process.argv
+  .find((a) => a.startsWith("--whitelist="))
+  ?.slice("--whitelist=".length);
 
 if ((APPLY || REVERT) && process.env.ALLOW_SHARED_IMPORT !== "1") {
   console.error(
@@ -142,16 +186,32 @@ async function main() {
       console.error(`차단 목록이 없다: ${BLOCKFILE}`);
       process.exit(1);
     }
-    for (const line of readFileSync(BLOCKFILE, "utf-8").split(/\r?\n/)) {
-      const t = line.trim();
-      if (t && !t.startsWith("#")) blocklist.add(t.replace(/\\/g, "/"));
-    }
+    for (const v of readPathList(readFileSync(BLOCKFILE, "utf-8")))
+      blocklist.add(v);
   }
   console.log(
     BLOCKFILE
       ? `검수 차단 목록 ${blocklist.size}장 (${BLOCKFILE})`
       : "🔴 검수 차단 목록이 **없다** — 눈으로 본 판정 없이 도는 중이다.",
   );
+
+  // 허용 목록: 있으면 「본 것만」. `undefined` 여야 «목록 없음» 이다 —
+  // 빈 Set 은 「아무것도 안 본다」는 뜻이라 전량이 막힌다.
+  let whitelist: Set<string> | undefined;
+  if (ALLOWFILE) {
+    if (!existsSync(ALLOWFILE)) {
+      console.error(`허용 목록이 없다: ${ALLOWFILE}`);
+      process.exit(1);
+    }
+    whitelist = readPathList(readFileSync(ALLOWFILE, "utf-8"));
+    if (whitelist.size === 0) {
+      console.error(`🔴 허용 목록이 비었다: ${ALLOWFILE} — 전량이 막힌다.`);
+      process.exit(1);
+    }
+    console.log(
+      `검수 허용 목록 ${whitelist.size}장 (${ALLOWFILE}) — 이 밖은 안 바꾼다`,
+    );
+  }
 
   const probs = await prisma.problem.findMany({
     where: { figureUrls: { isEmpty: false } },
@@ -187,7 +247,7 @@ async function main() {
         sourceMm: p.figureSourceMm?.[i] ?? null,
       };
     });
-    const d = decideAdoption(slots, blocklist);
+    const d = decideAdoption(slots, blocklist, whitelist);
     if (!d.ok) {
       const k = d.why.split(":")[0]!.split("(")[0]!.trim();
       why.set(k, (why.get(k) ?? 0) + 1);
@@ -219,16 +279,16 @@ async function main() {
 
   if (!APPLY) {
     console.log("\n드라이런이다 — DB 를 한 건도 안 바꿨다.");
-    if (!BLOCKFILE)
+    if (!BLOCKFILE && !ALLOWFILE)
       console.log(
-        "🔴 적용하기 전에 **눈으로 본 검수 결과**(--blocklist)를 반드시 넣어라.",
+        "🔴 적용하기 전에 **눈으로 본 검수 결과**(--blocklist 또는 --whitelist)를 반드시 넣어라.",
       );
     await prisma.$disconnect();
     return;
   }
-  if (!BLOCKFILE) {
+  if (!BLOCKFILE && !ALLOWFILE) {
     console.error(
-      "🔴 --blocklist 없이 적용할 수 없다. 수치 검사는 획·글자가 빠진 SVG 를 구조적으로 못 본다.",
+      "🔴 --blocklist 도 --whitelist 도 없이 적용할 수 없다. 수치 검사는 획·글자가 빠진 SVG 를 구조적으로 못 본다.",
     );
     process.exit(1);
   }
@@ -243,6 +303,7 @@ async function main() {
           "되돌리기 자료. before* 가 적용 전 값이다. " +
           "되돌리기: ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/adopt-figure-svg.ts --revert --apply",
         blocklist: BLOCKFILE,
+        whitelist: ALLOWFILE,
         applied: false,
         rows,
       },

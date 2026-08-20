@@ -14,6 +14,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   decideAdoption,
+  readPathList,
   type FigureSlot,
 } from "../../../scripts/qa/adopt-figure-svg";
 
@@ -111,5 +112,95 @@ describe("SVG 로 갈아 끼울지 정하기", () => {
   it("그림이 없는 문항은 바꿀 것이 없다", () => {
     const d = decideAdoption([]);
     expect(d.ok).toBe(false);
+  });
+});
+
+describe("눈으로 본 것만 채택한다 (허용 목록)", () => {
+  // 🔴 왜 필요한가: 전량 검수가 **중간에 끊겼다**(계정 세션 한도). 그때
+  //    「결함만 빼고 나머지 다 채택」이면 **안 본 자리가 같이 들어간다.**
+  //    안 본 자리에 무엇이 있는지는 정의상 모른다 — 실제로 눈으로 본 구간에서
+  //    「전혀 다른 그림」이 나왔고, 그건 수치 가드를 전부 통과했다.
+  //    그래서 판정을 뒤집는다: **본 것만 들어온다.**
+  it("허용 목록을 주면 그 목록에 없는 자리는 안 바꾼다", () => {
+    const s = slot();
+    const d = decideAdoption([s], new Set(), new Set());
+    expect(d.ok).toBe(false);
+    if (!d.ok) expect(d.why).toContain("눈으로 안 본");
+  });
+
+  it("허용 목록에 있으면 바꾼다", () => {
+    const s = slot();
+    const d = decideAdoption([s], new Set(), new Set([s.svgPath]));
+    expect(d.ok).toBe(true);
+  });
+
+  it("한 자리만 목록에 있으면 통째로 안 바꾼다 — 절반만 바꾸면 짝이 어긋난다", () => {
+    const a = slot();
+    const b = slot({ svgPath: "public/figures-svg/1111/q07.svg" });
+    const d = decideAdoption([a, b], new Set(), new Set([a.svgPath]));
+    expect(d.ok).toBe(false);
+  });
+
+  it("허용 목록을 안 주면 예전대로 — 전부 후보다", () => {
+    expect(decideAdoption([slot()]).ok).toBe(true);
+  });
+
+  it("허용 목록에 있어도 결함 판정이면 막는다 — 본 결과가 「결함」이었다", () => {
+    const s = slot();
+    const d = decideAdoption([s], new Set([s.svgPath]), new Set([s.svgPath]));
+    expect(d.ok).toBe(false);
+    if (!d.ok) expect(d.why).toContain("결함");
+  });
+});
+
+describe("목록 파일 읽기 — 차단·허용이 같은 함수를 쓴다", () => {
+  // 🔴 이 결함은 실제로 났다: 줄 끝 주석을 안 떼서 어떤 경로와도 안 맞았고,
+  //    「바꿀 것 0」으로만 드러났다. 차단 목록이었으면 **에러 없이** 결함 SVG 가
+  //    지면에 나간다 — 숫자만 조용히 달라진다.
+  it("줄 끝 주석을 뗀다", () => {
+    const got = readPathList("public/figures-svg/4208/q23_2.svg  # 1390");
+    expect([...got]).toEqual(["public/figures-svg/4208/q23_2.svg"]);
+  });
+
+  it("온줄 주석과 빈 줄은 버린다", () => {
+    const NL = String.fromCharCode(10);
+    const got = readPathList(
+      ["# 머리말", "", "public/a.svg", "   ", "# 꼬리", ""].join(NL),
+    );
+    expect([...got]).toEqual(["public/a.svg"]);
+  });
+
+  it("역슬래시 경로를 슬래시로 맞춘다 — 윈도우에서 만든 목록이 섞인다", () => {
+    const bs = String.fromCharCode(92);
+    const got = readPathList(["public", "figures-svg", "b.svg"].join(bs));
+    expect([...got]).toEqual(["public/figures-svg/b.svg"]);
+  });
+
+  it("경로 안의 # 는 안 건드린다 — 앞에 공백이 있어야 주석이다", () => {
+    expect([...readPathList("public/fig#1/a.svg")]).toEqual([
+      "public/fig#1/a.svg",
+    ]);
+  });
+});
+
+describe("가드는 **저장할 값**을 본다 (반올림 뒤 비율)", () => {
+  // 🔴 실제로 났다: 가드는 반올림 **전** viewBox 비율을 재고, 지면은 반올림
+  //    **후** `figureDims` 를 쓴다. viewBox 가 74×29 처럼 작으면 반올림만으로
+  //    비율이 3% 흔들려 «2% 안»이라는 보장이 거짓이 된다.
+  //    세는 쪽과 쓰는 쪽이 다른 값을 보면 그 지표는 아무것도 보장하지 않는다.
+  it("반올림 전엔 맞고 반올림 뒤 어긋나면 안 바꾼다", () => {
+    const d = decideAdoption([
+      slot({ rasterDims: [100, 40], svgViewBox: [7.4, 2.96] }),
+    ]);
+    expect(d.ok).toBe(false);
+    if (!d.ok) expect(d.why).toContain("비율이 어긋난다");
+  });
+
+  it("반올림해도 2% 안이면 바꾼다", () => {
+    const d = decideAdoption([
+      slot({ rasterDims: [1000, 400], svgViewBox: [750.4, 300.2] }),
+    ]);
+    expect(d.ok).toBe(true);
+    if (d.ok) expect(d.dims).toEqual([750, 300]);
   });
 });

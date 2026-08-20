@@ -115,6 +115,9 @@ scripts/qa/reports/*
 !scripts/qa/reports/figure-swap-ledger.json
 # SVG 채택 되돌리기 원장 — figureUrls 의 **옛 경로**가 여기에만 있다.
 !scripts/qa/reports/figure-svg-adopt.json
+# 단계 3 허용 목록 — 「눈으로 본 시트」가 여기 적혀 있다. 이게 없으면 무엇을
+# 근거로 채택했는지 다음 사람이 못 센다.
+!scripts/qa/reports/svg-whitelist.txt
 # 보기 그림 짝을 못 찾아 **출제에서 뺀** 문항 원장 — 행마다 이전 상태와 사유.
 # 영구 삭제가 아니라 되살릴 수 있어야 하고, 그 근거가 이 파일뿐이다.
 !scripts/qa/reports/choice-figure-discard-lock.json
