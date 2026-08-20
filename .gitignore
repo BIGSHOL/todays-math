@@ -205,3 +205,5 @@ public/figures-backup-300swap/
 # (칸 그림 `rpm-stem-sheet/` 9MB 는 재생성 가능하므로 안 넣는다.)
 !scripts/qa/reports/rpm-stem-sheet-decision.json
 !scripts/qa/reports/rpm-stem-sheet.json
+scripts/qa/reports/svg-compare/
+scripts/qa/reports/svg-compare-blocked/
