@@ -77,6 +77,43 @@ enum ProblemPool {
   @@map("problem_pool")
 }
 
+/// 신고 사유. **기계 키**다 — 한글 문구를 키로 쓰면 문구를 다듬는 순간 지난 기록이 갈라진다.
+enum ReportReason {
+  figure // 그림이 이상하다
+  content // 문제가 이상하다
+  answer // 답이 틀렸다
+  solution // 해설이 없다·틀렸다
+  unit // 단원이 틀렸다
+  other // 기타 — 설명이 있어야 받는다
+
+  @@map("report_reason")
+}
+
+enum ReportStatus {
+  open
+  resolved
+  dismissed
+
+  @@map("report_status")
+}
+
+/// 해설이 어디서 왔나. `original` 과 `ai` 를 **반드시** 갈라 둔다 —
+/// 안 갈라 두면 틀린 AI 해설이 「원래 그랬던 것」이 된다.
+enum SolutionSource {
+  none // 해설이 없다
+  original // 원본에 있던 것(교재·기출·자작)
+  ai // 우리가 AI 로 만들었다
+
+  @@map("solution_source")
+}
+
+enum UserRole {
+  director // 원장 — 지금까지의 모든 계정
+  reviewer // 검수 전용 — 문제은행을 보고 신고만 한다
+
+  @@map("user_role")
+}
+
 // ─────────────────────────────────────────────
 // FEAT-0: 사용자 (강사) — 04 §2.1
 // ─────────────────────────────────────────────
@@ -103,6 +140,11 @@ model User {
   predictionRuns PredictionRun[]
   accounts       Account[]
   sessions       Session[]
+
+  /// 계정 역할. 기본값은 director — 기본값이 reviewer 면 기존 계정이 조용히 권한을 잃는다.
+  role            UserRole        @default(director)
+  reportsFiled    ProblemReport[] @relation("reporter")
+  reportsResolved ProblemReport[] @relation("resolver")
 
   @@map("user")
 }
@@ -343,6 +385,11 @@ model Problem {
   @@index([unitId, createdAt(sort: Desc), id(sort: Desc)])
   // 검수 대기 목록 — reviewStatus 로 좁힌 뒤 최신순.
   @@index([reviewStatus, createdAt(sort: Desc)])
+  /// 해설 출처. AI 가 만든 해설은 사람이 「이 해설 쓴다」를 누르기 전까지
+  /// `solution` 에 넣지 않는다(D-22 와 같은 결).
+  solutionSource SolutionSource  @default(none) @map("solution_source")
+  reports        ProblemReport[]
+
   @@map("problem")
 }
 
@@ -764,4 +811,35 @@ model ExamScope {
 
   @@unique([school, level, grade, subject, year, semester, round])
   @@map("exam_scope")
+}
+
+
+/// 문항 신고 — 쓰다가 이상하면 누른 기록.
+///
+/// 문항 47,049건은 전량 검수가 불가능하므로(한 문항 10초로도 131시간) 이것이
+/// **마지막 안전망**이자 다음 검수의 대기열이다.
+///
+/// ⚠️ 신고는 문항을 **바꾸지 않는다.** `directUseAllowed` 를 신고가 직접 건드리면
+///    오신고 한 건이 멀쩡한 문항을 지면에서 지운다. 빼는 것은 사람이 따로 결정한다.
+model ProblemReport {
+  id             String       @id @default(uuid()) @db.Uuid
+  problemId      String       @map("problem_id") @db.Uuid
+  /// 신고자가 탈퇴해도 **기록은 남는다** — 지우면 「몇 건이 있었나」가 거짓이 된다.
+  reporterId     String?      @map("reporter_id") @db.Uuid
+  reason         ReportReason
+  note           String?
+  status         ReportStatus @default(open)
+  /// 「왜 그대로 두는가」가 여기 남아야 같은 신고가 또 안 온다.
+  resolutionNote String?      @map("resolution_note")
+  resolvedAt     DateTime?    @map("resolved_at") @db.Timestamptz(6)
+  resolvedById   String?      @map("resolved_by") @db.Uuid
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  problem    Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  reporter   User?   @relation("reporter", fields: [reporterId], references: [id], onDelete: SetNull)
+  resolvedBy User?   @relation("resolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt(sort: Desc)])
+  @@index([problemId])
+  @@map("problem_report")
 }
