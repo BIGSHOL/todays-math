@@ -326,22 +326,82 @@ function WireB({ rows, counts }: { rows: Row[]; counts: Counts }) {
 }
 
 /* ── C. 격자 대조 ───────────────────────────────────────────── */
+/**
+ * 🔴 1차 시안에서 칸을 `max-h-56` 으로 **잘라** 놨더니 원장님이 바로 짚으셨다 —
+ *    「아래쪽 문제가 짤리는 것 같고, 안 짤리면 생각해볼만함」.
+ *    잘리는 것은 격자의 성질이 아니라 **내가 자른 것**이다. 그래서 안 자르고
+ *    세우고, 「안 자르면 한 화면에 몇 개가 들어가나」를 **재서** 보여 준다.
+ */
 function WireC({ rows, counts }: { rows: Row[]; counts: Counts }) {
+  const [clip, setClip] = useState(false);
+  const [cols, setCols] = useState(3);
+  const colClass =
+    cols === 2
+      ? "md:grid-cols-2"
+      : cols === 3
+        ? "md:grid-cols-3"
+        : "md:grid-cols-4";
   return (
     <div>
+      <div className="mb-3 flex flex-wrap items-center gap-3 text-sm">
+        <label className="flex cursor-pointer items-center gap-1.5">
+          <input
+            type="checkbox"
+            checked={clip}
+            onChange={(e) => setClip(e.target.checked)}
+            className="cursor-pointer"
+          />
+          칸 높이를 자른다
+        </label>
+        <span className="text-text-2">칸 수</span>
+        {[2, 3, 4].map((c) => (
+          <button
+            key={c}
+            type="button"
+            onClick={() => setCols(c)}
+            aria-pressed={cols === c}
+            className={
+              "cursor-pointer rounded border px-2 py-1 " +
+              (cols === c
+                ? "border-ink bg-ink text-white"
+                : "border-control bg-surface hover:bg-side")
+            }
+          >
+            {c}
+          </button>
+        ))}
+        <span className="text-text-2">
+          {clip
+            ? "자르면 한눈에 많이 들어오지만 아래쪽 보기·정답이 사라진다"
+            : "안 자르면 문항이 통째로 보이는 대신 칸 높이가 들쭉날쭉해진다"}
+        </span>
+      </div>
       <p className="mb-3 text-sm text-text-2">
-        한 화면에 12개. {n(counts.total)}문항이면{" "}
-        {n(Math.ceil(counts.total / 12))}화면. 튀는 것만 눌러서 크게 본다.
+        전체 {n(counts.total)}문항. 아래는 실제 문항 {rows.length}개를 그린
+        것이다 —
+        <strong className="text-ink">
+          {" "}
+          화면 하나에 몇 개가 들어가는지 직접 세어 보시라.
+        </strong>
       </p>
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
-        {rows.slice(0, 12).map((r) => (
+      <div className={"grid grid-cols-1 gap-3 " + colClass}>
+        {rows.map((r) => (
           <div
             key={r.id}
-            className="rounded border border-divider bg-surface p-2"
+            data-card="1"
+            className="flex min-w-0 flex-col rounded border border-divider bg-surface p-2"
           >
             <Badges r={r} />
-            <div className="mt-1 max-h-56 overflow-hidden text-[11px]">
+            <div
+              className={
+                "mt-1 min-w-0 text-[12px] " +
+                (clip ? "max-h-56 overflow-hidden" : "overflow-x-auto")
+              }
+            >
               <Problem r={r} />
+              <p className="mt-2 border-t border-divider pt-1 text-text-2">
+                정답 {r.answer}
+              </p>
             </div>
             <div className="mt-2 flex gap-1.5">
               <button
@@ -364,30 +424,102 @@ function WireC({ rows, counts }: { rows: Row[]; counts: Counts }) {
   );
 }
 
-/* ── D. 지면 그대로 ─────────────────────────────────────────── */
+/* ── D. 단 흐름 ─────────────────────────────────────────────── */
+/**
+ * 🔴 원장님 지적 둘을 다 고친 자리다.
+ *
+ * ⑴ 「너무 구분이 없어서 정신없을 것 같다」 — 맞다. 시험지는 **학생이 순서대로
+ *    푸는** 지면이라 구분이 약해도 되지만, 검수는 **한 문항씩 판정**하는 일이라
+ *    경계가 있어야 한다. 구분을 켜고 끌 수 있게 두고 켠 쪽을 기본으로 한다.
+ *
+ * ⑵ CSS 다단(`columns`)으로 그렸더니 **4단에서 칸이 서로 겹쳤다.** 칸이 단 높이보다
+ *    크면 `break-inside-avoid` 를 지킬 수 없어 넘쳐 나온 것이다. 그래서 다단을
+ *    버리고 **단을 명시적으로 나눈다** — 겹칠 수가 없다.
+ *    (측정으로만 드러났다. 2단에서는 멀쩡해 보였다.)
+ */
 function WireD({ rows }: { rows: Row[] }) {
+  const [divide, setDivide] = useState(true);
+  const [cols, setCols] = useState(3);
+  // 단을 직접 나눈다 — 번갈아 넣으면 개수가 고르게 퍼진다.
+  const columns: Row[][] = Array.from({ length: cols }, () => []);
+  rows.forEach((r, k) => columns[k % cols].push(r));
   return (
     <div>
-      <p className="mb-3 text-sm text-text-2">
-        시험지와 같은 두 단 배치. 넘침·겹침처럼 종이에서만 나는 결함이 보인다.
-      </p>
-      <div className="mx-auto max-w-4xl rounded border border-divider bg-surface p-6">
-        <div className="columns-2 gap-8">
-          {rows.slice(0, 8).map((r, i) => (
-            <div key={r.id} className="mb-5 break-inside-avoid">
-              <p className="text-xs text-text-3">
-                {i + 1}번 · {r.problemCode}
-              </p>
-              <Problem r={r} />
-              <button
-                type="button"
-                className="mt-1 cursor-pointer text-xs text-blue underline"
+      <div className="mb-3 flex flex-wrap items-center gap-3 text-sm">
+        <label className="flex cursor-pointer items-center gap-1.5">
+          <input
+            type="checkbox"
+            checked={divide}
+            onChange={(e) => setDivide(e.target.checked)}
+            className="cursor-pointer"
+          />
+          문항 구분을 준다
+        </label>
+        <span className="text-text-2">단 수</span>
+        {[2, 3, 4].map((c) => (
+          <button
+            key={c}
+            type="button"
+            onClick={() => setCols(c)}
+            aria-pressed={cols === c}
+            className={
+              "cursor-pointer rounded border px-2 py-1 " +
+              (cols === c
+                ? "border-ink bg-ink text-white"
+                : "border-control bg-surface hover:bg-side")
+            }
+          >
+            {c}
+          </button>
+        ))}
+        <span className="text-text-2">
+          격자와 달리 칸 높이가 달라도 빈자리가 안 생긴다
+        </span>
+      </div>
+      <div className="flex items-start gap-4">
+        {columns.map((col, ci) => (
+          <div key={ci} className="flex min-w-0 flex-1 flex-col gap-4">
+            {col.map((r) => (
+              <div
+                key={r.id}
+                data-card="1"
+                className={
+                  "min-w-0 " +
+                  (divide ? "rounded border border-divider p-3" : "")
+                }
               >
-                이 문항 신고
-              </button>
-            </div>
-          ))}
-        </div>
+                <div className="flex items-center gap-2">
+                  <span
+                    className={
+                      "text-xs " +
+                      (divide
+                        ? "rounded bg-ink px-1.5 py-0.5 font-semibold text-white"
+                        : "text-text-3")
+                    }
+                  >
+                    {r.problemCode}
+                  </span>
+                  {!r.solution ? (
+                    <span className="text-xs text-red-text">해설 없음</span>
+                  ) : null}
+                  {!r.directUseAllowed ? (
+                    <span className="text-xs text-red-text">출제 제외</span>
+                  ) : null}
+                </div>
+                <div className="mt-2 min-w-0 overflow-x-auto">
+                  <Problem r={r} />
+                </div>
+                <p className="mt-2 text-xs text-text-2">정답 {r.answer}</p>
+                <button
+                  type="button"
+                  className="mt-1 cursor-pointer text-xs text-blue underline"
+                >
+                  이 문항 신고
+                </button>
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     </div>
   );
