@@ -156,6 +156,23 @@ interface ProblemAnswerRow {
   sequence: number;
 }
 
+/**
+ * 문항 신고. 신고자가 탈퇴하면 `reporterId` 가 null 이 된다 — **기록은 남는다.**
+ * 지우면 「몇 건이 있었나」가 거짓이 된다.
+ */
+interface ProblemReportRow {
+  id: string;
+  problemId: string;
+  reporterId: string | null;
+  reason: "figure" | "content" | "answer" | "solution" | "unit" | "other";
+  note: string | null;
+  status: "open" | "resolved" | "dismissed";
+  resolutionNote: string | null;
+  resolvedAt: Date | null;
+  resolvedById: string | null;
+  createdAt: Date;
+}
+
 interface AnalysisReportRow {
   id: string;
   testResultId: string;
@@ -457,6 +474,7 @@ let testProblemRows: TestProblemRow[] = [];
 let testResultRows: TestResultRow[] = [];
 let problemAnswerRows: ProblemAnswerRow[] = [];
 let analysisReportRows: AnalysisReportRow[] = [];
+let problemReportRows: ProblemReportRow[] = [];
 let examRows: ExamRow[] = [];
 let examQuestionRows: ExamQuestionRow[] = [];
 let predictionRunRows: PredictionRunRow[] = [];
@@ -520,6 +538,7 @@ export function resetPrismaTestDouble() {
   testResultRows = [];
   problemAnswerRows = [];
   analysisReportRows = [];
+  problemReportRows = [];
   examRows = [];
   examQuestionRows = [];
   predictionRunRows = [];
@@ -778,6 +797,19 @@ function applySelect<T extends object>(
     }
     return projected;
   });
+}
+
+/** 신고 조회 — 준 조건만 견준다(빠뜨린 필드는 안 거른다). */
+function matchReports(
+  where?: Partial<
+    Pick<ProblemReportRow, "problemId" | "reporterId" | "reason" | "status">
+  >,
+) {
+  return problemReportRows.filter((row) =>
+    Object.entries(where ?? {}).every(
+      ([k, v]) => row[k as keyof ProblemReportRow] === v,
+    ),
+  );
 }
 
 function hydrateTestProblems(
@@ -1471,6 +1503,60 @@ const prismaModels = {
     },
     async findMany({ where }: { where?: Record<string, unknown> } = {}) {
       return problemAnswerRows.filter((row) => matchesWhere(row, where));
+    },
+  },
+  problemReport: {
+    async create({
+      data,
+    }: {
+      data: {
+        problemId: string;
+        reporterId?: string | null;
+        reason: ProblemReportRow["reason"];
+        note?: string | null;
+      };
+    }) {
+      const row: ProblemReportRow = {
+        id: randomUUID(),
+        problemId: data.problemId,
+        reporterId: data.reporterId ?? null,
+        reason: data.reason,
+        note: data.note ?? null,
+        status: "open",
+        resolutionNote: null,
+        resolvedAt: null,
+        resolvedById: null,
+        createdAt: new Date(),
+      };
+      problemReportRows.push(row);
+      return row;
+    },
+    async findFirst({
+      where,
+    }: {
+      where?: Partial<
+        Pick<ProblemReportRow, "problemId" | "reporterId" | "reason" | "status">
+      >;
+    } = {}) {
+      return matchReports(where)[0] ?? null;
+    },
+    async findMany({
+      where,
+    }: {
+      where?: Partial<
+        Pick<ProblemReportRow, "problemId" | "reporterId" | "reason" | "status">
+      >;
+    } = {}) {
+      return matchReports(where);
+    },
+    async count({
+      where,
+    }: {
+      where?: Partial<
+        Pick<ProblemReportRow, "problemId" | "reporterId" | "reason" | "status">
+      >;
+    } = {}) {
+      return matchReports(where).length;
     },
   },
   analysisReport: {
