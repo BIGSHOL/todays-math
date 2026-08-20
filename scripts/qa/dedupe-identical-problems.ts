@@ -54,6 +54,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { isDirectScript } from "../import/isDirectScript";
 import { writeJson } from "../import/writeJson";
+import { pointsAtPrintedFigure } from "../../src/lib/figure/missingFigureRule";
 import { groupBy, hasAnswer, type Row } from "./find-true-duplicates";
 import { mergeLedgerRows, stillApplied } from "./revertLedger";
 
@@ -62,14 +63,21 @@ const LEDGER = "scripts/qa/reports/duplicate-delete-ledger.json";
 const DAILY = 8;
 
 /**
- * 「본문이 그림을 지목하나」 — **넓게** 잡는다.
+ * 「본문이 그림을 지목하나」 — 판정은 `missingFigureRule` **한 곳**에 있다.
  *
- * 좁게 잡으면 서로 다른 문항을 지운다. 넓게 잡으면 못 지울 뿐이다.
- * 그래서 「그림자」·「그림그래프」 같은 오탐을 **일부러 안 걸러낸다** —
- * 여기서 오탐의 값은 «보류» 이고, 보류는 아무것도 망가뜨리지 않는다.
+ * ## 왜 낱말에서 지시로 바꿨나 (2026-08-20)
+ *
+ * 첫 판은 `/그림|그래프|도형|상자|좌표평면|…/` 라는 **낱말**로 잡았다. 「좁게 잡으면
+ * 서로 다른 문항을 지운다, 넓게 잡으면 못 지울 뿐이다」는 근거였고 그때는 옳았다.
+ *
+ * 그런데 「그림 회수가 끝나면 저절로 갈린다」고 적어 둔 39무리가 **한 무리도 안 갈렸다.**
+ * 전량을 눈으로 보니 이유가 분명했다 — 「$y=ax$ 의 **그래프**에 대한 설명으로 옳지 않은
+ * 것은?」처럼 **식이 본문에 다 있는** 문항이 대부분이고, `<상자>` 는 본문 마크업이었다.
+ * 지면 그림이 있어야 푸는 것은 **세 무리뿐**이었다. 낱말로는 영영 안 갈린다.
+ *
+ * 그래서 열쇠를 **지시**로 바꾸고, 규칙은 정본(`pointsAtPrintedFigure`)을 부른다.
+ * 보수적인 쪽(라벨 도형)은 그 함수가 이미 «가리킨다»로 센다 — 보류가 늘 뿐이다.
  */
-const REFERENCES_FIGURE =
-  /그림|그래프|도형|전개도|산점도|상자|좌표평면|다음 표|아래 표|위의 표|표를 완성|도표|그리시오|작도/;
 
 /**
  * 이 무리를 지워도 되나. 못 지우는 사유를 돌려주고, 지워도 되면 `null`.
@@ -82,7 +90,7 @@ export function holdReason(bucket: readonly Row[]): string | null {
     return "정답이 없는 행이 있다 — 정답 축을 못 본다";
   if (
     bucket.every((row) => row.figureUrls.length === 0) &&
-    bucket.some((row) => REFERENCES_FIGURE.test(row.content))
+    bucket.some((row) => pointsAtPrintedFigure(row.content))
   ) {
     return "본문이 그림을 지목하는데 전원 그림이 없다 — 가르는 숫자가 그림 안일 수 있다";
   }

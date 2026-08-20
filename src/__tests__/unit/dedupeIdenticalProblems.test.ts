@@ -5,6 +5,7 @@ import {
   hasAnswer,
   type Row,
 } from "../../../scripts/qa/find-true-duplicates";
+import { pointsAtPrintedFigure } from "../../lib/figure/missingFigureRule";
 import {
   holdReason,
   type Keepable,
@@ -136,5 +137,68 @@ describe("판정을 두 벌 만들지 않는다", () => {
     expect(hasAnswer({ answer: "(정답 없음)" })).toBe(false);
     expect(hasAnswer({ answer: "  " })).toBe(false);
     expect(hasAnswer({ answer: "③" })).toBe(true);
+  });
+});
+
+describe("[2026-08-20] 그림 보류의 열쇠는 **낱말이 아니라 지시**다", () => {
+  /**
+   * 첫 판은 「그림|그래프|상자|좌표평면…」이라는 **낱말**로 잡았다. 일부러 넓게 잡은
+   * 것이고 그때는 옳았다 — 보류는 아무것도 망가뜨리지 않으니까. 그런데 그 뒤 그림을
+   * 회수해도 **한 무리도 안 갈렸다.** 39무리를 전량 눈으로 보니 이유가 분명했다:
+   * 「$y=ax$ 의 **그래프**에 대한 설명으로 옳지 않은 것은?」처럼 **식이 본문에 다 있는**
+   * 문항이 대부분이었다. 지면에 그림이 있어야 풀리는 것은 세 무리뿐이다.
+   *
+   * CLAUDE.md 2026-08-18 이 적은 그 자리다 — 「열쇠를 낱말에서 **지시어**로 바꿔야 갈렸다」.
+   */
+  it("식이 본문에 다 있으면 «그림을 가리키지 않는다»", () => {
+    expect(
+      pointsAtPrintedFigure(
+        "다음 중 $y=ax$의 그래프에 대한 설명으로 옳지 않은 것은? 1. 원점을 지나는 직선이다.",
+      ),
+    ).toBe(false);
+  });
+
+  it("지면의 그래프를 **제시**하면 가리킨다", () => {
+    expect(
+      pointsAtPrintedFigure(
+        "다음 직선 도로를 달리는 자전거의 시간에 따른 속력의 변화를 나타낸 그래프이다.",
+      ),
+    ).toBe(true);
+  });
+
+  it("보기 문장의 「…그래프이다.」는 제시가 아니다", () => {
+    expect(
+      pointsAtPrintedFigure(
+        "이차함수 $y=-x^{2}+5$ 의 그래프에 대한 설명으로 옳지 않은 것은? 5. $y=-x^{2}$ 의 그래프를 $x$ 축의 방향으로 $5$ 만큼 평행이동한 그래프이다.",
+      ),
+    ).toBe(false);
+  });
+
+  it("좌표가 그림에만 있는 문항은 가리킨다", () => {
+    expect(
+      pointsAtPrintedFigure(
+        "다음 중 좌표평면 위의 각 점 A, B, C, D, E의 좌표를 나타낸 것으로 옳지 않은 것은?",
+      ),
+    ).toBe(true);
+  });
+
+  it("«상자»는 본문 마크업이라 그림이 아니다", () => {
+    expect(
+      pointsAtPrintedFigure("다음을 계산한 것은? <상자> ($x-2$)($x-5$)"),
+    ).toBe(false);
+  });
+
+  it("정본 판정기가 «유실»이라 하면 그대로 따른다 — 규칙을 두 벌 만들지 않는다", () => {
+    expect(
+      pointsAtPrintedFigure("다음 그림에서 ∠$x$ 의 크기를 구하시오."),
+    ).toBe(true);
+  });
+
+  it("라벨로만 정의되는 도형은 **보수적으로** 가리킨다고 본다", () => {
+    // 지시어를 안 써도 지면에 그림이 있어야 푸는 부류. 반대쪽(그림이 붙은 행)에
+    // 지시어만 대면 24.5%를 못 봤고 그 대부분이 이 모양이었다.
+    expect(
+      pointsAtPrintedFigure("평행사변형 ABCD에서 점 O는 두 대각선의 교점이다."),
+    ).toBe(true);
   });
 });
