@@ -52,6 +52,14 @@ export const PRINT_ROUTE = "/tests/{시험지id}/print";
  */
 export const SPECIMEN_ROUTE = "/dev/print-specimen";
 
+/**
+ * 나머지 미결은 **시험지를 뽑아 봐야** 드러난다. 그런데 출제 엔진이 고른 문항이
+ * 그 항목들을 다 건드릴 보장이 없다 — 서술형이 하나도 안 뽑히면 「서술형 배지」는
+ * 영영 못 본다. 이 화면은 **일부러 그 종류를 넣어** 제품 지면에 그대로 얹는다.
+ * 못 채운 자리는 화면 위에 크게 찍는다(그 항목은 검수했다고 적으면 안 된다).
+ */
+export const PAPER_SPECIMEN_ROUTE = "/dev/print-paper";
+
 /** 견본지가 대신 판정해 주는 항목들. */
 export const SPECIMEN_ITEM_IDS = [
   "figure-print-size-mm",

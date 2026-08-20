@@ -5,6 +5,7 @@ import {
   ITEMS,
   PRINT_ROUTE,
   SAMPLING_PLAN,
+  PAPER_SPECIMEN_ROUTE,
   SPECIMEN_ITEM_IDS,
   SPECIMEN_ROUTE,
 } from "./items";
@@ -96,6 +97,16 @@ export default async function PrintCheckPage() {
             <code className="bg-side px-1">{SPECIMEN_ROUTE}</code>
           </a>{" "}
           견본지에서 한 번에 판정한다. 첫 장의 100mm 자가 인쇄 배율을 지킨다.
+        </p>
+        <p className="mt-2 border-l-[3px] border-ink pl-3 text-[12.5px] leading-[1.75] text-ink">
+          <strong>나머지는 시험지를 뽑아 봐야</strong> 드러나는데, 출제 엔진이
+          고른 문항이 그 항목들을 다 건드릴 보장이 없다.{" "}
+          <a className="underline" href={PAPER_SPECIMEN_ROUTE}>
+            <code className="bg-side px-1">{PAPER_SPECIMEN_ROUTE}</code>
+          </a>{" "}
+          가 <strong>일부러 그 종류를 넣은</strong> 25문항 시험지를 제품 지면에
+          그대로 얹는다 — 문제지·정답지를 둘 다 뽑는다. 반·진도·출제·확정을 안
+          밟아도 된다.
         </p>
         <ul className="mt-2 flex flex-col gap-1">
           {SAMPLING_PLAN.map((line) => (
