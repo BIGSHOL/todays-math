@@ -18,8 +18,8 @@ import {
   FIGURE_URL_COLUMNS,
   brokenRows,
   figureRepoPath,
-  figureRoots,
   presentFilesFromLsTree,
+  treeFigureFiles,
 } from "../../../scripts/qa/checkDeployedFigures";
 
 describe("figureRepoPath — DB 의 URL 을 저장소 경로로", () => {
@@ -112,41 +112,31 @@ describe("presentFilesFromLsTree — 배포본에 «실제로 있는» 것만", 
   });
 });
 
-describe("figureRoots — 훑을 뿌리를 **손으로 적지 않는다**", () => {
+describe("어느 디렉터리를 보나 — 미리 정하지 않는다", () => {
   /**
-   * 🔴 이걸 손으로 박아서 실제로 당했다(2026-08-20). pathspec 이
-   *    `public/figures` 하나라 `public/figures-svg/…` 를 git 이 **아예 안 봤고**,
-   *    SVG 로 바꾼 멀쩡한 716문항이 「배포에 없다」로 나왔다.
-   *    git pathspec 은 경로 «조각» 단위다 — 접두사처럼 생겼다고 덮지 않는다.
+   * 2026-08-20: 다른 트랙이 719문항을 `/figures-svg/…` 벡터로 갈아 끼웠다.
+   * 검사가 `public/figures` 만 훑고 있었다면 그 719건이 통째로 **거짓 경고**가 되고,
+   * 반대로 새 디렉터리가 진짜로 안 밀린 날에는 아무 말도 못 한다.
+   * DB 가 무엇을 가리킬지는 DB 가 정한다 — 검사는 `public` 전체를 본다.
    */
-  it("🔴 `/figures-svg/…` 는 `public/figures` 가 **안 덮는** 딴 뿌리다", () => {
-    expect(
-      figureRoots(["/figures/rpm/a/0.png", "/figures-svg/rpm/a/0.svg"]),
-    ).toEqual(["public/figures", "public/figures-svg"]);
+  it("`public/figures` 밖의 그림도 «있는 것»으로 센다", () => {
+    const files = treeFigureFiles("HEAD");
+    expect([...files].some((f) => f.startsWith("public/figures/"))).toBe(true);
+    expect([...files].some((f) => f.startsWith("public/figures-svg/"))).toBe(
+      true,
+    );
   });
 
-  it("새 뿌리가 생기면 저절로 따라온다 — 다음에 또 눈이 멀지 않게", () => {
-    expect(figureRoots(["/figures-3d/x/0.glb"])).toEqual(["public/figures-3d"]);
-  });
-
-  it("바깥 주소는 뿌리를 만들지 않는다", () => {
-    expect(
-      figureRoots(["https://x/y.png", "data:image/png;base64,AA"]),
-    ).toEqual([]);
-  });
-
-  it("같은 뿌리는 한 번만", () => {
-    expect(figureRoots(["/figures/a/1.png", "/figures/b/2.png"])).toEqual([
-      "public/figures",
-    ]);
+  it("읽을 수 없는 참조는 **멈춘다** — 「확인 못 했다」를 «괜찮다»로 넘기지 않는다", () => {
+    expect(() => treeFigureFiles("없는참조-zzz")).toThrow(/읽을 수 없다/);
   });
 });
 
 describe("거짓 경보도 결함이다", () => {
   /**
-   * 밀 때마다 수백 건이 빨갛게 나오면 다음 사람은 훅을 우회한다.
-   * 그때부터 **진짜 결함도 같이 안 보인다** — 침묵하는 가드와 결과가 같다.
-   * 그래서 「있는 파일을 없다고 하지 않는가」를 가드로 못 박는다.
+   * 밀 때마다 수백 건이 빨갛게 나오면 다음 사람은 훅을 우회한다. 그때부터
+   * **진짜 결함도 같이 안 보인다** — 침묵하는 가드와 결과가 같다.
+   * 그래서 「빠진 것을 잡는가」뿐 아니라 **「있는 것을 없다고 하는가」**도 못 박는다.
    */
   it("🔴 배포본에 있는 SVG 를 «없다»고 하면 안 된다", () => {
     const present = new Set(["public/figures-svg/rpm/a/0.svg"]);

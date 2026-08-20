@@ -34,6 +34,10 @@ const eslintConfig = defineConfig([
     // 파일 때문에 `npm run lint` 가 빨개지면 **게이트가 병합을 못 가른다** —
     // 실제로 병합 검수에서 `.probe/peek.ts` 의 any 3건으로 빨갛게 떴다.
     ".probe/**",
+    // 같은 이유로 `.measure/**` 도 뺀다 — 재는 데 쓰고 버리는 스크래치라
+    // 커밋되지 않는데(.gitignore), 남아 있으면 게이트가 남의 조사 파일 때문에
+    // 빨개진다(2026-08-20: `find-poly.ts` 의 any 1건).
+    ".measure/**",
   ]),
 ]);
 
