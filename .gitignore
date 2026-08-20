@@ -246,3 +246,4 @@ scripts/qa/reports/svg-compare-blocked/
 !scripts/qa/reports/empty-frac-repair.json
 !scripts/qa/reports/empty-frac-reject.json
 !scripts/qa/reports/lim-arrow-repair.json
+!scripts/qa/reports/solution-hwp-repair.json

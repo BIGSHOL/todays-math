@@ -524,6 +524,35 @@ export const ITEMS: PrintCheckItem[] = [
     changedOn: "2026-08-21",
   },
   {
+    id: "solution-hwp-latex",
+    title:
+      "**정답지에 «LEFT ( 3x^2 +ax-5 RIGHT )» 가 글자로 나가고 있었다** — 해설 4,576문항",
+    changed:
+      "잔재 지표가 **본문만** 재고 있었다(0.31%). 해설을 재니 **9.98%(4,694문항)** 였다 — " +
+      "변환을 본문에만 돌리고 해설은 안 돌린 자리다. 정본 변환기로 30,293덩어리를 " +
+      "LaTeX 로 바꿨다. **9.98% → 0.33%**(같은 계량기로 다시 잼). 덤으로 붉게 나가던 " +
+      "문항이 741 → 480 으로 줄었다.",
+    look:
+      "**정답지(해설)를 같이 뽑아서 본다.** 분수가 한 층으로 서는지, 근호가 씌워지는지, " +
+      "`lim` 아래 화살표가 →인지. 그리고 **글자로 남은 영문 낱말**(`over`·`LEFT`·`ln`)이 " +
+      "보이면 적어 주시면 된다 — 118문항이 아직 그 상태로 남아 있다.",
+    lookFromSource: false,
+    evidence: [
+      "scripts/qa/convert-hwp-spans.py",
+      "scripts/qa/solutionHwpScope.ts",
+      "scripts/qa/reports/solution-hwp-repair.json",
+      "docs/planning/tracks/report-math-script-residue.md",
+    ],
+    scale:
+      "해설이 있는 14,116문항 중 **4,576문항**을 고쳤다. 해설은 **정답지에만** 나가므로 " +
+      "문제지 지면은 안 바뀐다 — 이 항목은 정답지 검수다.",
+    needs:
+      "고1~고3 범위(미적분·확률과통계·기하)로 뽑은 시험지 + **정답지**. " +
+      "해설이 긴 서술형을 일부러 넣을 것.",
+    status: "대기",
+    changedOn: "2026-08-21",
+  },
+  {
     id: "prod-print",
     title: "프로덕션 실물 인쇄 최종 검수 (T6.2)",
     changed: "배포 태스크의 인수 조건. 배포 자체가 미완이라 착수 전이다.",
