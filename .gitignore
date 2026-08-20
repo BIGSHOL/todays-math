@@ -120,6 +120,8 @@ scripts/qa/reports/*
 !scripts/qa/reports/svg-whitelist.txt
 # 2차 합본 허용 목록 — 「무엇을 근거로 채택했나」가 여기에만 있다.
 !scripts/qa/reports/svg-whitelist-2.txt
+# 뭉친 문항 되돌리기 원장 — 「무엇을 왜 뺐나」가 여기에만 있다.
+!scripts/qa/reports/merged-problem-reject.json
 # 보기 그림 짝을 못 찾아 **출제에서 뺀** 문항 원장 — 행마다 이전 상태와 사유.
 # 영구 삭제가 아니라 되살릴 수 있어야 하고, 그 근거가 이 파일뿐이다.
 !scripts/qa/reports/choice-figure-discard-lock.json
