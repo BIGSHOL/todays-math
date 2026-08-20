@@ -21,6 +21,7 @@
  * |---|---|
  * | `기출·배선됨` | 기출이 들어온다. `syncExamMetadata` 를 부른다 — **감사기가 실제로 확인한다** |
  * | `기출·원본없음` | 기출일 수 있으나 원본 시험지 정보(examId·sourceFile)가 없어 Exam 을 만들 수 없다 |
+ * | `되돌리기` | **우리가 지운 행**을 원장 그대로 되살린다. 편을 다시 짓지 않는 대신 `exam_question` 링크를 되돌린다 — **감사기가 실제로 확인한다** |
  * | `기출아님` | 자작/AI 생성·변형만 넣는다 |
  * | `테스트` | 테스트·픽스처 |
  * | (표시 없음) | **판단불가** — 감사기가 실패한다 |
@@ -58,6 +59,8 @@ export type WiringVerdict =
   | "기출·배선없음"
   | "기출·원본없음"
   | "기출아님"
+  | "되돌리기"
+  | "되돌리기·링크없음"
   | "테스트"
   | "판단불가";
 
@@ -70,8 +73,22 @@ const DECLARABLE: readonly WiringVerdict[] = [
   "기출·배선됨",
   "기출·원본없음",
   "기출아님",
+  "되돌리기",
   "테스트",
 ];
+
+/**
+ * `되돌리기` 가 진짜인지 대조하는 열쇠.
+ *
+ * 되돌리기는 **우리가 지운 행을 원장 그대로** 되살린다. 새 기출이 아니므로 편을 다시
+ * 짓지 않는다 — 그러면 안 된다. `syncExamMetadata` 는 편을 «지금 문항»으로 다시 짓기
+ * 때문에, 짝이 다른 편에 있는 문항은 그 편에서 통째로 사라진다.
+ *
+ * 대신 되돌리기가 **반드시** 해야 하는 일이 하나 있다: `exam_question.problem_id` 를
+ * 원래대로 돌려놓는 것. 그 컬럼에는 FK 가 없어서 **끊겨도 오류가 안 난다.**
+ * 그러니 「배선됨」을 `syncExamMetadata` 로 대조하듯, 「되돌리기」는 이것으로 대조한다.
+ */
+const REVERT_LINK = /examQuestion\s*\.\s*(update|updateMany)/;
 
 export interface WiringSite {
   file: string;
@@ -161,6 +178,11 @@ export function classifyFile(file: string, source: string): WiringSite[] {
       verdict = "판단불가";
       note =
         "`// exam-wiring:` 표시가 없다 — 이 경로가 기출을 넣는지 선언할 것";
+    } else if (declared === "되돌리기" && !REVERT_LINK.test(source)) {
+      // 표시를 믿지 않는다 — 「되돌린다」고 적어 놓고 링크를 안 되돌리면 조용히 끊긴다.
+      verdict = "되돌리기·링크없음";
+      note =
+        "「되돌리기」라 적혀 있는데 파일에 examQuestion 링크를 되돌리는 곳이 없다";
     } else if (declared === "기출·배선됨" && !wired) {
       // 표시를 믿지 않는다 — 부른다고 적어 놓고 안 부르면 그게 제일 나쁘다.
       verdict = "기출·배선없음";

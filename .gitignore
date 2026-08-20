@@ -57,6 +57,9 @@ scripts/qa/reports/*
 # 그림 유실 잠금 원장 — **공유 DB 를 되돌리는 유일한 근거다.**
 # 여기 없으면 다른 컴퓨터에서 790건을 되돌릴 방법이 없다(적대적 리뷰 지적).
 !scripts/qa/reports/missing-figure-lock.json
+# 중복 문항 삭제 원장 — **지운 행의 모든 컬럼**이 여기에만 있다.
+# 이게 없으면 `--revert` 가 아무것도 못 되살린다(영구 삭제가 된다).
+!scripts/qa/reports/duplicate-delete-ledger.json
 # AI 생성 문항 보기 표기 정규화 — 되돌리기 원장(공유 DB 를 바꾼다)
 !scripts/qa/reports/view-normalize-ledger.json
 # 정답 정정 목록 — **이 목록 자체가 되돌리기 근거다**(`before`→`after`).
