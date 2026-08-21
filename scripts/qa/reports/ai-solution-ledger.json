@@ -44095,6 +44095,1396 @@
    "id": "5e97998f-01ad-4ac8-8cb9-3e41401c034c",
    "before": null,
    "after": "$2-\\sqrt2\\approx0.586$은 이미 0과 1 사이의 값이므로 소수 부분 $b=2-\\sqrt2$\n$a+b=\\sqrt2$에서 $a=\\sqrt2-(2-\\sqrt2)=2\\sqrt2-2$\n$2<x<3$이므로 $x$의 정수 부분은 2, 소수 부분은 $a=x-2$\n$x-2=2\\sqrt2-2$이므로 $x=2\\sqrt2$"
+  },
+  {
+   "id": "bc0b9447-c420-4db0-a924-e45a2164d613",
+   "before": null,
+   "after": "$a=\\sqrt3+1\\approx2.732$이므로 $f(a)=2,\\ g(a)=\\sqrt3-1$\n$b=2\\sqrt2+1\\approx3.828$이므로 $f(b)=3,\\ g(b)=2\\sqrt2-2$\n분자: $g(a)-f(b)+4=(\\sqrt3-1)-3+4=\\sqrt3$\n분모: $f(a)+g(b)=2+(2\\sqrt2-2)=2\\sqrt2$\n따라서 $\\dfrac{\\sqrt3}{2\\sqrt2}=\\dfrac{\\sqrt6}{4}$"
+  },
+  {
+   "id": "532c9db8-6f98-46f6-96f6-f41c2978d277",
+   "before": null,
+   "after": "$\\dfrac{3\\sqrt2}{\\sqrt3}=\\sqrt6$, $\\sqrt3\\times\\sqrt2=\\sqrt6$\n$\\sqrt{18}\\div\\sqrt3=\\sqrt6$, $\\sqrt{24}-\\sqrt6=2\\sqrt6-\\sqrt6=\\sqrt6$\n$\\sqrt{(-6)^2}\\div\\sqrt2\\times\\sqrt3=6\\div\\sqrt2\\times\\sqrt3=3\\sqrt6$\n따라서 값이 다른 것은 ⑤"
+  },
+  {
+   "id": "1f2b180a-9ac4-4fed-b5b0-b17256d1bcd0",
+   "before": null,
+   "after": "$\\sqrt{0.0052}=\\sqrt{\\dfrac{52}{10000}}=\\dfrac{\\sqrt{52}}{100}=\\dfrac{b}{100}$\n$\\sqrt{520}=\\sqrt{5.2\\times100}=10\\sqrt{5.2}=10a$\n따라서 $\\sqrt{0.0052}-\\sqrt{520}=-10a+\\dfrac{b}{100}$"
+  },
+  {
+   "id": "34741f39-1d67-43c5-9e0b-6f06387df530",
+   "before": null,
+   "after": "① $\\dfrac{\\sqrt7}{\\sqrt{45}}=\\dfrac{\\sqrt7}{3\\sqrt5}=\\dfrac{\\sqrt{35}}{15}$ (거짓)\n② $\\sqrt{28}\\div\\dfrac{\\sqrt7}{\\sqrt3}=2\\sqrt7\\times\\dfrac{\\sqrt3}{\\sqrt7}=2\\sqrt3$ (거짓)\n③ $3\\sqrt2\\times2\\sqrt6\\div\\sqrt3=6\\sqrt{12}\\div\\sqrt3=12$ (거짓)\n④ $\\sqrt{27}-2\\sqrt{12}+\\sqrt3(2-\\sqrt3)=3\\sqrt3-4\\sqrt3+2\\sqrt3-3=\\sqrt3-3$ (거짓)\n⑤ $(\\sqrt{18}-\\sqrt6)\\div\\sqrt3+\\sqrt2(2\\sqrt3-3)=(\\sqrt6-\\sqrt2)+(2\\sqrt6-3\\sqrt2)=3\\sqrt6-4\\sqrt2$ (참)"
+  },
+  {
+   "id": "18c1a37f-d982-4479-87d4-43b25d933094",
+   "before": null,
+   "after": "$x=\\sqrt6+\\sqrt2,\\ y=\\sqrt6-\\sqrt2$라 하면 $xy=4,\\ x^2-y^2=(x-y)(x+y)=2\\sqrt2\\times2\\sqrt6=8\\sqrt3$\n$\\dfrac{x}{y}-\\dfrac{y}{x}=\\dfrac{x^2-y^2}{xy}=\\dfrac{8\\sqrt3}{4}=2\\sqrt3$"
+  },
+  {
+   "id": "f81c9fd4-1b64-4266-8cd0-5e1f7cacc5e1",
+   "before": null,
+   "after": "$x=\\dfrac{3}{\\sqrt2}=\\dfrac{3\\sqrt2}{2}$이므로 $\\dfrac1x=\\dfrac{\\sqrt2}{3}$\n$x-\\dfrac1x=\\dfrac{3\\sqrt2}{2}-\\dfrac{\\sqrt2}{3}=\\sqrt2\\left(\\dfrac32-\\dfrac13\\right)=\\sqrt2\\times\\dfrac76=\\dfrac{7\\sqrt2}{6}$"
+  },
+  {
+   "id": "11656a44-f6f6-4cf7-b43b-61e343595caa",
+   "before": null,
+   "after": "$A-B=\\sqrt3-2<0$이므로 $A<B$\n$A-C=\\sqrt7-2>0$이므로 $A>C$\n$B-C=\\sqrt7-\\sqrt3>0$이므로 $B>C$\n따라서 $C<A<B$"
+  },
+  {
+   "id": "7f007252-38c9-4dca-ae06-82d2d36f11cd",
+   "before": null,
+   "after": "① $\\sqrt3\\sqrt5=\\sqrt{15}$ (거짓, $\\sqrt{35}$ 아님)\n② $-4\\sqrt2=-\\sqrt{32}$이므로 부호가 달라 거짓\n③ $\\sqrt{28}\\div\\sqrt7=\\sqrt4=2$ (참)\n④ $\\dfrac{\\sqrt{75}}{5}=\\dfrac{5\\sqrt3}{5}=\\sqrt3$ (거짓, $\\sqrt{15}$ 아님)\n⑤ $\\sqrt{15}\\div\\sqrt{35}=\\sqrt{3/7}=\\dfrac{\\sqrt{21}}{7}$ (거짓)"
+  },
+  {
+   "id": "380f7405-332a-4ab7-b452-c2c519c7a0ae",
+   "before": null,
+   "after": "$xy-2x-3y+6=x(y-2)-3(y-2)=(x-3)(y-2)$\n자연수가 되려면 $(x-3)(y-2)$가 0이 아닌 완전제곱수여야 함\n$x,y=1,\\dots,6$에서 확인하면 $(x,y)=(2,1),(4,3),(4,6),(5,4),(6,5)$의 5가지\n확률은 $\\dfrac{5}{36}$"
+  },
+  {
+   "id": "0998682f-632e-489c-b0d5-8f4469a4a9c7",
+   "before": null,
+   "after": "① $\\sqrt3\\times\\sqrt6=\\sqrt{18}=3\\sqrt2$ (참)\n② $2\\sqrt3\\div\\sqrt6=2\\sqrt{1/2}=\\sqrt2$ (참)\n③ $2\\sqrt3\\times4\\sqrt5=8\\sqrt{15}$인데 문제는 $6\\sqrt{15}$라 하여 거짓\n④ $4\\sqrt{21}\\div2\\sqrt7=2\\sqrt3$ (참)\n옳지 않은 것은 ③"
+  },
+  {
+   "id": "e0c8e4a1-caff-4720-905d-7658219caee2",
+   "before": null,
+   "after": "① $\\sqrt5+\\sqrt{25}=\\sqrt5+5$ (거짓, $\\sqrt{30}$ 아님)\n② $\\sqrt{16}+\\sqrt{(-2)^2}=4+2=6$ (거짓)\n③ $\\sqrt{20}\\div\\dfrac1{\\sqrt2}=2\\sqrt5\\times\\sqrt2=2\\sqrt{10}$ (거짓)\n④ $(\\sqrt7-\\sqrt3)\\times\\sqrt7=7-\\sqrt{21}$ (거짓)\n⑤ $-(-\\sqrt{12})^2\\times\\dfrac1{\\sqrt2}=-12\\times\\dfrac1{\\sqrt2}=-6\\sqrt2$ (참)"
+  },
+  {
+   "id": "dcbbdb0d-624a-4bc9-801c-d92990967676",
+   "before": null,
+   "after": "$\\dfrac{2\\sqrt2-\\sqrt3}{\\sqrt2}=2-\\dfrac{\\sqrt6}{2}$\n$\\dfrac{2\\sqrt2-\\sqrt3}{\\sqrt3}=\\dfrac{2\\sqrt6}{3}-1$\n두 식의 차: $\\left(2-\\dfrac{\\sqrt6}{2}\\right)-\\left(\\dfrac{2\\sqrt6}{3}-1\\right)=3-\\dfrac{7\\sqrt6}{6}$\n$a=3,\\ b=-\\dfrac76$이므로 $a+b=\\dfrac{11}{6}$"
+  },
+  {
+   "id": "f5469f11-11b7-41c2-a969-b07d48f28bdc",
+   "before": null,
+   "after": "$a=\\dfrac{\\sqrt6}{2\\sqrt3}+\\dfrac1{\\sqrt2}=\\dfrac{\\sqrt2}{2}+\\dfrac{\\sqrt2}{2}=\\sqrt2$\n$b=\\sqrt{32}-\\dfrac{10}{\\sqrt2}=4\\sqrt2-5\\sqrt2=-\\sqrt2$\n$ab=\\sqrt2\\times(-\\sqrt2)=-2$"
+  },
+  {
+   "id": "65ce155c-655a-48c5-8041-c8f95fdd2135",
+   "before": null,
+   "after": "$(\\sqrt{100}-\\sqrt{36})\\div\\sqrt2=(10-6)\\div\\sqrt2=4\\div\\sqrt2=2\\sqrt2$\n$\\dfrac6{\\sqrt2}=3\\sqrt2$\n합은 $2\\sqrt2+3\\sqrt2=5\\sqrt2$"
+  },
+  {
+   "id": "96f2c0e4-5007-4062-b632-7d6a3e819ff1",
+   "before": null,
+   "after": "$-2-\\sqrt5\\approx-4.236$이므로 정수 부분 $a=-5$\n$b=(-2-\\sqrt5)-(-5)=3-\\sqrt5$ (범위 $0\\le b<1$ 확인됨)\n$a-b=-5-(3-\\sqrt5)=\\sqrt5-8$"
+  },
+  {
+   "id": "3bd2b5e8-330b-43f4-a851-55c4b412f323",
+   "before": null,
+   "after": "① $2\\sqrt5+\\sqrt5=3\\sqrt5$ (참)\n② $3\\sqrt6-\\sqrt{24}=3\\sqrt6-2\\sqrt6=\\sqrt6$ (참)\n③ $2\\sqrt3\\times\\sqrt2=2\\sqrt6$ (참)\n④ $\\sqrt{10}\\div\\sqrt{21}=\\sqrt{10/21}$로 $\\sqrt5$가 아니므로 거짓\n⑤ $\\sqrt5(\\sqrt{10}-\\sqrt{20})=\\sqrt{50}-\\sqrt{100}=5\\sqrt2-10$ (참)\n옳지 않은 것은 ④"
+  },
+  {
+   "id": "9945d245-02d4-4d71-b913-6ffa7906a7c8",
+   "before": null,
+   "after": "$2(1-\\sqrt5)(a+2\\sqrt5)=2[a-10+(2-a)\\sqrt5]$\n유리수가 되려면 $\\sqrt5$의 계수가 0이어야 하므로 $2-a=0$\n따라서 $a=2$"
+  },
+  {
+   "id": "1c0f4498-b34d-47fd-8952-e34ef1850a63",
+   "before": null,
+   "after": "$\\sqrt{340}=\\sqrt{3.4\\times100}=10\\sqrt{3.4}=10b$\n$\\sqrt{0.0034}=\\sqrt{\\dfrac{34}{10000}}=\\dfrac{\\sqrt{34}}{100}=\\dfrac{a}{100}$\n따라서 $\\sqrt{340}+\\sqrt{0.0034}=\\dfrac1{100}a+10b$"
+  },
+  {
+   "id": "82600d77-0e5f-49da-b9cf-ce31fadf366c",
+   "before": null,
+   "after": "표에서 $x=6$, $y=a$이다.\n$\\sqrt{x}\\times\\sqrt{y}=12$이므로 $\\sqrt{6}\\times\\sqrt{a}=\\sqrt{6a}=12$, 양변을 제곱하면 $6a=144$, $a=24$.\n$\\sqrt{y}\\div\\sqrt{x}=b$이므로 $\\sqrt{a}\\div\\sqrt{6}=\\sqrt{24/6}=\\sqrt{4}=2$, $b=2$.\n따라서 $a-b=24-2=22$."
+  },
+  {
+   "id": "711de1ee-81c8-4e11-a8a3-2105e146e420",
+   "before": null,
+   "after": "$f(20)=\\sqrt{5\\times20}=\\sqrt{100}=10$보다 작은 자연수는 $1,2,\\dots,9$이므로 $a=f(20)=9$.\n$n<\\sqrt{x}\\le n+1$의 각 변을 제곱하면 $n^2<x\\le(n+1)^2$이고, 이를 만족하는 자연수 $x$의 개수는 $(n+1)^2-n^2=2n+1$.\n$2n+1=33$이므로 $n=16$, 즉 $b=16$.\n$a+b=9+16=25$."
+  },
+  {
+   "id": "834068b0-c0c0-4ebf-becb-dde2974fba9c",
+   "before": null,
+   "after": "$a>0,\\,b<0$이므로 $a-b>0$이다.\n$\\sqrt{4(a-b)^2}=2|a-b|=2(a-b)$\n$\\sqrt{9(b-a)^2}=3|b-a|=3(a-b)$ ($(b-a)^2=(a-b)^2$이므로)\n두 식을 더하면 $2(a-b)+3(a-b)=5(a-b)=5a-5b$."
+  },
+  {
+   "id": "04583b2a-4e4c-4bec-9593-a18d05283f0e",
+   "before": null,
+   "after": "$\\sqrt{24-x}$가 자연수가 되려면 $24-x$가 $1,4,9,16$ 중 하나여야 한다.\n$24-x=16,9,4,1$일 때 $x=8,15,20,23$이므로 가장 작은 자연수는 $a=8$.\n$\\sqrt{27y}$가 자연수가 되려면 $27y=3^3y$가 완전제곱수여야 하므로 $y=3$일 때 $27\\times3=81=9^2$, 가장 작은 $b=3$.\n$a-2b=8-6=2$."
+  },
+  {
+   "id": "af2fd72d-64c3-4209-91f0-cbd3e2ef6ea5",
+   "before": null,
+   "after": "$\\dfrac{2}{\\sqrt{3}}=\\dfrac{2\\sqrt{3}}{3}=\\dfrac{2}{3}\\sqrt{3}$이므로 $a=\\dfrac{2}{3}$."
+  },
+  {
+   "id": "3bd61812-bb2d-4ea3-b54c-a5e8716d28bc",
+   "before": null,
+   "after": "$\\sqrt{80}:4\\sqrt{2}=1:x$에서 $\\sqrt{80}\\times x=4\\sqrt{2}$이므로 $x=\\dfrac{4\\sqrt{2}}{\\sqrt{80}}$.\n$\\sqrt{80}=4\\sqrt{5}$이므로 $x=\\dfrac{4\\sqrt{2}}{4\\sqrt{5}}=\\dfrac{\\sqrt{2}}{\\sqrt{5}}=\\dfrac{\\sqrt{10}}{5}$."
+  },
+  {
+   "id": "5e79c336-2cdc-49aa-bd35-c97fff1219a4",
+   "before": null,
+   "after": "$ab<0$이고 $a-b>0$이므로 $a>0,\\,b<0$이다.\n$\\sqrt{(-a)^2}+\\sqrt{(3b-a)^2}+\\sqrt{(-2b)^2}=|a|+|3b-a|+2|b|$\n$b<0$이므로 $3b-a<0$, 즉 $|3b-a|=a-3b$이고 $|b|=-b$.\n$=a+(a-3b)+(-2b)=2a-5b$."
+  },
+  {
+   "id": "361bf593-f71d-4dd6-865e-3b2a22d08d6f",
+   "before": null,
+   "after": "$ab<0,\\,a-b>0$이므로 $a>0,\\,b<0$이다.\n$\\sqrt{(a-b)^2}+\\sqrt{(-3a)^2}-\\sqrt{4b^2}=(a-b)+3a-2|b|$\n$b<0$이므로 $|b|=-b$, 즉 $-2|b|=2b$.\n$=(a-b)+3a+2b=4a+b$."
+  },
+  {
+   "id": "31913cd5-e7fa-4a65-8f87-52feee91e909",
+   "before": null,
+   "after": "$a=-p,\\,b=-q$ ($p,q>0$)로 놓으면 $\\sqrt{ab}=\\sqrt{pq}=10$이므로 $pq=100$.\n$a\\sqrt{\\dfrac{b}{a}}=-p\\sqrt{\\dfrac{q}{p}}=-p\\times\\dfrac{\\sqrt{q}}{\\sqrt{p}}=-\\sqrt{p}\\sqrt{q}=-\\sqrt{pq}=-10$\n같은 방법으로 $b\\sqrt{\\dfrac{a}{b}}=-\\sqrt{pq}=-10$\n두 값을 더하면 $-10+(-10)=-20$."
+  },
+  {
+   "id": "a3c15e1b-d4d8-4ec1-903a-baa0837321d2",
+   "before": null,
+   "after": "$\\dfrac{4}{\\sqrt{2}}=2\\sqrt{2}$이므로 $2\\sqrt{2}(\\sqrt{3}-\\sqrt{2})=2\\sqrt{6}-4$.\n$\\sqrt{48}-\\sqrt{72}=4\\sqrt{3}-6\\sqrt{2}$이므로 $\\dfrac{4\\sqrt{3}-6\\sqrt{2}}{\\sqrt{3}}=4-2\\sqrt{6}$.\n두 결과를 더하면 $(2\\sqrt{6}-4)+(4-2\\sqrt{6})=0$."
+  },
+  {
+   "id": "88d8b09d-ba6b-44c4-9c78-d1df52a48b8e",
+   "before": null,
+   "after": "$\\dfrac{\\sqrt{32}-6}{\\sqrt{2}}=\\dfrac{4\\sqrt{2}-6}{\\sqrt{2}}=4-3\\sqrt{2}$\n$a(\\sqrt{8}-3)=a(2\\sqrt{2}-3)=2a\\sqrt{2}-3a$\n두 식을 더하면 $(4-3a)+(2a-3)\\sqrt{2}$이고, 이 값이 유리수이려면 $\\sqrt{2}$의 계수가 0이어야 하므로 $2a-3=0$, $a=\\dfrac{3}{2}$."
+  },
+  {
+   "id": "b4986c29-015c-4fdd-a1d5-2aa025016495",
+   "before": null,
+   "after": "분모를 유리화하면 $\\dfrac{\\sqrt{3}+\\sqrt{2}}{\\sqrt{3}-\\sqrt{2}}=\\dfrac{(\\sqrt{3}+\\sqrt{2})^2}{3-2}=5+2\\sqrt{6}=5+\\sqrt{24}$\n따라서 $A=5,\\,B=24$이고 $A+B=29$."
+  },
+  {
+   "id": "6d916f35-4ef4-43b3-bbb5-0e33d80c56a6",
+   "before": null,
+   "after": "$9-2\\sqrt{3}\\approx5.54$이므로 정수 부분은 5, 소수 부분은 $a=9-2\\sqrt{3}-5=4-2\\sqrt{3}$.\n$a^2=(4-2\\sqrt{3})^2=16-16\\sqrt{3}+12=28-16\\sqrt{3}$\n$a^2-8a+7=(28-16\\sqrt{3})-8(4-2\\sqrt{3})+7=(28-16\\sqrt{3})+(-32+16\\sqrt{3})+7=3$."
+  },
+  {
+   "id": "a666e8af-f648-400f-9177-410a4b73c224",
+   "before": null,
+   "after": "$a-b>0,\\,ab<0$이므로 $a>0,\\,b<0$이다.\n$(-\\sqrt{a})^2-\\sqrt{(-3b)^2}+\\sqrt{(b-a)^2}=a-3|b|+|b-a|$\n$b<0$이므로 $|b|=-b$; $a>b$이므로 $|b-a|=a-b$.\n$=a-(-3b)+(a-b)=a+3b+a-b=2a+2b$."
+  },
+  {
+   "id": "8baadb9a-7124-4e10-8920-74d554e6b664",
+   "before": null,
+   "after": "$\\sqrt{4x+1}=3\\sqrt{5}$의 양변을 제곱하면 $4x+1=9\\times5=45$\n$4x=44$이므로 $x=11$."
+  },
+  {
+   "id": "569a5a91-2e33-49c9-83ff-b04b0ff43419",
+   "before": null,
+   "after": "$\\dfrac{1}{f(x)}=\\dfrac{1}{\\sqrt{x}+\\sqrt{x+1}}=\\dfrac{\\sqrt{x+1}-\\sqrt{x}}{(x+1)-x}=\\sqrt{x+1}-\\sqrt{x}$\n이는 망원급수이므로 $\\sum_{x=1}^{49}\\dfrac{1}{f(x)}=(\\sqrt{2}-\\sqrt{1})+(\\sqrt{3}-\\sqrt{2})+\\cdots+(\\sqrt{50}-\\sqrt{49})$\n$=\\sqrt{50}-\\sqrt{1}=5\\sqrt{2}-1$."
+  },
+  {
+   "id": "22e3e7d6-1906-4440-88f1-e3396f6ecfcb",
+   "before": null,
+   "after": "정사각형의 한 변을 $h$라 하면 $h^2=150$.\n사다리꼴의 넓이는 정사각형 넓이의 2배이므로 $\\dfrac12(윗변+아랫변)\\times h=300$.\n윗변$=2k$, 아랫변$=3k$라 하면 $\\dfrac12(5k)h=300$이므로 $k=\\dfrac{120}{h}$, $h=\\sqrt{150}=5\\sqrt6$이므로 $k=\\dfrac{120}{5\\sqrt6}=\\dfrac{24}{\\sqrt6}=4\\sqrt6$.\n윗변의 길이는 $2k=8\\sqrt6\\,\\mathrm{cm}$."
+  },
+  {
+   "id": "fa3bfae5-9c7f-4765-8c57-0dbe0f0beb73",
+   "before": null,
+   "after": "$\\sqrt{0.0035}=\\sqrt{\\dfrac{35}{10000}}=\\dfrac{\\sqrt{35}}{100}=\\dfrac{5.916}{100}=0.05916$이므로 옳다.\n(참고: $\\sqrt{350}=18.71$, $\\sqrt{3500}=59.16$, $\\sqrt{0.35}=0.5916$, $\\sqrt{0.035}=0.1871$로 나머지는 모두 틀림)"
+  },
+  {
+   "id": "1510977e-4192-4c0f-a4fd-69471e9c9d64",
+   "before": null,
+   "after": "$4a^2-12a+9=(2a-3)^2$, $4a^2-20a+25=(2a-5)^2$, $4a^2-28a+49=(2a-7)^2$이므로 주어진 식은 $|2a-3|+|2a-5|+|2a-7|$이다.\n$2\\sqrt2<a<\\sqrt{10}$이므로 $2a$의 범위는 약 $5.66<2a<6.32$이다.\n이 범위에서 $2a-3>0$, $2a-5>0$, $2a-7<0$이므로\n$|2a-3|+|2a-5|+|2a-7|=(2a-3)+(2a-5)+(7-2a)=2a-1$."
+  },
+  {
+   "id": "8bb43517-eb0a-4b89-8b69-b0beb631007c",
+   "before": null,
+   "after": "분자와 분모에 $\\sqrt{x+1}-\\sqrt{x-1}$을 곱해 유리화합니다.\n$\\frac{\\sqrt{x+1}-\\sqrt{x-1}}{\\sqrt{x+1}+\\sqrt{x-1}}=\\frac{(\\sqrt{x+1}-\\sqrt{x-1})^2}{(x+1)-(x-1)}=\\frac{2x-2\\sqrt{x^2-1}}{2}=x-\\sqrt{x^2-1}$\n$x=\\sqrt3$이므로 $x^2-1=2$\n따라서 값은 $\\sqrt3-\\sqrt2$"
+  },
+  {
+   "id": "7798467b-930b-41f1-897d-a5e06e2a3c82",
+   "before": null,
+   "after": "$(\\sqrt3)^2=3$, $(-\\sqrt{10})^2=10$, $\\sqrt{(-2)^2}=\\sqrt4=2$, $\\sqrt{5^2}=\\sqrt{25}=5$\n주어진 식은 $3-10+2-5$\n계산하면 $-10$"
+  },
+  {
+   "id": "9811e0e5-4083-46f2-aca6-451d29c0d805",
+   "before": null,
+   "after": "①, ②, ③, ⑤를 각각 계산하면 좌변 값이 주어진 우변과 일치하지 않습니다(예: ①은 $3\\sqrt2$, ③은 $2\\sqrt5-2\\sqrt{15}$)\n④를 계산하면 $-2\\sqrt{32}=-8\\sqrt2$, $\\sqrt{20}=2\\sqrt5$이므로\n$-8\\sqrt2+2\\sqrt5-\\sqrt2+4\\sqrt5=-9\\sqrt2+6\\sqrt5$\n이는 주어진 우변과 일치하므로 옳은 것은 ④"
+  },
+  {
+   "id": "63a8b22d-786e-42cb-a04c-3b2012906f8b",
+   "before": null,
+   "after": "①, ②, ③을 계산하면 각각 $-3$, $4$, $2\\sqrt2$로 주어진 값과 일치합니다\n④는 $\\frac34\\div\\frac{\\sqrt2}{\\sqrt{10}}\\div\\frac{\\sqrt5}{3}=\\frac34\\times\\sqrt5\\times\\frac{3}{\\sqrt5}=\\frac94$로 계산되어 주어진 $\\frac{3\\sqrt5}{2}$와 다릅니다\n⑤는 $\\frac{5\\sqrt2}{\\sqrt3}\\times\\left(-\\frac{\\sqrt7}{\\sqrt5}\\right)\\div\\frac{\\sqrt{14}}{2\\sqrt3}=-2\\sqrt5$로 계산되어 주어진 $-4\\sqrt5$와 다릅니다\n따라서 옳지 않은 것은 ④, ⑤"
+  },
+  {
+   "id": "a41a47ba-ad32-40f7-86bc-7f1866c45bfb",
+   "before": null,
+   "after": "$\\sqrt5\\approx2.236$이므로 $\\sqrt5-1\\approx1.236$\n정수 부분은 $a=1$, 소수 부분은 $b=(\\sqrt5-1)-1=\\sqrt5-2$\n$a-b=1-(\\sqrt5-2)=3-\\sqrt5$"
+  },
+  {
+   "id": "b1aa552f-c5b1-46f2-bc73-d31759d2f775",
+   "before": null,
+   "after": "$x>0,y<0$이므로 $x-y>0$, 즉 $\\sqrt{(x-y)^2}=x-y$\n$\\sqrt{x^2}=x$ ($x>0$이므로), $\\sqrt{y^2}=-y$ ($y<0$이므로)\n식을 정리하면 $(x-y)+x-(-y)=2x$"
+  },
+  {
+   "id": "0b7c01bc-1810-47a6-b76c-c8283102ddec",
+   "before": null,
+   "after": "$3\\sqrt3(1+\\sqrt3)=3\\sqrt3+9$\n$\\sqrt{27}=3\\sqrt3$, $\\frac{3}{\\sqrt3}=\\sqrt3$\n따라서 $3\\sqrt3+9-3\\sqrt3+\\sqrt3=9+\\sqrt3$"
+  },
+  {
+   "id": "54bf1424-5ae1-44ed-a193-834a59d0c1ab",
+   "before": null,
+   "after": "$a>b, ab<0$이므로 $a>0, b<0$\n$\\sqrt{4a^2}=2a$, $\\sqrt{(-3b)^2}=3|b|=-3b$, $\\sqrt{(b-a)^2}=|b-a|=a-b$ ($b-a<0$이므로)\n식을 정리하면 $2a+(-3b)-(a-b)=a-2b$"
+  },
+  {
+   "id": "cd88dec2-8cce-43c8-8a36-a118dfda10a3",
+   "before": null,
+   "after": "$\\sqrt{a^2}=-a$이므로 $a\\le0$이고, $ab\\ne0$이므로 $a<0$\n$\\sqrt{(-b)^2}=-b$이므로 $b\\le0$이고 같은 이유로 $b<0$\n$\\sqrt{(-a)^2}=|a|=-a$, $\\sqrt{9b^2}=3|b|=-3b$\n따라서 $2a-(-a)+(-3b)=3a-3b$"
+  },
+  {
+   "id": "c4ea6a80-4ee5-4255-8caa-cf72ce1021d1",
+   "before": null,
+   "after": "$\\sqrt5\\approx2.236$이므로 $\\sqrt5-2>0$, $\\sqrt{(\\sqrt5-2)^2}=\\sqrt5-2$\n$2-\\sqrt5<0$이므로 $\\sqrt{(2-\\sqrt5)^2}=\\sqrt5-2$\n$\\sqrt{(-5)^2}=5$, $(-\\sqrt2)^2=2$\n식을 정리하면 $(\\sqrt5-2)-(\\sqrt5-2)-5+2=-3$"
+  },
+  {
+   "id": "7085e338-3f6c-4e07-9bf5-269382ca730f",
+   "before": null,
+   "after": "각 수를 근삿값으로 비교하면 $-3<1-\\sqrt{11}<1-\\sqrt2<\\sqrt5-\\sqrt3<-1+\\sqrt5$\n따라서 왼쪽에서 두 번째 수는 $a=1-\\sqrt{11}$, 가장 오른쪽 수는 $b=-1+\\sqrt5$\n$a+b=(1-\\sqrt{11})+(\\sqrt5-1)=\\sqrt5-\\sqrt{11}$"
+  },
+  {
+   "id": "dab9a1fe-dab8-489a-887b-fbdffdac5d36",
+   "before": null,
+   "after": "$a<0$이므로 $-2a>0$, $\\sqrt{(-2a)^2}=-2a$\n$\\sqrt{a^2}=|a|=-a$\n따라서 $-2a-(-a)=-a$"
+  },
+  {
+   "id": "2f0f1ca4-26f2-4735-9eb5-4f054a113394",
+   "before": null,
+   "after": "첫째 항을 유리화하면 $\\frac{2}{\\sqrt5-2}=\\frac{2(\\sqrt5+2)}{5-4}=2\\sqrt5+4$\n둘째 항을 유리화하면 $\\frac{\\sqrt5-2}{\\sqrt5+2}=\\frac{(\\sqrt5-2)^2}{5-4}=9-4\\sqrt5$\n두 값을 더하면 $(2\\sqrt5+4)+(9-4\\sqrt5)=13-2\\sqrt5$"
+  },
+  {
+   "id": "fd3e6525-57a2-4574-9a98-a2d501696ab7",
+   "before": null,
+   "after": "$ab<0, a-b<0$이므로 $a<0, b>0$\n$\\sqrt{49a^2}=7|a|=-7a$, $\\sqrt{(2b-a)^2}=2b-a$ ($2b-a>0$이므로), $(\\sqrt{-5a})^2=-5a$\n식을 정리하면 $-7a-(2b-a)-(-5a)=-a-2b$"
+  },
+  {
+   "id": "5c852ce5-d506-4b43-acbd-decfe857a787",
+   "before": null,
+   "after": "$\\sqrt8=2\\sqrt2\\approx2.828$이므로 $6-\\sqrt8\\approx3.172$\n정수 부분은 $a=3$, 소수 부분은 $b=(6-\\sqrt8)-3=3-2\\sqrt2$\n$\\frac{a}{b}=\\frac{3}{3-2\\sqrt2}=\\frac{3(3+2\\sqrt2)}{9-8}=9+6\\sqrt2$"
+  },
+  {
+   "id": "3cf297f9-2b7d-432f-9d40-16087946ec82",
+   "before": null,
+   "after": "$\\sqrt7\\approx2.6458$은 소수점 첫째 자리가 6이므로 반올림하면 $f(7)=3$\n$\\sqrt{11}\\approx3.3166$은 소수점 첫째 자리가 3이므로 반올림하면 $f(11)=3$\n$\\sqrt{13}\\approx3.6056$은 소수점 첫째 자리가 6이므로 반올림하면 $f(13)=4$\n$f(7)+f(11)+f(13)=3+3+4=10$"
+  },
+  {
+   "id": "f13b8951-a907-4c40-94c6-888523e50e8c",
+   "before": null,
+   "after": "$a^2-6a+9=(a-3)^2$, $4a^2-4a+1=(2a-1)^2$이므로 식은 $-\\sqrt{(a-3)^2}-\\sqrt{(2a-1)^2}=-|a-3|-|2a-1|$\n$\\frac12<a<3$이므로 $a-3<0$, 즉 $|a-3|=3-a$이고, $2a-1>0$, 즉 $|2a-1|=2a-1$\n따라서 $-(3-a)-(2a-1)=-3+a-2a+1=-a-2$"
+  },
+  {
+   "id": "e9319aaa-cdbf-4f5b-a2b3-0a21667c2db7",
+   "before": null,
+   "after": "$5\\sqrt6+4\\sqrt2-3\\sqrt6+\\sqrt2$을 동류항끼리 정리하면\n$(5-3)\\sqrt6+(4+1)\\sqrt2=2\\sqrt6+5\\sqrt2$\n따라서 $a=2$, $b=5$이므로 $ab=10$"
+  },
+  {
+   "id": "9de1b528-e9ec-42d6-b700-348c75ae7211",
+   "before": null,
+   "after": "연산 $a*b=ab+6$의 정의에 대입하면\n$(-\\sqrt3)*\\sqrt{27}=(-\\sqrt3)\\times\\sqrt{27}+6$\n$\\sqrt{27}=3\\sqrt3$이므로 $(-\\sqrt3)\\times3\\sqrt3=-3\\times3=-9$\n따라서 $-9+6=-3$"
+  },
+  {
+   "id": "f0c8ee88-e3bc-4777-9251-b30511372fd7",
+   "before": null,
+   "after": "$\\sqrt{35000}=\\sqrt{3.5\\times10000}=100\\sqrt{3.5}=100a$\n$\\sqrt{0.35}=\\sqrt{35\\times0.01}=\\frac{1}{10}\\sqrt{35}=\\frac{1}{10}b$\n따라서 $\\sqrt{35000}+\\sqrt{0.35}=100a+\\frac{1}{10}b$"
+  },
+  {
+   "id": "d17a63cb-13f2-4fde-9e78-9df66e225d86",
+   "before": null,
+   "after": "① $\\sqrt2+\\sqrt3$은 $\\sqrt5$로 합쳐지지 않는다\n② $4\\sqrt3-2\\sqrt3=2\\sqrt3\\ne2$\n③ $\\sqrt{10}-\\sqrt7$은 $\\sqrt3$이 아니다\n④ $2\\sqrt3+4\\sqrt3=6\\sqrt3$으로 옳다\n⑤ $\\sqrt{(-3)^2\\times2}=\\sqrt{18}=3\\sqrt2$이므로 $-3\\sqrt2$와 부호가 다르다"
+  },
+  {
+   "id": "add1a04b-fac3-4a68-8fc6-2e932a0e13f3",
+   "before": null,
+   "after": "각 식을 정리해 □ 안의 수를 구한다\n① $\\sqrt{80}=4\\sqrt5$이므로 □=5\n② $-3\\sqrt2=-\\sqrt{18}$이므로 □=18\n③ $\\sqrt{13}\\times\\sqrt{39}=\\sqrt{507}=13\\sqrt3$이므로 □=13\n④ $-4\\sqrt{23}=-\\sqrt{368}$이므로 □=368\n⑤ $\\frac{\\sqrt{2^2\\times3^3\\times5}}{\\sqrt2\\times3}=\\frac{6\\sqrt{15}}{3\\sqrt2}=\\sqrt{30}$으로 □는 작은 값\n따라서 □가 가장 큰 것은 368인 ④"
+  },
+  {
+   "id": "c8389fac-e99e-4831-8611-347c91f8256e",
+   "before": null,
+   "after": "$\\frac{\\sqrt2-\\sqrt6}{\\sqrt2}=1-\\sqrt3$\n$\\sqrt{12}=2\\sqrt3$이므로 $2+\\sqrt{12}=2+2\\sqrt3$\n따라서 $(1-\\sqrt3)-(2+2\\sqrt3)=-1-3\\sqrt3$"
+  },
+  {
+   "id": "81393080-2f85-4b71-93b3-2fba088d2b37",
+   "before": null,
+   "after": "$\\sqrt{320}=8\\sqrt5$이고 $\\sqrt{4m}=2\\sqrt m$이므로 $2\\sqrt m=\\sqrt5(8-\\sqrt n)$\n양변을 제곱하면 $n$이 제곱수여야 하므로 $n=t^2$ ($t$는 자연수)\n$4m=5(t-8)^2$에서 $m$이 자연수이려면 $t$는 짝수, $\\sqrt n\\le8$이므로 $t\\le8$\n$t=2,4,6$일 때 각각 $m=45,20,5$ ($t=8$이면 $m=0$이라 제외)\n따라서 $m$의 값의 합은 $45+20+5=70$"
+  },
+  {
+   "id": "917b40ef-6d1f-4dc2-b27b-02e8f9da0b43",
+   "before": null,
+   "after": "각 수를 근삿값으로 비교한다 ($\\sqrt2≈1.41$, $\\sqrt5≈2.24$, $\\sqrt{10}≈3.16$)\n$3\\sqrt5-1≈5.71$, $2\\sqrt2+1≈3.83$, $3+\\sqrt5≈5.24$, $5-\\sqrt2≈3.59$, $\\sqrt{10}-1≈2.16$\n가장 큰 값은 $3\\sqrt5-1$"
+  },
+  {
+   "id": "61c6dacc-eb8a-4043-ad47-e66a3e0ada26",
+   "before": null,
+   "after": "근삿값으로 비교하면 ($\\sqrt2≈1.41$, $\\sqrt3≈1.73$)\n$\\sqrt2+1≈2.41$이 가장 크고, $\\sqrt2-\\sqrt3≈-0.32$가 가장 작다\n가장 큰 수와 가장 작은 수의 차는\n$(\\sqrt2+1)-(\\sqrt2-\\sqrt3)=1+\\sqrt3$"
+  },
+  {
+   "id": "28f7f732-9520-4ecd-a2ef-4fe446ad6c9e",
+   "before": null,
+   "after": "연속하는 세 홀수를 $a=b-2,~c=b+2$로 놓으면\n$3a+b+2c=3(b-2)+b+2(b+2)=6b-2$\n$a+b+c=3b\\le105$에서 $b\\le35$이고, $6b-2=k^2$이 완전제곱수여야 한다\n$b=3,11,17,33$일 때 각각 $k=4,8,10,14$로 성립\n따라서 순서쌍의 개수는 4개"
+  },
+  {
+   "id": "ccc18df6-068d-4049-988c-d1b808d8d05e",
+   "before": null,
+   "after": "$-3<x<3$에서 $x-3<0$, $x+3>0$이므로\n$\\sqrt{(x-3)^2}=3-x$, $\\sqrt{(x+3)^2}=x+3$\n$(3-x)-(x+3)=3x+1$\n$-2x=3x+1$에서 $x=-\\frac{1}{5}$"
+  },
+  {
+   "id": "9f0c6d07-d2ef-4ba9-bb3a-c7dd915ca6b3",
+   "before": null,
+   "after": "$\\sqrt{54}=3\\sqrt6$, $\\sqrt{18}=3\\sqrt2$\n$(\\sqrt{18}-\\sqrt6)\\div\\sqrt3=(3\\sqrt2-\\sqrt6)\\div\\sqrt3=\\sqrt6-\\sqrt2$\n전체를 더하면 $3\\sqrt6+(\\sqrt6-\\sqrt2)-\\sqrt2=4\\sqrt6-2\\sqrt2$\n따라서 $a=-2$, $b=4$이므로 $a-b=-6$"
+  },
+  {
+   "id": "92de1156-7756-4f89-a4e4-b891570ed830",
+   "before": null,
+   "after": "각 보기를 확인한다\n① $\\sqrt3+2≈3.73<4$로 거짓\n② $\\sqrt{0.8}>\\sqrt{0.7}$이므로 $-\\sqrt{0.8}<-\\sqrt{0.7}$로 거짓\n③ $5\\sqrt2≈7.07>4\\sqrt3≈6.93$이므로 거짓\n④ $\\sqrt5≈2.24>2$이므로 거짓\n⑤ $5\\sqrt3-\\sqrt{12}=3\\sqrt3≈5.20$, $\\sqrt2+\\sqrt{18}=4\\sqrt2≈5.66$이므로 $3\\sqrt3<4\\sqrt2$로 참"
+  },
+  {
+   "id": "5c1108a6-9f6d-4083-a8e1-a8299b09a828",
+   "before": null,
+   "after": "$4<5<9$이므로 $\\sqrt4<\\sqrt5<\\sqrt9$, 즉 $2<\\sqrt5<3$\n각 변에 $-1$을 곱하고 7을 더하면 $4<7-\\sqrt5<5$\n따라서 정수 부분은 $a=4$\n소수 부분은 $b=(7-\\sqrt5)-a=(7-\\sqrt5)-4=3-\\sqrt5$\n따라서 $3a-b=3\\times4-(3-\\sqrt5)=12-3+\\sqrt5=9+\\sqrt5$"
+  },
+  {
+   "id": "3357df8b-a83a-4dfd-89eb-a865d00389e8",
+   "before": null,
+   "after": "$\\sqrt{7a}$가 정수이려면 $7a$가 완전제곱수여야 하므로 $a=7k^2$ ($k$는 0 이상의 정수)\n$0\\le7k^2\\le200$에서 $k^2\\le28.5\\cdots$이므로 $k=0,1,2,3,4,5$\n이때 $a=0,7,28,63,112,175$로 모두 조건을 만족\n따라서 $a$의 개수는 6개"
+  },
+  {
+   "id": "e9f52c6a-7b81-4a15-87de-294a87034f08",
+   "before": null,
+   "after": "$\\sqrt{27}=3\\sqrt3$, $\\sqrt{48}=4\\sqrt3$\n$\\sqrt{27}-\\sqrt{48}=3\\sqrt3-4\\sqrt3=-\\sqrt3$"
+  },
+  {
+   "id": "a950eead-fcb9-465d-9022-a8ac20b4474f",
+   "before": null,
+   "after": "각 수의 유리수 여부를 판별한다\n$\\sqrt{0.49}=0.7$(유리수), $\\sqrt{(-3)^2}=3$(유리수), $0.\\overline{35}$(순환소수, 유리수), $\\sqrt{25}-5=0$(유리수)\n$7+\\sqrt{30}$은 $\\sqrt{30}$이 무리수라 무리수, $\\pi$는 무리수, $\\frac{1}{\\sqrt3}=\\frac{\\sqrt3}{3}$도 무리수\n따라서 유리수가 아닌 것은 3개"
+  },
+  {
+   "id": "af552cbe-c31d-41b3-a12f-9cec9fc2844e",
+   "before": null,
+   "after": "제곱근표에서 $\\sqrt{3.15}=1.775$이므로 $\\sqrt{315}=10\\sqrt{3.15}=17.75$\n$\\sqrt x=19.737-17.75=1.987$이고 표에서 $\\sqrt{3.95}=1.987$이므로 $x=3.95$\n$\\sqrt{0.0315}=\\sqrt{3.15}\\div10=0.1775$\n$\\sqrt y=2.1265-0.1775=1.949$이고 표에서 $\\sqrt{3.80}=1.949$이므로 $y=3.80$\n따라서 $100x-100y=395-380=15$"
+  },
+  {
+   "id": "568364d4-6056-4b90-aaa1-552fac92b7b8",
+   "before": null,
+   "after": "$a=\\sqrt2,\\ b=\\sqrt5$\n① $\\sqrt{20}=2\\sqrt5=a^2b$ (참)\n② $a^3=2\\sqrt2$이므로 $\\frac{b}{a^3}=\\frac{\\sqrt5}{2\\sqrt2}$ (참)\n③ $\\sqrt{0.01}=0.1=\\frac{1}{a^2b^2}$ (참)\n④ $4\\sqrt{35}\\div2\\sqrt7=2\\sqrt5=2b$ (참)\n⑤ $(\\sqrt{15}-\\sqrt6)\\div\\sqrt3=\\sqrt5-\\sqrt2=b-a$ 인데 보기는 $a-b$로 부호가 반대이므로 옳지 않다."
+  },
+  {
+   "id": "d5e5d835-4d85-4e7c-ba6e-2fb77da51ac3",
+   "before": null,
+   "after": "① $\\sqrt{18}=3\\sqrt2$ 로 구할 수 있음\n② $\\sqrt{0.5}=\\frac{\\sqrt2}{2}$ 로 구할 수 있음\n③ $\\sqrt{2000}=\\sqrt{2\\times10^3}=20\\sqrt5$ 이므로 $\\sqrt5$ 가 필요해 $\\sqrt2$ 만으로는 구할 수 없음\n④ $\\sqrt{0.005}=\\sqrt{50\\times10^{-4}}=0.05\\sqrt2$ 로 구할 수 있음\n⑤ $\\sqrt8=2\\sqrt2$ 이므로 $\\frac{1}{3-\\sqrt8}=\\frac{1}{3-2\\sqrt2}=3+2\\sqrt2$ 로 구할 수 있음\n따라서 답은 ③"
+  },
+  {
+   "id": "9290e23c-bc3c-4861-9418-de9bd3788548",
+   "before": null,
+   "after": "식은 $\\sqrt{27}\\left(\\sqrt6+\\frac{2}{\\sqrt3}\\right)-\\frac{10}{\\sqrt2}(\\sqrt8-1)$ 로 해석\n$\\sqrt{27}=3\\sqrt3$ 이므로 앞부분: $3\\sqrt3\\times\\sqrt6+3\\sqrt3\\times\\frac{2}{\\sqrt3}=9\\sqrt2+6$\n$\\frac{10}{\\sqrt2}=5\\sqrt2$, $\\sqrt8=2\\sqrt2$ 이므로 뒷부분: $5\\sqrt2(2\\sqrt2-1)=20-5\\sqrt2$\n전체: $(9\\sqrt2+6)-(20-5\\sqrt2)=14\\sqrt2-14$"
+  },
+  {
+   "id": "954065de-b9be-40e5-a3ac-782f4f60ff8b",
+   "before": null,
+   "after": "$\\frac{6}{\\sqrt3}=2\\sqrt3$\n$\\sqrt3(2-\\sqrt3)=2\\sqrt3-3$\n$2\\sqrt{12}=4\\sqrt3$\n합: $2\\sqrt3+(2\\sqrt3-3)-4\\sqrt3=-3$"
+  },
+  {
+   "id": "4d2da8fb-eae9-4bb3-8150-b3b73969f796",
+   "before": null,
+   "after": "표에서 $\\sqrt{9.44}=3.072,\\ \\sqrt{10.0}=3.162,\\ \\sqrt{9.70}=3.114,\\ \\sqrt{9.91}=3.148,\\ \\sqrt{9.83}=3.135$\n① $\\sqrt{944}=\\sqrt{9.44}\\times10=30.72$ (참)\n② $\\sqrt{0.1}=\\sqrt{10}\\div10=0.3162$ (참)\n③ $\\sqrt{0.097}=\\sqrt{9.7}\\div10=0.3114$ (참)\n④ $\\sqrt{99100}=\\sqrt{9.91\\times10^4}=\\sqrt{9.91}\\times100=314.8$ 인데 보기는 $31.48$ 로 옳지 않음\n⑤ $\\sqrt{0.000983}=\\sqrt{9.83}\\times10^{-2}=0.03135$ (참)\n따라서 답은 ④"
+  },
+  {
+   "id": "358144a2-a8c0-420c-8015-b5a4d7fe2dc2",
+   "before": null,
+   "after": "$\\frac{2\\sqrt3}{\\sqrt6}=\\frac{2\\sqrt3\\times\\sqrt6}{6}=\\frac{2\\sqrt{18}}{6}=\\frac{6\\sqrt2}{6}=\\sqrt2$"
+  },
+  {
+   "id": "cc483a86-e1c2-4c46-9799-c2cfe924e0a4",
+   "before": null,
+   "after": "가로 $x=\\sqrt{24}-3=2\\sqrt6-3$, 세로 $y=\\sqrt{12}=2\\sqrt3$, 높이 $z=\\sqrt8=2\\sqrt2$\n$V=xyz=(2\\sqrt6-3)(4\\sqrt6)=48-12\\sqrt6$\n$S=2(xy+yz+zx)=2(12\\sqrt2-6\\sqrt3+4\\sqrt6+8\\sqrt3-6\\sqrt2)=12\\sqrt2+4\\sqrt3+8\\sqrt6$\n$2V+3S=(96-24\\sqrt6)+(36\\sqrt2+12\\sqrt3+24\\sqrt6)=96+36\\sqrt2+12\\sqrt3$\n$p=96,q=36,r=12$ 이므로 $p+q+r=144$"
+  },
+  {
+   "id": "b8fd5e6f-18f2-43d1-9f7b-04f0fee8f5ce",
+   "before": null,
+   "after": "$(\\sqrt2)^2+(-\\sqrt7)^2-\\sqrt{121}+\\sqrt{(-5)^2}=2+7-11+5=3$"
+  },
+  {
+   "id": "af2cffe1-16b6-4e21-a0f6-24c66d6049ea",
+   "before": null,
+   "after": "$\\frac{3\\sqrt2}{\\sqrt6}=\\sqrt3$, $\\sqrt{48}=4\\sqrt3$, $\\sqrt5\\times\\sqrt{15}=\\sqrt{75}=5\\sqrt3$\n합: $\\sqrt3+4\\sqrt3+5\\sqrt3=10\\sqrt3=k\\sqrt3$ 이므로 $k=10$"
+  },
+  {
+   "id": "5ca7c1d9-1983-4744-ab36-1bf5ef7acd45",
+   "before": null,
+   "after": "ㄱ. $\\sqrt{42}\\div\\sqrt6=\\sqrt7\\ne2\\sqrt2$ (거짓)\nㄴ. $3\\sqrt2\\times\\frac{1}{\\sqrt6}=\\frac{3}{\\sqrt3}=\\sqrt3$ (참)\nㄷ. $2\\sqrt{75}-\\sqrt{48}=10\\sqrt3-4\\sqrt3=6\\sqrt3$ (참)\nㄹ. $\\frac{\\sqrt{18}}{6}+\\frac{\\sqrt6}{\\sqrt{12}}=\\frac{\\sqrt2}{2}+\\frac{\\sqrt2}{2}=\\sqrt2$ (참)\nㅁ. $\\sqrt3(\\sqrt3-\\sqrt6)+4\\sqrt2=3-3\\sqrt2+4\\sqrt2=3+\\sqrt2\\ne3-\\sqrt2$ (거짓)\n옳은 것은 ㄴ,ㄷ,ㄹ 이므로 답은 ⑤"
+  },
+  {
+   "id": "6fc9f6c7-551d-433f-87c5-9f4de3eeea2e",
+   "before": null,
+   "after": "① $\\sqrt{40}\\div\\sqrt8-\\sqrt{45}=\\sqrt5-3\\sqrt5=-2\\sqrt5$ (참)\n② $3\\sqrt{28}-\\sqrt{63}+2\\sqrt7=6\\sqrt7-3\\sqrt7+2\\sqrt7=5\\sqrt7$ (참)\n③ $\\sqrt2(\\sqrt5+\\sqrt6)-\\sqrt3=\\sqrt{10}+2\\sqrt3-\\sqrt3=\\sqrt{10}+\\sqrt3$ (참)\n④ $\\frac{\\sqrt2-\\sqrt6}{\\sqrt2}-(1+\\sqrt3)=(1-\\sqrt3)-(1+\\sqrt3)=-2\\sqrt3$ 인데 보기는 $-1+\\sqrt2$ 로 옳지 않음\n⑤ $2\\sqrt3-\\sqrt7-4\\sqrt3+2\\sqrt7=-2\\sqrt3+\\sqrt7$ (참)\n따라서 답은 ④"
+  },
+  {
+   "id": "84ecc91e-23b5-4bbd-885f-7e6267faedf4",
+   "before": null,
+   "after": "① $\\sqrt{12}=2\\sqrt3$ (참)\n② $\\sqrt{44}=2\\sqrt{11}$ (참)\n③ $\\sqrt{200}=10\\sqrt2$ (참)\n④ $\\sqrt{3\\times5^2}=5\\sqrt3$ (참)\n⑤ $\\sqrt{2^2\\times3^2\\times7}=\\sqrt{252}=6\\sqrt7$ 인데 보기는 $5\\sqrt7$ 로 옳지 않음\n따라서 답은 ⑤"
+  },
+  {
+   "id": "f9674d7d-dda3-4506-902f-b5402e974df4",
+   "before": null,
+   "after": "$(2x-ay)^2=4x^2-4axy+a^2y^2$\n$xy$의 계수 $-4a=-12$ 이므로 $a=3$\n$y^2$의 계수는 $a^2=9$"
+  },
+  {
+   "id": "b43fd408-fecb-4e8a-a081-5f27ef1fda6a",
+   "before": null,
+   "after": "$(3x+a)(2x-b)=6x^2+(2a-3b)x-ab$ 에서 $2a-3b=11$\n$(bx+3)(-ax+1)=-abx^2+(b-3a)x+3$ 에서 $b-3a=-13$\n두 식을 연립하면 $a=4,\\ b=-1$\n$a+b=3$"
+  },
+  {
+   "id": "dc62be0b-a749-4ded-8d13-21a74c9a9dd0",
+   "before": null,
+   "after": "$9x^2+mx+1=(3x)^2+mx+1^2$ 이 완전제곱식이 되려면 $m=2\\times3\\times1=6$ (양수)\n$x^2-12x+n=(x-6)^2$ 이 되려면 $n=36$\n$\\frac{n}{m}=\\frac{36}{6}=6$"
+  },
+  {
+   "id": "7e6b239d-1ba7-4703-b069-405c84ef4191",
+   "before": null,
+   "after": "$x+\\frac1x=5$ 의 양변을 제곱하면 $x^2+\\frac1{x^2}=25-2=23$\n양변에 $x$를 곱하면 $x^2+1=5x$, 즉 $x^2-5x=-1$\n$2x^2+\\frac1{x^2}-5x=(x^2-5x)+\\left(x^2+\\frac1{x^2}\\right)=-1+23=22$"
+  },
+  {
+   "id": "2664ab77-f722-42b7-b0ef-ba7a0ac1941d",
+   "before": null,
+   "after": "2A+3B = 2(2x-3)+3(-x+4) = 4x-6-3x+12 = x+6\nA-2B = (2x-3)-2(-x+4) = 2x-3+2x-8 = 4x-11\n(2A+3B)(A-2B) = (x+6)(4x-11) = 4x^2-11x+24x-66 = $4x^2+13x-66$"
+  },
+  {
+   "id": "371dfb8b-d000-4e34-9db5-c815107565b5",
+   "before": null,
+   "after": "$\\left(x-\\frac{a}{2}\\right)^2=x^2-ax+\\frac{a^2}{4}$\n$(3x+1)(5x-2)=15x^2-x-2$\n두 식의 차를 구하면 $x^2-ax+\\frac{a^2}{4}-15x^2+x+2=-14x^2+(1-a)x+\\frac{a^2}{4}+2$\n$x$의 계수가 5이므로 $1-a=5$, 따라서 $a=-4$"
+  },
+  {
+   "id": "d9f39f01-f4b2-4f7e-9d86-6b860c738e4b",
+   "before": null,
+   "after": "$\\left(\\frac{2}{3}a+\\frac{3}{5}b\\right)\\left(\\frac{2}{3}a-\\frac{3}{5}b\\right)=\\frac{4}{9}a^2-\\frac{9}{25}b^2$\n$=\\frac{4}{9}\\times45-\\frac{9}{25}\\times50=20-18=2$"
+  },
+  {
+   "id": "74011bb4-ecf3-4874-be16-2032f13be070",
+   "before": null,
+   "after": "① $(a+2)^2=a^2+4a+4$ (참)\n② $(2x-3)^2=4x^2-12x+9$ (참)\n③ $(4x-1)(4x+1)=16x^2-1$ (참)\n④ $(2x-5)(3x+1)=6x^2+2x-15x-5=6x^2-13x-5$인데 문제는 $6x^2-15x-5$로 되어 있어 틀림\n⑤ $\\left(x-\\frac{1}{3}\\right)\\left(x+\\frac{1}{4}\\right)=x^2-\\frac{1}{12}x-\\frac{1}{12}$ (참)"
+  },
+  {
+   "id": "8e47c3e5-8ee5-463f-ac65-4ee6c7afd8cf",
+   "before": null,
+   "after": "$(x+a)(x+b)=x^2+(a+b)x+ab=x^2+cx+6$이므로 $ab=6$, $c=a+b$\n$a,b$가 정수이고 곱이 6인 정수쌍: $(1,6)\\to c=7$, $(2,3)\\to c=5$, $(-1,-6)\\to c=-7$, $(-2,-3)\\to c=-5$\n따라서 $c$의 값이 될 수 있는 것은 $\\pm5,\\pm7$뿐이므로 $3$은 될 수 없다"
+  },
+  {
+   "id": "118026ea-7bd6-4c0e-a148-cbae32c57de4",
+   "before": null,
+   "after": "$\\frac{√5-2}{√5+2}+\\frac{√5+2}{√5-2}=\\frac{(√5-2)^2+(√5+2)^2}{(√5+2)(√5-2)}$\n분모: 5-4=1\n분자: (9-4√5)+(9+4√5)=18\n따라서 값은 18"
+  },
+  {
+   "id": "30e8f34f-d507-4770-a14a-7cc62b7ec714",
+   "before": null,
+   "after": "$(3x+A)(3x-A)=9x^2-A^2=Bx^2-\\frac{25}{9}$\n따라서 $B=9$, $A^2=\\frac{25}{9}$이고 $A>0$이므로 $A=\\frac{5}{3}$\n$AB=\\frac{5}{3}\\times9=15$"
+  },
+  {
+   "id": "0d42eb5c-a0ea-4cf3-bcad-80b91d988d82",
+   "before": null,
+   "after": "$x=\\frac{1}{√3-1}=\\frac{√3+1}{2}$, $y=\\frac{1}{√3+1}=\\frac{√3-1}{2}$\n$x+y=√3$, $x-y=1$, $xy=\\frac{(√3+1)(√3-1)}{4}=\\frac{1}{2}$\n$x^3y-xy^3-x-y=xy(x^2-y^2)-(x+y)=xy(x+y)(x-y)-(x+y)$\n$=√3\\left(\\frac{1}{2}\\times1-1\\right)=√3\\times\\left(-\\frac{1}{2}\\right)=-\\frac{√3}{2}$"
+  },
+  {
+   "id": "d51999db-7fa7-455c-9d43-a6b5415038ad",
+   "before": null,
+   "after": "$x=\\frac{2}{3+√7}=3-√7$, $y=\\frac{2}{3-√7}=3+√7$\n$x+y=6$, $xy=(3-√7)(3+√7)=2$\n$x^2+y^2=(x+y)^2-2xy=36-4=32$\n$x^2+y^2+xy=32+2=34$"
+  },
+  {
+   "id": "9846df50-d320-4e69-b8d2-d250433bcc13",
+   "before": null,
+   "after": "$(4x+1)(2x-3)=8x^2-12x+2x-3=8x^2-10x-3$\na=8, b=-10, c=-3\na+b-c=8-10-(-3)=1"
+  },
+  {
+   "id": "cf00450b-8b2b-48b8-97b8-a1528bbcc8f7",
+   "before": null,
+   "after": "$\\left(-\\frac{1}{2}x-y\\right)\\left(\\frac{1}{2}x-y\\right)=-\\left(\\frac{1}{2}x+y\\right)\\left(\\frac{1}{2}x-y\\right)=-\\left(\\frac{1}{4}x^2-y^2\\right)=-\\frac{1}{4}x^2+y^2$\n$(x+2y)(3x-y)=3x^2-xy+6xy-2y^2=3x^2+5xy-2y^2$\n두 식을 더하면 $\\left(3-\\frac{1}{4}\\right)x^2+5xy+(1-2)y^2=\\frac{11}{4}x^2+5xy-y^2$\n$a=\\frac{11}{4}$, $b=-1$이므로 $4a+b=11-1=10$"
+  },
+  {
+   "id": "8a09edad-aabc-404c-9fe6-e4095bf805ac",
+   "before": null,
+   "after": "2025=n이라 하면 2024=n-1, 2026=n+1\n분모: $n^2-(n-1)(n+1)=n^2-(n^2-1)=1$\n따라서 $\\frac{2026}{1}=2026$"
+  },
+  {
+   "id": "7f2d2bec-4486-4548-8c01-027f1a754f9b",
+   "before": null,
+   "after": "$x=-2+√5$이므로 $x+2=√5$\n양변을 제곱하면 $x^2+4x+4=5$, 즉 $x^2+4x=1$\n$x^2+4x-5=1-5=-4$"
+  },
+  {
+   "id": "07b038b4-e57c-45bb-8bd4-38f7ab5ac232",
+   "before": null,
+   "after": "p(x)=8+7x+6x^2+x^3의 계수는 c0=8,c1=7,c2=6,c3=1\np(x)^2의 x^4 계수 a = 2*c1*c3+c2^2 = 2*7*1+6^2 = 14+36=50\nq(x)=1+x+2x^2+x^3의 계수는 c0=1,c1=1,c2=2,c3=1\nq(x)^2의 x^4 계수 b = 2*1*1+2^2 = 2+4=6\na+b=50+6=56"
+  },
+  {
+   "id": "9893eecd-51fd-478d-8c84-911a865d36bf",
+   "before": null,
+   "after": "$x=\\frac{√5+2}{√5-2}=\\frac{(√5+2)^2}{(√5-2)(√5+2)}=(√5+2)^2=9+4√5$\n$\\frac{1}{x}=\\frac{√5-2}{√5+2}=(√5-2)^2=9-4√5$\n$x-\\frac{1}{x}=(9+4√5)-(9-4√5)=8√5$"
+  },
+  {
+   "id": "518d49e2-eb08-42ae-99ae-d700ac7eaabe",
+   "before": null,
+   "after": "$x^2-11x+k=(x-a)(x-b)$에서 $a+b=11$, $ab=k$ ($a,b$는 자연수)\na+b=11인 자연수 쌍: (1,10),(2,9),(3,8),(4,7),(5,6)\nab의 값: 10,18,24,28,30\n최댓값 30, 최솟값 10이므로 차는 30-10=20"
+  },
+  {
+   "id": "bfaa0658-eaf2-46ed-9d9a-af2fcf5a0a7d",
+   "before": null,
+   "after": "분모, 분자에 $√3-√2$를 곱하면\n$\\frac{√3-√2}{√3+√2}=\\frac{(√3-√2)^2}{(√3+√2)(√3-√2)}=\\frac{(√3-√2)^2}{3-2}=(√3-√2)^2$\n$(√3-√2)^2=3-2√6+2=5-2√6$\n따라서 답은 $5-2√6$"
+  },
+  {
+   "id": "edd6cac5-d205-4b83-a577-03381b92a908",
+   "before": null,
+   "after": "$(3-5)(3+5)(3^2+5^2)(3^4+5^4)=3^8-5^8$이고 $3-5=-2$이므로 $(3+5)(3^2+5^2)(3^4+5^4)=\\frac{5^8-3^8}{2}$\n앞항 $=2\\times\\frac{5^8-3^8}{2}=5^8-3^8$\n$(3-2)(3+2)(3^2+2^2)(3^4+2^4)=3^8-2^8$이고 $3-2=1$이므로 뒤항 $=3^8-2^8$\n전체 합: $(5^8-3^8)+(3^8-2^8)=5^8-2^8$이므로 $a=5,b=2,n=8$\n$\\frac{a-b}{n}=\\frac{5-2}{8}=\\frac{3}{8}$"
+  },
+  {
+   "id": "6a0979c1-0e54-4ca1-b213-a445deacb5e7",
+   "before": null,
+   "after": "$6x^2+11x-10$을 인수분해하면 $(3x-2)(2x+5)$\n확인: $(3x-2)(2x+5)=6x^2+15x-4x-10=6x^2+11x-10$ (일치)\n두 일차식의 합은 (3x-2)+(2x+5)=5x+3"
+  },
+  {
+   "id": "a18e5906-9889-407b-ad69-36ffaf40b800",
+   "before": null,
+   "after": "$(3x+a)(2x+b)=6x^{2}+(2a+3b)x+ab$이므로 $ab=-3$, $k=2a+3b$\n$a,b$가 정수이고 $ab=-3$인 경우는 $(a,b)=(1,-3),(-1,3),(3,-1),(-3,1)$\n각각 $k=2a+3b$를 계산하면 $-7,,7,,3,,-3$\n따라서 $k$의 최댓값은 $7$"
+  },
+  {
+   "id": "0d80c3cd-5a18-4a48-b1fe-904b910d1718",
+   "before": null,
+   "after": "$(2x-4)^{2}=4x^{2}-16x+16$\n따라서 $x$의 계수는 $-16$"
+  },
+  {
+   "id": "d5068b78-a995-4441-b5df-738b85c3d5e1",
+   "before": null,
+   "after": "$(3+2sqrt2)(3-2sqrt2)=9-8=1$\n$(3+2sqrt2)^{20}(3-2sqrt2)^{22}={(3+2sqrt2)(3-2sqrt2)}^{20}\times(3-2sqrt2)^{2}=(3-2sqrt2)^{2}$\n$(3-2sqrt2)^{2}=9-12sqrt2+8=17-12sqrt2$\n$a=17,,b=-12$이므로 $a-b=17-(-12)=29$"
+  },
+  {
+   "id": "a11548af-4fae-4443-b1a5-c32ab9131fc1",
+   "before": null,
+   "after": "$496^{2}<496^{2}+2<497^{2}$이므로 $sqrt{496^{2}+2}$의 정수 부분은 $496$\n소수 부분은 $d=sqrt{496^{2}+2}-496$, 즉 $d+496=sqrt{496^{2}+2}$\n양변을 제곱하면 $(d+496)^{2}=496^{2}+2=246018$\n$246018div10$의 나머지는 $8$"
+  },
+  {
+   "id": "c88b9632-b4c2-4988-9ea8-f51c3bb73356",
+   "before": null,
+   "after": "$(a+3b)(2a-3b)=2a^{2}-3ab+6ab-9b^{2}=2a^{2}+3ab-9b^{2}$\n$a^{2}$의 계수는 $2$, $ab$의 계수는 $3$\n합은 $2+3=5$"
+  },
+  {
+   "id": "28417eb1-3fe5-4c67-8c21-20ca30d6e6fe",
+   "before": null,
+   "after": "$(x-2)(x+a)=x^{2}+(a-2)x-2a$\n$x^{2}+bx-8$과 비교하면 $-2a=-8$에서 $a=4$\n$b=a-2=2$\n$a+b=4+2=6$"
+  },
+  {
+   "id": "738744ee-e25c-449b-bbaf-c74679d95e59",
+   "before": null,
+   "after": "$(2a-5b)(3a+2b)=6a^{2}+4ab-15ab-10b^{2}=6a^{2}-11ab-10b^{2}$\n$4(a+2b)(a-2b)=4(a^{2}-4b^{2})=4a^{2}-16b^{2}$\n두 식을 빼면 $6a^{2}-11ab-10b^{2}-4a^{2}+16b^{2}=2a^{2}-11ab+6b^{2}$"
+  },
+  {
+   "id": "3a75f342-a072-49f5-a85a-154003b8573a",
+   "before": null,
+   "after": "$(x-y+3)(2x+ay-1)$을 전개하면 $2x^{2}+(a-2)xy-ay^{2}+5x+(1+3a)y-3$\n$xy$의 계수가 $2$이므로 $a-2=2$에서 $a=4$\n$y$의 계수는 $1+3a=1+12=13$"
+  },
+  {
+   "id": "22906eec-15c3-4a22-aebe-1e35558a82bd",
+   "before": null,
+   "after": "$(x-2)(5x+6)=5x^{2}-4x-12$\n$(3x-2)^{2}=9x^{2}-12x+4$\n두 식을 빼면 $5x^{2}-4x-12-(9x^{2}-12x+4)=-4x^{2}+8x-16$\n${\rm A}=-4,,{\rm B}=-8,,{\rm C}=16$이므로 ${\rm A}+{\rm B}+{\rm C}=4$"
+  },
+  {
+   "id": "ea32a8ca-167d-40d3-9aa8-75890fec2327",
+   "before": null,
+   "after": "$(3x-2)(ax+b)=3ax^{2}+(3b-2a)x-2b$\n상수항이 $8$이므로 $-2b=8$에서 $b=-4$\n$x$의 계수가 상수항보다 $12$만큼 작으므로 $3b-2a=8-12=-4$, 즉 $-12-2a=-4$에서 $a=-4$\n$x^{2}$의 계수는 $3a=-12$"
+  },
+  {
+   "id": "fd4db317-620c-4e9a-8d21-eff223b6f69e",
+   "before": null,
+   "after": "$(2x-y)(x-3y)=2x^{2}-6xy-xy+3y^{2}=2x^{2}-7xy+3y^{2}$\n$a=-7,,b=3$이므로 $a+b=-4$"
+  },
+  {
+   "id": "e5b302fb-0558-4f36-bf4c-d1a8032dd240",
+   "before": null,
+   "after": "$(x-y)^{2}=x^{2}-2xy+y^{2}$이므로 ①은 틀림\n$(2a+3)^{2}=4a^{2}+12a+9$이므로 ②는 틀림\n$(x-5)(x+3)=x^{2}-2x-15$이므로 ③은 맞음\n$(-x-y)(-x+y)=x^{2}-y^{2}$이므로 ④는 틀림\n$(7x-4)(3x-6)=21x^{2}-54x+24$이므로 ⑤는 틀림"
+  },
+  {
+   "id": "8076139f-8462-473b-8416-821aba39aad0",
+   "before": null,
+   "after": "가로를 $7$만큼 줄이고 세로를 $A$만큼 늘이면 넓이는 $(3x-7)(x+A)=3x^{2}+(3A-7)x-7A$\n이것이 $3x^{2}+Bx-21$과 같으므로 $-7A=-21$에서 $A=3$\n$B=3A-7=9-7=2$\n$A+B=3+2=5$"
+  },
+  {
+   "id": "2a8782bc-2c31-4f67-9abb-78abf7d8eb63",
+   "before": null,
+   "after": "$105\times98-101^{2}=10290-10201=89$이므로 ㄱ은 틀림(주장은 $91$)\n$105\times98=(100+5)(100-2)$이므로 $(x+a)(x+b)$ 공식을 쓸 수 있어 ㄴ은 맞음\n$101^{2}=(100+1)^{2}$이므로 $a=100,b=1$ 모두 양수인 $(a+b)^{2}$ 공식을 쓸 수 있어 ㄷ은 맞음\n옳은 것은 ㄴ, ㄷ"
+  },
+  {
+   "id": "01ee7ff7-c52e-48b6-9aba-0bc6723dc7a6",
+   "before": null,
+   "after": "$(a-b)^2=a^2-2ab+b^2$ 과 비교한다.\nㄱ. $(a+b)^2=a^2+2ab+b^2$ — 다르다\nㄴ. $(b-a)^2=a^2-2ab+b^2$ — 같다\nㄷ. $(-a+b)^2=(b-a)^2=a^2-2ab+b^2$ — 같다\nㄹ. $-(-a-b)^2=-(a+b)^2=-a^2-2ab-b^2$ — 다르다\nㅁ. $-(a+b)^2=-a^2-2ab-b^2$ — 다르다\nㅂ. $-(a-b)^2=-a^2+2ab-b^2$ — 다르다\n같은 것은 ㄴ, ㄷ 두 개이다."
+  },
+  {
+   "id": "a278786e-da95-481a-82ff-9558a62e05e3",
+   "before": null,
+   "after": "$(x+3a)^2=x^2+6ax+9a^2$ 이므로 $b=6a$, $9a^2=\\frac{1}{9}$\n$a^2=\\frac{1}{81}$ 에서 $a=\\pm\\frac{1}{9}$\n$a=\\frac{1}{9}$ 이면 $b=\\frac{2}{3}$, $a-b=-\\frac{5}{9}$\n$a=-\\frac{1}{9}$ 이면 $b=-\\frac{2}{3}$, $a-b=\\frac{5}{9}$\n따라서 최댓값은 $\\frac{5}{9}$"
+  },
+  {
+   "id": "9b41c704-fd95-41a3-878a-928119300c3a",
+   "before": null,
+   "after": "① $(x+3)^2=x^2+6x+9$\n② $(x+y)^2=x^2+2xy+y^2$\n③ $(x+7)(x-7)=x^2-49$\n④ $(x-3)(2x-1)=2x^2-7x+3$\n⑤ $(-2x-3)(2x-3)=-(2x+3)(2x-3)=-(4x^2-9)=-4x^2+9$ — 옳다"
+  },
+  {
+   "id": "1fa65a60-a21a-4031-b592-906b02938b50",
+   "before": null,
+   "after": "$(3x+a)^2=9x^2+6ax+a^2$ 이므로 $a^2=\\frac{1}{16}$, $a>0$ 이므로 $a=\\frac{1}{4}$\n$b=6a=\\frac{3}{2}$\n$4(a+b)=4\\left(\\frac{1}{4}+\\frac{3}{2}\\right)=4\\cdot\\frac{7}{4}=7$"
+  },
+  {
+   "id": "9dcfe980-9b58-4642-8010-609b82e06ca8",
+   "before": null,
+   "after": "$x=-1+\\sqrt5$ 에서 $x+1=\\sqrt5$\n양변을 제곱하면 $x^2+2x+1=5$, 즉 $x^2+2x=4$\n따라서 $x^2+2x-3=4-3=1$"
+  },
+  {
+   "id": "36de18cc-9054-4ac2-9c1a-cb56d2a22a41",
+   "before": null,
+   "after": "$\\frac{\\sqrt5-2}{\\sqrt5+2}=\\frac{(\\sqrt5-2)^2}{(\\sqrt5+2)(\\sqrt5-2)}=\\frac{9-4\\sqrt5}{1}=9-4\\sqrt5$\n$(3-\\sqrt5)(3+\\sqrt5)=9-5=4$\n따라서 $9-4\\sqrt5-4=5-4\\sqrt5$"
+  },
+  {
+   "id": "1141e9e2-c8ac-442e-83e3-b7960d7cfb4f",
+   "before": null,
+   "after": "$(2x-3)(ax+5)=2ax^2+(10-3a)x-15$\n$x$의 계수가 $1$이므로 $10-3a=1$, $a=3$"
+  },
+  {
+   "id": "f251ee46-6eea-47fa-90b0-37b15b3374ae",
+   "before": null,
+   "after": "$x=\\frac{\\sqrt5-1}{\\sqrt5+1}=\\frac{(\\sqrt5-1)^2}{(\\sqrt5+1)(\\sqrt5-1)}=\\frac{6-2\\sqrt5}{4}=\\frac{3-\\sqrt5}{2}$\n$2x=3-\\sqrt5$, $2x-3=-\\sqrt5$\n양변을 제곱하면 $4x^2-12x+9=5$, 즉 $4x^2-12x=-4$\n따라서 $4x^2-12x+7=-4+7=3$"
+  },
+  {
+   "id": "edf6a588-187e-4a89-b92b-d3219793cb9a",
+   "before": null,
+   "after": "$x^2+3x+2=(x+1)(x+2)$\n$x=-2+\\sqrt2$ 에서 $x+2=\\sqrt2$, $x+1=-1+\\sqrt2$\n$(x+1)(x+2)=(-1+\\sqrt2)\\sqrt2=-\\sqrt2+2=2-\\sqrt2$"
+  },
+  {
+   "id": "9618bee7-6ae0-465f-9325-53668e00054c",
+   "before": null,
+   "after": "$174\\times166=(170+4)(170-4)=170^2-4^2=28900-16=28884$\n$169^2=(170-1)^2=28900-340+1=28561$\n따라서 $28884-28561=323$"
+  },
+  {
+   "id": "4b04a157-4400-4620-937e-774410f3b2f9",
+   "before": null,
+   "after": "① $(x-y)(-x+y)=-(x-y)^2=-x^2+2xy-y^2$\n② $(x+\\frac12)(x-\\frac18)=x^2+\\frac38x-\\frac1{16}$\n③ $(-3x+y)(3x+y)=-(9x^2-y^2)=-9x^2+y^2$\n④ $(x-2y)(x+3y)=x^2+xy-6y^2$\n⑤ $(4x-3)(3x+5)=12x^2+11x-15$ — 옳다"
+  },
+  {
+   "id": "4f8fa6b9-a664-4946-9b09-4cef330d2f35",
+   "before": null,
+   "after": "$x+\\frac5x=2$ 의 양변에 $x$를 곱하면 $x^2+5=2x$, 즉 $x^2=2x-5$\n$x(x-2)=x^2-2x=(2x-5)-2x=-5$\n$(x+2)(x-4)=x^2-2x-8=(2x-5)-2x-8=-13$\n$x(x+2)(x-2)(x-4)=\\{x(x-2)\\}\\{(x+2)(x-4)\\}=(-5)\\times(-13)=65$"
+  },
+  {
+   "id": "8a57e8f0-1bb2-48cb-b3fc-5108c75b90dd",
+   "before": null,
+   "after": "$(a+3)(b-5)=ab-5a+3b-15$"
+  },
+  {
+   "id": "3e041c86-40fd-4150-875f-4700b4a3704c",
+   "before": null,
+   "after": "$(ax-b)(2x+5)=2ax^2+(5a-2b)x-5b$\n$2a=6$ 에서 $a=3$, $-5b=20$ 에서 $b=-4$\n확인: $5a-2b=15+8=23$로 일치\n$a+b=3-4=-1$"
+  },
+  {
+   "id": "9f242289-f5f2-42dd-a9b1-3c6416d7883e",
+   "before": null,
+   "after": "$(9x-\\frac56y)^2=81x^2-2\\times9\\times\\frac56xy+\\frac{25}{36}y^2=81x^2-15xy+\\frac{25}{36}y^2$\n따라서 $xy$의 계수는 $-15$"
+  },
+  {
+   "id": "460dc3f8-7214-45cb-9ff0-3acf7a149995",
+   "before": null,
+   "after": "① $(x+3)^2=x^2+6x+9$\n② $(-3x-2)^2=9x^2+12x+4$\n③ $(2x-1)(-2x-1)=-4x^2+1$\n④ $(3x+1)(3x+2)=9x^2+9x+2$ — 옳다\n⑤ $(x+2y)(3x-y)=3x^2+5xy-2y^2$"
+  },
+  {
+   "id": "c92e3b31-685d-45d2-bf05-8283e0cf59e7",
+   "before": null,
+   "after": "$x=\\frac{2}{\\sqrt2-1}=2(\\sqrt2+1)=2\\sqrt2+2$, $y=\\frac{2}{\\sqrt2+1}=2(\\sqrt2-1)=2\\sqrt2-2$\n$x+y=4\\sqrt2$, $xy=(2\\sqrt2)^2-2^2=8-4=4$\n$x^2+y^2-xy=(x+y)^2-3xy=32-12=20$"
+  },
+  {
+   "id": "12ccab8d-4dfd-4e99-94c2-63c157890333",
+   "before": null,
+   "after": "① $(x-4)^2=x^2-8x+16$ → □$=8$\n② $(3x+\\frac12)^2=9x^2+3x+\\frac14$ → □$=3$\n③ $(3x-5)(3x+5)=9x^2-25$ → □$=9$\n④ $(x-7)(x+2)=x^2-5x-14$ → □$=5$\n⑤ $(5x+2)(3x+1)=15x^2+11x+2$ → □$=2$\n작은 순서로 $2,3,5,8,9$이므로 두 번째로 작은 것은 $3$, 즉 ②"
+  },
+  {
+   "id": "dc894e7d-5029-455b-9c99-8779e680759b",
+   "before": null,
+   "after": "$(3\\sqrt2-2)(5\\sqrt2+a)=30+3a\\sqrt2-10\\sqrt2-2a=(30-2a)+(3a-10)\\sqrt2$\n$b=30-2a$, $c=3a-10$이고 $b=c$이므로 $30-2a=3a-10$\n$5a=40$, $a=8$"
+  },
+  {
+   "id": "7fe3cd3c-4f61-4238-8f61-bb659351b415",
+   "before": null,
+   "after": "$(ax+5)(3x+b) = 3ax^{2}+(ab+15)x+5b$\n계수를 비교하면 $3a=-12$ 에서 $a=-4$, $5b=-20$ 에서 $b=-4$\n$c=ab+15=(-4)(-4)+15=31$\n$3a+2b+c=-12-8+31=11$"
+  },
+  {
+   "id": "8f76235f-51e5-4a1b-818c-23160b6d666f",
+   "before": null,
+   "after": "$(2x-3)^{2}=4x^{2}-12x+9$\n$(x+2)(x-5)=x^{2}-3x-10$\n$(2x-3)^{2}-(x+2)(x-5)=4x^{2}-12x+9-x^{2}+3x+10=3x^{2}-9x+19$\n$x$의 계수 $-9$, 상수항 $19$ 이므로 합은 $-9+19=10$"
+  },
+  {
+   "id": "d9f63a9f-f260-4cb8-b562-93a56c980250",
+   "before": null,
+   "after": "① $(x-3)^{2}=x^{2}-6x+9$ 옳음\n② $(x-2)(-x-2)=-(x-2)(x+2)=-(x^{2}-4)=-x^{2}+4$ 이므로 $x^{2}-4$ 와 다르다 — 옳지 않음\n③ $(2a+1)(2a-1)=4a^{2}-1$ 옳음\n④ $(4a-3)^{2}=16a^{2}-24a+9$ 옳음\n⑤ $(\\frac{1}{2}x-3)^{2}=\\frac{1}{4}x^{2}-3x+9$ 옳음"
+  },
+  {
+   "id": "133a31d7-e896-4283-8830-3b293d0d324d",
+   "before": null,
+   "after": "$x=\\frac{1}{2\\sqrt2+3}=\\frac{2\\sqrt2-3}{(2\\sqrt2+3)(2\\sqrt2-3)}=\\frac{2\\sqrt2-3}{8-9}=3-2\\sqrt2$\n$x-3=-2\\sqrt2$ 이므로 양변을 제곱하면 $(x-3)^{2}=8$, 즉 $x^{2}-6x+9=8$\n$x^{2}-6x=-1$\n$x^{2}-6x-5=-1-5=-6$"
+  },
+  {
+   "id": "0ef90cfd-bd5f-4391-8660-dde003a7b993",
+   "before": null,
+   "after": "$1022\\times1024=1023^{2}-1$ 이므로 $\\frac{1}{1022\\times1024}+1=\\frac{1023^{2}}{1022\\times1024}$\n$1023\\times1025=1024^{2}-1$ 이므로 $\\frac{1}{1023\\times1025}+1=\\frac{1024^{2}}{1023\\times1025}$\n세 식을 곱하면 $\\frac{1023^{2}}{1022\\times1024}\\times\\frac{1024^{2}}{1023\\times1025}\\times\\frac{1025}{1023}=\\frac{1024}{1022}=\\frac{512}{511}$\n$a=512,\\,b=511$ 은 서로소이므로 $a+b=1023$"
+  },
+  {
+   "id": "fc9b995f-e0af-40a3-8f27-9fb26f40afa7",
+   "before": null,
+   "after": "$(-a-b)^{2}=\\{-(a+b)\\}^{2}=(a+b)^{2}$\n따라서 전개식이 같은 것은 $(a+b)^{2}$"
+  },
+  {
+   "id": "c177f54e-cb7f-4d65-9113-4dca6c29b1f7",
+   "before": null,
+   "after": "$(3x-a)^{2}=9x^{2}-6ax+a^{2}$\n$a^{2}=\\frac{4}{9}$ 이고 $a>0$ 이므로 $a=\\frac{2}{3}$\n$b=-6a=-6\\times\\frac{2}{3}=-4$\n$a+b=\\frac{2}{3}-4=-\\frac{10}{3}$"
+  },
+  {
+   "id": "0dc69a61-3f26-4a1c-a27c-3858de29458d",
+   "before": null,
+   "after": "$(3x+y-2)(2y-x+1)$ 을 전개하면\n$-3x^{2}+6xy+3x-xy+2y^{2}+y+2x-4y-2$\n$=-3x^{2}+5xy+5x+2y^{2}-3y-2$\n$x^{2}$의 계수 $a=-3$, $xy$의 계수 $b=5$ 이므로 $a+b=2$"
+  },
+  {
+   "id": "b81a5bda-07bf-400b-a48a-37f145501927",
+   "before": null,
+   "after": "$(2+\\sqrt x)^{2}=4+4\\sqrt x+x=15+4\\sqrt x$ 에서 $x=11$\n$(10-3\\sqrt y)(2+\\sqrt y)=20+4\\sqrt y-3y=2+4\\sqrt y$ 에서 $20-3y=2$, $y=6$\n$\\sqrt x-\\sqrt y=\\sqrt{11}-\\sqrt6$\n$\\frac{10}{\\sqrt{11}-\\sqrt6}=\\frac{10(\\sqrt{11}+\\sqrt6)}{11-6}=2(\\sqrt{11}+\\sqrt6)$"
+  },
+  {
+   "id": "5da552cc-9877-43cc-bb31-4062c63069ec",
+   "before": null,
+   "after": "$(3x-1)(2x+4)=6x^{2}+12x-2x-4=6x^{2}+10x-4$\n$x^{2}$의 계수 $6$, $x$의 계수 $10$ 이므로 합은 $6+10=16$"
+  },
+  {
+   "id": "c3bdd833-cb03-4bb3-b7d4-0e07ba13383e",
+   "before": null,
+   "after": "$(2x+5)(x+10)-kx=2x^{2}+25x+50-kx=2x^{2}+(25-k)x+50$\n완전제곱식이 되려면 판별식이 $0$: $(25-k)^{2}-4\\times2\\times50=0$\n$(25-k)^{2}=400$ 에서 $25-k=\\pm20$\n$k=5$ 또는 $k=45$ 이므로 합은 $50$"
+  },
+  {
+   "id": "0c33ea30-f4dd-4e37-9540-65a0081e5553",
+   "before": null,
+   "after": "$a=12m+5,\\,b=12n+8$ 으로 놓으면\n$ab=(12m+5)(12n+8)=144mn+96m+60n+40$\n$=12(12mn+8m+5n)+40$\n$40=12\\times3+4$ 이므로 $ab$ 를 $12$ 로 나눈 나머지는 $4$"
+  },
+  {
+   "id": "552a3a71-db4f-4971-b1e2-0fb5eee09032",
+   "before": null,
+   "after": "① $(x-3)^{2}=x^{2}-6x+9$ 이므로 $\\Box=-6$\n② $(x+\\Box)(x-6)=x^{2}-36$ 은 $x$항이 없어야 하므로 $\\Box=6$\n③ $(x+\\Box)^{2}=x^{2}+12x+36$ 에서 $2\\Box=12$, $\\Box=6$\n④ $(x+2)(x+4)=x^{2}+6x+8$ 이므로 $\\Box=6$\n⑤ $(2x+1)(3x-2)=6x^{2}-x-2$ 이므로 $\\Box=6$\n②~⑤ 는 모두 $6$ 이고 ①만 $-6$ 이다"
+  },
+  {
+   "id": "b93bbe8f-d73c-44dd-85ac-74bf3e23d16e",
+   "before": null,
+   "after": "$(x+2)(x+3)=x^{2}+5x+6$\n$a=5,\\,b=6$ 이므로 $a+b=11$"
+  },
+  {
+   "id": "62e67b95-ecbc-4e05-9500-0ecadfdf78f3",
+   "before": null,
+   "after": "$(-3x+1)^{2}+5(x+2)(2-x)$\n$(-3x+1)^{2}=9x^{2}-6x+1$\n$(x+2)(2-x)=-x^{2}+4$ 이므로 $5(x+2)(2-x)=-5x^{2}+20$\n합하면 $9x^{2}-6x+1-5x^{2}+20=4x^{2}-6x+21$"
+  },
+  {
+   "id": "9b2172a0-3d4a-4570-9ae0-a17bd8f83d55",
+   "before": null,
+   "after": "$(3x+a)(bx-2)=3bx^{2}+(ab-6)x-2a$\n$\\frac{3}{2}x^{2}-cx-10$ 과 비교하면 $3b=\\frac{3}{2}$ 에서 $b=\\frac{1}{2}$\n$-2a=-10$ 에서 $a=5$\n$ab-6=-c$ 에서 $5\\times\\frac{1}{2}-6=-\\frac{7}{2}=-c$, 즉 $c=\\frac{7}{2}$"
+  },
+  {
+   "id": "be935026-69fd-4433-bf3d-5a82af0b3b07",
+   "before": null,
+   "after": "$(2x+a)(x+b)=2x^{2}+(2b+a)x+ab=2x^{2}+11x+k$\n$a+2b=11,\\ k=ab$ ($a,b$ 는 자연수)\n$b=1,2,3,4,5$ 에 대해 $a=9,7,5,3,1$ 이고 $k=9,14,15,12,5$\n$k$ 의 최댓값은 $b=3,\\,a=5$ 일 때 $15$"
+  },
+  {
+   "id": "90088dc0-4e44-4560-806e-cc4c180545e6",
+   "before": null,
+   "after": "$(3x+A)(Bx-2)=3Bx^{2}+(AB-6)x-2A$\n$-6x^{2}+Cx+8$ 과 비교하면 $3B=-6$ 에서 $B=-2$\n$-2A=8$ 에서 $A=-4$\n$C=AB-6=(-4)(-2)-6=2$\n$A+B+C=-4-2+2=-4$"
+  },
+  {
+   "id": "8d6ba3e1-0dd1-4b08-8404-71d43933b6f5",
+   "before": null,
+   "after": "$(x-y)^{2}=(x+y)^{2}-4xy=100-36=64$\n$x>y$ 이므로 $x-y>0$\n$x-y=8$"
+  },
+  {
+   "id": "7928979f-b136-496f-9aeb-1f347a0180a7",
+   "before": null,
+   "after": "$(3x-2y)(5x+4y)=15x^{2}+12xy-10xy-8y^{2}=15x^{2}+2xy-8y^{2}$\n$xy$ 의 계수는 $2$"
+  },
+  {
+   "id": "cb783e1a-6b2f-45c3-b255-3306266daa86",
+   "before": null,
+   "after": "$(x+3)^{2}$을 전개하면 $x^{2}+6x+9$이다.\n주어진 식 $x^{2}+6x+A$와 비교하면 $A=9$이다."
+  },
+  {
+   "id": "cd9dd42a-b9db-4c1a-8476-68e9dfe8a2e8",
+   "before": null,
+   "after": "$(2x-3y)^{2}=4x^{2}-12xy+9y^{2}$이므로 $a=4, b=-12, c=9$이다.\n$a-b+c=4-(-12)+9=25$이다."
+  },
+  {
+   "id": "853aba0b-f635-4f70-ae8d-a1c659375cb6",
+   "before": null,
+   "after": "$x^{2}-6xy+A$가 완전제곱식이 되려면 $(x-3y)^{2}=x^{2}-6xy+9y^{2}$이어야 하므로 $A=9y^{2}$이다.\n$16x^{2}+B+49y^{2}$가 완전제곱식이 되려면 $(4x\\pm7y)^{2}=16x^{2}\\pm56xy+49y^{2}$이어야 하므로 $B=\\pm56xy$이다.\n따라서 $A=9y^{2}, B=\\pm56xy$이다."
+  },
+  {
+   "id": "cf2f12b7-6ca4-4337-b90e-24aedb611630",
+   "before": null,
+   "after": "$(ax+5)(3x-4)=3ax^{2}+(15-4a)x-20$이다.\n$x^{2}$의 계수를 비교하면 $3a=6$이므로 $a=2$이다.\n$x$의 계수를 비교하면 $b=15-4a=15-8=7$이다.\n따라서 $a+b=2+7=9$이다."
+  },
+  {
+   "id": "550009b2-4c51-4e2e-b71a-f617c998b75e",
+   "before": null,
+   "after": "$(2x+1-\\sqrt{5})(x+1+\\sqrt{5})$를 전개하면 $x^{2}$항, $x$항, 상수항으로 나뉜다.\n상수항만 모으면 $1\\cdot1+1\\cdot\\sqrt5-\\sqrt5\\cdot1-\\sqrt5\\cdot\\sqrt5=1+\\sqrt5-\\sqrt5-5=-4$이다.\n따라서 상수항은 $-4$이다."
+  },
+  {
+   "id": "fb8b498b-70b9-471d-ab47-1fb77af08967",
+   "before": null,
+   "after": "$1-\\frac{1}{n^{2}}=\\frac{(n-1)(n+1)}{n^{2}}$이다.\n$n=2$부터 $10$까지 곱하면 $\\frac{1\\cdot2}{2^{2}}\\times\\frac{2\\cdot3}{3^{2}}\\times\\cdots\\times\\frac{9\\cdot11}{10^{2}}$이다.\n분자·분모가 약분되어 $\\frac{1}{10}\\times\\frac{11}{2}=\\frac{11}{20}$이 남는다."
+  },
+  {
+   "id": "85e0b4c0-0c1e-4dcf-ac8b-d02612148def",
+   "before": null,
+   "after": "각 보기를 전개하여 $xy$의 계수를 구한다.\n① $-1$, ② $3$, ③ $-5$, ④ $2x^{2}+4xy+3y^{2}$에서 $4$, ⑤ $2$이다.\n따라서 $xy$의 계수가 가장 큰 것은 ④이다."
+  },
+  {
+   "id": "dcd1ca17-7e3f-4f8b-8c6a-9eb0c2e98f70",
+   "before": null,
+   "after": "$\\sqrt{a^{2}-4a+4}=\\sqrt{(a-2)^{2}}=|a-2|$, $\\sqrt{a^{2}-8a+16}=\\sqrt{(a-4)^{2}}=|a-4|$이다.\n$2<a<4$이므로 $a-2>0, a-4<0$이다.\n따라서 $|a-2|-|a-4|=(a-2)-(4-a)=2a-6$이다."
+  },
+  {
+   "id": "0a7bd2aa-a570-472a-a2b0-f04459ade51b",
+   "before": null,
+   "after": "$(5x-2)(3x+k)=15x^{2}+(5k-6)x-2k$이다.\n$x$의 계수와 상수항이 같으므로 $5k-6=-2k$이다.\n$7k=6$이므로 $k=\\frac{6}{7}$이다."
+  },
+  {
+   "id": "2699fc29-8eff-4509-a706-00079bf63fa2",
+   "before": null,
+   "after": "$(x-y)(-x+y)=(x-y)\\times\\{-(x-y)\\}=-(x-y)^{2}$이다.\n따라서 전개식이 같은 것은 $-(x-y)^{2}$인 ④이다."
+  },
+  {
+   "id": "912b8b45-7a94-4fa5-a72b-7300587986de",
+   "before": null,
+   "after": "$3n^{2}-4n-15=(3n+5)(n-3)$으로 인수분해된다.\n$n$이 자연수이면 $3n+5\\ge8$이므로 곱이 소수가 되려면 $n-3=1$이어야 한다.\n$n=4$일 때 $3n+5=17$이므로 $3n^{2}-4n-15=17$은 소수이다.\n따라서 구하는 곱은 $4\\times17=68$이다."
+  },
+  {
+   "id": "f6cea75c-360a-4168-849c-1827ff739145",
+   "before": null,
+   "after": "$\\sqrt{18}=3\\sqrt2$, $\\frac{2}{\\sqrt8}=\\frac{2}{2\\sqrt2}=\\frac{\\sqrt2}{2}$이다.\n$(3\\sqrt2+6)(\\frac{\\sqrt2}{2}-a)$를 전개하면 $(3-6a)+(3-3a)\\sqrt2$이다.\n유리수가 되려면 $\\sqrt2$의 계수가 $0$이어야 하므로 $3-3a=0$, 즉 $a=1$이다."
+  },
+  {
+   "id": "6455cea1-4451-4d69-8311-ee2aa5ad758c",
+   "before": null,
+   "after": "$(x-1)(x+3)=x^{2}+2x-3$, $(x-2)(x+4)=x^{2}+2x-8$이다.\n$x^{2}+2x-4=0$에서 $x^{2}+2x=4$이다.\n따라서 주어진 식은 $(4-3)(4-8)=1\\times(-4)=-4$이다."
+  },
+  {
+   "id": "17bee0c9-925c-4009-b0eb-5ff6ac24d6e5",
+   "before": null,
+   "after": "$(5x+6y)(3x-2y)=15x^{2}+8xy-12y^{2}$이다.\n$xy$의 계수 $a=8$, $y^{2}$의 계수 $b=-12$이다.\n따라서 $a+b=8+(-12)=-4$이다."
+  },
+  {
+   "id": "5ede8219-8903-4242-ac69-16a33c0e21bc",
+   "before": null,
+   "after": "$(3x-2)(Ax-B)=3Ax^{2}-(3B+2A)x+2B$이다.\n$x^{2}$의 계수가 $6$이므로 $3A=6$, $A=2$이다.\n$x$의 계수는 $x^{2}$의 계수보다 $1$ 작으므로 $-(3B+4)=5$, $B=-3$이다.\n따라서 상수항은 $2B=-6$이다."
+  },
+  {
+   "id": "dfe9203c-4f28-4ae5-8416-0abdc46c24f5",
+   "before": null,
+   "after": "$x-\\frac{1}{x}=7$의 양변을 제곱하면 $x^{2}-2+\\frac{1}{x^{2}}=49$이므로 $x^{2}+\\frac{1}{x^{2}}=51$이다.\n주어진 식은 $\\left(x^{2}+\\frac{1}{x^{2}}\\right)-3\\left(x-\\frac{1}{x}\\right)$으로 묶인다.\n따라서 $51-3\\times7=51-21=30$이다."
+  },
+  {
+   "id": "73bf5d9e-ac58-47b5-8c3c-2f6bc7c0d95c",
+   "before": null,
+   "after": "$(3x+1)^{2}=9x^{2}+6x+1$이다.\n$2(x+1)(3x-5)=2(3x^{2}-2x-5)=6x^{2}-4x-10$이다.\n두 식을 빼면 $3x^{2}+10x+11$이므로 $a=3,b=10,c=11$이다.\n따라서 $a+b+c=24$이다."
+  },
+  {
+   "id": "5eea2095-e2d4-48fd-9350-37d5a0f99972",
+   "before": null,
+   "after": "각 보기를 직접 전개하여 확인한다.\n① $(2x-3)^{2}=4x^{2}-12x+9$이므로 틀렸다.\n② $(x+5)(x-5)=x^{2}-25$이므로 틀렸다.\n③ $(4x+1)(4x-1)=16x^{2}-1$이므로 틀렸다.\n④ $(x-7)^{2}=x^{2}-14x+49$이므로 틀렸다.\n⑤ $(3x+2)^{2}=9x^{2}+12x+4$이므로 옳다."
+  },
+  {
+   "id": "6e2a2286-b41c-4473-8e6b-0e36b06b628a",
+   "before": null,
+   "after": "$(-a+b)^{2}=\\{-(a-b)\\}^{2}=(a-b)^{2}$이다.\n따라서 전개식이 $(a-b)^{2}$의 전개식과 같은 것은 ④이다."
+  },
+  {
+   "id": "2dcc6e07-b8d6-42f2-9c73-758f8c3cda69",
+   "before": null,
+   "after": "$(2x-y)(x+3y) = 2x\\cdot x + 2x\\cdot 3y - y\\cdot x - y\\cdot 3y$\n$= 2x^{2}+6xy-xy-3y^{2}$\n$= 2x^{2}+5xy-3y^{2}$\n따라서 정답은 ⑤이다."
+  },
+  {
+   "id": "26734ec0-d388-4e19-a59e-15f577a1f47f",
+   "before": null,
+   "after": "$497=A-3$에서 $A=500$, $201=B+1$에서 $B=200$, $24.8=C-0.2$에서 $C=25$\n따라서 $AB=500\\times 200=100000$, $\\frac{AB}{C}=\\frac{100000}{25}=4000$\n$4000=400\\times 10$이므로 양의 제곱근은 $\\sqrt{4000}=20\\sqrt{10}$\n정답은 ③이다."
+  },
+  {
+   "id": "540b7e79-ce17-450f-ab8c-fe994bb62b8e",
+   "before": null,
+   "after": "$(x-3y-2)(x+ay+b)$를 전개하면\n$x^{2}+(a-3)xy-3ay^{2}+(b-2)x-(3b+2a)y-2b$\n$xy$의 계수: $a-3=3$이므로 $a=6$\n$y$의 계수: $-(3b+2a)=3$, 즉 $3b+12=-3$이므로 $b=-5$\n$a-b=6-(-5)=11$이다."
+  },
+  {
+   "id": "dabcf22e-d21c-4c0c-a2ca-2dce99f19740",
+   "before": null,
+   "after": "$\\frac{2}{\\sqrt5-\\sqrt3}=\\frac{2(\\sqrt5+\\sqrt3)}{5-3}=\\sqrt5+\\sqrt3$\n$\\frac{3}{\\sqrt5+\\sqrt3}=\\frac{3(\\sqrt5-\\sqrt3)}{5-3}=\\frac{3(\\sqrt5-\\sqrt3)}{2}$\n주어진 식 $=(\\sqrt5+\\sqrt3)-\\frac{3(\\sqrt5-\\sqrt3)}{2}=\\frac{-\\sqrt5+5\\sqrt3}{2}=\\frac{5}{2}\\sqrt3-\\frac{1}{2}\\sqrt5$\n$a=\\frac{5}{2}, b=-\\frac{1}{2}$이므로 $ab=-\\frac{5}{4}$이다."
+  },
+  {
+   "id": "cb50b50e-4c3a-4cad-aebf-c663bfaff494",
+   "before": null,
+   "after": "①, ②, ④, ⑤는 직접 전개하면 모두 옳다.\n③ $(-2x+1)(-2x-1)$은 $(-2x)^{2}-1^{2}=4x^{2}-1$이 되어야 하는데 $4x^{2}-2x+1$로 잘못 계산되어 있다.\n따라서 옳지 않은 것은 ③이다."
+  },
+  {
+   "id": "333d6c53-4f5d-4ac3-9c95-958e64a0e6bf",
+   "before": null,
+   "after": "$ax^{2}-52x+169$가 완전제곱식이려면 판별식이 $0$이어야 한다.\n$(-52)^{2}-4\\cdot a\\cdot 169=0$\n$2704=676a$이므로 $a=4$\n확인: $4x^{2}-52x+169=(2x-13)^{2}$이 성립하므로 $a=4$이다."
+  },
+  {
+   "id": "8cc6298e-2192-4e4f-bad5-470983b0b564",
+   "before": null,
+   "after": "$(x+1)(x+4)=x^{2}+5x+4$, $(x+2)(x+3)=x^{2}+5x+6$이므로 $t=x^{2}+5x$로 치환하면\n주어진 식 $=(t+4)(t+6)+k=t^{2}+10t+24+k$\n이 식이 완전제곱식이 되려면 $24+k=\\left(\\frac{10}{2}\\right)^{2}=25$이어야 하므로 $k=1$이다."
+  },
+  {
+   "id": "48d1a3ec-f761-45e2-9746-0d41777bad4e",
+   "before": null,
+   "after": "$(x-3)(x+a)=x^{2}+(a-3)x-3a$\n이 식이 $x^{2}+bx-21$과 같으므로 $-3a=-21$에서 $a=7$\n$b=a-3=4$\n따라서 $a+b=7+4=11$이다."
+  },
+  {
+   "id": "9518f1d0-6f83-4f90-97f9-6dafa1d471af",
+   "before": null,
+   "after": "$\\frac{b}{a}=\\dfrac{\\frac{1}{\\sqrt5}}{\\sqrt5}=\\frac{1}{5}$, $\\frac{a}{b}=\\dfrac{\\sqrt5}{\\frac{1}{\\sqrt5}}=\\sqrt5\\cdot\\sqrt5=5$\n따라서 $\\frac{b}{a}+\\frac{a}{b}=\\frac{1}{5}+5=\\frac{26}{5}$이다."
+  },
+  {
+   "id": "3677285b-5b16-4bee-9e05-2fccb7e2b290",
+   "before": null,
+   "after": "$(x+a)(2x+b)=2x^{2}+(b+2a)x+ab$이므로 $ab=15$, $A=b+2a$이다.\n$a<b$인 정수쌍 $(a,b)$는 $(1,15),(3,5),(-15,-1),(-5,-3)$이다.\n각각 $A$값: $17, 11, -31, -13$이므로 $M=17$, $m=-31$\n따라서 $M+m=17+(-31)=-14$이다."
+  },
+  {
+   "id": "a6e267af-dc1b-4639-97f8-267187931737",
+   "before": null,
+   "after": "$x^{2}+ax+81$이 완전제곱식이려면 $a^{2}=4\\cdot81=324$에서 $a=\\pm18$, $a<0$이므로 $a=-18$\n$3x^{2}-30x+b$가 완전제곱식이려면 $(-30)^{2}=4\\cdot3\\cdot b$에서 $900=12b$, $b=75$\n따라서 $a-b=-18-75=-93$이다."
+  },
+  {
+   "id": "0c0fb125-f115-4a52-a87f-44dc5f680bd7",
+   "before": null,
+   "after": "$(2x+a)(bx+5)=2bx^{2}+(10+ab)x+5a$\n$-8x^{2}+cx-25$와 비교하면 $2b=-8$에서 $b=-4$, $5a=-25$에서 $a=-5$\n$c=10+ab=10+20=30$\n따라서 $c-ab=30-20=10$이다."
+  },
+  {
+   "id": "207f9213-c76a-4a21-b998-4bd49cbead1c",
+   "before": null,
+   "after": "모든 항의 계수의 합은 $a=b=c=d=1$을 대입한 값과 같다.\n$(-2\\cdot1+5\\cdot1)(1-3\\cdot1)=(3)(-2)=-6$\n따라서 정답은 $-6$이다."
+  },
+  {
+   "id": "2e04363d-7f1d-4447-9c65-67ad975ce8a1",
+   "before": null,
+   "after": "$(2-1)=1$을 곱해도 값이 변하지 않으므로\n$(2-1)(2+1)(2^{2}+1)(2^{4}+1)(2^{8}+1)(2^{16}+1)$\n$=(2^{2}-1)(2^{2}+1)\\cdots(2^{16}+1)=(2^{4}-1)(2^{4}+1)\\cdots=(2^{32}-1)$\n따라서 주어진 식은 $2^{32}-1$이다."
+  },
+  {
+   "id": "4725feeb-68fb-4ed5-9649-9625b831a916",
+   "before": null,
+   "after": "$(x+5)(x+a)=x^{2}+(a+5)x+5a$\n$2(x-1)(x+2)=2(x^{2}+x-2)=2x^{2}+2x-4$\n주어진 식 $=-x^{2}+(a+3)x+(5a+4)$이므로 상수항 $5a+4=14$에서 $a=2$\n따라서 $x$의 계수는 $a+3=5$이다."
+  },
+  {
+   "id": "b93df720-e7b5-4bb1-a38e-5584a30c8c2c",
+   "before": null,
+   "after": "$x^{2}-4=2x$에서 $x^{2}-2x=4$\n$(x+2)(x-4)=x^{2}-2x-8=4-8=-4$\n$(x+1)(x-3)=x^{2}-2x-3=4-3=1$\n따라서 $(x+2)(x+1)(x-3)(x-4)=(-4)(1)=-4$이다."
+  },
+  {
+   "id": "6394557f-d01d-4b52-ae10-717b230444ab",
+   "before": null,
+   "after": "$t=x-y$로 치환하면 $(t-2)(t+1)=t^{2}-t-2$\n$=(x-y)^{2}-(x-y)-2$\n$=x^{2}-2xy+y^{2}-x+y-2$\n따라서 정답은 ①이다."
+  },
+  {
+   "id": "f2f0a427-ce07-4a73-a0be-a3341c380e61",
+   "before": null,
+   "after": "$(2a+b)(2a-b)=4a^{2}-b^{2}$\n$2(b+a)(b-a)=2(b^{2}-a^{2})=2b^{2}-2a^{2}$\n두 식을 더하면 $4a^{2}-b^{2}+2b^{2}-2a^{2}=2a^{2}+b^{2}$\n$p=2, q=1$이므로 $p-q=1$이다."
+  },
+  {
+   "id": "9942ea0b-7660-46b4-bd8a-a104282107ca",
+   "before": null,
+   "after": "가로는 $x+3a$, 세로는 $x-a$이므로 넓이는\n$(x+3a)(x-a)=x^{2}+2ax-3a^{2}$\n$x^{2}+4x+b$와 비교하면 $2a=4$에서 $a=2$, $b=-3a^{2}=-12$\n따라서 $ab=2\\times(-12)=-24$이다."
+  },
+  {
+   "id": "21820ad0-6de7-4806-a3af-860393619146",
+   "before": null,
+   "after": "$(2x+y)^2$을 전개하면 $4x^2+4xy+y^2$\n$(x-y)(x-3y)$을 전개하면 $x^2-4xy+3y^2$\n두 식을 더하면 $5x^2+0\\cdot xy+4y^2$이므로 $xy$의 계수는 $0$"
+  },
+  {
+   "id": "422d43e5-523c-46ee-8089-1ae199c93fc5",
+   "before": null,
+   "after": "다항식을 $4x^2+(5m-3)x+9$로 보고 풀이\n완전제곱식이 되려면 $(2x\\pm3)^2=4x^2\\pm12x+9$ 꼴이어야 하므로 $5m-3=12$ 또는 $5m-3=-12$\n각각 $m=3$, $m=-\\frac{9}{5}$\n$k=3\\times\\left(-\\frac{9}{5}\\right)=-\\frac{27}{5}$이므로 $5k=-27$"
+  },
+  {
+   "id": "a5e8185c-d4ca-4e46-b32b-e858a0389261",
+   "before": null,
+   "after": "$(4x-1)(y+A)=4xy+4Ax-y-A$\n여기서 $x$의 계수는 $4A$이므로 $4A=8$, $A=2$\n상수항은 $-A=-2$"
+  },
+  {
+   "id": "eaa4e339-bd54-4fa7-8b28-5c45122d8d98",
+   "before": null,
+   "after": "$(ax+2)(3x+b)=3ax^2+(ab+6)x+2b$\n계수 비교: $3a=-6$에서 $a=-2$, $2b=10$에서 $b=5$\n$c=ab+6=(-2)(5)+6=-4$\n$a+b+c=-2+5-4=-1$"
+  },
+  {
+   "id": "77031c14-9d11-4cb9-882c-31287c04e83d",
+   "before": null,
+   "after": "$(2x+a)^2+(3x-a)(4b-x)=x^2+(5a+12b)x+a^2-4ab$\n$x$의 계수 $5a+12b=32$를 만족하는 자연수는 $a=4,\\,b=1$\n상수항은 $a^2-4ab=16-16=0$"
+  },
+  {
+   "id": "9d6c103b-3ceb-49c6-a395-cc1f09aee17e",
+   "before": null,
+   "after": "$(x+a)^2+(4x+b)(3x-1)=13x^2+(2a+3b-4)x+(a^2-b)$\n$x$의 계수 $2a+3b-4=5$, 즉 $2a+3b=9$를 만족하는 자연수는 $a=3,\\,b=1$\n상수항은 $a^2-b=9-1=8$"
+  },
+  {
+   "id": "61679975-f021-4128-bf29-a6bb91cdd355",
+   "before": null,
+   "after": "① $(2x+2y)^2=4x^2+8xy+4y^2\\ne2(x+y)^2$\n② $(-2x-1)^2=4x^2+4x+1\\ne4x^2+4x-1$\n③ $(x-4)(x+2)=x^2-2x-8\\ne x^2-2x-6$\n④ $(3x-1)(3x+1)=9x^2-1\\ne9x^2-9$\n⑤ $(2x+1)(3x-4)=6x^2-5x-4$로 성립"
+  },
+  {
+   "id": "2167cb53-54ff-40c5-a070-175bca6daa4e",
+   "before": null,
+   "after": "$(x+2y)(x-2y)=x^2-4y^2$\n① $(-x+2y)(-x-2y)=(x-2y)(x+2y)=x^2-4y^2$로 같음\n나머지 보기는 부호가 바뀌거나 $(x-2y)^2,(x+2y)^2$ 꼴이 되어 다름"
+  },
+  {
+   "id": "347d1e99-cb5f-4d3f-b367-62e6c13aec14",
+   "before": null,
+   "after": "$a,b$는 두 자리 자연수이므로 $a+b$는 $20$ 이상 $198$ 이하\n조건(가)에서 $a+b$는 $48$의 배수이므로 $48,96,144,192$ 중 하나\n조건(나)에서 $\\sqrt{a+b}$가 자연수이려면 $a+b$가 제곱수이어야 하고, 이 중 $144=12^2$만 해당\n$a+b=144$를 만족하는 두 자리 자연수 $a$는 $45$부터 $99$까지이므로 $55$개"
+  },
+  {
+   "id": "7d8e9c6a-3f30-4380-b4c4-20a40fd40969",
+   "before": null,
+   "after": "$(x+2)(x+a)=x^2+(a+2)x+2a$\n계수 비교: $2a=12$에서 $a=6$, $b=a+2=8$\n$b-a=8-6=2$"
+  },
+  {
+   "id": "633fa39c-7491-4130-a730-27c32e6a4108",
+   "before": null,
+   "after": "$(4x+3y+2)(3x-2y+1)$을 전개\n$xy$항: $4x\\cdot(-2y)+3y\\cdot3x=-8xy+9xy=xy$이므로 $A=1$\n$x$항: $4x\\cdot1+2\\cdot3x=4x+6x=10x$이므로 $B=10$\n$A+B=11$"
+  },
+  {
+   "id": "2ed41e76-b34a-412f-a300-0125495d1163",
+   "before": null,
+   "after": "$(4x+a)(3x+5)=12x^2+(20+3a)x+5a$\n일차항의 계수 $20+3a$와 상수항 $5a$가 같으므로 $20+3a=5a$\n$2a=20$, $a=10$"
+  },
+  {
+   "id": "1637d0a6-ca6f-4f32-a972-9766c8067182",
+   "before": null,
+   "after": "$105\\times95=(100+5)(100-5)=100^2-5^2$ 형태로 계산\n주어진 식 (㈎$+5$)($100+$㈏)와 비교하면 ㈎$=100$, $100+$㈏$=95$에서 ㈏$=-5$\n따라서 (가)는 $100$, (나)는 $-5$"
+  },
+  {
+   "id": "1b6f4954-be58-4b42-a16e-c3b975cf9881",
+   "before": null,
+   "after": "$(x-2)(x+1)=x^2-x-2$\n$A=1,\\,B=-1,\\,C=-2$\n$A+B+C=1-1-2=-2$"
+  },
+  {
+   "id": "35a54d6b-41d5-4c9a-9df0-d28c0dc94814",
+   "before": null,
+   "after": "$(x+3y-2)(x-ay+b)$를 전개\n$xy$항: $-axy+3xy=(3-a)xy$\n$y$항: $2ay+3by=(2a+3b)y$\n두 계수가 같으므로 $3-a=2a+3b$, 즉 $3=3a+3b$에서 $a+b=1$"
+  },
+  {
+   "id": "318790e7-31fd-4030-99a7-02a59ebbe1c1",
+   "before": null,
+   "after": "$x=\\frac52,\\,y=\\frac12$로 놓으면 $x-y=2$이고 주어진 곱은 $(x+y)(x^2+y^2)(x^4+y^4)(x^8+y^8)$\n양변에 $x-y=2$를 곱하면 $(x-y)(x+y)(x^2+y^2)(x^4+y^4)(x^8+y^8)=x^{16}-y^{16}=\\dfrac{5^{16}-1}{2^{16}}$\n따라서 원래 곱은 $\\dfrac{5^{16}-1}{2^{17}}$이고 여기에 $\\dfrac{1}{2^{17}}$을 더하면 $\\dfrac{5^{16}}{2^{17}}$\n$y=16,\\,x=17$이므로 $x+y=33$"
+  },
+  {
+   "id": "87e140c8-1bf6-4367-84c6-5e8c5cc90efd",
+   "before": null,
+   "after": "$(x-2)(x-A)=x^2-(A+2)x+2A$\n계수 비교: $2A=12$에서 $A=6$, $B=A+2=8$\n$B-A=8-6=2$"
+  },
+  {
+   "id": "0dc58c76-1fde-4d52-8275-58f9621f38b0",
+   "before": null,
+   "after": "$(3x+a)(-4x+by+1)=-12x^2+3bxy+(3-4a)x+aby+a$\n$x$의 계수 $3-4a=1$에서 $a=\\frac12$\n$y$의 계수 $ab=\\frac12$에서 $b=1$\n$xy$의 계수는 $3b=3$"
+  },
+  {
+   "id": "522b8a90-25ce-418d-9d58-eebff39daf40",
+   "before": null,
+   "after": "$(x-2)(2x+3)=2x^2-x-6$\n$a=2,\\,b=-1,\\,c=-6$\n$2a-b-c=4-(-1)-(-6)=11$"
+  },
+  {
+   "id": "91324abd-5865-4435-86df-7c07a5d7344e",
+   "before": null,
+   "after": "$x<0,\\,y<0,\\,xy=8$\n$\\sqrt{2xy}=\\sqrt{16}=4$\n$x\\sqrt{\\dfrac{4y}{x}}$는 $\\dfrac{4y}{x}=\\dfrac{4xy}{x^2}=\\dfrac{32}{x^2}$이고 $x<0$이므로 $x\\sqrt{\\dfrac{4y}{x}}=-4\\sqrt2$\n$-y\\sqrt{\\dfrac{16x}{y}}$는 같은 방법으로 $8\\sqrt2$\n합하면 $4-4\\sqrt2+8\\sqrt2=4+4\\sqrt2$"
+  },
+  {
+   "id": "2d1f4471-ee01-437f-a6dc-761063e56304",
+   "before": null,
+   "after": "ㄱ. $98×102=(100-2)(100+2)=100^{2}-4$ 이므로 $a=4$\nㄴ. $102×103=(100+2)(100+3)=10000+100×5+6$ 이므로 $b=5$\nㄷ. $3-2=1$이므로 $(3+2)(3^{2}+2^{2})(3^{4}+2^{4})=(3-2)(3+2)(3^{2}+2^{2})(3^{4}+2^{4})=3^{8}-2^{8}$, 즉 $c=8$\n따라서 $a+b-c=4+5-8=1$"
+  },
+  {
+   "id": "e13fbc4c-fdd0-40be-92e2-5077b9c96a48",
+   "before": null,
+   "after": "분모를 유리화하면 $x=\\frac{2(\\sqrt5+\\sqrt3)}{(\\sqrt5-\\sqrt3)(\\sqrt5+\\sqrt3)}=\\frac{2(\\sqrt5+\\sqrt3)}{2}=\\sqrt5+\\sqrt3$\n같은 방법으로 $y=\\frac{2(\\sqrt5-\\sqrt3)}{2}=\\sqrt5-\\sqrt3$\n따라서 $x+y=(\\sqrt5+\\sqrt3)+(\\sqrt5-\\sqrt3)=2\\sqrt5$"
+  },
+  {
+   "id": "d3083a4f-711d-4a16-afb7-e48d30fb2f75",
+   "before": null,
+   "after": "① $(x-2y)^{2}=x^{2}-4xy+4y^{2}$ 이므로 틀림\n② $(x+7)(x-8)=x^{2}-x-56$ 이므로 틀림\n③ $(5a+3b)(a-2b)=5a^{2}-7ab-6b^{2}$ 이므로 틀림\n④ $(-2x+3y)(-2x-3y)=4x^{2}-9y^{2}$ 이므로 틀림\n⑤ $(a+3b)(c-2d)=ac-2ad+3bc-6bd$ 이므로 옳음"
+  },
+  {
+   "id": "e2280594-21ba-46e3-b74e-5a507f99f233",
+   "before": null,
+   "after": "① $(x-2)^{2}=x^{2}-4x+4$ 이므로 빈칸은 $-4$\n② $(x-3)(x+3)=x^{2}-9$ 이므로 빈칸은 $-9$\n③ $(3x-2)(2x+3)=6x^{2}+5x-6$ 이므로 빈칸은 $-6$\n④ $(-5x+1)^{2}=25x^{2}-10x+1$ 이므로 빈칸은 $-10$\n⑤ $(x+3)(x-4)=x^{2}-x-12$ 이므로 빈칸은 $-1$\n가장 큰 값은 $-1$인 ⑤"
+  },
+  {
+   "id": "8e2bb1f6-e0af-4698-9c84-331425c93948",
+   "before": null,
+   "after": "$(2x+3)(2x-3)=4x^{2}-9$\n$(4x^{2}-9)(4x^{2}+9)=16x^{4}-81$"
+  },
+  {
+   "id": "e6e91c86-22e3-4376-8713-098555c7d5dc",
+   "before": null,
+   "after": "합차공식을 이용하면 $(x+\\sqrt2)^{2}-(x-\\sqrt2)^{2}=\\{(x+\\sqrt2)+(x-\\sqrt2)\\}\\{(x+\\sqrt2)-(x-\\sqrt2)\\}=2x×2\\sqrt2=4\\sqrt2x$\n$4\\sqrt2x=8$이므로 $x=\\frac{8}{4\\sqrt2}=\\sqrt2$"
+  },
+  {
+   "id": "5af47026-b4d1-441f-b113-3e9f9e0747d6",
+   "before": null,
+   "after": "$(\\frac{1}{2}x+a)^{2}=\\frac{1}{4}x^{2}+ax+a^{2}$\n$(x+3)(x-2)=x^{2}+x-6$\n두 식을 빼면 $\\frac{1}{4}x^{2}+ax+a^{2}-(x^{2}+x-6)=-\\frac{3}{4}x^{2}+(a-1)x+(a^{2}+6)$\n$x$의 계수: $a-1$, 상수항: $a^{2}+6$\n$x$의 계수가 $5$이므로 $a-1=5$에서 $a=6$, 상수항 $b=6^{2}+6=42$\n따라서 $5a-b=30-42=-12$"
+  },
+  {
+   "id": "61afa509-e5ef-44cc-b5e2-f4f60d51d4c7",
+   "before": null,
+   "after": "$(3x+1)(2x-3)=6x^{2}-7x-3$\n$2(x+1)(x-1)=2x^{2}-2$\n두 식을 빼면 $6x^{2}-7x-3-(2x^{2}-2)=4x^{2}-7x-1$\n$a=4,b=-7,c=-1$이므로 $a+b+c=4-7-1=-4$"
+  },
+  {
+   "id": "3807e3aa-1ff4-4c44-9d3b-8ac8aba55332",
+   "before": null,
+   "after": "$(3x+a)(bx-2)=3bx^{2}+(ab-6)x-2a$\n계수를 비교하면 $3b=3$에서 $b=1$, $-2a=-2$에서 $a=1$\n$c=ab-6=1-6=-5$\n따라서 $a+b+c=1+1-5=-3$"
+  },
+  {
+   "id": "94a1d758-2726-4f49-ba13-333948cfa03b",
+   "before": null,
+   "after": "$6=2(1+2)$이므로 주어진 식은 $2(1+2)(1+2^{2})(1+2^{4})(1+2^{8})$\n$(2-1)(1+2)(1+2^{2})(1+2^{4})(1+2^{8})=2^{16}-1$이고 $2-1=1$이므로 $(1+2)(1+2^{2})(1+2^{4})(1+2^{8})=2^{16}-1$\n따라서 주어진 식은 $2(2^{16}-1)=2^{17}-2$"
+  },
+  {
+   "id": "8342a90e-c8c2-491f-ba27-4c6d847ca6db",
+   "before": null,
+   "after": "합차공식을 이용하면 $(\\frac{\\sqrt2}{2}a+\\frac{\\sqrt3}{3}b)(\\frac{\\sqrt2}{2}a-\\frac{\\sqrt3}{3}b)=\\frac{2}{4}a^{2}-\\frac{3}{9}b^{2}=\\frac{1}{2}a^{2}-\\frac{1}{3}b^{2}$\n$a^{2}=30,b^{2}=39$을 대입하면 $\\frac{1}{2}×30-\\frac{1}{3}×39=15-13=2$"
+  },
+  {
+   "id": "b2904454-5d17-4474-b861-d0604f2ebf40",
+   "before": null,
+   "after": "$x=\\frac{1-\\sqrt{1991}}{3}$에서 $3x-1=-\\sqrt{1991}$\n양변을 제곱하면 $(3x-1)^{2}=1991$, 즉 $9x^{2}-6x+1=1991$\n$9x^{2}-6x=1990$이므로 $9x^{2}-6x-1991=1990-1991=-1$\n따라서 $(9x^{2}-6x-1991)^{3}=(-1)^{3}=-1$"
+  },
+  {
+   "id": "80021c7a-7222-4636-b45a-d706220ac11d",
+   "before": null,
+   "after": "$(a+b)^{2}-(a-b)^{2}=4ab$이므로 $4ab=20$에서 $ab=5$\n$(2a-1)(2b-1)=4ab-2(a+b)+1=7$에 $ab=5$를 대입하면 $20-2(a+b)+1=7$이므로 $a+b=7$\n$\\frac{a}{b}+\\frac{b}{a}=\\frac{a^{2}+b^{2}}{ab}=\\frac{(a+b)^{2}-2ab}{ab}=\\frac{49-10}{5}=\\frac{39}{5}$"
+  },
+  {
+   "id": "ffd4804e-832e-4884-98e0-78fdafcace1e",
+   "before": null,
+   "after": "$(3x+a)(bx-7)=3bx^{2}+(ab-21)x-7a$\n계수를 비교하면 $3b=12$에서 $b=4$, $-7a=-14$에서 $a=2$\n(검산: $ab-21=8-21=-13$으로 일치)\n따라서 $a-b=2-4=-2$"
+  },
+  {
+   "id": "f21f8508-cbed-4050-b8e8-c6884979b121",
+   "before": null,
+   "after": "$x+\\frac{1}{x}=-4$의 양변에 $x$를 곱하면 $x^{2}+4x+1=0$, 즉 $x^{2}=-4x-1$\n$(x-1)(x+1)=x^{2}-1=-4x-2$\n$(x+3)(x+5)=x^{2}+8x+15=4x+14$\n두 식을 곱하면 $(-4x-2)(4x+14)=-16x^{2}-64x-28=-16(-4x-1)-64x-28=-12$\n따라서 $(x-1)(x+1)(x+3)(x+5)+2=-12+2=-10$"
+  },
+  {
+   "id": "9ab17333-6d92-47f9-a60a-e3b2e1a50f89",
+   "before": null,
+   "after": "$(2x+a)(bx-3)=2bx^{2}+(ab-6)x-3a$\n계수를 비교하면 $2b=2$에서 $b=1$, $-3a=-3$에서 $a=1$\n$c=ab-6=1-6=-5$\n따라서 $a+b+c=1+1-5=-3$"
+  },
+  {
+   "id": "b5e41534-5be0-4b87-8e1f-8e80e1e699d6",
+   "before": null,
+   "after": "$(x+y)^{2}=x^{2}+2xy+y^{2}$이므로 $8^{2}=32+2xy$\n$64-32=2xy$이므로 $xy=16$"
+  },
+  {
+   "id": "d990f509-eb27-4250-8612-aab07b24714d",
+   "before": null,
+   "after": "$(ax-4)(2x+b)=2ax^{2}+(ab-8)x-4b$\n$-4b=-28$에서 $b=7$\n$ab-8=13$에서 $ab=21$이고 $b=7$이므로 $a=3$\n$c=2a=6$\n따라서 $a+b+c=3+7+6=16$"
+  },
+  {
+   "id": "1c3f0fd4-ab2b-4de1-8f73-8984b72206d5",
+   "before": null,
+   "after": "분모를 유리화하면 $x=\\frac{(\\sqrt2+\\sqrt3)^{2}}{2-3}=-(\\sqrt2+\\sqrt3)^{2}=-(5+2\\sqrt6)$\n$y=\\frac{(\\sqrt2-\\sqrt3)^{2}}{2-3}=-(\\sqrt2-\\sqrt3)^{2}=-(5-2\\sqrt6)$\n$x+y=-(5+2\\sqrt6)-(5-2\\sqrt6)=-10$\n$x^{2}+2xy+y^{2}=(x+y)^{2}=(-10)^{2}=100$"
+  },
+  {
+   "id": "d43cb9e5-75c9-416e-ae55-368aa3c19300",
+   "before": null,
+   "after": "① $(x+1)^{2}=x^{2}+2x+1$ 옳음\n② $(x-2)^{2}=x^{2}-4x+4$ 옳음\n③ $(x-3)(x+3)=x^{2}-9$ 인데 $x^{2}-6$으로 제시되어 옳지 않음\n④ $(x-4)(x+5)=x^{2}+x-20$ 옳음\n⑤ $(2x-1)(3x+4)=6x^{2}+5x-4$ 옳음"
+  },
+  {
+   "id": "80777fd3-01dd-4366-bef0-fe4332fab7ec",
+   "before": null,
+   "after": "ㄱ. $25a^{2}-30ab+9b^{2}=(5a-3b)^{2}$이므로 □=-3\nㄴ. $ax+bx-y(a+b)=(a+b)(x-y)$이므로 □=-1\nㄷ. $(x-3y)(4x+□y)=4x^{2}+(□-12)xy-3□y^{2}$에서 상수항을 비교하면 $-3□=-3$, □=1\nㄹ. $(2x+3)(x-5)+11=2x^{2}-7x-4=(2x+1)(x-4)$이므로 □=4\nㅁ. $4(x-2y)^{2}-9(2x-y)^{2}=(4x+y)(7y-8x)$이므로 □=-8\n따라서 □가 가장 큰 것은 ㄹ이다."
+  },
+  {
+   "id": "07e63c14-9f14-4344-aae7-788701d8fe00",
+   "before": null,
+   "after": "$s=x+\\sqrt5y$, $t=x-\\sqrt5y$라 하면 $0<t<1$이므로 $0<t^{2}<1$, 즉 $t^{2}$의 정수부분은 0이라 $a=t^{2}$이다.\n$s^{2}+t^{2}=2(x^{2}+5y^{2})=2N$ ($N=x^{2}+5y^{2}$은 자연수)이므로 $s^{2}=2N-t^{2}=2N-a$이다.\n$0<a<1$이므로 $s^{2}=(2N-1)+(1-a)$이고 $2N-1$은 정수, $0<1-a<1$이다.\n따라서 $(x+\\sqrt5y)^{2}$의 소수부분은 $1-a$이다."
+  },
+  {
+   "id": "72f58a2e-79d6-4976-96b5-5c9bf8fbac04",
+   "before": null,
+   "after": "$(2x+1)(18x-1)=36x^{2}+16x-1$이므로 주어진 식은 $36x^{2}+16x+(k-1)$이다.\n$36x^{2}=(6x)^{2}$이므로 완전제곱식이 되려면 $(6x+m)^{2}=36x^{2}+12mx+m^{2}$ 꼴이어야 한다.\n$12m=16$에서 $m=\\frac{4}{3}$이고 $k-1=m^{2}=\\frac{16}{9}$이므로 $k=\\frac{25}{9}$이다."
+  },
+  {
+   "id": "b142e3a4-26a8-4579-b853-5560439a813e",
+   "before": null,
+   "after": "$ab=-8$인 정수 $a,b$의 쌍은 $(1,-8),(2,-4),(4,-2),(8,-1)$과 그 순서를 바꾼 것들이다.\n각 경우 $c=a+b$의 값은 $-7,-2,2,7$로 4가지이다.\n이 값들의 곱은 $(-7)\\times(-2)\\times2\\times7=196$이다."
+  },
+  {
+   "id": "d2a6c0ac-1670-4d40-83bf-46a81d4ecb8c",
+   "before": null,
+   "after": "$(3x-A)^{2}=9x^{2}-6Ax+A^{2}$이므로 $B=-6A$, $A^{2}=4$에서 $A=\\pm2$이다.\n$A=2$이면 $B=-12$로 $A>B$를 만족하고, $A=-2$이면 $B=12$로 $A>B$를 만족하지 않는다.\n따라서 $A=2,\\ B=-12$이고 $A+B=-10$이다."
+  },
+  {
+   "id": "adc7e56b-d2cd-4c5e-9266-754628171ead",
+   "before": null,
+   "after": "$(2x+a)(3x-5)=6x^{2}+(3a-10)x-5a$이다.\n상수항을 비교하면 $-5a=-10$이므로 $a=2$이다.\n$x$의 계수를 비교하면 $3a-10=-b$에서 $6-10=-b$, $b=4$이다.\n따라서 $a-b=2-4=-2$이다."
+  },
+  {
+   "id": "d6ff1f24-b9c7-4d4a-8f0a-890032a3df91",
+   "before": null,
+   "after": "$\\frac{y}{x}+\\frac{x}{y}=\\frac{x^{2}+y^{2}}{xy}=4$이므로 $x^{2}+y^{2}=4xy=20$이다.\n$(x^{2}-y^{2})^{2}=(x^{2}+y^{2})^{2}-4x^{2}y^{2}=20^{2}-4\\times5^{2}=400-100=300$이다."
+  },
+  {
+   "id": "68d65b66-9d83-47ba-8b71-37363a993eca",
+   "before": null,
+   "after": "새 직사각형의 넓이는 $(x+a)(x+b)=x^{2}+(a+b)x+ab$이므로 $a+b=8$, $n=ab$이다.\n$a,b$가 자연수이고 $a+b=8$일 때 $ab$의 값은 $1\\times7=7,\\ 2\\times6=12,\\ 3\\times5=15,\\ 4\\times4=16$으로 4가지이다.\n이 값들의 합은 $7+12+15+16=50$이다."
+  },
+  {
+   "id": "89bd183c-10d2-48bd-9821-229cc682c810",
+   "before": null,
+   "after": "$(x+2y)^{2}=x^{2}+4xy+4y^{2}$이므로 첫 번째 식은 틀렸다.\n$(\\frac{a}{2}-\\frac{b}{3})(\\frac{a}{2}+\\frac{b}{3})=\\frac{a^{2}}{4}-\\frac{b^{2}}{9}$는 옳다.\n$(x+5)(x-3)=x^{2}+2x-15$는 옳다.\n$(3x-1)(x+5)=3x^{2}+14x-5$이므로 네 번째 식은 틀렸다.\n따라서 옳은 것은 2개이다."
+  },
+  {
+   "id": "5b2dc4ba-f529-4968-be79-8bf85e874dab",
+   "before": null,
+   "after": "$y(x-y)-x(x+y)+3xy=xy-y^{2}-x^{2}-xy+3xy=-(x^{2}-2xy+y^{2})+xy=-(x-y)^{2}+xy$이다.\n$(x-y)^{2}=(3\\sqrt2)^{2}=18$이므로 식의 값은 $-18+3=-15$이다."
+  },
+  {
+   "id": "a7d7a2bf-2704-4676-b362-fe68f924c97e",
+   "before": null,
+   "after": "$(x-3)(2x+a)=2x^{2}+(a-6)x-3a$이다.\n$x$의 계수와 상수항이 같으므로 $a-6=-3a$에서 $4a=6$, $a=\\frac{3}{2}$이다.\n따라서 $2a=3$이다."
+  },
+  {
+   "id": "2f8d9cb4-720f-41a8-bc63-742f9b675e7a",
+   "before": null,
+   "after": "$(2x-3)^{2}=4x^{2}-12x+9$, $(x+5)^{2}=x^{2}+10x+25$, $(x+7)(x-7)=x^{2}-49$, $(x-5)(x+3)=x^{2}-2x-15$로 각각 주어진 식과 다르다.\n$(2x+1)(3x-1)=6x^{2}+3x-2x-1=6x^{2}+x-1$은 옳다."
+  },
+  {
+   "id": "53e3da18-3483-42ee-8361-8b457dee3bbb",
+   "before": null,
+   "after": "$(2x-3y)(3x+4y)=6x^{2}-xy-12y^{2}$이므로 $xy$의 계수는 $-1$이다.\n$(2x-y)(2x+3y)=4x^{2}+4xy-3y^{2}$, $(x-y)(3x+7y)=3x^{2}+4xy-7y^{2}$, $(x+5y)(9y-x)=-x^{2}+4xy+45y^{2}$, $(x+y)(x+3y)=x^{2}+4xy+3y^{2}$로 나머지는 모두 $xy$의 계수가 4이다.\n따라서 나머지와 다른 하나는 첫 번째 식이다."
+  },
+  {
+   "id": "fde4a9a0-68aa-48b4-a5eb-27637fcf8c0d",
+   "before": null,
+   "after": "$(2x-3y)(x+2y)=2x^{2}+4xy-3xy-6y^{2}=2x^{2}+xy-6y^{2}$이다."
+  },
+  {
+   "id": "e78337ba-a0ce-4513-935f-53183450da19",
+   "before": null,
+   "after": "$(a+b)(3a+2b)=3a^{2}+2ab+3ab+2b^{2}=3a^{2}+5ab+2b^{2}$이다."
+  },
+  {
+   "id": "daa7a2ba-1382-4de5-96ab-9af629255d7a",
+   "before": null,
+   "after": "$(3x+5)(2x+1)=6x^{2}+3x+10x+5=6x^{2}+13x+5$이므로 $a=6$이다."
+  },
+  {
+   "id": "54b171c3-dbfd-436b-807b-933662ce0689",
+   "before": null,
+   "after": "$25x^{2}=(5x)^{2}$, $16=4^{2}$이므로 완전제곱식이 되려면 $(5x\\pm4)^{2}=25x^{2}\\pm40x+16$ 꼴이어야 한다.\n$7k-2=40$이면 $k=6$, $7k-2=-40$이면 $k=-\\frac{38}{7}$이다.\n$k<0$이므로 $k=-\\frac{38}{7}$이다."
+  },
+  {
+   "id": "6ef0d794-3423-421b-a084-867b8eae9d24",
+   "before": null,
+   "after": "$(x-3y)(2x+5y-4)=2x^{2}+5xy-4x-6xy-15y^{2}+12y=2x^{2}-xy-4x-15y^{2}+12y$이다.\n따라서 $a=-1,\\ b=-4,\\ c=12$이고 $a+b+c=-1-4+12=7$이다."
+  },
+  {
+   "id": "e4a36923-1bb9-424e-9bb7-7fca395b3776",
+   "before": null,
+   "after": "$(x-1)^{2}=x^{2}-2x+1$의 모든 항의 계수의 합은 $x=1$을 대입한 값과 같다.\n$(1-1)^{2}=0$이므로 계수들의 합은 $0$이다."
+  },
+  {
+   "id": "29706941-6956-4840-863c-d71ed1ecc236",
+   "before": null,
+   "after": "$(x-y)^{2}=x^{2}-2xy+y^{2}$이므로 $25=13-2xy$에서 $xy=-6$이다.\n$(x+y)^{2}=x^{2}+2xy+y^{2}=13+2\\times(-6)=1$이다."
+  },
+  {
+   "id": "f502068a-6905-487d-bbcb-866f2783f40d",
+   "before": null,
+   "after": "$0<x<\\frac{1}{2}$이므로 $x-\\frac{1}{2}<0$, $x+\\frac{1}{2}>0$이다.\n$\\sqrt{(x-\\frac{1}{2})^{2}+2x}=\\sqrt{x^{2}+x+\\frac{1}{4}}=\\sqrt{(x+\\frac{1}{2})^{2}}=x+\\frac{1}{2}$\n$\\sqrt{(x+\\frac{1}{2})^{2}-2x}=\\sqrt{x^{2}-x+\\frac{1}{4}}=\\sqrt{(x-\\frac{1}{2})^{2}}=\\frac{1}{2}-x$\n주어진 식은 $\\left(x+\\frac{1}{2}\\right)-\\left(\\frac{1}{2}-x\\right)=2x$"
+  },
+  {
+   "id": "aebd859a-667e-4091-901a-72d6d7ab9638",
+   "before": null,
+   "after": "$a^{2}+b^{2}=(a+b)^{2}-2ab=3^{2}-2\\times(-1)=9+2=11$\n$a^{4}+b^{4}=(a^{2}+b^{2})^{2}-2(ab)^{2}=11^{2}-2\\times1=121-2=119$\n따라서 $k=(a^{2}+b^{2})(a^{4}+b^{4})=11\\times119=1309$"
+  },
+  {
+   "id": "1983da90-e0cf-4db8-bb66-f68c9941ff82",
+   "before": null,
+   "after": "$(2x-a)(6+bx)=2bx^{2}+(12-ab)x-6a$\n이 식이 $-10x^{2}-cx+30$과 같으므로\n$2b=-10$에서 $b=-5$, $-6a=30$에서 $a=-5$\n$12-ab=-c$에서 $12-25=-13=-c$이므로 $c=13$\n따라서 $a+b+c=-5-5+13=3$"
+  },
+  {
+   "id": "4dff44b5-9190-46de-963f-662ab2964d22",
+   "before": null,
+   "after": "$(3x-1)^{2}=9x^{2}-6x+1$\n$(2x-3)(2x+3)=4x^{2}-9$\n따라서 $(3x-1)^{2}-(2x-3)(2x+3)=9x^{2}-6x+1-4x^{2}+9=5x^{2}-6x+10$"
+  },
+  {
+   "id": "b941e5c0-039e-43ab-98b7-9b95fc1566d2",
+   "before": null,
+   "after": "$(3x+a)(5x+2)=15x^{2}+(6+5a)x+2a$가 $15x^{2}-19x-10$과 같으므로\n$2a=-10$에서 $a=-5$ (검산: $6+5\\times(-5)=-19$, 성립)\n옳게 전개한 식은 $(3x-5)(2x+5)=6x^{2}+15x-10x-25=6x^{2}+5x-25$"
+  },
+  {
+   "id": "39944cf9-ee15-4a9b-a062-0c41b3452836",
+   "before": null,
+   "after": "양변에 $(4-2)=2$를 곱하면\n$(4-2)(4+2)(4^{2}+2^{2})(4^{4}+2^{4})=(4^{2}-2^{2})(4^{2}+2^{2})(4^{4}+2^{4})=(4^{4}-2^{4})(4^{4}+2^{4})=4^{8}-2^{8}$\n따라서 $(4+2)(4^{2}+2^{2})(4^{4}+2^{4})=\\frac{4^{8}-2^{8}}{2}=\\frac{2^{16}-2^{8}}{2}=2^{15}-2^{7}$\n주어진 식은 $2^{15}-2^{7}-2^{15}=-2^{7}$"
+  },
+  {
+   "id": "a08a7c06-0205-4660-8739-b3ca07f60783",
+   "before": null,
+   "after": "$(a-x)(a+x)=a^{2}-x^{2}$ (합차공식)"
+  },
+  {
+   "id": "f49309ba-994e-423a-bfbf-9a0886697bdf",
+   "before": null,
+   "after": "$(3a+b)(3a-b)=9a^{2}-b^{2}$\n② $(b-3a)(-b-3a)=-(b-3a)(b+3a)=-(b^{2}-9a^{2})=9a^{2}-b^{2}$로 같다.\n나머지는 전개하면 부호나 $ab$항이 달라져 같지 않다."
+  },
+  {
+   "id": "589a8165-1a30-47d2-8123-67a81080552a",
+   "before": null,
+   "after": "$x^{2}y+xy^{2}=xy(x+y)=4xy$이므로 $4xy+4=12$에서 $xy=2$\n$(x-y)^{2}=(x+y)^{2}-4xy=16-8=8$\n$x>y$이므로 $x-y=\\sqrt{8}=2\\sqrt{2}$"
+  },
+  {
+   "id": "b9706698-c6bf-4d7f-b553-e9ee73a6cfbe",
+   "before": null,
+   "after": "$(2x-3y)(x+y)=2x^{2}+2xy-3xy-3y^{2}=2x^{2}-xy-3y^{2}$\n$x^{2}$의 계수는 2, $xy$의 계수는 $-1$이므로 합은 $2+(-1)=1$"
+  },
+  {
+   "id": "59112a21-a6f4-491d-a7c6-f3fa62642c2c",
+   "before": null,
+   "after": "$(x+a)(x+b)=x^{2}+(a+b)x+ab$이므로 $ab=36$, $c=a+b$\n$ab=36$인 정수쌍의 합은 $\\pm12,\\pm13,\\pm15,\\pm20,\\pm37$뿐이다.\n선택지 중 $-15,13,20,37$은 가능하지만 $-14$는 이 목록에 없으므로 될 수 없다."
+  },
+  {
+   "id": "dce828fc-09d3-4901-a435-834945db646c",
+   "before": null,
+   "after": "$\\left(\\frac{1}{2}x-3y\\right)^{2}=\\frac{1}{4}x^{2}-3xy+9y^{2}$\n④ $\\frac{1}{4}(x-6y)^{2}=\\frac{1}{4}(x^{2}-12xy+36y^{2})=\\frac{1}{4}x^{2}-3xy+9y^{2}$로 같다.\n나머지 선택지는 계수나 부호가 달라 같지 않다."
+  },
+  {
+   "id": "3c0c42d8-d709-4ed4-9c6a-010122a4d3c7",
+   "before": null,
+   "after": "분모를 통분하면 $(\\sqrt{6}-\\sqrt{2})(\\sqrt{6}+\\sqrt{2})=6-2=4$\n분자는 $(\\sqrt{6}+\\sqrt{2})^{2}+(\\sqrt{6}-\\sqrt{2})^{2}=2(6+2)=16$\n따라서 주어진 식은 $\\frac{16}{4}=4$"
+  },
+  {
+   "id": "220542c4-37c0-4f1a-8de5-7475999fc0a3",
+   "before": null,
+   "after": "$(x-3y)(2x+7y)=2x^{2}+7xy-6xy-21y^{2}=2x^{2}+xy-21y^{2}$"
+  },
+  {
+   "id": "80d036f2-f22e-42ae-aa78-cac19028813b",
+   "before": null,
+   "after": "$(x+a)(x-a)=x^{2}-a^{2}$가 $x^{2}-4$와 같으므로 $a^{2}=4$, 즉 $a=\\pm2$\n선택지 중 이를 만족하는 값은 $2$뿐이다."
+  },
+  {
+   "id": "3c3aaf3e-4095-4289-9e45-e3147da5ab63",
+   "before": null,
+   "after": "$(x+a)(x-3)=x^{2}+(a-3)x-3a$가 $x^{2}-bx+6$과 같으므로\n$-3a=6$에서 $a=-2$\n$a-3=-b$에서 $-2-3=-5=-b$이므로 $b=5$\n따라서 $a+b=-2+5=3$"
+  },
+  {
+   "id": "b82c8ec1-d72e-40fe-afd2-d127c1163b2c",
+   "before": null,
+   "after": "$(x-a)(3x+4)=3x^{2}+(4-3a)x-4a$가 $3x^{2}+bx-20$과 같으므로\n$-4a=-20$에서 $a=5$\n$4-3a=b$에서 $4-15=-11=b$\n따라서 $a-b=5-(-11)=16$"
+  },
+  {
+   "id": "83ef2da2-862a-486d-a9b2-39adb1de2433",
+   "before": null,
+   "after": "⑴ $2010^{2}=(2000+10)^{2}$의 꼴이므로 완전제곱공식 ㄱ을 쓴다.\n$2010^{2}=2000^{2}+2\\times2000\\times10+10^{2}=4000000+40000+100=4040100$\n⑵ $55^{2}-45^{2}$은 제곱의 차이므로 합차공식 ㄴ을 쓴다.\n$55^{2}-45^{2}=(55+45)(55-45)=100\\times10=1000$"
+  },
+  {
+   "id": "b9972de4-aea7-47b7-bddc-84c936251d7e",
+   "before": null,
+   "after": "① $(x+2)^{2}=x^{2}+4x+4$이므로 안에 알맞은 수는 $4$\n② $(-a+3)(-a-3)=a^{2}-9$이므로 안에 알맞은 수는 $-9$\n③ $(3x-2)(x+3)=3x^{2}+7x-6$이므로 안에 알맞은 수는 $7$\n④ $(x+3)(2x-9)=2x^{2}-3x-27$이므로 안에 알맞은 수는 $-3$\n⑤ $(2a-b)(3a+4b)=6a^{2}+5ab-4b^{2}$이므로 안에 알맞은 수는 $5$\n따라서 가장 큰 것은 ③이다."
+  },
+  {
+   "id": "56093d03-623d-4d2c-b298-2ce2947db227",
+   "before": null,
+   "after": "$(a+4)^{2}=a^{2}+8a+16$이므로 ㉠$=16$ (①은 틀림)\n$(2x-5)^{2}=4x^{2}-20x+25$이므로 ㉡$=4$, ㉢$=20$ (②, ③은 틀림)\n$(4x+k)^{2}=16x^{2}+8kx+k^{2}$가 $16x^{2}-24x+㉤$과 같으려면 $8k=-24$, 즉 $k=-3$이므로 ㉣$=-3$ (④가 옳음)\n이때 ㉤$=k^{2}=9$이므로 ⑤는 틀림"
   }
  ]
 }

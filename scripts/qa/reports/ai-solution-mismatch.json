@@ -808,5 +808,47 @@
   "code": "J30103-PLEG",
   "dbAnswer": "②",
   "aiAnswer": "③"
+ },
+ {
+  "id": "4598d677-9f58-4f4b-8433-b2b6f40e4b8e",
+  "code": "J30103-T93H",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "0e0930a2-f521-4215-a022-6299d83a4866",
+  "code": "J30103-VGSV",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "82faa561-4c5f-4c7e-bb4a-7545e64330d6",
+  "code": "J30201-25XH",
+  "dbAnswer": "$4$, $16$, $10816$",
+  "aiAnswer": "4, 16"
+ },
+ {
+  "id": "1283cbe9-95fd-4dd4-9419-4fef32300f70",
+  "code": "J30201-4T3B",
+  "dbAnswer": "-15√13",
+  "aiAnswer": "$-15sqrt{13}$"
+ },
+ {
+  "id": "2d121e7b-fe99-4c0c-b3ad-6cba0f028d07",
+  "code": "J30201-6CYU",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "ec94119f-98a8-4445-a802-e6503dd7c058",
+  "code": "J30201-AARK",
+  "dbAnswer": "(6a+5b)(6a-5b)=36a²-25b²",
+  "aiAnswer": "$36a^{2}-25b^{2}$"
+ },
+ {
+  "id": "0d016350-18e6-4c54-8a80-1606874cefed",
+  "code": "J30201-BPA6",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
  }
 ]
