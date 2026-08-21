@@ -14,16 +14,19 @@
  *   · `[적대③-D]` 추정기의 «자»   → `overflowLines.test.ts`
  *   · `[적대③-E]` 모형·경고 문구  → `printOverflow.test.ts`
  *
- * 아래 **두 건**은 일부러 빨간 채로 둔다. 고치면 **인쇄물 출력 결과가 바뀐다** —
+ * 아래 **한 건**은 일부러 빨간 채로 둔다. 고치면 **인쇄물 출력 결과가 바뀐다** —
  * 지면 형태는 원장님 확정 사항이므로(D-07 · 절대 규칙 1·6) 이 트랙에서 결정할 수 없다.
  * 원장님이 확정하면 이 파일에서 지우고 `printPack.test.ts` 로 옮긴다.
+ *
+ * ✅ **`[적대③-B]` 문제지 분할은 2026-08-21 에 나갔다.** 원장님이 「문항 길이에 따라
+ *    배치를 다르게. 길이가 길면 1개로」로 확정하셔서 `packProblems` 가 문항 높이를
+ *    보게 됐다. 회귀 가드는 위 규칙대로 `src/__tests__/unit/printPack.test.ts` 에 있다.
  */
 import { describe, expect, it } from "vitest";
 
 import type { TestPrintProblem } from "@/components/print/types";
 import { JASEUP_GEOMETRY } from "@/lib/printGeometry";
 import { paginateAnswerKey } from "@/lib/printLayout";
-import { packProblems } from "@/lib/printPack";
 
 const problem = (over: Partial<TestPrintProblem> = {}): TestPrintProblem => ({
   id: "p1",
@@ -32,28 +35,6 @@ const problem = (over: Partial<TestPrintProblem> = {}): TestPrintProblem => ({
   answer: "1",
   solution: null,
   ...over,
-});
-
-describe("[적대③-B] 첫 장이 좁다는 사실이 «분할» 에는 아직 없다", () => {
-  /**
-   * `packProblems` 는 장을 **문항 수로만** 자른다. 첫 장에는 머리글과 「◆ 핵심 개념
-   * 정리」 상자가 얹혀 문항 칸이 **79px(3.9줄) 좁은데** 그 사실이 분할에 한 글자도
-   * 들어가 있지 않다. 실측: 첫 장에서만 넘치는 문항 3,216건.
-   *
-   * 판정은 이제 안다(첫 장 한계 19줄 / 이어지는 장 23줄) — 그래서 경고는 나간다.
-   * 그래도 **1·2번 자리에 놓인다는 사실 자체**는 안 바뀐다.
-   *
-   * ⚠️ 고치려면 첫 장 정원을 1문항으로 줄여야 하고, 그러면 시험지 장 수가 늘고
-   *    문항이 놓이는 자리가 통째로 바뀐다 — **원장님 확정 대상**(D-07).
-   */
-  it("지면 분할은 첫 장에도 그냥 두 문항을 넣는다", () => {
-    const pages = packProblems(
-      Array.from({ length: 6 }, (_, i) => problem({ id: `p${i}` })),
-    );
-    expect(JASEUP_GEOMETRY.questionsPerPage).toBe(2);
-    // 🔴 첫 장이 79px 좁으므로 «장별 정원»이 같을 수 없다 — 원장님 확정 대기.
-    expect(pages[0]!.problems.length).toBeLessThan(pages[1]!.problems.length);
-  });
 });
 
 describe("[적대③-C] 정답지 1쪽 정원이 「빠른 정답」 상자를 모른다", () => {

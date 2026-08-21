@@ -69,9 +69,11 @@ import { JASEUP_MEASURED_PX } from "../../src/lib/printGeometry";
 import {
   assessOverflowRisk,
   estimateProblemPx,
+  packProblems,
   parseFigureDimensions,
 } from "../../src/lib/printOverflow";
 import { capByName } from "./capLayoutProbe";
+import { packProblemsLegacy } from "./legacy/printPack-20260821";
 import {
   assertHeightCacheFresh,
   measuredRowsHash,
@@ -133,6 +135,30 @@ const toPrint = (rows: Row[]): TestPrintProblem[] =>
     figureSourceMm: r.figureSourceMm ?? [],
   }));
 
+/**
+ * **옛 분할(장당 2문항 고정)의 자리별 칸** — git 에서 꺼낸 옛 코드로 구한다.
+ *
+ * 「이렇게 부르면 옛 동작과 같다」고 손으로 적으면 그건 추론이지 측정이 아니다
+ * (CLAUDE.md 2026-08-18). 칸을 «혼자인가·첫 장인가»로 고르는 규칙은 안 바뀌었으므로
+ * 그대로 쓰고, **바뀐 것(분할)만** 옛것으로 갈아 끼운다.
+ */
+function legacySeatCapacities(problems: TestPrintProblem[]): number[] {
+  const out: number[] = [];
+  packProblemsLegacy(problems).forEach((page, pageIndex) => {
+    const alone = page.problems.length === 1;
+    const first = pageIndex === 0;
+    const px = alone
+      ? first
+        ? JASEUP_MEASURED_PX.soloFirstPageSlot
+        : JASEUP_MEASURED_PX.soloContinuationSlot
+      : first
+        ? JASEUP_MEASURED_PX.firstPageSlot
+        : JASEUP_MEASURED_PX.continuationSlot;
+    for (let i = 0; i < page.problems.length; i += 1) out.push(px);
+  });
+  return out;
+}
+
 /** 그 배치에서 **실제로** 넘치는 문항 수 — 참은 실측 높이와 실측 칸이다. */
 function overflowCount(order: Row[], seats: number[]): number {
   let n = 0;
@@ -165,7 +191,12 @@ function ratioFor(count: number): DifficultyRatio {
 
 interface Arm {
   label: string;
+  /** 시험지 장 수 — 높이 분할의 **대가**다. 재지 않으면 이득만 적히게 된다. */
+  pages: number;
   overflow: number;
+  /** **같은 시험지**를 옛 분할(장당 2문항 고정)로 찍었다면. 분할만 갈아 낀 대조군이다. */
+  legacyPages: number;
+  legacyOverflow: number;
   warnings: number;
   warnedSheets: number;
   typeBreak: number;
@@ -176,7 +207,10 @@ interface Arm {
 
 const newArm = (label: string): Arm => ({
   label,
+  pages: 0,
   overflow: 0,
+  legacyPages: 0,
+  legacyOverflow: 0,
   warnings: 0,
   warnedSheets: 0,
   typeBreak: 0,
@@ -451,7 +485,7 @@ async function main() {
     );
   }
 
-  /* ── 검산 — 출제의 후순위 판정 ↔ 인쇄 경고가 한 건도 다르지 않은가 ────────── */
+  /* ── 검산 — 출제의 후순위 판정 ↔ **분할이 장을 통째로 주는 문항**이 같은가 ──── */
   {
     let drift = 0;
     let example = "";
@@ -470,25 +504,36 @@ async function main() {
     let warnCount = 0;
     let realCount = 0;
     let hitCount = 0;
+    /**
+     * 🔴 **2026-08-21 — 견주는 상대가 바뀌었다.** 분할이 문항 높이를 보게 되면서
+     *    (원장님 확정) 반 칸을 넘는 문항은 **경고가 아니라 자리로** 풀린다. 그러니
+     *    「출제가 미는 문항 == 인쇄가 경고하는 문항」은 더 이상 참이 아니고, 참인
+     *    것은 **「출제가 미는 문항 == 분할이 장을 통째로 주는 문항」**이다.
+     *    뜻은 그대로다 — 출제와 조판이 «반 칸에 들어가는가»를 **한 규칙**으로 본다.
+     */
     for (const p of pool) {
-      // 3번 자리 = 이어지는 장의 반 칸(484px). 캐시가 잰 것과 같은 자리다.
+      // 3번 자리 = 이어지는 장. 캐시가 잰 것과 같은 자리다.
       const placed = [filler, filler, ...toPrint([p]), filler];
-      const warned = assessOverflowRisk(placed).some((r) => r.number === 3);
-      if (risksTightSeat(p, JASEUP_MEASURED_PX.continuationSlot) !== warned) {
+      const page = packProblems(placed).find((pg) =>
+        pg.problems.some((q) => q.id === p.id),
+      )!;
+      const alone = page.problems.length === 1;
+      const tight = risksTightSeat(p, JASEUP_MEASURED_PX.continuationSlot);
+      if (tight !== alone) {
         drift += 1;
         if (!example) example = p.id;
       }
       const real = p.neededPx > JASEUP_MEASURED_PX.continuationSlot;
-      if (warned) warnCount += 1;
+      if (tight) warnCount += 1;
       if (real) realCount += 1;
-      if (warned && real) hitCount += 1;
+      if (tight && real) hitCount += 1;
     }
     if (drift > 0)
       throw new Error(
-        `출제의 후순위 판정이 인쇄 경고와 ${drift}건 다르다 — 규칙이 두 벌이 됐다. 예: ${example}`,
+        `출제의 후순위 판정이 분할과 ${drift}건 다르다 — 규칙이 두 벌이 됐다. 예: ${example}`,
       );
     console.log(
-      `검산 · 출제 후순위 판정 ↔ 인쇄 경고 일치 (0건 불일치, ${pool.length.toLocaleString()}건 전수)`,
+      `검산 · 출제 후순위 판정 ↔ 분할이 장을 통째로 주는 문항 일치 (0건 불일치, ${pool.length.toLocaleString()}건 전수)`,
     );
     console.log(
       `검산 · 이 조건에서 판정의 성적 (484px 칸, 출제 가능 풀 전수) — ` +
@@ -531,10 +576,17 @@ async function main() {
   console.log(`\n단원 ${byUnit.size.toLocaleString()}개`);
 
   for (const count of counts) {
-    const seats = seatCapacitiesFor(count);
     const ratio = ratioFor(count);
-    const seatDesc = `${seats.filter((s) => s === firstPageSlot).length}×${firstPageSlot} · ${seats.filter((s) => s === continuationSlot).length}×${continuationSlot}${
-      count % 2 === 1 ? ` · 1×${seats[seats.length - 1]}` : ""
+    /**
+     * 🔴 자리는 **시험지마다 다르다.** 분할이 문항 높이를 보게 된 뒤로
+     *    (원장님 확정 2026-08-21) 개수로 미리 구할 수 없다 — 아래 채점 고리 안에서
+     *    그 시험지의 실제 문항으로 구한다. 여기 표시는 «짧은 문항만일 때»의 모양이다.
+     */
+    const nominal = seatCapacitiesFor(
+      Array.from({ length: count }, () => ({ content: "짧다." })),
+    );
+    const seatDesc = `${nominal.filter((s) => s === firstPageSlot).length}×${firstPageSlot} · ${nominal.filter((s) => s === continuationSlot).length}×${continuationSlot}${
+      count % 2 === 1 ? ` · 1×${nominal[nominal.length - 1]}` : ""
     }`;
     console.log(
       `\n${"═".repeat(76)}\n일일테스트(단원 하나) ${count}문항 · 자리 ${seatDesc}\n${"═".repeat(76)}`,
@@ -591,8 +643,18 @@ async function main() {
           const arm = arms[index]!;
           // 「현행」팔은 지면 셋을 떼고 뽑았으므로 채점·경고는 원래 행으로 되돌린다.
           const order = run.problems.map((p) => rowById.get(p.id)!);
+          // 자리는 그 시험지의 **실제 문항**이 정한다(높은 문항은 칸을 혼자 쓴다).
+          const printed = toPrint(order);
+          const seats = seatCapacitiesFor(printed);
+          arm.pages += packProblems(printed).length;
           arm.overflow += overflowCount(order, seats);
-          const risks = assessOverflowRisk(toPrint(order));
+          // 🔴 **같은 시험지**를 옛 분할로 찍었다면 — 분할만 갈아 낀 대조군.
+          arm.legacyPages += packProblemsLegacy(printed).length;
+          arm.legacyOverflow += overflowCount(
+            order,
+            legacySeatCapacities(printed),
+          );
+          const risks = assessOverflowRisk(printed);
           arm.warnings += risks.length;
           if (risks.length > 0) arm.warnedSheets += 1;
           arm.typeBreak += consecutiveViolations(order);
@@ -634,6 +696,17 @@ async function main() {
     console.log(
       `      「들어가는 문항」만으로 정원을 못 채우는 단원 ${thinUnits}/${units.length}` +
         ` · 고른 문항이 전부 들어가던 시험지 ${share(base.allFitting)} → ${share(arms[1]!.allFitting)}`,
+    );
+    console.log(
+      `      시험지 장 수 ${per(base.pages)} → ${per(arms[1]!.pages)}장/장`,
+    );
+    const now = arms[1]!;
+    console.log(
+      `  └ 분할만 갈아 끼우면 (같은 시험지 · 같은 문항 순서)
+` +
+        `      옛 분할(장당 2문항 고정)  넘침 ${per(now.legacyOverflow)}건/장 · ${per(now.legacyPages)}장
+` +
+        `      지금(길이가 정한다)       넘침 ${per(now.overflow)}건/장 · ${per(now.pages)}장`,
     );
     console.log(
       `      난이도 대체 ${per(base.substitutions)} → ${per(arms[1]!.substitutions)}건/장` +

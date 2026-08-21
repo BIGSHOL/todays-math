@@ -22,7 +22,7 @@
  *
  * ## 무엇을 보는가
  *
- * 장당 문항 수는 2로 고정이고(`JASEUP_GEOMETRY.questionsPerPage`) 칸 높이는
+ * 장당 문항 수는 **문항 높이가 정한다**(`packProblems` — 원장님 확정 2026-08-21). 칸 높이는
  * **첫 장 405px · 이어지는 장 484px** 이다(`JASEUP_MEASURED_PX`).
  * 판정은 본문 표시폭 · 배치(상자·보기 열 수) · **그림 높이** · 놓이는 **장**을 본다.
  * 정답지는 `assessAnswerKeyRisk` 가 따로 본다.
@@ -44,7 +44,6 @@ import { displayWidth, fitsTwoColumns } from "@/lib/math/displayWidth";
 import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
 import { hideFigureMarker } from "@/lib/problem/figureMarker";
 import { paginateAnswerKey } from "@/lib/printLayout";
-import { packProblems } from "@/lib/printPack";
 import {
   normalizeOcrText,
   parseProblemContent,
@@ -456,39 +455,104 @@ export const OVERFLOW_LINE_LIMIT_SOLO_FIRST_PAGE = lineLimitFor(
   JASEUP_MEASURED_PX.soloFirstPageSlot,
 );
 
+export interface PackedPage<T> {
+  problems: T[];
+  startingNumber: number;
+}
+
+/** 문제지 지면 한 장. 부르는 자리는 `@/lib/printPack` 로 그대로 들여온다. */
+export type PackedProblemPage = PackedPage<TestPrintProblem>;
+
 /**
- * 문항 수 N 짜리 시험지의 **자리별 문항 칸 높이**(px).
+ * 문제지 지면 분할 — **문항 길이가 장당 문항 수를 정한다.**
+ *
+ * 원장님 확정(2026-08-21): 「문항 길이에 따라 배치를 다르게. 길이가 긴 문항은
+ * 2개를 넣을 수 없음. 길이가 길면 1개로.」
+ *
+ * ## 왜 분할이 판정 파일에 있나
+ *
+ * 「이 문항이 이 칸에 들어가는가」는 `assessSeat` **한 곳**에만 있어야 한다.
+ * 분할이 그 물음을 제 손으로 다시 물으면 조판과 판정이 다른 답을 내고, 그러면
+ * 「조판은 넣었는데 판정은 경고하는」 문항이 생긴다 — 이 저장소가 여러 번 낸
+ * 결함(세는 쪽과 고치는 쪽이 다른 것을 본다)이라 한 곳으로 모은다.
+ * 그래서 분할을 여기로 옮기고 `printPack.ts` 는 그대로 내보내기만 한다
+ * (부르는 자리는 한 글자도 안 바뀐다).
+ *
+ * ## 규칙
+ *
+ * 읽기 순서를 지키며 앞에서부터 채운다. **둘 다** 그 장의 반 칸에 들어갈 때만 둘을
+ * 넣고, 아니면 앞 문항만 그 장에 넣어 칸을 통째로 준다. 뒤 문항을 앞으로 당기지
+ * 않으므로(읽기 순서) 다른 짝이 없다 — 이 그리디가 곧 장 수의 최솟값이다.
+ *
+ * 칸이 «몇째 장인가»로도 갈린다: 첫 장은 머리글과 「◆ 핵심 개념 정리」 상자가
+ * 얹혀 반 칸이 79px 좁다(405 vs 484). 그래서 **같은 문항이 첫 장이면 혼자 쓰고
+ * 뒤 장에서는 짝을 이룬다.**
+ *
+ * ⚠️ **혼자 놓아도 안 들어가는 문항은 그래도 혼자 놓는다.** 분할로 더 할 수 있는
+ *    것이 없고, 그 자리는 `assessOverflowRisk` 가 계속 경고한다 — 분할이 경고를
+ *    대신하면 원장님은 종이를 받고서야 안다(실측 47,152건 중 54건).
+ *
+ * ⚠️ 칸 실측은 「그 장에 하나」와 「그 장에 둘」 **두 가지뿐**이다. 정원
+ *    (`JASEUP_GEOMETRY.questionsPerPage`)을 올리려면 칸부터 다시 재야 하므로
+ *    `printPack.test.ts` 가 그 값을 못 박아 둔다.
+ */
+export function packProblems<T extends SeatProblem>(
+  problems: readonly T[],
+): PackedPage<T>[] {
+  const pages: PackedPage<T>[] = [];
+  let index = 0;
+
+  while (index < problems.length) {
+    const onFirstPage = pages.length === 0;
+    // 「둘이 나눠 쓰는」 칸. 이 칸에 안 들어가면 그 문항은 장을 혼자 쓴다.
+    const shared = onFirstPage
+      ? JASEUP_MEASURED_PX.firstPageSlot
+      : JASEUP_MEASURED_PX.continuationSlot;
+    const here = problems[index]!;
+    const next = problems[index + 1];
+    const pairs =
+      next !== undefined &&
+      !assessSeat(here, shared).tooTall &&
+      !assessSeat(next, shared).tooTall;
+
+    pages.push({
+      problems: pairs ? [here, next] : [here],
+      startingNumber: index + 1,
+    });
+    index += pairs ? 2 : 1;
+  }
+
+  return pages;
+}
+
+/**
+ * 시험지의 **자리별 문항 칸 높이**(px).
  *
  * 분할은 `packProblems` 가 정하고(판정이 스스로 「인덱스 2까지가 첫 장」이라고 굳히면
  * 분할이 바뀔 때 조용히 어긋난다), 칸은 `.problemItem { flex: 1 1 0% }` 라
- * **«그 장에 몇 개인가»**로 나뉜다 — 홀수면 마지막 하나가 통째로 쓴다(리뷰 ④ B).
+ * **«그 장에 몇 개인가»**로 나뉜다 — 혼자면 통째로 쓴다(리뷰 ④ B).
  *
- * ⚠️ 판정(`assessOverflowRisk`)과 출제(⑸-c)가 **이 한 함수**를 같이 본다.
+ * ⚠️ 판정(`assessOverflowRisk`)과 출제·시뮬레이터가 **이 한 함수**를 같이 본다.
  *    자리 계산을 두 곳이 각자 가지면 한쪽만 움직여도 아무도 모른다(리뷰 §A).
+ *
+ * ⚠️ **문항 수가 아니라 문항을 받는다.** 분할이 높이를 보게 됐으므로 개수만으로는
+ *    자리를 못 정한다 — 예전 서명(`seatCapacities(count)`)으로 부르면 빈 본문을
+ *    재서 **늘 «짧은 문항»으로** 보고, 그러면 이 값이 조용히 틀린다.
  */
-export function seatCapacities(problemCount: number): number[] {
-  const stub: TestPrintProblem = {
-    id: "",
-    orderIndex: 0,
-    content: "",
-    answer: "",
-    solution: null,
-  };
+export function seatCapacities(problems: readonly SeatProblem[]): number[] {
   const capacities: number[] = [];
-  packProblems(Array.from({ length: problemCount }, () => stub)).forEach(
-    (page, pageIndex) => {
-      const alone = page.problems.length === 1;
-      const first = pageIndex === 0;
-      const px = alone
-        ? first
-          ? JASEUP_MEASURED_PX.soloFirstPageSlot
-          : JASEUP_MEASURED_PX.soloContinuationSlot
-        : first
-          ? JASEUP_MEASURED_PX.firstPageSlot
-          : JASEUP_MEASURED_PX.continuationSlot;
-      for (let i = 0; i < page.problems.length; i += 1) capacities.push(px);
-    },
-  );
+  packProblems(problems).forEach((page, pageIndex) => {
+    const alone = page.problems.length === 1;
+    const first = pageIndex === 0;
+    const px = alone
+      ? first
+        ? JASEUP_MEASURED_PX.soloFirstPageSlot
+        : JASEUP_MEASURED_PX.soloContinuationSlot
+      : first
+        ? JASEUP_MEASURED_PX.firstPageSlot
+        : JASEUP_MEASURED_PX.continuationSlot;
+    for (let i = 0; i < page.problems.length; i += 1) capacities.push(px);
+  });
   return capacities;
 }
 
@@ -585,7 +649,7 @@ export function assessOverflowRisk(
    * 자리마다 칸이 다르다 — 첫 장은 79px 좁고, 그 장에 문항이 하나뿐이면 두 배가 넘는다.
    * 그 계산은 `seatCapacities` 한 곳에 있다(출제도 같은 것을 본다).
    */
-  const capacities = seatCapacities(problems.length);
+  const capacities = seatCapacities(problems);
 
   problems.forEach((problem, index) => {
     const reasons: string[] = [];

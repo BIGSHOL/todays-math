@@ -13,7 +13,7 @@
 | `docs/planning/04-database-design.md` | ERD 9개 엔티티 |
 | `docs/planning/05-design-system.md` | 디자인 — **`[협의 필요]` 항목은 미확정!** |
 | `docs/planning/06-tasks.md` | 태스크 목록 (M0~M6, 21개) — `/orchestrate`가 사용 |
-| `docs/planning/07-coding-convention.md` | 컨벤션, 도메인 용어 SSOT, Decision Log D-01~61 |
+| `docs/planning/07-coding-convention.md` | 컨벤션, 도메인 용어 SSOT, Decision Log D-01~62 |
 | `docs/planning/09-figure-engine-guide.md` | **도형 SVG 엔진 사용 지침** — testchanger 호출법, elem-1(D-61),<br>재발 금지 §4. **초등·큐브 그림 작업 전 필독** |
 | `docs/planning/10-handoff.md` | **인수인계 — 이어할 때 여기부터.** 지금 일은 §9 큐브 (2026-08-21) |
 | `docs/planning/11-score-predictor.md` | **기출 예상 점수 판독기 설계 SSOT** — 실측 근거·엔진 계층<br>·backtest 결과·배점 보정기(§10). '오늘의 시험' 작업 전 필독 |

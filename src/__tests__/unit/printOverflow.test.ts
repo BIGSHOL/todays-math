@@ -18,7 +18,9 @@ import { cssPxToMm } from "@/lib/figurePrintSize";
 import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
 import {
   assessOverflowRisk,
+  assessSeat,
   estimateProblemPx,
+  seatCapacities,
   OVERFLOW_MARGIN_PX,
   OVERFLOW_LINE_LIMIT,
   OVERFLOW_LINE_LIMIT_FIRST_PAGE,
@@ -38,19 +40,28 @@ const problem = (over: Partial<TestPrintProblem> = {}): TestPrintProblem => ({
 });
 
 /**
- * **확실히 높은 본문.** 전각 1,400자는 열 안에서 25줄 남짓(추정 570px)이라
- * 가장 큰 반쪽 칸(이어지는 장 484px)도 넘는다. 「길다」를 폭이 아니라 **높이**로
- * 적는다 — 2026-08-20 부터 판정이 보는 것이 그것이기 때문이다.
+ * **확실히 높은 본문.** 전각 2,800자는 열 안에서 49줄 남짓(추정 1,058px)이라
+ * **가장 큰 칸(혼자 쓰는 이어지는 장 997px)도 넘는다.** 「길다」를 폭이 아니라
+ * **높이**로 적는다 — 2026-08-20 부터 판정이 보는 것이 그것이기 때문이다.
+ *
+ * 🔴 2026-08-21 에 1,400자(570px)에서 여기까지 키웠다. 분할이 문항 높이를 보게
+ *    되면서(원장님 확정) 570px 짜리는 **반 칸을 넘으면 장을 통째로 받는다** —
+ *    그래서 이제 경고가 안 난다. 「칸을 넘으면 경고한다」를 시험하려면 픽스처가
+ *    **혼자 쓰는 칸**을 넘어야 한다. 안 키우면 이 아래 시험들이 전부 장식이 된다.
  *
  * (문단을 여러 개 이어 붙이는 방식은 못 쓴다 — `parseProblemContent` 가 개행을
  *  녹여 한 줄로 만든다. 자가 세는 것과 다른 것을 세게 된다.)
  */
-const TALL_CONTENT = "가".repeat(1400);
+const TALL_CONTENT = "가".repeat(2800);
 
 /**
  * 문항 칸은 «그 장에 몇 개인가»로 갈린다 — 혼자면 두 배다(`flex: 1 1 0%`).
- * 그래서 «보통 자리»(장에 두 문항)를 보려면 **짝을 채워야** 한다.
- * 혼자 놓이는 자리는 아래 [적대④-B] 에서 따로 잠근다.
+ *
+ * 🔴 **누가 그 장에 몇을 넣는지가 2026-08-21 에 바뀌었다.** 예전에는 개수가 정했고
+ *    (장당 둘 고정) 그래서 짝을 채우면 «반 칸»을 볼 수 있었다. 이제는 **높이가
+ *    정한다**(`packProblems`) — 반 칸에 안 들어가는 문항은 짝을 채워도 장을 혼자
+ *    쓴다. 그러니 이 도우미는 «반 칸을 강제하는 장치»가 아니라 그냥 짝일 뿐이다.
+ *    반 칸의 규칙 자체를 보려면 `assessSeat(문항, 칸)` 을 직접 부른다.
  */
 const paired = (target: TestPrintProblem): TestPrintProblem[] => [
   target,
@@ -103,7 +114,8 @@ describe("[T2] 인쇄 넘침 위험 판정", () => {
         problem({
           content: "가".repeat(OVERFLOW_WIDTH_LIMIT),
           figureUrls: ["/a.png"],
-          figureDims: [400, 900],
+          // 1,037px — 혼자 쓰는 칸(997px)도 넘는다. 그래야 경고가 실제로 난다.
+          figureDims: [400, 2000],
         }),
       ),
     );
@@ -217,18 +229,29 @@ describe("[적대③-A] 그림 높이를 판정이 본다", () => {
 4. $\frac{\sqrt{10}}{4}$
 5. $3\sqrt{10}\frac{}{10}$`;
 
-  it("그림 1장짜리도 칸을 넘기면 경고한다", () => {
-    const risks = assessOverflowRisk(
-      paired(
-        problem({
-          content: ONE_FIGURE_CONTENT,
-          figureUrls: ["/figures/4729/hwp-q03.png"],
-          figureDims: [598, 688],
-        }),
-      ),
+  /**
+   * 🔴 **2026-08-21 이후 이 문항은 지면에서 «장을 혼자» 받는다.**
+   *
+   * 분할이 문항 높이를 보게 됐으므로(원장님 확정) 550.5px 짜리는 이제 겹쳐 찍히지
+   * 않는다 — **경고가 아니라 자리로 풀린다.** 그래도 [적대③-A] 의 교훈은 그대로다:
+   * **그림 높이가 판정의 인자에 있어야** 이 문항을 «반 칸에 안 들어간다»고 볼 수
+   * 있고, 그래야 분할이 자리를 준다. 인자에 없으면 **분할도 똑같이 눈이 먼다.**
+   */
+  it("그림 1장짜리가 반 칸을 넘는 것을 판정이 보고, 분할이 자리를 준다", () => {
+    const target = problem({
+      content: ONE_FIGURE_CONTENT,
+      figureUrls: ["/figures/4729/hwp-q03.png"],
+      figureDims: [598, 688],
+    });
+    const seat = assessSeat(target, JASEUP_MEASURED_PX.continuationSlot);
+    expect(seat.tooTall).toBe(true);
+    // 높이의 절반 넘게가 그림이다 — 원장이 지면에서 손볼 곳도 그림이다.
+    expect(seat.figurePx * 2).toBeGreaterThanOrEqual(seat.px);
+    // 그래서 이 문항은 첫 장을 통째로 쓴다. 겹치지 않으므로 경고도 없다.
+    expect(seatCapacities(paired(target))[0]).toBe(
+      JASEUP_MEASURED_PX.soloFirstPageSlot,
     );
-    expect(risks).toHaveLength(1);
-    expect(risks[0].reasons).toContain("그림이 크다");
+    expect(assessOverflowRisk(paired(target))).toEqual([]);
   });
 
   it("같은 본문에 작은 그림이면 경고하지 않는다 — 장수가 아니라 높이다", () => {
@@ -246,13 +269,13 @@ describe("[적대③-A] 그림 높이를 판정이 본다", () => {
   });
 
   it("사유는 **그림**을 가리킨다 — 원장이 지면에서 찾을 것과 같아야 한다", () => {
-    // 이어지는 장 한계(23줄)도 넘는 크기라 «첫 장» 단서가 안 붙는다.
+    // 혼자 쓰는 칸(997px)도 넘는 크기라 «첫 장» 단서가 안 붙는다.
     const risks = assessOverflowRisk(
       paired(
         problem({
           content: "짧은 발문이다.",
           figureUrls: ["/f.png"],
-          figureDims: [300, 1400],
+          figureDims: [300, 2400], // 1,005px
         }),
       ),
     );
@@ -311,15 +334,21 @@ describe("[적대③-B] 장을 아는 판정", () => {
   });
 
   /**
-   * 첫 장에만 안 들어가는 높이의 문항. 1·2번 자리에서는 경고가 나오고
-   * 3번(이어지는 장) 자리에서는 안 나와야 한다.
+   * **첫 장에만 안 들어가는 높이의 문항.** 첫 장 자리에서는 경고가 나오고
+   * 이어지는 장 자리에서는 안 나와야 한다 — 그게 [적대③-B] 의 전부다.
+   *
+   * 🔴 **크기가 2026-08-21 에 바뀌었다(425px → 895px).** 분할이 높이를 보게 되면서
+   *    반 칸(405/484)에 안 들어가는 문항은 **장을 통째로 받는다.** 그래서 「첫 장이
+   *    좁다」가 드러나는 자리도 반 칸 한 쌍(405 vs 484)에서 **혼자 쓰는 칸 한 쌍
+   *    (838 vs 997)**으로 옮겨 갔다. 옛 크기 그대로 두면 두 자리 다 넉넉해져
+   *    이 시험이 아무것도 안 가른다.
    */
   const borderline = () =>
     problem({
       content: "짧은 발문이다.",
       figureUrls: ["/f.png"],
-      // 21줄짜리 문항 — 첫 장 한계(19)는 넘고 이어지는 장 한계(23)는 안 넘는다.
-      figureDims: [200, 330],
+      // 895px — 첫 장 혼자 칸(838)은 넘고 이어지는 장 혼자 칸(997)은 안 넘는다.
+      figureDims: [200, 800],
       figureSourceMm: [cssPxToMm(200)],
     });
 
@@ -330,7 +359,8 @@ describe("[적대③-B] 장을 아는 판정", () => {
       { ...borderline(), id: "c" },
       { ...borderline(), id: "d" },
     ]);
-    expect(risks.map((r) => r.number)).toEqual([1, 2]);
+    // 넷 다 장을 혼자 쓴다 — 첫 장(838px)에 앉은 1번만 넘친다.
+    expect(risks.map((r) => r.number)).toEqual([1]);
   });
 
   it("첫 장에서만 걸리면 **첫 장 때문**이라고 적는다 — 뒤로 옮기면 되니까", () => {
@@ -355,7 +385,8 @@ describe("[적대③-B] 장을 아는 판정", () => {
   /**
    * 장 배정은 **`packProblems` 에서 받는다.** 판정이 스스로 「인덱스 2까지가 첫 장」
    * 이라고 정하면 분할이 바뀔 때 조용히 어긋난다(렌더러와 열 수를 나눠 갖던
-   * `fitsTwoColumns` 와 같은 자리다).
+   * `fitsTwoColumns` 와 같은 자리다). 2026-08-21 에 분할이 실제로 바뀌었고,
+   * 이 시험은 손대지 않아도 따라왔다 — **그러라고 이렇게 써 둔 것이다.**
    */
   it("장당 문항 수가 바뀌면 «첫 장»의 범위도 같이 바뀐다", () => {
     const many = Array.from({ length: 6 }, (_, i) => ({
@@ -456,20 +487,41 @@ describe("[적대④-B] 칸은 «그 장에 몇 개인가»로 갈린다", () =>
     );
   });
 
-  it("홀수 시험지의 마지막 문항은 혼자 쓰는 칸으로 잰다", () => {
-    const risks = assessOverflowRisk([tall("a"), tall("b"), tall("c")]);
-    // 1·2번은 첫 장을 나눠 쓰므로 진짜 경고, 3번은 997px 을 혼자 쓴다.
-    expect(risks.map((r) => r.number)).toEqual([1, 2]);
+  it("짧은 문항만이면 홀수 시험지의 마지막 하나가 칸을 통째로 쓴다", () => {
+    const { firstPageSlot, continuationSlot, soloContinuationSlot } =
+      JASEUP_MEASURED_PX;
+    const shorts = (n: number) =>
+      Array.from({ length: n }, (_, i) => problem({ id: `s${i}` }));
+    expect(seatCapacities(shorts(3))).toEqual([
+      firstPageSlot,
+      firstPageSlot,
+      soloContinuationSlot,
+    ]);
+    expect(seatCapacities(shorts(4))).toEqual([
+      firstPageSlot,
+      firstPageSlot,
+      continuationSlot,
+      continuationSlot,
+    ]);
   });
 
-  it("짝수면 마지막 문항도 반씩 쓴다 — 같은 문항이 경고가 된다", () => {
-    const risks = assessOverflowRisk([
-      tall("a"),
-      tall("b"),
-      tall("c"),
-      tall("d"),
-    ]);
-    expect(risks.map((r) => r.number)).toEqual([1, 2, 3, 4]);
+  /**
+   * 🔴 **2026-08-21 — 짝수·홀수가 더 이상 큰 문항의 운을 가르지 않는다.**
+   *
+   * 예전에는 `tall`(594.8px)이 홀수 시험지의 마지막 자리에 앉으면 멀쩡하고
+   * 짝수면 넷 다 경고였다. **같은 문항의 운명이 시험지 문항 수의 홀짝으로
+   * 갈렸다.** 이제 분할이 높이를 보므로 어느 쪽이든 칸을 통째로 받는다.
+   */
+  it("반 칸을 넘는 문항은 홀짝과 무관하게 칸을 통째로 쓴다", () => {
+    const { soloFirstPageSlot, soloContinuationSlot } = JASEUP_MEASURED_PX;
+    for (const count of [3, 4]) {
+      const list = Array.from({ length: count }, (_, i) => tall(`t${i}`));
+      expect(seatCapacities(list)).toEqual([
+        soloFirstPageSlot,
+        ...Array<number>(count - 1).fill(soloContinuationSlot),
+      ]);
+      expect(assessOverflowRisk(list)).toEqual([]);
+    }
   });
 
   it("문항이 하나뿐인 시험지는 첫 장을 통째로 쓴다", () => {
@@ -502,15 +554,22 @@ describe("[적대④-B] 칸은 «그 장에 몇 개인가»로 갈린다", () =>
  *  전부 초록이었다. 상수는 **망가뜨려 봐야** 지켜지는 줄 안다.)
  */
 describe("여유 — 추정이 칸에 들어가도 «한 줄 안쪽»이면 경고한다", () => {
-  // 전각 1,110자 → 추정 468.8px. 이어지는 장 칸 484px 에 «들어간다»고 나오지만
-  // 여유(20.3px) 안쪽이다.
-  const NEAR_EDGE = "가".repeat(1110);
+  /**
+   * 전각 2,620자 → 추정 996.9px. **혼자 쓰는 칸 997px** 에 «들어간다»고 나오지만
+   * 여유(20.3px) 안쪽이다.
+   *
+   * 🔴 2026-08-21 에 1,110자(468.8px · 반 칸 484 의 가장자리)에서 옮겨 왔다.
+   *    분할이 높이를 보게 되면서 468.8px 짜리는 **반 칸을 넘는다는 이유로 장을
+   *    통째로 받고**, 997px 칸에서는 가장자리가 아니게 된다. 그러면 이 시험이
+   *    여유를 0으로 바꿔도 초록이다 — 가장자리는 **실제로 앉는 칸**에서 잡아야 한다.
+   */
+  const NEAR_EDGE = "가".repeat(2620);
 
   it("이 픽스처는 추정으로는 칸에 들어간다 — 그래서 여유가 없으면 안 걸린다", () => {
     const px = estimateProblemPx(NEAR_EDGE);
-    expect(px).toBeLessThanOrEqual(JASEUP_MEASURED_PX.continuationSlot);
+    expect(px).toBeLessThanOrEqual(JASEUP_MEASURED_PX.soloContinuationSlot);
     expect(px).toBeGreaterThan(
-      JASEUP_MEASURED_PX.continuationSlot - OVERFLOW_MARGIN_PX,
+      JASEUP_MEASURED_PX.soloContinuationSlot - OVERFLOW_MARGIN_PX,
     );
   });
 

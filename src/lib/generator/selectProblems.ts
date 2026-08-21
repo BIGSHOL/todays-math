@@ -9,7 +9,7 @@ import type { DifficultyRatio } from "@/contracts/common.contract";
 import type { ProblemEntity } from "@/contracts/problem.contract";
 import type { ShortfallItem } from "@/contracts/test.contract";
 
-import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
+import { JASEUP_GEOMETRY, JASEUP_MEASURED_PX } from "@/lib/printGeometry";
 import { assessSeat, seatCapacities } from "@/lib/printOverflow";
 
 import {
@@ -87,10 +87,13 @@ export interface SelectProblemsResult<
 const MAX_CONSECUTIVE_SAME_TYPE = 2;
 
 /**
- * 첫 장에서 칸이 좁은 자리의 수 — 장당 문항 수(`packProblems`)와 같다.
- * `seatCapacities` 가 자리별 칸을 내주므로 여기서는 «어디까지가 첫 장인가»만 쓴다.
+ * 첫 장에서 칸이 좁은 자리의 수 — 장당 정원(`JASEUP_GEOMETRY.questionsPerPage`)과 같다.
+ *
+ * 예전에는 `seatCapacities(2).length` 로 유도했다. 분할이 문항 높이를 보게 된 뒤로
+ * (원장님 확정 2026-08-21) 자리 수는 **내용에 따라 달라지므로** 개수만으로는 못 구한다 —
+ * 여기서 필요한 것은 「첫 장이 최대 몇 자리인가」뿐이라 정원을 그대로 쓴다.
  */
-const TIGHT_SEATS = seatCapacities(2).length;
+const TIGHT_SEATS = JASEUP_GEOMETRY.questionsPerPage;
 
 export function selectProblems<T extends SelectableProblem>(
   args: SelectProblemsArgs<T>,
@@ -139,21 +142,31 @@ export function selectProblems<T extends SelectableProblem>(
 }
 
 /**
- * ⑸-c — **큰 문항을 첫 장 1·2번에 안 놓는다. 최소 개입.**
+ * ⑸-c — **첫 장이 두 문항을 담게 한다. 최소 개입.**
  *
- * 첫 장 칸은 405px 로 이어지는 장(484px)보다 79px 좁다(머리글 + 「◆ 핵심 개념 정리」
- * 상자가 얹힌다). 그래서 405~484px 짜리는 **앞자리에 앉을 때만** 넘친다 — ⑷ 로
- * 걸러도 남는 몫이 정확히 그것이다(§11: ⑷ 만으로 8문항 0.105 · 25문항 0.123).
+ * 첫 장 반 칸은 405px 로 이어지는 장(484px)보다 79px 좁다(머리글 + 「◆ 핵심 개념
+ * 정리」 상자가 얹힌다). 405~484px 짜리는 **앞자리에 앉을 때만** 그 칸을 넘는다.
  *
- * 하는 일: 1·2번 자리에 그 칸을 넘는 문항이 오면 뒤쪽에서 **«서로 바꿔도 둘 다
- * 들어가는»** 짝을 찾아 한 번 맞바꾼다. 최대 두 번 바뀐다.
+ * ## 🔴 이 정책이 무엇을 버는지가 2026-08-21 에 바뀌었다
+ *
+ * 원장님 확정으로 분할이 문항 높이를 보게 됐다(`packProblems`). 그래서 앞자리에
+ * 큰 문항이 와도 이제 **겹쳐 찍히지 않는다** — 그 문항이 첫 장을 혼자 쓴다.
+ * 대신 **장이 하나 는다.** 그러니 이 정책이 버는 것은 «경고»가 아니라 **«장 수»**다.
+ *
+ * 그래서 묻는 것이 하나로 줄었다:
+ *   · 앞자리 문항이 **첫 장 반 칸(405px)** 에 들어가는가. 들어가면 그대로 둔다.
+ *   · 안 들어가면, 뒤에서 **그 반 칸에 들어가는** 문항을 찾아 한 번 맞바꾼다.
+ *
+ * ⚠️ **그 문항 자신이 이어지는 장 반 칸(484px)에도 안 들어가면 안 흔든다.**
+ *    어디로 옮겨도 장을 혼자 쓰므로 **장 수가 그대로**다 — 순서만 흔들고 얻는 게
+ *    없다. (예전에는 이 자리에서 «경고를 옮길 뿐»이라 안 했다. 이유가 바뀌었고
+ *    결과는 같다.)
  *
  * ⚠️ **완전 재배열(⑸-a·⑸-b)은 하지 않는다 — 원장님 확정.** 실측으로 같은 효과를
  *    내면서 「같은 유형 3연속」을 33~56% 더 만든다. `arrangeByType` 가 막으려는
  *    바로 그것이라, 순서를 거의 안 흔드는 이 형태만 쓴다(실측 +1% 안쪽).
  *
- * ⚠️ **맞바꿀 상대가 없으면 그냥 둔다.** 억지로 섞으면 유형 배치만 깨지고 경고는
- *    그대로다 — 뒤가 전부 큰 문항이면 어디로 옮겨도 그 자리가 넘친다.
+ * ⚠️ **맞바꿀 상대가 없으면 그냥 둔다.** 억지로 섞으면 유형 배치만 깨진다.
  *
  * 「모른다」는 여기서도 **위험한 쪽**이다(`risksTightSeat`). 그래서 본문을 안 실은
  * 풀에서는 앞자리도 뒷자리도 «위험»이라 짝이 안 잡히고 — 한 번도 안 바뀐다.
@@ -161,15 +174,16 @@ export function selectProblems<T extends SelectableProblem>(
 export function avoidTightFirstSeats<T extends SelectableProblem>(
   items: T[],
 ): T[] {
-  const seats = seatCapacities(items.length);
+  const { firstPageSlot, continuationSlot } = JASEUP_MEASURED_PX;
   const out = [...items];
   // 좁은 자리는 첫 장의 둘뿐이다. 그 뒤 자리는 손대지 않는다(최소 개입).
   for (let i = 0; i < Math.min(TIGHT_SEATS, out.length); i += 1) {
-    if (!risksTightSeat(out[i]!, seats[i]!)) continue;
+    if (!risksTightSeat(out[i]!, firstPageSlot)) continue;
+    // 뒤로 가도 반 칸에 안 들어가면 장을 혼자 쓴다 — 옮겨도 장 수가 그대로다.
+    if (risksTightSeat(out[i]!, continuationSlot)) continue;
     for (let j = out.length - 1; j >= TIGHT_SEATS; j -= 1) {
-      // 서로 바꿔서 **둘 다** 제 자리에 들어갈 때만 바꾼다.
-      if (risksTightSeat(out[j]!, seats[i]!)) continue;
-      if (risksTightSeat(out[i]!, seats[j]!)) continue;
+      // 앞자리로 오는 쪽은 **좁은 첫 장 칸**에 들어가야 한다.
+      if (risksTightSeat(out[j]!, firstPageSlot)) continue;
       const moved = out[i]!;
       out[i] = out[j]!;
       out[j] = moved;

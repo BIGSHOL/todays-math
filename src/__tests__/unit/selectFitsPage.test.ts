@@ -30,6 +30,7 @@ import {
 } from "@/lib/generator/selectProblems";
 import { cssPxToMm } from "@/lib/figurePrintSize";
 import { JASEUP_MEASURED_PX } from "@/lib/printGeometry";
+import { packProblems } from "@/lib/printPack";
 import { assessOverflowRisk, assessSeat } from "@/lib/printOverflow";
 
 /**
@@ -316,7 +317,16 @@ describe("[⑷] 출제의 후순위 판정 = 인쇄 판정의 경고", () => {
     { ...small("wide"), content: "가".repeat(400) },
   ];
 
-  it("이어지는 장 칸에서 두 판정이 한 건도 다르지 않다", () => {
+  /**
+   * 🔴 **2026-08-21 — 견주는 상대가 바뀌었다.**
+   *
+   * 예전에는 「출제가 후순위로 미는 문항 == 인쇄가 경고하는 문항」이었다. 이제 분할이
+   * 문항 높이를 보므로(원장님 확정) 반 칸을 넘는 문항은 **경고가 아니라 자리로**
+   * 풀린다 — 장을 통째로 받는다. 그래서 견줄 상대는 «경고»가 아니라 **«분할이 그
+   * 문항에게 장을 통째로 주는가»** 다. 뜻은 그대로다: **출제와 조판이 «이 문항이
+   * 반 칸에 들어가는가»에 대해 한 글자도 다르지 않아야 한다.**
+   */
+  it("출제의 후순위 판정 = 분할이 장을 통째로 주는 문항", () => {
     for (const sample of samples) {
       const filler: TestPrintProblem = {
         id: "filler",
@@ -325,11 +335,14 @@ describe("[⑷] 출제의 후순위 판정 = 인쇄 판정의 경고", () => {
         answer: "",
         solution: null,
       };
-      // 캐시·채점기와 같은 자리 잡기 — 3번 자리는 이어지는 장의 반 칸(484px)이다.
+      // 캐시·채점기와 같은 자리 잡기 — 3번 자리는 이어지는 장이다.
       const placed = [filler, filler, ...asPrint([sample]), filler];
-      const warned = assessOverflowRisk(placed).some((r) => r.number === 3);
+      const page = packProblems(placed).find((p) =>
+        p.problems.some((q) => q.id === sample.id),
+      )!;
+      const 혼자 = page.problems.length === 1;
       expect(risksTightSeat(sample, JASEUP_MEASURED_PX.continuationSlot)).toBe(
-        warned,
+        혼자,
       );
     }
   });
@@ -341,21 +354,33 @@ describe("[⑷] 출제의 후순위 판정 = 인쇄 판정의 경고", () => {
       soloContinuationSlot,
       soloFirstPageSlot,
     } = JASEUP_MEASURED_PX;
-    expect(seatCapacitiesFor(8)).toEqual([
+    const smalls = (n: number) =>
+      asPrint(Array.from({ length: n }, (_, i) => small(`s-${i}`)));
+
+    expect(seatCapacitiesFor(smalls(8))).toEqual([
       firstPageSlot,
       firstPageSlot,
       ...Array<number>(6).fill(continuationSlot),
     ]);
     // 홀수면 마지막 하나가 칸을 통째로 쓴다(적대적 리뷰 ④ B).
-    expect(seatCapacitiesFor(25).at(-1)).toBe(soloContinuationSlot);
-    expect(seatCapacitiesFor(1)).toEqual([soloFirstPageSlot]);
+    expect(seatCapacitiesFor(smalls(25)).at(-1)).toBe(soloContinuationSlot);
+    expect(seatCapacitiesFor(smalls(1))).toEqual([soloFirstPageSlot]);
 
-    // 판정이 실제로 그 칸으로 재는지 — 첫 장에서만 넘치는 문항으로 확인한다.
-    expect(
-      assessOverflowRisk(asPrint([midsize("a"), midsize("b")])).map(
-        (r) => r.number,
-      ),
-    ).toEqual([1, 2]);
+    /**
+     * 🔴 **분할이 높이를 보게 된 뒤로 이 자리의 답이 바뀌었다**(원장님 확정 2026-08-21).
+     *
+     * `midsize` 는 이어지는 장 반 칸(484px)에는 들어가고 첫 장 반 칸(405px)에는
+     * 안 들어간다. 예전에는 그런 문항 둘을 첫 장에 억지로 밀어 넣어 **둘 다 경고**가
+     * 떴다. 이제는 각자 칸을 혼자 쓴다 — 자리가 838 · 997 이 되고 경고가 없다.
+     * 대신 **장이 하나 는다**(1장 → 2장). 그게 이 정책의 값이자 대가다.
+     */
+    expect(seatCapacitiesFor(asPrint([midsize("a"), midsize("b")]))).toEqual([
+      soloFirstPageSlot,
+      soloContinuationSlot,
+    ]);
+    expect(assessOverflowRisk(asPrint([midsize("a"), midsize("b")]))).toEqual(
+      [],
+    );
     expect(
       assessOverflowRisk(
         asPrint([small("a"), small("b"), midsize("c"), midsize("d")]),
@@ -418,16 +443,26 @@ describe("[⑸-c] 큰 문항을 첫 장 앞자리에 안 놓는다 (최대 두 �
     expect(ids(avoidTightFirstSeats(before))).toEqual(ids(before));
   });
 
-  it("홀수 시험지의 마지막 자리는 칸을 통째로 쓰므로 큰 문항이 갈 수 있다", () => {
-    // 자리 25개 = 2×405 · 22×484 · 1×997. t-1(594.8px)은 997px 자리에 들어간다.
+  /**
+   * 🔴 **어디로 옮겨도 칸을 혼자 쓰는 문항은 안 흔든다**(2026-08-21).
+   *
+   * 예전에는 t-1 을 홀수 시험지의 마지막 자리(997px)로 옮겼다 — 그러면 경고가
+   * 사라졌기 때문이다. 이제 분할이 높이를 보므로 **어느 자리에 있든** t-1 은
+   * 장을 혼자 쓴다: 앞에 두면 첫 장을 혼자, 뒤에 두면 그 장을 혼자.
+   * **장 수도 경고도 똑같다** — 얻는 것 없이 순서만 흔드는 셈이라 안 한다.
+   */
+  it("옮겨도 장 수가 그대로인 문항은 안 흔든다 — 최소 개입", () => {
     const before = [
       tall("t-1"),
       ...Array.from({ length: 24 }, (_, i) => small(`s-${i}`)),
     ];
     const after = avoidTightFirstSeats(before);
-    expect(after[0]!.id).toMatch(/^s-/);
-    expect(after.at(-1)!.id).toBe("t-1");
+    expect(ids(after)).toEqual(ids(before));
+    // 그래도 **겹치지는 않는다** — 분할이 t-1 에게 첫 장을 통째로 준다.
     expect(assessOverflowRisk(asPrint(after))).toEqual([]);
+    expect(seatCapacitiesFor(asPrint(after))[0]).toBe(
+      JASEUP_MEASURED_PX.soloFirstPageSlot,
+    );
   });
 
   it("3번 이후 자리는 건드리지 않는다 — 최소 개입이다", () => {
