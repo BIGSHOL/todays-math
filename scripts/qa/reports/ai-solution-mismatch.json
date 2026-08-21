@@ -40,5 +40,23 @@
   "code": "HAL0106-74NY",
   "dbAnswer": "④",
   "aiAnswer": "⑤"
+ },
+ {
+  "id": "280f9183-da9a-4ce0-a8f7-98ee968d03ce",
+  "code": "J10102-AUUY",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "bb6ea4b0-beb5-46cf-9fc7-f89668baebd8",
+  "code": "J10102-B7B7",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "e819de70-3f24-4eb8-bec6-781c824f914a",
+  "code": "J10102-CDPF",
+  "dbAnswer": "",
+  "aiAnswer": "②"
  }
 ]

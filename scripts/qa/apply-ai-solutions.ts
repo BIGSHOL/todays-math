@@ -41,9 +41,12 @@ type Gen =
 /** 답 표기 차이를 접는다 — ①↔1(객관식), $·공백·\left 류, √·분수. */
 function normalizeAnswer(s: string): string {
   let t = s.trim();
-  const circled = "①②③④⑤";
-  for (let i = 0; i < circled.length; i += 1)
-    t = t.split(circled[i]!).join(String(i + 1));
+  // 원문자 보기 번호 — 표준(①…, U+2460~)뿐 아니라 HWP 추출이 남기는 딩뱃
+  // 변형(➀…, U+2780~)도 같은 뜻이다. 43건 실측(2026-08-22, J10102-GXYG 등).
+  const circledSets = ["①②③④⑤", "➀➁➂➃➄"];
+  for (const circled of circledSets)
+    for (let i = 0; i < circled.length; i += 1)
+      t = t.split(circled[i]!).join(String(i + 1));
   t = t
     .replace(/\$\s*/g, "")
     .replace(/\\left|\\right|\\,|\\;|\\!|~/g, "")
