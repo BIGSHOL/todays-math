@@ -940,5 +940,11 @@
   "code": "J30301-5FYG",
   "dbAnswer": "⑤",
   "aiAnswer": "④"
+ },
+ {
+  "id": "4125e5cd-7110-4bb7-9a78-f31d73b9a376",
+  "code": "J30301-BNAH",
+  "dbAnswer": "⑴x=-9 또는 5, a=5 ⑵b=(-3-√57)/8 ⑶2-√57",
+  "aiAnswer": "$2-\\sqrt{57}$"
  }
 ]
