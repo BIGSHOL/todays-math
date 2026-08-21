@@ -96,13 +96,17 @@ async function main() {
   }));
   const file = path.join(OUT_DIR, `todo-${tag}.json`);
   writeFileSync(file, JSON.stringify(items, null, 1), "utf8");
-  // 조각 파일 — 에이전트가 제 몫 40문항만 읽는다 (전체 파일을 n번 중복으로
-  // 읽으면 그 토큰이 전부 낭비다. 2026-08-22 토큰 절약 지시)
+  // 조각 파일 — 에이전트가 제 몫 20문항만 읽는다 (전체 파일을 n번 중복으로
+  // 읽으면 그 토큰이 전부 낭비다. 2026-08-22 토큰 절약 지시). 이름은 번호
+  // (01, 02…) — 글자(a~h, 8개)로는 8조각을 넘기면 undefined 파일이 나왔다
+  // (2026-08-22 실측 버그, 200문항/10조각에서 발견).
   const SLICE = 20;
-  const names = "abcdefgh";
+  const sliceCount = Math.ceil(items.length / SLICE);
+  const pad = String(sliceCount).length;
   for (let i = 0; i * SLICE < items.length; i += 1) {
+    const idx = String(i + 1).padStart(pad, "0");
     writeFileSync(
-      path.join(OUT_DIR, `todo-${tag}-${names[i]}.json`),
+      path.join(OUT_DIR, `todo-${tag}-${idx}.json`),
       JSON.stringify(items.slice(i * SLICE, (i + 1) * SLICE), null, 1),
       "utf8",
     );
