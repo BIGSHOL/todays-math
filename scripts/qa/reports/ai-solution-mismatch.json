@@ -694,5 +694,59 @@
   "code": "J30101-9LMM",
   "dbAnswer": "③",
   "aiAnswer": "④"
+ },
+ {
+  "id": "5d7d9010-caf2-4707-be0f-444de238ff80",
+  "code": "J30101-E3V3",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "0e8c0e20-d4d8-4f44-a521-6770740fba22",
+  "code": "J30101-HE7V",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "970e1067-82c3-4339-a141-a4a191bc146e",
+  "code": "J30101-JP2C",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "7ebc1ada-1dd2-409b-bd9f-6f797dbf2fee",
+  "code": "J30101-PLP9",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "0b4cdb7b-c67e-4730-88ce-7e75d863b643",
+  "code": "J30101-QZ9Z",
+  "dbAnswer": "12 (a=6¹², b=6, n=6)",
+  "aiAnswer": "12"
+ },
+ {
+  "id": "555f6d1c-434e-4673-a49d-2ef93e91797c",
+  "code": "J30103-2DHU",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "15523d88-1475-4005-b694-1b572ec0d435",
+  "code": "J30103-2WF4",
+  "dbAnswer": "⑤",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "625a3d0f-a1dc-4aba-8433-b72ff861c5ec",
+  "code": "J30103-3ULR",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "71018553-74e7-4a48-9642-2686a9e2546c",
+  "code": "J30103-4K9P",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
  }
 ]
