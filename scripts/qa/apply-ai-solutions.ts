@@ -57,8 +57,18 @@ function normalizeAnswer(s: string): string {
     .replace(/\\left|\\right|\\,|\\;|\\!|~/g, "")
     .replace(/\\sqrt\{([^{}]+)\}/g, "√$1")
     .replace(/\\sqrt(\d)/g, "√$1")
-    .replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, "$1/$2")
-    .replace(/\\dfrac\{([^{}]+)\}\{([^{}]+)\}/g, "$1/$2")
+    // \frac{5+√5}{4} → "(5+√5)/4" — 분자·분모에 이항연산자(+·-)가 있으면
+    // 괄호를 살려 둔다. 안 그러면 "5+√5/4" 로 풀려 «5 더하기 (√5 나누기
+    // 4)»로 뜻이 바뀐다 — DB 가 이미 괄호를 쓴 값과 어긋난다(2026-08-22
+    // 실측: J30203-XWGJ «(5+√5)/4» vs 괄호 없는 "5+√5/4"). 첫 글자의
+    // 부호(-5 같은 단항)는 괄호가 필요 없어 slice(1) 부터 검사한다.
+    .replace(
+      /\\d?frac\{([^{}]+)\}\{([^{}]+)\}/g,
+      (_m, num: string, den: string) => {
+        const wrap = (s: string) => (/[+-]/.test(s.slice(1)) ? `(${s})` : s);
+        return `${wrap(num)}/${wrap(den)}`;
+      },
+    )
     .replace(/\\times/g, "×")
     .replace(/\\pi/g, "π")
     .replace(/\\degree|°/g, "")

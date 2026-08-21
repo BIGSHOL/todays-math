@@ -916,5 +916,29 @@
   "code": "J30203-JVAD",
   "dbAnswer": "1/2",
   "aiAnswer": "2"
+ },
+ {
+  "id": "a471f624-2cdc-4c68-b725-d765a1d48dd0",
+  "code": "J30203-TB5T",
+  "dbAnswer": "⑴ -x+1 ⑵ -2x+2",
+  "aiAnswer": "⑴ $1-x$ ⑵ $2-2x$"
+ },
+ {
+  "id": "3f8a6d41-5076-4daa-8447-9ba64721466b",
+  "code": "J30301-3T2V",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "e38ce2c7-5e0d-4d7e-97f0-0635c921d3f6",
+  "code": "J30301-43W5",
+  "dbAnswer": "차례대로 25, 25, 5, 12",
+  "aiAnswer": "첫째·둘째 빈칸: $25$, 셋째 빈칸: $5$, 넷째 빈칸: $12$ (완성식 $(x+5)^{2}=12$)"
+ },
+ {
+  "id": "b7f1e634-6c7b-4310-b89d-0b8e4138264a",
+  "code": "J30301-5FYG",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
  }
 ]
