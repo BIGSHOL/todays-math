@@ -88,5 +88,71 @@
   "code": "J10105-V8W2",
   "dbAnswer": "⑴ 48=2^4×3, 150=2×3×5^2, ⑵ G=6, ⑶ L=1200",
   "aiAnswer": "$48=2^4×3$, $150=2×3×5^2$, $G=6$, $L=1200$"
+ },
+ {
+  "id": "ff748789-f8db-40ae-ba12-f5cd437ca5e7",
+  "code": "J10201-3PHX",
+  "dbAnswer": "",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "1a37cfc3-4b7e-488d-8d86-b913422101e3",
+  "code": "J10201-3Y9Y",
+  "dbAnswer": "④",
+  "aiAnswer": "②, ④"
+ },
+ {
+  "id": "fa4fbc0d-4cf4-485f-b83a-3c7def1ec241",
+  "code": "J10201-5NCU",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "5882062d-a0d1-4f85-bb55-03e7204c6c12",
+  "code": "J10201-5VQW",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "6288d4bf-8ba7-4ee5-96f9-61d330d5bb70",
+  "code": "J10201-97N4",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "1fe766ab-51d1-49c6-9bcf-ae4ddfeb7722",
+  "code": "J10201-CDV2",
+  "dbAnswer": "",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "841ad8b1-517d-4468-9292-e7a374ef1fc3",
+  "code": "J10201-CVMT",
+  "dbAnswer": "",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "cdbeb714-18dd-4caa-b9b8-1dca13d8b0cc",
+  "code": "J10201-E7Z9",
+  "dbAnswer": "",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "450a366d-cc70-4ed8-932f-f71053f08e17",
+  "code": "J10201-E8UE",
+  "dbAnswer": "a=-14/15, b=10 이므로 a÷b = -7/75",
+  "aiAnswer": "$-\\frac{7}{75}$"
+ },
+ {
+  "id": "26b2bbca-a66e-423d-b771-de90930777d5",
+  "code": "J10201-HPEE",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "47abf666-acb5-4bfc-b593-af417d7e054a",
+  "code": "J10201-J63P",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
  }
 ]
