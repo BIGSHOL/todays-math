@@ -646,5 +646,35 @@
   "code": "J20504-2FL5",
   "dbAnswer": "①",
   "aiAnswer": "②"
+ },
+ {
+  "id": "ea719871-f49b-4676-8073-ca354c244a4d",
+  "code": "J20508-DFX2",
+  "dbAnswer": "③",
+  "aiAnswer": "③, ⑤"
+ },
+ {
+  "id": "bad9ae58-4d6c-4091-9098-9e1eab46b417",
+  "code": "J20508-JTKZ",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "cb6d288b-8663-4eb8-b196-1bf7f6177541",
+  "code": "J20705-SJB2",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "130c52d8-0396-44bd-8a82-c133ef092224",
+  "code": "J20902-D4LQ",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "8606447a-633a-4cb1-a9eb-d99127d3488b",
+  "code": "J20902-EYR9",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
  }
 ]
