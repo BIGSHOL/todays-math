@@ -65,6 +65,12 @@ function normalizeAnswer(s: string): string {
     // \mathrm{A} 는 변수 라벨 감싸개일 뿐 — 벗기지 않으면 [{}\s] 가 중괄호만
     // 지워 "\mathrmA" 로 뭉친다(2026-08-22 실측: J10201-Y9H3).
     .replace(/\\mathrm\{([^{}]+)\}/g, "$1")
+    // x^{2} → x² — DB 는 유니코드 위첨자를 쓰는데 AI 는 LaTeX 지수를 쓴다
+    // (2026-08-22 실측: J20107-JPXP·V46C). \frac·\sqrt 뒤라 남은 ^ 는
+    // 전부 지수다.
+    .replace(/\^\{?(\d+)\}?/g, (_m, digits: string) =>
+      [...digits].map((d) => "⁰¹²³⁴⁵⁶⁷⁸⁹"[Number(d)]).join(""),
+    )
     // \le·\leq·\ge·\geq → DB 가 쓰는 유니코드 부등호로. \leq 를 먼저 잡아야
     // \le 규칙이 "leq" 의 앞 두 글자만 먹고 "q" 를 못 지우는 일이 없다.
     .replace(/\\leq|\\le/g, "≤")

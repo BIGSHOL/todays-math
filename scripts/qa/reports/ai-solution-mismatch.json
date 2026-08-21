@@ -490,5 +490,53 @@
   "code": "J20107-FZB7",
   "dbAnswer": "-x²-xy",
   "aiAnswer": "$-x^2-xy$"
+ },
+ {
+  "id": "7c264602-84d6-4ad2-996b-9b7c040f9d6f",
+  "code": "J20107-JPXP",
+  "dbAnswer": "C=3x²-9xy",
+  "aiAnswer": "3x^{2}-9xy"
+ },
+ {
+  "id": "e61224c7-c320-490a-b48e-e543194119dd",
+  "code": "J20107-R3UY",
+  "dbAnswer": "⑴A=-a⁴/b ⑵B=9y²-7xy",
+  "aiAnswer": "(1) -\\frac{a^4}{b}, (2) -7xy+9y^2"
+ },
+ {
+  "id": "3c6d9f4f-d663-46b9-a5a6-7f32b8c3183e",
+  "code": "J20107-T97B",
+  "dbAnswer": "가능한 식 (-3x+10y)/6, (3x-10y)/6, (21x+14y)/6 / 합 (21x+14y)/6 (=7x/2+7y/3)",
+  "aiAnswer": "\\frac{7}{2}x+\\frac{7}{3}y"
+ },
+ {
+  "id": "c78bc3a2-426a-4e8b-9d0d-e1dd695b0a16",
+  "code": "J20107-VQ53",
+  "dbAnswer": "A=2x²-5x+5, 바르게 계산한 식은 2x²-8x+7",
+  "aiAnswer": "⑴ $2x^2-5x+5$, ⑵ $2x^2-8x+7$"
+ },
+ {
+  "id": "481ee85f-6e18-4d6d-af52-c5a6aa24776b",
+  "code": "J20107-WXXA",
+  "dbAnswer": "어떤 식 x²+8x-7, 바르게 계산한 식 x²+11x-8",
+  "aiAnswer": "어떤 식: $x^{2}+8x-7$, 바르게 계산한 식: $x^{2}+11x-8$"
+ },
+ {
+  "id": "d3037fa4-7139-4561-9689-15ccda4612c9",
+  "code": "J20107-YEXQ",
+  "dbAnswer": "A-B=-31a",
+  "aiAnswer": "-31a"
+ },
+ {
+  "id": "fb458912-e152-4bbe-a8a1-324baf4429e7",
+  "code": "J20205-2QWB",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "1f986c24-2116-4c3c-a5a6-9f9093c80e70",
+  "code": "J20205-KX7J",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
  }
 ]
