@@ -676,5 +676,23 @@
   "code": "J20902-EYR9",
   "dbAnswer": "③",
   "aiAnswer": "⑤"
+ },
+ {
+  "id": "3cb6e6e7-3875-4560-98ee-13e04166e373",
+  "code": "J20903-7SEJ",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "1a79dbd2-b5dd-4045-9a0b-ebf1adc87ffb",
+  "code": "J30101-8B4G",
+  "dbAnswer": "11, -11",
+  "aiAnswer": "$\\pm11$"
+ },
+ {
+  "id": "17458d7a-0e88-4f57-9c70-d990b8eb3639",
+  "code": "J30101-9LMM",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
  }
 ]

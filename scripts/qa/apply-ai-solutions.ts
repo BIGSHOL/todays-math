@@ -75,6 +75,10 @@ function normalizeAnswer(s: string): string {
     // \le 규칙이 "leq" 의 앞 두 글자만 먹고 "q" 를 못 지우는 일이 없다.
     .replace(/\\leq|\\le/g, "≤")
     .replace(/\\geq|\\ge/g, "≥")
+    // \pm → ± — DB 는 유니코드 ±, AI 는 LaTeX \pm 를 쓴다. 안 바꾸면 뒤의
+    // 백슬래시 쓸어내기가 "pm" 이라는 날 글자를 남긴다(2026-08-22 실측:
+    // J30101-4DSA — DB «±8/3» vs AI «$\pm\frac{8}{3}$»).
+    .replace(/\\pm/g, "±")
     .replace(/[{}\s]/g, "")
     // 나열형 답의 구분자 — "D > A > C > B" 와 "D, A, C, B" 는 같은 뜻인데
     // 구분자만 다르다. 소문항 구분자 쉼표("⑴ 70, ⑵ 35" vs "⑴ 70 ⑵ 35")도
