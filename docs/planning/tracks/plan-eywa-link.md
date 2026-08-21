@@ -184,14 +184,29 @@ grok 은 계획서만 읽지 않고 **양쪽 저장소와 운영 DB alpha 까지
 10. 미리보기 배포에 연계 env 를 넣지 않는다 — 공개 URL 이 같은 키를 먹는다
     (grok #8). 원장님 배포 체크리스트에 명기.
 
-## 7. 완료 조건 (개정)
+## 7. 완료 조건 — **전부 완료** (2026-08-21)
 
-- [ ] eywa: 라우트 2 + 테스트(401·테넌트 격리·커서 왕복·경계), 브랜치 푸시
-- [ ] 우리: roster·progress 동기화(dry-run 결과 첨부 · 변이 시험)
-- [ ] 실쓰기 1회: `eywaStudentId IS NOT NULL` 학생 수 == eywa 활성 수학반
-      재원생 수(193) — demo 2명은 비교 범위 밖 (codex #18)
-- [ ] `[개정]` **정확도 표본**: 무작위 30명의 «현재 진도 단원»을 eywa 원문과
-      육안 대조, 결과를 보고서에 (codex #23)
-- [ ] `/api/tests/default-range` 가 동기화된 학생별 진도로 범위를 내는 것 확인
-- [ ] 그림자 실행: DB 직결 vs API diff 0 (API 배포 뒤)
-- [ ] API 전환 후 `EYWA_DATABASE_URL` 제거 + `EYWA_TRANSPORT=api` 고정
+- [x] eywa: 라우트 2 + 테스트 10, 브랜치 푸시 → **원장님 지시로 main 병합·배포**
+      (`d3546b9c`, eywa-alpha.vercel.app). 운영 스모크: 401·400·no-store·193명 ✅
+- [x] 우리: 동기화(dry-run + 실쓰기 3회 — db 2회·api 1회, 전부 멱등 수렴)
+- [x] 실쓰기 검산: 연계 학생 193 == eywa 활성 수학반 재원생 193 ✅
+- [x] 정확도 표본 30명(seed 21): **30/30 규칙 일치** (`sample-eywa-accuracy.ts`)
+- [x] `default-range` 함수에 동기화 실데이터 — 실학생 3명 범위 확인 ✅
+- [x] 그림자 실행: roster 193=193 · progress 12,293=12,293 · **내용 다름 0 ·
+      한쪽만 0** (`shadow-eywa-transport.ts`)
+- [x] `EYWA_TRANSPORT=api` 고정 + `EYWA_DATABASE_URL`·`EYWA_TENANT_ID` **env 제거**.
+      db 전송 강제 시 `EywaNotConfiguredError` 로 시끄럽게 실패(fail-closed 확인)
+
+### §4.1 에서 한 가지 의도적 이탈
+
+계획은 「`EYWA_DATABASE_URL` 을 env 와 **코드**에서 둘 다 제거」라 했다.
+**자격증명(env)은 지웠고 코드(`fetchViaDb`·`client.ts`)는 남겼다** — 그림자
+diff·읽기 전용 probe 가 그 코드다. 위험한 것은 코드가 아니라 **자격증명**이고,
+`requiredTransport` 가 폴백을 막으며, 자격증명 없이 db 전송을 켜면 위처럼
+즉시 던진다. 다시 쓰려면 env 를 명시적으로 되넣어야 한다.
+
+### 남은 것 (2단계로)
+
+- cron + 「지금 가져오기」 — 상태가 보이는 화면과 함께 (D-07 Wire 부터)
+- eywa Vercel env 는 **Production 에만** 있다. 미리보기 배포에 넣지 말 것
+- 같은 날 두 갈래(정규+특강) 학생의 진도 분리 — 계약의 `classId` 로 2단계가 가른다
