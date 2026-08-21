@@ -47,6 +47,11 @@ function normalizeAnswer(s: string): string {
   for (const circled of circledSets)
     for (let i = 0; i < circled.length; i += 1)
       t = t.split(circled[i]!).join(String(i + 1));
+  // 소문항 표지 ⑴⑵⑶… (U+2474~) 를 "(1)(2)(3)…" 로 접는다 — 프롬프트가
+  // 이 원문자를 요구하지 않아 AI 는 흔히 맨 괄호 숫자를 쓴다(J10301-EDCG 등).
+  const parenDigits = "⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽";
+  for (let i = 0; i < parenDigits.length; i += 1)
+    t = t.split(parenDigits[i]!).join(`(${i + 1})`);
   t = t
     .replace(/\$\s*/g, "")
     .replace(/\\left|\\right|\\,|\\;|\\!|~/g, "")
@@ -69,10 +74,13 @@ function normalizeAnswer(s: string): string {
     // 구분자만 다르다. 소문항 구분자 쉼표("⑴ 70, ⑵ 35" vs "⑴ 70 ⑵ 35")도
     // 이걸로 접힌다. (2026-08-22 실측: J10201-5Y3Q·BVQQ)
     .replace(/[,>]/g, "")
-    // 숫자 바로 뒤 개수 단위 — DB 는 "45개"처럼 단위를 남기고, 프롬프트는
-    // finalAnswer 에 "값 자체"만 요구해 AI 는 "45"만 준다. 서술형 문장
-    // 답(예: "소인수가 2와 5뿐")은 숫자로 안 끝나 이 규칙에 안 걸린다.
-    .replace(/(\d)(개|가지)$/, "$1")
+    // 숫자·변수 바로 뒤 단위 — DB 는 "45개"·"405원"·"3x원"처럼 단위를
+    // 남기고, 프롬프트는 finalAnswer 에 "값 자체"만 요구해 AI 는 단위를
+    // 뺀다. "3x원" 처럼 변수 뒤에 붙기도 해 숫자만이 아니라 영문자도
+    // 앞자리로 받는다(2026-08-22 실측: J10301-EDCG·GW5F·PM6G). 소문항이
+    // 여럿이면 단위가 여러 번 나오니 전역(g)으로 — 서술형 문장 답
+    // (예: "소인수가 2와 5뿐")은 숫자·변수로 안 끝나 이 규칙에 안 걸린다.
+    .replace(/([0-9a-zA-Z])(개|가지|원|회)/g, "$1")
     // 잔여 백슬래시 쓸어내기 — `\ `(간격 명령) 는 `[{}\s]` 가 공백만 지우고
     // 백슬래시는 안 지워 "a=2\b" 처럼 남는다(2026-08-22 실측: J10201-F5EN).
     // 여기까지 왔으면 \frac·\sqrt·\times·\pi·\degree·\left·\right·\,·\;·\!
