@@ -8,7 +8,9 @@
  * 🔴 **정답을 내보내지 않는다.** 에이전트가 기록된 정답을 보면 그쪽으로 꿰맞춘
  *    풀이를 쓴다 — 독립 검산이 죽는다. 답 대조는 적용 스크립트가 한다.
  *
- * 우선순위: ① 실제 시험에 나갔던 것 ② 그림 없는 것 전부 (문항코드순).
+ * 우선순위: ① 학년 (원장님 지시 2026-08-22: 중1→중2→중3→고1→고2 순.
+ *    미확정 학년(초등·미적분2 등 고3)은 뒤로) ② 실제 시험에 나갔던 것
+ *    ③ 그림 없는 것 전부 (문항코드순).
  * 그림 있는 문항은 제외 — 그림 품질 트랙 뒤에 한다 (원장님 확정).
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -18,6 +20,23 @@ import { PrismaClient } from "@prisma/client";
 
 const p = new PrismaClient();
 const OUT_DIR = path.join("scripts", "qa", "nosol-out");
+
+/** 「중1→중2→중3→고1→고2」(원장님 지시). `unit.grade` 는 2022 개정 교육과정
+ *  과목명 — 공통수학1·2=고1, 대수·미적분1·확률과 통계·기하=고2, 미적분2=고3
+ *  (prisma/seed-data/units.ts 등장 순서가 정본). 목록에 없는 값(초등 등)은
+ *  마지막 순위. */
+const GRADE_PRIORITY = [
+  "중1",
+  "중2",
+  "중3",
+  "공통수학1",
+  "공통수학2",
+  "대수",
+  "미적분1",
+  "확률과 통계",
+  "기하",
+  "미적분2",
+];
 
 /** 이미 시도해서 못 채운 문항(답 불일치·건너뜀)은 다시 내보내지 않는다 —
  *  채워진 문항은 WHERE 가 거르지만, 이들은 여전히 「해설 없음」이라 매 배치
@@ -61,7 +80,10 @@ async function main() {
        AND cardinality(pr.figure_urls) = 0
        AND (pr.figure_svg IS NULL OR pr.figure_svg = '')
        ${exclude.length > 0 ? `AND pr.id NOT IN (${exclude.map((i) => `'${i}'`).join(",")})` : ""}
-     ORDER BY used DESC, pr.problem_code ASC
+     ORDER BY CASE u.grade
+       ${GRADE_PRIORITY.map((g, i) => `WHEN '${g}' THEN ${i}`).join(" ")}
+       ELSE ${GRADE_PRIORITY.length}
+     END, used DESC, pr.problem_code ASC
      OFFSET ${skip} LIMIT ${count}`,
   );
   mkdirSync(OUT_DIR, { recursive: true });
