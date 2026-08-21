@@ -154,5 +154,35 @@
   "code": "J10201-J63P",
   "dbAnswer": "①",
   "aiAnswer": "②"
+ },
+ {
+  "id": "3cd40b2c-8052-41a1-9e46-f7a2eced4216",
+  "code": "J10201-M9R3",
+  "dbAnswer": "①, ⑤",
+  "aiAnswer": "①, ④"
+ },
+ {
+  "id": "12259097-4f51-4489-8fbf-351408377b5e",
+  "code": "J10201-RMLG",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "a7849fce-8614-4fd8-9d96-f4b4f8b59dd0",
+  "code": "J10301-3SZD",
+  "dbAnswer": "1/a=-1/2, a+2=0, -a=2, a²=4, -a³=8 (작은 수부터 -1/2, 0, 2, 4, 8)",
+  "aiAnswer": "$\\frac{1}{a}<a+2<-a<a^{2}<-a^{3}$ (즉 $-\\frac{1}{2}<0<2<4<8$)"
+ },
+ {
+  "id": "e6bdab21-568d-4a4c-b1b7-bc6ffede9636",
+  "code": "J10301-5DJZ",
+  "dbAnswer": "⑴ 0.8a원 (=4a/5원), ⑵ 72000원",
+  "aiAnswer": "⑴ $0.8a$원 ⑵ $72000$원"
+ },
+ {
+  "id": "6faace8a-ef12-4701-9679-3c6c64a8759c",
+  "code": "J10301-8DER",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
  }
 ]

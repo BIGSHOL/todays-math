@@ -57,6 +57,13 @@ function normalizeAnswer(s: string): string {
     .replace(/\\times/g, "×")
     .replace(/\\pi/g, "π")
     .replace(/\\degree|°/g, "")
+    // \mathrm{A} 는 변수 라벨 감싸개일 뿐 — 벗기지 않으면 [{}\s] 가 중괄호만
+    // 지워 "\mathrmA" 로 뭉친다(2026-08-22 실측: J10201-Y9H3).
+    .replace(/\\mathrm\{([^{}]+)\}/g, "$1")
+    // \le·\leq·\ge·\geq → DB 가 쓰는 유니코드 부등호로. \leq 를 먼저 잡아야
+    // \le 규칙이 "leq" 의 앞 두 글자만 먹고 "q" 를 못 지우는 일이 없다.
+    .replace(/\\leq|\\le/g, "≤")
+    .replace(/\\geq|\\ge/g, "≥")
     .replace(/[{}\s]/g, "")
     // 나열형 답의 구분자 — "D > A > C > B" 와 "D, A, C, B" 는 같은 뜻인데
     // 구분자만 다르다. 소문항 구분자 쉼표("⑴ 70, ⑵ 35" vs "⑴ 70 ⑵ 35")도
