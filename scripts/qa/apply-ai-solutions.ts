@@ -66,6 +66,33 @@ function normalizeAnswer(s: string): string {
   return t;
 }
 
+/** content 의 번호 매김 보기("1. $85$\n2. $90$…")를 {번호: 값} 으로 뽑는다. */
+function extractChoices(content: string): Map<string, string> {
+  const map = new Map<string, string>();
+  const re = /(?:^|\n)\s*([1-5])[.)]\s*([^\n]+)/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(content))) map.set(m[1]!, m[2]!.trim());
+  return map;
+}
+
+/** AI 가 「보기 번호」 대신 「값 자체」를 낸 경우를 구제한다 — finalAnswer 가
+ *  본문 보기 중 정확히 하나와 값이 같으면 그 보기 번호로 취급한다. 값이
+ *  둘 이상의 보기와 같으면(모호) 구제하지 않는다.
+ *  (2026-08-22 실측: J10102-PWZN·RAE5 — AI 계산은 맞았는데 지시(「보기
+ *  번호로」)를 안 지켜 "④" 대신 "18" 을 내 거짓 불일치가 났다.) */
+function resolveViaChoices(
+  content: string,
+  finalAnswer: string,
+): string | null {
+  const choices = extractChoices(content);
+  if (choices.size === 0) return null;
+  const target = normalizeAnswer(finalAnswer);
+  const matches = [...choices.entries()].filter(
+    ([, v]) => normalizeAnswer(v) === target,
+  );
+  return matches.length === 1 ? matches[0]![0] : null;
+}
+
 function rendersClean(solution: string): boolean {
   const dollars = (solution.match(/\$/g) ?? []).length;
   if (dollars % 2 !== 0) return false;
@@ -117,7 +144,12 @@ async function main() {
     }
     const row = await p.problem.findUnique({
       where: { id: g.id },
-      select: { problemCode: true, answer: true, solution: true },
+      select: {
+        problemCode: true,
+        answer: true,
+        solution: true,
+        content: true,
+      },
     });
     if (!row) {
       skipped["행 없음"] = (skipped["행 없음"] ?? 0) + 1;
@@ -127,14 +159,21 @@ async function main() {
       alreadyHas += 1;
       continue;
     }
-    if (normalizeAnswer(row.answer ?? "") !== normalizeAnswer(g.finalAnswer)) {
-      mismatches.push({
-        id: g.id,
-        code: row.problemCode,
-        dbAnswer: row.answer ?? "",
-        aiAnswer: g.finalAnswer,
-      });
-      continue;
+    const dbNorm = normalizeAnswer(row.answer ?? "");
+    let aiFinal = g.finalAnswer;
+    if (dbNorm !== normalizeAnswer(aiFinal)) {
+      const resolved = resolveViaChoices(row.content, aiFinal);
+      if (resolved && dbNorm === normalizeAnswer(resolved)) {
+        aiFinal = resolved; // 값→보기번호 구제 성공
+      } else {
+        mismatches.push({
+          id: g.id,
+          code: row.problemCode,
+          dbAnswer: row.answer ?? "",
+          aiAnswer: g.finalAnswer,
+        });
+        continue;
+      }
     }
     if (!rendersClean(g.solution)) {
       renderFail += 1;
