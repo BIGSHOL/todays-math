@@ -65,6 +65,10 @@ function normalizeAnswer(s: string): string {
     // \mathrm{A} 는 변수 라벨 감싸개일 뿐 — 벗기지 않으면 [{}\s] 가 중괄호만
     // 지워 "\mathrmA" 로 뭉친다(2026-08-22 실측: J10201-Y9H3).
     .replace(/\\mathrm\{([^{}]+)\}/g, "$1")
+    // \text{ cm} 도 같은 문제 — 안 벗기면 "\textcm" 으로 뭉쳐 뒤의 단위
+    // 제거 규칙이 "cm" 앞의 진짜 글자(t)에 걸려 엉뚱하게 지운다(2026-08-22
+    // 실측: J30103-PCEZ — DB «8√3 cm» vs AI «$8\sqrt3\text{ cm}$»).
+    .replace(/\\text\{([^{}]*)\}/g, "$1")
     // x^{2} → x² — DB 는 유니코드 위첨자를 쓰는데 AI 는 LaTeX 지수를 쓴다
     // (2026-08-22 실측: J20107-JPXP·V46C). \frac·\sqrt 뒤라 남은 ^ 는
     // 전부 지수다.
@@ -131,6 +135,16 @@ function resolveViaChoices(
     ([, v]) => normalizeAnswer(v) === target,
   );
   return matches.length === 1 ? matches[0]![0] : null;
+}
+
+/** AI 가 「보기 번호」 뒤에 검산값을 덧붙인 경우("③ $0.3464$")를 구제한다 —
+ *  선두 원문자만 취하고 뒤는 버린다. **DB 가 단일 보기 번호 하나일 때만**
+ *  main 에서 이 함수를 부른다 — 나열형·서술형 답까지 적용하면 위험하다
+ *  (2026-08-22 실측: J30103-ABDG 등 14건 — 프롬프트가 "보기 번호로" 라고
+ *  했는데 AI 가 계산값을 같이 적었다). */
+function extractLeadingChoice(raw: string): string | null {
+  const m = raw.trim().match(/^([①②③④⑤➀➁➂➃➄])\s*([\s\S]+)$/);
+  return m ? m[1]! : null;
 }
 
 function rendersClean(solution: string): boolean {
@@ -202,9 +216,13 @@ async function main() {
     const dbNorm = normalizeAnswer(row.answer ?? "");
     let aiFinal = g.finalAnswer;
     if (dbNorm !== normalizeAnswer(aiFinal)) {
-      const resolved = resolveViaChoices(row.content, aiFinal);
+      let resolved: string | null = /^[1-5]$/.test(dbNorm)
+        ? extractLeadingChoice(aiFinal)
+        : null;
+      if (!resolved || dbNorm !== normalizeAnswer(resolved))
+        resolved = resolveViaChoices(row.content, aiFinal);
       if (resolved && dbNorm === normalizeAnswer(resolved)) {
-        aiFinal = resolved; // 값→보기번호 구제 성공
+        aiFinal = resolved; // 값→보기번호 또는 번호+값→번호 구제 성공
       } else {
         mismatches.push({
           id: g.id,

@@ -748,5 +748,65 @@
   "code": "J30103-4K9P",
   "dbAnswer": "②",
   "aiAnswer": "④"
+ },
+ {
+  "id": "779e2e2d-1d53-425d-9cf9-631848280e2d",
+  "code": "J30103-EC7D",
+  "dbAnswer": "(정답 없음)",
+  "aiAnswer": "$10\\sqrt3$"
+ },
+ {
+  "id": "f4105f54-ce3a-4031-bba2-6755ca5ff1d2",
+  "code": "J30103-FG24",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "03158335-a0eb-4abe-bb03-0a16a4b59ce6",
+  "code": "J30103-GKYB",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "5cbced34-d69d-4958-9cb9-8a206d18a718",
+  "code": "J30103-GU34",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "bf652688-a7d6-41e3-a2c8-85a8ee2d52a1",
+  "code": "J30103-HQW8",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "1917c0c7-858a-4325-a71f-b9177530aca7",
+  "code": "J30103-JYCF",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "51d90aff-b47e-4433-b415-2313d0f5a62a",
+  "code": "J30103-KG8Y",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "ed3db617-3fbd-4e19-9e35-6df18e77977b",
+  "code": "J30103-KQ8X",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "4b04518e-5084-4a61-96b5-44c99316d9c5",
+  "code": "J30103-MELV",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "40de2160-02ba-48a0-a3ca-ec109cc67f20",
+  "code": "J30103-PLEG",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
  }
 ]

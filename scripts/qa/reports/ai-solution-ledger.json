@@ -42715,6 +42715,1386 @@
    "id": "ad218bb7-4029-4f53-9627-bea46483f8b4",
    "before": null,
    "after": "$h=200$을 대입하면 볼 수 있는 가장 먼 거리는 $\\sqrt{12.6\\times200}=\\sqrt{2520}$km이다.\n$\\sqrt{2520}\\approx50.20$이므로 가장 먼 거리는 약 $50.20$km이다."
+  },
+  {
+   "id": "04f52cf6-1c2b-42d8-9678-164d3dc37c21",
+   "before": null,
+   "after": "$a-c=(2\\sqrt5+\\sqrt3)-(\\sqrt5+2\\sqrt3)=\\sqrt5-\\sqrt3>0$이므로 $a>c$\n$c-b=(\\sqrt5+2\\sqrt3)-3\\sqrt3=\\sqrt5-\\sqrt3>0$이므로 $c>b$\n따라서 $b<c<a$"
+  },
+  {
+   "id": "12781161-f455-42c8-864a-bd0fe4f57a0c",
+   "before": null,
+   "after": "$a\\sqrt{\\frac{28b}{a}}=\\sqrt{a^2\\cdot\\frac{28b}{a}}=\\sqrt{28ab}=\\sqrt{28\\times64}=\\sqrt{1792}=16\\sqrt7$\n$b\\sqrt{\\frac{7a}{b}}=\\sqrt{b^2\\cdot\\frac{7a}{b}}=\\sqrt{7ab}=\\sqrt{7\\times64}=\\sqrt{448}=8\\sqrt7$\n따라서 합은 $16\\sqrt7+8\\sqrt7=24\\sqrt7$"
+  },
+  {
+   "id": "e9065310-ecf5-4993-a834-d6ad9b80d58a",
+   "before": null,
+   "after": "$\\sqrt{\\left(a+\\frac1a\\right)^2}=\\left|a+\\frac1a\\right|=a+\\frac1a$ ($0<a<1$이면 항상 양수)\n$\\sqrt{\\left(\\frac1a-a\\right)^2}=\\left|\\frac1a-a\\right|=\\frac1a-a$ ($0<a<1$이면 $\\frac1a>1>a$)\n두 식을 더하면 $\\left(a+\\frac1a\\right)+\\left(\\frac1a-a\\right)=\\frac2a$"
+  },
+  {
+   "id": "d795ff22-41e4-4942-96da-7e1eda497983",
+   "before": null,
+   "after": "$f(x)=\\lfloor x^2\\rfloor$는 $x>0$에서 $x$가 커지면 감소하지 않으므로 $a<b$이면 $f(a)\\le f(b)$\n$f(a)\\times f(b)=8$을 만족하는 경우는 $(f(a),f(b))=(1,8)$ 또는 $(2,4)$\n$(1,8)$: $1\\le a^2<2,\\ 8\\le b^2<9$이므로 최소 $a=1,\\ b=2\\sqrt2$, 합 $1+2\\sqrt2\\approx3.83$\n$(2,4)$: $2\\le a^2<3,\\ 4\\le b^2<5$이므로 최소 $a=\\sqrt2,\\ b=2$, 합 $2+\\sqrt2\\approx3.41$\n둘을 비교하면 $2+\\sqrt2$가 더 작으므로 최솟값은 $2+\\sqrt2$"
+  },
+  {
+   "id": "2714f739-5a10-4a66-b1ca-0b65f824e9bb",
+   "before": null,
+   "after": "분모를 유리화하려면 분모와 같은 무리수를 분자·분모에 곱해야 분모가 유리수가 된다.\n①~④는 분자·분모에 다른 수를 곱했거나, 곱한 뒤에도 분모에 근호가 남는다.\n⑤ $\\frac{8}{3\\sqrt3}=\\frac{8\\times\\sqrt3}{3\\sqrt3\\times\\sqrt3}=\\frac{8\\sqrt3}{9}$로 분모가 유리수가 되어 올바른 과정이다."
+  },
+  {
+   "id": "3cf2bc78-1e61-439e-8d1d-3d534bba3dd6",
+   "before": null,
+   "after": "$\\sqrt{2a}$가 유리수가 되려면 $2a$가 완전제곱수여야 한다.\n$1\\le a\\le20$이므로 $2\\le2a\\le40$이고, 이 범위의 완전제곱수는 $4,16,36$\n$2a=36$일 때 $a=18$로 가장 크다."
+  },
+  {
+   "id": "0d603f3e-fffe-4137-b587-a5d9454bc169",
+   "before": null,
+   "after": "① $1+\\sqrt3\\approx2.73<3$: 참\n② $\\sqrt6-4\\approx-1.55<-1$: 참\n③ $1-\\sqrt{11}\\approx-2.32<-2$: 참\n④ $\\sqrt5-\\sqrt3<\\sqrt5-\\sqrt2\\Leftrightarrow\\sqrt3>\\sqrt2$: 참\n⑤ $-2\\sqrt2+\\sqrt3\\approx-1.10$, $\\sqrt2-2\\sqrt3\\approx-2.05$이므로 $-1.10<-2.05$는 거짓\n따라서 옳지 않은 것은 ⑤"
+  },
+  {
+   "id": "fc0a6d6d-8d1b-4cce-a7f1-d9a3cfc77e36",
+   "before": null,
+   "after": "① $\\sqrt6-4\\sqrt6+5\\sqrt6=2\\sqrt6\\approx4.90$\n② $\\frac{2\\sqrt{18}}3+\\frac{\\sqrt3}{\\sqrt{24}}-\\frac1{2\\sqrt2}=2\\sqrt2+\\frac1{2\\sqrt2}-\\frac1{2\\sqrt2}=2\\sqrt2\\approx2.83$\n③ $\\sqrt{27}-\\sqrt{12}+\\frac6{\\sqrt3}+\\sqrt3=3\\sqrt3-2\\sqrt3+2\\sqrt3+\\sqrt3=4\\sqrt3\\approx6.93$\n④ $\\sqrt{24}\\sqrt2+9\\sqrt6\\div\\sqrt2-5\\sqrt3=4\\sqrt3+9\\sqrt3-5\\sqrt3=8\\sqrt3\\approx13.86$\n⑤ $3\\sqrt{20}\\times\\frac1{10}\\sqrt5+\\sqrt{12}+\\sqrt{48}=3+2\\sqrt3+4\\sqrt3=3+6\\sqrt3\\approx13.39$\n가장 큰 값은 ④ $8\\sqrt3$"
+  },
+  {
+   "id": "abee6218-ca78-465f-bc9c-9dd68a2ac3a8",
+   "before": null,
+   "after": "$\\langle n,2m\\rangle=\\sqrt5n+3(2m)=\\sqrt5n+6m$\n$\\langle-2n,m\\rangle=\\sqrt5(-2n)+3m=-2\\sqrt5n+3m$\n두 식을 더하면 $-\\sqrt5n+9m=3\\sqrt5+9$\n$n,m$이 유리수이므로 무리부분·유리부분을 비교하면 $-n=3,\\ 9m=9$\n따라서 $n=-3,\\ m=1$"
+  },
+  {
+   "id": "a0412669-f3be-4e0d-b9a2-a828a3bb4a76",
+   "before": null,
+   "after": "$\\frac{\\sqrt{324}}3-4\\sqrt7+\\sqrt{144}+\\sqrt{112}=6-4\\sqrt7+12+4\\sqrt7=18$이므로 $a=18$\n$\\sqrt{18}=3\\sqrt2\\approx4.24$이므로 정수부분 $4$, 소수부분 $x=3\\sqrt2-4$\n$\\sqrt{a-10}=\\sqrt8=2\\sqrt2\\approx2.83$이므로 정수부분 $2$, 소수부분 $y=2\\sqrt2-2$\n$x-2=3\\sqrt2-6<0$이므로 $\\sqrt{(x-2)^2}=6-3\\sqrt2$, $y-1=2\\sqrt2-3<0$이므로 $\\sqrt{(y-1)^2}=3-2\\sqrt2$\n따라서 $(6-3\\sqrt2)-(3-2\\sqrt2)=3-\\sqrt2$"
+  },
+  {
+   "id": "af53e7f9-c44b-483c-af0d-3fbaf260497d",
+   "before": null,
+   "after": "$k^2=a+b+2\\sqrt{ab}=\\frac{11+2\\sqrt{30}}{30}=\\frac{11}{30}+\\frac{2\\sqrt{30}}{30}$\n유리부분·무리부분을 비교하면 $a+b=\\frac{11}{30}$, $2\\sqrt{ab}=\\frac{2\\sqrt{30}}{30}$이므로 $\\sqrt{ab}=\\frac{\\sqrt{30}}{30}$, $ab=\\frac1{30}$\n$|a-b|=\\sqrt{(a+b)^2-4ab}=\\sqrt{\\frac{121}{900}-\\frac{120}{900}}=\\sqrt{\\frac1{900}}=\\frac1{30}$"
+  },
+  {
+   "id": "6144aeb9-6a1b-4b90-a9d5-5616ed07d0c9",
+   "before": null,
+   "after": "$\\frac{3\\sqrt a}{2\\sqrt3}=\\frac{\\sqrt{15}}2$에서 $3\\sqrt a=\\sqrt3\\times\\sqrt{15}=\\sqrt{45}=3\\sqrt5$이므로 $\\sqrt a=\\sqrt5$, $a=5$\n$\\frac2{\\sqrt{20}}=\\frac2{2\\sqrt5}=\\frac1{\\sqrt5}=\\frac{\\sqrt5}5=b\\sqrt5$이므로 $b=\\frac15$\n따라서 $ab=5\\times\\frac15=1$"
+  },
+  {
+   "id": "843ba800-c2ef-4b2f-be27-44e8963edc60",
+   "before": null,
+   "after": "$x=\\frac{\\sqrt2-1}{\\sqrt2+1}=(\\sqrt2-1)^2=3-2\\sqrt2$\n$y=\\frac{\\sqrt2+1}{\\sqrt2-1}=(\\sqrt2+1)^2=3+2\\sqrt2$\n$x+y=6$, $x-y=-4\\sqrt2$이므로 $x^2-y^2=(x+y)(x-y)=6\\times(-4\\sqrt2)=-24\\sqrt2$\n(참고: $xy=1$, $x^2+y^2=34$, $(x-y)^2=32$이므로 나머지 보기는 모두 틀리다)"
+  },
+  {
+   "id": "075e8299-7ed6-493f-acdb-aed13679c5dc",
+   "before": null,
+   "after": "① $5<\\sqrt2+1\\approx2.41$: 거짓\n② $3<4-\\sqrt3\\approx2.27$: 거짓\n③ $\\sqrt6+1\\approx3.45$, $2\\sqrt6-1\\approx3.90$이므로 $\\sqrt6+1<2\\sqrt6-1$: 참\n④ $1+2\\sqrt2\\approx3.83$, $1+\\sqrt7\\approx3.65$이므로 거짓\n⑤ $\\sqrt{26}-3\\approx2.10$, $\\sqrt{23}-3\\approx1.80$이므로 거짓\n따라서 옳은 것은 ③"
+  },
+  {
+   "id": "5f46b282-e37b-4e48-9cf6-cf0c3df42266",
+   "before": null,
+   "after": "$\\sqrt7\\approx2.646$이므로 $5+\\sqrt7\\approx7.646$\n정수부분 $a=7$, 소수부분 $b=(5+\\sqrt7)-7=\\sqrt7-2$\n따라서 $a-b=7-(\\sqrt7-2)=9-\\sqrt7$"
+  },
+  {
+   "id": "89d7adf1-3e72-4374-a2ec-269e1f8a1231",
+   "before": null,
+   "after": "$a\\sqrt{\\frac{3b}a}=\\sqrt{a^2\\cdot\\frac{3b}a}=\\sqrt{3ab}=\\sqrt{3\\times12}=\\sqrt{36}=6$\n$\\sqrt{\\frac{18}{ab}}=\\sqrt{\\frac{18}{12}}=\\sqrt{\\frac32}=\\frac{\\sqrt6}2$\n$b\\sqrt{\\frac{9a}{8b}}=\\sqrt{b^2\\cdot\\frac{9a}{8b}}=\\sqrt{\\frac{9ab}8}=\\sqrt{\\frac{108}8}=\\sqrt{\\frac{27}2}=\\frac{3\\sqrt6}2$\n따라서 $6+\\frac{\\sqrt6}2-\\frac{3\\sqrt6}2=6-\\sqrt6$"
+  },
+  {
+   "id": "77f0bbe5-4f5a-425e-a4c7-cf0535549a1a",
+   "before": null,
+   "after": "$\\sqrt{n^2+39}=m$ ($m$은 자연수)이라 하면 $m^2-n^2=39$, 즉 $(m-n)(m+n)=39$\n$39=1\\times39=3\\times13$\n$m-n=1,\\ m+n=39$이면 $m=20,\\ n=19$\n$m-n=3,\\ m+n=13$이면 $m=8,\\ n=5$\n$n$의 값의 합은 $19+5=24$"
+  },
+  {
+   "id": "9be9e7c7-3178-490f-ac58-12541245d86b",
+   "before": null,
+   "after": "① $\\sqrt5\\div\\sqrt{10}\\div\\sqrt2=\\frac{\\sqrt5}{\\sqrt{10}}\\div\\sqrt2=\\frac1{\\sqrt2}\\div\\sqrt2=\\frac12$이므로 거짓\n② $3\\sqrt2\\times5\\sqrt6\\div3\\sqrt3=15\\sqrt{12}\\div3\\sqrt3=30\\sqrt3\\div3\\sqrt3=10$이므로 참\n따라서 옳은 것은 ②"
+  },
+  {
+   "id": "91e16c4d-f5d1-4955-b7bd-72c4544b7f45",
+   "before": null,
+   "after": "ㄱ. $\\sqrt{26}\\approx5.10$이므로 $-5>-\\sqrt{26}$은 참\nㄴ. $\\sqrt3+2\\approx3.73<4$이므로 거짓\nㄷ. $2-\\sqrt2<\\sqrt5-\\sqrt2\\Leftrightarrow2<\\sqrt5\\approx2.24$이므로 참\nㄹ. $\\sqrt2+\\sqrt{27}=\\sqrt2+3\\sqrt3<5\\sqrt3-\\sqrt2\\Leftrightarrow2\\sqrt2<2\\sqrt3\\Leftrightarrow\\sqrt2<\\sqrt3$이므로 참\n옳은 것은 ㄱ,ㄷ,ㄹ"
+  },
+  {
+   "id": "c2920e5e-29b7-4b42-923a-1f0dc6fcf482",
+   "before": null,
+   "after": "$217=2.17\\times100$이므로 $\\sqrt{217}=\\sqrt{2.17}\\times\\sqrt{100}=1.473\\times10=14.73$"
+  },
+  {
+   "id": "420691b4-510f-45cc-8194-3dc314d8dfd3",
+   "before": null,
+   "after": "보기를 차례로 계산한다.\n①$4\\sqrt{12}\\div(-2\\sqrt3)=8\\sqrt3\\div(-2\\sqrt3)=-4$ (참)\n②$9\\div\\sqrt3+4\\sqrt3=3\\sqrt3+4\\sqrt3=7\\sqrt3$ (참)\n③$3\\sqrt{12}-\\sqrt{75}+\\frac{6}{\\sqrt3}=6\\sqrt3-5\\sqrt3+2\\sqrt3=3\\sqrt3$ (참)\n④$2\\sqrt{12}\\div\\sqrt6\\times(-\\sqrt2)=4\\sqrt3\\div\\sqrt6\\times(-\\sqrt2)=2\\sqrt2\\times(-\\sqrt2)=-4$ 이므로 $-2$가 아니라 $-4$이다 (거짓)\n따라서 옳지 않은 것은 ④이다."
+  },
+  {
+   "id": "40da53f4-2a27-41e1-b4bc-632892e666ae",
+   "before": null,
+   "after": "$ab=16$을 이용해 각 항을 정리한다.\n$b\\sqrt{\\frac{3a}{b}}=\\sqrt{3ab}=\\sqrt{3\\times16}=\\sqrt{48}=4\\sqrt3$\n$\\frac{2}{b}\\sqrt{\\frac{12b}{a}}=\\sqrt{\\frac{4}{b^2}\\times\\frac{12b}{a}}=\\sqrt{\\frac{48}{ab}}=\\sqrt{\\frac{48}{16}}=\\sqrt3$\n두 항을 더하면 $4\\sqrt3+\\sqrt3=5\\sqrt3$"
+  },
+  {
+   "id": "a13281f2-2df3-4a53-97ed-d2e602757a20",
+   "before": null,
+   "after": "$12!=2^{10}\\times3^{5}\\times5^{2}\\times7\\times11$이므로\n$\\sqrt{1\\times2\\times\\cdots\\times12}=\\sqrt{12!}=\\sqrt{2^{10}3^{5}5^{2}\\times7\\times11}$\n$=2^{5}\\times3^{2}\\times5\\times\\sqrt{3\\times7\\times11}=1440\\sqrt{231}$\n따라서 $a=1440,\\ b=231$이고 $a+b=1671$"
+  },
+  {
+   "id": "4c05e920-9b11-4ae8-a612-821ebfb4e6d8",
+   "before": null,
+   "after": "$A=3(1-a\\sqrt3)-\\sqrt2(a\\sqrt2-3\\sqrt6)$을 전개하면\n$A=3-3a\\sqrt3-(2a-3\\sqrt{12})=3-3a\\sqrt3-2a+6\\sqrt3=(3-2a)+(6-3a)\\sqrt3$\n유리수가 되려면 $\\sqrt3$의 계수가 0이어야 하므로 $6-3a=0,\\ a=2=p$\n이때 $A=3-2\\times2=-1=q$\n따라서 $p+q=2+(-1)=1$"
+  },
+  {
+   "id": "ab41aed4-f0b4-4664-8dac-cd73bf265e83",
+   "before": null,
+   "after": "$\\sqrt{(-2)^{2}}-\\sqrt{48}=2-4\\sqrt3$\n이를 $\\frac23\\sqrt2$로 나누면 $(2-4\\sqrt3)\\times\\frac{3}{2\\sqrt2}=\\frac{3-6\\sqrt3}{\\sqrt2}=\\frac{3\\sqrt2-6\\sqrt6}{2}$\n$\\frac{\\sqrt3-3}{\\sqrt2}=\\frac{\\sqrt6-3\\sqrt2}{2}$\n두 값을 더하면 $\\frac{3\\sqrt2-6\\sqrt6+\\sqrt6-3\\sqrt2}{2}=-\\frac{5\\sqrt6}{2}$"
+  },
+  {
+   "id": "794f6b6f-4f49-4c62-8b52-1751031a371c",
+   "before": null,
+   "after": "$0<x<1$에서 절댓값을 푼다.\n$\\sqrt{(x-x^{2})^{2}}=x-x^{2}$ ($x(1-x)>0$)\n$\\sqrt{(\\frac1x-x^{2})^{2}}=\\frac1x-x^{2}$ ($\\frac1x>1>x^{2}$)\n$\\sqrt{(1-\\frac1x)^{2}}=\\frac1x-1$ ($\\frac1x>1$)\n따라서 $(x-x^{2})-(\\frac1x-x^{2})+(\\frac1x-1)=x-1$"
+  },
+  {
+   "id": "b9de2f67-0448-459b-9e14-e88b672f07b4",
+   "before": null,
+   "after": "$\\sqrt{\\frac{a}{720}}=\\frac1k$이면 $a=\\frac{720}{k^{2}}$\n$720=2^{4}\\times3^{2}\\times5$이므로 $k^{2}$이 720을 나누는 $k\\in\\{1,2,3,4,6,12\\}$\n정수가 아닌 유리수이므로 $k=1$은 제외, $k=2,3,4,6,12$일 때 $a=180,80,45,20,5$\n개수 $p=5$, 합 $q=180+80+45+20+5=330$\n따라서 $p+q=335$"
+  },
+  {
+   "id": "5e5c6368-168c-4a8f-b6fb-4bb5e9d5b3d1",
+   "before": null,
+   "after": "①$\\sqrt{81}=9\\ne3\\sqrt3$\n②$8\\sqrt2\\ne\\sqrt{16}=4$\n③$7\\sqrt3=\\sqrt{49\\times3}=\\sqrt{147}$ (참)\n④$\\sqrt{625}=25\\ne5\\sqrt5$\n⑤$\\sqrt{100}=10\\ne10\\sqrt{10}$\n따라서 옳은 것은 ③"
+  },
+  {
+   "id": "877bd14a-31be-4972-a8db-cd6ec41721f9",
+   "before": null,
+   "after": "$-1-\\sqrt5\\approx-3.24$, $2+\\sqrt{10}\\approx5.16$\n이 사이의 정수는 $-3,-2,-1,0,1,2,3,4,5$\n합은 $-3-2-1+0+1+2+3+4+5=9$"
+  },
+  {
+   "id": "99c68c68-a695-4c56-9f73-e7ad91a3a564",
+   "before": null,
+   "after": "①$1.\\dot5=\\frac{14}{9}\\approx1.556$ (유리수)\n②$\\sqrt{\\frac94}=1.5$ (유리수)\n③$\\sqrt{1.6}$은 무리수\n④$1.414$ (유리수)\n⑤$\\sqrt9-1.5=1.5$ (유리수)\n유리수 중 가장 큰 값은 ① $1.\\dot5\\approx1.556$"
+  },
+  {
+   "id": "4f306cb4-3185-4253-8e27-1d5a2be7f865",
+   "before": null,
+   "after": "$x^{2}$을 3으로 나눈 나머지는 $x\\equiv0$이면 0, $x\\equiv1,2\\pmod3$이면 1이다.\nㄱ. $5\\equiv2\\pmod3$이므로 $f(5)=1$ (참)\nㄴ. $x=6$(짝수)이면 $f(6)=0$이므로 거짓\nㄷ. $7$~$50$ 중 3의 배수는 $9,12,\\dots,48$로 14개, 나머지 30개는 $f=1$이므로 합은 30 (28이 아니므로 거짓)\nㄹ. 나머지는 항상 0 또는 1이므로 항상 참\n따라서 옳은 것은 ㄱ, ㄹ"
+  },
+  {
+   "id": "af9fb7af-bb2b-4e1f-9b83-cf05361ea432",
+   "before": null,
+   "after": "$\\sqrt{18}\\div\\frac{2}{\\sqrt6}=3\\sqrt2\\times\\frac{\\sqrt6}{2}=\\frac{3\\sqrt{12}}{2}=3\\sqrt3$\n$\\sqrt{12}\\times\\sqrt3=\\sqrt{36}=6$\n합은 $6+3\\sqrt3$이므로 $a=6,\\ b=3$\n따라서 $a-b=3$"
+  },
+  {
+   "id": "b1e32998-237d-4975-b642-18c840d549fe",
+   "before": null,
+   "after": "$2\\sqrt{12}=4\\sqrt3$\n$\\sqrt3(2\\sqrt3+2\\sqrt2)=6+2\\sqrt6$\n$\\frac{3-6\\sqrt2}{\\sqrt3}=\\sqrt3-2\\sqrt6$\n모두 더하면 $4\\sqrt3+6+2\\sqrt6+\\sqrt3-2\\sqrt6=6+5\\sqrt3$\n따라서 $a=6,\\ b=5$이고 $a+b=11$"
+  },
+  {
+   "id": "94871409-7951-4f46-9f75-50654dbb6cbe",
+   "before": null,
+   "after": "분모를 유리화하면\n$\\frac{2}{3+\\sqrt2}=\\frac{2(3-\\sqrt2)}{(3+\\sqrt2)(3-\\sqrt2)}=\\frac{6-2\\sqrt2}{7}=\\frac67-\\frac27\\sqrt2$\n따라서 $a=\\frac67,\\ b=-\\frac27$이고 $a+b=\\frac47$"
+  },
+  {
+   "id": "c1ead116-88b3-4236-b1e1-3baef4c32fc5",
+   "before": null,
+   "after": "$\\sqrt2\\approx1.414$이므로 $3\\sqrt2\\approx4.243$, $2-3\\sqrt2\\approx-2.24$\n정수부분(내림) $a=-3$\n소수부분 $b=(2-3\\sqrt2)-(-3)=5-3\\sqrt2$\n$3a+2b=-9+2(5-3\\sqrt2)=-9+10-6\\sqrt2=1-6\\sqrt2$"
+  },
+  {
+   "id": "5dcd0d77-a4f8-4174-ab9a-98415778fcf1",
+   "before": null,
+   "after": "$\\sqrt{ab}=5$이므로 $ab=25$\n$\\frac{50}{a}\\sqrt{\\frac{a}{5b}}=\\frac{50}{\\sqrt{5ab}}=\\frac{50}{\\sqrt{125}}=\\frac{50}{5\\sqrt5}=2\\sqrt5$\n$b\\sqrt{\\frac{5a}{b}}=\\sqrt{5ab}=\\sqrt{125}=5\\sqrt5$\n합은 $2\\sqrt5+5\\sqrt5=7\\sqrt5$"
+  },
+  {
+   "id": "a823ff6b-a293-46a8-8605-a2a2aace8ecf",
+   "before": null,
+   "after": "$0<a<1$에서 절댓값을 푼다.\n$\\sqrt{(a+\\frac1a)^{2}}=a+\\frac1a$\n$\\sqrt{(a-\\frac1a)^{2}}=\\frac1a-a$ ($\\frac1a>a$)\n$\\sqrt{(1-\\frac1a)^{2}}=\\frac1a-1$ ($\\frac1a>1$)\n식은 $-(a+\\frac1a)-(\\frac1a-a)+(\\frac1a-1)=-\\frac1a-1$"
+  },
+  {
+   "id": "ad306c2e-5f3b-4945-9ee5-e5ada8ca7a88",
+   "before": null,
+   "after": "$x>3$에서 $5-2x<0$, $x+4>0$이므로\n$\\sqrt{(5-2x)^{2}}-\\sqrt{(x+4)^{2}}=(2x-5)-(x+4)=6$\n$x-9=6$\n$x=15$"
+  },
+  {
+   "id": "ac11c529-2421-4500-ac4c-e9da6792c3e0",
+   "before": null,
+   "after": "$\\sqrt{300}=\\sqrt{100\\times3}=10\\sqrt3$이므로 $\\dfrac{3}{\\sqrt{300}}=\\dfrac{3}{10\\sqrt3}=\\dfrac{\\sqrt3}{10}=0.1\\sqrt3$\n$\\sqrt{0.48}=\\dfrac{\\sqrt{48}}{10}=\\dfrac{4\\sqrt3}{10}=0.4\\sqrt3$\n$\\sqrt{0.75}=\\dfrac{\\sqrt{75}}{10}=\\dfrac{5\\sqrt3}{10}=0.5\\sqrt3$\n따라서 $0.1\\sqrt3-0.4\\sqrt3+0.5\\sqrt3=0.2\\sqrt3=0.2\\times1.732=0.3464$"
+  },
+  {
+   "id": "87aa2aa8-3ec7-4f0a-98e0-439d5b3b1a2d",
+   "before": null,
+   "after": "좌변을 전개하면 $\\sqrt3(\\sqrt6+2\\sqrt2x)=\\sqrt{18}+2\\sqrt6x=3\\sqrt2+2\\sqrt6x$\n우변을 전개하면 $\\sqrt6(x+\\sqrt{12})+\\sqrt2(\\sqrt3-4)=\\sqrt6x+\\sqrt{72}+\\sqrt6-4\\sqrt2=\\sqrt6x+2\\sqrt2+\\sqrt6$\n부등식 $3\\sqrt2+2\\sqrt6x>\\sqrt6x+2\\sqrt2+\\sqrt6$을 정리하면 $\\sqrt6x>\\sqrt6-\\sqrt2$\n$x>1-\\dfrac{\\sqrt2}{\\sqrt6}=1-\\dfrac{\\sqrt3}{3}\\approx0.423$\n이를 만족시키는 가장 작은 정수는 $1$"
+  },
+  {
+   "id": "87369c77-ea0e-4f19-bc86-5b7cef3248cf",
+   "before": null,
+   "after": "$a=9\\sqrt2-2\\sqrt{18}=9\\sqrt2-6\\sqrt2=3\\sqrt2$\n$b=2\\sqrt2\\times3\\sqrt{10}=6\\sqrt{20}=6\\times2\\sqrt5=12\\sqrt5$\n$\\dfrac{a}{b}=\\dfrac{3\\sqrt2}{12\\sqrt5}=\\dfrac{\\sqrt2}{4\\sqrt5}=\\dfrac{\\sqrt2\\times\\sqrt5}{4\\times5}=\\dfrac{\\sqrt{10}}{20}$"
+  },
+  {
+   "id": "ed357cf3-31ad-4238-bc10-4f57dba1f2f8",
+   "before": null,
+   "after": "직선 $\\sqrt3x+y=\\sqrt3$의 $y$절편은 $(0,\\sqrt3)$, 직선 $y=\\sqrt3(x-2)$의 $y$절편은 $(0,-2\\sqrt3)$\n두 직선의 교점: $\\sqrt3(1-x)=\\sqrt3(x-2)$에서 $1-x=x-2$, $x=\\dfrac32$, $y=-\\dfrac{\\sqrt3}{2}$\n세 꼭짓점 $(0,\\sqrt3),(0,-2\\sqrt3),\\left(\\tfrac32,-\\tfrac{\\sqrt3}{2}\\right)$인 삼각형이 만들어짐\n$y$축 위 밑변의 길이는 $\\sqrt3-(-2\\sqrt3)=3\\sqrt3$, 높이는 $\\dfrac32$\n넓이는 $\\dfrac12\\times3\\sqrt3\\times\\dfrac32=\\dfrac94\\sqrt3$"
+  },
+  {
+   "id": "711db70f-6e08-4078-9ae0-4d0099bc2172",
+   "before": null,
+   "after": "① $2\\sqrt5+4\\sqrt5=6\\sqrt5$ 옳음\n② $3\\sqrt7-8\\sqrt7+2\\sqrt7=-3\\sqrt7$ 옳음\n③ $\\sqrt{98}-\\sqrt{18}-\\sqrt{50}=7\\sqrt2-3\\sqrt2-5\\sqrt2=-\\sqrt2$ 옳음\n④ $3\\sqrt{12}+\\dfrac{15}{\\sqrt3}-4\\sqrt3=6\\sqrt3+5\\sqrt3-4\\sqrt3=7\\sqrt3$인데 문제에는 $5\\sqrt3$으로 되어 있어 옳지 않음\n⑤ $\\sqrt{250}+\\dfrac{10}{\\sqrt{10}}-3\\sqrt{10}=5\\sqrt{10}+\\sqrt{10}-3\\sqrt{10}=3\\sqrt{10}$ 옳음\n따라서 옳지 않은 것은 ④"
+  },
+  {
+   "id": "38ad3f86-a19e-4d4d-b844-f36e76d7b99e",
+   "before": null,
+   "after": "$0<x<1$이므로 $-x<0,\\ x>0,\\ -x-1<0,\\ 1-x>0$\n$\\sqrt{(-x)^2}=|-x|=x$\n$\\sqrt{x^2}=|x|=x$\n$\\sqrt{(-x-1)^2}=|-x-1|=x+1$\n$\\sqrt{(1-x)^2}=|1-x|=1-x$\n식의 값은 $x-x+(x+1)-(1-x)=2x$"
+  },
+  {
+   "id": "0ea5263a-f3f1-4302-9be0-9da3e0f92b14",
+   "before": null,
+   "after": "$a=\\sqrt{24}-3=2\\sqrt6-3,\\ b=\\sqrt{12}=2\\sqrt3,\\ c=\\sqrt8=2\\sqrt2$\n$bc=4\\sqrt6$이므로 $V=abc=(2\\sqrt6-3)(4\\sqrt6)=48-12\\sqrt6$\n$ab=12\\sqrt2-6\\sqrt3,\\ bc=4\\sqrt6,\\ ca=8\\sqrt3-6\\sqrt2$이므로 $S=2(ab+bc+ca)=12\\sqrt2+4\\sqrt3+8\\sqrt6$\n$2V+3S=(96-24\\sqrt6)+(36\\sqrt2+12\\sqrt3+24\\sqrt6)=96+36\\sqrt2+12\\sqrt3$\n따라서 $p=96,q=36,r=12$이고 $p+q+r=144$"
+  },
+  {
+   "id": "c52e8ba4-867f-459e-93f9-7ec05dfb7700",
+   "before": null,
+   "after": "① $\\sqrt2\\sqrt3=\\sqrt6$인데 $\\sqrt5$로 되어 있어 틀림\n② $2\\sqrt3\\times\\sqrt5=2\\sqrt{15}$인데 $\\sqrt{30}$으로 되어 있어 틀림\n③ $3\\sqrt6\\div\\sqrt2=3\\sqrt3$인데 $3\\sqrt2$로 되어 있어 틀림\n④ $4\\sqrt{14}\\div\\sqrt2=4\\sqrt7$인데 $2\\sqrt7$로 되어 있어 틀림\n⑤ $3\\sqrt2\\times2\\sqrt5=6\\sqrt{10}$은 옳음\n따라서 바르게 계산한 것은 ⑤"
+  },
+  {
+   "id": "7481040b-518e-44f2-b4ac-1e5d8c622a78",
+   "before": null,
+   "after": "$h=20$을 대입하면 가시거리는 $\\sqrt{27.2\\times20}=\\sqrt{544}$\n$544=5.44\\times100$이므로 $\\sqrt{544}=\\sqrt{5.44}\\times\\sqrt{100}=2.3\\times10=23$\n따라서 볼 수 있는 가장 먼 거리는 $23$km"
+  },
+  {
+   "id": "86ad399b-57b5-4df0-85e3-86344f808500",
+   "before": null,
+   "after": "$x=\\dfrac{\\sqrt7-\\sqrt5}{\\sqrt7+\\sqrt5}=\\dfrac{(\\sqrt7-\\sqrt5)^2}{2}=6-\\sqrt{35}$, $y=\\dfrac{\\sqrt7+\\sqrt5}{\\sqrt7-\\sqrt5}=\\dfrac{(\\sqrt7+\\sqrt5)^2}{2}=6+\\sqrt{35}$이므로 $xy=1$\n$4x^3y-8x^2y^2+4xy^3=4xy(x^2-2xy+y^2)=4xy(x-y)^2$\n$x-y=(6-\\sqrt{35})-(6+\\sqrt{35})=-2\\sqrt{35}$이므로 $(x-y)^2=140$\n따라서 식의 값은 $4\\times1\\times140=560$"
+  },
+  {
+   "id": "4f579c7f-4e77-4341-a291-bd8f43057516",
+   "before": null,
+   "after": "$\\sqrt{72a}=b\\sqrt3$의 양변을 제곱하면 $72a=3b^2$, 즉 $b^2=24a$\n$b$가 자연수이려면 $24a$가 완전제곱수여야 하므로 $a=6m^2$ ($m$은 자연수) 꼴이어야 하고 이때 $b=12m$\n$a$가 두 자리 자연수가 되는 $m=2,3,4$에서 $(a,b)=(24,24),(54,36),(96,48)$\n$a+b$의 값은 각각 $48,90,144$이므로 가장 작은 값은 $48$"
+  },
+  {
+   "id": "847a47c6-ee5f-41ac-bb73-3f00f7c17f5a",
+   "before": null,
+   "after": "$a=\\dfrac{4}{4+2\\sqrt3}=\\dfrac{2}{2+\\sqrt3}=2(2-\\sqrt3)=4-2\\sqrt3$\n$b=\\dfrac{1}{2-\\sqrt3}=2+\\sqrt3$\n$a^2+4ab+4b^2=(a+2b)^2$이고 $a+2b=(4-2\\sqrt3)+(4+2\\sqrt3)=8$이므로 분자는 $64$\n$a-2b=(4-2\\sqrt3)-(4+2\\sqrt3)=-4\\sqrt3$\n식의 값은 $\\dfrac{64}{-4\\sqrt3}=-\\dfrac{16}{3}\\sqrt3$이므로 $p=3,q=16$, $q-p=13$"
+  },
+  {
+   "id": "f53b1dce-6721-4011-856d-baa944d2f5e1",
+   "before": null,
+   "after": "$\\sqrt{1200}=\\sqrt{12\\times100}=10\\sqrt{12}$\n주어진 값 $\\sqrt{12}=3.464$를 대입하면 $10\\times3.464=34.64$"
+  },
+  {
+   "id": "0020ddf1-86a6-4b53-8d51-57b1c5a5b512",
+   "before": null,
+   "after": "$f(x)=\\sqrt x+\\sqrt{x+1}$이므로 $\\dfrac{1}{f(n)}=\\dfrac{1}{\\sqrt n+\\sqrt{n+1}}=\\sqrt{n+1}-\\sqrt n$ (분모를 유리화)\n$\\displaystyle\\sum_{n=1}^{48}\\dfrac{1}{f(n)}=\\sum_{n=1}^{48}(\\sqrt{n+1}-\\sqrt n)$은 중간 항이 상쇄되는 합\n$=\\sqrt{49}-\\sqrt1=7-1=6$"
+  },
+  {
+   "id": "e872f00f-5466-4780-9c23-6fdde9e9f2c9",
+   "before": null,
+   "after": "$\\sqrt{343}=\\sqrt{49\\times7}=7\\sqrt7$, $\\dfrac{1}{\\sqrt7}=\\dfrac{\\sqrt7}{7}$\n식을 정리하면 $7\\sqrt7-\\dfrac{\\sqrt7}{7}-4\\sqrt7+x\\sqrt7=\\sqrt7\\left(\\dfrac{20}{7}+x\\right)$\n$\\sqrt7$은 무리수이므로 유리수가 되려면 $\\dfrac{20}{7}+x=0$\n따라서 $x=-\\dfrac{20}{7}$"
+  },
+  {
+   "id": "99ae5273-d4fe-43be-afbf-d8b49e915446",
+   "before": null,
+   "after": "$A=\\dfrac{\\sqrt5+\\sqrt{15}}{\\sqrt5}=1+\\sqrt3\\approx2.73$\n$B=\\sqrt6\\times\\sqrt{32}-3\\sqrt{60}\\div\\sqrt5=\\sqrt{192}-3\\sqrt{12}=8\\sqrt3-6\\sqrt3=2\\sqrt3\\approx3.46$\n$C=\\dfrac{2}{\\sqrt5-\\sqrt3}-\\dfrac{2}{\\sqrt7-\\sqrt5}=(\\sqrt5+\\sqrt3)-(\\sqrt7+\\sqrt5)=\\sqrt3-\\sqrt7\\approx-0.91$\n따라서 $C<A<B$"
+  },
+  {
+   "id": "5170c5b4-0c45-4418-bbbc-1513c49e03fe",
+   "before": null,
+   "after": "$\\sqrt{48}=4\\sqrt3,\\ \\sqrt{18}=3\\sqrt2,\\ \\sqrt{12}=2\\sqrt3,\\ \\sqrt{98}=7\\sqrt2$\n식을 정리하면 $4\\sqrt3-3\\sqrt2+2\\sqrt3+7\\sqrt2=6\\sqrt3+4\\sqrt2$\n즉 $a=4,\\ b=6$이므로 $a-b=4-6=-2$"
+  },
+  {
+   "id": "431158e3-cceb-4484-8691-d34d3073f53f",
+   "before": null,
+   "after": "① $\\sqrt2\\times\\sqrt3=\\sqrt6$ 옳음\n② $\\sqrt{200}\\div\\sqrt4=\\sqrt{50}=5\\sqrt2$ 옳음\n③ $\\sqrt{18}\\times\\left(-\\dfrac{\\sqrt2}{3}\\right)=-\\dfrac{\\sqrt{36}}{3}=-2$ 옳음\n④ $-4\\sqrt6\\div2\\sqrt2=-2\\sqrt3$ 옳음\n⑤ $\\sqrt{15}\\times(-\\sqrt3)=-\\sqrt{45}=-3\\sqrt5$인데 $-5\\sqrt3$로 되어 있어 틀림\n따라서 옳지 않은 것은 ⑤"
+  },
+  {
+   "id": "41259b48-5976-4da7-9abb-77c7b059bad2",
+   "before": null,
+   "after": "$x<-2$이므로 $x-2<0,\\ -x>0,\\ 2-x>0$\n$\\sqrt{9(x-2)^2}=3|x-2|=3(2-x)=6-3x$\n$(-\\sqrt{-x})^2=(\\sqrt{-x})^2=-x$\n$\\sqrt{(2-x)^2}=|2-x|=2-x$\n식의 값은 $(6-3x)+(-x)-(2-x)=4-3x$"
+  },
+  {
+   "id": "92ad0b52-6aff-4167-a054-dc4c6b6b154f",
+   "before": null,
+   "after": "$0<a<1$이므로 $a+\\frac{1}{a}>0$, $a-\\frac{1}{a}<0$, $a^2-a<0$이다.\n$\\sqrt{(a+\\frac{1}{a})^2}=a+\\frac{1}{a}$, $\\sqrt{(a-\\frac{1}{a})^2}=\\frac{1}{a}-a$, $\\sqrt{(a^2-a)^2}=a-a^2$\n따라서 주어진 식은 $(a+\\frac{1}{a})-(\\frac{1}{a}-a)+(a-a^2)=3a-a^2=-a^2+3a$"
+  },
+  {
+   "id": "d0bbb239-fc8e-41ca-8317-8997ae1be7a9",
+   "before": null,
+   "after": "직사각형의 넓이는 $8\\times4=32$이다.\n정사각형의 한 변의 길이를 $x$라 하면 $x^2=32$\n$x>0$이므로 $x=\\sqrt{32}=4\\sqrt{2}$"
+  },
+  {
+   "id": "6ccc9faa-bdf0-45cd-a736-404bbb82b34a",
+   "before": null,
+   "after": "$\\sqrt{125}=5\\sqrt5$, $\\frac{1}{\\sqrt5}=\\frac{\\sqrt5}{5}$이므로\n$x\\sqrt5+5\\sqrt5-4\\sqrt5-\\frac{\\sqrt5}{5}=\\left(x+1-\\frac15\\right)\\sqrt5=\\left(x+\\frac45\\right)\\sqrt5$\n이 식이 유리수가 되려면 $\\sqrt5$의 계수가 0이어야 하므로 $x+\\frac45=0$\n따라서 $x=-\\frac45$"
+  },
+  {
+   "id": "5bb2d741-bef8-45a8-b2be-049316f4274e",
+   "before": null,
+   "after": "① $\\sqrt{48}-\\frac{6}{\\sqrt3}+\\sqrt{108}=4\\sqrt3-2\\sqrt3+6\\sqrt3=8\\sqrt3$ (아님)\n② $\\sqrt{18}-\\sqrt3(5\\sqrt6-\\sqrt{24})=3\\sqrt2-9\\sqrt2=-6\\sqrt2$ (아님)\n③ 계산하면 $-\\frac{\\sqrt6}{6}$ (아님), ④ 계산하면 $6-4\\sqrt6$ (아님)\n⑤ $\\frac{2}{\\sqrt2}-3\\sqrt6\\div\\frac{\\sqrt3}{6}-\\frac{\\sqrt{32}}{2}=\\sqrt2-18\\sqrt2-2\\sqrt2=-19\\sqrt2$ (맞음)\n따라서 옳은 것은 ⑤이다."
+  },
+  {
+   "id": "4be37cae-0088-46d3-bc7c-244712e02f3d",
+   "before": null,
+   "after": "$\\sqrt2\\left(\\frac{12}{\\sqrt6}-\\frac{10}{\\sqrt8}\\right)=4\\sqrt3-5$\n$\\frac{1}{\\sqrt3}\\left(6-\\frac{4}{\\sqrt{12}}\\right)=2\\sqrt3-\\frac23$\n주어진 식 $=(4\\sqrt3-5)-\\left(2\\sqrt3-\\frac23\\right)=2\\sqrt3-\\frac{13}{3}$\n따라서 $a=2$, $b=-\\frac{13}{3}$이므로 $2a+3b=4-13=-9$"
+  },
+  {
+   "id": "ba00d956-d3ca-4d97-a7a0-12ca1e8a782e",
+   "before": null,
+   "after": "$\\sqrt{20}=2\\sqrt5$이므로\n$5\\sqrt5-\\sqrt{20}=5\\sqrt5-2\\sqrt5=3\\sqrt5$"
+  },
+  {
+   "id": "ee731a6a-0188-42ed-9cd6-f61eea5ddc21",
+   "before": null,
+   "after": "$\\frac{2\\sqrt3}{\\sqrt2}=\\sqrt6$\n$\\frac{3\\sqrt2-6}{\\sqrt6}=\\frac{(3\\sqrt2-6)\\sqrt6}{6}=\\frac{6\\sqrt3-6\\sqrt6}{6}=\\sqrt3-\\sqrt6$\n따라서 주어진 식 $=\\sqrt6-(\\sqrt3-\\sqrt6)=2\\sqrt6-\\sqrt3=-\\sqrt3+2\\sqrt6$"
+  },
+  {
+   "id": "38ad057b-d39e-45a4-af13-4ed29378e1e0",
+   "before": null,
+   "after": "$\\frac{2}{3\\sqrt{32}}=\\frac{2}{12\\sqrt2}=\\frac{\\sqrt2}{12}=a\\sqrt2$이므로 $a=\\frac{1}{12}$\n$\\frac{3\\sqrt2}{\\sqrt{10}}=\\frac{3}{\\sqrt5}=\\frac{3\\sqrt5}{5}=b\\sqrt5$이므로 $b=\\frac35$\n$ab=\\frac{1}{12}\\times\\frac35=\\frac{1}{20}$이므로 $\\sqrt{ab}=\\sqrt{\\frac{1}{20}}=\\frac{\\sqrt5}{10}$"
+  },
+  {
+   "id": "f300ed98-7285-4c72-b46b-93b746a6ac6c",
+   "before": null,
+   "after": "$2\\sqrt{32}=8\\sqrt2$, $\\sqrt{45}=3\\sqrt5$, $\\sqrt{20}=2\\sqrt5$이므로\n좌변 $=8\\sqrt2+3\\sqrt5+a\\sqrt2+2\\sqrt5-\\sqrt5=(8+a)\\sqrt2+4\\sqrt5$\n우변 $=5\\sqrt2+b\\sqrt5$이므로 $8+a=5$, $b=4$, 즉 $a=-3$\n따라서 $a+b=1$"
+  },
+  {
+   "id": "2cc68b95-0213-41d6-b40b-a3d9abb13890",
+   "before": null,
+   "after": "연속하는 세 짝수를 $y-2,y,y+2$라 하면 합은 $3y$이고 $\\sqrt{3y}=k$이므로 $3y$는 제곱수이다.\n$3y$가 제곱수이려면 $y=3m^2$($m$은 자연수) 꼴이어야 하고, $y$가 짝수이려면 $m$도 짝수여야 하므로 $m=2n$이라 하면 $y=12n^2$\n세 짝수의 합이 $150$ 미만이므로 $3y<150$, 즉 $y<50$\n$n=1$이면 $y=12$, $n=2$이면 $y=48$이 조건을 만족한다\n따라서 모든 $y$의 값의 합은 $12+48=60$"
+  },
+  {
+   "id": "1a5856e4-2d89-4d3d-9604-c0a26116e8cf",
+   "before": null,
+   "after": "직사각형의 넓이는 (가로)$\\times$(세로)이므로\n세로의 길이는 $\\sqrt{12}\\div\\sqrt3=\\sqrt{\\frac{12}{3}}=\\sqrt4=2$"
+  },
+  {
+   "id": "6285f1fb-fbe1-4b64-aad4-3200272bca43",
+   "before": null,
+   "after": "$(\\sqrt{18}-2\\sqrt6)\\div\\sqrt3=\\frac{3\\sqrt2-2\\sqrt6}{\\sqrt3}=\\sqrt6-2\\sqrt2$\n$\\sqrt2(\\sqrt3-5)=\\sqrt6-5\\sqrt2$\n주어진 식 $=(\\sqrt6-2\\sqrt2)+(\\sqrt6-5\\sqrt2)=2\\sqrt6-7\\sqrt2$\n따라서 $a=-7$, $b=2$이므로 $a+b=-5$"
+  },
+  {
+   "id": "25c9002d-54ab-4af9-b98d-3ff8756cc6ad",
+   "before": null,
+   "after": "제곱근표에서 $\\sqrt{6.23}$은 $6.2$행, $3$열의 값이므로 $a=2.496$\n$\\sqrt{6.42}$는 $6.4$행, $2$열의 값이므로 $b=2.534$\n따라서 $1000(b-a)=1000\\times0.038=38$"
+  },
+  {
+   "id": "302eadb1-fede-4c35-8310-a88656ee4773",
+   "before": null,
+   "after": "$\\sqrt{5.7}=2.387$을 이용하려면 $5.7$에 $100$의 거듭제곱을 곱하거나 나눈 꼴, 즉 소수점이 짝수 자리만큼 이동한 수여야 한다.\n$0.00057=5.7\\times10^{-4}$, $0.057=5.7\\times10^{-2}$, $570=5.7\\times10^{2}$, $57000=5.7\\times10^{4}$는 모두 짝수 자리 이동이라 값을 구할 수 있다.\n그러나 $0.57=5.7\\times10^{-1}$은 소수점이 홀수 자리만큼 이동하므로 주어진 값만으로는 구할 수 없다."
+  },
+  {
+   "id": "78faf82d-553b-4fe5-bcc3-e68eb5b19643",
+   "before": null,
+   "after": "① $\\sqrt5\\approx2.24>2$이므로 거짓\n② 제곱하면 $75>45$이므로 $5\\sqrt3>3\\sqrt5$, 거짓\n③ $5-\\sqrt2<\\sqrt{18}=3\\sqrt2 \\Leftrightarrow 5<4\\sqrt2 \\Leftrightarrow \\sqrt2>1.25$인데 $\\sqrt2\\approx1.414$이므로 참\n④ $\\sqrt3>\\sqrt2$이므로 $\\sqrt3+1>\\sqrt2+1$, 거짓\n⑤ $3\\sqrt2<\\sqrt5+\\sqrt2 \\Leftrightarrow 2\\sqrt2<\\sqrt5$인데 제곱하면 $8<5$로 거짓\n따라서 옳은 것은 ③이다."
+  },
+  {
+   "id": "7972ff08-a11b-431c-8eab-f2892a4203ae",
+   "before": null,
+   "after": "$2\\sqrt3(1-\\sqrt3)=2\\sqrt3-6$\n$\\frac{3}{\\sqrt3}=\\sqrt3$\n따라서 주어진 식 $=2\\sqrt3-6+\\sqrt3=3\\sqrt3-6$"
+  },
+  {
+   "id": "0e447916-8367-48b9-bfc5-dabe5b8df317",
+   "before": null,
+   "after": "① $\\sqrt6\\sqrt7=\\sqrt{42}$이므로 거짓\n② $\\sqrt{54}\\sqrt{\\frac56}=\\sqrt{54\\times\\frac56}=\\sqrt{45}=3\\sqrt5$이므로 참\n③ $\\sqrt{50}\\div\\sqrt5=\\sqrt{10}$이므로 거짓\n④ $\\sqrt{18}\\div\\frac{\\sqrt3}{5}=5\\sqrt6$이므로 거짓\n⑤ $3\\sqrt2\\times2\\sqrt6=6\\sqrt{12}=12\\sqrt3$이므로 거짓\n따라서 옳은 것은 ②이다."
+  },
+  {
+   "id": "958d9155-e03e-4463-acba-0746916daa04",
+   "before": null,
+   "after": "$50\\times2025=2\\times25\\times2025$이므로 $A=\\sqrt{2025^2-2\\times25\\times2025+25^2}=\\sqrt{(2025-25)^2}=\\sqrt{2000^2}=2000$\n$B=225^2-25^2=(225-25)(225+25)=200\\times250=50000$\n따라서 $\\frac{B}{A}=\\frac{50000}{2000}=25$"
+  },
+  {
+   "id": "9b7cbf70-5650-47ad-aa6d-00d1616396b9",
+   "before": null,
+   "after": "$3\\sqrt2=\\sqrt{18}$이고 $4<\\sqrt{18}<5$이므로 정수부분은 $4$, 소수부분은 $a=3\\sqrt2-4$\n$a^2=(3\\sqrt2-4)^2=18-24\\sqrt2+16=34-24\\sqrt2$, $10a=30\\sqrt2-40$\n따라서 $a^2+10a+2=34-24\\sqrt2+30\\sqrt2-40+2=-4+6\\sqrt2$"
+  },
+  {
+   "id": "055cbeec-1f49-4b19-b6e7-955d4d014bb3",
+   "before": null,
+   "after": "$\\frac{2\\sqrt3+4}{\\sqrt3}=2+\\frac{4}{\\sqrt3}=2+\\frac{4\\sqrt3}{3}$\n$\\sqrt2(\\sqrt6-\\sqrt2)=\\sqrt{12}-2=2\\sqrt3-2$\n주어진 식 $=\\left(2+\\frac{4\\sqrt3}{3}\\right)-(2\\sqrt3-2)=4-\\frac{2\\sqrt3}{3}$\n따라서 $a=4$, $b=-\\frac23$이므로 $\\frac{a}{b}=4\\div\\left(-\\frac23\\right)=-6$"
+  },
+  {
+   "id": "c9852e32-9756-4b29-9016-99258e5be13f",
+   "before": null,
+   "after": "$\\sqrt{80}=4\\sqrt5$, $\\sqrt{45}=3\\sqrt5$이고 $\\sqrt5≈2.236$이므로 $4\\sqrt5≈8.94$, $3\\sqrt5≈6.71$이다.\n$f(80)=4\\sqrt5-8$, $f(45)=3\\sqrt5-6$이다.\n$f(80)-f(45)=(4\\sqrt5-8)-(3\\sqrt5-6)=\\sqrt5-2=-2+\\sqrt5$이다."
+  },
+  {
+   "id": "8c938852-7f65-4680-b83f-673d18a10b3b",
+   "before": null,
+   "after": "$30=2×3×5$는 제곱인수가 없으므로 $\\sqrt{30n}$이 자연수가 되려면 $n=30k^2$($k$는 자연수) 꼴이어야 한다.\n$k=1$이면 $n=30$, $k=2$이면 $n=120$, $k=3$이면 $n=270$으로 범위를 벗어난다.\n따라서 $10≤n<150$을 만족하는 $n$은 $30, 120$으로 2개이다."
+  },
+  {
+   "id": "016c8379-ff33-4a1e-b004-cf41b333717c",
+   "before": null,
+   "after": "$\\sqrt{27}+\\sqrt3=3\\sqrt3+\\sqrt3=4\\sqrt3=a\\sqrt3$이므로 $a=4$이다.\n$\\sqrt{20}-\\sqrt5=2\\sqrt5-\\sqrt5=\\sqrt5=\\sqrt b$이므로 $b=5$이다.\n$a^2+b=16+5=21$이다."
+  },
+  {
+   "id": "ac22b8da-4ab5-4777-bcd7-3b8777fb51e6",
+   "before": null,
+   "after": "$\\sqrt{24}÷\\sqrt3=\\sqrt8=2\\sqrt2$이다.\nㄱ. $\\sqrt2+\\sqrt2=2\\sqrt2$ (같음), ㄴ. $\\sqrt{16}÷\\sqrt{21}=4/\\sqrt{21}$ (다름), ㄷ. $2\\sqrt3/\\sqrt6=\\sqrt2$ (다름)\nㄹ. $\\sqrt2×\\sqrt4=2\\sqrt2$ (같음), ㅁ. $\\sqrt{32}-2\\sqrt2=4\\sqrt2-2\\sqrt2=2\\sqrt2$ (같음)\nㅂ. $6/\\sqrt2-\\sqrt8/2=3\\sqrt2-\\sqrt2=2\\sqrt2$ (같음)\n따라서 ㄱ, ㄹ, ㅁ, ㅂ이 $2\\sqrt2$와 같다."
+  },
+  {
+   "id": "d0a03538-33c2-4964-ae70-fb9634cc4264",
+   "before": null,
+   "after": "$n+2<\\sqrt x≤n+k$는 $(n+2)^2<x≤(n+k)^2$와 같으므로 정수 $x$의 개수는 $(n+k)^2-(n+2)^2=(k-2)(2n+k+2)$이다.\n이것이 $(k+10)(k-2)$와 같아야 하므로 $k≠2$일 때 $2n+k+2=k+10$, 즉 $n=4$이다.\n$k=2$이면 개수가 0이 되어 조건에 맞지 않으므로 $k$는 3 이상이어야 하고, $x$가 최소가 되는 경우는 $k=3$, $n=4$일 때이다.\n이때 $6<\\sqrt x≤7$, 즉 $36<x≤49$이므로 $x$의 최솟값은 37이다."
+  },
+  {
+   "id": "f59c686b-3975-4f32-ab2e-1f68cc5eb5c0",
+   "before": null,
+   "after": "$\\sqrt{50}=5\\sqrt2$, $3\\sqrt{12}=6\\sqrt3$, $\\dfrac4{\\sqrt2}=2\\sqrt2$이므로 식은 $5\\sqrt2-6\\sqrt3+2\\sqrt2+5\\sqrt3$이다.\n정리하면 $7\\sqrt2-\\sqrt3=a\\sqrt2+b\\sqrt3$이므로 $a=7$, $b=-1$이다.\n$a+2b=7-2=5$이다."
+  },
+  {
+   "id": "f9111ce2-6380-4f68-bcc4-602a8f08ed60",
+   "before": null,
+   "after": "$5+\\sqrt2≈6.41$이므로 정수부분은 6, 소수부분 $a=\\sqrt2-1$이다.\n$2+\\sqrt5≈4.24$이므로 정수부분은 4, 소수부분 $b=\\sqrt5-2$이다.\n$(\\sqrt2+1)a=(\\sqrt2+1)(\\sqrt2-1)=1$이고, $\\dfrac1{(\\sqrt5+2)b}=\\dfrac1{(\\sqrt5+2)(\\sqrt5-2)}=1$이다.\n따라서 구하는 값은 $1+1=2$이다."
+  },
+  {
+   "id": "d1a82a62-a87d-460e-b82e-f0b39044125b",
+   "before": null,
+   "after": "$\\sqrt3x-3y=\\sqrt3(2x-\\sqrt2y)=2\\sqrt3x-\\sqrt6y$에서 정리하면 $y(\\sqrt6-3)=\\sqrt3x$이다.\n따라서 $x=\\dfrac{y(\\sqrt6-3)}{\\sqrt3}=(\\sqrt2-\\sqrt3)y$이다.\n이를 대입하면 $\\sqrt2x-y=(2-\\sqrt6)y-y=(1-\\sqrt6)y$이고 $x+\\sqrt3y=(\\sqrt2-\\sqrt3)y+\\sqrt3y=\\sqrt2y$이다.\n구하는 값은 $\\dfrac{(1-\\sqrt6)y}{\\sqrt2y}=\\dfrac{1-\\sqrt6}{\\sqrt2}=\\dfrac{\\sqrt2-2\\sqrt3}2$이다."
+  },
+  {
+   "id": "1e80a16b-0f07-4cc8-814b-b5a5723f1cc9",
+   "before": null,
+   "after": "$\\sqrt{0.2}=\\dfrac{\\sqrt5}5=\\dfrac{2.236}5=0.4472$로 $\\sqrt5$를 이용해 구할 수 있다.\n$\\sqrt{0.5}=\\dfrac{\\sqrt{50}}{10}=\\dfrac{7.071}{10}=0.7071$로 $\\sqrt{50}$을 이용해 구할 수 있다.\n$\\sqrt2=\\dfrac{\\sqrt{50}}5=\\dfrac{7.071}5=1.4142$로 $\\sqrt{50}$을 이용해 구할 수 있다.\n$\\sqrt{500}=10\\sqrt5=10×2.236=22.36$으로 $\\sqrt5$를 이용해 구할 수 있다.\n따라서 ㄱ, ㄴ, ㄷ, ㄹ 모두 값을 구할 수 있다."
+  },
+  {
+   "id": "8a6144d5-fd6e-4a0b-8198-d820cf3e3294",
+   "before": null,
+   "after": "$3<x<4$의 각 변에 6을 더하면 $9<x+6<10$이다.\n$x+6$이 자연수 $n$의 양의 제곱근이므로 $n=(x+6)^2$이고 $81<n<100$이다.\n따라서 $n$이 자연수이므로 가장 작은 값은 82이다."
+  },
+  {
+   "id": "a6b92174-cc8a-4a5c-a78f-f54baeed140c",
+   "before": null,
+   "after": "$6\\sqrt5÷\\sqrt3×2=\\dfrac{12\\sqrt5}{\\sqrt3}=\\dfrac{12\\sqrt5×\\sqrt3}3=\\dfrac{12\\sqrt{15}}3=4\\sqrt{15}$이다.\n따라서 $a\\sqrt{15}=4\\sqrt{15}$이므로 $a=4$이다."
+  },
+  {
+   "id": "1c89bc8f-d250-45b0-b715-89781e758363",
+   "before": null,
+   "after": "$\\mathrm P=\\sqrt{169}-(-\\sqrt6)^2+\\sqrt{(-3)^2}-(\\sqrt{11})^2=13-6+3-11=-1$이다.\n$\\mathrm Q$의 첫째 항: $\\dfrac{3\\sqrt7-\\sqrt2}{\\sqrt7}=3-\\dfrac{\\sqrt{14}}7$이다.\n$\\sqrt{42}÷\\dfrac{7\\sqrt2}{2\\sqrt6}=\\dfrac{12\\sqrt7}{7\\sqrt2}=\\dfrac{6\\sqrt{14}}7$이고, $\\sqrt7×\\sqrt{98}=\\sqrt{686}=7\\sqrt{14}$이므로 둘의 합은 $\\dfrac{55\\sqrt{14}}7$이다.\n$\\mathrm Q=3-\\dfrac{\\sqrt{14}}7-\\dfrac{55\\sqrt{14}}7=3-8\\sqrt{14}$이므로 $\\mathrm P+\\mathrm Q=-1+3-8\\sqrt{14}=2-8\\sqrt{14}$이다."
+  },
+  {
+   "id": "8cbc81a4-1973-47fe-a96b-23a69a956b57",
+   "before": null,
+   "after": "$\\sqrt{50}=7.071$이므로 $\\sqrt{0.5}=\\dfrac{\\sqrt{50}}{10}=0.7071$이다.\n따라서 $\\sqrt a=0.7071$을 만족하는 $a=0.5$이다."
+  },
+  {
+   "id": "c4bfa030-475d-452b-9388-74634ab56998",
+   "before": null,
+   "after": "$\\sqrt{18}÷\\sqrt3=\\sqrt6$이다.\n$\\sqrt6×\\sqrt{24}=\\sqrt{144}=12$이다.\n따라서 계산 결과는 12이다."
+  },
+  {
+   "id": "622e994d-5261-4155-8899-04a9d333abb9",
+   "before": null,
+   "after": "$\\sqrt{5a}$가 유리수(자연수)가 되려면 $5a$가 완전제곱수여야 하므로 $a=5k^2$($k$는 자연수) 꼴이어야 한다.\n$a≤100$에서 $k=1,2,3,4$일 때 $a=5,20,45,80$으로 4개이다.\n따라서 $\\sqrt{5a}$가 무리수가 되는 $a$의 개수는 $100-4=96$이다."
+  },
+  {
+   "id": "7ab74096-35fa-445c-82c3-d2f97f4a5c43",
+   "before": null,
+   "after": "$\\dfrac{\\sqrt{30}-\\sqrt5}{\\sqrt5}=\\dfrac{\\sqrt{30}}{\\sqrt5}-1=\\sqrt6-1$이다.\n$\\dfrac{\\sqrt{42}-\\sqrt7}{\\sqrt7}=\\dfrac{\\sqrt{42}}{\\sqrt7}-1=\\sqrt6-1$이다.\n두 식을 더하면 $(\\sqrt6-1)+(\\sqrt6-1)=2\\sqrt6-2$이다."
+  },
+  {
+   "id": "7c98cae5-9560-4b3a-9aaa-53ef2265d380",
+   "before": null,
+   "after": "① $1+\\sqrt5≈3.24>3$이므로 거짓이다.\n② $\\sqrt4+\\sqrt7≈2+2.65=4.65>4$이므로 거짓이다.\n③ $1-3\\sqrt5≈1-6.71=-5.71$이므로 $-5<1-3\\sqrt5$는 거짓이다.\n④ $\\sqrt5-2<\\sqrt3-2$는 $\\sqrt5<\\sqrt3$과 같은데 이는 거짓이다.\n⑤ $7\\sqrt3-\\sqrt{27}=4\\sqrt3≈6.93$이고 $\\sqrt6+\\sqrt{24}=3\\sqrt6≈7.35$이므로 참이다."
+  },
+  {
+   "id": "ee7e7d30-b66d-4d73-9775-b297e6fd0fd4",
+   "before": null,
+   "after": "$20=2^2×5$이므로 $\\sqrt{20n}$이 자연수가 되려면 $n=5k^2$($k$는 자연수) 꼴이어야 한다.\n$n≤100$에서 $5k^2≤100$, 즉 $k^2≤20$이므로 $k=1,2,3,4$가 가능하다.\n따라서 $n=5,20,45,80$으로 개수는 4개이다."
+  },
+  {
+   "id": "8d734496-53de-4597-b9f4-534a341dff71",
+   "before": null,
+   "after": "$\\sqrt{16}=4$이므로 4의 음의 제곱근은 $A=-2$이다.\n$(-8)^2=64$이므로 64의 양의 제곱근은 $B=8$이다.\n$A+B=-2+8=6$이다."
+  },
+  {
+   "id": "51b79939-eb34-4b4b-b126-489ca3ccdecd",
+   "before": null,
+   "after": "ㄱ. $a>0,b>0$이면 $\\sqrt{a^2}+\\sqrt{b^2}=a+b$로 참이다.\nㄴ. $a<0,b>0$이면 $\\sqrt{a^2}=-a$이므로 $-\\sqrt{a^2}+\\sqrt{b^2}=a+b$로 참이다.\nㄷ. $a<0,b>0$이면 $\\sqrt{(-a)^2}=-a$, $\\sqrt{b^2}=b$이므로 좌변은 $-a+b$가 되어 $-a-b$와 다르므로 거짓이다.\nㄹ. $a>0,b<0$이면 $\\sqrt{(-a)^2}=a$, $\\sqrt{(-b)^2}=-b$이므로 좌변은 $a-b$가 되어 $-a-b$와 다르므로 거짓이다.\n따라서 옳은 것은 ㄱ, ㄴ이다."
+  },
+  {
+   "id": "174c69d9-5c6a-430c-9992-95f7891ce31c",
+   "before": null,
+   "after": "$\\frac{2-\\sqrt3}{2+\\sqrt3}$의 분모를 유리화하면 $(2-\\sqrt3)^2=7-4\\sqrt3$\n$\\frac{2+\\sqrt3}{2-\\sqrt3}$의 분모를 유리화하면 $(2+\\sqrt3)^2=7+4\\sqrt3$\n두 식을 빼면 $(7-4\\sqrt3)-(7+4\\sqrt3)=-8\\sqrt3$"
+  },
+  {
+   "id": "e1b28f93-1388-46f5-9882-dbf21da0abb8",
+   "before": null,
+   "after": "①,②,③,④는 좌변을 정리하면 모두 우변과 같다.\n⑤ $\\sqrt{63}=3\\sqrt7$이므로 분자는 $3\\sqrt7+2\\sqrt{21}$이고,\n이를 $-\\sqrt7$로 나누면 $-3-2\\sqrt3$가 되어 주어진 $-3-\\sqrt3$와 다르다.\n따라서 옳지 않은 것은 ⑤이다."
+  },
+  {
+   "id": "44459cc2-9e5e-4243-971e-a375ff01f70e",
+   "before": null,
+   "after": "① $\\sqrt6×\\sqrt2=\\sqrt{12}=2\\sqrt3$ (틀림)\n② $\\sqrt{12}+4\\sqrt3=2\\sqrt3+4\\sqrt3=6\\sqrt3$ (틀림)\n③ $5\\sqrt3-2\\sqrt3=3\\sqrt3$ (틀림)\n④ $\\sqrt{28}÷\\frac{\\sqrt7}{\\sqrt5}×\\frac{\\sqrt3}{2}=2\\sqrt5×\\frac{\\sqrt3}{2}=\\sqrt{15}$ (맞음)\n⑤ $\\sqrt5(3\\sqrt2+\\sqrt{10})=3\\sqrt{10}+5\\sqrt2$ (틀림)\n따라서 옳은 것은 ④이다."
+  },
+  {
+   "id": "5c55d71c-3c22-4e64-96a5-b3380db5166e",
+   "before": null,
+   "after": "$\\sqrt{27000}=\\sqrt{2.7×10000}=100\\sqrt{2.7}=100a$\n$\\sqrt{0.53}=\\sqrt{53×0.01}=0.1\\sqrt{53}=\\frac{1}{10}b$\n따라서 $\\sqrt{27000}-\\sqrt{0.53}=100a-\\frac{1}{10}b$"
+  },
+  {
+   "id": "1471daa4-884f-4911-879d-ca4b15d62307",
+   "before": null,
+   "after": "$\\sqrt{0.017}=\\sqrt{1.7×0.01}=0.1\\sqrt{1.7}=\\frac{1}{10}a$\n$\\sqrt{1700}=\\sqrt{17×100}=10\\sqrt{17}=10b$\n$\\sqrt{0.017}+\\sqrt{1700}=\\frac{1}{10}a+10b$이므로 $x=\\frac{1}{10}, y=10$\n$xy^2=\\frac{1}{10}×100=10$"
+  },
+  {
+   "id": "dadf6af2-621e-4a1e-b97c-25836130b5a3",
+   "before": null,
+   "after": "$0.00548=54.8×10^{-4}$이므로\n$\\sqrt{0.00548}=\\sqrt{54.8}×10^{-2}=7.403×0.01=0.07403$"
+  },
+  {
+   "id": "276c8d63-0aba-4f5f-a6d1-44451e4a11ea",
+   "before": null,
+   "after": "$\\sqrt2(\\sqrt{18}-1)=\\sqrt{36}-\\sqrt2=6-\\sqrt2$\n$\\sqrt5(2\\sqrt5+\\sqrt{10})=2×5+\\sqrt{50}=10+5\\sqrt2$\n두 식을 더하면 $6-\\sqrt2+10+5\\sqrt2=16+4\\sqrt2$\n따라서 $a=16, b=4$이므로 $a+b=20$"
+  },
+  {
+   "id": "85b0efc1-552e-4fc6-b2b8-349cef511569",
+   "before": null,
+   "after": "$\\sqrt3\\left(\\frac{2}{\\sqrt6}+\\frac{5}{\\sqrt{12}}\\right)=\\sqrt2+\\frac{5}{2}$\n$\\sqrt2\\left(\\frac{10}{\\sqrt{32}}-\\frac{4}{\\sqrt6}+\\frac{3}{8}\\right)=\\frac{5}{2}-\\frac{4}{3}\\sqrt3+\\frac{3}{8}\\sqrt2$\n두 식을 빼면 $\\sqrt2-\\frac{3}{8}\\sqrt2+\\frac{4}{3}\\sqrt3=\\frac{5}{8}\\sqrt2+\\frac{4}{3}\\sqrt3$\n따라서 $a=\\frac{5}{8}, b=\\frac{4}{3}$이므로 $ab=\\frac{5}{6}$"
+  },
+  {
+   "id": "40d7d01f-f6e5-4594-bfdb-77a6a9bdda29",
+   "before": null,
+   "after": "① $\\sqrt3+2≈3.73>3$ (참)\n② $-\\sqrt5+6≈3.76>3$ (참)\n③ $3-\\sqrt{11}>\\sqrt{11}-2 \\Leftrightarrow 5>2\\sqrt{11} \\Leftrightarrow 25>44$인데 거짓이므로 성립하지 않는다 (거짓)\n④ $\\sqrt{17}-\\sqrt{19}<1$은 항상 성립 (참)\n⑤ $7-2\\sqrt3<3\\sqrt3-1 \\Leftrightarrow 8<5\\sqrt3 \\Leftrightarrow 64<75$ (참)\n따라서 옳지 않은 것은 ③이다."
+  },
+  {
+   "id": "5c7cb91d-4216-4b7f-9c2a-260a4e4a7739",
+   "before": null,
+   "after": "$\\sqrt3$의 정수 부분이 $1$이므로 소수 부분은 $x=\\sqrt3-1$\n$\\frac{x}{x+2}=\\frac{\\sqrt3-1}{\\sqrt3+1}=\\frac{(\\sqrt3-1)^2}{(\\sqrt3+1)(\\sqrt3-1)}=\\frac{4-2\\sqrt3}{2}=2-\\sqrt3$"
+  },
+  {
+   "id": "d266ac00-cd0d-456e-83e7-720fad6697fa",
+   "before": null,
+   "after": "$x=\\frac{\\sqrt6+4}{\\sqrt6-4}=\\frac{(\\sqrt6+4)^2}{6-16}=-\\frac{22+8\\sqrt6}{10}$\n$y=\\frac{4-\\sqrt6}{4+\\sqrt6}=\\frac{(4-\\sqrt6)^2}{16-6}=\\frac{22-8\\sqrt6}{10}$\n$x+y=\\frac{-22-8\\sqrt6+22-8\\sqrt6}{10}=-\\frac{16\\sqrt6}{10}=-\\frac{8}{5}\\sqrt6$"
+  },
+  {
+   "id": "14490a33-2d84-4ea5-9b3f-c51111115218",
+   "before": null,
+   "after": "① $3\\sqrt2$ (틀림)\n② $3\\sqrt6$ (틀림)\n③ $2\\sqrt5-2\\sqrt{15}$ (틀림)\n④ $-2\\sqrt{32}+\\sqrt{20}-\\sqrt2+4\\sqrt5=-8\\sqrt2+2\\sqrt5-\\sqrt2+4\\sqrt5=-9\\sqrt2+6\\sqrt5$ (맞음)\n⑤ $5\\sqrt5+4\\sqrt2$ (틀림)\n따라서 옳은 것은 ④이다."
+  },
+  {
+   "id": "778d4c54-4bd7-46ea-bc46-a1d0ca3c8bb8",
+   "before": null,
+   "after": "$\\sqrt{0.0573}=\\sqrt{5.73×0.01}=0.1\\sqrt{5.73}≈0.1×2.394=0.2394$\n$\\sqrt{a}=23.9294-0.2394=23.69$\n$a≈23.69^2=561.06$이므로 보기 중 이 값에 해당하는 것은 $561$\n따라서 $a=561$"
+  },
+  {
+   "id": "0383efaf-594b-4d51-a654-35e9e8152410",
+   "before": null,
+   "after": "넓이의 비가 $1:2$이면 닮음비(변의 비)는 $1:\\sqrt2$이다.\n작은 정삼각형의 한 변을 $s$라 하면 큰 정삼각형의 한 변은 $\\sqrt2s$\n둘레의 합: $3s+3\\sqrt2s=12 \\Rightarrow s(1+\\sqrt2)=4$\n$s=\\frac{4}{1+\\sqrt2}=4(\\sqrt2-1)=4\\sqrt2-4$"
+  },
+  {
+   "id": "6081f83c-e86e-4983-958b-467271dd99df",
+   "before": null,
+   "after": "넓이가 $2$배가 되면 길이는 넓이의 제곱근인 $\\sqrt2$배가 된다.\n$\\sqrt2≈1.414$이므로 확대율이 $141.4\\%$인 것과 일치한다.\n따라서 (가)에 알맞은 수는 $\\sqrt2$"
+  },
+  {
+   "id": "3c5fc287-9409-4140-b937-c224912f86a6",
+   "before": null,
+   "after": "(나) $\\sqrt{3n}$이 자연수이려면 $3n$이 완전제곱수여야 하므로 $n=3j^2$ ($j$는 자연수)\n$n≤100$을 만족하는 $n$: $3,12,27,48,75$\n(가) $\\sqrt{n+4}$가 무리수이려면 $n+4$가 완전제곱수가 아니어야 하는데, $n=12$일 때 $n+4=16=4^2$이므로 제외\n나머지 $3,27,48,75$의 합은 $3+27+48+75=153$"
+  },
+  {
+   "id": "79498e4b-7be3-4c2b-b036-921b48446214",
+   "before": null,
+   "after": "$\\sqrt{147}=7\\sqrt3$이므로 $\\frac{\\sqrt{147}}{\\sqrt{2p}}$가 유리수이려면 $2p=3m^2$ 꼴이어야 하고,\n$p$가 자연수이려면 $m=2t$이어야 하므로 $p=6t^2$\n이때 식의 값은 $\\frac{7}{2t}$이고 이것이 $2$보다 작으려면 $t>1.75$, 즉 $t≥2$\n$t=2$일 때 $p=24$(가장 작은 수), $t=3$일 때 $p=54$(두 번째로 작은 수)"
+  },
+  {
+   "id": "4b8b99d9-7605-4f90-9449-083aa523e381",
+   "before": null,
+   "after": "$\\sqrt{125}=5\\sqrt5$, $\\frac{6}{\\sqrt3}=2\\sqrt3$, $\\sqrt{20}=2\\sqrt5$\n대입하면 $6\\sqrt3-5\\sqrt5-2\\sqrt3+2\\sqrt5=4\\sqrt3-3\\sqrt5$\n따라서 $a=4,\\ b=-3$이므로 $a+b=1$"
+  },
+  {
+   "id": "21ebff12-99e6-4a84-8279-01addf67a19c",
+   "before": null,
+   "after": "$\\frac{9}{4\\sqrt3}=\\frac{9\\sqrt3}{12}=\\frac{3\\sqrt3}{4}$\n$\\frac{\\sqrt6}{\\sqrt2+1}=\\frac{\\sqrt6(\\sqrt2-1)}{(\\sqrt2+1)(\\sqrt2-1)}=\\sqrt{12}-\\sqrt6=2\\sqrt3-\\sqrt6$\n두 식을 더하면 $\\frac{3\\sqrt3}{4}+2\\sqrt3-\\sqrt6=\\frac{11\\sqrt3}{4}-\\sqrt6$\n따라서 $a=\\frac{11}{4},\\ b=-1$이므로 $ab=-\\frac{11}{4}$"
+  },
+  {
+   "id": "99403022-803e-4b16-bcd8-8956786b7c04",
+   "before": null,
+   "after": "주어진 식은 $\\sqrt{a^2-\\frac{2}{3}a+\\frac{1}{9}}-\\sqrt{a^2+\\frac{2}{3}a+\\frac{1}{9}}=\\sqrt{\\left(a-\\frac13\\right)^2}-\\sqrt{\\left(a+\\frac13\\right)^2}$\n$=\\left|a-\\frac13\\right|-\\left|a+\\frac13\\right|$\n$0<a<\\frac13$이므로 $a-\\frac13<0,\\ a+\\frac13>0$\n$=\\left(\\frac13-a\\right)-\\left(a+\\frac13\\right)=-2a$"
+  },
+  {
+   "id": "b056f525-292b-4443-a3c3-8e1ec60e0f60",
+   "before": null,
+   "after": "제곱근표에서 $\\sqrt{3.01}=1.735$, $\\sqrt{5.02}=2.241$\n$\\sqrt{301}=\\sqrt{3.01\\times100}=10\\sqrt{3.01}=10\\times1.735=17.35$\n$\\sqrt{0.0502}=\\sqrt{5.02\\times0.01}=0.1\\sqrt{5.02}=0.1\\times2.241=0.2241$\n따라서 $\\sqrt{301}+\\sqrt{0.0502}=17.35+0.2241=17.5741$"
+  },
+  {
+   "id": "9532e986-2dac-4a0d-84f4-7e9549f5686e",
+   "before": null,
+   "after": "괄호를 풀면 $\\sqrt3\\times\\frac{1}{\\sqrt2}-\\sqrt3\\times\\frac{2}{\\sqrt3}-\\sqrt2\\times a\\sqrt3+\\sqrt2\\times\\frac{1}{\\sqrt2}$\n$=\\frac{\\sqrt6}{2}-2-a\\sqrt6+1=\\left(\\frac12-a\\right)\\sqrt6-1$\n결과가 유리수가 되려면 $\\sqrt6$의 계수가 0이어야 하므로 $\\frac12-a=0$\n따라서 $a=\\frac12$"
+  },
+  {
+   "id": "2b4831c8-ce9b-42fe-ad30-47bcbd060289",
+   "before": null,
+   "after": "$\\frac{3\\sqrt{27}}{\\sqrt{48}}=3\\sqrt{\\frac{27}{48}}=3\\sqrt{\\frac{9}{16}}=3\\times\\frac34=\\frac94$\n나눗셈과 곱셈은 앞에서부터 순서대로 계산한다: $\\sqrt6\\div\\frac{4\\sqrt2}{3}\\times\\frac{4}{3\\sqrt3}=\\sqrt6\\times\\frac{3}{4\\sqrt2}\\times\\frac{4}{3\\sqrt3}=\\sqrt6\\times\\frac{1}{\\sqrt6}=1$\n따라서 전체 식은 $\\frac94-1=\\frac54$"
+  },
+  {
+   "id": "837e430f-d270-4d01-9ef2-69bc3dc989ae",
+   "before": null,
+   "after": "$ab<0$이므로 $a,b$의 부호가 다르고, $a-b<0$이면 $a<b$\n부호가 다르면서 $a<b$이려면 $a<0<b$\n$\\sqrt{4a^2}=|2a|=-2a$ (∵ $a<0$), $\\sqrt{(3b)^2}=|3b|=3b$ (∵ $b>0$), $\\sqrt{(a-b)^2}=|a-b|=b-a$ (∵ $a-b<0$)\n따라서 $-2a-3b-(b-a)=-a-4b$"
+  },
+  {
+   "id": "f8f9ced0-01c1-42bc-977a-fd733dbe8685",
+   "before": null,
+   "after": "$\\frac{\\sqrt6+\\sqrt2}{\\sqrt2}=\\sqrt3+1$\n$\\sqrt3(1-\\sqrt3)=\\sqrt3-3$\n$\\frac{\\sqrt{15}-\\sqrt5}{\\sqrt5}=\\sqrt3-1$\n따라서 $(\\sqrt3+1)+(\\sqrt3-3)-(\\sqrt3-1)=\\sqrt3-1$"
+  },
+  {
+   "id": "f9f16354-59c8-45ca-a66a-e5cef4686051",
+   "before": null,
+   "after": "$\\sqrt{18}=3\\sqrt2$, $\\frac{4}{\\sqrt2}=2\\sqrt2$, $3\\sqrt2(3-2\\sqrt2)=9\\sqrt2-12$\n대입하면 $3\\sqrt2-2\\sqrt2+9\\sqrt2-12=10\\sqrt2-12$\n따라서 $a=-12,\\ b=10$이므로 $a+b=-2$"
+  },
+  {
+   "id": "055fb27d-e6ae-4ef0-81f1-2b17f52e4c4d",
+   "before": null,
+   "after": "$108=2^2\\times3^3$이므로 $\\sqrt{108}=2\\times3\\sqrt3=6\\sqrt3$\n$a=\\sqrt2$이므로 $a^2=2$이고, $b=\\sqrt3$이므로 $b^3=3\\sqrt3$\n따라서 $\\sqrt{108}=a^2b^3$"
+  },
+  {
+   "id": "800e36ab-e046-4926-9504-6ce35f2e17af",
+   "before": null,
+   "after": "삼각형의 넓이 공식 $\\frac12\\times$밑변$\\times$높이 $=2\\sqrt3+\\sqrt{15}$에서\n높이 $h=\\frac{2(2\\sqrt3+\\sqrt{15})}{\\sqrt3}=4+\\frac{2\\sqrt{15}}{\\sqrt3}$\n$\\frac{2\\sqrt{15}}{\\sqrt3}=2\\sqrt5$이므로\n따라서 높이는 $4+2\\sqrt5$"
+  },
+  {
+   "id": "c5d051e0-390e-4b46-9e38-77a0d97e5e59",
+   "before": null,
+   "after": "$3\\times4\\times5\\times6\\times7\\times8\\times9=181440$\n$\\sqrt{181440}=A\\sqrt{35}$의 양변을 제곱하면 $181440=35A^2$\n$A^2=5184=72^2$\n따라서 $A=72$"
+  },
+  {
+   "id": "a3b1ce31-876d-4287-8479-824985f4fb62",
+   "before": null,
+   "after": "$\\sqrt{24}=2\\sqrt6=2\\sqrt a$이므로 $a=6$\n$5\\sqrt7-6\\sqrt7+4\\sqrt7=3\\sqrt7=b\\sqrt7$이므로 $b=3$\n$\\frac{4}{\\sqrt2}=2\\sqrt2=c\\sqrt2$이므로 $c=2$\n따라서 $a+b+c=6+3+2=11$"
+  },
+  {
+   "id": "6596b455-2b88-4f44-ac7b-fb8a0c1b6f19",
+   "before": null,
+   "after": "$a\\sqrt{\\frac{4b}{a}}=\\sqrt{a^2\\times\\frac{4b}{a}}=\\sqrt{4ab}=2\\sqrt{ab}=2\\sqrt4=4$\n$b\\sqrt{\\frac{9a}{b}}=\\sqrt{b^2\\times\\frac{9a}{b}}=\\sqrt{9ab}=3\\sqrt{ab}=3\\times2=6$\n따라서 두 식의 합은 $4+6=10$"
+  },
+  {
+   "id": "4f3f1a8a-ed13-448e-87bf-e02420b1a14a",
+   "before": null,
+   "after": "홀수를 $n$개 더한 합은 $n^2$이 되는 규칙이다: $\\sqrt{1+3}=\\sqrt{2^2}=2$, $\\sqrt{1+3+5}=\\sqrt{3^2}=3$과 같이 항의 개수가 곧 결괏값이다\n$1+3+5+\\cdots+45$는 45까지의 홀수의 합인데, 45는 23번째 홀수이므로 항이 23개\n따라서 $\\sqrt{1+3+5+\\cdots+45}=\\sqrt{23^2}=23$"
+  },
+  {
+   "id": "8186f183-5d78-45a8-b0fe-b8ee3d82ed10",
+   "before": null,
+   "after": "$\\sqrt{24}=2\\sqrt6$\n$\\sqrt{24}\\div3\\sqrt2=\\frac{2\\sqrt6}{3\\sqrt2}=\\frac23\\times\\frac{\\sqrt6}{\\sqrt2}=\\frac23\\sqrt3$\n따라서 값은 $\\frac{2\\sqrt3}{3}$"
+  },
+  {
+   "id": "eb2e2afa-6683-40d0-a66f-ad78bf49411d",
+   "before": null,
+   "after": "$f(x)=\\sqrt{x-1}+\\sqrt x$이므로 분모를 유리화하면 $\\frac{1}{f(x)}=\\frac{1}{\\sqrt x+\\sqrt{x-1}}=\\sqrt x-\\sqrt{x-1}$\n$\\frac{1}{f(6)}+\\frac{1}{f(7)}+\\frac{1}{f(8)}+\\frac{1}{f(9)}$\n$=(\\sqrt6-\\sqrt5)+(\\sqrt7-\\sqrt6)+(\\sqrt8-\\sqrt7)+(\\sqrt9-\\sqrt8)$\n중간 항이 소거되어 $=\\sqrt9-\\sqrt5=3-\\sqrt5$"
+  },
+  {
+   "id": "be0805fe-45f4-4369-9b42-088cf40c1947",
+   "before": null,
+   "after": "$\\sqrt{28}=2\\sqrt7$\n나눗셈과 곱셈을 순서대로 계산하면 $2\\sqrt7\\div\\frac{\\sqrt7}{\\sqrt3}\\times\\frac{\\sqrt5}{8}=2\\sqrt7\\times\\frac{\\sqrt3}{\\sqrt7}\\times\\frac{\\sqrt5}{8}=2\\sqrt3\\times\\frac{\\sqrt5}{8}=\\frac{2\\sqrt{15}}{8}=\\frac{\\sqrt{15}}{4}$\n따라서 $a=\\frac14$"
+  },
+  {
+   "id": "582902c8-e7c4-4ae1-a8ba-e57dd785c1d4",
+   "before": null,
+   "after": "$\\sqrt{pq}=15$이므로 $pq=225$\n$\\sqrt p,\\sqrt q$가 무리수이려면 $p,q$는 완전제곱수가 아니어야 하고, 이 조건과 $p<q$를 만족하는 순서쌍은 $(3,75)$ 또는 $(5,45)$\n$(3,75)$일 때 $\\sqrt3\\approx1.7,\\ \\sqrt{75}\\approx8.7$로 그 사이의 자연수는 7개\n$(5,45)$일 때 $\\sqrt5\\approx2.2,\\ \\sqrt{45}\\approx6.7$로 그 사이의 자연수는 $3,4,5,6$의 4개이므로 조건에 맞다\n따라서 $p=5,\\ q=45$이므로 $p+q=50$"
+  },
+  {
+   "id": "d14f4c47-f67c-452d-9a3e-26c147c10620",
+   "before": null,
+   "after": "정삼각형의 한 변을 $a$라 하면 넓이는 $\\frac{\\sqrt3}{4}a^2$이다.\n$\\frac{\\sqrt3}{4}a^2=27\\sqrt3$ 이므로 $a^2=27\\sqrt3\\times\\frac{4}{\\sqrt3}=108$\n$a=\\sqrt{108}=6\\sqrt3$\n둘레는 $3a=18\\sqrt3$ (cm)"
+  },
+  {
+   "id": "eab8ab79-8c59-48f0-bca8-9a1aae2714f9",
+   "before": null,
+   "after": "$\\sqrt{100}=10$, $\\sqrt{200}=10\\sqrt2$ 이므로 $10<2x<10\\sqrt2$\n양변을 2로 나누면 $5<x<5\\sqrt2$\n$5\\sqrt2\\approx7.07$이므로 자연수 $x$는 $6,7$\n개수는 2개이다."
+  },
+  {
+   "id": "f35472fe-5d46-406f-b4c5-ff686dc2e2e0",
+   "before": null,
+   "after": "① $5\\sqrt2-2\\approx5.07>5$ 이므로 거짓\n② $50<48$이 거짓이므로 $5\\sqrt2<4\\sqrt3$ 거짓\n③ $5\\sqrt3-2$와 $3\\sqrt5$를 각각 제곱하면 $79-20\\sqrt3$과 $45$이고, $34<20\\sqrt3$(즉 $1.7<\\sqrt3$)이 성립하므로 $79-20\\sqrt3<45$, 따라서 $5\\sqrt3<3\\sqrt5+2$는 참\n④ $\\sqrt{0.8}>\\sqrt{0.7}$이므로 $-\\sqrt{0.8}<-\\sqrt{0.7}$, 거짓\n⑤ $3\\sqrt5-2\\sqrt2\\approx3.88$, $2\\sqrt{10}-3\\approx3.32$이므로 거짓"
+  },
+  {
+   "id": "f72fbbb3-e189-4045-b0a7-a8bcb104b08f",
+   "before": null,
+   "after": "① $\\frac{4}{\\sqrt3}\\times\\sqrt{12}=8$, $\\frac{\\sqrt{20}}{2}=\\sqrt5$ 이므로 좌변은 $8-\\sqrt5$로 우변과 다름\n② $(\\frac{\\sqrt{18}}{2}+\\sqrt3)\\times2\\sqrt3=3\\sqrt6+6$로 우변($6\\sqrt3+6$)과 다름\n③ $\\sqrt{18}\\div\\frac{1}{\\sqrt6}=6\\sqrt3$이고 $\\sqrt{12}\\times\\sqrt3=6$이므로 좌변은 $6\\sqrt3+6$으로 우변과 다름\n⑤ $\\sqrt{50}\\times\\frac{\\sqrt2}{5}=2$이므로 좌변은 $2+15\\sqrt6$로 우변($2\\sqrt2+15\\sqrt6$)과 다름\n①②③⑤가 모두 틀리므로 옳은 것은 ④"
+  },
+  {
+   "id": "21171098-f4ac-4d94-8952-440db4bb46f8",
+   "before": null,
+   "after": "② $(-\\sqrt3)^2+\\sqrt{100}=3+10=13$ (참)\n③ $\\sqrt{(-5)^2}-(-\\sqrt7)^2=5-7=-2$ (참)\n④ $\\sqrt{3^4}-\\sqrt{(-2)^2}-\\sqrt{81}=9-2-9=-2$ (참)\n⑤ $(-\\sqrt{16})^2\\div\\sqrt{2^2}\\times\\sqrt{49}=16\\div2\\times7=56$이므로 $14$가 아니다 (거짓)\n따라서 계산이 옳지 않은 것은 ⑤"
+  },
+  {
+   "id": "76a79810-eec5-41bc-9fb9-0780dd0bbe16",
+   "before": null,
+   "after": "① $\\sqrt{1.5}\\approx1.22$\n② $\\sqrt{0.36}=0.6$\n③ $\\sqrt{4^2}\\div\\sqrt{\\frac94}=4\\div\\frac32=\\frac83\\approx2.67$\n④ $(\\sqrt6)^2-\\sqrt{49}=6-7=-1$\n⑤ $(\\sqrt2)^2+(-\\sqrt4)=2-2=0$\n가장 큰 수는 ③이다."
+  },
+  {
+   "id": "6a67beeb-b078-4fac-b879-0d14d04a61c1",
+   "before": null,
+   "after": "$a+b=-1-\\sqrt5+3=2-\\sqrt5$이고 $\\sqrt5>2$이므로 $a+b<0$, $\\sqrt{(a+b)^2}=\\sqrt5-2$\n$c-d=(2\\sqrt2-4)-(-1)=2\\sqrt2-3$이고 $2\\sqrt2<3$이므로 $c-d<0$, $\\sqrt{(c-d)^2}=3-2\\sqrt2$\n식의 값은 $(\\sqrt5-2)-2(3-2\\sqrt2)=\\sqrt5-2-6+4\\sqrt2=-8+4\\sqrt2+\\sqrt5$"
+  },
+  {
+   "id": "5a8b0a72-8824-4754-97ee-0db502f1a2c4",
+   "before": null,
+   "after": "$\\frac{2}{3\\sqrt2}=\\frac{2\\sqrt2}{6}=\\frac{\\sqrt2}{3}$\n$\\sqrt8=2\\sqrt2$\n$\\frac{\\sqrt2}{3}+2\\sqrt2=\\frac{\\sqrt2}{3}+\\frac{6\\sqrt2}{3}=\\frac{7\\sqrt2}{3}$"
+  },
+  {
+   "id": "640800f5-83cb-4924-9fbe-6bbfcefc9aea",
+   "before": null,
+   "after": "$\\sqrt3\\approx1.73$, $-\\sqrt7\\approx-2.65$이므로 두 수 사이는 $-2.65$에서 $1.73$까지의 구간이다.\n① 자연수 $1$이 구간에 포함되므로 거짓\n② 구간에 속한 정수는 $-2,-1,0,1$로 4개이므로 참\n③④ 두 실수 사이에는 무리수와 유리수가 각각 무수히 많으므로 거짓\n따라서 옳은 설명은 ②"
+  },
+  {
+   "id": "40388592-9204-4c7c-b20f-015ba57ee0db",
+   "before": null,
+   "after": "$\\sqrt{18}\\div\\frac{3}{\\sqrt2}=3\\sqrt2\\times\\frac{\\sqrt2}{3}=2$\n$\\sqrt{\\frac32}\\times(4\\sqrt3-2\\sqrt6)=4\\sqrt{\\frac32\\times3}-2\\sqrt{\\frac32\\times6}=4\\sqrt{4.5}-2\\times3=6\\sqrt2-6$\n따라서 식의 값은 $2-(6\\sqrt2-6)=8-6\\sqrt2$"
+  },
+  {
+   "id": "5ce313e4-c452-411b-98d2-d680fd20c2c8",
+   "before": null,
+   "after": "윗변 $\\sqrt{80}-3\\sqrt2=4\\sqrt5-3\\sqrt2$\n아랫변 $\\sqrt{20}+\\sqrt{45}+\\sqrt{18}=2\\sqrt5+3\\sqrt5+3\\sqrt2=5\\sqrt5+3\\sqrt2$\n넓이 $=\\frac{(4\\sqrt5-3\\sqrt2)+(5\\sqrt5+3\\sqrt2)}{2}\\times2\\sqrt5=\\frac{9\\sqrt5}{2}\\times2\\sqrt5=45$\n같은 넓이의 정사각형 한 변은 $\\sqrt{45}=3\\sqrt5$"
+  },
+  {
+   "id": "a1b49f23-fbaf-44f1-9427-0c81063e2c25",
+   "before": null,
+   "after": "$-2+\\sqrt7\\approx0.65$, $-1$, $\\sqrt7-\\sqrt5\\approx0.41$, $2-\\sqrt{10}\\approx-1.16$, $1$\n가장 큰 수는 $a=1$, 가장 작은 수는 $b=2-\\sqrt{10}$\n$a-b=1-(2-\\sqrt{10})=\\sqrt{10}-1$"
+  },
+  {
+   "id": "ae6df7ef-71e8-4ade-8495-116c893ee33e",
+   "before": null,
+   "after": "$\\frac{\\sqrt a}{a\\sqrt b}=\\frac{1}{\\sqrt a\\sqrt b}=\\frac{1}{\\sqrt{ab}}$, 같은 방법으로 $\\frac{\\sqrt b}{b\\sqrt a}=\\frac{1}{\\sqrt{ab}}$\n두 항의 합은 $\\frac{2}{\\sqrt{ab}}=\\frac{2}{\\sqrt4}=\\frac{2}{2}=1$"
+  },
+  {
+   "id": "8cc0c7c7-7161-452c-a19c-7db7b3dee069",
+   "before": null,
+   "after": "$\\frac{2}{\\sqrt5+\\sqrt3}=\\sqrt5-\\sqrt3$, $\\frac{5}{\\sqrt5-\\sqrt3}=\\frac{5(\\sqrt5+\\sqrt3)}{2}$\n식의 값 $=(\\sqrt5-\\sqrt3)-\\frac{5(\\sqrt5+\\sqrt3)}{2}=\\frac{2\\sqrt5-2\\sqrt3-5\\sqrt5-5\\sqrt3}{2}=-\\frac32\\sqrt5-\\frac72\\sqrt3$\n$a=-\\frac32$, $b=-\\frac72$이므로 $ab=\\frac{21}{4}$"
+  },
+  {
+   "id": "cfb67f66-6a9b-4706-8450-b839f0467941",
+   "before": null,
+   "after": "① $\\sqrt2+3\\approx4.41<5$이므로 거짓\n② $3-\\sqrt2\\approx1.59>2$이므로 거짓\n③ $\\sqrt6<\\sqrt8$이므로 $\\sqrt6+\\sqrt7<\\sqrt7+\\sqrt8$, 거짓\n④ $\\sqrt2<\\sqrt5$이므로 $1-\\sqrt2>1-\\sqrt5$, 거짓\n⑤ 양변에서 $\\sqrt2$를 빼면 $0.1<\\sqrt{0.1}\\approx0.316$이 성립하므로 참"
+  },
+  {
+   "id": "581faa15-f3c1-4234-ac80-e59f4e56f3f1",
+   "before": null,
+   "after": "$\\frac{b\\sqrt b}{\\sqrt a}=\\frac{b^2}{\\sqrt{ab}}$, $\\frac{a\\sqrt a}{\\sqrt b}=\\frac{a^2}{\\sqrt{ab}}$이므로 합은 $\\frac{a^2+b^2}{\\sqrt{ab}}$\n$\\sqrt{ab}=\\sqrt4=2$\n$a^2+b^2=(a+b)^2-2ab=(3\\sqrt2)^2-2\\times4=18-8=10$\n식의 값은 $\\frac{10}{2}=5$"
+  },
+  {
+   "id": "17cadd32-8f80-4d75-aa7a-d276ab576807",
+   "before": null,
+   "after": "㉠ $-\\sqrt6$은 음수이므로 참\n㉡ $\\sqrt3>0>-\\sqrt6$이므로 참\n㉢ $\\sqrt3>1$이므로 $-\\sqrt3<-1$, 즉 $-1$이 더 크므로 참\n㉣ $\\frac32=1.5>\\sqrt2\\approx1.41$이므로 참\n㉤ 양변에서 $\\sqrt5$를 빼면 $\\sqrt3\\approx1.73<2$이므로 $\\sqrt3+\\sqrt5<2+\\sqrt5$, 거짓\n옳지 않은 것은 ㉤"
+  },
+  {
+   "id": "315b1fca-3f5e-4505-918a-1ddcd506b841",
+   "before": null,
+   "after": "$\\sqrt2(\\sqrt2+\\sqrt6)=2+\\sqrt{12}=2+2\\sqrt3$\n식 전체는 $2+2\\sqrt3+a\\sqrt3=2+(2+a)\\sqrt3$\n이 값이 유리수가 되려면 $\\sqrt3$의 계수가 0이어야 하므로 $2+a=0$, $a=-2$"
+  },
+  {
+   "id": "0b994eb4-e519-45e7-84fb-e433e2050371",
+   "before": null,
+   "after": "$a-b>0$이고 $ab<0$이므로 $a>0$, $b<0$이다.\n$\\sqrt{(-2a)^2}=|-2a|=2a$ (∵ $a>0$)\n$(-\\sqrt a)^2=a$\n$\\sqrt{(5b)^2}=|5b|=-5b$ (∵ $b<0$)\n따라서 주어진 식은 $2a+a-(-5b)=3a+5b$"
+  },
+  {
+   "id": "7394f6c9-5cbd-476a-b6a6-a52e9e92707c",
+   "before": null,
+   "after": "분모를 유리화한다.\n$\\frac{\\sqrt6+2}{\\sqrt6-2}=\\frac{(\\sqrt6+2)^2}{6-4}=\\frac{10+4\\sqrt6}{2}=5+2\\sqrt6$\n$\\frac{5-2\\sqrt6}{5+2\\sqrt6}=\\frac{(5-2\\sqrt6)^2}{25-24}=49-20\\sqrt6$\n두 식을 빼면 $(5+2\\sqrt6)-(49-20\\sqrt6)=-44+22\\sqrt6$\n따라서 $a=-44$, $b=22$이므로 $a+2b=-44+44=0$"
+  },
+  {
+   "id": "2e0cce43-3013-4843-909b-6d364b8b37f5",
+   "before": null,
+   "after": "제곱근표의 값을 이용하려면 구하려는 수를 (표에 있는 수)$\\times10^{2n}$ 꼴로 나타낼 수 있어야 한다.\n$\\sqrt{614}=\\sqrt{6.14}\\times10$, $\\sqrt{623}=\\sqrt{6.23}\\times10$, $\\sqrt{62600}=\\sqrt{6.26}\\times100$, $\\sqrt{0.0637}=\\sqrt{6.37}\\times0.1$은 모두 표의 값(6.14, 6.23, 6.26, 6.37)으로 구할 수 있다.\n$0.00625$는 $6.25\\times10^{-3}$으로 지수가 홀수라 짝수 자리 이동으로는 표의 범위(6.0~6.3대)에 대응시킬 수 없어 값을 구할 수 없다."
+  },
+  {
+   "id": "2f80b85d-dd7e-4736-a808-f76835ff212a",
+   "before": null,
+   "after": "$\\sqrt{(-a)^2}=-a$가 성립하려면 $-a\\geq0$, 즉 $a\\leq0$이다.\n$(-\\sqrt b)^2=b$가 성립하려면 $b\\geq0$이다.\n$\\sqrt{16a^2}=\\sqrt{(4a)^2}=|4a|=-4a$ (∵ $a\\leq0$)\n$\\sqrt{(-3b)^2}=|3b|=3b$ (∵ $b\\geq0$)\n따라서 $\\sqrt{16a^2}-\\sqrt{(-3b)^2}=-4a-3b$"
+  },
+  {
+   "id": "4ce4b9cc-dfef-44da-b1df-b4037f0b46e2",
+   "before": null,
+   "after": "$\\sqrt{121}=11$\n$\\sqrt{(-3)^2}=|-3|=3$\n따라서 $\\sqrt{121}+\\sqrt{(-3)^2}=11+3=14$"
+  },
+  {
+   "id": "e204649f-add9-4f90-95e9-27678eeb0916",
+   "before": null,
+   "after": "$\\sqrt{10}\\approx3.162$이므로 $2\\sqrt{10}\\approx6.325$, $10-2\\sqrt{10}\\approx3.675$로 정수부분이 $3$이다.\n따라서 소수부분 $a=(10-2\\sqrt{10})-3=7-2\\sqrt{10}$\n$\\sqrt{35}\\approx5.916$이므로 $2\\sqrt{35}\\approx11.832$, $-4+2\\sqrt{35}\\approx7.832$로 정수부분 $b=7$\n$2a+b=2(7-2\\sqrt{10})+7=14-4\\sqrt{10}+7=21-4\\sqrt{10}$"
+  },
+  {
+   "id": "15cce5d9-57ae-49ab-b721-0aac4d593e16",
+   "before": null,
+   "after": "$f(x)=\\sqrt{x+1}+\\sqrt x$이므로 $\\frac{1}{f(n)}=\\frac{1}{\\sqrt{n+1}+\\sqrt n}=\\sqrt{n+1}-\\sqrt n$ (분모 유리화)\n$n=1$부터 $99$까지 더하면 중간항이 소거되어 $\\sum_{n=1}^{99}(\\sqrt{n+1}-\\sqrt n)=\\sqrt{100}-\\sqrt1$\n$=10-1=9$"
+  },
+  {
+   "id": "a5e8e2c4-3e74-4db0-97f1-0f2486d62189",
+   "before": null,
+   "after": "$a-b>0$, $ab<0$에서 $a>0$, $b<0$이다.\n$(-\\sqrt a)^2=a$\n$a-2b>0$ (∵ $a>0,-2b>0$)이므로 $\\sqrt{(a-2b)^2}=a-2b$\n$b-3a<0$이므로 $\\sqrt{(b-3a)^2}=-(b-3a)=3a-b$, $\\sqrt{25b^2}=|5b|=-5b$\n주어진 식은 $a-(a-2b)-(3a-b)+(-5b)=-3a-2b$"
+  },
+  {
+   "id": "45d61270-52b2-4287-b279-934147870e21",
+   "before": null,
+   "after": "$\\frac{7}{\\sqrt{14}}=\\frac{7\\sqrt{14}}{14}=\\frac{\\sqrt{14}}{2}$이므로 $a=\\frac12$\n$\\frac{6}{\\sqrt{12}}=\\frac{6}{2\\sqrt3}=\\frac{3}{\\sqrt3}=\\sqrt3$이므로 $b=1$\n따라서 $a+b=\\frac12+1=\\frac32$"
+  },
+  {
+   "id": "1bc9c93d-9238-40da-ba12-580aad5889c7",
+   "before": null,
+   "after": "① $\\sqrt{64}-\\sqrt{36}=8-6=2\\neq\\sqrt{28}$\n② $\\sqrt{(-2)^2}\\times\\sqrt{3^2}=2\\times3=6\\neq-6$\n③ $\\sqrt{(-3)^2}-\\sqrt{4^2}=3-4=-1$ (참)\n④ $(-\\sqrt5)^2-(-\\sqrt3)^2=5-3=2\\neq-8$\n⑤ $(\\sqrt6)^2+(-\\sqrt{12})^2=6+12=18\\neq-6$\n따라서 옳게 계산한 것은 ③"
+  },
+  {
+   "id": "e1eeff97-eb34-46a9-9fa1-c99260cf30cc",
+   "before": null,
+   "after": "$\\sqrt{0.03}=\\sqrt{\\frac{3}{100}}=\\frac{\\sqrt3}{10}$\n$\\sqrt3=1.732$이므로 $\\sqrt{0.03}=\\frac{1.732}{10}=0.1732$"
+  },
+  {
+   "id": "3284925a-4036-456a-acbe-0f7cd3355bba",
+   "before": null,
+   "after": "나눗셈을 곱셈으로 바꾸면 $\\frac{\\sqrt{10}}{\\sqrt3}\\div\\frac{1}{\\sqrt3}\\times\\frac{5}{\\sqrt2}=\\frac{\\sqrt{10}}{\\sqrt3}\\times\\sqrt3\\times\\frac{5}{\\sqrt2}$\n$=\\sqrt{10}\\times\\frac{5}{\\sqrt2}=\\frac{5\\sqrt{10}}{\\sqrt2}=5\\sqrt5$"
+  },
+  {
+   "id": "34970b67-382b-43b4-9cf1-24426ad5db6e",
+   "before": null,
+   "after": "$b=\\sqrt{43.2}=\\sqrt{4.32\\times10}=\\sqrt{10}\\,a$\n$\\sqrt{432}=\\sqrt{4.32\\times100}=10a$\n$\\sqrt{0.432}=\\sqrt{43.2\\times0.01}=\\sqrt{43.2}\\times0.1=\\frac{b}{10}$\n따라서 $\\sqrt{432}+\\sqrt{0.432}=10a+\\frac{b}{10}$"
+  },
+  {
+   "id": "b2bf41b8-afb0-41c0-a8d9-a2784f65afc4",
+   "before": null,
+   "after": "① $\\frac{7\\sqrt2}{\\sqrt7}=7\\sqrt{\\frac27}=\\sqrt{14}$ (참)\n② $\\frac{12\\sqrt6}{3\\sqrt2}=4\\sqrt{\\frac62}=4\\sqrt3$ (참)\n③ $\\sqrt{50}\\div\\sqrt2=\\sqrt{25}=5$인데 $25$라고 했으므로 옳지 않다\n④ $\\sqrt{32}\\div\\sqrt2=\\sqrt{16}=4$ (참)\n⑤ $\\sqrt{24}\\div\\sqrt3=\\sqrt8=2\\sqrt2$ (참)\n따라서 옳지 않은 것은 ③"
+  },
+  {
+   "id": "e3b41682-8d55-4b78-b893-62f399395950",
+   "before": null,
+   "after": "$4x^2+4x+1=(2x+1)^2$, $4x^2-4x+1=(2x-1)^2$\n$-\\frac12<x<\\frac12$이면 $0<2x+1<2$이므로 $|2x+1|=2x+1$\n$-2<2x-1<0$이므로 $|2x-1|=1-2x$\n따라서 $\\sqrt{4x^2+4x+1}-\\sqrt{4x^2-4x+1}=(2x+1)-(1-2x)=4x$"
+  },
+  {
+   "id": "0e0ff407-3677-480d-aae9-d8a77ed2cae8",
+   "before": null,
+   "after": "$\\sqrt{128}=8\\sqrt2$, $\\sqrt{45}=3\\sqrt5$, $\\sqrt{32}=4\\sqrt2$, $\\sqrt{20}=2\\sqrt5$\n대입하면 $8\\sqrt2-3\\sqrt5-4\\sqrt2+2\\sqrt5=4\\sqrt2-\\sqrt5$\n따라서 $a=4$, $b=-1$이므로 $a\\times b=-4$"
+  },
+  {
+   "id": "125f522f-b36f-44ed-b3c7-6ab9d304a6b0",
+   "before": null,
+   "after": "$3\\sqrt{18}=9\\sqrt2$, $6\\sqrt{20}=12\\sqrt5$, $\\sqrt8=2\\sqrt2$, $7\\sqrt{45}=21\\sqrt5$\n대입하면 $9\\sqrt2+12\\sqrt5-2\\sqrt2-21\\sqrt5=7\\sqrt2-9\\sqrt5$\n따라서 $a=7$, $b=-9$이므로 $a+b=-2$"
+  },
+  {
+   "id": "07c2291f-d294-4610-b314-8def3f2cda91",
+   "before": null,
+   "after": "①: $\\sqrt2\\times\\sqrt3\\times\\sqrt6=\\sqrt{36}=6$\n②: $5\\sqrt2\\div\\sqrt3\\times\\sqrt{27}=5\\sqrt2\\times\\dfrac{\\sqrt{27}}{\\sqrt3}=5\\sqrt2\\times3=15\\sqrt2$\n③: $\\sqrt{\\frac{5}{16}}\\times5\\sqrt{\\frac{8}{3}}\\times\\sqrt{\\frac{6}{5}}=5\\sqrt{\\frac{5}{16}\\cdot\\frac{8}{3}\\cdot\\frac{6}{5}}=5\\sqrt1=5$\n④: $\\dfrac{\\sqrt{14}}{\\sqrt8}\\div\\dfrac{\\sqrt7}{\\sqrt{12}}\\div\\dfrac{\\sqrt6}{\\sqrt{20}}=\\sqrt{\\dfrac{14\\times12\\times20}{8\\times7\\times6}}=\\sqrt{10}$\n⑤: $-2\\sqrt{12}\\div\\sqrt6\\times(-\\sqrt2)=-2\\sqrt2\\times(-\\sqrt2)=4$\n값을 비교하면 $15\\sqrt2\\approx21.2$로 가장 크므로 ②"
+  },
+  {
+   "id": "02186c4b-f1ae-4fd8-ad2e-3a85b522200e",
+   "before": null,
+   "after": "$a=\\sqrt2,\\ b=\\sqrt{20}=2\\sqrt5$\n①: $\\sqrt{0.002}=\\dfrac{a}{10\\sqrt{10}}\\neq1000a$\n②: $\\sqrt{0.02}=\\dfrac{a}{10}\\neq100a$\n③: $\\sqrt{0.2}=\\dfrac{b}{10}\\neq\\dfrac{b}{100}$\n④: $\\sqrt{2000}=\\sqrt{100\\times20}=10\\sqrt{20}=10b$ 성립\n⑤: $\\sqrt{20000}=100\\sqrt2=100a\\neq100b$\n따라서 옳은 것은 ④"
+  },
+  {
+   "id": "2442a90d-9cc7-43b1-9dc8-f9b324c9319f",
+   "before": null,
+   "after": "$\\sqrt n$ 이하의 자연수의 개수는 $\\lfloor\\sqrt n\\rfloor$이다.\n$n=28\\sim35$(8개)일 때 $\\lfloor\\sqrt n\\rfloor=5$이므로 $f(n)=6-5=1$\n$n=36\\sim40$(5개)일 때 $\\lfloor\\sqrt n\\rfloor=6$이므로 $f(n)=6-6=0$\n합은 $1\\times8+0\\times5=8$\n따라서 답은 ②"
+  },
+  {
+   "id": "bbdc0188-83f1-4cbd-a36f-ce00f071a051",
+   "before": null,
+   "after": "분모를 유리화하면\n$x=\\dfrac{(\\sqrt6-\\sqrt2)^2}{(\\sqrt6+\\sqrt2)(\\sqrt6-\\sqrt2)}=\\dfrac{8-4\\sqrt3}{4}=2-\\sqrt3$\n$\\sqrt3\\approx1.732$이므로 $x\\approx0.268$\n$x$에 가장 가까운 정수는 $0$이므로 답은 ③"
+  },
+  {
+   "id": "8866fdb3-720c-476a-a907-eec042e7d57d",
+   "before": null,
+   "after": "$\\dfrac2{\\sqrt5}(\\sqrt5-\\sqrt2)=2-\\dfrac{2\\sqrt{10}}5$\n$(\\sqrt{12}-\\dfrac{3\\sqrt{60}}5)\\div\\sqrt6=\\sqrt2-\\dfrac{3\\sqrt{10}}5$\n$\\dfrac{\\sqrt8-2}{\\sqrt2}=2-\\sqrt2$\n전체 식 $=\\left(2-\\dfrac{2\\sqrt{10}}5\\right)-\\left(\\sqrt2-\\dfrac{3\\sqrt{10}}5\\right)-(2-\\sqrt2)=\\dfrac{\\sqrt{10}}5$\n따라서 답은 ①"
+  },
+  {
+   "id": "4f41aeea-87f0-4fca-b616-d4867aee8c19",
+   "before": null,
+   "after": "$a^2=b^2+77$이므로 $(a-b)(a+b)=77=1\\times77=7\\times11$\n$a-b=1,a+b=77\\Rightarrow a=39,b=38$\n$a-b=7,a+b=11\\Rightarrow a=9,b=2$\nㄱ$(7,2)$: $49\\neq81$ 거짓, ㄴ$(9,2)$: $81=81$ 참\nㄷ$(29,12)$: $841\\neq221$ 거짓, ㄹ$(39,38)$: $1521=1521$ 참, ㅁ$(43,41)$: $1849\\neq1758$ 거짓\n참인 것은 ㄴ,ㄹ이므로 답은 ②"
+  },
+  {
+   "id": "50d2ac62-9681-4407-9b1f-892c5f6ffebb",
+   "before": null,
+   "after": "$\\sqrt{x^2}=|x|$이므로\n$\\sqrt{(\\sqrt5-3)^2}=|\\sqrt5-3|=3-\\sqrt5$ ($\\sqrt5<3$)\n$\\sqrt{(2\\sqrt5-6)^2}=|2\\sqrt5-6|=6-2\\sqrt5$ ($2\\sqrt5<6$)\n식 $=(3-\\sqrt5)-(6-2\\sqrt5)=-3+\\sqrt5$\n따라서 답은 ③"
+  },
+  {
+   "id": "9026f894-21b4-4707-a6ff-135f966a857b",
+   "before": null,
+   "after": "①: $\\sqrt7-3>\\sqrt5-3\\iff\\sqrt7>\\sqrt5$ 참\n②: $5-\\sqrt3\\approx3.27>3$ 참\n③: $\\sqrt{12}+1\\approx4.46<5$ 참\n④: $0<0.7<1$이므로 $\\sqrt{0.7}>0.7$, 즉 $-\\sqrt{0.7}<-0.7$이다. 부호가 반대이므로 거짓\n⑤: $5^3=125<243=3^5$이므로 $-\\sqrt{125}>-\\sqrt{243}$ 참\n옳지 않은 것은 ④"
+  },
+  {
+   "id": "4b8767c2-8edd-4953-82d2-9537ad14c3a7",
+   "before": null,
+   "after": "$570=5.7\\times100$이므로\n$\\sqrt{570}=\\sqrt{5.7}\\times\\sqrt{100}=2.387\\times10=23.87$\n따라서 답은 ③"
+  },
+  {
+   "id": "4fa57b4d-a96e-4118-b7df-1ab5cac1a050",
+   "before": null,
+   "after": "①: $-\\sqrt{16}=-4\\neq4$ 거짓\n②: $\\sqrt{25}=5$ (양의 제곱근만) $\\neq\\pm5$ 거짓\n③: $9$의 제곱근은 $\\pm3$이므로 $3$만 있는 것은 거짓\n④: $(-5)^2=25$이므로 $-5$는 $25$의 제곱근, 참\n⑤: $0$의 제곱근은 $0$ 하나뿐이므로 거짓\n따라서 옳은 것은 ④"
+  },
+  {
+   "id": "25aaee2d-fa6a-49bf-9daa-8ac4a4005ffb",
+   "before": null,
+   "after": "$\\dfrac2{\\sqrt5}(\\sqrt2-\\sqrt5)=\\dfrac{2\\sqrt{10}}5-2$\n$(\\sqrt{12}+\\dfrac{3\\sqrt{60}}5)\\div\\sqrt6=\\sqrt2+\\dfrac{3\\sqrt{10}}5$\n$\\dfrac{\\sqrt8-2}{\\sqrt2}=2-\\sqrt2$\n전체 식을 더하면 $\\left(\\dfrac{2\\sqrt{10}}5-2\\right)+\\left(\\sqrt2+\\dfrac{3\\sqrt{10}}5\\right)+(2-\\sqrt2)=\\sqrt{10}$\n따라서 답은 ③"
+  },
+  {
+   "id": "f075587e-dcec-45d7-b474-0071c3ce9dc2",
+   "before": null,
+   "after": "$\\sqrt{45}=3\\sqrt5=a\\sqrt5$이므로 $a=3$\n$2\\sqrt3=\\sqrt b$의 양변을 제곱하면 $b=12$\n$\\sqrt{ab}=\\sqrt{3\\times12}=\\sqrt{36}=6$\n따라서 답은 ⑤"
+  },
+  {
+   "id": "bffb7d43-d428-4891-928f-cad65b08d09f",
+   "before": null,
+   "after": "각 값을 근사하면 $1,\\ \\sqrt2-1\\approx0.41,\\ \\sqrt2-\\sqrt3\\approx-0.32,\\ \\sqrt{27}-\\sqrt8=3\\sqrt3-2\\sqrt2\\approx2.37,\\ \\sqrt2\\approx1.41$\n가장 큰 수는 $3\\sqrt3-2\\sqrt2$, 가장 작은 수는 $\\sqrt2-\\sqrt3$\n합은 $(3\\sqrt3-2\\sqrt2)+(\\sqrt2-\\sqrt3)=2\\sqrt3-\\sqrt2$\n따라서 답은 ④"
+  },
+  {
+   "id": "18e527f4-00fd-499c-b3b0-e155f8f05603",
+   "before": null,
+   "after": "$p=\\sqrt{x-1},q=\\sqrt{x+1}$로 놓으면 $p^2+q^2=2x,\\ p^2-q^2=-2,\\ pq=\\sqrt{x^2-1}$\n$\\dfrac{p+q}{p-q}=\\dfrac{(p+q)^2}{p^2-q^2}=\\dfrac{2x+2pq}{-2}$\n$x=\\sqrt3$이므로 $x^2-1=2$, $pq=\\sqrt2$\n$=\\dfrac{2\\sqrt3+2\\sqrt2}{-2}=-\\sqrt3-\\sqrt2$\n따라서 답은 ⑤"
+  },
+  {
+   "id": "8c0ce27b-2d6d-4262-a80a-80ea9f6a9cf4",
+   "before": null,
+   "after": "$(\\sqrt{15}+\\sqrt{20})\\div\\sqrt5=\\sqrt3+\\sqrt4=\\sqrt3+2\\approx3.73$\n정수 부분 $a=3$, 소수 부분 $b=\\sqrt3-1$\n$2\\sqrt a+b^2=2\\sqrt3+(\\sqrt3-1)^2=2\\sqrt3+(4-2\\sqrt3)=4$\n따라서 답은 ③"
+  },
+  {
+   "id": "22ad23b5-ab4b-4caa-9566-bfb90fd69e48",
+   "before": null,
+   "after": "$\\sqrt2\\times\\sqrt3\\times\\cdots\\times\\sqrt{10}=\\sqrt{2\\times3\\times\\cdots\\times10}=\\sqrt{10!}=\\sqrt{3628800}$\n$3628800=2^8\\times3^4\\times5^2\\times7$이므로\n$\\sqrt{3628800}=2^4\\times3^2\\times5\\times\\sqrt7=720\\sqrt7$\n따라서 답은 ⑤"
+  },
+  {
+   "id": "92583c98-38db-4811-89b0-b6898e1bedb2",
+   "before": null,
+   "after": "$\\dfrac{\\sqrt{27}}2\\times\\sqrt6=\\dfrac{\\sqrt{162}}2=\\dfrac{9\\sqrt2}2$, $\\dfrac{\\sqrt{27}}2\\times\\dfrac2{\\sqrt3}=\\sqrt9=3$\n앞부분 $=\\dfrac{9\\sqrt2}2-3$\n$\\dfrac{3(\\sqrt8+1)}{\\sqrt2}=3\\times2+\\dfrac{3\\sqrt2}2=6+\\dfrac{3\\sqrt2}2$\n전체 $=\\left(\\dfrac{9\\sqrt2}2-3\\right)-\\left(6+\\dfrac{3\\sqrt2}2\\right)=3\\sqrt2-9$\n따라서 답은 ①"
+  },
+  {
+   "id": "506ad0b4-7da4-417e-b486-91cca8d0da0d",
+   "before": null,
+   "after": "각 항의 분모를 유리화하면 $\\frac{1}{\\sqrt{n+1}+\\sqrt{n}}=\\sqrt{n+1}-\\sqrt{n}$ 이다.\n따라서 주어진 식은 $(\\sqrt2-\\sqrt1)+(\\sqrt3-\\sqrt2)+\\cdots+(\\sqrt9-\\sqrt8)$ 로 중간 항이 모두 소거된다.\n남은 값은 $\\sqrt9-\\sqrt1=3-1=2$"
+  },
+  {
+   "id": "2f76a0ec-68ab-44fe-826d-316ea827f00d",
+   "before": null,
+   "after": "$2a\\sqrt{\\frac{b}{a}}=2\\sqrt a\\cdot\\sqrt a\\cdot\\frac{\\sqrt b}{\\sqrt a}=2\\sqrt{ab}$ 이고, 같은 방법으로 $b\\sqrt{\\frac{a}{b}}=\\sqrt{ab}$ 이다.\n따라서 주어진 식은 $2\\sqrt{ab}+\\sqrt{ab}=3\\sqrt{ab}$\n$ab=2$ 이므로 값은 $3\\sqrt2$"
+  },
+  {
+   "id": "b7bc2d84-5303-4f36-be84-2c41acf05380",
+   "before": null,
+   "after": "$\\frac{6}{\\sqrt3}=\\frac{6\\sqrt3}{3}=2\\sqrt3=2a$\n$12\\times\\sqrt5\\div\\sqrt{48}=\\frac{12\\sqrt5}{4\\sqrt3}=\\frac{3\\sqrt5}{\\sqrt3}=\\sqrt{15}=\\sqrt3\\cdot\\sqrt5=ab$\n따라서 식의 값은 $2a+ab$"
+  },
+  {
+   "id": "656abaf0-c401-4d5a-8cc2-d7463519095f",
+   "before": null,
+   "after": "$\\sqrt{18}=3\\sqrt2$ 이므로 $(3\\sqrt2-2\\sqrt6)\\div\\sqrt3=\\sqrt6-2\\sqrt2$\n$\\sqrt2(\\sqrt3-2)=\\sqrt6-2\\sqrt2$\n두 값을 더하면 $2\\sqrt6-4\\sqrt2$ 이므로 $a=-4,\\ b=2$\n$a+b=-2$"
+  },
+  {
+   "id": "2a6cf563-c985-4fdc-906e-508cd7246d85",
+   "before": null,
+   "after": "$\\sqrt{\\frac{5}{81}}=\\frac{\\sqrt5}{9}=a\\sqrt5$ 이므로 $a=\\frac19$\n$6\\sqrt2=\\sqrt b$ 의 양변을 제곱하면 $b=36\\times2=72$\n따라서 $ab=\\frac19\\times72=8$"
+  },
+  {
+   "id": "ca99d1c2-90f1-463d-8b0e-f5078857a216",
+   "before": null,
+   "after": "ㄱ. $\\sqrt{28}\\times\\frac{2\\sqrt3}{\\sqrt7}\\div\\frac{2}{\\sqrt5}=2\\sqrt7\\times\\frac{2\\sqrt3}{\\sqrt7}\\times\\frac{\\sqrt5}{2}=2\\sqrt{15}$ (참)\nㄴ. $\\sqrt{125}-6\\sqrt3-\\frac{6}{\\sqrt3}+\\sqrt{20}=5\\sqrt5-6\\sqrt3-2\\sqrt3+2\\sqrt5=7\\sqrt5-8\\sqrt3$ (참)\nㄷ. $2\\sqrt2(\\sqrt8-2)=8-4\\sqrt2$, $(4\\sqrt3-2\\sqrt6)\\div\\sqrt{24}=\\sqrt2-1$ 이므로 합은 $7-3\\sqrt2$ (참)\n셋 다 옳으므로 정답은 ㄱ, ㄴ, ㄷ"
+  },
+  {
+   "id": "cbc0cfaf-f7a5-44c1-ae30-acfbd51050da",
+   "before": null,
+   "after": "$b-a>0$ 에서 $a<b$, $a^2b<0$ 에서 $b<0$ 이므로 $a<b<0$\n$a+2b<0$ 이므로 $\\sqrt{(a+2b)^2}=-a-2b$, $a,b$ 모두 음수라 $ab>0$ 이므로 $|ab|=ab$\n$a-b<0$ 이므로 $\\sqrt{(a-b)^2}=b-a$\n정리하면 $(-a-2b)+ab-(b-a)=ab-3b$"
+  },
+  {
+   "id": "e653dd55-3fa6-4eb4-be2a-a5c610f48dfd",
+   "before": null,
+   "after": "$\\sqrt{343}=\\sqrt{49\\times7}=7\\sqrt7$ 이므로 식은 $7\\sqrt7-4\\sqrt7+x\\sqrt7=(3+x)\\sqrt7$\n이 값이 유리수가 되려면 $\\sqrt7$ 의 계수가 0이어야 하므로 $3+x=0$\n따라서 $x=-3$"
+  },
+  {
+   "id": "3b17b0b9-9e10-42f1-bf46-c926a9ff0463",
+   "before": null,
+   "after": "$f(n)=\\sqrt{n+1}+\\sqrt n$ 이므로 $\\frac{2}{f(n)}=\\frac{2(\\sqrt{n+1}-\\sqrt n)}{(\\sqrt{n+1}+\\sqrt n)(\\sqrt{n+1}-\\sqrt n)}=2(\\sqrt{n+1}-\\sqrt n)$\n$n=1$ 부터 $50$ 까지 더하면 중간 항이 소거되어 $2(\\sqrt{51}-\\sqrt1)$\n따라서 값은 $2\\sqrt{51}-2$"
+  },
+  {
+   "id": "5d61c810-c022-4154-ba52-4a008c414267",
+   "before": null,
+   "after": "$\\sqrt7$ 항끼리 모으면 $3\\sqrt7+\\sqrt7=4\\sqrt7$\n$\\sqrt5$ 항끼리 모으면 $2\\sqrt5-3\\sqrt5=-\\sqrt5$\n따라서 $a=-1,\\ b=4$\n$b-a=4-(-1)=5$"
+  },
+  {
+   "id": "7aa8cf0b-0d13-4ff0-a66b-cb54f8c18900",
+   "before": null,
+   "after": "$3(\\sqrt2+\\sqrt3)\\times\\frac{\\sqrt3}{\\sqrt2}=\\frac{3(\\sqrt6+3)}{\\sqrt2}=\\frac{3\\sqrt6+9}{\\sqrt2}$\n이를 $\\sqrt8=2\\sqrt2$ 로 나누면 $\\frac{3\\sqrt6+9}{4}=\\frac{3\\sqrt6}{4}+\\frac94$\n여기서 $\\frac{5\\sqrt6}{4}$ 를 빼면 $\\frac94-\\frac{\\sqrt6}{2}$\n따라서 $a=\\frac94,\\ b=-\\frac12$ 이고 $a+b=\\frac74$"
+  },
+  {
+   "id": "88bc458c-ef14-4910-a7ce-8abf3b8a26c6",
+   "before": null,
+   "after": "분모를 유리화하려면 $\\sqrt3-1$ 의 켤레인 $\\sqrt3+1$ 을 분모, 분자에 곱한다.\n$\\frac{2}{\\sqrt3-1}=\\frac{2(\\sqrt3+1)}{(\\sqrt3-1)(\\sqrt3+1)}=\\frac{2(\\sqrt3+1)}{3-1}=\\sqrt3+1$\n이때 사용된 곱셈공식은 $(a+b)(a-b)=a^2-b^2$"
+  },
+  {
+   "id": "34c69047-5baa-4d30-a5b7-bbe0f6b8dcfb",
+   "before": null,
+   "after": "$\\sqrt{27}=3\\sqrt3=a\\sqrt3$ 이므로 $a=3$\n$5\\sqrt2=\\sqrt b$ 의 양변을 제곱하면 $b=50$\n$ab=3\\times50=150$\n$\\sqrt{ab}=\\sqrt{150}=\\sqrt{25\\times6}=5\\sqrt6$"
+  },
+  {
+   "id": "04c9fa7f-4b8e-464e-814f-3c623b8e6997",
+   "before": null,
+   "after": "떨어지는 시간은 $t=\\sqrt{\\frac{h}{4.9}}$ 초이다.\n$h=29.4$ 를 대입하면 $\\frac{h}{4.9}=\\frac{29.4}{4.9}=6$\n따라서 $t=\\sqrt6$ 초"
+  },
+  {
+   "id": "d6cf401f-d6ab-4166-aee4-886df975817f",
+   "before": null,
+   "after": "$\\sqrt{(-a)^2}=-a$ 이므로 $a<0$\n$\\sqrt{4a^2}=|2a|=-2a$, $\\sqrt{(-3a)^2}=|-3a|=-3a$\n$\\sqrt{a^2-4a+4}=\\sqrt{(a-2)^2}=|a-2|=2-a$ ($a<0$ 이므로 $a-2<0$)\n정리하면 $(-2a)-(-3a)+(2-a)=-2a+3a+2-a=2$"
+  },
+  {
+   "id": "dfc680c9-491e-46f9-abd9-c2f494d12778",
+   "before": null,
+   "after": "$\\frac{4\\sqrt2}{\\sqrt3}=\\frac{4\\sqrt2\\cdot\\sqrt3}{3}=\\frac{4\\sqrt6}{3}$ 이므로 $a=\\frac43$\n$\\frac{14}{3\\sqrt7}=\\frac{14\\sqrt7}{21}=\\frac{2\\sqrt7}{3}$ 이므로 $b=\\frac23$\n$a+b=\\frac43+\\frac23=2$"
+  },
+  {
+   "id": "2ceea28f-961a-43c0-9973-23f060c65171",
+   "before": null,
+   "after": "ㄱ. $\\sqrt{18}\\div\\sqrt2=\\sqrt9=3$ (거짓)\nㄴ. $3\\sqrt5-\\sqrt5=2\\sqrt5$ (거짓)\nㄷ. $\\sqrt8+\\sqrt2=2\\sqrt2+\\sqrt2=3\\sqrt2$ (거짓)\nㄹ. $\\frac{\\sqrt3}{\\sqrt2}+\\frac{\\sqrt2}{\\sqrt3}=\\frac{\\sqrt6}{2}+\\frac{\\sqrt6}{3}=\\frac{5\\sqrt6}{6}$ (참)\nㅁ. $3\\sqrt2\\times2\\sqrt5=6\\sqrt{10}$ (참)\n옳은 것은 ㄹ, ㅁ"
+  },
+  {
+   "id": "89caafd7-a40b-4bcb-b108-9daf463f8a2b",
+   "before": null,
+   "after": "$-2<x<y<0$ 을 이용해 각 절댓값의 부호를 정리한다.\n① $-\\sqrt{(-y)^2}=y$  ② $-\\sqrt{(x-2)^2}=x-2$  ③ $-\\sqrt{(y-2)^2}=y-2$\n④ $\\sqrt{(2+y)^2}=2+y$ ($2+y>0$)  ⑤ $\\sqrt{(2-x)^2}=2-x$ ($2-x>0$)\n$x<y<0$ 이므로 $2-x$ 가 나머지보다 크다"
+  },
+  {
+   "id": "32df7fc4-d80d-4f4c-87ba-5024e854eebc",
+   "before": null,
+   "after": "정육면체의 부피는 $5^3=125$입니다.\n높이가 같으므로 정사각뿔의 높이도 $5$이고, 부피비가 $5:3$이므로 정사각뿔의 부피는 $125\\times\\frac{3}{5}=75$입니다.\n정사각뿔의 부피는 $\\frac{1}{3}x^2\\times5=\\frac{5}{3}x^2$이므로 $\\frac{5}{3}x^2=75$, $x^2=45$입니다.\n$x=\\sqrt{45}=3\\sqrt5$이므로 답은 ④입니다."
+  },
+  {
+   "id": "cf4d69ec-0563-48f2-82f9-352a8522d8e4",
+   "before": null,
+   "after": "①②③⑤는 각각 계산하면 등식이 성립합니다.\n④ $\\sqrt2(\\sqrt8-\\sqrt6)=4-2\\sqrt3$이고, $\\frac{3-\\sqrt3}{\\sqrt3}=\\sqrt3-1$입니다.\n$\\frac{4}{\\sqrt3+1}=2(\\sqrt3-1)=2\\sqrt3-2$이므로 전체는 $(4-2\\sqrt3)+(\\sqrt3-1)-(2\\sqrt3-2)=5-3\\sqrt3$입니다.\n이는 $5-2\\sqrt3$이 아니므로 옳지 않은 것은 ④입니다."
+  },
+  {
+   "id": "03e98043-a37f-4e63-8184-386dcf914c30",
+   "before": null,
+   "after": "각 수를 확인하면 $-\\sqrt{14}$, $\\sqrt{0.1}$, $\\sqrt5+1$, $\\pi$는 모두 무리수(순환소수가 아닌 무한소수)입니다.\n$\\sqrt{169}=13$, $(-\\sqrt3)^2=3$은 정수(유한소수)이고, $\\frac{17}{6}$과 $1.2\\dot3$은 순환소수이므로 제외됩니다.\n따라서 순환소수가 아닌 무한소수는 $4$개이므로 답은 ④입니다."
+  },
+  {
+   "id": "cfc1588f-e4e9-44a4-8529-5c5c462d554b",
+   "before": null,
+   "after": "각 수를 근삿값으로 비교하면 $-1$, $2\\sqrt7-\\sqrt3\\approx3.56$, $2-2\\sqrt3\\approx-1.46$, $-\\sqrt7+3\\sqrt3\\approx2.55$입니다.\n가장 큰 값은 $2\\sqrt7-\\sqrt3$, 가장 작은 값은 $2-2\\sqrt3$입니다.\n두 점 사이의 거리는 $(2\\sqrt7-\\sqrt3)-(2-2\\sqrt3)=2\\sqrt7+\\sqrt3-2$이므로 답은 ②입니다."
+  },
+  {
+   "id": "9c5fc04b-4dce-47ae-a6a1-827b95491360",
+   "before": null,
+   "after": "$\\frac{6}{\\sqrt{12}}=\\frac{6}{2\\sqrt3}=\\sqrt3$이므로 좌변은 $\\sqrt3-2m-\\frac{n}{3}$입니다.\n우변은 $\\left(2-\\frac{m}{3}\\right)\\sqrt3-5$이므로, 무리수 부분과 유리수 부분을 각각 비교합니다.\n$1=2-\\frac{m}{3}$에서 $m=3$이고, $-2m-\\frac{n}{3}=-5$에 대입하면 $-6-\\frac{n}{3}=-5$, $n=-3$입니다.\n$m+n=3+(-3)=0$이므로 답은 ③입니다."
+  },
+  {
+   "id": "92b818b4-4b35-4c9e-a672-e52dc0c1a0e6",
+   "before": null,
+   "after": "각 값을 근삿값으로 구하면 $a=-2$, $b=-2+\\sqrt7\\approx0.65$, $c=\\sqrt{26}-7\\approx-1.90$, $d=-\\sqrt3+\\sqrt7\\approx0.91$입니다.\n크기를 비교하면 $a<c<b<d$이므로 답은 ①입니다."
+  },
+  {
+   "id": "09496b2d-ebf4-4a2b-834a-f0cb5d82829b",
+   "before": null,
+   "after": "$3\\sqrt{28}=6\\sqrt7$, $\\sqrt{63}=3\\sqrt7$, $\\frac{21}{2\\sqrt7}=\\frac{3\\sqrt7}{2}$입니다.\n좌변을 정리하면 $6\\sqrt7+2\\sqrt7+\\frac{\\sqrt7}{2}-3\\sqrt7-\\frac{3\\sqrt7}{2}=5\\sqrt7-\\sqrt7=4\\sqrt7$입니다.\n따라서 $a=4$이므로 답은 ④입니다."
+  },
+  {
+   "id": "b97b8344-a96e-47d9-b357-98e9a1948ef6",
+   "before": null,
+   "after": "$-\\sqrt5\\approx-2.24$이고 $\\frac32=1.5$입니다.\n보기의 값을 근삿값으로 구하면 $-\\frac32=-1.5$, $\\sqrt5\\approx2.24$, $-2.5$, $\\sqrt{27}\\approx5.20$, $-2$, $-\\sqrt{211}\\approx-14.53$, $-1+\\sqrt6\\approx1.45$입니다.\n이 중 $-2.24$와 $1.5$ 사이에 있는 것은 $-\\frac32$, $-2$, $-1+\\sqrt6$로 3개입니다.\n따라서 답은 ③입니다."
+  },
+  {
+   "id": "2fc94b39-bd3d-4a00-9b64-8ddc162c6840",
+   "before": null,
+   "after": "$\\sqrt{121}=11$이고 $3<\\sqrt{11}<4$이므로 $f(\\sqrt{121})=f(11)=3$입니다.\n$\\sqrt{64}=8$이고 $2<\\sqrt8<3$이므로 $g(\\sqrt{64})=g(8)=\\sqrt8-2=2\\sqrt2-2$입니다.\n따라서 $3\\times f(\\sqrt{121})-g(\\sqrt{64})\\times\\sqrt2=9-(2\\sqrt2-2)\\sqrt2=9-(4-2\\sqrt2)=5+2\\sqrt2$입니다."
+  },
+  {
+   "id": "dc2e6a0c-9dad-4985-b896-2303a956e959",
+   "before": null,
+   "after": "제곱근표는 $\\sqrt{4.12}=2.030$, $\\sqrt{4.16}=2.040$, $\\sqrt{4.25}=2.062$, $\\sqrt{30.2}=5.495$, $\\sqrt{31.2}=5.586$ 등의 값을 담고 있습니다.\n$\\sqrt{100x}=10\\sqrt{x}$의 관계를 이용하면 ②~⑤는 각각 $416=4.16\\times100$, $3120=31.2\\times100$, $0.302=30.2\\div100$, $0.0425=4.25\\div100$으로 표의 값을 이용해 구할 수 있습니다.\n반면 $0.41$은 $10$의 짝수 제곱 배로 표의 범위($4.1x$, $4.2x$, $30.x$, $31.x$)에 맞출 수 없으므로 구할 수 없습니다.\n따라서 답은 ①입니다."
+  },
+  {
+   "id": "88b4fa7e-a121-4781-bfe2-1a811dbe609c",
+   "before": null,
+   "after": "$\\sqrt{1800}=\\sqrt{900\\times2}=30\\sqrt2=30a$입니다.\n$\\sqrt{0.025}=\\sqrt{\\frac{25}{1000}}=\\frac{5}{10\\sqrt{10}}=\\frac{1}{2\\sqrt2\\sqrt5}=\\frac{\\sqrt2\\sqrt5}{20}=\\frac{ab}{20}$입니다.\n따라서 $\\sqrt{1800}+\\sqrt{0.025}=30a+\\frac{1}{20}ab$이므로 답은 ④입니다."
+  },
+  {
+   "id": "0fcb1a17-6b72-46ac-b813-de6b1180a101",
+   "before": null,
+   "after": "$\\sqrt3\\approx1.73$이므로 $1+\\sqrt3\\approx2.73$이고, 정수부분은 $2$입니다.\n소수부분 $a=(1+\\sqrt3)-2=\\sqrt3-1$입니다.\n$a^2+2a+1=(a+1)^2=(\\sqrt3-1+1)^2=(\\sqrt3)^2=3$이므로 답은 ①입니다."
+  },
+  {
+   "id": "ce1bfe7b-9f8c-46b1-93d2-c2aaa57b7d10",
+   "before": null,
+   "after": "① $\\sqrt{18}=3\\sqrt2=ab^2$, ② $\\sqrt{72}=6\\sqrt2=a^3b^2$, ④ $\\frac{2}{\\sqrt3}=\\frac{2}{b}=\\frac{a^2}{b}$, ⑤ $\\frac{3\\sqrt3}{2}=\\frac{3b}{2}=\\frac{b^3}{a^2}$는 모두 성립합니다.\n③ $\\frac{b}{a^2}=\\frac{\\sqrt3}{2}$인데 $\\sqrt{1.5}=\\sqrt{\\frac32}=\\frac{\\sqrt3}{\\sqrt2}=\\frac{b}{a}$이므로 $\\frac{b}{a^2}$과 같지 않습니다.\n따라서 옳지 않은 것은 ③입니다."
+  },
+  {
+   "id": "1a29b7df-6ae3-4c64-937a-da534afca8e6",
+   "before": null,
+   "after": "$\\sqrt x=\\sqrt{3y}+4\\sqrt2$의 양변을 제곱하면 $x=3y+32+8\\sqrt{6y}$이므로, $x$가 자연수이려면 $6y$가 완전제곱수여야 합니다.\n$6y=t^2$이라 하면 $t$는 $6$의 배수여야 하므로 가장 작은 경우는 $t=6$, 이때 $y=6$입니다.\n이때 $x=3(6)+32+8(6)=18+32+48=98$입니다.\n$x+y=98+6=104$로 가장 작으므로 답은 ④입니다."
+  },
+  {
+   "id": "bb0a2c96-e0c1-4c90-b1ac-df938f7fe715",
+   "before": null,
+   "after": "ㄱ. $\\sqrt2-6\\sqrt2=-5\\sqrt2$이므로 $5\\sqrt2$가 아닙니다.\nㄴ. $3\\sqrt2$와 $2\\sqrt3$은 서로 다른 무리수라 더해지지 않으므로 $5\\sqrt5$가 될 수 없습니다.\nㄷ. $5\\sqrt2+6\\sqrt7-3\\sqrt2-7\\sqrt7=2\\sqrt2-\\sqrt7$로 성립합니다.\nㄹ. $\\sqrt3+3\\sqrt5-4\\sqrt3-2\\sqrt5=-3\\sqrt3+\\sqrt5$로 성립합니다.\n옳은 것은 ㄷ, ㄹ이므로 답은 ⑤입니다."
+  },
+  {
+   "id": "2a477f48-8444-4a80-8c48-94d0aded65b9",
+   "before": null,
+   "after": "$A=2(4\\sqrt2+\\sqrt5)=8\\sqrt2+2\\sqrt5$입니다.\n$2B=2(2\\sqrt5-3\\sqrt2)=4\\sqrt5-6\\sqrt2$입니다.\n$A-2B=(8\\sqrt2+2\\sqrt5)-(4\\sqrt5-6\\sqrt2)=14\\sqrt2-2\\sqrt5$이므로 답은 ④입니다."
+  },
+  {
+   "id": "47f9aa44-faa5-4cb6-b87d-a07d6c67f638",
+   "before": null,
+   "after": "$a=5-\\sqrt2$, $b=3+\\sqrt3$, $c=4$이다.\n$a<c$: $5-\\sqrt2<4 \\Leftrightarrow 1<\\sqrt2$ (참)\n$c<b$: $4<3+\\sqrt3 \\Leftrightarrow 1<\\sqrt3$ (참)\n따라서 $a<c<b$"
+  },
+  {
+   "id": "a0a4d814-6dfa-4e69-8246-33eb12d7b141",
+   "before": null,
+   "after": "$\\sqrt{48}=4\\sqrt3$, $\\frac{\\sqrt{18}}{6}=\\frac{3\\sqrt2}{6}=\\frac{\\sqrt2}{2}$\n$\\sqrt3\\left(2+\\frac{6}{\\sqrt{24}}\\right)=2\\sqrt3+\\frac{6\\sqrt3}{2\\sqrt6}=2\\sqrt3+\\frac{3\\sqrt2}{2}$\n주어진 식 $=4\\sqrt3-\\frac{\\sqrt2}{2}-2\\sqrt3-\\frac{3\\sqrt2}{2}=2\\sqrt3-2\\sqrt2$\n$a=-2$, $b=2$이므로 $ab=-4$"
+  },
+  {
+   "id": "85e9cf2d-7fc1-48cc-a947-5f404e64360b",
+   "before": null,
+   "after": "표에서 행 96·열2로 $\\sqrt{96.2}=9.808$, 행 9.6·열2로 $\\sqrt{9.62}=3.102$를 읽는다.\n$A=\\sqrt{9620}=\\sqrt{96.2\\times100}=10\\sqrt{96.2}=98.08$\n$B=\\sqrt{0.0962}=\\sqrt{9.62\\times0.01}=0.1\\sqrt{9.62}=0.3102$\n$A+B=98.08+0.3102=98.3902$"
+  },
+  {
+   "id": "21a8b0c7-66f6-47a0-884a-ad416d4bff04",
+   "before": null,
+   "after": "$A=\\sqrt{(x+1)^2}-\\sqrt{(2x-1)^2}=|x+1|-|2x-1|$\nㄱ. $x<-1$이면 $A=-(x+1)-\\{-(2x-1)\\}=x-2$ (참)\nㄴ. $-1<x<\\frac12$이면 $A=(x+1)-(1-2x)=3x$이므로 $A=2x$는 거짓\nㄷ. $x>\\frac12$이면 $A=(x+1)-(2x-1)=-x+2$ (참)\n옳은 것은 ㄱ, ㄷ"
+  },
+  {
+   "id": "39b4bf9d-9fd5-40e1-b341-0e1f2af87f38",
+   "before": null,
+   "after": "$a>1$이면 $\\frac1a<1<a<a^2$이다.\n$\\sqrt{(\\frac1a-a)^2}=a-\\frac1a$, $\\sqrt{(a-a^2)^2}=a^2-a$, $\\sqrt{(a^2-\\frac1a)^2}=a^2-\\frac1a$\n주어진 식 $=(a-\\frac1a)-(a^2-a)+(a^2-\\frac1a)=2a-\\frac2a$"
+  },
+  {
+   "id": "784628fd-83cc-444b-ab4b-b4dd4574f194",
+   "before": null,
+   "after": "$\\sqrt{20}=2\\sqrt5=a\\sqrt5$이므로 $a=2$\n$\\frac{8}{\\sqrt2}=\\frac{8\\sqrt2}{2}=4\\sqrt2=b\\sqrt2$이므로 $b=4$\n$ab=2\\times4=8$"
+  },
+  {
+   "id": "009958ab-7cef-4a73-9423-b3f84ce61500",
+   "before": null,
+   "after": "$\\sqrt8=2\\sqrt2$이므로\n$2\\sqrt2+5\\sqrt2-4\\sqrt2=3\\sqrt2$"
+  },
+  {
+   "id": "68e8f584-eac9-40eb-b581-a373b2b2ab49",
+   "before": null,
+   "after": "$(-\\sqrt5)^2=5$\n$\\sqrt{(-3)^2}=\\sqrt9=3$\n$5+3=8$"
+  },
+  {
+   "id": "3026030e-15da-4213-b8c0-2ba39327781a",
+   "before": null,
+   "after": "$\\sqrt2\\cdot\\frac{2}{\\sqrt6}=\\frac{2\\sqrt3}{3}$, $\\sqrt2\\cdot\\frac{10}{\\sqrt{12}}=\\frac{5\\sqrt6}{3}$이므로 앞 괄호는 $\\frac{2\\sqrt3}{3}-\\frac{5\\sqrt6}{3}$\n$\\sqrt6\\cdot\\frac{6}{\\sqrt{32}}=\\frac{3\\sqrt3}{2}$, $\\sqrt6\\cdot\\frac{3}{\\sqrt2}=3\\sqrt3$이므로 뒤 괄호는 $\\frac{3\\sqrt3}{2}-3\\sqrt3=-\\frac{3\\sqrt3}{2}$\n합하면 $\\frac{2\\sqrt3}{3}-\\frac{3\\sqrt3}{2}-\\frac{5\\sqrt6}{3}=-\\frac{5}{6}\\sqrt3-\\frac{5}{3}\\sqrt6$"
+  },
+  {
+   "id": "58ad6798-a3c4-4395-a4cf-dbf5b19cd942",
+   "before": null,
+   "after": "$\\sqrt{48}=4\\sqrt3$이므로 $a=3$\n$\\sqrt{72}=6\\sqrt2$이므로 $b=6$\n$\\sqrt{150}=5\\sqrt6$이므로 $c=6$\n$abc=3\\times6\\times6=108$이고 $\\sqrt{108}=6\\sqrt3$"
+  },
+  {
+   "id": "050df301-b0d5-40c3-8321-479f054f8833",
+   "before": null,
+   "after": "표의 행 3.2·열0에서 $\\sqrt{3.20}=1.789$를 읽는다.\n$0.032=3.20\\times10^{-2}$이므로 $\\sqrt{0.032}=0.1\\sqrt{3.20}=0.1789$\n나머지 선택지는 이동한 자릿수가 표의 값과 맞지 않아 옳지 않다."
+  },
+  {
+   "id": "32da8ec4-3428-4757-a926-7da3f816ce1a",
+   "before": null,
+   "after": "$a\\sqrt{\\frac{18b}{a}}=\\sqrt{18ab}=\\sqrt{18\\times25}=\\sqrt{450}=15\\sqrt2$\n$b\\sqrt{\\frac{32a}{b}}=\\sqrt{32ab}=\\sqrt{32\\times25}=\\sqrt{800}=20\\sqrt2$\n$15\\sqrt2-20\\sqrt2=-5\\sqrt2$"
+  },
+  {
+   "id": "9064f68c-c964-4f89-b707-28b8467e5585",
+   "before": null,
+   "after": "높이를 $h$라 하면 $h^2=300$에서 $h=10\\sqrt3$\n윗변:아랫변$=2:3$이므로 $x=2k$, $y=3k$라 하면\n사다리꼴의 넓이 $\\frac{(x+y)h}{2}=\\frac{5k\\times10\\sqrt3}{2}=25\\sqrt3k=300$\n$k=\\frac{300}{25\\sqrt3}=4\\sqrt3$\n$x=2k=8\\sqrt3$, $y=3k=12\\sqrt3$"
+  },
+  {
+   "id": "b0a815e9-e03c-4784-8cdb-c56e88986a41",
+   "before": null,
+   "after": "$\\frac{4}{\\sqrt2}(\\sqrt2-\\sqrt6)=4-\\frac{4\\sqrt6}{\\sqrt2}=4-4\\sqrt3$\n$\\frac{\\sqrt{12}-3}{\\sqrt3}=\\frac{2\\sqrt3-3}{\\sqrt3}=2-\\sqrt3$\n주어진 식 $=(4-4\\sqrt3)-(2-\\sqrt3)=2-3\\sqrt3$\n$a=2$, $b=-3$이므로 $2a+b=4-3=1$"
+  },
+  {
+   "id": "e9a30169-aafc-4810-9091-0da38163ab77",
+   "before": null,
+   "after": "$(\\sqrt{27}-3\\sqrt2)\\div\\sqrt3=\\frac{3\\sqrt3-3\\sqrt2}{\\sqrt3}=3-\\sqrt6$\n$\\frac{4}{\\sqrt2}(\\sqrt2-\\sqrt3)=4-\\frac{4\\sqrt3}{\\sqrt2}=4-2\\sqrt6$\n합하면 $(3-\\sqrt6)+(4-2\\sqrt6)=7-3\\sqrt6$"
+  },
+  {
+   "id": "26226526-cd14-430c-a004-381a4bec03bb",
+   "before": null,
+   "after": "$4x-3$이 완전제곱수 $k^2$이면 $\\sqrt{4x-3}$은 무리수가 아니다. $k$는 홀수이고 $x=\\frac{k^2+3}{4}$\n$k=1,3,5,7,9,11,13$일 때 $x=1,3,7,13,21,31,43$으로 모두 50 이하 (7개)\n따라서 무리수가 되는 $x$의 개수는 $50-7=43$"
+  },
+  {
+   "id": "75e21f83-2b2c-404a-9e88-2de7d04ff6c0",
+   "before": null,
+   "after": "표의 행 9.6·열3에서 $\\sqrt{9.63}=3.103$을 바로 읽을 수 있다."
+  },
+  {
+   "id": "ffeca409-6d71-43d5-bd0a-4d811978ff41",
+   "before": null,
+   "after": "표는 $20.0\\sim21.4$ 범위를 담고 있어, 소수점을 두 자리씩(100배 단위로) 옮긴 수만 구할 수 있다.\n$0.00202=20.2\\times10^{-4}$, $0.204=20.4\\times10^{-2}$, $2010=20.1\\times10^{2}$, $210000=21.0\\times10^{4}$는 모두 짝수 자리 이동으로 표에서 구해진다.\n$0.0203=20.3\\times10^{-3}$은 이동 자리가 홀수라 표로 구할 수 없다."
+  },
+  {
+   "id": "d713b053-7070-4fcc-b251-d9e3ceb40951",
+   "before": null,
+   "after": "$\\frac{6}{\\sqrt2}+\\frac{6}{\\sqrt3}=3\\sqrt2+2\\sqrt3$은 옳다.\n$2\\sqrt3-5\\sqrt2+\\sqrt3+2\\sqrt2=3\\sqrt3-3\\sqrt2$인데 이는 $-\\sqrt5$와 같지 않으므로 옳지 않다."
+  },
+  {
+   "id": "a4227a3e-4576-4113-acac-880978900237",
+   "before": null,
+   "after": "$\\sqrt5(3\\sqrt2-2)+\\frac{10}{\\sqrt5}$을 전개합니다.\n$\\sqrt5\\times3\\sqrt2=3\\sqrt{10}$, $\\sqrt5\\times(-2)=-2\\sqrt5$\n$\\frac{10}{\\sqrt5}=\\frac{10\\sqrt5}{5}=2\\sqrt5$\n따라서 $3\\sqrt{10}-2\\sqrt5+2\\sqrt5=3\\sqrt{10}$"
+  },
+  {
+   "id": "f76ec884-83b5-4669-8096-248778f4069d",
+   "before": null,
+   "after": "세 수를 근삿값으로 비교하면 $\\sqrt3-2\\sqrt5<\\sqrt5-\\sqrt3<-1+\\sqrt5$ 순서입니다.\n합이 가장 크려면 가장 큰 두 수를 더해야 하므로 $a=(\\sqrt5-\\sqrt3)+(-1+\\sqrt5)=2\\sqrt5-\\sqrt3-1$\n차가 가장 크려면 최댓값에서 최솟값을 빼야 하므로 $b=(-1+\\sqrt5)-(\\sqrt3-2\\sqrt5)=3\\sqrt5-\\sqrt3-1$\n따라서 $a-b=-\\sqrt5$"
+  },
+  {
+   "id": "1632ec71-5810-4ede-9239-a92ec345b3c4",
+   "before": null,
+   "after": "$\\sqrt{48}=4\\sqrt3$이므로 $\\frac{3}{\\sqrt{48}}=\\frac{\\sqrt3}{4}$\n$\\sqrt6\\div\\frac{4\\sqrt2}{3}=\\sqrt6\\times\\frac{3}{4\\sqrt2}=\\frac{3\\sqrt3}{4}$\n$\\frac{\\sqrt6}{4}\\times\\sqrt2=\\frac{\\sqrt{12}}{4}=\\frac{\\sqrt3}{2}$\n합하면 $\\frac{\\sqrt3}{4}+\\frac{3\\sqrt3}{4}-\\frac{\\sqrt3}{2}=\\frac{\\sqrt3}{2}$"
+  },
+  {
+   "id": "f9fb275f-47df-4408-b480-8d00be9e66b8",
+   "before": null,
+   "after": "$\\sqrt3\\times\\frac{5}{\\sqrt{15}}=\\sqrt5$, $\\sqrt3\\times3=3\\sqrt3$이므로 앞의 괄호는 $\\sqrt5+3\\sqrt3$\n$\\sqrt2\\times\\frac{9}{\\sqrt6}=3\\sqrt3$, $\\sqrt2\\times\\frac{6}{\\sqrt{18}}=2$이므로 뒤의 괄호는 $3\\sqrt3-2$\n전체는 $(\\sqrt5+3\\sqrt3)-(3\\sqrt3-2)=\\sqrt5+2$"
+  },
+  {
+   "id": "dd041c9c-93b6-4d8f-b3cb-e7b759cb0b66",
+   "before": null,
+   "after": "각 분수를 유리화합니다.\n$\\frac{\\sqrt5-\\sqrt3}{\\sqrt5+\\sqrt3}=\\frac{(\\sqrt5-\\sqrt3)^2}{2}=4-\\sqrt{15}$\n$\\frac{\\sqrt5+\\sqrt3}{\\sqrt5-\\sqrt3}=\\frac{(\\sqrt5+\\sqrt3)^2}{2}=4+\\sqrt{15}$\n따라서 $(4-\\sqrt{15})-(4+\\sqrt{15})=-2\\sqrt{15}$"
+  },
+  {
+   "id": "ce8a865a-71d7-4325-a78f-e3b3691afb18",
+   "before": null,
+   "after": "각 보기를 계산합니다.\n① $\\sqrt{144}+\\sqrt4=12+2=14$ (옳음)\n② $\\sqrt{64}-\\sqrt{(-5)^2}=8-5=3$ (옳음)\n③ $\\sqrt{0.49}\\times\\sqrt9=0.7\\times3=2.1$ (0.63이 아니므로 옳지 않음)\n④ $\\sqrt{(-15)^2}\\div\\sqrt{25}=15\\div5=3$ (옳음)\n⑤ $(-\\sqrt5)^2\\times(\\sqrt9)^2=5\\times9=45$ (옳음)\n따라서 옳지 않은 것은 ③"
+  },
+  {
+   "id": "ebdc047f-26b7-4268-af2e-9fa2223b0823",
+   "before": null,
+   "after": "닮음비가 $2:3$이므로 반지름을 $2k, 3k$라 하면 넓이비는 $4:9$입니다.\n넓이 차 $9\\pi k^2-4\\pi k^2=5\\pi k^2=10\\pi$이므로 $k^2=2$\n큰 원의 반지름은 $3k=3\\sqrt2$"
+  },
+  {
+   "id": "6fd7c463-db5b-4508-8ad1-eae69eaf57c9",
+   "before": null,
+   "after": "$A=\\sqrt{5^2}+\\sqrt{(-3)^2}\\times(-\\sqrt4)^2=5+3\\times4=17$\n$B=\\frac{\\sqrt{(-11)^2}-\\sqrt{(-5)^2}}{3}=\\frac{11-5}{3}=2$\n$\\sqrt{A-4B}=\\sqrt{17-8}=\\sqrt9=3$"
+  },
+  {
+   "id": "f8b2f1eb-6ab2-4030-b0d9-9468c14eaa58",
+   "before": null,
+   "after": "$a<b<0$이므로 $a-b<0$, $a<0$, $b<0$입니다.\n$\\sqrt{(a-b)^2}=|a-b|=b-a$\n$\\sqrt{9a^2}=3|a|=-3a$, $\\sqrt{(-b)^2}=|b|=-b$\n따라서 $(b-a)-(-3a)-(-b)=b-a+3a+b=2a+2b$"
+  },
+  {
+   "id": "cc4f51e7-4f46-47c9-9fa0-e1450e90356b",
+   "before": null,
+   "after": "두 분모의 곱은 $(3+2\\sqrt2)(3-2\\sqrt2)=1$이므로 통분하면\n$\\frac{2(3-2\\sqrt2)+(3+2\\sqrt2)}{1}=9-2\\sqrt2$\n$\\sqrt2\\approx1.414$이므로 $9-2\\sqrt2\\approx6.17$, 정수부분 $a=6$, 소수부분 $b=3-2\\sqrt2$\n$\\frac{a-5}{b}=\\frac{1}{3-2\\sqrt2}=\\frac{3+2\\sqrt2}{(3-2\\sqrt2)(3+2\\sqrt2)}=3+2\\sqrt2$"
+  },
+  {
+   "id": "48f9dff6-7d28-4f30-a65e-2711b7cc397e",
+   "before": null,
+   "after": "$a^2=5$, $(-b)^2=b^2=2$이므로 $-2a^2\\times(-b)^2=-2\\times5\\times2=-20$\n$\\sqrt{(-c)^2}=\\sqrt9=3$, $\\sqrt{4c^2}=\\sqrt{36}=6$\n따라서 $-20-3+6=-17$"
+  },
+  {
+   "id": "2b62a250-8cf5-4118-81b3-f19835b854bd",
+   "before": null,
+   "after": "$57000=5.7\\times10000$이므로\n$\\sqrt{57000}=\\sqrt{5.7}\\times\\sqrt{10000}=\\sqrt{5.7}\\times100=2.387\\times100=238.7$"
+  },
+  {
+   "id": "0b1fcdd3-c2b7-4cfe-a409-1cddfac4e695",
+   "before": null,
+   "after": "$a-b>0$이고 $ab<0$이므로 $a>0, b<0$입니다.\n$\\sqrt{(-a)^2}=|a|=a$\n$\\sqrt{(-3b)^2}=3|b|=-3b$, $\\sqrt{16b^2}=4|b|=-4b$\n따라서 $a-(-3b)+(-4b)=a+3b-4b=a-b$"
+  },
+  {
+   "id": "60e5f5f0-35e9-498a-9181-836865656830",
+   "before": null,
+   "after": "$12-x$가 $0$ 이상인 완전제곱수가 되어야 합니다. $12-x\\in\\{0,1,4,9\\}$\n$x\\in\\{12,11,8,3\\}$ (모두 자연수)\n가장 큰 값 $a=12$, 가장 작은 값 $b=3$이므로 $a-b=9$"
+  },
+  {
+   "id": "d0f32a53-80ef-46c4-a268-935b0f3c3ab9",
+   "before": null,
+   "after": "$x=\\frac{1}{\\sqrt5+\\sqrt3}=\\frac{\\sqrt5-\\sqrt3}{2}$\n③ $x-\\frac{\\sqrt5}{2}=\\frac{\\sqrt5-\\sqrt3}{2}-\\frac{\\sqrt5}{2}=-\\frac{\\sqrt3}{2}$이므로 $\\left(x-\\frac{\\sqrt5}{2}\\right)^2=\\frac34$ (유리수)\n나머지 보기는 모두 계산 결과에 근호가 남아 무리수입니다."
+  },
+  {
+   "id": "c9d8c48b-62dd-4fba-a21f-260817d73e9a",
+   "before": null,
+   "after": "두 눈의 합 $s=x+y$ ($2\\le s\\le12$)에 대해 $12-s$가 완전제곱수(0,1,4,9)이면 $\\sqrt{12-x-y}$는 유리수입니다.\n$12-s\\in\\{0,1,4,9\\}$이면 $s\\in\\{12,11,8,3\\}$이고 그 경우의 수는 $1+2+5+2=10$가지\n따라서 무리수가 될 확률은 $\\frac{36-10}{36}=\\frac{26}{36}=\\frac{13}{18}$"
+  },
+  {
+   "id": "9f9f0baf-e6db-4339-9677-613680619536",
+   "before": null,
+   "after": "근호 안의 값을 모두 곱하면\n$\\sqrt{15\\times2a\\times6\\times5a}=\\sqrt{900a^2}=30a$ ($a>0$)\n$30a=120$이므로 $a=4$"
+  },
+  {
+   "id": "5e687bcb-dc77-4512-80cf-56a7e767de0a",
+   "before": null,
+   "after": "각 수를 판별합니다.\n$\\sqrt2+1,\\ \\sqrt2-\\sqrt3,\\ \\sqrt3,\\ \\sqrt3-1$은 무리수, $1,\\ \\sqrt{2^2}=2,\\ -\\frac{1}{10}$은 유리수\n유리수 개수 $a=3$, 무리수 개수 $b=4$\n따라서 $3a-b=9-4=5$"
+  },
+  {
+   "id": "da7252f8-2d1a-4d4f-9b5f-8b9ebd15c089",
+   "before": null,
+   "after": "$\\sqrt2$의 계수만 계산하면 $2-4+1-6=-7$\n따라서 $2\\sqrt2-4\\sqrt2+\\sqrt2-6\\sqrt2=-7\\sqrt2$"
+  },
+  {
+   "id": "203e3763-6236-4b15-8b1b-03f203f52fee",
+   "before": null,
+   "after": "2의 제곱근은 $\\pm\\sqrt2$이므로 큰 것은 $a=\\sqrt2$\n8의 제곱근은 $\\pm2\\sqrt2$이므로 작은 것은 $b=-2\\sqrt2$\n$\\frac{3+b}{a-1}=\\frac{3-2\\sqrt2}{\\sqrt2-1}$의 분모, 분자에 $\\sqrt2+1$을 곱해 유리화하면\n$\\frac{(3-2\\sqrt2)(\\sqrt2+1)}{(\\sqrt2-1)(\\sqrt2+1)}=\\frac{3\\sqrt2+3-4-2\\sqrt2}{1}=\\sqrt2-1$"
+  },
+  {
+   "id": "df16b1d7-003c-4563-8032-37ed3ae686ad",
+   "before": null,
+   "after": "$\\frac{2}{2+\\sqrt2}=\\frac{2(2-\\sqrt2)}{(2+\\sqrt2)(2-\\sqrt2)}=\\frac{2(2-\\sqrt2)}{2}=2-\\sqrt2$\n$\\frac{1}{2-\\sqrt2}=\\frac{2+\\sqrt2}{(2-\\sqrt2)(2+\\sqrt2)}=\\frac{2+\\sqrt2}{2}=1+\\frac{\\sqrt2}{2}$\n두 식의 차: $(2-\\sqrt2)-\\left(1+\\frac{\\sqrt2}{2}\\right)=1-\\frac{3}{2}\\sqrt2$\n따라서 $a=1,\\ b=-\\frac{3}{2}$이므로 $a-b=1+\\frac{3}{2}=\\frac{5}{2}$"
+  },
+  {
+   "id": "6dae05c5-20b6-465f-907e-c875d4e9a7d1",
+   "before": null,
+   "after": "$\\frac{\\sqrt a}{4\\sqrt{15}}=\\frac{\\sqrt a\\cdot\\sqrt{15}}{60}=\\frac{\\sqrt{15a}}{60}$\n이것이 $\\frac{\\sqrt{10}}{20}=\\frac{3\\sqrt{10}}{60}$과 같으므로 $\\sqrt{15a}=3\\sqrt{10}$\n양변을 제곱하면 $15a=90$\n따라서 $a=6$"
+  },
+  {
+   "id": "85cee4d2-a652-4e0e-8fd0-b9ada2688ad1",
+   "before": null,
+   "after": "$\\sqrt3\\approx1.732>1$이므로 $1-\\sqrt3<0$, $\\sqrt3-1>0$\n$\\sqrt{(1-\\sqrt3)^2}=|1-\\sqrt3|=\\sqrt3-1$\n$\\sqrt{(\\sqrt3-1)^2}=|\\sqrt3-1|=\\sqrt3-1$\n두 값을 더하면 $2\\sqrt3-2=-2+2\\sqrt3$"
+  },
+  {
+   "id": "901a2369-1f1d-4151-8d0d-e3f7d88d0744",
+   "before": null,
+   "after": "$\\frac{7}{\\sqrt6}=\\frac{7\\sqrt6}{6}$\n$\\sqrt6(\\sqrt{12}+1)=\\sqrt{72}+\\sqrt6=6\\sqrt2+\\sqrt6$\n$\\frac{13}{\\sqrt2}=\\frac{13\\sqrt2}{2}$\n식을 정리하면 $\\frac{7\\sqrt6}{6}-6\\sqrt2-\\sqrt6+\\frac{13\\sqrt2}{2}=\\frac{1}{2}\\sqrt2+\\frac{1}{6}\\sqrt6$\n따라서 $a=\\frac12,\\ b=\\frac16$이므로 $a+b=\\frac{2}{3}$"
+  },
+  {
+   "id": "0ae8adf7-c637-4a87-a215-5ea228b7f12d",
+   "before": null,
+   "after": "$a=\\sqrt{9^2}-(-\\sqrt{11})^2=9-11=-2$\n$b=(-\\sqrt5)^2\\times\\sqrt{\\frac{9}{25}}=5\\times\\frac{3}{5}=3$\n따라서 $a-b=-2-3=-5$"
+  },
+  {
+   "id": "a5b0adc0-d5f1-465b-9e17-be2401aa6caa",
+   "before": null,
+   "after": "$5^{2026}+5^{2025}n=5^{2025}(5+n)=5^{2024}\\times 5(5+n)$\n$5^{2024}$은 이미 완전제곱수이므로 $5(5+n)$이 완전제곱수여야 자연수가 된다\n$5(5+n)=k^2$이면 $5\\mid k$이므로 $k=5m$, 즉 $5+n=5m^2$에서 $n=5(m^2-1)$\n$1\\le n\\le100$인 자연수 $n$을 만족하는 $m$은 $m=2,3,4$ ($n=15,40,75$) — $m=1$이면 $n=0$이라 제외, $m=5$면 $n=120$으로 범위 초과\n따라서 $n$의 값의 개수는 3개"
+  },
+  {
+   "id": "a2014436-7ea4-410c-84ff-264ca1bcb6b8",
+   "before": null,
+   "after": "$a\\sqrt{\\frac{3b}{a}}=\\sqrt{a^2\\cdot\\frac{3b}{a}}=\\sqrt{3ab}$ ($a>0$)\n$b\\sqrt{\\frac{12a}{b}}=\\sqrt{b^2\\cdot\\frac{12a}{b}}=\\sqrt{12ab}$ ($b>0$)\n$ab=49$이므로 $\\sqrt{3ab}=\\sqrt{147}=7\\sqrt3$, $\\sqrt{12ab}=\\sqrt{588}=14\\sqrt3$\n두 값을 더하면 $7\\sqrt3+14\\sqrt3=21\\sqrt3$"
+  },
+  {
+   "id": "d890ee88-c4bf-4667-962b-989cb268b4a2",
+   "before": null,
+   "after": "각 수의 근삿값: $-\\sqrt5\\approx-2.236$, $2-\\sqrt5\\approx-0.236$, $0$, $\\sqrt3+2\\sqrt5\\approx6.204$, $\\sqrt5+2\\sqrt3\\approx5.700$, $-5+\\sqrt5\\approx-2.764$\n작은 값부터 나열: $-5+\\sqrt5<-\\sqrt5<2-\\sqrt5<0<\\sqrt5+2\\sqrt3<\\sqrt3+2\\sqrt5$\n왼쪽에서 두 번째는 $-\\sqrt5$, 오른쪽에서 첫 번째(최댓값)는 $\\sqrt3+2\\sqrt5$\n두 값의 합: $-\\sqrt5+(\\sqrt3+2\\sqrt5)=\\sqrt3+\\sqrt5$"
+  },
+  {
+   "id": "99b5976e-369b-45cc-a3e9-615a5f8989e7",
+   "before": null,
+   "after": "$\\frac{1}{\\sqrt5-\\sqrt2}+\\frac{1}{\\sqrt5+\\sqrt2}=\\frac{(\\sqrt5+\\sqrt2)+(\\sqrt5-\\sqrt2)}{(\\sqrt5-\\sqrt2)(\\sqrt5+\\sqrt2)}=\\frac{2\\sqrt5}{5-2}=\\frac{2\\sqrt5}{3}$"
+  },
+  {
+   "id": "ec341d09-1be1-45ec-9994-6c08651f88e0",
+   "before": null,
+   "after": "$\\sqrt{72}=6\\sqrt2$이므로 $\\frac{\\sqrt3}{2}\\times\\sqrt{72}=\\frac{\\sqrt3}{2}\\times6\\sqrt2=3\\sqrt6$\n$\\frac{\\sqrt{90}}{\\sqrt5}=\\sqrt{18}=3\\sqrt2$\n식을 정리하면 $3\\sqrt6-3\\sqrt2=-3\\sqrt2+3\\sqrt6$\n따라서 $a=-3,\\ b=3$이므로 $a+b=0$"
+  },
+  {
+   "id": "fd4c4a0f-487a-47ad-bef2-7060dc6a1bf3",
+   "before": null,
+   "after": "분모, 분자에 각각 $3+2\\sqrt2$를 곱한다\n분모: $(3-2\\sqrt2)(3+2\\sqrt2)=9-8=1$\n분자: $(4+3\\sqrt2)(3+2\\sqrt2)=12+8\\sqrt2+9\\sqrt2+12=24+17\\sqrt2$\n따라서 $a=24,\\ b=17$이므로 $a-b=7$"
+  },
+  {
+   "id": "27a55e81-891c-4675-bb3d-e9f1d76c25ed",
+   "before": null,
+   "after": "$\\sqrt{(a-b)^2}=a-b$에서 $a-b\\ge0$이고, $ab<0$과 함께 생각하면 $a>0,\\ b<0$\nㄱ. $\\sqrt{a^2}=|a|=a$ (참)\nㄴ. $\\sqrt{4b^2}=2|b|=-2b\\ne2b$ ($b<0$이므로 거짓)\nㄷ. $\\sqrt{(a-b)^2}-\\sqrt{(b-a)^2}=(a-b)-(a-b)=0\\ne2a-2b$ ($a\\ne b$이므로 거짓)\n옳은 것은 ㄱ뿐"
+  },
+  {
+   "id": "742ca81b-3c1a-4f66-9804-afab0f520d48",
+   "before": null,
+   "after": "$\\sqrt{12}\\left(\\sqrt5-\\frac{1}{\\sqrt3}\\right)=2\\sqrt3\\times\\sqrt5-2\\sqrt3\\times\\frac{1}{\\sqrt3}=2\\sqrt{15}-2$\n$\\frac{3}{\\sqrt2}(\\sqrt8-\\sqrt{30})=3\\sqrt4-3\\sqrt{15}=6-3\\sqrt{15}$\n전체 식: $(2\\sqrt{15}-2)-(6-3\\sqrt{15})=5\\sqrt{15}-8$\n즉 $-8+5\\sqrt{15}$"
+  },
+  {
+   "id": "cf19cd90-ef45-4061-a528-2ec2e1227454",
+   "before": null,
+   "after": "$a<0$이므로 $|a|=-a$\n$\\sqrt{9a^2}=3|a|=-3a$\n$\\sqrt{(-a)^2}=|-a|=|a|=-a$\n두 값을 더하면 $-3a+(-a)=-4a$"
+  },
+  {
+   "id": "ad2eb59c-e278-46f2-af16-ca8293e79e02",
+   "before": null,
+   "after": "$\\sqrt{5.52}\\approx2.3495$\n$\\sqrt{5.90}\\approx2.4290$\n$\\sqrt{5.81}\\approx2.4104$\n세 값을 계산하면 $2.3495-2.4290+2.4104\\approx2.331$\n주어진 보기 중 가장 가까운 값은 $2.330$"
+  },
+  {
+   "id": "c0c2f4fa-aaf4-4e96-bf83-a5cc0591d10c",
+   "before": null,
+   "after": "$x>0$이므로 $\\sqrt{x^2}=x$, $\\sqrt{(-x)^2}=|-x|=x$, $\\sqrt{(-4x)^2}=|-4x|=4x$\n식을 정리하면 $x+x-4x=-2x$"
+  },
+  {
+   "id": "4c73c983-36b8-40ea-98b5-3e4b29fb48a4",
+   "before": null,
+   "after": "$h=60$을 대입하면 $\\sqrt{12.6\\times60}=\\sqrt{756}$\n$756=100\\times7.56$이므로 $\\sqrt{756}=10\\sqrt{7.56}$\n주어진 값 $\\sqrt{7.56}=2.750$을 대입하면 $10\\times2.750=27.5$\n따라서 가장 먼 거리는 $27.5$km"
+  },
+  {
+   "id": "5e97998f-01ad-4ac8-8cb9-3e41401c034c",
+   "before": null,
+   "after": "$2-\\sqrt2\\approx0.586$은 이미 0과 1 사이의 값이므로 소수 부분 $b=2-\\sqrt2$\n$a+b=\\sqrt2$에서 $a=\\sqrt2-(2-\\sqrt2)=2\\sqrt2-2$\n$2<x<3$이므로 $x$의 정수 부분은 2, 소수 부분은 $a=x-2$\n$x-2=2\\sqrt2-2$이므로 $x=2\\sqrt2$"
   }
  ]
 }
