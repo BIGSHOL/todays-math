@@ -1144,5 +1144,17 @@
   "code": "J30503-H5H3",
   "dbAnswer": "⑤",
   "aiAnswer": "③"
+ },
+ {
+  "id": "efd4f1c8-91a7-4ab0-acdd-9e514b49cdd7",
+  "code": "J30701-4CL7",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "810c4501-fc0d-473c-91d0-9ac0bfbeef74",
+  "code": "J30701-CS3L",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
  }
 ]
