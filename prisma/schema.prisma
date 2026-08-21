@@ -197,6 +197,11 @@ model Student {
   /// 두 번 만들어지지 않는다.
   eywaStudentId String? @unique @map("eywa_student_id") @db.Uuid
 
+  /// 대사(reconciliation) 표시 — 동기화가 «받은 수 == total» 검증에 성공했는데
+  /// roster 에 이 학생이 없으면 여기에 시각을 적는다(퇴원·수학반 이탈).
+  /// 지우지 않는 이유: 시험 이력이 딸려 있다. 되돌아오면 NULL 로 푼다.
+  eywaWithdrawnAt DateTime? @map("eywa_withdrawn_at")
+
   /// 재학 학교 — '오늘의 시험' 예측 대상을 정한다(트랙 E).
   /// 표기는 eywa `school-name.ts` 규칙으로 정규화해 넣는다("경명여자중학교" → "경명여중").
   schoolName  String? @map("school_name") @db.VarChar(50)

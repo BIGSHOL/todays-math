@@ -1,0 +1,14 @@
+{
+ "runId": "eywa-sync-2026-08-21T05-54-43-758Z",
+ "transport": "db",
+ "before": {
+  "students": [],
+  "classes": [],
+  "progressRows": []
+ },
+ "planned": {
+  "classes": 62,
+  "students": 193,
+  "progressRows": 13571
+ }
+}
