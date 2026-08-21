@@ -310,5 +310,77 @@
   "code": "J10403-VKNJ",
   "dbAnswer": "③",
   "aiAnswer": "①"
+ },
+ {
+  "id": "3025d430-20dd-4a57-9a15-c468dc83fb91",
+  "code": "J10404-W6TN",
+  "dbAnswer": "①",
+  "aiAnswer": "①, ⑤"
+ },
+ {
+  "id": "3055f43d-2f54-4208-bc8e-22d8f1552e6f",
+  "code": "J10701-WKYA",
+  "dbAnswer": "면의 개수 6개, 육면체",
+  "aiAnswer": "6개, 육면체"
+ },
+ {
+  "id": "1036c7bf-1a86-4bec-a47e-da6113c6ddbd",
+  "code": "J20101-2VSS",
+  "dbAnswer": "순환마디 12, 3.012 (1과 2 위에 점)",
+  "aiAnswer": "순환마디: $12$, $3.0\\dot{1}\\dot{2}$"
+ },
+ {
+  "id": "98a35558-80c2-4748-a534-0ee2954723d2",
+  "code": "J20101-594V",
+  "dbAnswer": "순환마디 05, 0.0̇5̇",
+  "aiAnswer": "순환마디: $05$, $0.\\dot{0}\\dot{5}$"
+ },
+ {
+  "id": "d36c9ce9-0462-479e-8788-23616c8c97a0",
+  "code": "J20101-77ZF",
+  "dbAnswer": "순환마디: 2, $1.43\\dot{2}$",
+  "aiAnswer": "$1.43\\dot{2}$"
+ },
+ {
+  "id": "2ed0011d-457d-4a13-ba33-2af19393032b",
+  "code": "J20102-63Y7",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "6333a8d0-3298-40c9-ae48-6537b26f5ad6",
+  "code": "J20104-EEEX",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "be73699e-27d2-4b4c-b446-3b3557243285",
+  "code": "J20104-GKBU",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "6aea6504-0fed-4749-badc-0f9407428fe0",
+  "code": "J20104-HYZL",
+  "dbAnswer": "풀이참조",
+  "aiAnswer": "85개"
+ },
+ {
+  "id": "8519ade3-0ef3-4bf4-80ab-13305f3a2559",
+  "code": "J20104-JVAL",
+  "dbAnswer": "A=13/3 (바르게 계산한 답 26/9)",
+  "aiAnswer": "$A=\\dfrac{13}{3}=4.\\dot3$ (순환마디: 3)"
+ },
+ {
+  "id": "87053997-c2d8-4d25-8be9-ccb97ab68630",
+  "code": "J20104-K8JU",
+  "dbAnswer": "①",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "c139c4fa-5794-4b25-afe3-b7ca68ec9319",
+  "code": "J20104-LNE3",
+  "dbAnswer": "7/30",
+  "aiAnswer": "$0.2\\dot{3}$"
  }
 ]
