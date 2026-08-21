@@ -30,6 +30,7 @@ const MISMATCH = path.join(
   "reports",
   "ai-solution-mismatch.json",
 );
+const SKIPLOG = path.join("scripts", "qa", "reports", "ai-solution-skip.json");
 
 const p = new PrismaClient();
 
@@ -97,12 +98,14 @@ async function main() {
     aiAnswer: string;
   }> = [];
   const skipped: Record<string, number> = {};
+  const skipRows: Array<{ id: string; reason: string }> = [];
   let renderFail = 0;
   let alreadyHas = 0;
 
   for (const g of gens) {
     if ("skip" in g) {
       skipped[g.skip] = (skipped[g.skip] ?? 0) + 1;
+      skipRows.push({ id: g.id, reason: g.skip });
       continue;
     }
     const row = await p.problem.findUnique({
@@ -190,6 +193,24 @@ async function main() {
     MISMATCH,
     JSON.stringify(
       [...prevMis, ...mismatches.filter((m) => !misIds.has(m.id))],
+      null,
+      1,
+    ),
+    "utf8",
+  );
+
+  // 건너뜀도 누적 — 내보내기가 이 목록을 빼야 매 배치 같은 문항을 다시 안 푼다
+  const prevSkip = existsSync(SKIPLOG)
+    ? (JSON.parse(readFileSync(SKIPLOG, "utf8")) as Array<{
+        id: string;
+        reason: string;
+      }>)
+    : [];
+  const skipIds = new Set(prevSkip.map((r) => r.id));
+  writeFileSync(
+    SKIPLOG,
+    JSON.stringify(
+      [...prevSkip, ...skipRows.filter((r) => !skipIds.has(r.id))],
       null,
       1,
     ),

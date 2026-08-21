@@ -65,6 +65,7 @@ scripts/qa/reports/*
 # Claude 생성 해설 원장 — 되돌리기 자료. 커밋 필수 (2026-08-22)
 !scripts/qa/reports/ai-solution-ledger.json
 !scripts/qa/reports/ai-solution-mismatch.json
+!scripts/qa/reports/ai-solution-skip.json
 # 중복 문항 삭제 원장 — **지운 행의 모든 컬럼**이 여기에만 있다.
 # 이게 없으면 `--revert` 가 아무것도 못 되살린다(영구 삭제가 된다).
 !scripts/qa/reports/duplicate-delete-ledger.json

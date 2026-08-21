@@ -11,7 +11,7 @@
  * 우선순위: ① 실제 시험에 나갔던 것 ② 그림 없는 것 전부 (문항코드순).
  * 그림 있는 문항은 제외 — 그림 품질 트랙 뒤에 한다 (원장님 확정).
  */
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import { PrismaClient } from "@prisma/client";
@@ -19,9 +19,26 @@ import { PrismaClient } from "@prisma/client";
 const p = new PrismaClient();
 const OUT_DIR = path.join("scripts", "qa", "nosol-out");
 
+/** 이미 시도해서 못 채운 문항(답 불일치·건너뜀)은 다시 내보내지 않는다 —
+ *  채워진 문항은 WHERE 가 거르지만, 이들은 여전히 「해설 없음」이라 매 배치
+ *  맨 앞에 되돌아온다(정렬이 같으므로). 원장 둘에서 id 를 모아 뺀다. */
+function attemptedIds(): string[] {
+  const out: string[] = [];
+  for (const f of ["ai-solution-mismatch.json", "ai-solution-skip.json"]) {
+    const fp = path.join("scripts", "qa", "reports", f);
+    if (!existsSync(fp)) continue;
+    for (const r of JSON.parse(readFileSync(fp, "utf8")) as Array<{
+      id: string;
+    }>)
+      out.push(r.id);
+  }
+  return out;
+}
+
 async function main() {
   const count = Number(process.argv[2] ?? 60);
   const skip = Number(process.argv[3] ?? 0);
+  const exclude = attemptedIds();
   const rows = await p.$queryRawUnsafe<
     Array<{
       id: string;
@@ -42,6 +59,7 @@ async function main() {
        AND pr.answer IS NOT NULL AND pr.answer <> ''
        AND cardinality(pr.figure_urls) = 0
        AND (pr.figure_svg IS NULL OR pr.figure_svg = '')
+       ${exclude.length > 0 ? `AND pr.id NOT IN (${exclude.map((i) => `'${i}'`).join(",")})` : ""}
      ORDER BY used DESC, pr.problem_code ASC
      OFFSET ${skip} LIMIT ${count}`,
   );
