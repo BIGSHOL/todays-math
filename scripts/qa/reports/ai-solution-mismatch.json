@@ -1138,5 +1138,11 @@
   "code": "J30403-VJLS",
   "dbAnswer": "②",
   "aiAnswer": "③"
+ },
+ {
+  "id": "e6b9c361-7101-434a-a0c0-032aca93ee6a",
+  "code": "J30503-H5H3",
+  "dbAnswer": "⑤",
+  "aiAnswer": "③"
  }
 ]
