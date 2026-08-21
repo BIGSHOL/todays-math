@@ -16,5 +16,11 @@
   "code": "HAL0101-D3K3",
   "dbAnswer": "③",
   "aiAnswer": "②"
+ },
+ {
+  "id": "2418cc8b-53a0-476a-bb86-cd4039759e70",
+  "code": "HAL0101-NDFL",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
  }
 ]
