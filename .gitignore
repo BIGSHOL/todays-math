@@ -241,6 +241,12 @@ scripts/qa/reports/svg-compare-blocked/
 # 다시 확대해서 다시 본다(그림 파일은 재생성되므로 판정만 남기면 된다).
 !scripts/qa/reports/svg-agy-flags-verdict.txt
 
+# 🔴 SVG 검수 «누가 무엇을 봤나» — 판정 원본은 세션 임시 폴더에만 있어 지워진다.
+#    집계본과 시트 색인을 커밋해 두어야 셧다운 뒤에도 「어디까지 했나」가 남는다
+#    (CLAUDE.md 2026-08-21). 색인은 지어냄을 세는 열쇠이기도 하다.
+!scripts/qa/reports/svg-sheets.json
+!scripts/qa/reports/svg-verdicts.tsv
+
 # 빈 분수 되살리기·제외 원장 — **되돌리기가 이 파일 하나를 읽는다.** 커밋 안 되면
 # 이 컴퓨터에서만 되돌릴 수 있다(2026-08-18 에 실제로 그랬다).
 !scripts/qa/reports/empty-frac-repair.json
