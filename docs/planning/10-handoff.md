@@ -21,9 +21,12 @@ Hi-fi 4안 → ① 계기판, 위치 = 메인 상단)로 확정 후 구현. **D-
 동기화가 `EywaSyncRun` 실행 기록과 학생 `eywaLastReportDate/Text`(D-64)를 쓴다.
 시안: `/dev/eywa-daily-wire`·`/dev/eywa-daily-hifi` (실데이터, 이름만 가명).
 
-**남은 것:** ① todays-math **Vercel env 5개**(계획 §8-2 — 넣어야 운영 버튼·cron 이
-산다; 로컬은 이미 동작) ② 이중 트랙(정규+특강) 분리 — 계약의 classId 로.
-소유 이관·지금 가져오기·cron 코드는 2026-08-21 에 끝났다(계획 §8).
+**남은 것:** 이중 트랙(정규+특강) 분리 — 계약의 classId 로.
+**운영은 2026-08-21 밤에 전부 살았다**: Vercel env 5개 투입 · production 배포 복구
+(어제 21:53부터 전량 Error — Hobby 12함수 한도, 동적 파일 접근 5곳 `turbopackIgnore`
+로 수리, 커밋 9fc65da0) · cron 실물 1회 성공(193명·13,618행, **production 소요 약
+2분 4초** — 로컬 14.5초보다 느리니 「지금 가져오기」 버튼도 그만큼 돈다; 한도 300초 안).
+공개 도메인은 todays-math.vercel.app (–bigshoul-project 별칭은 Vercel SSO 가 막는 게 정상).
 
 ## 0. 한 줄 요약 (2026-08-21 갱신)
 
