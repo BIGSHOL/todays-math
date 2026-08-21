@@ -81,7 +81,11 @@ interface FileRead {
 function readRepoFile(relative: string): FileRead {
   try {
     return {
-      raw: readFileSync(path.join(process.cwd(), relative), "utf8"),
+      raw: readFileSync(
+        // 배포 추적 제외 — dev 전용 원장 읽기가 프로젝트 전체를 람다에 싣는다 (2026-08-21)
+        path.join(/*turbopackIgnore: true*/ process.cwd(), relative),
+        "utf8",
+      ),
       reason: null,
     };
   } catch {

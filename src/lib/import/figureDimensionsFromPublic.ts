@@ -22,7 +22,12 @@ const cache = new Map<string, [number, number] | null>();
 /** `public` 아래 경로(`/figures/…`)를 실제 파일 경로로. */
 function publicPathFor(figureUrl: string): string | null {
   if (!figureUrl.startsWith("/")) return null;
-  return path.join(process.cwd(), "public", figureUrl);
+  // 배포 추적 제외 — public 전체(1.8만 그림)가 람다에 실린다. 람다에선 파일이 없어 null(«모른다»)이 된다.
+  return path.join(
+    /*turbopackIgnore: true*/ process.cwd(),
+    "public",
+    figureUrl,
+  );
 }
 
 export function readFigureDimensions(
@@ -35,7 +40,10 @@ export function readFigureDimensions(
   const file = publicPathFor(figureUrl);
   if (file) {
     try {
-      const head = readFileSync(file).subarray(0, HEAD_BYTES);
+      const head = readFileSync(/*turbopackIgnore: true*/ file).subarray(
+        0,
+        HEAD_BYTES,
+      );
       const measured = readImageDimensions(head);
       if (measured) result = [measured.width, measured.height];
     } catch {
