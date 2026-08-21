@@ -946,5 +946,29 @@
   "code": "J30301-BNAH",
   "dbAnswer": "⑴x=-9 또는 5, a=5 ⑵b=(-3-√57)/8 ⑶2-√57",
   "aiAnswer": "$2-\\sqrt{57}$"
+ },
+ {
+  "id": "2484668a-9be9-4d00-88ef-8519d9886013",
+  "code": "J30301-MG8W",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "41f03c05-acc9-4fee-b345-9372190ad5a8",
+  "code": "J30301-MHYQ",
+  "dbAnswer": "(a, b) = (8, 1), (6, 2), (4, 3), (2, 4) — 4개",
+  "aiAnswer": "$(a,b)=(8,1),(6,2),(4,3),(2,4)$, 개수 $4$개"
+ },
+ {
+  "id": "45aaceaa-cb8d-41c0-a0eb-0d8498e80983",
+  "code": "J30301-MLA5",
+  "dbAnswer": "90",
+  "aiAnswer": "$p^{2}q=90$"
+ },
+ {
+  "id": "28707f93-b85b-4537-b6df-0563e6e45ac3",
+  "code": "J30301-MMZ7",
+  "dbAnswer": "⑤",
+  "aiAnswer": "②"
  }
 ]
