@@ -616,5 +616,35 @@
   "code": "J20402-T79Y",
   "dbAnswer": "①",
   "aiAnswer": "⑤"
+ },
+ {
+  "id": "1c8d0a13-4d70-497a-90d3-18430d394f4b",
+  "code": "J20408-ER5Z",
+  "dbAnswer": "③ (11)",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "3177c3c0-4ff3-4a40-a74b-7189ee57ee35",
+  "code": "J20408-S69U",
+  "dbAnswer": "y=-(1/3)x+15 (x+3y-45=0)",
+  "aiAnswer": "x+3y-45=0"
+ },
+ {
+  "id": "949d2ffb-c3fc-4abb-8705-83b5ce145b91",
+  "code": "J20408-SBDA",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "c82d5b6d-dbc9-4b3c-9493-cec56082ec0e",
+  "code": "J20408-Y6RY",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "c72ae1f1-0630-45ea-9b2f-dd0f2c341888",
+  "code": "J20504-2FL5",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
  }
 ]
