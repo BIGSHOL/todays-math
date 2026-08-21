@@ -64,5 +64,29 @@
   "code": "J10102-NE66",
   "dbAnswer": "①",
   "aiAnswer": "②"
+ },
+ {
+  "id": "7bff2f5c-88fe-483c-aa8d-1fbd0c13629d",
+  "code": "J10105-F68M",
+  "dbAnswer": "a=3, b=4, c=2, d=5, 비밀번호 3425",
+  "aiAnswer": "3425"
+ },
+ {
+  "id": "3d8df302-6ee9-4cd2-a0ae-1be7bbe81661",
+  "code": "J10105-LWXM",
+  "dbAnswer": "(정답 없음)",
+  "aiAnswer": "$A=24, B=32$"
+ },
+ {
+  "id": "e9837cf1-f012-4d9e-a9a8-127ecf1b8645",
+  "code": "J10105-MYTZ",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "81985d00-6bfd-4b4e-abd9-bb2a6d872890",
+  "code": "J10105-V8W2",
+  "dbAnswer": "⑴ 48=2^4×3, 150=2×3×5^2, ⑵ G=6, ⑶ L=1200",
+  "aiAnswer": "$48=2^4×3$, $150=2×3×5^2$, $G=6$, $L=1200$"
  }
 ]
