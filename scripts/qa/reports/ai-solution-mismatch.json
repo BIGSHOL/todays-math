@@ -874,5 +874,47 @@
   "code": "J30203-4PT4",
   "dbAnswer": "④",
   "aiAnswer": "⑤"
+ },
+ {
+  "id": "e0c281a7-483e-4416-8e1c-bbf05a93a189",
+  "code": "J30203-5HHT",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "1ebd599d-38bd-439f-bdaa-3f09736b3bb5",
+  "code": "J30203-B6Z2",
+  "dbAnswer": "⑤",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "d1e19610-ab6b-4153-a670-33679e31a49b",
+  "code": "J30203-BTMR",
+  "dbAnswer": "2",
+  "aiAnswer": "작은 정사각형의 한 변의 길이는 $11$, 큰 정사각형의 한 변의 길이는 $18$"
+ },
+ {
+  "id": "cd2633ef-8dd6-44c9-9fd7-3efe9ce473f7",
+  "code": "J30203-EE4C",
+  "dbAnswer": "(1, 8), (2, 32), (3, 72)",
+  "aiAnswer": "$(a,b)=(1,8),\\,(2,32),\\,(3,72)$"
+ },
+ {
+  "id": "930900a2-afbb-4e1a-8119-f0f60b449c35",
+  "code": "J30203-HQPE",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "93cac2c6-3f2e-4f52-aa90-cff571be7602",
+  "code": "J30203-JK3S",
+  "dbAnswer": "=a√⁄2+b√⁄3",
+  "aiAnswer": "46"
+ },
+ {
+  "id": "97336a64-65f0-47c0-bd6e-6af21bd03b71",
+  "code": "J30203-JVAD",
+  "dbAnswer": "1/2",
+  "aiAnswer": "2"
  }
 ]
