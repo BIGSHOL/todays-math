@@ -850,5 +850,29 @@
   "code": "J30201-BPA6",
   "dbAnswer": "②",
   "aiAnswer": "⑤"
+ },
+ {
+  "id": "aa271cb7-b21d-44a7-b935-84ba4af48b68",
+  "code": "J30201-L2Y4",
+  "dbAnswer": "(2x-3)(x+4)",
+  "aiAnswer": "2x^2+5x-12=(2x-3)(x+4)"
+ },
+ {
+  "id": "3fa3c989-156c-4991-b9a4-742898cb29c8",
+  "code": "J30203-2FMH",
+  "dbAnswer": "4",
+  "aiAnswer": "$n=4$"
+ },
+ {
+  "id": "a452854a-9c61-49b6-b00b-a3abed1229c2",
+  "code": "J30203-4J5A",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "3f66f09f-3e10-48fb-bb30-9a8e462b98c0",
+  "code": "J30203-4PT4",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
  }
 ]
