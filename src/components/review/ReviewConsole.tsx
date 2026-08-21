@@ -166,13 +166,30 @@ export function ReviewConsole({
       const t = e.target as HTMLElement | null;
       if (t && ["INPUT", "TEXTAREA", "SELECT"].includes(t.tagName)) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (reporting) {
+        // 신고 패널이 열려 있으면 숫자는 **사유**다 — 누르는 즉시 신고하고 다음
+        // (2026-08-22 원장님: 「신고를 눌렀을 때도 숫자 입력으로 빠르게」).
+        const idx = Number(e.key) - 1;
+        if (Number.isInteger(idx) && idx >= 0 && idx < REASON_ORDER.length) {
+          const r = REASON_ORDER[idx]!;
+          if (r === "other")
+            setReason(r); // 설명이 필수라 자동 제출하지 않는다
+          else void submit("defect", r, note);
+          return;
+        }
+        if (e.key === "Escape") {
+          setReporting(false);
+          setReason(null);
+        }
+        return; // 패널이 열려 있는 동안 판정 단축(1·3)은 쉰다 — 숫자가 사유이므로
+      }
       if (e.key === "1") void submit("pass");
-      if (e.key === "2") setReporting((v) => !v);
+      if (e.key === "2") setReporting(true);
       if (e.key === "3") void submit("unsure");
     };
     window.addEventListener("keydown", on);
     return () => window.removeEventListener("keydown", on);
-  }, [submit]);
+  }, [submit, reporting, note]);
 
   function pick(k: ReviewQueueKey) {
     setKey(k);
@@ -310,21 +327,31 @@ export function ReviewConsole({
               <p className="text-[13px] font-semibold text-[var(--red-text)]">
                 무엇이 이상한가
               </p>
-              <div className="mt-2 flex flex-wrap gap-1.5">
-                {REASON_ORDER.map((r) => (
+              <p className="mt-0.5 text-[12px] text-text-2">
+                숫자 키·탭 즉시 신고 · Esc 닫기
+              </p>
+              {/* 1행 1라벨 — 누르는 즉시 신고하고 다음 (모바일은 이 탭 하나로 끝).
+                  「그 밖의 것」만 설명이 필수라 골라 두고 아래에 적는다. */}
+              <div className="mt-2 flex flex-col gap-1.5">
+                {REASON_ORDER.map((r, i) => (
                   <button
                     key={r}
                     type="button"
+                    disabled={busy}
                     aria-pressed={reason === r}
-                    onClick={() => setReason(r)}
+                    onClick={() => {
+                      if (r === "other") setReason(r);
+                      else void submit("defect", r, note);
+                    }}
                     className={
-                      "cursor-pointer rounded-full border px-2.5 py-1 text-[13px] transition-colors " +
+                      "flex w-full cursor-pointer items-center justify-between rounded-md border px-3 py-2 text-left text-[13px] transition-colors disabled:cursor-not-allowed disabled:opacity-40 " +
                       (reason === r
                         ? "border-ink bg-ink text-white"
-                        : "border-control hover:bg-side")
+                        : "border-control bg-surface hover:bg-side")
                     }
                   >
-                    {REASON_LABELS[r]}
+                    <span>{REASON_LABELS[r]}</span>
+                    <kbd className="font-normal opacity-60">{i + 1}</kbd>
                   </button>
                 ))}
               </div>
