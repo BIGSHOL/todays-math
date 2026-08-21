@@ -268,5 +268,47 @@
   "code": "J10306-E8UP",
   "dbAnswer": "④",
   "aiAnswer": "①"
+ },
+ {
+  "id": "310324ee-e63e-40c5-909d-24b30cd89fcd",
+  "code": "J10306-FWA7",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "5325be56-710a-4a5b-b972-bad13b5c45cd",
+  "code": "J10306-JFBX",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "378e474c-7bdc-4230-b557-0082425b059b",
+  "code": "J10306-TBT7",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "e46df594-fb24-4cb3-be33-af5f5c9eeb84",
+  "code": "J10306-Y2SN",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "7bfaf140-84e8-4dc7-9c51-2017011ba6ec",
+  "code": "J10403-A2PA",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "0acb287f-1b1f-4be9-b593-6e3c28a68d2a",
+  "code": "J10403-JX9J",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "9aa4460a-8638-4522-88c4-bbe6a526b904",
+  "code": "J10403-VKNJ",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
  }
 ]
