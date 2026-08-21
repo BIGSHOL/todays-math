@@ -382,5 +382,113 @@
   "code": "J20104-LNE3",
   "dbAnswer": "7/30",
   "aiAnswer": "$0.2\\dot{3}$"
+ },
+ {
+  "id": "173463dd-9787-449d-81a6-46ac33f9910f",
+  "code": "J20104-SFAR",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "39e93a40-5185-46d9-a484-ac61dae9ccf0",
+  "code": "J20104-UHXK",
+  "dbAnswer": "②",
+  "aiAnswer": "②, ③"
+ },
+ {
+  "id": "c3d76e57-e9b0-4298-9277-e7de6fca3279",
+  "code": "J20104-WPB5",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "12a19988-be5f-4648-b36c-0d154712d2a5",
+  "code": "J20104-WXKT",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "438eeda1-76ca-42f3-bb94-41eedc14fd37",
+  "code": "J20106-5G83",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "4ba35e32-9d05-4ac7-b7bf-287573953d5f",
+  "code": "J20106-6PEN",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "3d9a3e4e-2871-416c-972c-5f8a69cd3094",
+  "code": "J20106-JU2P",
+  "dbAnswer": "영수 7/30, 철수 11/15, 바르게 본 순환소수는 7/15 = 0.46̇",
+  "aiAnswer": "0.4\\dot{6}"
+ },
+ {
+  "id": "5ef5b39e-fb30-465d-8d02-405541fa33c3",
+  "code": "J20106-TL7Q",
+  "dbAnswer": "A = -(1/3)a⁴b² - a²b³ + (2/3)a²b²",
+  "aiAnswer": "-a^2b^3-\\frac{1}{3}a^4b^2+\\frac{2}{3}a^2b^2"
+ },
+ {
+  "id": "6530bb4f-fd6e-41ec-a132-9f957e064b74",
+  "code": "J20106-XF32",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "9a5d5a2b-5136-43cf-b2a3-d67c00dd8aba",
+  "code": "J20106-XMD5",
+  "dbAnswer": "①",
+  "aiAnswer": "$3^{10}$"
+ },
+ {
+  "id": "5190031e-ef68-4535-bae7-a4b7e911adcb",
+  "code": "J20106-Z5TN",
+  "dbAnswer": "a²b⁴/16",
+  "aiAnswer": "$\\frac{a^{2}b^{4}}{16}$"
+ },
+ {
+  "id": "d876a1f4-75d8-4de4-8076-af7a222d549f",
+  "code": "J20107-2JHN",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "93a082cb-bc47-48c6-986a-727f673f5dfc",
+  "code": "J20107-3J9T",
+  "dbAnswer": "A=2x²+3x-1, 옳게 계산한 식 5x²+x-5",
+  "aiAnswer": "$A=2x^{2}+3x-1$, 옳게 계산한 식은 $5x^{2}+x-5$"
+ },
+ {
+  "id": "898b96c1-ed15-4b4c-8258-82373145f829",
+  "code": "J20107-3L2Z",
+  "dbAnswer": "-x²+18xy²-6y",
+  "aiAnswer": "$-x^{2}+18xy^{2}-6y$"
+ },
+ {
+  "id": "d0c653d7-4464-4384-a593-805088d8f052",
+  "code": "J20107-6KYC",
+  "dbAnswer": "(5a+9b)/18 원",
+  "aiAnswer": "$\\frac{5a+9b}{18}$원"
+ },
+ {
+  "id": "773f0756-dd8a-4e01-ab4f-ffa5fae8cbe7",
+  "code": "J20107-6UY2",
+  "dbAnswer": "-3a²-5ab+3b²",
+  "aiAnswer": "$-3a^{2}-5ab+3b^{2}$"
+ },
+ {
+  "id": "3bc608a7-9843-4f63-9625-b6b9d94804a5",
+  "code": "J20107-E6BA",
+  "dbAnswer": "-4x²+9x-11",
+  "aiAnswer": "$-4x^2+9x-11$"
+ },
+ {
+  "id": "f31cc9f5-7a0f-448e-ac02-5c9582f99ae8",
+  "code": "J20107-FZB7",
+  "dbAnswer": "-x²-xy",
+  "aiAnswer": "$-x^2-xy$"
  }
 ]
