@@ -38,6 +38,7 @@ function attemptedIds(): string[] {
 async function main() {
   const count = Number(process.argv[2] ?? 60);
   const skip = Number(process.argv[3] ?? 0);
+  const tag = process.argv[4] ?? `b${skip}`;
   const exclude = attemptedIds();
   const rows = await p.$queryRawUnsafe<
     Array<{
@@ -64,28 +65,36 @@ async function main() {
      OFFSET ${skip} LIMIT ${count}`,
   );
   mkdirSync(OUT_DIR, { recursive: true });
-  const file = path.join(OUT_DIR, `todo-${skip}.json`);
-  writeFileSync(
-    file,
-    JSON.stringify(
-      rows.map((r) => ({
-        id: r.id,
-        code: r.problem_code,
-        unit: r.unit_name,
-        type: r.question_type,
-        content: r.content,
-      })),
-      null,
-      1,
-    ),
-    "utf8",
-  );
+  const items = rows.map((r) => ({
+    id: r.id,
+    code: r.problem_code,
+    unit: r.unit_name,
+    type: r.question_type,
+    content: r.content,
+  }));
+  const file = path.join(OUT_DIR, `todo-${tag}.json`);
+  writeFileSync(file, JSON.stringify(items, null, 1), "utf8");
+  // 조각 파일 — 에이전트가 제 몫 40문항만 읽는다 (전체 파일을 n번 중복으로
+  // 읽으면 그 토큰이 전부 낭비다. 2026-08-22 토큰 절약 지시)
+  const SLICE = 40;
+  const names = "abcdefgh";
+  for (let i = 0; i * SLICE < items.length; i += 1) {
+    writeFileSync(
+      path.join(OUT_DIR, `todo-${tag}-${names[i]}.json`),
+      JSON.stringify(items.slice(i * SLICE, (i + 1) * SLICE), null, 1),
+      "utf8",
+    );
+  }
   console.log(
     file,
     "←",
     rows.length,
-    "문항 (실제 출제됐던 것",
+    "문항 (조각",
+    Math.ceil(items.length / SLICE),
+    "· 실제 출제됐던 것",
     rows.filter((r) => Number(r.used) > 0).length,
+    "· 기시도 제외",
+    exclude.length,
     ")",
   );
 }
