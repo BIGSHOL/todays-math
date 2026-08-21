@@ -8,13 +8,7 @@
  * 교체: 1클릭, 확인 모달 없음. 인쇄 링크만 /tests/[id]/print
  */
 import { describe, expect, it } from "vitest";
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  within,
-} from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 
@@ -59,74 +53,46 @@ describe("[T4.3 S-05] 검수 — 문제 카드", () => {
     expect(within(first).getByRole("separator")).toBeInTheDocument();
   });
 
-  it("본문을 누르면 답과 해설을 보여 준다", async () => {
-    const { user } = await renderReview(TEST_DRAFT_ID);
+  it("답·해설이 오른쪽에 상시 보인다 — 펼침 없이 (2026-08-21 원장님 확정)", async () => {
+    // 문제 본문 폭은 「인쇄와 동일」 원칙으로 고정이라 오른쪽이 비어 있었다.
+    // 검수는 어차피 답·해설을 보는 일이므로 옆에 늘 보인다 — 클릭이 필요 없다.
+    await renderReview(TEST_DRAFT_ID);
     const first = await screen.findByRole("article", { name: "문 1" });
 
-    expect(within(first).getByText("답")).not.toBeVisible();
-
-    await user.click(within(first).getByText("를 유한소수로 나타내어라."));
-
-    expect(within(first).getByText("답")).toBeVisible();
-    expect(within(first).getAllByText("0.28").length).toBeGreaterThan(0);
-    expect(within(first).getByText("해설")).toBeVisible();
-    expect(within(first).queryByText("해설 없음")).not.toBeInTheDocument();
+    const aside = within(first).getByRole("complementary", {
+      name: "답과 해설",
+    });
+    expect(within(aside).getByText("답")).toBeVisible();
+    expect(within(aside).getAllByText("0.28").length).toBeGreaterThan(0);
+    expect(within(aside).getByText("해설")).toBeVisible();
+    expect(within(aside).queryByText("해설 없음")).not.toBeInTheDocument();
+    // 상시 표시이므로 답·해설 수식도 즉시 조판되어 있다
+    expect(aside.querySelector(".katex")).not.toBeNull();
   });
 
-  it("닫혀 있는 동안에는 답·해설 수식을 조판하지 않는다", async () => {
-    // `<details>` 가 닫혀 있어도 React 는 자식을 렌더한다 — 30문항이면 보이지도
-    // 않는 KaTeX 파이프라인 60개를 그대로 지불한다. 그 비용을 다시 들여오는
-    // 회귀를 막는다. (화면에 보이는 것은 전후가 같다 — 닫힘은 어차피 안 보인다.)
-    const user = userEvent.setup();
-    const problem = MOCK_PROBLEMS.find((item) => item.solution !== null)!;
-
+  it("해설이 여러 줄로 나뉜다 — 한 줄 벽 금지 (splitSolutionSteps 배선)", () => {
+    // 데이터는 개행이 없어도 표시에서 줄 경계를 되찾는다. 단위 규칙은
+    // solutionSteps.test.ts 가 잠그고, 여기는 **배선**만 잠근다 — 카드가
+    // 해설을 통짜 MathText 하나로 그리면 이 검사가 빨개진다.
+    const problem = {
+      ...MOCK_PROBLEMS.find((item) => item.solution !== null)!,
+      solution: "$x=2$이고 $y=3$이다.따라서 합은 $5$",
+    };
     render(<ReviewProblemCard orderIndex={1} problem={problem} />);
     const card = screen.getByRole("article", { name: "문 1" });
-
-    // 접힌 상태: 제목("답"/"해설")은 그대로, 발췌 밖 수식은 조판되지 않았다.
-    expect(within(card).getByText("답")).toBeInTheDocument();
-    expect(within(card).getByText("해설")).toBeInTheDocument();
-    const closedFormulas = card.querySelectorAll(".katex").length;
-
-    await user.click(card.querySelector("summary")!);
-
-    // 펼치면 바로 보인다 — 한 박자 기다릴 필요가 없다.
-    expect(card.querySelectorAll(".katex").length).toBeGreaterThan(
-      closedFormulas,
-    );
-    expect(within(card).getByText("답")).toBeVisible();
+    const aside = within(card).getByRole("complementary", {
+      name: "답과 해설",
+    });
+    const steps = aside.querySelectorAll("section:nth-of-type(2) div div");
+    expect(steps.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("summary 클릭을 거치지 않고 펼쳐져도 답과 해설이 나온다", async () => {
-    // 키보드(Enter/Space) 활성화는 브라우저가 summary 에 click 을 흘려 주지만
-    // jsdom 은 그 활성화 동작을 흉내 내지 않는다. 그래서 **어떤 경로로 열리든**
-    // 마지막에 반드시 일어나는 일(open 이 켜지고 toggle 이 뜬다)을 검증한다 —
-    // 페이지 내 찾기·코드로 여는 경우도 같은 경로다.
-    const problem = MOCK_PROBLEMS.find((item) => item.solution !== null)!;
-
-    render(<ReviewProblemCard orderIndex={1} problem={problem} />);
-    const card = screen.getByRole("article", { name: "문 1" });
-    const details = card.querySelector("details")!;
-    const closedFormulas = card.querySelectorAll(".katex").length;
-
-    details.open = true;
-    fireEvent(details, new Event("toggle"));
-
-    expect(card.querySelectorAll(".katex").length).toBeGreaterThan(
-      closedFormulas,
-    );
-    expect(within(card).getByText("답")).toBeVisible();
-  });
-
-  it("해설이 없으면 해설 없음이다", async () => {
-    const user = userEvent.setup();
+  it("해설이 없으면 해설 없음이다", () => {
     const problem = MOCK_PROBLEMS.find((item) => item.solution === null);
     expect(problem).toBeDefined();
 
     render(<ReviewProblemCard orderIndex={3} problem={problem!} />);
     const card = screen.getByRole("article", { name: "문 3" });
-
-    await user.click(card.querySelector("summary")!);
 
     expect(within(card).getByText("답")).toBeVisible();
     expect(within(card).getByText("해설 없음")).toBeVisible();

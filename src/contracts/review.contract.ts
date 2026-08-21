@@ -84,7 +84,7 @@ export const reviewSubmitResponseSchema = dataResponseSchema(
 /* ── 대기열 ──────────────────────────────────────────────────────── */
 
 export const reviewQueueKeySchema = z.enum(
-  ["mm", "pending", "excluded", "nosolution"],
+  ["mm", "pending", "excluded", "nosolution", "figure"],
   { error: "대기열 값이 올바르지 않습니다." },
 );
 export type ReviewQueueKey = z.infer<typeof reviewQueueKeySchema>;

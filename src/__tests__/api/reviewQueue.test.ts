@@ -73,6 +73,21 @@ describe("GET /api/review/queue — 검수 대기열", () => {
     errorResponseSchema.parse(await res.json());
   });
 
+  it("「그림을 보라」 대기열 — 그림이 붙은 문항만 온다 (2026-08-21)", async () => {
+    const ids = await pendingIds();
+    expect(ids.length).toBeGreaterThanOrEqual(1);
+    await prismaTestDouble.problem.update({
+      where: { id: ids[0] },
+      data: { figureUrls: ["/figures/test/0.png"] },
+    });
+    const b = await body(await get("key=figure&limit=50"));
+    expect(b.data.map((p) => p.id)).toContain(ids[0]);
+    // 그림 없는 문항은 이 대기열에 못 들어온다
+    for (const p of b.data) {
+      expect((p.figureUrls ?? []).length).toBeGreaterThan(0);
+    }
+  });
+
   it("🔴 **내가 판정한 문항은 다시 안 나온다**", async () => {
     const before = await body(await get("key=pending&limit=50"));
     const target = before.data[0];
