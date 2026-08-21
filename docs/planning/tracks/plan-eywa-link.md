@@ -238,10 +238,12 @@ diff·읽기 전용 probe 가 그 코드다. 위험한 것은 코드가 아니�
 1. **「지금 가져오기」 + POST /api/eywa-sync** — sync 를 lib 로 빼서 라우트가 부른다.
    ⚠️ 서버리스는 `scripts/sync/ledgers` 파일을 못 쓴다 — 원장을 DB 로도 남겨야 한다.
 2. cron (동기화 자동화) — ①이 선행.
-3. 🔴 **eywa 반 62개 소유 이관** — 지금 전부 `import@todays-math.local` 소유.
-   원장님 실계정으로 로그인하면 「모두 출제」(generate 의 requireOwnedClass)가 403.
-   원장님 계정 이메일 확정 후 `UPDATE class SET user_id = … WHERE eywa_class_id IS NOT NULL`
-   한 번. daily-review 조회는 소유를 안 물어서 화면은 보인다.
+3. ~~eywa 반 62개 소유 이관~~ ✅ **끝 (2026-08-21)** — 원장님 확정: 로그인 계정은
+   `test_t@osu.com` 그대로. 반 62개 이관 완료(원장:
+   `scripts/sync/ledgers/class-owner-transfer-2026-08-21.json`), env
+   `EYWA_SYNC_OWNER_EMAIL` 도 같은 계정으로(앞으로 생기는 반도 이 소유).
+   실물 스모크: 이관 후 학생별 출제 **201**(곽경찬 8/20 범위, 초안 8문항) →
+   `todayTests` 로 잡혀 「모두 출제」가 그 학생을 건너뛰는 것까지 확인.
 4. 이중 트랙(정규+특강) 분리 — 계약의 `classId`.
 5. 초등 문항 부족(대단원 범위 기준 8/10 실측 14갈래) — 문항 보충이 본질.
    화면은 「부족 — 자동에서 뺌」으로 정직하게 보여 준다.

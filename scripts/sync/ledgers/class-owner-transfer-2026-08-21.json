@@ -1,0 +1,381 @@
+{
+ "reason": "원장님 확정 2026-08-21 — 로그인 계정 test_t@osu.com. eywa 반 소유 이관(계획 §8-3)",
+ "to": {
+  "id": "4bca3c4a-b02d-4bcc-8409-bc33244c1016",
+  "email": "test_t@osu.com"
+ },
+ "before": [
+  {
+   "id": "681273fc-bae2-4c9d-9a83-0992912a0cbf",
+   "eywaClassId": "fdaf75c9-8bae-49c8-b80f-496e05ae8ba4",
+   "name": "중등M 개별 JJ2N",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "17aea57b-c490-4707-aa17-32cc92afc32f",
+   "eywaClassId": "44aa85fb-fe36-4c38-8402-be6430afcc2c",
+   "name": "초등M 개별 CR1D",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "528964ce-d3c4-48cc-9436-537d537baca4",
+   "eywaClassId": "ff5053b0-9d7c-4ff6-9d43-b4d9229f7758",
+   "name": "개별(초등M) 초5 BS2C",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "5d28308c-7c28-4917-baed-13f74ced12db",
+   "eywaClassId": "5312ef43-0a4a-478a-8f6c-571a31d0cd8c",
+   "name": "중등M 개별 JJ2L",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "9d935106-d068-47b0-8bff-3c77e00141c1",
+   "eywaClassId": "804f15f0-d665-4eb1-8dbd-9a7b3abf53f7",
+   "name": "중등M 중2 PS2S",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "7392c071-f694-4124-9a34-e630d2c228c8",
+   "eywaClassId": "785b7bb2-f32e-44ee-8aa0-c97cf0f58bcc",
+   "name": "중등M 중2 JJPS",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "862c7641-54e5-41ba-aafe-82e41765def5",
+   "eywaClassId": "64cd708f-33ac-4588-9268-cb8dd330e6c8",
+   "name": "초등M 개별 JJ1H",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "4101c380-fc71-4b6d-a7a4-1e38b9272246",
+   "eywaClassId": "23ff329b-a71f-4850-827d-0ecb254cd3d1",
+   "name": "초등M 개별 BS1B",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "49c87f53-221e-44ed-81b3-debf32c8ad5f",
+   "eywaClassId": "8ad5678e-2a8f-4ab1-9c20-74488b844051",
+   "name": "중등M 중1 MS2R",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "8e03a8b0-ea87-452d-8ea9-10fe3a117f95",
+   "eywaClassId": "10beb51f-fc5d-45d8-ae3b-0eda94efc495",
+   "name": "중등M 개별 BS2F",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "67c40bdc-77c5-4bf2-8b21-0e26c48c712c",
+   "eywaClassId": "85fc275e-6577-4b46-8a1e-1b843c611081",
+   "name": "고등M 개별 토일",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "3991e08e-a3b5-4f33-876b-54f52e4e3634",
+   "eywaClassId": "485761fb-1e1d-47e5-a9df-3830520ea77d",
+   "name": "고등M_일 개별진도",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "946fbe35-1967-429b-9eb6-afc00310763a",
+   "eywaClassId": "5984ef1b-4750-4ae5-80cf-9e21a55e33aa",
+   "name": "초등M 초5 MS1A",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "2cf269e8-4bb5-4d96-8219-0a5a1a092d94",
+   "eywaClassId": "78db34d2-952d-4b8c-8ce6-9c4174a1f1a9",
+   "name": "초등M 초5 JJ1A",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "de62a5ba-e137-4dfe-8a61-dd5b9fcc2d23",
+   "eywaClassId": "77bc5b03-2d1a-4c8a-9b27-eb3498c23eac",
+   "name": "[특강]중2-2 문제 풀이반",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "ca683c4c-8c36-41c7-836d-577eaeaec414",
+   "eywaClassId": "6b35eee3-3255-4ab1-8551-0b5cea71a70a",
+   "name": "고등M 중2 PS3A",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "db127005-b712-44f2-9554-d9fb8a0256eb",
+   "eywaClassId": "7abe4ef8-3ab6-4a2c-9b4e-150b564c7014",
+   "name": "초등M 초4 EL2S",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "84dffe8f-e685-451e-9f0e-957675e7b61c",
+   "eywaClassId": "13bd2d24-b7c7-4e03-8b26-4068e02ac70d",
+   "name": "중등M 개별 JJ3K",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "de664939-9ea4-4fe1-9a48-85f547aa1a88",
+   "eywaClassId": "eba7ec60-b595-4e6f-8386-7f5e8c46bdc4",
+   "name": "중등M 중2 EL3N",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "f1bba7c8-29da-4f83-8e17-9fa1e1328669",
+   "eywaClassId": "16dd6f5b-0951-4cfd-9357-4cd1c403b933",
+   "name": "고등M 고2 BS4F 토",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "b4a28fb2-755d-4f6c-aec7-85ce5cc14b7b",
+   "eywaClassId": "c609548d-acb0-44e6-afa9-8b4546790c72",
+   "name": "초등M 초5 EL2T",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "d744f74c-075f-475f-a568-ec2d10a38c66",
+   "eywaClassId": "6bb8d03f-dd0c-4b32-acc2-63b3be849d4c",
+   "name": "중등M 개별 JJ3J",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "564413e3-c1f4-46f4-ab57-8f9c0fa5067f",
+   "eywaClassId": "4e771338-28f0-43a6-8561-952244498026",
+   "name": "초등M 개별 JJ1G",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "c8b94768-a044-40aa-8f48-25bee9bd0529",
+   "eywaClassId": "6a6cdbac-05e8-4c00-b275-afa5692464dd",
+   "name": "초등M 개별 BS1D",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "c5ddc875-97cb-4981-ad7f-50ebd71effae",
+   "eywaClassId": "4523d193-dc7f-4fcb-8546-28cd18c2278f",
+   "name": "중등M 개별 BS3G",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "fdcd9044-ea77-4f92-ab2c-047b69527fa5",
+   "eywaClassId": "9a21ba13-35c6-492b-b8ff-ceaf3158cd3b",
+   "name": "중등M 중3 BS3Q",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "591b9da4-2075-4201-99a0-146e00659407",
+   "eywaClassId": "13776719-adf9-45d8-a3e7-58188531ccd1",
+   "name": "초등M 개별 JJ2M",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "32b27a18-4db1-4295-bc07-0ad5b0bfd1b7",
+   "eywaClassId": "08382e79-9b77-4a86-991c-a6836c6d1f21",
+   "name": "초등M 개별 JJ1I",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "4eff88b7-2d2e-4e9f-84bd-f1b3a27fdd51",
+   "eywaClassId": "a600c53d-1fde-47c8-b533-65b5e580ccc0",
+   "name": "고등M 개별 TP4E",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "788cac6c-e62c-4b8a-b0e2-06a889b293d4",
+   "eywaClassId": "33d7196e-4491-4bed-b222-5254bd5454bc",
+   "name": "초등M 개별 BS1L",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "37c9806b-bc53-43bb-b47e-2ab13ce473b4",
+   "eywaClassId": "214cf556-62ca-46ee-a054-b8888ad5ee54",
+   "name": "초등M 초6 BS2P",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "5393d892-c33a-44c0-b8ee-7d8fd6629fd0",
+   "eywaClassId": "3d5dce26-3f41-4654-8bf0-797b3bdd4d86",
+   "name": "중등M 중2 BS3B",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "2d4e9bc0-3031-431a-a8d5-12bd2645f3ce",
+   "eywaClassId": "37d90976-163b-42e0-b5ce-9fd74686a96d",
+   "name": "초등M 개별 JJ1E",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "5fd7d716-ddaf-42fa-8cd0-71cb1fa3f63a",
+   "eywaClassId": "c3722975-cf6e-47cc-9844-674cad6c8c84",
+   "name": "중등M 중1 BS3E",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "ad63cd76-3cbe-4128-a035-b2e083e49227",
+   "eywaClassId": "46d7247b-992b-4c96-972e-d8a4fe61e476",
+   "name": "중등M 개별 JJ3L",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "5ba3a0ab-e2c9-44d7-93dc-725f50511c60",
+   "eywaClassId": "277cc7dc-d4a0-4751-9e44-4ba3fa934225",
+   "name": "[특강] 고등개별",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "c7e8ed1e-4f2f-4bab-acce-557d76cc2d88",
+   "eywaClassId": "3c878bcd-e370-4e19-8cc5-5df40d4f7093",
+   "name": "중등M 개별 BS3Q",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "8ca6b535-b8f2-4fdd-a366-2a3f1be3fc88",
+   "eywaClassId": "c727d35f-897f-420e-90c6-c5894fbd7fab",
+   "name": "초등M 개별 EL1K",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "e31b3f4a-6999-4d8a-a58e-339ce5c76012",
+   "eywaClassId": "039046f8-d47e-4fff-8fdb-7420b005e49d",
+   "name": "고등M 단체 BS4F",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "346faced-c0e2-4c62-a001-3ef63362b7f3",
+   "eywaClassId": "44ef1302-0a4d-4d67-bea9-8a058de3e473",
+   "name": "초등M 개별 JJ1F",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "eacfeb6c-2797-4321-9cbc-e9c8092ae3f7",
+   "eywaClassId": "333b3ffb-da7f-4091-a263-efbf17a00845",
+   "name": "초등M 초4 BS1J",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "9c2b7aa3-ae6b-43fe-ba36-bebcc769f5a5",
+   "eywaClassId": "8b05465f-ac44-483a-adef-c7bc2b16db02",
+   "name": "초등M 개별 JJ2I",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "4cb6e841-fe19-4812-aef7-d42d3839e0ce",
+   "eywaClassId": "7b123770-f1bc-413f-8b6c-d8429dbdf9aa",
+   "name": "초등M 개별 BS2G",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "c721722a-1060-43ec-8ba0-8a3369fb2a72",
+   "eywaClassId": "aecda760-3851-4ebc-81e2-7f59bfc2eb4b",
+   "name": "초등M 초3 BS2E",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "54e43e98-d12f-48df-bd1f-53c4819df12e",
+   "eywaClassId": "436ccd9b-52e7-4e5b-87f4-480f8ac2c340",
+   "name": "중등M 중1 EL2T 화금",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "7b6b56d9-591a-497f-9833-827e90462d89",
+   "eywaClassId": "c975bde1-e4a7-4021-82ff-449a7b24a89e",
+   "name": "중등M 개별 JJ2K",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "7faf3c7f-b10d-464e-9e6f-5c60ea29ae17",
+   "eywaClassId": "bde7e4e9-7745-4475-9707-3fef9edb2685",
+   "name": "초등M 개별 JJ2G",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "e56aabfe-7805-4b17-967e-7d691df7351c",
+   "eywaClassId": "08ceea73-ea47-41b3-af5a-4be1e367b471",
+   "name": "중등M 초6 개별MS2B",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "5734d930-3c3e-4150-8f56-a5029daff74f",
+   "eywaClassId": "6d40c305-63d1-4085-ae20-0cf430397169",
+   "name": "고등M 개별 BS4F 토",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "2101ef13-3703-4a4f-aee5-4f91491d8cb5",
+   "eywaClassId": "27d25d69-b2a7-4874-b259-332185db67c6",
+   "name": "고등M 고1 BS4F 수",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "a715a6b0-df31-40f3-8213-47bf49cae3f6",
+   "eywaClassId": "2914f6bc-d7cd-4a1d-85b9-fcbd0ec72324",
+   "name": "중등M 초6 MS2A",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "6d61fb80-a462-4885-8216-6073837fcd66",
+   "eywaClassId": "3d8f916d-912b-41a3-a2ab-cefd7261fea0",
+   "name": "중등M 초6 JJ2A",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "3c986e74-96a9-467e-9001-30d0b69ce2d3",
+   "eywaClassId": "5a498345-7548-45eb-8317-1731abb29bb3",
+   "name": "[특강]중3-2 개념 완성반",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "dcbe82ea-057c-43ed-835c-d616ff530e09",
+   "eywaClassId": "2b91e163-fb40-4b41-a7f5-4cf385f95aad",
+   "name": "중등M 초6 TP2Q",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "b9ff81fd-9623-47cd-92ac-e483fed790a2",
+   "eywaClassId": "37adee1a-e62c-4568-a4df-f857ea2691a1",
+   "name": "초등M 개별 CR1C",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "553552a5-7b51-49c4-8636-78f75678da4c",
+   "eywaClassId": "8688122f-a37e-489a-8068-80244e854588",
+   "name": "중등M 중3 CR3D",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "b19ee374-2c35-46a7-97ee-4d03c0b775bb",
+   "eywaClassId": "ef943bb3-e7a3-4093-847d-e35e6912b3e8",
+   "name": "중등M 개별 JJ3I",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "0af3b33a-8df5-4bb5-a8b2-226e8473f27a",
+   "eywaClassId": "29282187-f38c-422d-8e9c-c27b7ed94aac",
+   "name": "중등M 개별  BS3R",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "7353e20d-3b7a-447b-b285-1aa05dd079fc",
+   "eywaClassId": "0f135226-63d2-4f3b-a89b-0b3905f709fa",
+   "name": "중등M 중2 BS3O",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "39706dfd-4192-466e-a53f-0b00e273cbcb",
+   "eywaClassId": "1d3bc205-0ceb-4de1-a40e-7620b592e846",
+   "name": "중등M 중1 BS3C",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "c950fa02-3644-4510-a45b-7a0da17fcb3a",
+   "eywaClassId": "78433564-4b1b-4099-b94a-6fcd68cc2058",
+   "name": "중등M 중3 BS2O",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  },
+  {
+   "id": "52c3ead8-4c40-4a8c-b01a-9741518b42b5",
+   "eywaClassId": "65ddba89-80c4-4261-8fa4-0f07f2d994fc",
+   "name": "중등M 중2 BS3E",
+   "userId": "abd81fd6-47bf-4012-92c2-0b0da3fea42a"
+  }
+ ]
+}
