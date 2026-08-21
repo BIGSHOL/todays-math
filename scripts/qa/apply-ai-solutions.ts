@@ -161,6 +161,20 @@ function extractLeadingChoice(raw: string): string | null {
   return m ? m[1]! : null;
 }
 
+/** AI 가 값 앞에 "변수=" 라벨을 붙인 경우("m=1"·"$a=-12$")를 구제한다 —
+ *  라벨을 떼고 값만 남긴다. **DB 가 라벨 없는 값 하나일 때만** 구제가
+ *  성립한다(둘 다 값이므로 라벨을 떼도 위험이 없다 — DB 가 실제로
+ *  "a=5" 처럼 자기 라벨을 쓰면 뗀 값과 안 맞아 자연히 불일치로 남는다).
+ *  (2026-08-22 실측: J30203-2FMH «n=4», J30303-88PX «x=3/2»,
+ *  J30401-L7M2 «a=-12», J30401-MJ5R «m=1» — 네 배치에 걸쳐 반복돼
+ *  일반화했다. 프롬프트가 "값 자체만" 이라고 했는데 AI 가 자꾸
+ *  변수명을 같이 적는다.) */
+function stripLeadingVarLabel(raw: string): string | null {
+  const t = raw.trim().replace(/^\$+|\$+$/g, "");
+  const m = t.match(/^[a-zA-Z](?:_\{?[a-zA-Z0-9]+\}?)?\s*=\s*(.+)$/);
+  return m ? m[1]! : null;
+}
+
 function rendersClean(solution: string): boolean {
   const dollars = (solution.match(/\$/g) ?? []).length;
   if (dollars % 2 !== 0) return false;
@@ -235,6 +249,8 @@ async function main() {
         : null;
       if (!resolved || dbNorm !== normalizeAnswer(resolved))
         resolved = resolveViaChoices(row.content, aiFinal);
+      if (!resolved || dbNorm !== normalizeAnswer(resolved))
+        resolved = stripLeadingVarLabel(aiFinal);
       if (resolved && dbNorm === normalizeAnswer(resolved)) {
         aiFinal = resolved; // 값→보기번호 또는 번호+값→번호 구제 성공
       } else {

@@ -1048,5 +1048,11 @@
   "code": "J30401-9FG8",
   "dbAnswer": "a=7 또는 a=-1",
   "aiAnswer": "-1, 7"
+ },
+ {
+  "id": "1fb70720-eaa8-4a4e-a0d4-df59cdd2fa2e",
+  "code": "J30401-HR6N",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
  }
 ]
