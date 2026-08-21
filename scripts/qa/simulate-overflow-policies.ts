@@ -96,6 +96,12 @@ interface Row {
   content?: string;
   figureUrls?: string[];
   figureDims?: number[];
+  /**
+   * 🔴 그림의 **물리 폭(mm)**. 2026-08-20 부터 인쇄 크기는 픽셀이 아니라 이 값에서
+   *    온다(8,238문항). 이걸 안 넘기면 엔진이 **옛 픽셀 규칙**으로 크기를 재서,
+   *    이 시뮬레이션이 «제품이 아닌 것»의 성적을 내게 된다.
+   */
+  figureSourceMm?: number[];
   /** 채점의 «참» — 지면을 그려 잰 값이다. 제품은 이 값을 못 본다. */
   neededPx: number;
 }
@@ -107,10 +113,11 @@ function arg(name: string): string | undefined {
 
 /** 엔진이 지면을 못 보던 때 — 지면 셋을 떼고 부른다. */
 function blind(row: Row): Row {
-  const { content, figureUrls, figureDims, ...rest } = row;
+  const { content, figureUrls, figureDims, figureSourceMm, ...rest } = row;
   void content;
   void figureUrls;
   void figureDims;
+  void figureSourceMm;
   return rest;
 }
 
@@ -123,6 +130,7 @@ const toPrint = (rows: Row[]): TestPrintProblem[] =>
     solution: null,
     figureUrls: r.figureUrls ?? [],
     figureDims: r.figureDims ?? [],
+    figureSourceMm: r.figureSourceMm ?? [],
   }));
 
 /** 그 배치에서 **실제로** 넘치는 문항 수 — 참은 실측 높이와 실측 칸이다. */
@@ -219,6 +227,7 @@ async function main() {
   const rows = (await prisma.$queryRawUnsafe(
     `SELECT id, unit_id AS "unitId", difficulty, problem_type AS "problemType",
             content, figure_urls AS "figureUrls", figure_dims AS "figureDims",
+            figure_source_mm AS "figureSourceMm",
             question_type AS "questionType",
             (pool = 'shared' AND review_status = 'approved'
              AND direct_use_allowed = TRUE AND answer <> '(정답 없음)') AS eligible
@@ -228,6 +237,7 @@ async function main() {
       content: string;
       figureUrls: string[];
       figureDims: number[];
+      figureSourceMm: number[] | null;
       questionType: string | null;
       eligible: boolean;
     }
@@ -245,11 +255,21 @@ async function main() {
    * 캐시가 **지금 지면·지금 본문·지금 그림 파일**을 보고 잰 것인지 지문으로 대조한다.
    * 지문이 없거나 어긋나면 멈춘다 — 그 숫자는 거짓이다(리뷰 §F, 검수 §L).
    */
+  /**
+   * 🔴 **크기 기준 두 컬럼을 반드시 같이 넘긴다.**
+   *
+   * `measuredRowsHash` 는 `figureDims`·`figureSourceMm` 도 지문에 넣는다. 여기서
+   * 빠뜨리면 측정기가 낸 지문과 **영영 어긋나** 「캐시가 낡았다」는 거짓 경보가
+   * 난다 — 실제로 mm 적재(8,238문항, 2026-08-20) 뒤로 이 도구는 계속 빨간색이었고,
+   * 그래서 아무도 못 돌렸다. **거짓 경보는 침묵하는 가드보다 나쁘다.**
+   */
   const rowsHash = measuredRowsHash(
     rows.map((r) => ({
       id: r.id,
       content: r.content,
       figureUrls: r.figureUrls,
+      figureDims: r.figureDims,
+      figureSourceMm: r.figureSourceMm,
       questionType: r.questionType,
     })),
   );
@@ -407,6 +427,7 @@ async function main() {
       content: r.content,
       figureUrls: r.figureUrls,
       figureDims: capDims(r.figureUrls, r.figureDims),
+      figureSourceMm: r.figureSourceMm ?? undefined,
       neededPx,
     });
   }
