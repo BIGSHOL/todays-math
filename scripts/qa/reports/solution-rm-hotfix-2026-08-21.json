@@ -1,0 +1,10 @@
+{
+ "note": "원장님 검수 지적 — 해설 rm 잔재 (J30602-VMC9). 1차 시도가 heredoc 백슬래시 유실로 mathrm 을 만들어 2차로 확정.",
+ "rows": [
+  {
+   "id": "ecdb88b4-19e7-458d-9545-2ac6c22d068e",
+   "before": "$18$$\\mathrm{\\angle }PAO=\\angle PBO=90°$피타고라스의 정리에 의하여 $\\mathrm{\\overline{AO}}=3$$\\mathrm{\\triangle }PAO=\\triangle PBO$ ($rmRHS$합동)$□rmAOBP$의 둘레의 길이는 $3+3+6+6 = 18$",
+   "after": "$18$$\\mathrm{\\angle }PAO=\\angle PBO=90°$피타고라스의 정리에 의하여 $\\mathrm{\\overline{AO}}=3$$\\mathrm{\\triangle }PAO=\\triangle PBO$ ($\\mathrm{RHS}$ 합동)$□\\mathrm{AOBP}$의 둘레의 길이는 $3+3+6+6 = 18$"
+  }
+ ]
+}
