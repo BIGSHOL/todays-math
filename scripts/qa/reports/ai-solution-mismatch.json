@@ -538,5 +538,35 @@
   "code": "J20205-KX7J",
   "dbAnswer": "③",
   "aiAnswer": "②"
+ },
+ {
+  "id": "21ec10bf-0ed3-443b-af8f-1ea43e90d939",
+  "code": "J20301-A3S3",
+  "dbAnswer": "24 (x=8, y=8)",
+  "aiAnswer": "-1"
+ },
+ {
+  "id": "58fb28df-4b7c-4aac-8c19-e167c337cc58",
+  "code": "J20301-CVCL",
+  "dbAnswer": "⑤",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "d6959aaa-38d8-41d2-8c84-ba262b6b998e",
+  "code": "J20301-E9N3",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "fc3c5d18-7672-49f2-a0d4-4e3b0f815883",
+  "code": "J20301-H3JB",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "9223bd72-34c6-474d-94bf-8a5b3851e45a",
+  "code": "J20301-QBPQ",
+  "dbAnswer": "(정답 없음)",
+  "aiAnswer": "$x=3,~y=-\\frac{3}{2}$"
  }
 ]
