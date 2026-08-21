@@ -568,5 +568,35 @@
   "code": "J20301-QBPQ",
   "dbAnswer": "(정답 없음)",
   "aiAnswer": "$x=3,~y=-\\frac{3}{2}$"
+ },
+ {
+  "id": "7b630a2d-e2f5-4662-962e-29e7da74a869",
+  "code": "J20306-MT86",
+  "dbAnswer": "-25℃, -55℃",
+  "aiAnswer": "$x=-25$ 또는 $x=-55$"
+ },
+ {
+  "id": "b77bef78-2a2f-43fc-82f0-7fddb1c5878c",
+  "code": "J20306-N6QK",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "e6a4f9d5-df2c-4867-88f5-1725e30ef6bc",
+  "code": "J20306-NDDX",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "6d391148-544d-48d6-a4e4-f93f0c6e0414",
+  "code": "J20306-RTRR",
+  "dbAnswer": "A는 12일, B는 8일",
+  "aiAnswer": "A: 12일, B: 8일"
+ },
+ {
+  "id": "cbc063b7-47bd-4c4c-9d0f-cac5a4925150",
+  "code": "J20402-4SWT",
+  "dbAnswer": "0",
+  "aiAnswer": "$a+b=0$"
  }
 ]
