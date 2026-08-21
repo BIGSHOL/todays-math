@@ -92,6 +92,8 @@ async function postGenerate(
 export function DailyReviewSection({ units }: { units: UnitEntity[] }) {
   const [state, setState] = useState<LoadState>({ status: "loading" });
   const [reloadKey, setReloadKey] = useState(0);
+  const [syncing, setSyncing] = useState(false);
+  const [syncError, setSyncError] = useState<string | null>(null);
   const [progress, setProgress] = useState<GenerateProgress>({
     done: 0,
     total: 0,
@@ -210,6 +212,32 @@ export function DailyReviewSection({ units }: { units: UnitEntity[] }) {
       created,
       failures,
     });
+  }
+
+  // 「지금 가져오기」 — POST /api/eywa-sync (본체는 CLI 와 같은 runEywaSync).
+  // 수 분 걸릴 수 있다 — 도는 동안 잠그고, 끝나면 섹션을 새로 읽는다.
+  async function syncNow() {
+    if (syncing) return;
+    setSyncing(true);
+    setSyncError(null);
+    try {
+      const res = await fetch("/api/eywa-sync", { method: "POST" });
+      const body = (await res.json().catch(() => null)) as {
+        error?: { message?: string };
+      } | null;
+      if (!res.ok)
+        throw new Error(
+          body?.error?.message ?? `동기화 실패 (HTTP ${res.status})`,
+        );
+      setState({ status: "loading" });
+      setReloadKey((k) => k + 1);
+    } catch (error) {
+      setSyncError(
+        error instanceof Error ? error.message : "동기화에 실패했습니다",
+      );
+    } finally {
+      setSyncing(false);
+    }
   }
 
   const seg = (v: number) =>
@@ -434,6 +462,19 @@ export function DailyReviewSection({ units }: { units: UnitEntity[] }) {
         ) : (
           <span className="text-g-red-text">eywa 동기화 기록 없음</span>
         )}
+        <button
+          type="button"
+          onClick={() => void syncNow()}
+          disabled={syncing}
+          className="cursor-pointer border border-control px-2 py-0.5 text-[12px] text-ink disabled:cursor-not-allowed disabled:border-divider disabled:text-text-3"
+        >
+          {syncing ? "가져오는 중" : "지금 가져오기"}
+        </button>
+        {syncError ? (
+          <span className="text-g-red-text" role="alert">
+            {syncError}
+          </span>
+        ) : null}
       </p>
     </section>
   );

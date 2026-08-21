@@ -21,11 +21,9 @@ Hi-fi 4안 → ① 계기판, 위치 = 메인 상단)로 확정 후 구현. **D-
 동기화가 `EywaSyncRun` 실행 기록과 학생 `eywaLastReportDate/Text`(D-64)를 쓴다.
 시안: `/dev/eywa-daily-wire`·`/dev/eywa-daily-hifi` (실데이터, 이름만 가명).
 
-**남은 것(순서대로):** ① 「지금 가져오기」 버튼 + POST /api/eywa-sync (sync 를 lib 로
-빼서 라우트가 부른다 — 서버리스에서는 원장 파일을 못 쓰니 DB 원장 필요) ② cron
-③ **eywa 반 62개 소유 이관** — 지금 전부 `import@todays-math.local` 소유라 원장님
-실계정으로 로그인하면 「모두 출제」가 403 이다. 원장님 계정 확정 후 UPDATE 한 번
-(계획 문서 §8 기록) ④ 이중 트랙(정규+특강) 분리 — 계약의 classId 로.
+**남은 것:** ① todays-math **Vercel env 5개**(계획 §8-2 — 넣어야 운영 버튼·cron 이
+산다; 로컬은 이미 동작) ② 이중 트랙(정규+특강) 분리 — 계약의 classId 로.
+소유 이관·지금 가져오기·cron 코드는 2026-08-21 에 끝났다(계획 §8).
 
 ## 0. 한 줄 요약 (2026-08-21 갱신)
 

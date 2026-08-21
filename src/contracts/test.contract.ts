@@ -319,3 +319,16 @@ export const dailyReviewResponseSchema = dataResponseSchema(
   }),
 );
 export type DailyReviewResponse = z.infer<typeof dailyReviewResponseSchema>;
+
+/** POST /api/eywa-sync — 「지금 가져오기」. 본체는 runEywaSync (CLI 와 같은 함수). */
+export const eywaSyncResponseSchema = dataResponseSchema(
+  z.strictObject({
+    runId: z.string(),
+    students: z.number().int(),
+    classes: z.number().int(),
+    progressRows: z.number().int(),
+    unresolvedLines: z.number().int(),
+    ambiguous: z.number().int(),
+  }),
+);
+export type EywaSyncResponse = z.infer<typeof eywaSyncResponseSchema>;

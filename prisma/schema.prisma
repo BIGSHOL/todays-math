@@ -203,6 +203,21 @@ model EywaSyncRun {
   @@map("eywa_sync_run")
 }
 
+/// eywa 동기화 **되돌리기 원장** — 적용 전에 before 전량을 남긴다(JSON).
+/// CLI 는 파일(scripts/sync/ledgers)에도 남기지만, 서버(「지금 가져오기」)는
+/// 파일시스템이 없어(서버리스 read-only) 이 표가 유일한 원장이다.
+/// 회차별 행이라 덮어쓰기가 구조적으로 없다(2026-08-20 교훈). 오래된 것은
+/// 동기화가 최근 14회만 남기고 지운다.
+model EywaSyncLedger {
+  id        String   @id @default(uuid()) @db.Uuid
+  runId     String   @map("run_id") @db.VarChar(64)
+  createdAt DateTime @default(now()) @map("created_at")
+  payload   Json
+
+  @@index([createdAt])
+  @@map("eywa_sync_ledger")
+}
+
 model Student {
   id                    String  @id @default(uuid()) @db.Uuid
   classId               String  @map("class_id") @db.Uuid

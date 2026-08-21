@@ -171,6 +171,43 @@ describe("[2단계] 메인 상단 계기판 — 오늘의 확인테스트", () =
     expect(within(section).getByText("최하은")).toBeInTheDocument();
   });
 
+  /** 🔴 지금 가져오기 — POST /api/eywa-sync 후 섹션을 새로 읽는다. */
+  it("지금 가져오기 — 동기화를 부르고 끝나면 다시 읽는다", async () => {
+    useRichHandlers();
+    let syncCalls = 0;
+    let reviewCalls = 0;
+    server.use(
+      http.get("/api/tests/daily-review", () => {
+        reviewCalls += 1;
+        return HttpResponse.json(richDaily(new Date().toISOString()));
+      }),
+      http.post("/api/eywa-sync", () => {
+        syncCalls += 1;
+        return HttpResponse.json({
+          data: {
+            runId: "r1",
+            students: 193,
+            classes: 62,
+            progressRows: 13571,
+            unresolvedLines: 3999,
+            ambiguous: 97,
+          },
+        });
+      }),
+    );
+    const user = userEvent.setup();
+    render(<MainPage />);
+    const section = await findSection();
+    const before = reviewCalls;
+    await user.click(
+      await within(section).findByRole("button", { name: "지금 가져오기" }),
+    );
+    await waitFor(() => {
+      expect(syncCalls).toBe(1);
+      expect(reviewCalls).toBeGreaterThan(before);
+    });
+  });
+
   it("동기화가 48시간을 넘으면 「오래됨」 경고가 선다", async () => {
     useRichHandlers({
       syncRanAt: new Date(Date.now() - 72 * 3_600_000).toISOString(),

@@ -235,9 +235,18 @@ diff·읽기 전용 probe 가 그 코드다. 위험한 것은 코드가 아니�
 
 ### 남은 것 (다음 트랙)
 
-1. **「지금 가져오기」 + POST /api/eywa-sync** — sync 를 lib 로 빼서 라우트가 부른다.
-   ⚠️ 서버리스는 `scripts/sync/ledgers` 파일을 못 쓴다 — 원장을 DB 로도 남겨야 한다.
-2. cron (동기화 자동화) — ①이 선행.
+1. ~~「지금 가져오기」 + POST /api/eywa-sync~~ ✅ **끝 (2026-08-21)** — 본체를
+   `src/lib/eywa/runSync.ts` 로 옮겨 CLI 와 라우트가 **같은 함수**를 쓴다.
+   서버 원장은 `EywaSyncLedger` 표(최근 14회, 동률은 runId 사전순 = 시간순).
+   실물: 로그인 세션으로 POST → **14.5초**에 전체 동기화(13,577행) — 화면
+   「지금 가져오기」 버튼이 이걸 부르고 끝나면 섹션을 새로 읽는다.
+2. ~~cron~~ ✅ 코드는 끝 — `vercel.json` cron(매일 22:30 UTC = 한국 07:30) →
+   `GET /api/eywa-sync/cron`(CRON_SECRET 문지기, 시크릿 없으면 503 잠김).
+   ⚠️ **운영에 켜려면 todays-math Vercel 프로젝트에 env 5개가 필요하다**(아직 안 넣음
+   — Vercel CLI 가 chrismathone 계정에 로그인돼 있어 이 세션에서 못 넣었다):
+   `EYWA_TRANSPORT=api` · `EYWA_API_URL` · `EYWA_API_KEY` · `EYWA_SYNC_OWNER_EMAIL=test_t@osu.com`
+   · `CRON_SECRET`(새로 생성). 넣기 전까지 운영의 버튼·cron 은 명확한 사유로 실패한다
+   (fail-closed). 로컬은 .env 로 이미 동작.
 3. ~~eywa 반 62개 소유 이관~~ ✅ **끝 (2026-08-21)** — 원장님 확정: 로그인 계정은
    `test_t@osu.com` 그대로. 반 62개 이관 완료(원장:
    `scripts/sync/ledgers/class-owner-transfer-2026-08-21.json`), env
