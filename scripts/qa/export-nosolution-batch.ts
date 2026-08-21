@@ -76,7 +76,7 @@ async function main() {
   writeFileSync(file, JSON.stringify(items, null, 1), "utf8");
   // 조각 파일 — 에이전트가 제 몫 40문항만 읽는다 (전체 파일을 n번 중복으로
   // 읽으면 그 토큰이 전부 낭비다. 2026-08-22 토큰 절약 지시)
-  const SLICE = 40;
+  const SLICE = 20;
   const names = "abcdefgh";
   for (let i = 0; i * SLICE < items.length; i += 1) {
     writeFileSync(
