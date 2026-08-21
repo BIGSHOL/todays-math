@@ -239,10 +239,83 @@ export const defaultReviewRangeResponseSchema = dataResponseSchema(
       /** 범위 안 소단원 수 — 화면 한 줄에 「소단원 N개」로 적는다. */
       unitCount: z.number().int().min(1),
       /** 시작을 무엇이 정했나 — 화면 안내 문구가 갈린다. */
-      startedFrom: z.enum(["last-review", "progress-start", "current-only"]),
+      startedFrom: z.enum([
+        "last-review",
+        "progress-start",
+        "chapter-start",
+        "current-only",
+      ]),
     })
     .nullable(),
 );
 export type DefaultReviewRangeResponse = z.infer<
   typeof defaultReviewRangeResponseSchema
 >;
+
+/* ── 오늘의 학생별 확인테스트 (2단계 화면, D-63·D-64) ─────────────────────── */
+
+const dailyGroupStudentSchema = z.strictObject({
+  id: uuidSchema,
+  name: z.string(),
+  /** 출제 요청이 요구한다 — 「모두 출제」가 학생별로 POST /api/tests/generate 를 부른다. */
+  classId: uuidSchema,
+  grade: z.string(),
+  className: z.string(),
+});
+
+/** 같은 범위 학생 한 묶음 — 한 묶음이 시험지 한 종이다. */
+export const dailyReviewGroupSchema = z.strictObject({
+  key: z.string(),
+  rangeStartUnitId: uuidSchema,
+  rangeEndUnitId: uuidSchema,
+  startedFrom: z.enum([
+    "last-review",
+    "progress-start",
+    "chapter-start",
+    "current-only",
+  ]),
+  unitCount: z.number().int().min(1),
+  /** 이 묶음에 필요한 문항 수(구성원 반 기본값의 최댓값) — 부족 판정 기준. */
+  neededCount: z.number().int().min(1),
+  /** 출제 자격 문항 수 — 출제 조회와 같은 where 로 센다(eligibleProblemsWhere). */
+  poolTotal: z.number().int().min(0),
+  students: z.array(dailyGroupStudentSchema).min(1),
+});
+
+export const dailyReviewResponseSchema = dataResponseSchema(
+  z.strictObject({
+    /** 기준일(KST) — 「오늘」의 정의. */
+    day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    /** 마지막 동기화 — 없으면 null(한 번도 안 돌았다). 화면 스트립이 그대로 쓴다. */
+    sync: z
+      .strictObject({
+        ranAt: z.string(),
+        students: z.number().int(),
+        progressRows: z.number().int(),
+        unresolvedLines: z.number().int(),
+        ambiguous: z.number().int(),
+      })
+      .nullable(),
+    attended: z.number().int().min(0),
+    /** 문항이 충분한 묶음(poolTotal >= neededCount) — 「모두 출제」 대상. */
+    auto: z.array(dailyReviewGroupSchema),
+    /** 문항 부족 묶음 — 자동에서 뺀다. 화면이 사유와 함께 보여 준다. */
+    lacking: z.array(dailyReviewGroupSchema),
+    /** 시험기간·미분류 — D-64: 표시만. lines 가 보고서 원문 줄이다. */
+    examOrUnread: z.array(
+      dailyGroupStudentSchema.extend({ lines: z.array(z.string()) }),
+    ),
+    /** 범위를 못 낸 학생 — 조용히 버리지 않는다. */
+    noRange: z.array(dailyGroupStudentSchema),
+    /** 오늘 이미 만든 학생별 확인테스트(최신 한 건) — 「모두 출제」가 이 학생을
+     *  건너뛰고, 화면은 검수·인쇄 링크를 보여 준다(새로고침해도 중복 출제 없음). */
+    todayTests: z.array(
+      z.strictObject({
+        studentId: uuidSchema,
+        testId: uuidSchema,
+        status: z.enum(["draft", "confirmed", "printed"]),
+      }),
+    ),
+  }),
+);
+export type DailyReviewResponse = z.infer<typeof dailyReviewResponseSchema>;

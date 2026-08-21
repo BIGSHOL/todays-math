@@ -58,6 +58,35 @@ export interface FindEligibleProblemsParams {
   difficulty?: Difficulty;
 }
 
+/**
+ * 출제 자격 where — **조회와 세기가 같은 것을 보게** 한 곳에 둔다.
+ * `findEligibleProblems`(출제 풀)와 `countEligibleProblems`(화면의 «문항 N» 표시)가
+ * 갈리면, 화면이 「부족 아님」이라 한 묶음이 출제에서 422 로 죽는다.
+ */
+export function eligibleProblemsWhere(params: FindEligibleProblemsParams) {
+  return {
+    AND: [
+      problemVisibleWhere(params.userId),
+      {
+        unitId: { in: params.unitIds },
+        reviewStatus: "approved" as const,
+        directUseAllowed: true,
+        // 정답이 없으면 정답지가 비어 채점이 불가능하다 → 출제 대상에서 제외.
+        answer: { not: MISSING_ANSWER },
+        ...(params.difficulty ? { difficulty: params.difficulty } : {}),
+      },
+    ],
+  };
+}
+
+/** 출제 자격 문항 **수** — 일일 화면의 「문항 부족」 판정용. where 는 위와 한 벌이다. */
+export async function countEligibleProblems(
+  params: FindEligibleProblemsParams,
+): Promise<number> {
+  if (params.unitIds.length === 0) return 0;
+  return db.problem.count({ where: eligibleProblemsWhere(params) });
+}
+
 /** 자동 출제용 문제 풀 조회 — reviewStatus='approved'만 대상으로 한다(D-22 품질 리스크 완화). */
 export async function findEligibleProblems(
   params: FindEligibleProblemsParams,
@@ -65,19 +94,7 @@ export async function findEligibleProblems(
   if (params.unitIds.length === 0) return [];
 
   const rows = await db.problem.findMany({
-    where: {
-      AND: [
-        problemVisibleWhere(params.userId),
-        {
-          unitId: { in: params.unitIds },
-          reviewStatus: "approved",
-          directUseAllowed: true,
-          // 정답이 없으면 정답지가 비어 채점이 불가능하다 → 출제 대상에서 제외.
-          answer: { not: MISSING_ANSWER },
-          ...(params.difficulty ? { difficulty: params.difficulty } : {}),
-        },
-      ],
-    },
+    where: eligibleProblemsWhere(params),
     select: {
       id: true,
       unitId: true,

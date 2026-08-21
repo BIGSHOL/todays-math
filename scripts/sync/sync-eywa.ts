@@ -26,6 +26,7 @@ import { createEywaClient } from "@/lib/eywa/client";
 import { buildUnitIndex, type UnitRow } from "@/lib/eywa/resolveProgress";
 import {
   classGradeOf,
+  lastReportOf,
   planStudentProgress,
   primaryClassOf,
   schoolFieldsOf,
@@ -264,6 +265,13 @@ async function main() {
         const primary = primaryClassOf(student.classes);
         if (!primary) continue; // 활성 수학반이 없으면 이 연계의 대상이 아니다
         const school = schoolFieldsOf(student.grade);
+        // D-64: 마지막 보고서 날짜·원문 — 시험기간만 적힌 날의 학생을 화면이
+        // «자동 출제 제외 — 표시만»으로 보여 줄 유일한 근거다.
+        const last = lastReportOf(byStudentReports.get(student.id) ?? []);
+        const lastFields = {
+          eywaLastReportDate: last ? new Date(`${last.date}T00:00:00Z`) : null,
+          eywaLastReportText: last?.text ?? null,
+        };
         const row = await tx.student.upsert({
           where: { eywaStudentId: student.id },
           create: {
@@ -274,6 +282,7 @@ async function main() {
             schoolName: student.school?.slice(0, 50) ?? null,
             schoolLevel: school.schoolLevel,
             schoolGrade: school.schoolGrade,
+            ...lastFields,
           },
           update: {
             name: student.name,
@@ -283,6 +292,7 @@ async function main() {
             schoolLevel: school.schoolLevel,
             schoolGrade: school.schoolGrade,
             eywaWithdrawnAt: null, // 돌아온 학생은 표시를 푼다
+            ...lastFields,
           },
           select: { id: true },
         });
@@ -334,6 +344,20 @@ async function main() {
         await tx.progress.createMany({
           data: rowsToCreate.slice(at, at + 2000),
         });
+
+      // 실행 기록 — 화면의 「마지막 동기화」 스트립이 읽는다. 트랜잭션 안이라
+      // 적용이 죽으면 기록도 남지 않는다(«성공한 실행»만 기록).
+      await tx.eywaSyncRun.create({
+        data: {
+          transport: requiredTransport(),
+          students: roster.total,
+          classes: classMembers.size,
+          progressRows: rowsToCreate.length,
+          unresolvedLines: [...미분류.values()].reduce((a, b) => a + b, 0),
+          ambiguous: 애매,
+          examOnly: 시험기간만,
+        },
+      });
 
       console.log(
         `적용: 반 ${ourClassId.size} · 학생 ${ourStudentId.size} · 퇴원 표시 ${withdrawn.count} · 진도 삭제 ${deleted.count} → 생성 ${rowsToCreate.length}`,

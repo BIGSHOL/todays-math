@@ -117,6 +117,32 @@ export function unitsToRecord(
   return out;
 }
 
+/**
+ * 마지막 보고서 — «그날 수업했나»와 «원문에 뭐라고 적혔나»의 근거 (D-64).
+ *
+ * 시험기간(내신대비·모의고사…)만 적힌 날은 진도 행이 하나도 안 생긴다. 그 학생을
+ * 화면이 「자동 출제 제외 — 표시만」으로 보여 주려면, 진도와 **별도로** 마지막
+ * 보고서의 날짜·원문이 학생에 남아 있어야 한다. 같은 날 보고서가 여러 장이면
+ * 전부 합친다 — 한 장만 남기면 원문 표시가 반쪽이 된다.
+ */
+export function lastReportOf(
+  reports: readonly EywaReport[],
+): { date: string; text: string } | null {
+  if (reports.length === 0) return null;
+  const ordered = [...reports].sort(
+    (a, b) =>
+      a.reportDate.localeCompare(b.reportDate) ||
+      a.createdAt.localeCompare(b.createdAt) ||
+      a.id.localeCompare(b.id),
+  );
+  const date = ordered.at(-1)!.reportDate;
+  const text = ordered
+    .filter((r) => r.reportDate === date)
+    .map((r) => r.progress)
+    .join("\n");
+  return { date, text };
+}
+
 export interface PlannedProgressRow {
   eywaReportId: string;
   unitId: string;

@@ -210,3 +210,38 @@ diff·읽기 전용 probe 가 그 코드다. 위험한 것은 코드가 아니�
 - cron + 「지금 가져오기」 — 상태가 보이는 화면과 함께 (D-07 Wire 부터)
 - eywa Vercel env 는 **Production 에만** 있다. 미리보기 배포에 넣지 말 것
 - 같은 날 두 갈래(정규+특강) 학생의 진도 분리 — 계약의 `classId` 로 2단계가 가른다
+
+---
+
+## §8 2단계 — 학생별 일일 확인테스트 화면 (2026-08-21, D-07 절차 완료)
+
+### 확정 이력 (전부 원장님, 2026-08-21)
+
+| 물음 | 확정 | 근거 시안 |
+|---|---|---|
+| 화면 골격 | **D 예외 우선** (5안 중) | `/dev/eywa-daily-wire` — 실데이터 두 날 |
+| 첫 회 범위 | **현재 대단원만** → D-63 | 실측: 현행 73갈래·최대 368단원 ↔ 대단원 51갈래 |
+| 시험기간 학생 | **표시만, 자동 제외** → D-64 | 8/20 실측 78명 중 39명 |
+| 시각 처리 | **① 계기판** (4안 중) | `/dev/eywa-daily-hifi` |
+| 위치 | **메인 상단 합치기** → D-65 | — |
+
+### 들어간 것
+
+- `resolveDefaultReviewRange` D-63(`chapter-start`) · `planDailyReview` 순수 계획
+- `GET /api/tests/daily-review` — 자동/부족/시험기간/범위없음 + `todayTests`(중복 방지)
+  + `EywaSyncRun` 스트립. 풀 세기는 출제와 같은 where(`eligibleProblemsWhere`)
+- `DailyReviewSection` — 메인 상단 계기판. 「모두 출제」는 기존 generate 를 학생별로
+- 동기화: 학생 `eywaLastReportDate/Text`(D-64) + `EywaSyncRun`(성공한 실행만) 기록
+
+### 남은 것 (다음 트랙)
+
+1. **「지금 가져오기」 + POST /api/eywa-sync** — sync 를 lib 로 빼서 라우트가 부른다.
+   ⚠️ 서버리스는 `scripts/sync/ledgers` 파일을 못 쓴다 — 원장을 DB 로도 남겨야 한다.
+2. cron (동기화 자동화) — ①이 선행.
+3. 🔴 **eywa 반 62개 소유 이관** — 지금 전부 `import@todays-math.local` 소유.
+   원장님 실계정으로 로그인하면 「모두 출제」(generate 의 requireOwnedClass)가 403.
+   원장님 계정 이메일 확정 후 `UPDATE class SET user_id = … WHERE eywa_class_id IS NOT NULL`
+   한 번. daily-review 조회는 소유를 안 물어서 화면은 보인다.
+4. 이중 트랙(정규+특강) 분리 — 계약의 `classId`.
+5. 초등 문항 부족(대단원 범위 기준 8/10 실측 14갈래) — 문항 보충이 본질.
+   화면은 「부족 — 자동에서 뺌」으로 정직하게 보여 준다.

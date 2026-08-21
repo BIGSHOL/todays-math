@@ -185,6 +185,24 @@ model Class {
 // FEAT-4: 학생 — 04 §2.6 (최소 수집: 이름만)
 // ─────────────────────────────────────────────
 
+/// eywa 동기화 실행 기록 — 화면의 「마지막 동기화 · 미분류 N줄」 스트립이 읽는다.
+/// 원장 파일(scripts/sync/ledgers)은 되돌리기용이고, 이건 **보여 주기용**이다 —
+/// 파일은 production 웹서버가 못 읽는다(같은 저장소·다른 기계).
+model EywaSyncRun {
+  id              String   @id @default(uuid()) @db.Uuid
+  ranAt           DateTime @default(now()) @map("ran_at")
+  transport       String   @db.VarChar(8)
+  students        Int
+  classes         Int
+  progressRows    Int      @map("progress_rows")
+  unresolvedLines Int      @map("unresolved_lines")
+  ambiguous       Int
+  examOnly        Int      @map("exam_only")
+
+  @@index([ranAt])
+  @@map("eywa_sync_run")
+}
+
 model Student {
   id                    String  @id @default(uuid()) @db.Uuid
   classId               String  @map("class_id") @db.Uuid
@@ -201,6 +219,12 @@ model Student {
   /// roster 에 이 학생이 없으면 여기에 시각을 적는다(퇴원·수학반 이탈).
   /// 지우지 않는 이유: 시험 이력이 딸려 있다. 되돌아오면 NULL 로 푼다.
   eywaWithdrawnAt DateTime? @map("eywa_withdrawn_at")
+
+  /// 마지막 eywa 수업보고서의 날짜·원문 (D-64). 시험기간(내신대비·모의고사)만
+  /// 적힌 날은 진도 행이 안 생기므로, «오늘 수업했는데 자동 출제에서 빠진 학생»을
+  /// 화면이 보여 주려면 진도와 별도로 이 둘이 필요하다. 동기화가 덮어쓴다.
+  eywaLastReportDate DateTime? @map("eywa_last_report_date") @db.Date
+  eywaLastReportText String?   @map("eywa_last_report_text")
 
   /// 재학 학교 — '오늘의 시험' 예측 대상을 정한다(트랙 E).
   /// 표기는 eywa `school-name.ts` 규칙으로 정규화해 넣는다("경명여자중학교" → "경명여중").

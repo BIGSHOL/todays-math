@@ -17,6 +17,7 @@ import {
 import type { UnitRow } from "@/lib/eywa/resolveProgress";
 import {
   classGradeOf,
+  lastReportOf,
   planStudentProgress,
   primaryClassOf,
   schoolFieldsOf,
@@ -299,5 +300,47 @@ describe("[planStudentProgress] 한 학생의 보고서 나열 → 진도 행", 
       보고서("r2", "2026-08-01", "2026-08-01T10:00:00Z", "수학 다면체"),
     ]);
     expect(plan.rows.map((r) => r.eywaReportId)).toEqual(["r2", "r1"]);
+  });
+});
+
+describe("[lastReportOf] 마지막 보고서 — 「오늘 수업했나·뭐라고 적혔나」의 근거 (D-64)", () => {
+  const r = (
+    id: string,
+    date: string,
+    createdAt: string,
+    progress: string,
+  ) => ({
+    id,
+    studentId: "s1",
+    reportDate: date,
+    createdAt,
+    progress,
+    classId: null,
+    makeupClassId: null,
+  });
+
+  it("가장 늦은 (reportDate, createdAt, id) 의 날짜를 고른다", () => {
+    expect(
+      lastReportOf([
+        r("a", "2026-08-19", "2026-08-19T10:00:00Z", "수학 다면체"),
+        r("b", "2026-08-20", "2026-08-20T10:00:00Z", "수학 내신대비"),
+      ]),
+    ).toEqual({ date: "2026-08-20", text: "수학 내신대비" });
+  });
+
+  /** 같은 날 보고서 둘이면 **그날 전부**를 createdAt 순으로 잇는다 — 한 장만 남기면
+   *  화면의 «원문 표시»가 반쪽이 된다. */
+  it("같은 날 여러 장이면 전부 합친다 (createdAt 순)", () => {
+    expect(
+      lastReportOf([
+        r("b", "2026-08-20", "2026-08-20T14:00:00Z", "수학 모의고사"),
+        r("a", "2026-08-20", "2026-08-20T10:00:00Z", "수학 내신대비"),
+        r("z", "2026-08-19", "2026-08-19T10:00:00Z", "수학 다면체"),
+      ]),
+    ).toEqual({ date: "2026-08-20", text: "수학 내신대비\n수학 모의고사" });
+  });
+
+  it("보고서가 없으면 null", () => {
+    expect(lastReportOf([])).toBeNull();
   });
 });
