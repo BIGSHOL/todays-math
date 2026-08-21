@@ -1,0 +1,734 @@
+{
+ "note": "되돌리기 자료. before 가 **처음** 고치기 전 값이다(회차를 누적한다). 되돌리기: ALLOW_SHARED_IMPORT=1 npx tsx scripts/qa/repair-lsub.ts --revert --apply",
+ "규칙": "scripts/qa/lsubRules.ts — 셈으로 검산한다(verifyLsubArithmetic)",
+ "rows": [
+  {
+   "id": "82eb48c0-1921-4819-a9fb-497691992830",
+   "code": "HC10302-AJMX",
+   "field": "solution",
+   "before": "$156$일의자리에 $0$이 오는 경우의 수는 $\\mathrm{P}LSUB5_{3}=60$일의자리에 $2$ 또는 $4$가 오는 경우의 수는 $4\\times 4\\times 3\\times 2=96$따라서, 네 자리 짝수의 개수는 $60+96=156$",
+   "after": "$156$일의자리에 $0$이 오는 경우의 수는 ${}_5\\mathrm{P}_3=60$일의자리에 $2$ 또는 $4$가 오는 경우의 수는 $4\\times 4\\times 3\\times 2=96$따라서, 네 자리 짝수의 개수는 $60+96=156$",
+   "spans": 1
+  },
+  {
+   "id": "a5cb22ca-e86f-4538-952f-d4c2d288293f",
+   "code": "HC10302-QV4H",
+   "field": "solution",
+   "before": "(1) $19$개 (2) $288$개풀이과정(1) $7$개의 나라 중 두 나라를 연결하는 모든 직항 수: ${ } LSUB { 7`} rmC_{`2}$$rmB$와 $\\mathrm{}$$rmC`,~B$와 $rmE$를 연결하는 직항만 없으므로,$LSUB7\\,\\mathrm{C}_{\\,2}-2=\\frac{7\\times 6}{2!}-2=21-2=19$$\\therefore ~19$개 (2) $7$개의 나라가 모두 다 연결되어 있는 경우, ① $RMA$ 나라에서 출발하여 $6$개의 나라를 모두 한 번씩만 방문하고 다시 $RMA$로 돌아오는 경우의 수: $6!$ ② $RMB$ 나라에서 $RMC$나라 또는 $RMC$ 나라에서 $RMB$나라를 방문하는 경우의 수: $2\\times 5!$③ $RMB$ 나라에서 $RME$나라 또는 $RME$ 나라에서 $RMB$나라를 방문하는 경우의 수: $2\\times 5!$④ $RME$ 나라에서 $RMB$나라 거처 $rmC$나라 또는 $rmC$ 나라에서 $RMB$나라 거쳐 $rmE$나라 방문하는 경우의 수: $2\\times 4!$$\\therefore ~6!-2\\times 5!-2\\times 5!+2\\times 4!\\,=288$",
+   "after": "(1) $19$개 (2) $288$개풀이과정(1) $7$개의 나라 중 두 나라를 연결하는 모든 직항 수: ${ } LSUB { 7`} rmC_{`2}$$rmB$와 $\\mathrm{}$$rmC`,~B$와 $rmE$를 연결하는 직항만 없으므로,${}_7\\mathrm{C}_2-2=\\frac{7\\times 6}{2!}-2=21-2=19$$\\therefore ~19$개 (2) $7$개의 나라가 모두 다 연결되어 있는 경우, ① $RMA$ 나라에서 출발하여 $6$개의 나라를 모두 한 번씩만 방문하고 다시 $RMA$로 돌아오는 경우의 수: $6!$ ② $RMB$ 나라에서 $RMC$나라 또는 $RMC$ 나라에서 $RMB$나라를 방문하는 경우의 수: $2\\times 5!$③ $RMB$ 나라에서 $RME$나라 또는 $RME$ 나라에서 $RMB$나라를 방문하는 경우의 수: $2\\times 5!$④ $RME$ 나라에서 $RMB$나라 거처 $rmC$나라 또는 $rmC$ 나라에서 $RMB$나라 거쳐 $rmE$나라 방문하는 경우의 수: $2\\times 4!$$\\therefore ~6!-2\\times 5!-2\\times 5!+2\\times 4!\\,=288$",
+   "spans": 1
+  },
+  {
+   "id": "0bc309cd-ebf6-4ed6-8ccf-820f495ce0d0",
+   "code": "HC10302-U5U5",
+   "field": "solution",
+   "before": "정답 $n=8$풀이) $\\,_{n}+2\\mathrm{P}_{3}=20\\times _{n}C_{2}+22n-16$에서 $(n+2)(n+1)n=20\\cdot \\frac{n(n-1)}{2!}+22n-16$$n^{3}-7n^{2}-10n+16=0$$(n-1)(n+2)(n-8)=0$$n=1$ 또는 $n=-2$ 또는 $n=8$이때, $\\mathrm{LSUB}n+2P_{3}$에서 $n+2\\geq 3$, $n\\geq 1$또, $\\mathrm{LSUB}nC_{2}$에서 $n\\geq 2$이므로 조건을 만족하는 자연수 $n$은 $8$이다.",
+   "after": "정답 $n=8$풀이) $\\,_{n}+2\\mathrm{P}_{3}=20\\times _{n}C_{2}+22n-16$에서 $(n+2)(n+1)n=20\\cdot \\frac{n(n-1)}{2!}+22n-16$$n^{3}-7n^{2}-10n+16=0$$(n-1)(n+2)(n-8)=0$$n=1$ 또는 $n=-2$ 또는 $n=8$이때, ${}_{n+2}\\mathrm{P}_3$에서 $n+2\\geq 3$, $n\\geq 1$또, ${}_n\\mathrm{C}_2$에서 $n\\geq 2$이므로 조건을 만족하는 자연수 $n$은 $8$이다.",
+   "spans": 2
+  },
+  {
+   "id": "d14a8ced-32c4-4e09-a488-1ff7a8e72604",
+   "code": "HC10303-2CMM",
+   "field": "content",
+   "before": "$\\mathrm{LSUB}4P_{2}+CLSUB10_{8}+5!$의 값은?\n\n1. $177$\n2. $179$\n3. $181$\n4. $183$\n5. $185$",
+   "after": "${}_4\\mathrm{P}_2+{}_{10}\\mathrm{C}_8+5!$의 값은?\n\n1. $177$\n2. $179$\n3. $181$\n4. $183$\n5. $185$",
+   "spans": 1
+  },
+  {
+   "id": "b6c27bb1-83e3-45b7-ac0a-1f6734957e4f",
+   "code": "HC10303-BZGM",
+   "field": "solution",
+   "before": "⑴ $a=48$ ⑵ $b=40$ ⑶ $k=88$⑴ $0$, $1$이상의 홀수 $1$개($\\mathrm{C}LSUB5_{1}$), 짝수 $2$개($\\mathrm{C}LSUB4_{2}$), 특수 문자$1$개($\\mathrm{C}LSUB2_{1}$)를 뽑은 후에 나열한 후 $0$이 맨 앞에 오는 경우를 빼면$\\mathrm{\\left( }CLSUB5_{1}\\right) \\times \\left( CLSUB4_{2}\\right) \\times \\left( CLSUB2_{1}\\right) \\times \\left( 5!-4!\\right) =48\\times 5!$∴ $a=48$   ⑵  $1$이상의 홀수 $1$개($\\mathrm{C}LSUB5_{1}$), 짝수 $3$개($\\mathrm{C}LSUB4_{3}$), 특수 문자$1$개($\\mathrm{C}LSUB2_{1}$)를 뽑은 후에 나열하면$\\mathrm{\\left( }CLSUB5_{1}\\right) \\times \\left( CLSUB4_{3}\\right) \\times \\left( CLSUB2_{1}\\right) \\times 5~=40\\times 5!$∴ $b=40$    ⑶ 전체의 경우는 $0$을 포함해서 만드는 경우의 수와 $0$을포함하지 않고 만드는 경우의 수의 합이므로 $48\\times 5!+40\\times 5!\\,=\\,88\\times 5!$∴ $k=88$",
+   "after": "⑴ $a=48$ ⑵ $b=40$ ⑶ $k=88$⑴ $0$, $1$이상의 홀수 $1$개(${}_5\\mathrm{C}_1$), 짝수 $2$개(${}_4\\mathrm{C}_2$), 특수 문자$1$개(${}_2\\mathrm{C}_1$)를 뽑은 후에 나열한 후 $0$이 맨 앞에 오는 경우를 빼면$\\mathrm{\\left( }{}_5\\mathrm{C}_1\\right) \\times \\left( {}_4\\mathrm{C}_2\\right) \\times \\left( {}_2\\mathrm{C}_1\\right) \\times \\left( 5!-4!\\right) =48\\times 5!$∴ $a=48$   ⑵  $1$이상의 홀수 $1$개(${}_5\\mathrm{C}_1$), 짝수 $3$개(${}_4\\mathrm{C}_3$), 특수 문자$1$개(${}_2\\mathrm{C}_1$)를 뽑은 후에 나열하면$\\mathrm{\\left( }{}_5\\mathrm{C}_1\\right) \\times \\left( {}_4\\mathrm{C}_3\\right) \\times \\left( {}_2\\mathrm{C}_1\\right) \\times 5~=40\\times 5!$∴ $b=40$    ⑶ 전체의 경우는 $0$을 포함해서 만드는 경우의 수와 $0$을포함하지 않고 만드는 경우의 수의 합이므로 $48\\times 5!+40\\times 5!\\,=\\,88\\times 5!$∴ $k=88$",
+   "spans": 8
+  },
+  {
+   "id": "2bf67313-0399-4a3f-8794-298fda845537",
+   "code": "HC10303-HUU9",
+   "field": "solution",
+   "before": "$n=11$풀이과정$n$개의 팀이 서로 다른 팀과 모두 한 번씩 경기를 하는 경우의 수는 $\\mathrm{C}LSUBn_{2}$이때 총 $55$번 경기를 하였으므로  $\\mathrm{C}LSUBn_{2}=55$따라서 $n(n-1\\frac{)}{2}=55$이므로$n(n-1)=110,~n=11$",
+   "after": "$n=11$풀이과정$n$개의 팀이 서로 다른 팀과 모두 한 번씩 경기를 하는 경우의 수는 ${}_n\\mathrm{C}_2$이때 총 $55$번 경기를 하였으므로  ${}_n\\mathrm{C}_2=55$따라서 $n(n-1\\frac{)}{2}=55$이므로$n(n-1)=110,~n=11$",
+   "spans": 2
+  },
+  {
+   "id": "4ecf5d38-a6c0-416a-9f19-259cd93bba9a",
+   "code": "HC10303-RNHN",
+   "field": "content",
+   "before": "다음 등식을 만족시키는 두 자연수 $m,~n$에 대하여 $m+n$의 값은? (단, $m\\geq 4,~n\\geq 3$) \n⋅$4\\times _{m}\\mathrm{P}_{3}=5\\times \\mathit{_{m-1}}\\mathrm{P}_{3}$\n⋅$\\mathrm{LSUB}n\\mathrm{C}_{3}=3\\times \\mathit{\\mathrm{LSUB}}n\\mathrm{C}_{2}$\n\n1. $23$\n2. $24$\n3. $25$\n4. $26$\n5. $27$",
+   "after": "다음 등식을 만족시키는 두 자연수 $m,~n$에 대하여 $m+n$의 값은? (단, $m\\geq 4,~n\\geq 3$) \n⋅$4\\times _{m}\\mathrm{P}_{3}=5\\times \\mathit{_{m-1}}\\mathrm{P}_{3}$\n⋅${}_n\\mathrm{C}_3=3\\times {}_n\\mathrm{C}_2$\n\n1. $23$\n2. $24$\n3. $25$\n4. $26$\n5. $27$",
+   "spans": 1
+  },
+  {
+   "id": "9d947792-b3ed-4c28-99ae-13d4b353bbab",
+   "code": "HC20208-6P9A",
+   "field": "solution",
+   "before": "$211$$1)$ $B$의 원소개수를 $5$개라 하면 : $C LSUB {5} _{5}$ $A\\subset B$를 만족하는 $A$의 개수는 $2 ^{5} -1$ (공집합 제외)$2)$ $B$의 원소개수를 $4$개라 하면 : $C LSUB {5} _{4}$ $A\\subset B$를 만족하는 $A$의 개수는 $2 ^{4} -1$ (공집합 제외)$3)$ $B$의 원소개수를 $3$개라 하면 : $C LSUB {5} _{3}$ $A\\subset B$를 만족하는 $A$의 개수는 $2 ^{3} -1$ (공집합 제외)$4)$ $B$의 원소개수를 $2$개라 하면 : $C LSUB {5} _{2}$ $A\\subset B$를 만족하는 $A$의 개수는 $2 ^{2} -1$ (공집합 제외)$5)$ $B$의 원소개수를 $1$개라 하면 : $C LSUB {5} _{1}$ $A\\subset B$를 만족하는 $A$의 개수는 $2 ^{1} -1$ (공집합 제외)따라서,$CLSUB5_{1}\\times (2^{1}-1)+CLSUB5_{2}\\times (2^{2}-1)+CLSUB5_{3}\\times (2^{3}-1)##\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,+CLSUB5_{4}\\times (2^{4}-1)+CLSUB5_{5}\\times (2^{5}-1)##=31+75+70+30+5=211$",
+   "after": "$211$$1)$ $B$의 원소개수를 $5$개라 하면 : ${}_5\\mathrm{C}_5$ $A\\subset B$를 만족하는 $A$의 개수는 $2 ^{5} -1$ (공집합 제외)$2)$ $B$의 원소개수를 $4$개라 하면 : ${}_5\\mathrm{C}_4$ $A\\subset B$를 만족하는 $A$의 개수는 $2 ^{4} -1$ (공집합 제외)$3)$ $B$의 원소개수를 $3$개라 하면 : ${}_5\\mathrm{C}_3$ $A\\subset B$를 만족하는 $A$의 개수는 $2 ^{3} -1$ (공집합 제외)$4)$ $B$의 원소개수를 $2$개라 하면 : ${}_5\\mathrm{C}_2$ $A\\subset B$를 만족하는 $A$의 개수는 $2 ^{2} -1$ (공집합 제외)$5)$ $B$의 원소개수를 $1$개라 하면 : ${}_5\\mathrm{C}_1$ $A\\subset B$를 만족하는 $A$의 개수는 $2 ^{1} -1$ (공집합 제외)따라서,${}_5\\mathrm{C}_1\\times (2^{1}-1)+{}_5\\mathrm{C}_2\\times (2^{2}-1)+{}_5\\mathrm{C}_3\\times (2^{3}-1)##\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,\\,+{}_5\\mathrm{C}_4\\times (2^{4}-1)+{}_5\\mathrm{C}_5\\times (2^{5}-1)##=31+75+70+30+5=211$",
+   "spans": 6
+  },
+  {
+   "id": "ddb819df-ba81-4a56-94b9-62b8f0f9d9e0",
+   "code": "HPS0101-7Y3M",
+   "field": "solution",
+   "before": "$x$가 $0$개 일 때, $4\\times 4\\times 4\\times 4=256$$x$가 $1$개 일 때, $\\mathrm{C}LSUB4_{1}\\times 4\\times 4\\times 4=256$$x$가 $2$개 일 때, $3\\times 4\\times 4=48$ 이므로 $560$이다.",
+   "after": "$x$가 $0$개 일 때, $4\\times 4\\times 4\\times 4=256$$x$가 $1$개 일 때, ${}_4\\mathrm{C}_1\\times 4\\times 4\\times 4=256$$x$가 $2$개 일 때, $3\\times 4\\times 4=48$ 이므로 $560$이다.",
+   "spans": 1
+  },
+  {
+   "id": "1476ee8a-65ba-4aff-a699-a0903456398d",
+   "code": "HPS0101-9DUC",
+   "field": "content",
+   "before": "서로 다른 $5$통의 편지를 $7$개의 우체통에 넣는 방법의 수는? (단, 한 통의 편지도 넣지 않은 우체통이 있을 수 있다.)\n\n1. $5\\,!$\n2. $7\\,!$\n3. $5^{7}$\n4. $7^{5}$\n5. $\\mathrm{H}LSUB5_{7}$",
+   "after": "서로 다른 $5$통의 편지를 $7$개의 우체통에 넣는 방법의 수는? (단, 한 통의 편지도 넣지 않은 우체통이 있을 수 있다.)\n\n1. $5\\,!$\n2. $7\\,!$\n3. $5^{7}$\n4. $7^{5}$\n5. ${}_5\\mathrm{H}_7$",
+   "spans": 1
+  },
+  {
+   "id": "15883a98-9614-4b6b-bb7e-596cd5e90742",
+   "code": "HPS0101-FFZ4",
+   "field": "solution",
+   "before": "$42$$1)$ $f(2)=1,~f(1)=3$일 때, 공역과 치역이 같으므로 나머지 정의역의 원소 $3$개 중 $2$개가 남은 공역의 원소 $2,~4$에 대응되어야하고한다.$ⅰ)$ 정의역원소 $3,~4,~5$가 $2,~4$로 모두 가는 경우$2 ^{3} -2=6$$ⅱ)$ 정의역원소 $3,~4,~5$ 중에서 하나는$1,~3$으로 대응되고, 나머지 두 원소는 $2,~4$로 대응되는 경우$CLSUB3_{1}\\times 2\\times 2=12$따라서 $18$가지 이다.$2)$ $f(2)=3,~f(3)=3$ 일 때, 공역과 치역이 같으므로나머지 정의역의 원소는 공역의 원소 $1,~2,~4$에 대응되어야 하므로 $3!`=6$$3)$ $f(2)=4,~f(4)=3$일 때는 $1)$과 같으므로 $18$따라서 $42$",
+   "after": "$42$$1)$ $f(2)=1,~f(1)=3$일 때, 공역과 치역이 같으므로 나머지 정의역의 원소 $3$개 중 $2$개가 남은 공역의 원소 $2,~4$에 대응되어야하고한다.$ⅰ)$ 정의역원소 $3,~4,~5$가 $2,~4$로 모두 가는 경우$2 ^{3} -2=6$$ⅱ)$ 정의역원소 $3,~4,~5$ 중에서 하나는$1,~3$으로 대응되고, 나머지 두 원소는 $2,~4$로 대응되는 경우${}_3\\mathrm{C}_1\\times 2\\times 2=12$따라서 $18$가지 이다.$2)$ $f(2)=3,~f(3)=3$ 일 때, 공역과 치역이 같으므로나머지 정의역의 원소는 공역의 원소 $1,~2,~4$에 대응되어야 하므로 $3!`=6$$3)$ $f(2)=4,~f(4)=3$일 때는 $1)$과 같으므로 $18$따라서 $42$",
+   "spans": 1
+  },
+  {
+   "id": "2a0418e9-954e-4f7d-802c-9aff5ad1c369",
+   "code": "HPS0101-QH4K",
+   "field": "solution",
+   "before": "$61$(모든 경우의 수)$-$($1$을 포함하지 않는 경우의 수)$=\\pi LSUB5_{3}-\\pi LSUB4_{3}=125-64=61$",
+   "after": "$61$(모든 경우의 수)$-$($1$을 포함하지 않는 경우의 수)$={}_5\\Pi _3-{}_4\\Pi _3=125-64=61$",
+   "spans": 1
+  },
+  {
+   "id": "fe545020-f600-4a1c-bc92-9fe7e569252f",
+   "code": "HPS0101-T3NY",
+   "field": "solution",
+   "before": "$192$학생 $\\mathrm{A}$가 사탕을 $0$개 받는 경우 : $2^{5}=32$학생 $\\mathrm{A}$가 사탕을 $1$개 받는 경우 : $\\mathrm{C}LSUB5_{1}\\times 2^{4}=5\\times 16=80$학생 $\\mathrm{A}$가 사탕을 $2$개 받는 경우 : $\\mathrm{C}LSUB5_{2}\\times 2^{3}=10\\times 8=80$$32+80+80=192$",
+   "after": "$192$학생 $\\mathrm{A}$가 사탕을 $0$개 받는 경우 : $2^{5}=32$학생 $\\mathrm{A}$가 사탕을 $1$개 받는 경우 : ${}_5\\mathrm{C}_1\\times 2^{4}=5\\times 16=80$학생 $\\mathrm{A}$가 사탕을 $2$개 받는 경우 : ${}_5\\mathrm{C}_2\\times 2^{3}=10\\times 8=80$$32+80+80=192$",
+   "spans": 2
+  },
+  {
+   "id": "dc0c1bff-cdc5-4d1c-975b-ce0f56e35931",
+   "code": "HPS0102-96GH",
+   "field": "solution",
+   "before": "$1$단씩 올라가는 횟수를 $x$라 하고,$2$단씩 올라가는 횟수를 $y$라 하면 $x+2y=8$ 이다.$y=0,~x=8$이므로 $1$가지$y=1,~x=6$이므로 $CLSUB7_{1}=7$$y=2,~x=4$이므로 $CLSUB6_{2}=15$$y=3,~x=2$이므로 $CLSUB5_{2}=10$$y=4,~x=0$이므로 $1$가지 따라서 $34$이다.",
+   "after": "$1$단씩 올라가는 횟수를 $x$라 하고,$2$단씩 올라가는 횟수를 $y$라 하면 $x+2y=8$ 이다.$y=0,~x=8$이므로 $1$가지$y=1,~x=6$이므로 ${}_7\\mathrm{C}_1=7$$y=2,~x=4$이므로 ${}_6\\mathrm{C}_2=15$$y=3,~x=2$이므로 ${}_5\\mathrm{C}_2=10$$y=4,~x=0$이므로 $1$가지 따라서 $34$이다.",
+   "spans": 3
+  },
+  {
+   "id": "6cdb6d38-a502-4608-80be-eb646a42b02d",
+   "code": "HPS0103-645T",
+   "field": "solution",
+   "before": "$20$$\\left| \\left( a-b\\right) \\left( a+b\\right) \\right| =7$이므로$a-b=1$이고 $a+b=7$일 때 $a=4,~b=3$$a-b=-1$이고 $a+b=7$일 때 $a=3,~b=4$$\\left( a,~b\\right)$의 순서쌍은 $2$가지이다.(가)에서 $7+c+d+e=13$는 $c+d+e=6$이고$c=c\\prime +1$, $d=d\\prime +1$, $e=e\\prime +1$라 하면$c\\prime +d\\prime +e\\prime =3$ ($c\\prime ,~d\\prime ,~e\\prime$은 음이 아닌 정수)$\\mathrm{H}LSUB3_{3}=CLSUB5_{3}=10$$2\\times 10=20$",
+   "after": "$20$$\\left| \\left( a-b\\right) \\left( a+b\\right) \\right| =7$이므로$a-b=1$이고 $a+b=7$일 때 $a=4,~b=3$$a-b=-1$이고 $a+b=7$일 때 $a=3,~b=4$$\\left( a,~b\\right)$의 순서쌍은 $2$가지이다.(가)에서 $7+c+d+e=13$는 $c+d+e=6$이고$c=c\\prime +1$, $d=d\\prime +1$, $e=e\\prime +1$라 하면$c\\prime +d\\prime +e\\prime =3$ ($c\\prime ,~d\\prime ,~e\\prime$은 음이 아닌 정수)${}_3\\mathrm{H}_3={}_5\\mathrm{C}_3=10$$2\\times 10=20$",
+   "spans": 1
+  },
+  {
+   "id": "f5f1fd3f-5de9-4977-823c-b3772124acc0",
+   "code": "HPS0103-6JYU",
+   "field": "solution",
+   "before": "$1368$ⅰ) 딸기 $2$개 놓을 접시를 고른다. (대표 $RMA$)ⅱ) 남은 접시에 남은 딸기, 포토, 망고맛 사탕을 담는 경우의 수는 $\\mathrm{H}LSUB3_{2}\\times HLSUB3_{3}\\times HLSUB3_{2}$ⅲ) 이 중에서 딸기만 $2$개 담은 접시가 $2$개인 경우를 빼면$\\mathrm{_{4}}C_{1}\\times _{3}H_{2}\\times _{3}H_{3}\\times _{3}H_{2}-_{4}C_{1}\\times CLSUB3_{1}\\times _{2}H_{3}\\times _{2}H_{2}=1296$이다.",
+   "after": "$1368$ⅰ) 딸기 $2$개 놓을 접시를 고른다. (대표 $RMA$)ⅱ) 남은 접시에 남은 딸기, 포토, 망고맛 사탕을 담는 경우의 수는 ${}_3\\mathrm{H}_2\\times {}_3\\mathrm{H}_3\\times {}_3\\mathrm{H}_2$ⅲ) 이 중에서 딸기만 $2$개 담은 접시가 $2$개인 경우를 빼면$\\mathrm{_{4}}C_{1}\\times _{3}H_{2}\\times _{3}H_{3}\\times _{3}H_{2}-_{4}C_{1}\\times {}_3\\mathrm{C}_1\\times _{2}H_{3}\\times _{2}H_{2}=1296$이다.",
+   "spans": 2
+  },
+  {
+   "id": "8c6981af-f2da-4ced-b4e1-d8ece9bcdd02",
+   "code": "HPS0103-BSM4",
+   "field": "solution",
+   "before": "$\\frac{7}{125}$$X$에서 $X$로의 함수가 되는 경우의 수는 $5^4 = 625$$f(4)$의 값이 정해지면 $f(1),~f(2),~f(3)$은 $f(4)$값 미만의 값 중에서 중복조합이므로 ⅰ) $f(4 ) = 5$일 경우 $\\mathrm{H}_{3}lsub4=\\mathrm{C}_{3}lsub6=20$ⅱ) $f( 4 ) = 4$일 경우 $\\mathrm{H}_{3}lsub3=\\mathrm{C}_{2}lsub5=10$ⅲ) $f(4) =3$일 경우 $\\mathrm{H}_{3}lsub2=\\mathrm{C}_{3}lsub4=4$ⅳ) $f(4) = 2$일 경우 $rmH_3 lsub1 = rmC_3 lsub3 = 1$따라서 $\\frac{35}{625}=\\frac{7}{125}$",
+   "after": "$\\frac{7}{125}$$X$에서 $X$로의 함수가 되는 경우의 수는 $5^4 = 625$$f(4)$의 값이 정해지면 $f(1),~f(2),~f(3)$은 $f(4)$값 미만의 값 중에서 중복조합이므로 ⅰ) $f(4 ) = 5$일 경우 ${}_4\\mathrm{H}_3={}_6\\mathrm{C}_3=20$ⅱ) $f( 4 ) = 4$일 경우 ${}_3\\mathrm{H}_3={}_5\\mathrm{C}_2=10$ⅲ) $f(4) =3$일 경우 ${}_2\\mathrm{H}_3={}_4\\mathrm{C}_3=4$ⅳ) $f(4) = 2$일 경우 $rm{}_1\\mathrm{H}_3 = rm{}_3\\mathrm{C}_3 = 1$따라서 $\\frac{35}{625}=\\frac{7}{125}$",
+   "spans": 4
+  },
+  {
+   "id": "ef7770b4-2d77-4a3e-8a9a-4553542fae03",
+   "code": "HPS0103-CHT7",
+   "field": "solution",
+   "before": "$⑴$ $(0,~4,~0),~(1,~3,~0),~(2,~2,~0),~(3,~1,~0),~(4,~0,~0)$   $(0,~2,~1),~(1,~1,~1),~(2,~0,~1)$   $(0,~0,~2)$ 따라서 $9$개다.$⑵$ $z=0,~x+y=4,~\\mathrm{H}LSUB2_{4}=5$   $z=1,~x+y=2,~\\mathrm{H}LSUB2_{2}=3$   $z=2,~x+y=0,~\\mathrm{H}LSUB2_{0}=1$ 따라서 $9$개다.",
+   "after": "$⑴$ $(0,~4,~0),~(1,~3,~0),~(2,~2,~0),~(3,~1,~0),~(4,~0,~0)$   $(0,~2,~1),~(1,~1,~1),~(2,~0,~1)$   $(0,~0,~2)$ 따라서 $9$개다.$⑵$ $z=0,~x+y=4,~{}_2\\mathrm{H}_4=5$   $z=1,~x+y=2,~{}_2\\mathrm{H}_2=3$   $z=2,~x+y=0,~{}_2\\mathrm{H}_0=1$ 따라서 $9$개다.",
+   "spans": 3
+  },
+  {
+   "id": "fafd9922-1234-4a74-b9f1-579a3f8dd4c3",
+   "code": "HPS0103-E6SF",
+   "field": "solution",
+   "before": "$(1)$ $a+b+c+d=16$$(2)$ $b'=b+3$$(3)$ $d'=d+1$이므로 $a+(b'+3)+c+(d'+1)=16$    $HLSUB4_{12}=CLSUB15_{12}=455$이다.",
+   "after": "$(1)$ $a+b+c+d=16$$(2)$ $b'=b+3$$(3)$ $d'=d+1$이므로 $a+(b'+3)+c+(d'+1)=16$    ${}_4\\mathrm{H}_{12}={}_{15}\\mathrm{C}_{12}=455$이다.",
+   "spans": 1
+  },
+  {
+   "id": "8072be1e-4118-435e-8fd9-5378fa491937",
+   "code": "HPS0103-J96Q",
+   "field": "solution",
+   "before": "$\\frac{1}{13}$$x+y+z+w=12$($w$는 음이아닌 정수)모든경우의 수는 $\\mathrm{}_{4}H_{12}$이고 $x,`y,`z$가 홀수이면 $w$역시 홀수이므로 $\\frac{x-1}{2}+\\frac{y-1}{2}+\\frac{z-1}{2}+\\frac{w-1}{2}=4$이다.각각의 순서쌍 $(x,`y,`w)$가 선택될 근원사건의 가능성은 모두 같으므로 $\\frac{\\mathrm{HLSUB4_{4}}}{_{4}H_{12}}=\\frac{1}{13}$이다.",
+   "after": "$\\frac{1}{13}$$x+y+z+w=12$($w$는 음이아닌 정수)모든경우의 수는 $\\mathrm{}_{4}H_{12}$이고 $x,`y,`z$가 홀수이면 $w$역시 홀수이므로 $\\frac{x-1}{2}+\\frac{y-1}{2}+\\frac{z-1}{2}+\\frac{w-1}{2}=4$이다.각각의 순서쌍 $(x,`y,`w)$가 선택될 근원사건의 가능성은 모두 같으므로 $\\frac{\\mathrm{{}_4\\mathrm{H}_4}}{_{4}H_{12}}=\\frac{1}{13}$이다.",
+   "spans": 1
+  },
+  {
+   "id": "576bf417-8aa3-4506-843c-de62edf8644a",
+   "code": "HPS0103-JLKB",
+   "field": "content",
+   "before": "$SMALLPRODLSUB3_{n}-\\mathrm{H}LSUB5_{3}=208$을 만족하는 자연수 $n$의 값은?\n\n1. $5$\n2. $4$\n3. $3$\n4. $2$\n5. $1$",
+   "after": "${}_3\\Pi _n-{}_5\\mathrm{H}_3=208$을 만족하는 자연수 $n$의 값은?\n\n1. $5$\n2. $4$\n3. $3$\n4. $2$\n5. $1$",
+   "spans": 1
+  },
+  {
+   "id": "7158ebcb-e601-42af-90bc-b12c4f7f97cc",
+   "code": "HPS0103-LFDH",
+   "field": "solution",
+   "before": "$40$$1)$ $a,~d$가 모두 짝수$a,~b,~c,~d$는 중복을 허락해 $4$개를 고르는 경우와 같으므로 $rmH LSUB {4} _{4} =35$$2)$ $a,~d$가 모두 홀수$a$$b$$c$$d$$5$$6$$6$$7$$5$$H LSUB {2} _{2}$$9$$7$$8$$8$$9$",
+   "after": "$40$$1)$ $a,~d$가 모두 짝수$a,~b,~c,~d$는 중복을 허락해 $4$개를 고르는 경우와 같으므로 $rm{}_4\\mathrm{H}_4 =35$$2)$ $a,~d$가 모두 홀수$a$$b$$c$$d$$5$$6$$6$$7$$5$${}_2\\mathrm{H}_2$$9$$7$$8$$8$$9$",
+   "spans": 2
+  },
+  {
+   "id": "58e89618-628c-4a99-9cf2-cd4b85f49520",
+   "code": "HPS0103-Q7TW",
+   "field": "content",
+   "before": "$\\mathrm{\\pi }LSUB2_{3}+HLSUB2_{3}$의 값은?\n\n1. $10$\n2. $11$\n3. $12$\n4. $13$\n5. $14$",
+   "after": "${}_2\\Pi _3+{}_2\\mathrm{H}_3$의 값은?\n\n1. $10$\n2. $11$\n3. $12$\n4. $13$\n5. $14$",
+   "spans": 1
+  },
+  {
+   "id": "3612431d-09cf-4937-b0e9-fd66e67c43b8",
+   "code": "HPS0103-RYF7",
+   "field": "solution",
+   "before": "$31$$c+1=c\\prime$이라 치환하면 $1\\leq a\\leq b\\leq c\\prime \\leq d\\leq 4$입니다.$4$개의 숫자를 중복허용하여 $4$개를 뽑는 조합 $\\mathrm{H}LSUB4_{4}=CLSUB7_{3}=35$가지.단, $c=c\\prime -1$이 자연수여야하므로 $c\\prime$은 최소 $2$여야합니다. $c\\prime =1$인 경우를 제외. $c\\prime =1$이면 $a=1,~b=1\\,$로 고정되고, $d$는 $1,~2,~3,~4$중 하나이므로 $4$가지입니다.최종개수 $35-4=31$",
+   "after": "$31$$c+1=c\\prime$이라 치환하면 $1\\leq a\\leq b\\leq c\\prime \\leq d\\leq 4$입니다.$4$개의 숫자를 중복허용하여 $4$개를 뽑는 조합 ${}_4\\mathrm{H}_4={}_7\\mathrm{C}_3=35$가지.단, $c=c\\prime -1$이 자연수여야하므로 $c\\prime$은 최소 $2$여야합니다. $c\\prime =1$인 경우를 제외. $c\\prime =1$이면 $a=1,~b=1\\,$로 고정되고, $d$는 $1,~2,~3,~4$중 하나이므로 $4$가지입니다.최종개수 $35-4=31$",
+   "spans": 1
+  },
+  {
+   "id": "9fdb9fc9-9276-49da-9e12-e30b52fe82aa",
+   "code": "HPS0103-UPTX",
+   "field": "content",
+   "before": "$\\mathrm{H}LSUB4_{5}-\\pi LSUB3_{2}$을 구하는 풀이과정과 정답을 서술하시오.",
+   "after": "${}_4\\mathrm{H}_5-{}_3\\Pi _2$을 구하는 풀이과정과 정답을 서술하시오.",
+   "spans": 1
+  },
+  {
+   "id": "9fdb9fc9-9276-49da-9e12-e30b52fe82aa",
+   "code": "HPS0103-UPTX",
+   "field": "solution",
+   "before": "$47$$\\mathrm{H}LSUB4_{5}-\\pi LSUB3_{2}=CLSUB8_{5}-3^{2}=56-9=47$",
+   "after": "$47$${}_4\\mathrm{H}_5-{}_3\\Pi _2={}_8\\mathrm{C}_5-3^{2}=56-9=47$",
+   "spans": 1
+  },
+  {
+   "id": "89213403-d7f2-452b-9d99-7c844d731c91",
+   "code": "HPS0103-UWBY",
+   "field": "solution",
+   "before": "$78$흰 구슬은 $3$명모두 받아야 하므로 하나씩 나누어준 후, 흰구슬 $1$개, 붉은 구슬 $3$개, 검은 구슬 $7$개를 $3$명에게 나누어 주는 방법의 수는 $\\mathrm{H}LSUB3_{11}=\\mathrm{C}LSUB13_{11}=78$이다.",
+   "after": "$78$흰 구슬은 $3$명모두 받아야 하므로 하나씩 나누어준 후, 흰구슬 $1$개, 붉은 구슬 $3$개, 검은 구슬 $7$개를 $3$명에게 나누어 주는 방법의 수는 ${}_3\\mathrm{H}_{11}={}_{13}\\mathrm{C}_{11}=78$이다.",
+   "spans": 1
+  },
+  {
+   "id": "70248cc5-5908-412e-a6c1-3d2c49799115",
+   "code": "HPS0103-WAX5",
+   "field": "solution",
+   "before": "$318$검은 공 $4$개를 자연수분할 하면 $(4),~(1,~3),~(2,~2),~(1,~1,~2)$$1)$ $A,~B,~C$ 주머니에 검은색 $4$개를 모두 한 곳으로만 주는 경우의수 $\\mathrm{C}LSUB3_{1}$흰 공$6$개를 빈 주머니가 생기지 않도록 나누어 주는 경우의 수 $\\mathrm{H}LSUB3_{4}$$\\mathrm{C}LSUB3_{1}\\times HLSUB3_{4}=45$$2)$ $A,~B,~C$ 주머니에 검은색을 $3$개, $1$개로 나누어 주는 경우의 수 $\\mathrm{P}LSUB3_{2}$흰 공$6$개를 빈 주머니가 생기지 않도록 나누어 주는 경우의 수 $\\mathrm{H}LSUB3_{5}$$\\mathrm{P}LSUB3_{2}\\times HLSUB3_{5}=126$$3)$ $A,~B,~C$ 주머니에 검은색을 $2$개, $2$개로 나누어 주는 경우의 수 $\\mathrm{C}LSUB3_{2}$흰 공$6$개를 빈 주머니가 생기지 않도록 나누어 주는 경우의 수 $\\mathrm{H}LSUB3_{5}$$\\mathrm{C}LSUB3_{2}\\times HLSUB3_{5}=63$$4)$ $A,~B,~C$ 주머니에 검은색을 $1$개, $1$개, $2$개로 나누어 주는 경우의 수 $\\mathrm{C}LSUB3_{2}$흰 공$6$개를 빈 주머니가 생기지 않도록 나누어 주는 경우의 수 $\\mathrm{H}LSUB3_{6}$$\\mathrm{C}LSUB3_{2}\\times HLSUB3_{6}=84$$45+126+63+84=318$",
+   "after": "$318$검은 공 $4$개를 자연수분할 하면 $(4),~(1,~3),~(2,~2),~(1,~1,~2)$$1)$ $A,~B,~C$ 주머니에 검은색 $4$개를 모두 한 곳으로만 주는 경우의수 ${}_3\\mathrm{C}_1$흰 공$6$개를 빈 주머니가 생기지 않도록 나누어 주는 경우의 수 ${}_3\\mathrm{H}_4$${}_3\\mathrm{C}_1\\times {}_3\\mathrm{H}_4=45$$2)$ $A,~B,~C$ 주머니에 검은색을 $3$개, $1$개로 나누어 주는 경우의 수 ${}_3\\mathrm{P}_2$흰 공$6$개를 빈 주머니가 생기지 않도록 나누어 주는 경우의 수 ${}_3\\mathrm{H}_5$${}_3\\mathrm{P}_2\\times {}_3\\mathrm{H}_5=126$$3)$ $A,~B,~C$ 주머니에 검은색을 $2$개, $2$개로 나누어 주는 경우의 수 ${}_3\\mathrm{C}_2$흰 공$6$개를 빈 주머니가 생기지 않도록 나누어 주는 경우의 수 ${}_3\\mathrm{H}_5$${}_3\\mathrm{C}_2\\times {}_3\\mathrm{H}_5=63$$4)$ $A,~B,~C$ 주머니에 검은색을 $1$개, $1$개, $2$개로 나누어 주는 경우의 수 ${}_3\\mathrm{C}_2$흰 공$6$개를 빈 주머니가 생기지 않도록 나누어 주는 경우의 수 ${}_3\\mathrm{H}_6$${}_3\\mathrm{C}_2\\times {}_3\\mathrm{H}_6=84$$45+126+63+84=318$",
+   "spans": 12
+  },
+  {
+   "id": "17245821-7667-4ed9-9480-294ff2d47314",
+   "code": "HPS0103-X3JZ",
+   "field": "solution",
+   "before": "$70$$\\mathrm{_{5}}\\mathrm{H}_{\\mathit{r}}=\\mathrm{C}LSUB4+r_{r}=\\mathrm{C}LSUB4+r_{4}$ 이므로 $r=5$이다. 따라서 $\\mathrm{H}LSUB5_{4}=\\mathrm{C}LSUB8_{4}=70$이다.",
+   "after": "$70$$\\mathrm{_{5}}\\mathrm{H}_{\\mathit{r}}={}_{4+r}\\mathrm{C}_r={}_{4+r}\\mathrm{C}_4$ 이므로 $r=5$이다. 따라서 ${}_5\\mathrm{H}_4={}_8\\mathrm{C}_4=70$이다.",
+   "spans": 2
+  },
+  {
+   "id": "34e37749-b1de-4731-a748-028ba7833596",
+   "code": "HPS0104-46BT",
+   "field": "content",
+   "before": "아래 파스칼 삼각형을 보고 다음 물음에 답하시오.\n($1$) $(a+b)^{5}$를 전개하시오.\n($2$) $\\mathrm{C}LSUB3_{0}+CLSUB3_{1}+CLSUB4_{2}+\\,\\cdots \\,+CLSUB14_{12}+CLSUB15_{13}$의 값을 구하고 그 과정을 서술하시오.\n($3$)$31<CLSUBn_{1}+CLSUBn_{2}+CLSUBn_{3}+\\,\\cdots \\,+CLSUBn_{n-1}+CLSUBn_{n}<256$을 만족하는 모든 $n$의 값들의 합을 구하고 그 과정을 서술하시오.",
+   "after": "아래 파스칼 삼각형을 보고 다음 물음에 답하시오.\n($1$) $(a+b)^{5}$를 전개하시오.\n($2$) ${}_3\\mathrm{C}_0+{}_3\\mathrm{C}_1+{}_4\\mathrm{C}_2+\\,\\cdots \\,+{}_{14}\\mathrm{C}_{12}+{}_{15}\\mathrm{C}_{13}$의 값을 구하고 그 과정을 서술하시오.\n($3$)$31<{}_n\\mathrm{C}_1+{}_n\\mathrm{C}_2+{}_n\\mathrm{C}_3+\\,\\cdots \\,+{}_n\\mathrm{C}_{n-1}+{}_n\\mathrm{C}_n<256$을 만족하는 모든 $n$의 값들의 합을 구하고 그 과정을 서술하시오.",
+   "spans": 2
+  },
+  {
+   "id": "34e37749-b1de-4731-a748-028ba7833596",
+   "code": "HPS0104-46BT",
+   "field": "solution",
+   "before": "($1$) $a^{5}+5a^{4}b+10a^{3}b^{2}+10a^{2}b^{3}+5ab^{4}+b^{5}$($2$) $560$  ($3$) $21$($1$) $(a+b)^{5}=\\mathrm{C}LSUB5_{0}\\mathit{a}^{5}b^{0}+\\mathrm{C}LSUB5_{1}\\mathit{a}^{4}b^{1}+\\,\\cdots \\,+\\mathrm{C}LSUB5_{4}\\mathit{a}^{1}b^{4}+\\mathrm{C}LSUB5_{5}\\mathit{a}^{0}b^{5}$따라서 $a^{5}+5a^{4}b+10a^{3}b^{2}+10a^{2}b^{3}+5ab^{4}+b^{5}$($2$) $\\mathrm{C}LSUB3_{0}+CLSUB3_{1}+CLSUB4_{2}+\\,\\cdots \\,+CLSUB14_{12}+CLSUB15_{13}=CLSUB16_{13}$$CLSUB\\mathrm{16}_{3}=560$($3$) $31<\\mathrm{C}LSUB\\mathit{n}_{1}+CLSUBn_{2}+CLSUBn_{3}+\\,\\cdots \\,+CLSUBn_{n-1}+CLSUBn_{n}<256$$31<2^{n}-1<256$$32<2^{n}<257$ 이므로 따라서 $n=6,~7,~8$",
+   "after": "($1$) $a^{5}+5a^{4}b+10a^{3}b^{2}+10a^{2}b^{3}+5ab^{4}+b^{5}$($2$) $560$  ($3$) $21$($1$) $(a+b)^{5}={}_5\\mathrm{C}_0\\mathit{a}^{5}b^{0}+{}_5\\mathrm{C}_1\\mathit{a}^{4}b^{1}+\\,\\cdots \\,+{}_5\\mathrm{C}_4\\mathit{a}^{1}b^{4}+{}_5\\mathrm{C}_5\\mathit{a}^{0}b^{5}$따라서 $a^{5}+5a^{4}b+10a^{3}b^{2}+10a^{2}b^{3}+5ab^{4}+b^{5}$($2$) ${}_3\\mathrm{C}_0+{}_3\\mathrm{C}_1+{}_4\\mathrm{C}_2+\\,\\cdots \\,+{}_{14}\\mathrm{C}_{12}+{}_{15}\\mathrm{C}_{13}={}_{16}\\mathrm{C}_{13}$${}_{16}\\mathrm{C}_3=560$($3$) $31<{}_n\\mathrm{C}_1+{}_n\\mathrm{C}_2+{}_n\\mathrm{C}_3+\\,\\cdots \\,+{}_n\\mathrm{C}_{n-1}+{}_n\\mathrm{C}_n<256$$31<2^{n}-1<256$$32<2^{n}<257$ 이므로 따라서 $n=6,~7,~8$",
+   "spans": 4
+  },
+  {
+   "id": "5e03654f-23c8-45fd-bd1d-cc24fd5f20b8",
+   "code": "HPS0104-6HKD",
+   "field": "content",
+   "before": "$\\mathrm{LSUB}11C_{1}-\\mathrm{LSUB}11C_{2}+\\mathrm{LSUB}11C_{3}-~\\cdots ~+\\mathrm{LSUB}11C_{9}-\\mathrm{LSUB}11C_{10}+\\mathrm{LSUB}11C_{11}$의 값은?\n\n1. $-2$\n2. $-1$\n3. $0$\n4. $1$\n5. $2$",
+   "after": "${}_{11}\\mathrm{C}_1-{}_{11}\\mathrm{C}_2+{}_{11}\\mathrm{C}_3-~\\cdots ~+{}_{11}\\mathrm{C}_9-{}_{11}\\mathrm{C}_{10}+{}_{11}\\mathrm{C}_{11}$의 값은?\n\n1. $-2$\n2. $-1$\n3. $0$\n4. $1$\n5. $2$",
+   "spans": 1
+  },
+  {
+   "id": "086be5ef-e2c7-4035-8e1c-0f4da5ccf365",
+   "code": "HPS0104-8Z5H",
+   "field": "content",
+   "before": "$\\mathrm{C}LSUB7_{0}+CLSUB7_{1}+CLSUB7_{2}+CLSUB7_{3}+\\,\\cdots \\,+CLSUB7_{7}$의 값은?\n\n1. $64$\n2. $127$\n3. $128$\n4. $255$\n5. $256$",
+   "after": "${}_7\\mathrm{C}_0+{}_7\\mathrm{C}_1+{}_7\\mathrm{C}_2+{}_7\\mathrm{C}_3+\\,\\cdots \\,+{}_7\\mathrm{C}_7$의 값은?\n\n1. $64$\n2. $127$\n3. $128$\n4. $255$\n5. $256$",
+   "spans": 1
+  },
+  {
+   "id": "061a6453-7479-4c31-8bbc-2b41d84610d2",
+   "code": "HPS0104-D2S2",
+   "field": "content",
+   "before": "$\\mathrm{LSUB}10C_{1}+2\\times CLSUB10_{2}+3\\times CLSUB10_{3}+\\,\\cdots \\,+10\\times CLSUB10_{10}$의 값은?\n\n1. $512$\n2. $1024$\n3. $2048$\n4. $2560$\n5. $5120$",
+   "after": "${}_{10}\\mathrm{C}_1+2\\times {}_{10}\\mathrm{C}_2+3\\times {}_{10}\\mathrm{C}_3+\\,\\cdots \\,+10\\times {}_{10}\\mathrm{C}_{10}$의 값은?\n\n1. $512$\n2. $1024$\n3. $2048$\n4. $2560$\n5. $5120$",
+   "spans": 1
+  },
+  {
+   "id": "ed72d469-c20f-44eb-91a7-ce0e9659abe1",
+   "code": "HPS0104-HS9T",
+   "field": "content",
+   "before": "$\\mathrm{LSUB}12C_{0}+CLSUB12_{2}+CLSUB12_{4}+\\,\\cdots \\,+CLSUB12_{12}$의 값은?\n\n1. $512$\n2. $1024$\n3. $2048$\n4. $2560$\n5. $5120$",
+   "after": "${}_{12}\\mathrm{C}_0+{}_{12}\\mathrm{C}_2+{}_{12}\\mathrm{C}_4+\\,\\cdots \\,+{}_{12}\\mathrm{C}_{12}$의 값은?\n\n1. $512$\n2. $1024$\n3. $2048$\n4. $2560$\n5. $5120$",
+   "spans": 1
+  },
+  {
+   "id": "19e2d84a-531c-42a9-bfaa-f4bd454286c8",
+   "code": "HPS0104-K9DN",
+   "field": "solution",
+   "before": "정답 $10$$2\\times \\mathrm{C}LSUB6_{2}-\\mathrm{C}LSUB6_{3}=30-20=10$",
+   "after": "정답 $10$$2\\times {}_6\\mathrm{C}_2-{}_6\\mathrm{C}_3=30-20=10$",
+   "spans": 1
+  },
+  {
+   "id": "3796d01f-b693-4af8-bdd6-2d175e3c692f",
+   "code": "HPS0104-KQEM",
+   "field": "solution",
+   "before": "$a=1\\,$일 때, $1<b\\,$, $b=2,\\,3,\\,4,\\,5,\\,6$ $a=2\\,$일 때, $4<b\\,$, $b=5,\\,6$ $a\\geq 3\\,$일 때, 만족하는 $b\\,$는 없다. 따라서 사건 $A$의 확률은 $\\frac{7}{36}$이다. $a\\,$가 홀수인 사건의 경우의 수는 $3\\times 6=18\\,$ 가지이고, 사건 $B$ 의 확률은 $\\frac{18}{36}$이다. $a^{2}<b\\,$이면서 $a\\,$가 홀수일 확률은 $\\frac{5}{36}$이다. 따라서 구하는 확률은 $\\frac{7}{36}+\\frac{18}{36}-\\frac{5}{36}=\\frac{20}{36}=\\frac{5}{9}\\,$이다. $a=4$, $n=7$ $\\left( x+a\\right) ^{n}\\,$의 전개식에서 일반항은 $\\mathrm{C}LSUBn_{r}\\mathit{x}^{n}a^{n-r}$이고 $x$의 계수는 $r=1$일 때이므로 $\\mathrm{C}LSUBn_{1}\\mathit{x}^{n}a^{n-1}=n\\times a^{n-1}$ $\\left( 7x-3\\right) \\left( x+a\\right) ^{n}\\,$의 전개식에서 $x\\,$의 계수는 두가지 경우로 나뉜다. $①$ $7x$ 곱하기 상수항 형태 : $7\\times a^{n}=7a^{n}\\,$ $②$ 상수항 곱하기 $x\\,$의 계수 형태 : $-3\\times n\\times a^{n-1}=-3na^{n-1}$ 두 계수가 같으므로 $na^{n-1}=7a^{n}-3na^{n-1}$ $4na^{n-1}=7a^{n}$, $a\\,$는 자연수이므로 양변을 $a^{n-1}$로 나누면, $4n=7a$ $4$와 $7$은 서로소이므로 $n$은 $7$의 배수여야하고 $10$이하의 $n$은 $7$뿐이다. $n=7$을 대입하면 $a=4$이다.",
+   "after": "$a=1\\,$일 때, $1<b\\,$, $b=2,\\,3,\\,4,\\,5,\\,6$ $a=2\\,$일 때, $4<b\\,$, $b=5,\\,6$ $a\\geq 3\\,$일 때, 만족하는 $b\\,$는 없다. 따라서 사건 $A$의 확률은 $\\frac{7}{36}$이다. $a\\,$가 홀수인 사건의 경우의 수는 $3\\times 6=18\\,$ 가지이고, 사건 $B$ 의 확률은 $\\frac{18}{36}$이다. $a^{2}<b\\,$이면서 $a\\,$가 홀수일 확률은 $\\frac{5}{36}$이다. 따라서 구하는 확률은 $\\frac{7}{36}+\\frac{18}{36}-\\frac{5}{36}=\\frac{20}{36}=\\frac{5}{9}\\,$이다. $a=4$, $n=7$ $\\left( x+a\\right) ^{n}\\,$의 전개식에서 일반항은 ${}_n\\mathrm{C}_r\\mathit{x}^{n}a^{n-r}$이고 $x$의 계수는 $r=1$일 때이므로 ${}_n\\mathrm{C}_1\\mathit{x}^{n}a^{n-1}=n\\times a^{n-1}$ $\\left( 7x-3\\right) \\left( x+a\\right) ^{n}\\,$의 전개식에서 $x\\,$의 계수는 두가지 경우로 나뉜다. $①$ $7x$ 곱하기 상수항 형태 : $7\\times a^{n}=7a^{n}\\,$ $②$ 상수항 곱하기 $x\\,$의 계수 형태 : $-3\\times n\\times a^{n-1}=-3na^{n-1}$ 두 계수가 같으므로 $na^{n-1}=7a^{n}-3na^{n-1}$ $4na^{n-1}=7a^{n}$, $a\\,$는 자연수이므로 양변을 $a^{n-1}$로 나누면, $4n=7a$ $4$와 $7$은 서로소이므로 $n$은 $7$의 배수여야하고 $10$이하의 $n$은 $7$뿐이다. $n=7$을 대입하면 $a=4$이다.",
+   "spans": 2
+  },
+  {
+   "id": "c3f9dc86-7275-4654-a33a-b7309a5dad3c",
+   "code": "HPS0104-LAWZ",
+   "field": "content",
+   "before": "$\\mathrm{C}LSUB7_{0}+\\mathrm{C}LSUB7_{1}+\\mathrm{C}LSUB7_{2}+~\\cdots ~+\\mathrm{C}LSUB7_{7}$의 값은?\n\n1. $49$\n2. $64$\n3. $128$\n4. $256$\n5. $343$",
+   "after": "${}_7\\mathrm{C}_0+{}_7\\mathrm{C}_1+{}_7\\mathrm{C}_2+~\\cdots ~+{}_7\\mathrm{C}_7$의 값은?\n\n1. $49$\n2. $64$\n3. $128$\n4. $256$\n5. $343$",
+   "spans": 1
+  },
+  {
+   "id": "cdc6564b-1c20-4dac-a3df-e8c8b3e55ae8",
+   "code": "HPS0104-MY3Y",
+   "field": "solution",
+   "before": "$200$$rmi)$ $1$차$\\times $$2$차 : $1\\times CLSUB5_{2}\\times 2^{3}=80$$RMii)$ 상수$\\times $$3$차 : $3\\times {}C LSUB {5}_3 \\times 2^2 =120$$x^3$의 계수: $80+120=200$",
+   "after": "$200$$rmi)$ $1$차$\\times $$2$차 : $1\\times {}_5\\mathrm{C}_2\\times 2^{3}=80$$RMii)$ 상수$\\times $$3$차 : $3\\times {}{}_5\\mathrm{C}_3 \\times 2^2 =120$$x^3$의 계수: $80+120=200$",
+   "spans": 2
+  },
+  {
+   "id": "e7dea61c-4178-4c12-99ee-545c338643bb",
+   "code": "HPS0104-NNFT",
+   "field": "solution",
+   "before": "$-2$$\\left( x^{3}-\\frac{a}{x^{2}}\\right) ^{3}=\\mathrm{LSUB}3C_{\\mathit{r}}\\,\\left( x^{3}\\right) ^{3-r}\\left( -\\frac{a}{x^{2}}\\right) _{}^{r}=\\mathrm{C}LSUB3_{\\mathit{r}\\mathrm{}(-a)^{r}\\times \\mathit{x}^{9-5r}\\,\\cdots \\,㉠}$$ⅰ)$ $x$와 $㉠$의 $x^{4}$항의 곱은 $x\\times (-3ax^{4})=-3ax^{5}$$ⅱ)$ $\\frac{2}{x^{2}}$과 $㉠$의 $x^{7}$항의 곱에서 $9-4r=7$을 만족하는 정수 $r$은 존재하지 않는다.$ⅰ),~ⅱ)$에서 $-3a=6$이므로 $a=-2$이다.",
+   "after": "$-2$$\\left( x^{3}-\\frac{a}{x^{2}}\\right) ^{3}={}_3\\mathrm{C}_r\\,\\left( x^{3}\\right) ^{3-r}\\left( -\\frac{a}{x^{2}}\\right) _{}^{r}={}_3\\mathrm{C}_{r(-a)^{r}\\timesx^{9-5r}\\cdots㉠}$$ⅰ)$ $x$와 $㉠$의 $x^{4}$항의 곱은 $x\\times (-3ax^{4})=-3ax^{5}$$ⅱ)$ $\\frac{2}{x^{2}}$과 $㉠$의 $x^{7}$항의 곱에서 $9-4r=7$을 만족하는 정수 $r$은 존재하지 않는다.$ⅰ),~ⅱ)$에서 $-3a=6$이므로 $a=-2$이다.",
+   "spans": 1
+  },
+  {
+   "id": "3101caec-dfbd-41b9-bd0d-01d13082b3b0",
+   "code": "HPS0104-NPMG",
+   "field": "solution",
+   "before": "$⑴$ $(x^{2}-2x)(x+a)^{5}$에서 $x^{2}$의 계수는   $x^{2}\\times \\mathrm{C}LSUB5_{2}\\mathit{x}^{2}a^{3}+(-2x)\\mathrm{C}LSUB5_{3}\\mathit{x}^{3}a^{2}=(10a^{3}-20a^{2})x^{4}$이므로   $a^{3}-2a^{2}-9=0,~(a-3)(a^{2}+a+3)=0$   따라서 $a=3$이다.$⑵$  $\\left( x+1\\right) ^{6}\\left( -3x+1\\right) ^{4}$에서 $x^{2}$의 계수는    $1\\times \\mathrm{C}LSUB4_{2}\\mathit{(}-3x)^{2}=54x^{2}$    $\\mathrm{C}LSUB6_{1}\\mathit{x}\\times \\mathrm{C}LSUB4_{1}\\mathit{(}-3x)=-72x^{2}$    $\\mathrm{C}LSUB6_{2}\\mathit{x}^{2}\\times 1=15x^{2}$    따라서 $-3x^{2}$이므로 $x^{2}$의 계수는 $-3$이다.",
+   "after": "$⑴$ $(x^{2}-2x)(x+a)^{5}$에서 $x^{2}$의 계수는   $x^{2}\\times {}_5\\mathrm{C}_2\\mathit{x}^{2}a^{3}+(-2x){}_5\\mathrm{C}_3\\mathit{x}^{3}a^{2}=(10a^{3}-20a^{2})x^{4}$이므로   $a^{3}-2a^{2}-9=0,~(a-3)(a^{2}+a+3)=0$   따라서 $a=3$이다.$⑵$  $\\left( x+1\\right) ^{6}\\left( -3x+1\\right) ^{4}$에서 $x^{2}$의 계수는    $1\\times {}_4\\mathrm{C}_2\\mathit{(}-3x)^{2}=54x^{2}$    ${}_6\\mathrm{C}_1\\mathit{x}\\times {}_4\\mathrm{C}_1\\mathit{(}-3x)=-72x^{2}$    ${}_6\\mathrm{C}_2\\mathit{x}^{2}\\times 1=15x^{2}$    따라서 $-3x^{2}$이므로 $x^{2}$의 계수는 $-3$이다.",
+   "spans": 4
+  },
+  {
+   "id": "7ce1272c-39aa-4fa6-acdb-87023b4389bc",
+   "code": "HPS0104-NVUK",
+   "field": "solution",
+   "before": "(가) $8$, (나) $69$(가)영역의 수의 합은 $2^{3}=8$이다.(나)영역의 수의 합은 하키스틱 패턴을 적용하면$\\left( \\mathrm{C}LSUB3_{3}+\\,LSUB4C_{3}+\\,LSUB5C_{3}+\\,LSUB6C_{3}+\\,LSUB7C_{3}\\right) -1=CLSUB8_{4}-1=70-1=69$",
+   "after": "(가) $8$, (나) $69$(가)영역의 수의 합은 $2^{3}=8$이다.(나)영역의 수의 합은 하키스틱 패턴을 적용하면$\\left( {}_3\\mathrm{C}_3+\\,{}_4\\mathrm{C}_3+\\,{}_5\\mathrm{C}_3+\\,{}_6\\mathrm{C}_3+\\,{}_7\\mathrm{C}_3\\right) -1={}_8\\mathrm{C}_4-1=70-1=69$",
+   "spans": 1
+  },
+  {
+   "id": "fa947bfb-ee10-45b6-93f8-15404b5a78a4",
+   "code": "HPS0104-R4BC",
+   "field": "content",
+   "before": "다음의 물음에 답하시오. [총 $7$점]\n$(1)$ 파스칼의 삼각형을 이용하여\n$\\mathrm{C}LSUB9_{6}+CLSUB8_{5}+CLSUB7_{4}+CLSUB6_{3}+CLSUB5_{2}+CLSUB4_{1}$의\n값을 구하는 과정과 그 답을 구하시오.\n$(2)$ 이항정리를 이용하여 $\\mathrm{C}LSUB4_{0}^{2}+CLSUB4_{1}^{2}+CLSUB4_{2}^{2}+CLSUB4_{3}^{2}+CLSUB4_{4}^{2}$의 값을 구하는 과정과 그 답을 구하시오.",
+   "after": "다음의 물음에 답하시오. [총 $7$점]\n$(1)$ 파스칼의 삼각형을 이용하여\n${}_9\\mathrm{C}_6+{}_8\\mathrm{C}_5+{}_7\\mathrm{C}_4+{}_6\\mathrm{C}_3+{}_5\\mathrm{C}_2+{}_4\\mathrm{C}_1$의\n값을 구하는 과정과 그 답을 구하시오.\n$(2)$ 이항정리를 이용하여 ${}_4\\mathrm{C}_0^{2}+{}_4\\mathrm{C}_1^{2}+{}_4\\mathrm{C}_2^{2}+{}_4\\mathrm{C}_3^{2}+{}_4\\mathrm{C}_4^{2}$의 값을 구하는 과정과 그 답을 구하시오.",
+   "spans": 2
+  },
+  {
+   "id": "fa947bfb-ee10-45b6-93f8-15404b5a78a4",
+   "code": "HPS0104-R4BC",
+   "field": "solution",
+   "before": "$(1)$ $CLSUBn-1_{r-1}++LSUBn-1C_{r}=LSUBCLSUBn_{r}$이므로$\\mathrm{C}LSUB9_{6}+CLSUB8_{5}+CLSUB7_{4}+CLSUB6_{3}+CLSUB5_{2}+CLSUB4_{1}+CLSUB4_{0}$=$CLSUB10_{6}=CLSUB10_{4}=210$이므로$\\mathrm{C}LSUB9_{6}+CLSUB8_{5}+CLSUB7_{4}+CLSUB6_{3}+CLSUB5_{2}+CLSUB4_{1}=210-1=209$이다.$(2)$ $\\mathrm{C}LSUB4_{0}^{2}+CLSUB4_{1}^{2}+CLSUB4_{2}^{2}+CLSUB4_{3}^{2}+CLSUB4_{4}^{2}$=$\\mathrm{C}LSUB4_{0}^{}\\times CLSUB4_{4}+CLSUB4_{1}^{}\\times CLSUB4_{3}+CLSUB4_{2}^{}\\times CLSUB4_{2}+CLSUB4_{3}^{}\\times CLSUB4_{1}+CLSUB4_{4}^{}\\times CLSUB4_{0}$이고, 이는 $\\left( 1+x\\right) ^{8}$의 $x^{4}$의 계수와 같으므로 $CLSUB8_{4}=70$이다.",
+   "after": "$(1)$ $CLSUBn-1_{r-1}++LSUBn-1C_{r}=LSUBCLSUBn_{r}$이므로${}_9\\mathrm{C}_6+{}_8\\mathrm{C}_5+{}_7\\mathrm{C}_4+{}_6\\mathrm{C}_3+{}_5\\mathrm{C}_2+{}_4\\mathrm{C}_1+{}_4\\mathrm{C}_0$=${}_{10}\\mathrm{C}_6={}_{10}\\mathrm{C}_4=210$이므로${}_9\\mathrm{C}_6+{}_8\\mathrm{C}_5+{}_7\\mathrm{C}_4+{}_6\\mathrm{C}_3+{}_5\\mathrm{C}_2+{}_4\\mathrm{C}_1=210-1=209$이다.$(2)$ ${}_4\\mathrm{C}_0^{2}+{}_4\\mathrm{C}_1^{2}+{}_4\\mathrm{C}_2^{2}+{}_4\\mathrm{C}_3^{2}+{}_4\\mathrm{C}_4^{2}$=${}_4\\mathrm{C}_0^{}\\times {}_4\\mathrm{C}_4+{}_4\\mathrm{C}_1^{}\\times {}_4\\mathrm{C}_3+{}_4\\mathrm{C}_2^{}\\times {}_4\\mathrm{C}_2+{}_4\\mathrm{C}_3^{}\\times {}_4\\mathrm{C}_1+{}_4\\mathrm{C}_4^{}\\times {}_4\\mathrm{C}_0$이고, 이는 $\\left( 1+x\\right) ^{8}$의 $x^{4}$의 계수와 같으므로 ${}_8\\mathrm{C}_4=70$이다.",
+   "spans": 6
+  },
+  {
+   "id": "a1cc4bbb-a522-4fb0-a78b-9a1e2889cef1",
+   "code": "HPS0104-TFP3",
+   "field": "solution",
+   "before": "$5400$$1\\times \\left( x^{3}+\\frac{1}{x^{2}}\\right) ^{5}$에서 상수항은 $\\mathrm{C}LSUB5_{3}$$x\\times \\left( x^{3}+\\frac{1}{x^{2}}\\right) ^{5}$에서 상수항은 나올 수 없다따라서 $a=10$$(3x^{2}+10)^{4}$에서 $x^{4}$의 계수는 $\\mathrm{C}LSUB4_{2}\\times \\,3^{2}\\times 10^{2}=5400$",
+   "after": "$5400$$1\\times \\left( x^{3}+\\frac{1}{x^{2}}\\right) ^{5}$에서 상수항은 ${}_5\\mathrm{C}_3$$x\\times \\left( x^{3}+\\frac{1}{x^{2}}\\right) ^{5}$에서 상수항은 나올 수 없다따라서 $a=10$$(3x^{2}+10)^{4}$에서 $x^{4}$의 계수는 ${}_4\\mathrm{C}_2\\times \\,3^{2}\\times 10^{2}=5400$",
+   "spans": 2
+  },
+  {
+   "id": "5275f333-376f-4b64-b176-b607cd7dd9e9",
+   "code": "HPS0104-TPZF",
+   "field": "solution",
+   "before": "풀이참조($1$) $\\mathrm{C}LSUB3_{0}(3\\mathit{x})^{3}+\\mathrm{LSUB}3\\mathrm{C}_{1}(3\\mathit{x})^{2}y+\\mathrm{LSUB}3\\mathrm{C}_{2}(3\\mathit{x})y^{2}+\\mathrm{LSUB}3\\mathrm{C}_{3}\\mathit{y}^{3}$=$27x ^{3} +27x ^{2} y+9xy ^{2} +y ^{3}$($2$) $\\mathrm{C}LSUB5_{0}(-2\\mathit{x})^{5}+\\mathrm{LSUB}5\\mathrm{C}_{1}(-2\\mathit{x})^{4}+\\mathrm{LSUB}5\\mathrm{C}_{2}(-2\\mathit{x})^{3}+\\mathrm{LSUB}5\\mathrm{C}_{3}(-2\\mathit{x})_{}^{2}\\mathrm{+}_{5}C_{4}(-2\\mathit{x})^{}+\\mathrm{LSUB}5\\mathrm{C}_{5}$=$-32x ^{5} +80x ^{4} -80x ^{3} +40x ^{2} -10x+1$",
+   "after": "풀이참조($1$) ${}_3\\mathrm{C}_0(3\\mathit{x})^{3}+{}_3\\mathrm{C}_1(3\\mathit{x})^{2}y+{}_3\\mathrm{C}_2(3\\mathit{x})y^{2}+{}_3\\mathrm{C}_3\\mathit{y}^{3}$=$27x ^{3} +27x ^{2} y+9xy ^{2} +y ^{3}$($2$) ${}_5\\mathrm{C}_0(-2\\mathit{x})^{5}+{}_5\\mathrm{C}_1(-2\\mathit{x})^{4}+{}_5\\mathrm{C}_2(-2\\mathit{x})^{3}+{}_5\\mathrm{C}_3(-2\\mathit{x})_{}^{2}\\mathrm{+}_{5}C_{4}(-2\\mathit{x})^{}+{}_5\\mathrm{C}_5$=$-32x ^{5} +80x ^{4} -80x ^{3} +40x ^{2} -10x+1$",
+   "spans": 2
+  },
+  {
+   "id": "aa5b1609-448b-4e18-9da8-d17e2f2493f6",
+   "code": "HPS0104-UCQE",
+   "field": "content",
+   "before": "다음 중 $\\sum _{k=0}^{4}(2k+1)\\mathrm{C}LSUB10_{2\\mathit{k}+1}$의 값은?\n\n1. $5\\times 2^{6}$\n2. $5\\times 2^{7}$\n3. $5\\times 2^{8}$\n4. $5\\times 2^{9}$\n5. $5\\times 2^{10}$",
+   "after": "다음 중 $\\sum _{k=0}^{4}(2k+1){}_{10}\\mathrm{C}_{2k+1}$의 값은?\n\n1. $5\\times 2^{6}$\n2. $5\\times 2^{7}$\n3. $5\\times 2^{8}$\n4. $5\\times 2^{9}$\n5. $5\\times 2^{10}$",
+   "spans": 1
+  },
+  {
+   "id": "21f496cb-5256-472f-9bf1-a859bbc34b2c",
+   "code": "HPS0104-UE74",
+   "field": "content",
+   "before": "$S=\\mathrm{C}LSUB30_{0}+2^{2}\\times CLSUB30_{2}+2^{4}\\times CLSUB30_{4}+\\,\\cdots \\,+2^{30}\\times CLSUB30_{30}$이라 할 때, $2S-1$의 값은?\n\n1. $\\frac{3^{30}-1}{2}$\n2. $3^{30}$\n3. $3^{30}+1$\n4. $3^{31}$\n5. $3^{31}+1$",
+   "after": "$S={}_{30}\\mathrm{C}_0+2^{2}\\times {}_{30}\\mathrm{C}_2+2^{4}\\times {}_{30}\\mathrm{C}_4+\\,\\cdots \\,+2^{30}\\times {}_{30}\\mathrm{C}_{30}$이라 할 때, $2S-1$의 값은?\n\n1. $\\frac{3^{30}-1}{2}$\n2. $3^{30}$\n3. $3^{30}+1$\n4. $3^{31}$\n5. $3^{31}+1$",
+   "spans": 1
+  },
+  {
+   "id": "793b95da-8d41-410b-abd0-3369d8f20963",
+   "code": "HPS0104-X2LD",
+   "field": "solution",
+   "before": "정답 $2$풀이) 이항정리를 이용하면 $x$항의 계수는$CLSUBk_{r}\\left( 2x\\right) ^{r}\\left( -\\frac{1}{x^{2}}\\right) ^{k-r}=CLSUBk_{r}\\times 2^{r}\\times \\left( -1\\right) ^{k-r}\\times x^{3r-2k}$에서$3r=2k+1$일 때, $r=\\frac{2k+1}{3}$$k=1$일 때, $r=1$이므로 $CLSUB1_{1}\\times 2^{1}\\times \\left( -1\\right) ^{0}=2$",
+   "after": "정답 $2$풀이) 이항정리를 이용하면 $x$항의 계수는${}_k\\mathrm{C}_r\\left( 2x\\right) ^{r}\\left( -\\frac{1}{x^{2}}\\right) ^{k-r}={}_k\\mathrm{C}_r\\times 2^{r}\\times \\left( -1\\right) ^{k-r}\\times x^{3r-2k}$에서$3r=2k+1$일 때, $r=\\frac{2k+1}{3}$$k=1$일 때, $r=1$이므로 ${}_1\\mathrm{C}_1\\times 2^{1}\\times \\left( -1\\right) ^{0}=2$",
+   "spans": 2
+  },
+  {
+   "id": "aa4ce2e2-edf8-49a4-b66f-4aeca51129ad",
+   "code": "HPS0104-X5JZ",
+   "field": "solution",
+   "before": "$18$$\\mathrm{C}_{0}LSUBn+\\mathrm{C}_{1}lsubn\\times 2+\\mathrm{C}_{2}lsubn\\times 2^{2}+\\cdots +C_{n}lsubn\\times 2^{\\mathit{n}}=(1+2)^{\\mathit{n}}=3^{\\mathit{n}}$따라서 $100 < 3^n < 5000$을 만족하는 $n$은 $5,~6,~7$이므로 $5 +6+ 7 = 18$",
+   "after": "$18$${}_n\\mathrm{C}_0+{}_n\\mathrm{C}_1\\times 2+{}_n\\mathrm{C}_2\\times 2^{2}+\\cdots +{}_n\\mathrm{C}_n\\times 2^{\\mathit{n}}=(1+2)^{\\mathit{n}}=3^{\\mathit{n}}$따라서 $100 < 3^n < 5000$을 만족하는 $n$은 $5,~6,~7$이므로 $5 +6+ 7 = 18$",
+   "spans": 1
+  },
+  {
+   "id": "6a4eafd1-c984-4487-b375-e1c459441fdf",
+   "code": "HPS0104-XKKH",
+   "field": "content",
+   "before": "$\\mathrm{C}LSUB16_{0}+CLSUB16_{1}+CLSUB17_{2}+CLSUB18_{3}+CLSUB19_{4}=\\mathrm{}$$LSUBn\\mathrm{C}_{\\mathit{r}}$이라 할 때, $\\mathrm{C}LSUB16_{0}+CLSUB16_{1}+CLSUB17_{2}+CLSUB18_{3}+CLSUB19_{4}=\\mathrm{}$$LSUBn\\mathrm{C}_{\\mathit{r}}$를 계산하면 연속된 세 홀수의 곱으로 표현할 수 있다. 이때 연속된 세 홀수 중에 가장 작은 수를 $k$라 할 때, $n+r-k$의 값을 구하는 풀이 과정과 정답을 서술하시오.",
+   "after": "${}_{16}\\mathrm{C}_0+{}_{16}\\mathrm{C}_1+{}_{17}\\mathrm{C}_2+{}_{18}\\mathrm{C}_3+{}_{19}\\mathrm{C}_4=\\mathrm{}$${}_n\\mathrm{C}_r$이라 할 때, ${}_{16}\\mathrm{C}_0+{}_{16}\\mathrm{C}_1+{}_{17}\\mathrm{C}_2+{}_{18}\\mathrm{C}_3+{}_{19}\\mathrm{C}_4=\\mathrm{}$${}_n\\mathrm{C}_r$를 계산하면 연속된 세 홀수의 곱으로 표현할 수 있다. 이때 연속된 세 홀수 중에 가장 작은 수를 $k$라 할 때, $n+r-k$의 값을 구하는 풀이 과정과 정답을 서술하시오.",
+   "spans": 4
+  },
+  {
+   "id": "6a4eafd1-c984-4487-b375-e1c459441fdf",
+   "code": "HPS0104-XKKH",
+   "field": "solution",
+   "before": "$21$ 또는 $9$$\\mathrm{C}LSUB16_{0}+CLSUB16_{1}+CLSUB17_{2}+CLSUB18_{3}+CLSUB19_{4}$$=\\mathrm{C}LSUB17_{1}+CLSUB17_{2}+CLSUB18_{3}+CLSUB19_{4}$$=\\mathrm{C}LSUB18_{2}+CLSUB18_{3}+CLSUB19_{4}$$=\\mathrm{C}LSUB19_{3}+CLSUB19_{4}$$=\\mathrm{C}LSUB20_{4}$$\\mathrm{C}LSUB20_{4}=CLSUB20_{16}=19\\times 17\\times 15$$n=20,~r=16,~k=15$ 또는 $n=20,~r=4,~k=15$답은 $21$ 또는 $9$",
+   "after": "$21$ 또는 $9$${}_{16}\\mathrm{C}_0+{}_{16}\\mathrm{C}_1+{}_{17}\\mathrm{C}_2+{}_{18}\\mathrm{C}_3+{}_{19}\\mathrm{C}_4$$={}_{17}\\mathrm{C}_1+{}_{17}\\mathrm{C}_2+{}_{18}\\mathrm{C}_3+{}_{19}\\mathrm{C}_4$$={}_{18}\\mathrm{C}_2+{}_{18}\\mathrm{C}_3+{}_{19}\\mathrm{C}_4$$={}_{19}\\mathrm{C}_3+{}_{19}\\mathrm{C}_4$$={}_{20}\\mathrm{C}_4$${}_{20}\\mathrm{C}_4={}_{20}\\mathrm{C}_{16}=19\\times 17\\times 15$$n=20,~r=16,~k=15$ 또는 $n=20,~r=4,~k=15$답은 $21$ 또는 $9$",
+   "spans": 6
+  },
+  {
+   "id": "d104e63a-30f6-46ec-b281-447f5610bbf1",
+   "code": "HPS0104-XXTR",
+   "field": "solution",
+   "before": "정답 $76$(풀이) $(x+\\frac{1}{x})^{n}$의 전개식에서 일반항은 $\\mathrm{C}LSUB\\mathit{n}_{\\mathit{r}}\\,\\mathit{x}^{n-r}\\left( \\frac{1}{x}\\right) ^{r}$$=\\mathrm{C}LSUB\\mathit{n}_{\\mathit{r}}\\,\\mathit{x}^{n-2r}$이고, $n-2r=2$는 $n=3,~5,~7$일 때 존재하지 않는다. 따라서 $n=2,~4,~6,~8$일 때 $x^{2}$의 계수는 $1+4+15+56=76$이다.",
+   "after": "정답 $76$(풀이) $(x+\\frac{1}{x})^{n}$의 전개식에서 일반항은 ${}_n\\mathrm{C}_r\\,\\mathit{x}^{n-r}\\left( \\frac{1}{x}\\right) ^{r}$$={}_n\\mathrm{C}_r\\,\\mathit{x}^{n-2r}$이고, $n-2r=2$는 $n=3,~5,~7$일 때 존재하지 않는다. 따라서 $n=2,~4,~6,~8$일 때 $x^{2}$의 계수는 $1+4+15+56=76$이다.",
+   "spans": 2
+  },
+  {
+   "id": "a089c5c0-a0ed-418f-b1a8-b35c2efc5c90",
+   "code": "HPS0104-ZRZ6",
+   "field": "solution",
+   "before": "$a=-\\frac{7}{2}$$(x-\\frac{1}{x})^{6}$의 일반항은 $\\mathrm{C}LSUBn_{r}\\mathit{x}^{6-r}(-1)^{r}x^{-r}$에서 전개후 상수상은 ①$6-2r=-2$이므로 $r=4$일 때 $2\\times _{6}C_{4}=30$②$6-2r=0$이므로 $r=3$일 때 $a\\times _{6}C_{3}(-1)^{3}=-20a$$30-20a=100#-20a=70#a=-\\frac{7}{2}$",
+   "after": "$a=-\\frac{7}{2}$$(x-\\frac{1}{x})^{6}$의 일반항은 ${}_n\\mathrm{C}_r\\mathit{x}^{6-r}(-1)^{r}x^{-r}$에서 전개후 상수상은 ①$6-2r=-2$이므로 $r=4$일 때 $2\\times _{6}C_{4}=30$②$6-2r=0$이므로 $r=3$일 때 $a\\times _{6}C_{3}(-1)^{3}=-20a$$30-20a=100#-20a=70#a=-\\frac{7}{2}$",
+   "spans": 1
+  },
+  {
+   "id": "3d2e81be-7a3f-4ce8-814f-d9a862775200",
+   "code": "HPS0104-ZXHL",
+   "field": "content",
+   "before": "$CLSUB2_{0}+CLSUB3_{1}+CLSUB4_{2}+CLSUB5_{3}+~\\cdots ~+CLSUB2022_{2020}+CLSUB2023_{2021}$를 간단히 나타낸 것은?\n\n1. $2023$\n2. $CLSUB2023_{2021}$\n3. $CLSUB2024_{2021}$\n4. $2^{2022}$\n5. $2^{2023}$",
+   "after": "${}_2\\mathrm{C}_0+{}_3\\mathrm{C}_1+{}_4\\mathrm{C}_2+{}_5\\mathrm{C}_3+~\\cdots ~+{}_{2022}\\mathrm{C}_{2020}+{}_{2023}\\mathrm{C}_{2021}$를 간단히 나타낸 것은?\n\n1. $2023$\n2. ${}_{2023}\\mathrm{C}_{2021}$\n3. ${}_{2024}\\mathrm{C}_{2021}$\n4. $2^{2022}$\n5. $2^{2023}$",
+   "spans": 3
+  },
+  {
+   "id": "6604f6ef-f793-4132-ba85-9d0d345b7fdf",
+   "code": "HPS0202-9QVT",
+   "field": "solution",
+   "before": "$\\frac{1}{35}$$\\frac{CLSUB3_{2}}{CLSUB15_{2}}=\\frac{1}{35}$",
+   "after": "$\\frac{1}{35}$$\\frac{{}_3\\mathrm{C}_2}{{}_{15}\\mathrm{C}_2}=\\frac{1}{35}$",
+   "spans": 1
+  },
+  {
+   "id": "cb3d4e00-a5df-4da6-939c-d7b49199047a",
+   "code": "HPS0202-CGM4",
+   "field": "solution",
+   "before": "$(1)$ $\\frac{\\mathrm{CLSUB3_{3}}}{CLSUB12_{3}}=\\frac{1}{220}$$(2)$ $\\mathrm{1}-\\frac{CLSUB3_{3}+CLSUB5_{3}+CLSUB4_{3}}{CLSUB12_{3}}=1-\\frac{15}{220}=\\frac{41}{44}$",
+   "after": "$(1)$ $\\frac{\\mathrm{{}_3\\mathrm{C}_3}}{{}_{12}\\mathrm{C}_3}=\\frac{1}{220}$$(2)$ $\\mathrm{1}-\\frac{{}_3\\mathrm{C}_3+{}_5\\mathrm{C}_3+{}_4\\mathrm{C}_3}{{}_{12}\\mathrm{C}_3}=1-\\frac{15}{220}=\\frac{41}{44}$",
+   "spans": 2
+  },
+  {
+   "id": "f5dbdf09-96ca-44f5-bc69-4b698625ca2d",
+   "code": "HPS0202-UJM3",
+   "field": "solution",
+   "before": "$1$$\\mathrm{A}$반의 학생수를 $n$명이라하면, $\\mathrm{B}$반의 학생수는 $11-n$명이다.$\\frac{CLSUBn_{2}+CLSUB11-n_{2}}{\\mathrm{C}LSUB11_{2}}=\\frac{5}{11}$$n^{2}-n+110-21n+n^{2}=50,~$$2n^{2}-22n+60=0$$(n-5)(n-6)=0$따라서 한 반은 $5$명, 다른 반은 $6$명이므로 두 반의 학생 수의 차는 $6-5=1$이다.",
+   "after": "$1$$\\mathrm{A}$반의 학생수를 $n$명이라하면, $\\mathrm{B}$반의 학생수는 $11-n$명이다.$\\frac{{}_n\\mathrm{C}_2+{}_{11-n}\\mathrm{C}_2}{{}_{11}\\mathrm{C}_2}=\\frac{5}{11}$$n^{2}-n+110-21n+n^{2}=50,~$$2n^{2}-22n+60=0$$(n-5)(n-6)=0$따라서 한 반은 $5$명, 다른 반은 $6$명이므로 두 반의 학생 수의 차는 $6-5=1$이다.",
+   "spans": 1
+  },
+  {
+   "id": "f3ed3ddd-4c6b-4a4a-bb40-d2df6b7a34ce",
+   "code": "HPS0202-XLUX",
+   "field": "solution",
+   "before": "$\\frac{4}{5}$전체 경우의 수는 $\\mathrm{P}LSUB6_{4}=360$ 네 자리 자연수 중 $2300$미만의 가짓수를 구해보면첫째 자리가 $1$인 경우 $\\mathrm{P}LSUB5_{3}=60$첫째 자리가 $2$이고, 둘째 자리가 $1$인 경우 $\\mathrm{P}LSUB4_{2}=12$$\\frac{360-(60+12)}{360}=\\frac{288}{360}=\\frac{4}{5}$",
+   "after": "$\\frac{4}{5}$전체 경우의 수는 ${}_6\\mathrm{P}_4=360$ 네 자리 자연수 중 $2300$미만의 가짓수를 구해보면첫째 자리가 $1$인 경우 ${}_5\\mathrm{P}_3=60$첫째 자리가 $2$이고, 둘째 자리가 $1$인 경우 ${}_4\\mathrm{P}_2=12$$\\frac{360-(60+12)}{360}=\\frac{288}{360}=\\frac{4}{5}$",
+   "spans": 3
+  },
+  {
+   "id": "57253a64-bc25-4c61-9d70-30e027623f78",
+   "code": "HPS0203-F9LX",
+   "field": "solution",
+   "before": "$\\frac{138}{143}$(꺼낸 $3$개의 공이 적어도 한 개가 흰 공일 확률)$=1-$($3$개 모두 검은 공일 확률)$=1-\\frac{\\mathrm{LSUB}5C_{3}}{\\mathrm{LSUB}13C_{3}}=1-\\frac{5}{143}=\\frac{138}{143}$",
+   "after": "$\\frac{138}{143}$(꺼낸 $3$개의 공이 적어도 한 개가 흰 공일 확률)$=1-$($3$개 모두 검은 공일 확률)$=1-\\frac{{}_5\\mathrm{C}_3}{{}_{13}\\mathrm{C}_3}=1-\\frac{5}{143}=\\frac{138}{143}$",
+   "spans": 1
+  },
+  {
+   "id": "d9aab7db-893c-4d39-b5ad-6bbae5b85209",
+   "code": "HPS0203-SE25",
+   "field": "solution",
+   "before": "$8$개세 수의 곱이 짝수일 확률이 $\\frac{12}{13}$의 여사건인 세 수의 곱이 홀수일 확률이 $\\frac{1}{13}$이다.짝수의 개수를 $x$라 하면 홀수의 개수는  $15-x$이고 세 수의 곱이 홀수이려면 모든 수가 홀수이므로   $\\frac{CLSUB15-x_{3}}{CLSUB15_{3}}=\\frac{1}{13}##13(15-x)(14-x)(13-x)=15\\times 14\\times 13##x=8$",
+   "after": "$8$개세 수의 곱이 짝수일 확률이 $\\frac{12}{13}$의 여사건인 세 수의 곱이 홀수일 확률이 $\\frac{1}{13}$이다.짝수의 개수를 $x$라 하면 홀수의 개수는  $15-x$이고 세 수의 곱이 홀수이려면 모든 수가 홀수이므로   $\\frac{{}_{15-x}\\mathrm{C}_3}{{}_{15}\\mathrm{C}_3}=\\frac{1}{13}##13(15-x)(14-x)(13-x)=15\\times 14\\times 13##x=8$",
+   "spans": 1
+  },
+  {
+   "id": "8c347cd8-3ca8-4fbe-932d-f7748d209622",
+   "code": "HPS0204-F55L",
+   "field": "solution",
+   "before": "$512$가지ⅰ)$5$개의 구슬을 $A$ 또는 $B$에 넣는 방법 $2^{5}=32$가지나머지 구슬은 없으므로 $C,~D$에는 자동으로 $0$개씩 배정된다. 따라서 $32$가지ⅱ) $5$개중 $A,~B$에 넣을 구슬 $4$개를 택하는 방법 $CLSUB5_{4}=5$가지택한 $4$개를 $A,~B$에 나누어 넣는 방법 $2^{4}=16$가지남은 $1$개를 $C,~D$에 나누어 넣는 방법 $2$가지따라서 $5\\times 16\\times 2=160$가지ⅲ) $5$개중 $A,~B$에 넣을 구슬 $3$개를 택하는 방법 $CLSUB5_{3}=10$가지택한 $3$개를 $A,~b$에 나누어 넣는 방법 $2^{3}=8$가지남은 $2$개를 $C,~D$에 나누어 넣는 방법 $2^{2}=4$가지따라서 $10\\times 8\\times 4=320$가지따라서 $32+160+320=512$이다.",
+   "after": "$512$가지ⅰ)$5$개의 구슬을 $A$ 또는 $B$에 넣는 방법 $2^{5}=32$가지나머지 구슬은 없으므로 $C,~D$에는 자동으로 $0$개씩 배정된다. 따라서 $32$가지ⅱ) $5$개중 $A,~B$에 넣을 구슬 $4$개를 택하는 방법 ${}_5\\mathrm{C}_4=5$가지택한 $4$개를 $A,~B$에 나누어 넣는 방법 $2^{4}=16$가지남은 $1$개를 $C,~D$에 나누어 넣는 방법 $2$가지따라서 $5\\times 16\\times 2=160$가지ⅲ) $5$개중 $A,~B$에 넣을 구슬 $3$개를 택하는 방법 ${}_5\\mathrm{C}_3=10$가지택한 $3$개를 $A,~b$에 나누어 넣는 방법 $2^{3}=8$가지남은 $2$개를 $C,~D$에 나누어 넣는 방법 $2^{2}=4$가지따라서 $10\\times 8\\times 4=320$가지따라서 $32+160+320=512$이다.",
+   "spans": 2
+  },
+  {
+   "id": "86b210f0-ceb6-49f2-b4cc-9398c11fa6e3",
+   "code": "HPS0204-GAZ6",
+   "field": "solution",
+   "before": "$\\frac{8}{21}$$a,~b$가 모두 짝수인 사건을 $C$, $a>b$인 사건을 $D$사건 $C$의 경우의 수① $A$ (홀,홀), $B$ (홀,홀) : $\\mathrm{C}LSUB4_{2}\\times \\mathrm{LSUB}2C_{2}=6\\times 1=6$② $A$ (홀,홀), $B$ (짝,짝) : $\\mathrm{C}LSUB4_{2}\\times \\mathrm{LSUB}3C_{2}=6\\times 3=18$③ $A$ (짝,짝), $B$ (홀,호) : $\\mathrm{C}LSUB3_{2}\\times \\mathrm{LSUB}4C_{2}=3\\times 6=18$$6+18+18=42$사건 $C\\cap D$의 경우의 수① $a=12$$\\left( 5,~7\\right)$일 때:$b=4$$\\left( 1,~3\\right)$    $a=10$$\\left( 3,~7\\right)$일 때:$b=6$$\\left( 1,~5\\right)$ ⇒$2$가지② $a=12$$\\left( 5,~7\\right)$일 때:$b=6$$\\left( 2,~4\\right)$, $b=8$$\\left( 2,~6\\right)$, $b=10$$\\left( 4,~6\\right)$   $a=10$$\\left( 3,~7\\right)$일 때:$b=6$$\\left( 2,~4\\right)$, $b=8$$\\left( 2,~6\\right)$   $a=8$$\\left( 3,~5\\right)$,$\\left( 1,~7\\right)$일 때:$b=6$$\\left( 2,~4\\right)$ ⇒$7$가지③ $a=10$$\\left( 4,~6\\right)$일 때:$b=4$$\\left( 1,~3\\right)$, $b=6$$\\left( 1,~5\\right)$, $b=8$$\\left( 3,~5\\right)$,$\\left( 1,~7\\right)$   $a=8$$\\left( 2,~6\\right)$일 때:$b=4$$\\left( 1,~3\\right)$, $b=6$$\\left( 1,~5\\right)$   $a=6$$\\left( 2,~4\\right)$일 때:$b=4$$\\left( 1,~3\\right)$ ⇒$7$가지$2+7+7=16$$\\mathrm{P}\\left( \\mathit{D}\\,\\vert \\,C\\right) =\\frac{n\\left( C\\cap D\\right)}{n\\left( C\\right)}=\\frac{16}{42}=\\frac{8}{21}$",
+   "after": "$\\frac{8}{21}$$a,~b$가 모두 짝수인 사건을 $C$, $a>b$인 사건을 $D$사건 $C$의 경우의 수① $A$ (홀,홀), $B$ (홀,홀) : ${}_4\\mathrm{C}_2\\times {}_2\\mathrm{C}_2=6\\times 1=6$② $A$ (홀,홀), $B$ (짝,짝) : ${}_4\\mathrm{C}_2\\times {}_3\\mathrm{C}_2=6\\times 3=18$③ $A$ (짝,짝), $B$ (홀,호) : ${}_3\\mathrm{C}_2\\times {}_4\\mathrm{C}_2=3\\times 6=18$$6+18+18=42$사건 $C\\cap D$의 경우의 수① $a=12$$\\left( 5,~7\\right)$일 때:$b=4$$\\left( 1,~3\\right)$    $a=10$$\\left( 3,~7\\right)$일 때:$b=6$$\\left( 1,~5\\right)$ ⇒$2$가지② $a=12$$\\left( 5,~7\\right)$일 때:$b=6$$\\left( 2,~4\\right)$, $b=8$$\\left( 2,~6\\right)$, $b=10$$\\left( 4,~6\\right)$   $a=10$$\\left( 3,~7\\right)$일 때:$b=6$$\\left( 2,~4\\right)$, $b=8$$\\left( 2,~6\\right)$   $a=8$$\\left( 3,~5\\right)$,$\\left( 1,~7\\right)$일 때:$b=6$$\\left( 2,~4\\right)$ ⇒$7$가지③ $a=10$$\\left( 4,~6\\right)$일 때:$b=4$$\\left( 1,~3\\right)$, $b=6$$\\left( 1,~5\\right)$, $b=8$$\\left( 3,~5\\right)$,$\\left( 1,~7\\right)$   $a=8$$\\left( 2,~6\\right)$일 때:$b=4$$\\left( 1,~3\\right)$, $b=6$$\\left( 1,~5\\right)$   $a=6$$\\left( 2,~4\\right)$일 때:$b=4$$\\left( 1,~3\\right)$ ⇒$7$가지$2+7+7=16$$\\mathrm{P}\\left( \\mathit{D}\\,\\vert \\,C\\right) =\\frac{n\\left( C\\cap D\\right)}{n\\left( C\\right)}=\\frac{16}{42}=\\frac{8}{21}$",
+   "spans": 3
+  },
+  {
+   "id": "ca36366e-cfc0-40c8-be52-805441d190a9",
+   "code": "HPS0204-SY8V",
+   "field": "solution",
+   "before": "$\\frac{10}{17}$$rmA$에서 흰색이 $2$개 뽑힐 확률 : $CLSUB3\\frac{_{2}}{CLSUB7_{2}}$$RMB$에서 흰색이 $2$개 뽑힐 확률 : $\\frac{CLSUB2_{2}}{CLSUB5_{2}}$그때 $RMA$에서 흰색이 2개 뽑힐 확률 : $CLSUB3\\frac{\\frac{_{2}}{CLSUB7_{2}}}{\\frac{CLSUB3_{2}}{CLSUB7_{2}}+\\frac{CLSUB2_{2}}{CLSUB5_{2}}}$$=\\frac{\\frac{1}{7}}{\\frac{1}{7}+\\frac{1}{10}}$$=\\frac{10}{17}$",
+   "after": "$\\frac{10}{17}$$rmA$에서 흰색이 $2$개 뽑힐 확률 : $CLSUB3\\frac{_{2}}{CLSUB7_{2}}$$RMB$에서 흰색이 $2$개 뽑힐 확률 : $\\frac{{}_2\\mathrm{C}_2}{{}_5\\mathrm{C}_2}$그때 $RMA$에서 흰색이 2개 뽑힐 확률 : $CLSUB3\\frac{\\frac{_{2}}{CLSUB7_{2}}}{\\frac{CLSUB3_{2}}{CLSUB7_{2}}+\\frac{CLSUB2_{2}}{CLSUB5_{2}}}$$=\\frac{\\frac{1}{7}}{\\frac{1}{7}+\\frac{1}{10}}$$=\\frac{10}{17}$",
+   "spans": 1
+  },
+  {
+   "id": "b8bb0041-bbb7-485a-99e2-e6f3513ecd75",
+   "code": "HPS0204-XW7C",
+   "field": "solution",
+   "before": "$8$개의 꼭짓점에서 서로 다른 $4$개의 점을 택하는 경우 $CLSUB8_{4}$에서 $2$개의 점이 같은 모서리의 꼭짓점일 확률은여사건의 확률을 이용하여$CLSUB8_{4}$-(두 점이 서로 다른 모서리의 꼭짓점인 경우의수)= $CLSUB8_{4}$-$\\left( A,\\,\\,\\,H,\\,\\,\\,C,\\,\\,\\,F\\right)$, $\\left( B,\\,\\,\\,D,\\,\\,\\,E,\\,\\,\\,G\\right)$인 두가지 경우의수이므로 $1-\\frac{2}{CLSUB8_{4}}=\\frac{34}{35}$이다.",
+   "after": "$8$개의 꼭짓점에서 서로 다른 $4$개의 점을 택하는 경우 ${}_8\\mathrm{C}_4$에서 $2$개의 점이 같은 모서리의 꼭짓점일 확률은여사건의 확률을 이용하여${}_8\\mathrm{C}_4$-(두 점이 서로 다른 모서리의 꼭짓점인 경우의수)= ${}_8\\mathrm{C}_4$-$\\left( A,\\,\\,\\,H,\\,\\,\\,C,\\,\\,\\,F\\right)$, $\\left( B,\\,\\,\\,D,\\,\\,\\,E,\\,\\,\\,G\\right)$인 두가지 경우의수이므로 $1-\\frac{2}{{}_8\\mathrm{C}_4}=\\frac{34}{35}$이다.",
+   "spans": 4
+  },
+  {
+   "id": "d2d13472-dafd-4ac7-894e-7db365a53bd8",
+   "code": "HPS0206-2CRK",
+   "field": "solution",
+   "before": "$\\frac{1}{8}$$a=3b$, $(a,~b)\\,\\,\\Rightarrow \\,(3,~1),~(6,~2)$$\\frac{1}{6}\\times \\mathrm{C}LSUB3_{1}(\\frac{1}{2})^{3}+\\frac{1}{6}\\times \\mathrm{C}LSUB3_{2}(\\frac{1}{2})^{3}=\\frac{1}{6}\\times \\frac{3}{8}+\\frac{1}{6}\\times \\frac{3}{8}=\\frac{6}{48}=\\frac{1}{8}$",
+   "after": "$\\frac{1}{8}$$a=3b$, $(a,~b)\\,\\,\\Rightarrow \\,(3,~1),~(6,~2)$$\\frac{1}{6}\\times {}_3\\mathrm{C}_1(\\frac{1}{2})^{3}+\\frac{1}{6}\\times {}_3\\mathrm{C}_2(\\frac{1}{2})^{3}=\\frac{1}{6}\\times \\frac{3}{8}+\\frac{1}{6}\\times \\frac{3}{8}=\\frac{6}{48}=\\frac{1}{8}$",
+   "spans": 1
+  },
+  {
+   "id": "c8b73476-2a02-4428-b703-10cc2db37cf0",
+   "code": "HPS0206-C7LT",
+   "field": "solution",
+   "before": "흰공$6$개, $\\frac{6}{11}$흰공$x$개, 검은공 $(12- x)$개 $\\frac{\\mathrm{C}_{1}lsub\\mathit{x}\\times C_{1}lsub\\mathit{12}-x}{\\mathrm{C}_{2}lsub12}=\\frac{1}{66}\\mathit{x}(12-\\mathit{x})=-\\frac{1}{66}\\left\\{ (\\mathit{x}-6)^{2}-36\\right\\}$따라서 $x=6$일 때 확률이 최대 $\\frac{6}{11}$이다.",
+   "after": "흰공$6$개, $\\frac{6}{11}$흰공$x$개, 검은공 $(12- x)$개 $\\frac{{}_x\\mathrm{C}_1\\times {}_{12}\\mathrm{C}_1-x}{{}_{12}\\mathrm{C}_2}=\\frac{1}{66}\\mathit{x}(12-\\mathit{x})=-\\frac{1}{66}\\left\\{ (\\mathit{x}-6)^{2}-36\\right\\}$따라서 $x=6$일 때 확률이 최대 $\\frac{6}{11}$이다.",
+   "spans": 1
+  },
+  {
+   "id": "b63524df-05a8-4bde-ba5f-343e8c0e43c6",
+   "code": "HPS0206-XUUV",
+   "field": "solution",
+   "before": "$A$와 $B$는 서로 독립이 아니다, $A$와 $C$는 서로 독립이다.전체의 경우의 수는 $6\\times 6=36$사건 $A$ : $X$는 $2,~4,~6$이고 $Y$는 $1,~2,~3,~4,~5,~6$이므로$\\mathrm{P}\\left( \\mathit{A}\\,\\right) =\\frac{18}{36}=\\frac{1}{2}$사건 $B$ : $\\mathrm{C}LSUB6_{2}=15$이므로 $\\mathrm{P}\\left( \\mathit{B}\\,\\right) =\\frac{15}{36}=\\frac{5}{12}$사건 $C$ : 짝수$+$짝수/홀수$+$홀수인 경우로 $\\left( 3\\times 3\\right) +\\left( 3\\times 3\\right) =18$이므로 $\\mathrm{P}\\left( \\mathit{C}\\right) =\\frac{18}{36}=\\frac{1}{2}$사건 $A\\cap B$ : $X$가 $2$일 때, $Y=3,~4,~5,~6$이고 $X$가 $4$일 때, $Y=5,~6$이므로 $\\mathrm{P}\\left( \\mathit{A}\\,\\cap B\\right) =\\frac{6}{36}=\\frac{1}{6}$$\\mathrm{P}\\left( \\mathit{A}\\,\\cap B\\right) \\neq \\mathrm{P}\\left( \\mathit{A}\\right) \\mathrm{P}\\left( \\mathit{B}\\right) =\\frac{1}{2}\\times \\frac{5}{12}=\\frac{5}{24}$이므로 $A$와 $B$는 서로 독립이 아니다.사건 $A\\cap C$ : 짝수$+$짝수인 경우로  $3\\times 3=9$이므로 $\\mathrm{P}\\left( \\mathit{A}\\,\\cap C\\right) =\\frac{9}{36}=\\frac{1}{4}$ $\\mathrm{P}\\left( \\mathit{A}\\,\\cap C\\right) =\\mathrm{P}\\left( \\mathit{A}\\right) \\mathrm{P}\\left( \\mathit{C}\\right) =\\frac{1}{2}\\times \\frac{1}{2}=\\frac{1}{4}$이므로$A$와 $C$는 서로 독립이다.",
+   "after": "$A$와 $B$는 서로 독립이 아니다, $A$와 $C$는 서로 독립이다.전체의 경우의 수는 $6\\times 6=36$사건 $A$ : $X$는 $2,~4,~6$이고 $Y$는 $1,~2,~3,~4,~5,~6$이므로$\\mathrm{P}\\left( \\mathit{A}\\,\\right) =\\frac{18}{36}=\\frac{1}{2}$사건 $B$ : ${}_6\\mathrm{C}_2=15$이므로 $\\mathrm{P}\\left( \\mathit{B}\\,\\right) =\\frac{15}{36}=\\frac{5}{12}$사건 $C$ : 짝수$+$짝수/홀수$+$홀수인 경우로 $\\left( 3\\times 3\\right) +\\left( 3\\times 3\\right) =18$이므로 $\\mathrm{P}\\left( \\mathit{C}\\right) =\\frac{18}{36}=\\frac{1}{2}$사건 $A\\cap B$ : $X$가 $2$일 때, $Y=3,~4,~5,~6$이고 $X$가 $4$일 때, $Y=5,~6$이므로 $\\mathrm{P}\\left( \\mathit{A}\\,\\cap B\\right) =\\frac{6}{36}=\\frac{1}{6}$$\\mathrm{P}\\left( \\mathit{A}\\,\\cap B\\right) \\neq \\mathrm{P}\\left( \\mathit{A}\\right) \\mathrm{P}\\left( \\mathit{B}\\right) =\\frac{1}{2}\\times \\frac{5}{12}=\\frac{5}{24}$이므로 $A$와 $B$는 서로 독립이 아니다.사건 $A\\cap C$ : 짝수$+$짝수인 경우로  $3\\times 3=9$이므로 $\\mathrm{P}\\left( \\mathit{A}\\,\\cap C\\right) =\\frac{9}{36}=\\frac{1}{4}$ $\\mathrm{P}\\left( \\mathit{A}\\,\\cap C\\right) =\\mathrm{P}\\left( \\mathit{A}\\right) \\mathrm{P}\\left( \\mathit{C}\\right) =\\frac{1}{2}\\times \\frac{1}{2}=\\frac{1}{4}$이므로$A$와 $C$는 서로 독립이다.",
+   "spans": 1
+  },
+  {
+   "id": "e5288e93-2723-4d70-8403-3ec151ffdc09",
+   "code": "HPS0207-22TG",
+   "field": "content",
+   "before": "한 개의 주사위를 $400$번 던지는 시행에서 $3$의 배수의 눈이 나오는 횟수를 확률변수 $X$라 할 때, $X$의 확률질량함수는 $\\mathrm{P}(\\mathit{X}=x)=CLSUB400_{x}a^{x}\\left( \\frac{2}{3}\\right) ^{400-x}(x=0,~1,~2,~\\cdots ~400)$이다. $E(3X-60a)$의 값은? (단, $a$는 상수이다.)\n\n1. $380$\n2. $382$\n3. $384$\n4. $386$\n5. $388$",
+   "after": "한 개의 주사위를 $400$번 던지는 시행에서 $3$의 배수의 눈이 나오는 횟수를 확률변수 $X$라 할 때, $X$의 확률질량함수는 $\\mathrm{P}(\\mathit{X}=x)={}_{400}\\mathrm{C}_xa^{x}\\left( \\frac{2}{3}\\right) ^{400-x}(x=0,~1,~2,~\\cdots ~400)$이다. $E(3X-60a)$의 값은? (단, $a$는 상수이다.)\n\n1. $380$\n2. $382$\n3. $384$\n4. $386$\n5. $388$",
+   "spans": 1
+  },
+  {
+   "id": "138fb90d-8a3d-4410-8e39-11972f7e401b",
+   "code": "HPS0207-8TKV",
+   "field": "solution",
+   "before": "$496$한 개의 주사위를 $6$번 던질 때, $6$의 약수가 나오는 횟수를 $X$라 하면 $6$의 약수가 나오는 횟수가 $6$의 약수가 나오지 않는 횟수보다 클 확률은 $\\mathrm{P}(\\mathit{X}>3)$이다.$\\mathrm{ⅰ})\\,\\,P(\\mathit{X}=4)=\\mathrm{LSUB}6C_{4}\\left( \\frac{2}{3}\\right) ^{4}\\left( \\frac{1}{3}\\right) ^{2}=15\\times \\frac{16}{3^{6}}=\\frac{240}{3^{6}}$$\\mathrm{ⅱ})\\,\\,P(\\mathit{X}=5)=\\mathrm{LSUB}6C_{5}\\left( \\frac{2}{3}\\right) ^{5}\\left( \\frac{1}{3}\\right) ^{1}=6\\times \\frac{32}{3^{6}}=\\frac{192}{3^{6}}$$\\mathrm{ⅲ})\\,\\,P(\\mathit{X}=6)=\\mathrm{LSUB}6C_{6}\\left( \\frac{2}{3}\\right) ^{6}=\\frac{64}{3^{6}}$$ⅰ),\\,ⅱ),\\,ⅲ)$에 의해 $\\frac{240+192+64}{3^{6}}=\\frac{496}{3^{6}}$이므로 $p=496$이다.",
+   "after": "$496$한 개의 주사위를 $6$번 던질 때, $6$의 약수가 나오는 횟수를 $X$라 하면 $6$의 약수가 나오는 횟수가 $6$의 약수가 나오지 않는 횟수보다 클 확률은 $\\mathrm{P}(\\mathit{X}>3)$이다.$\\mathrm{ⅰ})\\,\\,P(\\mathit{X}=4)={}_6\\mathrm{C}_4\\left( \\frac{2}{3}\\right) ^{4}\\left( \\frac{1}{3}\\right) ^{2}=15\\times \\frac{16}{3^{6}}=\\frac{240}{3^{6}}$$\\mathrm{ⅱ})\\,\\,P(\\mathit{X}=5)={}_6\\mathrm{C}_5\\left( \\frac{2}{3}\\right) ^{5}\\left( \\frac{1}{3}\\right) ^{1}=6\\times \\frac{32}{3^{6}}=\\frac{192}{3^{6}}$$\\mathrm{ⅲ})\\,\\,P(\\mathit{X}=6)={}_6\\mathrm{C}_6\\left( \\frac{2}{3}\\right) ^{6}=\\frac{64}{3^{6}}$$ⅰ),\\,ⅱ),\\,ⅲ)$에 의해 $\\frac{240+192+64}{3^{6}}=\\frac{496}{3^{6}}$이므로 $p=496$이다.",
+   "spans": 3
+  },
+  {
+   "id": "97e29400-fd47-42be-a42e-532127f360b3",
+   "code": "HPS0207-EQX4",
+   "field": "solution",
+   "before": "정답 $\\frac{40}{81}$풀이 좌표가 $1$또는 $-1$이어야 하므로 $3$의 약수가 $2$번 또는 $3$번 나와야 한다.따라서, $CLSUB5_{2}\\left( \\frac{1}{3}\\right) ^{2}\\left( \\frac{2}{3}\\right) ^{3}+CLSUB5_{3}\\left( \\frac{1}{3}\\right) ^{3}\\left( \\frac{2}{3}\\right) ^{2}=10\\times \\frac{8}{243}+10\\times \\frac{4}{243}=\\frac{120}{243}=\\frac{40}{81}$",
+   "after": "정답 $\\frac{40}{81}$풀이 좌표가 $1$또는 $-1$이어야 하므로 $3$의 약수가 $2$번 또는 $3$번 나와야 한다.따라서, ${}_5\\mathrm{C}_2\\left( \\frac{1}{3}\\right) ^{2}\\left( \\frac{2}{3}\\right) ^{3}+{}_5\\mathrm{C}_3\\left( \\frac{1}{3}\\right) ^{3}\\left( \\frac{2}{3}\\right) ^{2}=10\\times \\frac{8}{243}+10\\times \\frac{4}{243}=\\frac{120}{243}=\\frac{40}{81}$",
+   "spans": 1
+  },
+  {
+   "id": "1f0d5854-91ee-4e54-b575-4a2ae2e223a3",
+   "code": "HPS0207-FDCM",
+   "field": "solution",
+   "before": "$1657$$\\mathrm{(}ⅰ)~A$공장에서 생산한 제품 $3$개를 임의추출하여 조사할 때, $2$개가 불량품일 확률$\\Rightarrow$ $\\frac{1}{3}\\times \\mathrm{LSUB}3C_{2}\\left( \\frac{3}{100}\\right) ^{2}\\left( \\frac{97}{100}\\right) =\\frac{873}{10^{6}}$$\\mathrm{(}ⅱ)~B$ 또는 $\\mathrm{C}$공장에서 생산한 제품 $3$개를 임의추출하여 조사할 때, $2$개가 불량품일 확률$\\Rightarrow$ $\\frac{2}{3}\\times \\mathrm{LSUB}3C_{2}\\left( \\frac{2}{100}\\right) ^{2}\\left( \\frac{98}{100}\\right) =\\frac{784}{10^{6}}$따라서 $p=\\frac{873+784}{10^{6}}=\\frac{1657}{10^{6}}$이므로 $10^{6}p=1657$이다.",
+   "after": "$1657$$\\mathrm{(}ⅰ)~A$공장에서 생산한 제품 $3$개를 임의추출하여 조사할 때, $2$개가 불량품일 확률$\\Rightarrow$ $\\frac{1}{3}\\times {}_3\\mathrm{C}_2\\left( \\frac{3}{100}\\right) ^{2}\\left( \\frac{97}{100}\\right) =\\frac{873}{10^{6}}$$\\mathrm{(}ⅱ)~B$ 또는 $\\mathrm{C}$공장에서 생산한 제품 $3$개를 임의추출하여 조사할 때, $2$개가 불량품일 확률$\\Rightarrow$ $\\frac{2}{3}\\times {}_3\\mathrm{C}_2\\left( \\frac{2}{100}\\right) ^{2}\\left( \\frac{98}{100}\\right) =\\frac{784}{10^{6}}$따라서 $p=\\frac{873+784}{10^{6}}=\\frac{1657}{10^{6}}$이므로 $10^{6}p=1657$이다.",
+   "spans": 2
+  },
+  {
+   "id": "3155a6a2-270d-4a78-b930-cc35c59eeb78",
+   "code": "HPS0207-KX2F",
+   "field": "solution",
+   "before": "정답 $\\frac{1}{3}$주사위의 눈이 $3$의 약수가 나온 횟수를 $x$라 하면 $3$의 약수가 아닌 눈이 나온 횟수는 $\\left( 7-x\\right)$ 시계반대방향을 양의 방향 , 시계방향을 음의 방향이라 할 주사위를 7번 던지고 한 번에 이동하는 거리가 $1$이므로 점 $\\mathrm{P}$가 도달할 수 있는 위치는 $-7$에서 $7$까지이다.점 $\\mathrm{P}$가 점 $\\mathrm{B}$에 있기 위해서는 점 $\\mathrm{P}$의 위치가 $-5,-2,1,4,7$ 가 되어야 한다.점 $\\mathrm{P}$ 위치 $1\\times x+\\left( -1\\right) \\times (7-x)=2x-7$이고 $x$는 자연수이므로 가능한 $x$의 값은 $1\\,,\\,\\,4\\,,\\,\\,7$이다.독립시행의 확률에서 $p=_{7}\\mathrm{C}_{1}\\left( \\frac{1}{3}\\right) ^{1}\\left( \\frac{2}{3}\\right) ^{6}+CLSUB7_{4}\\left( \\frac{1}{3}\\right) ^{4}\\left( \\frac{2}{3}\\right) ^{3}+_{7}C_{7}\\left( \\frac{1}{3}\\right) ^{7}\\left( \\frac{2}{3}\\right) ^{0}#\\,\\,\\,\\,\\,\\,=\\frac{729}{2187}=\\frac{1}{3}$",
+   "after": "정답 $\\frac{1}{3}$주사위의 눈이 $3$의 약수가 나온 횟수를 $x$라 하면 $3$의 약수가 아닌 눈이 나온 횟수는 $\\left( 7-x\\right)$ 시계반대방향을 양의 방향 , 시계방향을 음의 방향이라 할 주사위를 7번 던지고 한 번에 이동하는 거리가 $1$이므로 점 $\\mathrm{P}$가 도달할 수 있는 위치는 $-7$에서 $7$까지이다.점 $\\mathrm{P}$가 점 $\\mathrm{B}$에 있기 위해서는 점 $\\mathrm{P}$의 위치가 $-5,-2,1,4,7$ 가 되어야 한다.점 $\\mathrm{P}$ 위치 $1\\times x+\\left( -1\\right) \\times (7-x)=2x-7$이고 $x$는 자연수이므로 가능한 $x$의 값은 $1\\,,\\,\\,4\\,,\\,\\,7$이다.독립시행의 확률에서 $p=_{7}\\mathrm{C}_{1}\\left( \\frac{1}{3}\\right) ^{1}\\left( \\frac{2}{3}\\right) ^{6}+{}_7\\mathrm{C}_4\\left( \\frac{1}{3}\\right) ^{4}\\left( \\frac{2}{3}\\right) ^{3}+_{7}C_{7}\\left( \\frac{1}{3}\\right) ^{7}\\left( \\frac{2}{3}\\right) ^{0}#\\,\\,\\,\\,\\,\\,=\\frac{729}{2187}=\\frac{1}{3}$",
+   "spans": 1
+  },
+  {
+   "id": "eb72d84d-a8b7-48f7-b11d-c90477fb3b4f",
+   "code": "HPS0207-S3ZF",
+   "field": "solution",
+   "before": "$(1)$ 풀이참조  $(2)$ 풀이참조  $(3)$ $\\frac{17}{81}$$(1)$ $\\mathrm{P}(\\mathit{X}=x)=\\mathrm{LSUB}5C_{\\mathit{x}}\\mathit{\\left( }\\frac{1}{3}\\right) ^{x}\\left( \\frac{2}{3}\\right) ^{5-x}&&(x=0,~1,~2,~3,~4,~5)$$(2)$$X$$0$$1$$2$$3$$4$$5$합계$\\mathrm{P}\\left( \\mathit{X}=x\\right)$대구광역시 내신 수학 연구회$\\frac{32}{243}$$\\frac{80}{243}$$\\frac{80}{243}$$\\frac{40}{243}$$\\frac{10}{243}$$\\frac{1}{243}$$1$대구광역시 내신 수학 연구회$(3)$ $\\mathrm{P}(\\mathit{X}\\geq 3)=\\mathrm{P}(\\mathit{X}=3)+\\mathrm{P}(\\mathit{X}=4)+\\mathrm{P}(\\mathit{X}=5)$$\\mathrm{C}_{3}LSUB5\\left( \\frac{1}{3}\\right) ^{3}\\left( \\frac{2}{3}\\right) ^{2}+C_{4}LSUB5\\left( \\frac{1}{3}\\right) ^{4}\\left( \\frac{2}{3}\\right) ^{1}+C_{5}LSUB5\\left( \\frac{1}{3}\\right) ^{5}$ $=\\frac{51}{243}$$=\\frac{17}{81}$",
+   "after": "$(1)$ 풀이참조  $(2)$ 풀이참조  $(3)$ $\\frac{17}{81}$$(1)$ $\\mathrm{P}(\\mathit{X}=x)={}_5\\mathrm{C}_x\\mathit{\\left( }\\frac{1}{3}\\right) ^{x}\\left( \\frac{2}{3}\\right) ^{5-x}&&(x=0,~1,~2,~3,~4,~5)$$(2)$$X$$0$$1$$2$$3$$4$$5$합계$\\mathrm{P}\\left( \\mathit{X}=x\\right)$대구광역시 내신 수학 연구회$\\frac{32}{243}$$\\frac{80}{243}$$\\frac{80}{243}$$\\frac{40}{243}$$\\frac{10}{243}$$\\frac{1}{243}$$1$대구광역시 내신 수학 연구회$(3)$ $\\mathrm{P}(\\mathit{X}\\geq 3)=\\mathrm{P}(\\mathit{X}=3)+\\mathrm{P}(\\mathit{X}=4)+\\mathrm{P}(\\mathit{X}=5)$${}_5\\mathrm{C}_3\\left( \\frac{1}{3}\\right) ^{3}\\left( \\frac{2}{3}\\right) ^{2}+{}_5\\mathrm{C}_4\\left( \\frac{1}{3}\\right) ^{4}\\left( \\frac{2}{3}\\right) ^{1}+{}_5\\mathrm{C}_5\\left( \\frac{1}{3}\\right) ^{5}$ $=\\frac{51}{243}$$=\\frac{17}{81}$",
+   "spans": 2
+  },
+  {
+   "id": "1d4b9ee3-aba3-4c23-a451-553ab2e4b9ef",
+   "code": "HPS0207-WFBC",
+   "field": "solution",
+   "before": "$\\frac{40}{243}$$\\mathrm{C}LSUB5_{3}\\times \\left( \\frac{1}{3}\\right) ^{3}\\times \\left( \\frac{2}{3}\\right) ^{2}=10\\times \\frac{1}{27}\\times \\frac{4}{9}=\\frac{40}{243}$",
+   "after": "$\\frac{40}{243}$${}_5\\mathrm{C}_3\\times \\left( \\frac{1}{3}\\right) ^{3}\\times \\left( \\frac{2}{3}\\right) ^{2}=10\\times \\frac{1}{27}\\times \\frac{4}{9}=\\frac{40}{243}$",
+   "spans": 1
+  },
+  {
+   "id": "a3731339-068b-4298-b1e7-578723492423",
+   "code": "HPS0301-XZHV",
+   "field": "solution",
+   "before": "$0.015$실제 예매 수는 $20+20\\times 0.1=22$실제로 공연장에 오는 관객의 수를 확률변수 $X$라고 하자.확률변수 $X$는 이항분포 $\\mathrm{B}\\left( 22,~\\frac{3}{4}\\right)$를 따른다.좌석이 부족하려면 실제 온 사람이 $21$명 이상이어야 한다.$\\mathrm{P}\\left( \\mathit{X}=21\\right) =\\mathrm{C}LSUB22_{21}\\left( \\frac{3}{4}\\right) ^{21}\\left( \\frac{1}{4}\\right) =22\\times \\frac{\\left( 0.75\\right) ^{21}}{4}=22\\times \\frac{\\left( 0.75\\right) ^{22}}{4\\times 0.75}=0.0132$$\\mathrm{P}\\left( \\mathit{X}=22\\right) =\\mathrm{C}LSUB22_{22}\\left( \\frac{3}{4}\\right) ^{22}=\\left( 0.75\\right) ^{22}=0.0018$$\\mathrm{P}\\left( \\mathit{X}\\geq 21\\right) =0.0132+0.0018=0.015$",
+   "after": "$0.015$실제 예매 수는 $20+20\\times 0.1=22$실제로 공연장에 오는 관객의 수를 확률변수 $X$라고 하자.확률변수 $X$는 이항분포 $\\mathrm{B}\\left( 22,~\\frac{3}{4}\\right)$를 따른다.좌석이 부족하려면 실제 온 사람이 $21$명 이상이어야 한다.$\\mathrm{P}\\left( \\mathit{X}=21\\right) ={}_{22}\\mathrm{C}_{21}\\left( \\frac{3}{4}\\right) ^{21}\\left( \\frac{1}{4}\\right) =22\\times \\frac{\\left( 0.75\\right) ^{21}}{4}=22\\times \\frac{\\left( 0.75\\right) ^{22}}{4\\times 0.75}=0.0132$$\\mathrm{P}\\left( \\mathit{X}=22\\right) ={}_{22}\\mathrm{C}_{22}\\left( \\frac{3}{4}\\right) ^{22}=\\left( 0.75\\right) ^{22}=0.0018$$\\mathrm{P}\\left( \\mathit{X}\\geq 21\\right) =0.0132+0.0018=0.015$",
+   "spans": 2
+  },
+  {
+   "id": "f2ee69a9-ba4b-4239-8fbd-ac39d3b7b464",
+   "code": "HPS0302-EJ9N",
+   "field": "solution",
+   "before": "$18$$f(x)=m$ 실근의 개수가 홀수인 경우는 극대, 극소를 제외한 구간인 $\\left\\{ 2,~4,~5,~6\\right\\}$ $4$가지입니다.주사위 $1$회 시행 시 사건 $A$가 일어날 확률이 $\\frac{4}{6}=\\frac{2}{3}$이므로, 확률변수 $XSIMB\\left( n,~\\frac{2}{3}\\right)$입니다.$CLSUBn_{n-2}\\left( \\frac{2}{3}\\right) ^{n-2}\\left( \\frac{1}{3}\\right) ^{2}=9\\times CLSUBn_{n}\\times \\left( \\frac{2}{3}\\right) ^{n}$$\\frac{n(n-1)}{18}=4,~n(n-1)=72,~n=9$$XSIMB\\left( 9,~\\frac{2}{3}\\right)$이므로 $\\mathrm{V}(\\mathit{X})=9\\times \\frac{2}{3}\\times \\frac{1}{3}=2$입니다.따라서 $\\mathrm{V}(\\mathit{3X})=9\\mathrm{V}(\\mathit{X})=18$입니다.",
+   "after": "$18$$f(x)=m$ 실근의 개수가 홀수인 경우는 극대, 극소를 제외한 구간인 $\\left\\{ 2,~4,~5,~6\\right\\}$ $4$가지입니다.주사위 $1$회 시행 시 사건 $A$가 일어날 확률이 $\\frac{4}{6}=\\frac{2}{3}$이므로, 확률변수 $XSIMB\\left( n,~\\frac{2}{3}\\right)$입니다.${}_n\\mathrm{C}_{n-2}\\left( \\frac{2}{3}\\right) ^{n-2}\\left( \\frac{1}{3}\\right) ^{2}=9\\times {}_n\\mathrm{C}_n\\times \\left( \\frac{2}{3}\\right) ^{n}$$\\frac{n(n-1)}{18}=4,~n(n-1)=72,~n=9$$XSIMB\\left( 9,~\\frac{2}{3}\\right)$이므로 $\\mathrm{V}(\\mathit{X})=9\\times \\frac{2}{3}\\times \\frac{1}{3}=2$입니다.따라서 $\\mathrm{V}(\\mathit{3X})=9\\mathrm{V}(\\mathit{X})=18$입니다.",
+   "spans": 1
+  },
+  {
+   "id": "2d518dd5-297d-4a1c-b566-6121390bcaef",
+   "code": "HPS0302-XQNB",
+   "field": "solution",
+   "before": "$7^{10}$원주사위를 한 번 던져 $6$의 약수가 나올 확률은 $\\frac{2}{3}$$10$번을 던질 때 $6$의 약수가 $x$번 나올 확률은 독립시행의 확률에 의해 $\\mathrm{P}\\left( \\mathit{X}=x\\right) =_{10}\\mathrm{C}_{\\mathit{x}}\\left( \\frac{2}{3}\\right) ^{x}\\left( \\frac{1}{3}\\right) ^{10-x}$ 이다.상금의 기댓값은 $E\\left( 10^{x}\\right)$이므로$\\mathrm{E}\\left( \\mathit{10}^{x}\\right) =\\sum _{x=0}^{10}10^{x}\\times _{10}\\mathrm{C}_{\\mathit{x}}\\left( \\frac{2}{3}\\right) ^{x}\\left( \\frac{1}{3}\\right) ^{10-x}$$=\\sum _{x=0}^{10}\\,\\,LSUB10\\mathrm{C}_{\\mathit{x}}\\left( \\frac{20}{3}\\right) ^{x}\\left( \\frac{1}{3}\\right) ^{10-x}$이항정리에 의해 이 식은 $\\left( \\frac{20}{3}+\\frac{1}{3}\\right) ^{10}$과 같으므로 $7^{10}$",
+   "after": "$7^{10}$원주사위를 한 번 던져 $6$의 약수가 나올 확률은 $\\frac{2}{3}$$10$번을 던질 때 $6$의 약수가 $x$번 나올 확률은 독립시행의 확률에 의해 $\\mathrm{P}\\left( \\mathit{X}=x\\right) =_{10}\\mathrm{C}_{\\mathit{x}}\\left( \\frac{2}{3}\\right) ^{x}\\left( \\frac{1}{3}\\right) ^{10-x}$ 이다.상금의 기댓값은 $E\\left( 10^{x}\\right)$이므로$\\mathrm{E}\\left( \\mathit{10}^{x}\\right) =\\sum _{x=0}^{10}10^{x}\\times _{10}\\mathrm{C}_{\\mathit{x}}\\left( \\frac{2}{3}\\right) ^{x}\\left( \\frac{1}{3}\\right) ^{10-x}$$=\\sum _{x=0}^{10}\\,\\,{}_{10}\\mathrm{C}_x\\left( \\frac{20}{3}\\right) ^{x}\\left( \\frac{1}{3}\\right) ^{10-x}$이항정리에 의해 이 식은 $\\left( \\frac{20}{3}+\\frac{1}{3}\\right) ^{10}$과 같으므로 $7^{10}$",
+   "spans": 1
+  },
+  {
+   "id": "6b3dadc1-5839-4c3e-847f-617d56ccfe4b",
+   "code": "HPS0303-QNRB",
+   "field": "solution",
+   "before": "$\\frac{90}{1001}$전체 경우의 수는 $\\mathrm{C}LSUB15_{5}=3003$카드구성이 $\\left( 3,~1,~1\\right)$이어야 하므로$3$장 모두 같은 종류 $\\mathrm{C}LSUB5_{1}=5$나머지 두 종류 선택 $\\mathrm{C}LSUB4_{2}=6$각 숫자가 $3$장씩 있으므로 한 종류에서 $1$장 선택 $\\mathrm{C}LSUB3_{1}=3$종류가 $2$가지이므로 $3\\times 3=9$해당하는 경우의 수는 $5\\times 6\\times 9=270$확률은 $\\frac{270}{3003}=\\frac{90}{1001}$",
+   "after": "$\\frac{90}{1001}$전체 경우의 수는 ${}_{15}\\mathrm{C}_5=3003$카드구성이 $\\left( 3,~1,~1\\right)$이어야 하므로$3$장 모두 같은 종류 ${}_5\\mathrm{C}_1=5$나머지 두 종류 선택 ${}_4\\mathrm{C}_2=6$각 숫자가 $3$장씩 있으므로 한 종류에서 $1$장 선택 ${}_3\\mathrm{C}_1=3$종류가 $2$가지이므로 $3\\times 3=9$해당하는 경우의 수는 $5\\times 6\\times 9=270$확률은 $\\frac{270}{3003}=\\frac{90}{1001}$",
+   "spans": 4
+  },
+  {
+   "id": "94d77bf5-0931-4823-9554-313859fae5f9",
+   "code": "HPS0303-WZNG",
+   "field": "solution",
+   "before": "$\\frac{16}{25}$양의 약수의 개수가 홀수이려면 $f\\left( x\\right) \\times f\\left( f\\left( x\\right) \\right)$는 제곱수여야한다.주어진 조건의 전체 함수의 개수는 $\\mathrm{C}LSUB6_{4}\\times 5\\times 5=375$정해진 $4$개의 원소를 제외한 나머지 $2$개의 원소가 정해진 $4$개의 원소 중 하나에 대응되면 $f\\left( x\\right) \\times f\\left( f\\left( x\\right) \\right)$의 값은 제곱수가 된다.나머지 $2$개의 원소가 대응되는 경우의 수는 $4\\times 4=16$고정된 $4$개의 원소를 뽑는 경우의 수는 $\\mathrm{C}LSUB6_{4}=15$이므로$f\\left( x\\right) \\times f\\left( f\\left( x\\right) \\right)$의 양의 약수의 개수가 홀수인 경우의 수는 $16\\times 15=240$확률을 구하면 $\\frac{240}{375}=\\frac{16}{25}$",
+   "after": "$\\frac{16}{25}$양의 약수의 개수가 홀수이려면 $f\\left( x\\right) \\times f\\left( f\\left( x\\right) \\right)$는 제곱수여야한다.주어진 조건의 전체 함수의 개수는 ${}_6\\mathrm{C}_4\\times 5\\times 5=375$정해진 $4$개의 원소를 제외한 나머지 $2$개의 원소가 정해진 $4$개의 원소 중 하나에 대응되면 $f\\left( x\\right) \\times f\\left( f\\left( x\\right) \\right)$의 값은 제곱수가 된다.나머지 $2$개의 원소가 대응되는 경우의 수는 $4\\times 4=16$고정된 $4$개의 원소를 뽑는 경우의 수는 ${}_6\\mathrm{C}_4=15$이므로$f\\left( x\\right) \\times f\\left( f\\left( x\\right) \\right)$의 양의 약수의 개수가 홀수인 경우의 수는 $16\\times 15=240$확률을 구하면 $\\frac{240}{375}=\\frac{16}{25}$",
+   "spans": 2
+  },
+  {
+   "id": "e6e91f44-480c-4f10-9cab-2c3133e53ddc",
+   "code": "HPS0304-5DN6",
+   "field": "content",
+   "before": "이산확률변수 $X$의 확률질량함수가\n $\\mathrm{P}(\\mathit{X}=x)=CLSUB100_{x}\\,p^{x}\\left( 1-p\\right) ^{100-x}\\,\\,\\,\\,\\,(x=0,\\,\\,1,\\,\\,2,\\,\\,\\,\\cdots \\,,\\,\\,100)$\n일 때, $\\mathrm{E}(\\mathit{X})=20$이다. 이때 $\\sigma (X)$의 값은?\n\n1. $1$\n2. $4$\n3. $8$\n4. $12$\n5. $16$",
+   "after": "이산확률변수 $X$의 확률질량함수가\n $\\mathrm{P}(\\mathit{X}=x)={}_{100}\\mathrm{C}_x\\,p^{x}\\left( 1-p\\right) ^{100-x}\\,\\,\\,\\,\\,(x=0,\\,\\,1,\\,\\,2,\\,\\,\\,\\cdots \\,,\\,\\,100)$\n일 때, $\\mathrm{E}(\\mathit{X})=20$이다. 이때 $\\sigma (X)$의 값은?\n\n1. $1$\n2. $4$\n3. $8$\n4. $12$\n5. $16$",
+   "spans": 1
+  },
+  {
+   "id": "4924c0b2-4d5d-4645-9cb3-a9f5bb79e67c",
+   "code": "HPS0304-6JFM",
+   "field": "content",
+   "before": "$\\sum _{x=0}^{100}\\left( \\frac{1}{8}x^{2}+7\\right) \\mathrm{C}LSUB100_{\\mathit{x}}(0.4)^{x}(0.6)^{100-x}$의 값은?\n\n1. $200$\n2. $210$\n3. $220$\n4. $230$\n5. $240$",
+   "after": "$\\sum _{x=0}^{100}\\left( \\frac{1}{8}x^{2}+7\\right) {}_{100}\\mathrm{C}_x(0.4)^{x}(0.6)^{100-x}$의 값은?\n\n1. $200$\n2. $210$\n3. $220$\n4. $230$\n5. $240$",
+   "spans": 1
+  },
+  {
+   "id": "2c59489f-cdb5-475e-8eab-18e0e0164793",
+   "code": "HPS0304-8AUW",
+   "field": "content",
+   "before": "어느 배구선수의 공격이 성공하는 횟수를 확률변수 $X$라 하면 $n$번 공격했을 때 $k$번 성공할 확률은 $\\mathrm{P}(\\mathit{X}=k)=CLSUBn_{k}\\left( \\frac{1}{2}\\right) ^{n}~(k=0,~1,~2,~\\cdots ,~n)$ 이다. 이때 $\\sum _{k=0}^{n}(k+1)^{2}\\mathrm{P}(\\mathit{X}=k)=126$을 만족하는 $n$의 값은? (단, $n$은 $2$이상의 자연수이다.)\n\n1. $10$\n2. $15$\n3. $20$\n4. $25$\n5. $30$",
+   "after": "어느 배구선수의 공격이 성공하는 횟수를 확률변수 $X$라 하면 $n$번 공격했을 때 $k$번 성공할 확률은 $\\mathrm{P}(\\mathit{X}=k)={}_n\\mathrm{C}_k\\left( \\frac{1}{2}\\right) ^{n}~(k=0,~1,~2,~\\cdots ,~n)$ 이다. 이때 $\\sum _{k=0}^{n}(k+1)^{2}\\mathrm{P}(\\mathit{X}=k)=126$을 만족하는 $n$의 값은? (단, $n$은 $2$이상의 자연수이다.)\n\n1. $10$\n2. $15$\n3. $20$\n4. $25$\n5. $30$",
+   "spans": 1
+  },
+  {
+   "id": "12665a6e-2737-4af7-aa19-9f9c4e478b8f",
+   "code": "HPS0304-A6T8",
+   "field": "content",
+   "before": "자연수 $n$에 대하여 확률변수 $X$가 다음 조건을 만족시킨다.\n(가) $\\mathrm{P}(\\mathit{X}=x)=\\mathrm{LSUB}nC_{\\mathit{x}}\\frac{2^{n}}{2^{x}\\,3^{n}}\\,\\,(x=0,\\,\\,1,\\,2,\\,\\,\\cdots \\,,\\,\\,n)$\n(나) $\\sum _{k=0}^{n}\\,k^{2}\\,\\mathrm{LSUB}nC_{\\mathit{k}}\\frac{2^{n}}{2^{k}\\,3^{n}}-\\left\\{ \\sum _{k=0}^{n}\\,\\,\\mathit{k}\\mathrm{\\,}\\mathrm{LSUB}\\mathit{n}C_{\\mathit{k}}\\frac{2^{n}}{2^{k}\\,3^{n}}\\right\\} ^{2}=16$\n$\\sum _{k=26}^{n}\\,\\mathrm{LSUB}nC\\mathit{_{k}}\\frac{2^{n}}{2^{k}\\,3^{n}}$의 값을 아래쪽 표준정규분포표를 이용하여 구한 것은? (단, $n>26$)\n$z$\n$\\mathrm{P}(0\\leq \\mathit{Z}\\leq z)$\n$0.5$\n$0.1915$\n$1.0$\n$0.3413$\n$1.5$\n$0.4332$\n$2.0$\n$0.4772$\n\n1. $0.1587$\n2. $0.1915$\n3. $0.3085$\n4. $0.4772$\n5. $0.8085$",
+   "after": "자연수 $n$에 대하여 확률변수 $X$가 다음 조건을 만족시킨다.\n(가) $\\mathrm{P}(\\mathit{X}=x)={}_n\\mathrm{C}_x\\frac{2^{n}}{2^{x}\\,3^{n}}\\,\\,(x=0,\\,\\,1,\\,2,\\,\\,\\cdots \\,,\\,\\,n)$\n(나) $\\sum _{k=0}^{n}\\,k^{2}\\,{}_n\\mathrm{C}_k\\frac{2^{n}}{2^{k}\\,3^{n}}-\\left\\{ \\sum _{k=0}^{n}\\,\\,\\mathit{k}\\mathrm{\\,}{}_n\\mathrm{C}_k\\frac{2^{n}}{2^{k}\\,3^{n}}\\right\\} ^{2}=16$\n$\\sum _{k=26}^{n}\\,\\mathrm{LSUB}nC\\mathit{_{k}}\\frac{2^{n}}{2^{k}\\,3^{n}}$의 값을 아래쪽 표준정규분포표를 이용하여 구한 것은? (단, $n>26$)\n$z$\n$\\mathrm{P}(0\\leq \\mathit{Z}\\leq z)$\n$0.5$\n$0.1915$\n$1.0$\n$0.3413$\n$1.5$\n$0.4332$\n$2.0$\n$0.4772$\n\n1. $0.1587$\n2. $0.1915$\n3. $0.3085$\n4. $0.4772$\n5. $0.8085$",
+   "spans": 2
+  },
+  {
+   "id": "b749027a-5d9b-488c-8981-076f9447285a",
+   "code": "HPS0304-B4NQ",
+   "field": "content",
+   "before": "$m=1,\\,2$에 대하여 이산확률변수 $X_{m}$의 확률분포가 $\\mathrm{P}(\\mathit{X}_{m}=i)=\\mathrm{LSUB}18C_{\\mathit{i}}\\left( \\frac{1}{3}\\right) ^{i}\\left( \\frac{2}{3}\\right) ^{18-i},\\,\\,(0\\leq i\\leq 18)$이고 $X=X_{1}-X_{2}$라 할 때, $\\mathrm{E}(\\mathit{X})+\\mathrm{P}(\\mathit{X}_{1}\\leq X_{2}+17)$의 값은?\n(단, 두 사건 $X_{1},X_{2}$가 서로 독립이다.)\n\n1. $1-\\left( \\frac{2}{3}\\right) ^{17}$\n2. $1-\\left( \\frac{2}{3}\\right) ^{18}$\n3. $1-\\left( \\frac{1}{3}\\right) ^{18}$\n4. $1-\\left( \\frac{2}{9}\\right) ^{17}$\n5. $1-\\left( \\frac{2}{9}\\right) ^{18}$",
+   "after": "$m=1,\\,2$에 대하여 이산확률변수 $X_{m}$의 확률분포가 $\\mathrm{P}(\\mathit{X}_{m}=i)={}_{18}\\mathrm{C}_i\\left( \\frac{1}{3}\\right) ^{i}\\left( \\frac{2}{3}\\right) ^{18-i},\\,\\,(0\\leq i\\leq 18)$이고 $X=X_{1}-X_{2}$라 할 때, $\\mathrm{E}(\\mathit{X})+\\mathrm{P}(\\mathit{X}_{1}\\leq X_{2}+17)$의 값은?\n(단, 두 사건 $X_{1},X_{2}$가 서로 독립이다.)\n\n1. $1-\\left( \\frac{2}{3}\\right) ^{17}$\n2. $1-\\left( \\frac{2}{3}\\right) ^{18}$\n3. $1-\\left( \\frac{1}{3}\\right) ^{18}$\n4. $1-\\left( \\frac{2}{9}\\right) ^{17}$\n5. $1-\\left( \\frac{2}{9}\\right) ^{18}$",
+   "spans": 1
+  },
+  {
+   "id": "f663c93f-6ef5-42f6-b5e4-c3e14a785a25",
+   "code": "HPS0304-FESP",
+   "field": "solution",
+   "before": "$242$$\\mathrm{E}\\left( \\mathit{X}\\mathrm{\\right) }=\\mathit{np}=\\frac{121}{3}$$\\mathrm{P}\\mathit{\\left( }X=1\\right) =CLSUBn_{1}p\\left( 1-p\\right) ^{n-1}=np\\left( 1-p\\right) ^{n-1}$$\\mathrm{P}\\mathit{\\left( }X=2\\right) =CLSUBn_{2}p^{2}\\left( 1-p\\right) ^{n-2}=\\frac{n\\left( n-1\\right)}{2}p^{2}\\left( 1-p\\right) ^{n-2}$$\\frac{n\\left( n-1\\right)}{2}p^{2}\\left( 1-p\\right) ^{n-2}=30np\\left( 1-p\\right) ^{n-1}$$\\frac{\\left( n-1\\right) p}{2\\left( 1-p\\right)}=30\\,$, $np-p=60-60p$, $\\frac{121}{3}=np=60-59p$$59p=\\frac{59}{3}$, $p=\\frac{1}{3}$따라서 $n=121$ $\\mathrm{V}\\left( \\mathit{X}\\right) =np\\left( 1-p\\right) =\\frac{121}{3}\\times \\frac{2}{3}=\\frac{242}{9}$$\\mathrm{V}\\left( 3\\mathit{X}+10\\right) =9\\mathrm{V}\\left( \\mathit{X}\\right) =9\\times \\frac{242}{9}=242$",
+   "after": "$242$$\\mathrm{E}\\left( \\mathit{X}\\mathrm{\\right) }=\\mathit{np}=\\frac{121}{3}$$\\mathrm{P}\\mathit{\\left( }X=1\\right) ={}_n\\mathrm{C}_1p\\left( 1-p\\right) ^{n-1}=np\\left( 1-p\\right) ^{n-1}$$\\mathrm{P}\\mathit{\\left( }X=2\\right) ={}_n\\mathrm{C}_2p^{2}\\left( 1-p\\right) ^{n-2}=\\frac{n\\left( n-1\\right)}{2}p^{2}\\left( 1-p\\right) ^{n-2}$$\\frac{n\\left( n-1\\right)}{2}p^{2}\\left( 1-p\\right) ^{n-2}=30np\\left( 1-p\\right) ^{n-1}$$\\frac{\\left( n-1\\right) p}{2\\left( 1-p\\right)}=30\\,$, $np-p=60-60p$, $\\frac{121}{3}=np=60-59p$$59p=\\frac{59}{3}$, $p=\\frac{1}{3}$따라서 $n=121$ $\\mathrm{V}\\left( \\mathit{X}\\right) =np\\left( 1-p\\right) =\\frac{121}{3}\\times \\frac{2}{3}=\\frac{242}{9}$$\\mathrm{V}\\left( 3\\mathit{X}+10\\right) =9\\mathrm{V}\\left( \\mathit{X}\\right) =9\\times \\frac{242}{9}=242$",
+   "spans": 2
+  },
+  {
+   "id": "964aed68-345a-4e9b-bdcd-856049df1ec9",
+   "code": "HPS0304-JLEZ",
+   "field": "solution",
+   "before": "$(1)$ 풀이참고  $(2)~3$($1$) $\\frac{\\mathrm{P}(\\mathit{X}=3)}{\\mathrm{P}(\\mathit{X}=1)}=\\frac{\\mathrm{LSUB}4C_{3}\\mathit{p}^{3}(1-p)}{\\mathrm{LSUB}4C_{1}\\mathit{p}(1-p)^{3}}=\\frac{p^{2}}{(1-p)^{2}}=\\frac{1}{4}$이므로 $\\frac{p}{1-p}=\\frac{1}{2}$, 즉 $p=\\frac{1}{3}$이다.$\\mathrm{P}(\\mathit{X}=r)=\\mathrm{LSUB}4C_{\\mathit{r}}\\left( \\frac{1}{3}\\right) ^{r}\\left( \\frac{2}{3}\\right) ^{4-r}~(r=0,~1,~2,~3,~4)$($2$) $\\frac{\\mathrm{P}(\\mathit{X}=2)}{\\mathrm{P}(\\mathit{X}=3)}=\\mathrm{LSUB}4C_{2}\\left( \\frac{1}{3}\\right) ^{2}\\left( \\frac{2}{3}\\right) ^{2}\\frac{\\mathit{}}{\\mathrm{LSUB}4C_{3}\\mathit{\\left( }\\frac{1}{3}\\right) ^{3}\\left( \\frac{2}{3}\\right)}=\\frac{6\\times \\left( \\frac{2}{3}\\right)}{4\\times \\left( \\frac{1}{3}\\right)}=\\frac{12}{4}=3$이다.",
+   "after": "$(1)$ 풀이참고  $(2)~3$($1$) $\\frac{\\mathrm{P}(\\mathit{X}=3)}{\\mathrm{P}(\\mathit{X}=1)}=\\frac{{}_4\\mathrm{C}_3\\mathit{p}^{3}(1-p)}{{}_4\\mathrm{C}_1\\mathit{p}(1-p)^{3}}=\\frac{p^{2}}{(1-p)^{2}}=\\frac{1}{4}$이므로 $\\frac{p}{1-p}=\\frac{1}{2}$, 즉 $p=\\frac{1}{3}$이다.$\\mathrm{P}(\\mathit{X}=r)={}_4\\mathrm{C}_r\\left( \\frac{1}{3}\\right) ^{r}\\left( \\frac{2}{3}\\right) ^{4-r}~(r=0,~1,~2,~3,~4)$($2$) $\\frac{\\mathrm{P}(\\mathit{X}=2)}{\\mathrm{P}(\\mathit{X}=3)}={}_4\\mathrm{C}_2\\left( \\frac{1}{3}\\right) ^{2}\\left( \\frac{2}{3}\\right) ^{2}\\frac{\\mathit{}}{{}_4\\mathrm{C}_3\\mathit{\\left( }\\frac{1}{3}\\right) ^{3}\\left( \\frac{2}{3}\\right)}=\\frac{6\\times \\left( \\frac{2}{3}\\right)}{4\\times \\left( \\frac{1}{3}\\right)}=\\frac{12}{4}=3$이다.",
+   "spans": 3
+  },
+  {
+   "id": "ba5d3df7-4819-4b11-a293-969cd741e35c",
+   "code": "HPS0304-K25Z",
+   "field": "solution",
+   "before": "$\\left( 1\\right)$ $18$ $\\left( 2\\right)$ $0.9282$⑴ $\\mathrm{\\left| }\\frac{\\mathit{X}}{180}-\\frac{1}{6}\\right| \\leq 0.05\\,$는    $-9\\leq X-30\\leq 9,~21\\leq X\\leq 39$   $\\mathrm{P}\\mathit{\\left( }21\\leq X\\leq 39\\right) =\\sum _{r=21}^{39}CLSUB180_{r}\\left( \\frac{1}{6}\\right) ^{r}\\left( \\frac{5}{6}\\right) ^{180-r}$가 되어   $k=21,~l=39$따라서 $l-k=39-21=18$⑵ $\\left. \\mathrm{E}(\\mathit{X}\\right) =180\\times \\frac{1}{6}=30,~\\mathrm{V}\\left( \\mathit{X}\\right) =180\\times \\frac{1}{6}\\times \\frac{5}{6}=25=5^{2}$   $XSIM\\mathrm{N}\\left( 30,~5^{2}\\right)$   $\\mathrm{P}\\mathit{\\left( }21\\leq X\\leq 39\\right) =\\mathrm{P}\\mathit{\\left( }\\frac{21-30}{5}\\leq Z\\leq \\frac{39-30}{5}\\right)$             $=\\mathrm{P}\\left( -1.8\\leq \\mathit{Z}\\leq 1.8\\right) =2\\times \\mathrm{P}\\left( 0\\leq \\mathit{Z}\\leq 1.8\\right)$             $=2\\times 0.4641=0.9282$",
+   "after": "$\\left( 1\\right)$ $18$ $\\left( 2\\right)$ $0.9282$⑴ $\\mathrm{\\left| }\\frac{\\mathit{X}}{180}-\\frac{1}{6}\\right| \\leq 0.05\\,$는    $-9\\leq X-30\\leq 9,~21\\leq X\\leq 39$   $\\mathrm{P}\\mathit{\\left( }21\\leq X\\leq 39\\right) =\\sum _{r=21}^{39}{}_{180}\\mathrm{C}_r\\left( \\frac{1}{6}\\right) ^{r}\\left( \\frac{5}{6}\\right) ^{180-r}$가 되어   $k=21,~l=39$따라서 $l-k=39-21=18$⑵ $\\left. \\mathrm{E}(\\mathit{X}\\right) =180\\times \\frac{1}{6}=30,~\\mathrm{V}\\left( \\mathit{X}\\right) =180\\times \\frac{1}{6}\\times \\frac{5}{6}=25=5^{2}$   $XSIM\\mathrm{N}\\left( 30,~5^{2}\\right)$   $\\mathrm{P}\\mathit{\\left( }21\\leq X\\leq 39\\right) =\\mathrm{P}\\mathit{\\left( }\\frac{21-30}{5}\\leq Z\\leq \\frac{39-30}{5}\\right)$             $=\\mathrm{P}\\left( -1.8\\leq \\mathit{Z}\\leq 1.8\\right) =2\\times \\mathrm{P}\\left( 0\\leq \\mathit{Z}\\leq 1.8\\right)$             $=2\\times 0.4641=0.9282$",
+   "spans": 1
+  },
+  {
+   "id": "7853f14c-42c5-4257-aa62-49c95e2754b6",
+   "code": "HPS0304-N2BR",
+   "field": "solution",
+   "before": "$\\frac{256}{729}$실제로 투숙하는 예약자 수를 확률변수 $X$라고 하면,$X$는 $\\mathrm{B}(6,~\\frac{2}{3})$를 따른다.$\\mathrm{P}(\\mathit{X}=5)+\\mathrm{P}(\\mathit{X}=6)=\\mathrm{C}LSUB6_{5}\\left( \\frac{2}{3}\\right) ^{5}\\left( \\frac{1}{3}\\right) +\\mathrm{LSUB}6C_{6}\\left( \\frac{2}{3}\\right) ^{6}=\\frac{256}{729}$",
+   "after": "$\\frac{256}{729}$실제로 투숙하는 예약자 수를 확률변수 $X$라고 하면,$X$는 $\\mathrm{B}(6,~\\frac{2}{3})$를 따른다.$\\mathrm{P}(\\mathit{X}=5)+\\mathrm{P}(\\mathit{X}=6)={}_6\\mathrm{C}_5\\left( \\frac{2}{3}\\right) ^{5}\\left( \\frac{1}{3}\\right) +{}_6\\mathrm{C}_6\\left( \\frac{2}{3}\\right) ^{6}=\\frac{256}{729}$",
+   "spans": 1
+  },
+  {
+   "id": "40026161-2852-44d8-880f-c279d9b01c4e",
+   "code": "HPS0304-WN5A",
+   "field": "content",
+   "before": "확률변수 $X$의 확률질량함수가\n$\\mathrm{P}(\\mathit{X}=x)=\\mathrm{LSUB}150C_{\\mathit{\\,}x}\\times \\left( \\frac{2}{5}\\right) ^{x}\\times \\left( \\frac{3}{5}\\right) ^{150}-x$,($x=0,1,2,…,150$)일 때,\n$\\mathrm{P}(54\\leq \\mathit{x}\\leq 72)$의 값을 구하면?\n$z$\n$\\mathrm{P}(0\\leq \\mathit{Z}\\leq z)$\n$0.5$\n$0.20$\n$1.0$\n$0.35$\n$1.5$\n$0.43$\n$2.0$\n$0.48$\n\n1. $0.43$\n2. $0.48$\n3. $0.55$\n4. $0.78$\n5. $0.83$",
+   "after": "확률변수 $X$의 확률질량함수가\n$\\mathrm{P}(\\mathit{X}=x)={}_{150}\\mathrm{C}_x\\times \\left( \\frac{2}{5}\\right) ^{x}\\times \\left( \\frac{3}{5}\\right) ^{150}-x$,($x=0,1,2,…,150$)일 때,\n$\\mathrm{P}(54\\leq \\mathit{x}\\leq 72)$의 값을 구하면?\n$z$\n$\\mathrm{P}(0\\leq \\mathit{Z}\\leq z)$\n$0.5$\n$0.20$\n$1.0$\n$0.35$\n$1.5$\n$0.43$\n$2.0$\n$0.48$\n\n1. $0.43$\n2. $0.48$\n3. $0.55$\n4. $0.78$\n5. $0.83$",
+   "spans": 1
+  },
+  {
+   "id": "e2bea564-e7be-4d09-80da-eb9404150caf",
+   "code": "HPS0305-DWKL",
+   "field": "content",
+   "before": "$\\sum _{k=308}^{324}\\mathrm{C}_{k}LSUB400\\left( \\frac{4}{5}\\right) ^{k}\\left( \\frac{1}{5}\\right) ^{400}-k$의 값을 아래 표준정규분포표를 이용하여 구하고 그 과정을 서술하시오.\n$z$\n$\\mathrm{P}(0\\leq \\mathit{Z}\\leq z)$\n$0.5$\n$0.1915$\n$1.0$\n$0.3413$\n$1.5$\n$0.4332$\n$2.0$\n$0.4772$",
+   "after": "$\\sum _{k=308}^{324}{}_{400}\\mathrm{C}_k\\left( \\frac{4}{5}\\right) ^{k}\\left( \\frac{1}{5}\\right) ^{400}-k$의 값을 아래 표준정규분포표를 이용하여 구하고 그 과정을 서술하시오.\n$z$\n$\\mathrm{P}(0\\leq \\mathit{Z}\\leq z)$\n$0.5$\n$0.1915$\n$1.0$\n$0.3413$\n$1.5$\n$0.4332$\n$2.0$\n$0.4772$",
+   "spans": 1
+  }
+ ]
+}

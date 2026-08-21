@@ -191,6 +191,30 @@ async function main() {
   );
   dump("라벨 명령 안 (참고 — 잔재 아님)", labelRun, 15);
 
+  /**
+   * 🔴 **라벨 명령 안에 숨은 정본 키워드** — 세지는 않고 **보여만 준다.**
+   *
+   * `\mathrm{}` 안은 점 라벨로 보고 잔재에서 빼는데, 거기 `\mathrm{SMALLPROD}`·
+   * `\mathrm{LEFT}` 처럼 **진짜 키워드**가 들어앉는 일이 있다. 실측으로 `LSUB` 가
+   * 그랬다 — 정본 어휘에도 없고 라벨 안에도 들어가 **두 겹으로** 안 보였다.
+   *
+   * 그렇다고 세면 안 된다. 같은 자리에 `OF`(점 O·F)·`experience` 같은 **진짜
+   * 라벨**이 섞여 있어 거짓 경보가 난다 — 거짓 경보는 침묵하는 가드보다 나쁘다
+   * (다음 사람이 가드를 끈다, CLAUDE.md 2026-08-20).
+   *
+   * 그래서 **분류하지 않고 전량 늘어놓는다.** 눈으로 보라고 있는 목록이다.
+   */
+  const hidden = [...labelRun.entries()]
+    .filter(([run]) => isCanonicalHwpToken(run) || blockingKeyword(run))
+    .sort((a, b) => b[1].count - a[1].count);
+  console.log(
+    `\n── 🔴 라벨 명령 **안**인데 정본 키워드다 — 세지 않는다, 눈으로 보라 (${hidden.length}종) ──`,
+  );
+  for (const [run, b] of hidden)
+    console.log(
+      `  ${run.padEnd(22)} ${String(b.count).padStart(6)}  행 ${b.rows.size}`,
+    );
+
   // `le`/`ge` 후보는 **전량**을 낸다. 표본이 아니라 전량이라야 눈으로 다 볼 수 있다.
   const LEGE = /^(?:[A-Za-z]{0,2}(?:le|ge))+[A-Za-z]{0,2}$/;
   const legeAll = [...unknownRun.entries()]
