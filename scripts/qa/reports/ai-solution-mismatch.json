@@ -1,0 +1,20 @@
+[
+ {
+  "id": "de63fc43-bd13-49fa-bbef-d1d7c58f9190",
+  "code": "J20101-8CB9",
+  "dbAnswer": "1231",
+  "aiAnswer": "1106"
+ },
+ {
+  "id": "6a75d374-5178-45ba-bd87-26095139d881",
+  "code": "J20101-UCVS",
+  "dbAnswer": "소인수가 $2$와 $5$뿐",
+  "aiAnswer": "분모의 소인수가 $2$ 또는 $5$뿐이다"
+ },
+ {
+  "id": "c1669e79-0a43-45a0-b5c3-e5aa63f4c16e",
+  "code": "HAL0101-D3K3",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ }
+]

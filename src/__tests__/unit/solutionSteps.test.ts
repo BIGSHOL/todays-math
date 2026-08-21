@@ -56,6 +56,17 @@ describe("splitSolutionSteps — 해설 줄 나누기", () => {
     expect(steps).toEqual(["반지름은 $2.5$이다.", "넓이를 구하면 $6.25\\pi$"]);
   });
 
+  it("진짜 개행이 있으면 개행에서 가른다 — 생성 해설(2026-08-22)", () => {
+    const steps = splitSolutionSteps(
+      "분모를 통분한다.\n$x=\\frac{1}{2}$\n따라서 답은 $3$",
+    );
+    expect(steps).toEqual([
+      "분모를 통분한다.",
+      "$x=\\frac{1}{2}$",
+      "따라서 답은 $3$",
+    ]);
+  });
+
   it("가를 자리가 없으면 통째로 한 줄", () => {
     const s = "둘레는 $3+3+6+6 = 18$";
     expect(splitSolutionSteps(s)).toEqual([s]);

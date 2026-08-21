@@ -33,6 +33,11 @@ export function splitSolutionSteps(text: string): string[] {
       continue;
     }
     if (inMath) continue;
+    // 진짜 개행(새로 생성되는 해설이 쓴다)은 그대로 줄 경계다
+    if (ch === "\n") {
+      cuts.push(i);
+      continue;
+    }
     if (MARKER.test(t.slice(i)) && i > 0) cuts.push(i);
     // 한글 문장 끝: 한글 + '.' 뒤에 내용이 더 있을 때
     if (ch === "." && /[가-힣]/.test(t[i - 1] ?? "") && i < t.length - 1)
