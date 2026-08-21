@@ -994,5 +994,41 @@
   "code": "J30303-88PX",
   "dbAnswer": "3/2",
   "aiAnswer": "x=\\frac{3}{2}"
+ },
+ {
+  "id": "f88af9d1-3bc0-48a5-bb61-9f2fdfb173dd",
+  "code": "J30303-H7TB",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "6e4872b0-7608-4a22-ad63-d79a30d98fb6",
+  "code": "J30303-HDA9",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "e97585eb-e245-4c66-be51-4c98bdda5a40",
+  "code": "J30303-HQES",
+  "dbAnswer": "⑴ x(x+14)=207 (x²+14x-207=0) ⑵ x=9 — 윤희 7월 9일, 연주 7월 23일",
+  "aiAnswer": "⑴ $x^2+14x-207=0$ ⑵ 윤희: 7월 9일, 연주: 7월 23일"
+ },
+ {
+  "id": "e18ff479-9eec-4912-b617-ecc222922765",
+  "code": "J30303-RPW6",
+  "dbAnswer": "6",
+  "aiAnswer": "처음 원의 반지름의 길이는 $6$"
+ },
+ {
+  "id": "6e423b2b-97c6-41f2-964c-8316b08526ef",
+  "code": "J30303-S37Z",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "e2d12b64-939f-4dd2-8382-1a17332bf2eb",
+  "code": "J30303-XG82",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
  }
 ]
