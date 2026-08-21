@@ -1084,5 +1084,59 @@
   "code": "J30401-ZFS4",
   "dbAnswer": "④",
   "aiAnswer": "②"
+ },
+ {
+  "id": "968d695f-50c9-485c-8dd3-c24af5fffef8",
+  "code": "J30402-D8HJ",
+  "dbAnswer": "꼭짓점 (2, -7), 축의 방정식 x=2",
+  "aiAnswer": "꼭짓점의 좌표: $(2, -7)$, 축의 방정식: $x=2$"
+ },
+ {
+  "id": "365a2db8-0bfc-4ece-b217-05fb27fc839c",
+  "code": "J30402-FTS7",
+  "dbAnswer": "꼭짓점 (0, -7), 축의 방정식 x=0",
+  "aiAnswer": "꼭짓점의 좌표: $(0, -7)$, 축의 방정식: $x=0$"
+ },
+ {
+  "id": "29e01024-0706-4227-b447-1540b8525397",
+  "code": "J30402-HWRF",
+  "dbAnswer": "꼭짓점 (4, 0), 축의 방정식 x=4",
+  "aiAnswer": "꼭짓점의 좌표: $(4, 0)$, 축의 방정식: $x=4$"
+ },
+ {
+  "id": "bd657f8b-9956-462f-b22e-9f935692c77d",
+  "code": "J30402-P9KS",
+  "dbAnswer": "꼭짓점 (0, 4), 축의 방정식 x=0",
+  "aiAnswer": "꼭짓점의 좌표: $(0, 4)$, 축의 방정식: $x=0$"
+ },
+ {
+  "id": "19d4a7c2-e27c-41cc-a16f-00c00ded9ae2",
+  "code": "J30402-WFRN",
+  "dbAnswer": "꼭짓점 (-1, 0), 축의 방정식 x=-1",
+  "aiAnswer": "(-1, 0), x=-1"
+ },
+ {
+  "id": "0ec691c7-b8c0-4755-b3c9-9e65457b985d",
+  "code": "J30402-ZS2E",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "cc07c59e-7b7b-4a2e-85d3-6b52d9e8b578",
+  "code": "J30403-2HHL",
+  "dbAnswer": "A(-1, 0), B(5, 0), C(0, 5), △ABC의 넓이 15",
+  "aiAnswer": "\\mathrm{A}(-1, 0), \\mathrm{B}(5, 0), \\mathrm{C}(0, 5), 넓이: 15"
+ },
+ {
+  "id": "c776db07-e67b-4be8-9d34-3824634080ec",
+  "code": "J30403-HHX5",
+  "dbAnswer": "m=1 또는 m=5",
+  "aiAnswer": "$1, 5$"
+ },
+ {
+  "id": "d6dc67f6-7209-4dba-b991-bff0d955bada",
+  "code": "J30403-VJLS",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
  }
 ]
