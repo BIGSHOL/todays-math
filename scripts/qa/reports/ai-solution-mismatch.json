@@ -22,5 +22,23 @@
   "code": "HAL0101-NDFL",
   "dbAnswer": "③",
   "aiAnswer": "①"
+ },
+ {
+  "id": "827a63ba-5de9-425b-87f1-779d09412fa6",
+  "code": "HAL0103-V28L",
+  "dbAnswer": "①",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "49694bf9-d0b3-4eab-82e1-7042960ac9b8",
+  "code": "HAL0106-6EZE",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "d4fbf290-e630-47bd-b2db-6565f23fb51c",
+  "code": "HAL0106-74NY",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
  }
 ]

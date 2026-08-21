@@ -55,7 +55,11 @@ function normalizeAnswer(s: string): string {
     .replace(/\\pi/g, "π")
     .replace(/\\degree|°/g, "")
     .replace(/[{}\s]/g, "")
-    .replace(/,$/, "");
+    .replace(/,$/, "")
+    // 숫자 바로 뒤 개수 단위 — DB 는 "45개"처럼 단위를 남기고, 프롬프트는
+    // finalAnswer 에 "값 자체"만 요구해 AI 는 "45"만 준다. 서술형 문장
+    // 답(예: "소인수가 2와 5뿐")은 숫자로 안 끝나 이 규칙에 안 걸린다.
+    .replace(/(\d)(개|가지)$/, "$1");
   return t;
 }
 
