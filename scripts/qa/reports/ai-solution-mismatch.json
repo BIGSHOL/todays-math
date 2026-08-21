@@ -604,5 +604,17 @@
   "code": "J20402-KWSW",
   "dbAnswer": "③",
   "aiAnswer": "⑤"
+ },
+ {
+  "id": "58223086-525d-4fa6-b807-bc1a5e8b49cb",
+  "code": "J20402-RTPS",
+  "dbAnswer": "y = -(1/2)x + 3, 넓이 9",
+  "aiAnswer": "$y=-\\frac{1}{2}x+3$, 넓이 $9$"
+ },
+ {
+  "id": "c303d56f-71a2-42f2-a7e1-814fb34455cc",
+  "code": "J20402-T79Y",
+  "dbAnswer": "①",
+  "aiAnswer": "⑤"
  }
 ]
