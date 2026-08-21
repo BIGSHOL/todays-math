@@ -27,6 +27,12 @@ import { getCurrentProgress } from "@/lib/progressResolver";
 const LEDGER_DIR = join(process.cwd(), "scripts", "sync", "ledgers");
 const OUT_DIR = join(process.cwd(), "src", "app", "dev", "eywa-daily-wire");
 const DAY = process.argv[2] ?? "2026-08-10";
+/**
+ * 첫 회 범위 정책 (원장님 확정 2026-08-21): 직전 확인테스트가 없으면 **현재
+ * 대단원 처음~현재**. "chapter" 를 세 번째 인자로 주면 그 정책으로 계산한다
+ * (Hi-fi 시안용 — 제품 반영은 별도 TDD 트랙).
+ */
+const FIRST_RUN = process.argv[3] ?? "history";
 
 async function main() {
   const prisma = new PrismaClient();
@@ -228,13 +234,31 @@ async function main() {
       useIndividualProgress: st.useIndividualProgress,
     });
     if (!current) continue;
-    const range = resolveDefaultReviewRange({
+    let range = resolveDefaultReviewRange({
       units,
       currentUnitId: current.unitId,
       lastReviewEndUnitId: null,
       progressUnitIds: rows.map((r) => r.unitId),
     });
     if (!range) continue;
+    if (FIRST_RUN === "chapter") {
+      // 첫 회 = 현재 대단원 처음~현재 (원장님 확정). 직전 시험이 생기면
+      // resolveDefaultReviewRange 의 확정 규칙이 그대로 이어받는다.
+      const cu = unitById.get(current.unitId)!;
+      let chStart = cu;
+      for (const u of units)
+        if (
+          u.grade === cu.grade &&
+          u.chapter === cu.chapter &&
+          u.orderIndex < chStart.orderIndex
+        )
+          chStart = u;
+      range = {
+        startUnitId: chStart.id,
+        endUnitId: cu.id,
+        startedFrom: "progress-start",
+      };
+    }
     const key = `${range.startUnitId}~${range.endUnitId}`;
     const g = groups.get(key) ?? {
       key,
@@ -313,7 +337,10 @@ async function main() {
 
   mkdirSync(OUT_DIR, { recursive: true });
   writeFileSync(
-    join(OUT_DIR, `data-${DAY}.json`),
+    join(
+      OUT_DIR,
+      FIRST_RUN === "chapter" ? `data-chapter-${DAY}.json` : `data-${DAY}.json`,
+    ),
     JSON.stringify(summary, null, 1),
   );
 
