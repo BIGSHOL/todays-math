@@ -598,5 +598,11 @@
   "code": "J20402-4SWT",
   "dbAnswer": "0",
   "aiAnswer": "$a+b=0$"
+ },
+ {
+  "id": "9fc7b816-7832-41f4-aa7d-44f55522407a",
+  "code": "J20402-KWSW",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
  }
 ]
