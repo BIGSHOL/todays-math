@@ -2092,5 +2092,23 @@
   "code": "HPS0202-6J48",
   "dbAnswer": "③",
   "aiAnswer": "②"
+ },
+ {
+  "id": "21596f85-7dfa-4f0c-a7ec-92f813580950",
+  "code": "HPS0203-GYTD",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "62520600-cb7c-4384-90d5-e3aaac421f26",
+  "code": "HPS0203-JYWS",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "79c925cb-2d66-4a3c-8f2c-4cfd2bcaedfd",
+  "code": "HPS0204-ASBC",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
  }
 ]
