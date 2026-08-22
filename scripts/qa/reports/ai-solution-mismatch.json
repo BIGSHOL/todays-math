@@ -1546,5 +1546,29 @@
   "code": "HC20118-JZB2",
   "dbAnswer": "(1, 18), (1, -2), (-1, 20), (-1, 0)",
   "aiAnswer": "$(a,b)=(1,18),\\,(1,-2),\\,(-1,20),\\,(-1,0)$"
+ },
+ {
+  "id": "61955f09-16bd-4000-8256-21cc2337de16",
+  "code": "HC20120-9HYW",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "01e89ecf-c69d-45d1-8d18-21cd1e40b87d",
+  "code": "HC20120-MA2P",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "82a5b122-f9c2-4f60-a172-d28857c976d5",
+  "code": "HC20203-YN8L",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "3f0e99bb-fcdb-4b12-bddd-9119a8e1e22c",
+  "code": "HC20206-EBW7",
+  "dbAnswer": "⑴A={2,5},B={2,3,5,7,11,13},합7 ⑵M×m=527",
+  "aiAnswer": "⑴ 7 ⑵ M×m = 612"
  }
 ]
