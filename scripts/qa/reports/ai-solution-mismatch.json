@@ -1720,5 +1720,17 @@
   "code": "HAL0203-3PE2",
   "dbAnswer": "⑤",
   "aiAnswer": "①"
+ },
+ {
+  "id": "42640651-9703-42d3-8926-f1e1eaf40821",
+  "code": "HAL0204-DDTX",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "5127e448-396c-45f1-9ebc-b053353103ba",
+  "code": "HAL0204-TEVA",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
  }
 ]
