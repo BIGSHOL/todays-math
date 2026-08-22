@@ -1894,5 +1894,53 @@
   "code": "HM10207-MLPB",
   "dbAnswer": "③",
   "aiAnswer": "④"
+ },
+ {
+  "id": "d3a12149-4dfc-4977-84d0-a1bcbd7884e5",
+  "code": "HM10208-D6BB",
+  "dbAnswer": "x축",
+  "aiAnswer": "x"
+ },
+ {
+  "id": "2e3949d7-03e2-4a7e-bd11-d1c656a7b0b7",
+  "code": "HM10208-HGDU",
+  "dbAnswer": "a=-3, b≠-2",
+  "aiAnswer": "$a=-3, b \\neq -2$"
+ },
+ {
+  "id": "b5193830-2037-4818-a4a9-de33a4a26b19",
+  "code": "HM10208-RGSX",
+  "dbAnswer": "y=3x²와 y=-3x²",
+  "aiAnswer": "$y=3x^{2}, y=-3x^{2}$"
+ },
+ {
+  "id": "0cfe2805-cb32-4755-ba9b-f3c6b5b77270",
+  "code": "HM10209-6647",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "7034fcac-dcb2-4e69-b84d-299060a68915",
+  "code": "HM10209-FSUG",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "8b74e651-765b-4cb3-a1b9-a960d183eef5",
+  "code": "HM10209-LFQ4",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "cd749e9d-2a28-4c15-8373-f82ec527f5eb",
+  "code": "HM10209-MPFA",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "e269a4d9-058f-4908-b0c1-4889dc512931",
+  "code": "HM10209-PR3M",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
  }
 ]
