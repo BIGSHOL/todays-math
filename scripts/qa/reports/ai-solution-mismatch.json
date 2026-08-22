@@ -1270,5 +1270,59 @@
   "code": "HC10211-F9Y2",
   "dbAnswer": "⑴ a = 5/2, b = 1, ⑵ 0",
   "aiAnswer": "⑴ $a=\\frac{5}{2}$, $b=1$ ⑵ 최솟값 $0$"
+ },
+ {
+  "id": "d146aa6b-118d-477b-a683-922f75a3a421",
+  "code": "HC10211-YXBB",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "2fde3df4-2428-4a82-934b-7332c6046cc2",
+  "code": "HC10211-ZFJ7",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "d01638d5-452b-4de5-b598-f13295154e22",
+  "code": "HC10211-ZTKN",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "4e041f76-0b36-4eb5-af42-9e1397ef7d10",
+  "code": "HC10212-X8TN",
+  "dbAnswer": "⑴ f(x) = a(x+3)(x-1), ⑵ 꼭짓점 x좌표 -1, a = 1, ⑶ -3",
+  "aiAnswer": "(1) $f(x)=(x+1)^2-4$ (2) 꼭짓점 $x$좌표는 $-1$, $a=1$ (3) $f(-2)=-3$"
+ },
+ {
+  "id": "e0c4f6f5-1c66-429a-a98e-38cd7bcaa386",
+  "code": "HC10214-JU3F",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "999dda22-d646-4a99-8329-15a7cdb26102",
+  "code": "HC10214-P8AD",
+  "dbAnswer": "a=-3, 나머지 두 근 1+i, 1-i",
+  "aiAnswer": "$a=-3$, 나머지 두 근은 $x=1+i$, $x=1-i$"
+ },
+ {
+  "id": "8affd201-bc64-4568-b9f5-e3969e52f5e3",
+  "code": "HC10214-QSD9",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "222f8d97-8f41-44e5-af1e-79d3c860ab48",
+  "code": "HC10214-TLU6",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "a7dfd0f8-37d9-40af-ae71-36eaf563db59",
+  "code": "HC10219-3NQC",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
  }
 ]
