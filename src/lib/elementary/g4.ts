@@ -1114,13 +1114,62 @@ function barGraph(unit: UnitSeed, rng: Rng): ElemProblem {
   }
 
   if (c === "1-5-3") {
-    if (intBetween(rng, 0, 1) === 0) {
+    const kind = intBetween(rng, 0, 2);
+    if (kind === 0) {
       return make(
         unit,
         `${intro} 학생 수가 가장 많은 ${theme.item}과 가장 적은 ${theme.item}의 학생 수의 차는 몇 명인가?`,
         `${n(max - min)}명`,
         `가장 많은 것은 ${josa(top, "으로", "로")} ${n(max)}명, 가장 적은 것은 ` +
           `${josa(bottom, "으로", "로")} ${n(min)}명입니다. ${expr(`${max}-${min}=${max - min}`)}`,
+        figure,
+      );
+    }
+    if (kind === 1) {
+      // 원장님 예시(동아 「실력」): 「학생 수가 $1$반보다 많고 $5$반보다 적은 반을 모두 찾아
+      // 써 보세요.」 기준 **둘**을 읽고 나머지 전부와 범위를 견주어 **답이 여럿**인 부류다 —
+      // 지금까지의 값 읽기·순위·차·합·눈금 어디에도 없다.
+      //
+      // ⚠️ 기준 쌍을 아무렇게나 뽑으면 **답이 「없음」**이 된다. 값 넷은 서로 다르므로
+      // (`barSplits` 의 나눔 조건) 오름차순 `v1<v2<v3<v4` 에서 «사이에 드는 것»이 있는 쌍은
+      // **정확히 셋뿐**이다:
+      //     (v1,v4) → {v2,v3} **둘**  ·  (v1,v3) → {v2} 하나  ·  (v2,v4) → {v3} 하나
+      // 나머지 셋((v1,v2)·(v2,v3)·(v3,v4))은 **반드시 0개**다. 그래서 뽑고 나서 거르지 않고
+      // **고를 때부터 이 셋에서만** 뽑는다 — 뽑고 거르면 「없음」이 새어 나갈 길이 남고,
+      // 가드가 걸릴 값을 생성기가 만들면 그건 가드가 아니라 사고다.
+      //
+      // ⚠️ 값이 넷뿐이라 **답이 둘인 경우는 기준이 반드시 최소·최대**가 된다(그때 답은
+      // 「나머지 둘」이다). 「범위 밖이라 빠지는 항목」의 맛은 답이 하나인 두 쌍에만 있다.
+      // 둘 다 나오게 섞는 까닭이 이것이다 — 한쪽만 쓰면 유형이 반쪽이 된다.
+      const asc = [...values].sort((x, y) => x.value - y.value);
+      const [loAt, hiAt] = pick(rng, [
+        [0, 3],
+        [0, 2],
+        [1, 3],
+      ] as const);
+      const lo = asc[loAt]!;
+      const hi = asc[hiAt]!;
+      // 답은 **지면 순서**(왼쪽부터)로 적는다 — `values` 가 곧 지면 차례다. 채점이 갈리면 안 된다.
+      const inRange = values.filter(
+        (v) => v.value > lo.value && v.value < hi.value,
+      );
+      const steps = values
+        .filter((v) => v !== lo && v !== hi)
+        .map((v) =>
+          v.value > lo.value && v.value < hi.value
+            ? `${josa(v.label, "은", "는")} ${n(v.value)}명으로 ${n(lo.value)}명보다 많고 ${n(hi.value)}명보다 적습니다.`
+            : v.value < lo.value
+              ? `${josa(v.label, "은", "는")} ${n(v.value)}명으로 ${n(lo.value)}명보다 적습니다.`
+              : `${josa(v.label, "은", "는")} ${n(v.value)}명으로 ${n(hi.value)}명보다 많습니다.`,
+        );
+      return make(
+        unit,
+        `${intro} 좋아하는 학생 수가 ${lo.label}보다 많고 ${hi.label}보다 적은 ` +
+          `${josa(theme.item, "을", "를")} 모두 찾아 쓰시오.`,
+        inRange.map((v) => v.label).join(", "),
+        `${josa(lo.label, "은", "는")} ${n(lo.value)}명, ${josa(hi.label, "은", "는")} ` +
+          `${n(hi.value)}명입니다. ${steps.join(" ")} ` +
+          `따라서 ${inRange.map((v) => v.label).join(", ")}입니다.`,
         figure,
       );
     }
@@ -1135,6 +1184,144 @@ function barGraph(unit: UnitSeed, rng: Rng): ElemProblem {
   }
 
   return noBranch(unit);
+}
+
+/* ─────────────── 1-5 곁가지: 두 그래프 결합 (수 × 개당 가격) ───────────────
+ *
+ * 원장님 예시: 「팔린 종류별 아이스크림의 **수**와 아이스크림 한 개의 **가격**을 조사하여
+ * 나타낸 막대그래프입니다. 오늘 멜론 아이스크림을 팔고 받은 돈은 얼마인가?」
+ * → 같은 항목 목록을 공유하는 **두 자료**에서 지목된 항목의 값을 각각 읽어 **곱한다.**
+ *
+ * ⚠️ **아직 배선하지 않았다.** 가로 막대 + 두 그래프를 나란히 그리는 스펙 계약을
+ * elem-figures 가 만드는 중이고, 계약이 오기 전에 갈래를 열면 **발문이 「막대그래프입니다」라고
+ * 하는데 그림이 없는 문항**이 나간다 — 이 저장소가 1,420건으로 겪은 바로 그 부류다
+ * (`report-missing-figures.ts`). 그래서 지금은 **값·발문·해설만** 만들어 두고 시험으로
+ * 잠가 둔다. 계약이 오면 `fig(...)` 를 붙여 `1-5` 의 한 갈래에서 이 함수를 부르면 된다.
+ * 「그래프를 가리키면 그림이 있어야 한다」 시험이 그때 배선을 지킨다.
+ */
+type SaleTheme = {
+  /** 「어느 편의점」 — 발문 첫머리. */
+  place: string;
+  /** 「아이스크림」 — 「한 개의 가격」과 항목 이름 뒤에 붙는다. */
+  goods: string;
+  /** 세는 말. 「개」·「자루」·「줄」 — 「한 자루의 가격」이 되어야 한다. */
+  counter: string;
+  /**
+   * 가로축 항목. **꾸밈말**이라 뒤에 `goods` 를 붙이면 이름이 된다(「멜론」→「멜론 아이스크림」).
+   * 홀로 서는 이름(「단팥빵」)을 넣으면 「단팥빵 빵」이 되므로 넣지 말 것.
+   */
+  labels: readonly [string, string, string];
+};
+
+/**
+ * 「개당 가격 × 판 수」가 **참인** 소재만 — 좋아하는 과일을 «팔고 받은 돈»은 말이 안 된다.
+ * 세는 말이 항목마다 같아야 한다(연필 자루 · 김밥 줄).
+ */
+const SALE_THEMES: readonly SaleTheme[] = [
+  {
+    place: "어느 편의점",
+    goods: "아이스크림",
+    counter: "개",
+    labels: ["체리", "멜론", "바닐라"],
+  },
+  {
+    place: "어느 분식집",
+    goods: "붕어빵",
+    counter: "개",
+    labels: ["팥", "슈크림", "초코"],
+  },
+  {
+    place: "어느 문구점",
+    goods: "연필",
+    counter: "자루",
+    labels: ["빨강", "파랑", "검정"],
+  },
+  {
+    place: "어느 김밥집",
+    goods: "김밥",
+    counter: "줄",
+    labels: ["참치", "치즈", "야채"],
+  },
+  {
+    place: "어느 빵집",
+    goods: "도넛",
+    counter: "개",
+    labels: ["딸기", "초코", "설탕"],
+  },
+  {
+    place: "어느 편의점",
+    goods: "우유",
+    counter: "개",
+    labels: ["딸기", "초코", "바나나"],
+  },
+];
+
+/**
+ * 두 그래프의 걸음. **값이 눈금 위에 있어야** 「읽어서 곱한다」가 성립한다.
+ *
+ * 상한은 우리가 정하는 것이 아니라 엔진이 정한다 — 걸음을 스펙에 실으면 눈금이
+ * `최댓값 / 걸음 + 1` 줄이고 `MAX_Y_TICKS` 가 9라 **최댓값 ≤ `8 × 걸음`** 이다(실측 2026-08-22).
+ * 그래서 수는 `40`, 가격은 `800` 이 상한이다. 넘기면 그림이 **던진다.**
+ */
+const SALE_COUNT_STEP = 5; // 두 자리 → 10·15·…·40
+const SALE_PRICE_STEP = 100; // 세 자리 · 100원 단위 → 300·400·…·800
+
+const SALE_COUNTS = [10, 15, 20, 25, 30, 35, 40] as const;
+const SALE_PRICES = [300, 400, 500, 600, 700, 800] as const;
+
+/** 겹치지 않게 `k` 개를 뽑는다. 값이 겹치면 두 막대가 같은 높이라 그래프가 헷갈린다. */
+function pickDistinct<T>(rng: Rng, pool: readonly T[], k: number): T[] {
+  const rest = [...pool];
+  const out: T[] = [];
+  for (let i = 0; i < k; i += 1) {
+    const j = intBetween(rng, 0, rest.length - 1);
+    out.push(rest[j]!);
+    rest.splice(j, 1);
+  }
+  return out;
+}
+
+export type SaleCombo = {
+  theme: SaleTheme;
+  /** 항목별 팔린 수 — `theme.labels` 와 같은 차례(지면 차례). */
+  counts: number[];
+  /** 항목별 한 개의 가격 — 같은 차례. */
+  prices: number[];
+  /** 묻는 항목의 자리. */
+  at: number;
+  content: string;
+  answer: string;
+  solution: string;
+};
+
+/**
+ * 값·발문·해설을 만든다. **그림은 아직 안 붙인다**(위 ⚠️ 참조).
+ * 두 자료가 **같은 항목 목록**을 쓰는 것이 이 유형의 뼈대다 — 그래서 `labels` 하나로 둘을 만든다.
+ */
+function buildSaleCombo(rng: Rng): SaleCombo {
+  const theme = pick(rng, SALE_THEMES);
+  const counts = pickDistinct(rng, SALE_COUNTS, 3);
+  const prices = pickDistinct(rng, SALE_PRICES, 3);
+  const at = intBetween(rng, 0, 2);
+  const count = counts[at]!;
+  const price = prices[at]!;
+  const money = count * price;
+  const name = `${theme.labels[at]} ${theme.goods}`;
+  return {
+    theme,
+    counts,
+    prices,
+    at,
+    content:
+      `${theme.place}에서 오늘 팔린 종류별 ${josa(theme.goods, "의", "의")} 수와 ` +
+      `${theme.goods} 한 ${theme.counter}의 가격을 조사하여 나타낸 막대그래프입니다. ` +
+      `오늘 ${josa(name, "을", "를")} 팔고 받은 돈은 얼마인가?`,
+    answer: `${n(money)}원`,
+    solution:
+      `${josa(name, "은", "는")} ${n(count)}${theme.counter} 팔렸고, ` +
+      `한 ${theme.counter}의 가격은 ${n(price)}원입니다. ` +
+      `${expr(`${count}\\times${price}=${money}`)} 이므로 ${n(money)}원입니다.`,
+  };
 }
 
 /* ───────────────────────── 1-6 규칙 찾기 ───────────────────────── */
@@ -2131,6 +2318,15 @@ export const G4_BAR_THEMES = BAR_THEMES;
 /** 규모↔값 짝과 「해가 있는 총원」을 시험이 직접 세도록 내보낸다. */
 export const G4_BAR_SCALES = BAR_SCALES;
 export const G4_BAR_SPLITS = barSplits;
+// 두 그래프 결합 — **아직 갈래에 배선하지 않았다**(그림 계약 대기). 시험이 여기를 직접 부른다.
+export const G4_SALE_THEMES = SALE_THEMES;
+export const G4_SALE_COMBO = buildSaleCombo;
+export const G4_SALE_LIMITS = {
+  countStep: SALE_COUNT_STEP,
+  priceStep: SALE_PRICE_STEP,
+  counts: SALE_COUNTS,
+  prices: SALE_PRICES,
+} as const;
 export const G4_LINE_THEMES = LINE_THEMES;
 
 /**
