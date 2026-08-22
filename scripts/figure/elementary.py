@@ -6,7 +6,7 @@
 
 같은 그림이 두 번 나오면 좌표 일회성으로 맞추지 말고 kind 를 추가한다 (D-61, 09 §2.1).
 재발 금지: 사다리꼴 두 대각선, FigureSpec labels 로 가/나, 표 viewBox 키우기,
-피자 오림, 치수 손 곡선, 점격자 진한 점선 — 09 §4-6~4-11.
+피자 오림, 치수 손 곡선, 점격자 진한 점선, 원기둥 전개도 떠 있는 원, 원뿔 삼각형+타원 — 09 §4-6~4-13.
 """
 from __future__ import annotations
 
@@ -56,7 +56,9 @@ OPTIONAL: dict[str, frozenset[str]] = {
     "tape": frozenset({"unit", "segments"}),
     "boxedList": frozenset({"marks"}),
     "pointGrid": frozenset({"lines", "square"}),
-    "fracPie": frozenset({"start"}),
+    "fracPie": frozenset({"start", "fill"}),
+    "triRow": frozenset({"fill"}),
+    "trapFour": frozenset({"fill"}),
 }
 
 
@@ -165,15 +167,17 @@ def _length_mark(
     *,
     off: float = -10.0,
     fs: float = 11,
+    t: float = 0.5,
 ) -> str:
     """길이 치수 — 도형 엔진 `measured()` 와 같다.
 
     점선(`6 4`)이 잰 두 점에 닿고, 라벨은 곡선 정점에서 흰 halo 로 배경 처리한다
     (`core.figure_svg.measured` / `dim_label`). 여기서 다시 그리지 않는다.
+    t 는 선분 위 위치(0.5=중점). 교차점에 묻히면 밖으로 빼거나 t 를 옮긴다.
     """
     from core.figure_svg import measured
 
-    return measured(x0, y0, x1, y1, off, str(label), fs=fs)
+    return measured(x0, y0, x1, y1, off, str(label), fs=fs, t=t)
 
 
 def _number_cards(spec: Mapping[str, Any]) -> str:
@@ -452,22 +456,25 @@ def _column_op(spec: Mapping[str, Any]) -> str:
     result = spec.get("result")
     result_s = None if result is None else str(result)
     hi = spec.get("highlight")
-    width_d = max(len(top), len(bottom), len(result_s or ""))
+    # 자릿수와 무관하게 같은 viewBox·같은 글자 크기. 칸만 4자리로 고정한다.
+    slots = 4
     dw, dh = 18.0, 22.0
-    pad, box_pad = 14.0, 12.0
+    box_pad = 12.0
     x0 = box_pad + 22
     y_top = box_pad + 8
-    inner_w = x0 + width_d * dw + 10
+    inner_w = x0 + slots * dw + 10
     inner_h = box_pad * 2 + dh * 3 + 16
     parts = [_rect(6, 6, inner_w - 12, inner_h - 12, rx=6, sw=1.2)]
 
     def digits(s: str, y: float, key: str) -> None:
-        s = s.rjust(width_d)
+        raw = s
+        s = s.rjust(slots)
+        shift = slots - len(raw)
         for i, ch in enumerate(s):
             if ch == " ":
                 continue
             cx = x0 + i * dw + dw / 2
-            if hi == f"{key}{i}":
+            if hi == f"{key}{i - shift}":
                 bs = 15.0
                 parts.append(
                     _rect(cx - bs / 2, y - bs / 2, bs, bs, rx=1.5, sw=1.1, stroke="#b45a55")
@@ -483,13 +490,13 @@ def _column_op(spec: Mapping[str, Any]) -> str:
     digits(bottom, y_top + dh + 8, "b")
     y_line = y_top + dh * 2 + 2
     parts.append(
-        f'<line x1="{_n(x0 - 16)}" y1="{_n(y_line)}" x2="{_n(x0 + width_d * dw)}" '
+        f'<line x1="{_n(x0 - 16)}" y1="{_n(y_line)}" x2="{_n(x0 + slots * dw)}" '
         f'y2="{_n(y_line)}" stroke="{INK}" stroke-width="1.3"/>'
     )
     if result_s:
         digits(result_s, y_line + 16, "r")
     else:
-        parts.append(_rect(x0, y_line + 6, width_d * dw, 18, rx=2, sw=1.1))
+        parts.append(_rect(x0, y_line + 6, slots * dw, 18, rx=2, sw=1.1))
     return _svg(inner_w, inner_h, "".join(parts))
 
 
@@ -960,7 +967,7 @@ def _frac_pie(spec: Mapping[str, Any]) -> str:
     r, pad = 48.0, 8.0
     cx = cy = pad + r
     step = 360.0 / n
-    leftover, eaten = "#e2b48a", "#f4efe6"
+    leftover, eaten = str(spec.get("fill") or "#e2b48a"), "#f4efe6"
     parts: list[str] = []
     for i in range(n):
         a0 = math.radians(start + i * step)
@@ -998,7 +1005,7 @@ def _tri_row(spec: Mapping[str, Any]) -> str:
     filled = _frac_filled(spec["filled"], n)
     w, h, pad = 32.0, 46.0, 8.0
     lo_y, hi_y = pad + h, pad
-    fill_on, fill_off = "#d7c2e4", PAPER
+    fill_on, fill_off = str(spec.get("fill") or "#d7c2e4"), PAPER
     parts: list[str] = []
     for i in range(n):
         x0 = pad + i * w
@@ -1032,7 +1039,7 @@ def _trap_four(spec: Mapping[str, Any]) -> str:
     tl = (pad + u, y_top)
     tr = (pad + 2 * u, y_top)
     tris = ((bl, b1, tl), (tl, b1, tr), (b1, b2, tr), (tr, b2, br))
-    fill_on = "#d7c2e4"
+    fill_on = str(spec.get("fill") or "#d7c2e4")
     parts: list[str] = []
 
     def _pts(tri: tuple[tuple[float, float], ...]) -> str:
@@ -1054,8 +1061,58 @@ def _trap_four(spec: Mapping[str, Any]) -> str:
 
 
 _SHAPE_KINDS = frozenset(
-    {"square", "rect", "rightTri", "isoTri", "wideTri", "diamond", "tallDiamond"}
+    {
+        "square",
+        "rect",
+        "rightTri",
+        "isoTri",
+        "wideTri",
+        "eqTri",
+        "diamond",
+        "tallDiamond",
+        "trap",
+        "para",
+        "irregQuad",
+    }
 )
+
+
+def _poly_pts(pts: list[tuple[float, float]], sw: float = 1.5) -> str:
+    s = " ".join(f"{_n(x)},{_n(y)}" for x, y in pts)
+    return f'<polygon points="{s}" fill="none" stroke="{INK}" stroke-width="{_n(sw)}"/>'
+
+
+def _tick_at(a: tuple[float, float], b: tuple[float, float], length: float = 3.4) -> str:
+    mx, my = (a[0] + b[0]) / 2, (a[1] + b[1]) / 2
+    dx, dy = b[0] - a[0], b[1] - a[1]
+    hyp = math.hypot(dx, dy) or 1.0
+    nx, ny = (-dy / hyp) * length, (dx / hyp) * length
+    return (
+        f'<line x1="{_n(mx - nx)}" y1="{_n(my - ny)}" x2="{_n(mx + nx)}" y2="{_n(my + ny)}" '
+        f'stroke="{INK}" stroke-width="1.2"/>'
+    )
+
+
+def _right_mark(
+    corner: tuple[float, float],
+    p: tuple[float, float],
+    q: tuple[float, float],
+    size: float = 7.0,
+) -> str:
+    def unit(dst: tuple[float, float]) -> tuple[float, float]:
+        dx, dy = dst[0] - corner[0], dst[1] - corner[1]
+        hyp = math.hypot(dx, dy) or 1.0
+        return dx / hyp * size, dy / hyp * size
+
+    ux, uy = unit(p)
+    vx, vy = unit(q)
+    a = (corner[0] + ux, corner[1] + uy)
+    c = (corner[0] + vx, corner[1] + vy)
+    b = (corner[0] + ux + vx, corner[1] + uy + vy)
+    return (
+        f'<polyline points="{_n(a[0])},{_n(a[1])} {_n(b[0])},{_n(b[1])} {_n(c[0])},{_n(c[1])}" '
+        f'fill="none" stroke="{INK}" stroke-width="1.15"/>'
+    )
 
 
 def _draw_named_shape(kind: str, ox: float, oy: float, s: float) -> str:
@@ -1064,30 +1121,56 @@ def _draw_named_shape(kind: str, ox: float, oy: float, s: float) -> str:
     if kind == "rect":
         return _rect(ox + s * 0.18, oy, s * 0.64, s, sw=1.5)
     if kind == "rightTri":
-        return (
-            f'<polygon points="{_n(ox)},{_n(oy + s)} {_n(ox)},{_n(oy)} '
-            f'{_n(ox + s)},{_n(oy + s)}" fill="none" stroke="{INK}" stroke-width="1.5"/>'
-        )
+        pts = [(ox, oy + s), (ox, oy), (ox + s, oy + s)]
+        return _poly_pts(pts) + _right_mark(pts[0], pts[1], pts[2])
     if kind == "isoTri":
-        return (
-            f'<polygon points="{_n(ox)},{_n(oy + s)} {_n(ox + s / 2)},{_n(oy)} '
-            f'{_n(ox + s)},{_n(oy + s)}" fill="none" stroke="{INK}" stroke-width="1.5"/>'
-        )
+        return _poly_pts([(ox, oy + s), (ox + s / 2, oy), (ox + s, oy + s)])
     if kind == "wideTri":
-        return (
-            f'<polygon points="{_n(ox)},{_n(oy + s)} {_n(ox + s / 2)},{_n(oy + s * 0.42)} '
-            f'{_n(ox + s)},{_n(oy + s)}" fill="none" stroke="{INK}" stroke-width="1.5"/>'
-        )
+        return _poly_pts([(ox, oy + s), (ox + s / 2, oy + s * 0.42), (ox + s, oy + s)])
+    if kind == "eqTri":
+        h = s * math.sqrt(3) / 2
+        y0 = oy + (s - h) / 2
+        pts = [(ox, y0 + h), (ox + s / 2, y0), (ox + s, y0 + h)]
+        ticks = "".join(_tick_at(pts[i], pts[(i + 1) % 3]) for i in range(3))
+        return _poly_pts(pts) + ticks
     if kind == "diamond":
-        return (
-            f'<polygon points="{_n(ox + s / 2)},{_n(oy)} {_n(ox + s)},{_n(oy + s / 2)} '
-            f'{_n(ox + s / 2)},{_n(oy + s)} {_n(ox)},{_n(oy + s / 2)}" fill="none" '
-            f'stroke="{INK}" stroke-width="1.5"/>'
+        return _poly_pts(
+            [(ox + s / 2, oy), (ox + s, oy + s / 2), (ox + s / 2, oy + s), (ox, oy + s / 2)]
         )
-    return (
-        f'<polygon points="{_n(ox + s / 2)},{_n(oy)} {_n(ox + s * 0.72)},{_n(oy + s / 2)} '
-        f'{_n(ox + s / 2)},{_n(oy + s)} {_n(ox + s * 0.28)},{_n(oy + s / 2)}" fill="none" '
-        f'stroke="{INK}" stroke-width="1.5"/>'
+    if kind == "tallDiamond":
+        return _poly_pts(
+            [
+                (ox + s / 2, oy),
+                (ox + s * 0.72, oy + s / 2),
+                (ox + s / 2, oy + s),
+                (ox + s * 0.28, oy + s / 2),
+            ]
+        )
+    if kind == "trap":
+        return _poly_pts(
+            [
+                (ox + s * 0.2, oy + s * 0.12),
+                (ox + s * 0.8, oy + s * 0.12),
+                (ox + s, oy + s),
+                (ox, oy + s),
+            ]
+        )
+    if kind == "para":
+        return _poly_pts(
+            [
+                (ox + s * 0.28, oy),
+                (ox + s, oy),
+                (ox + s * 0.72, oy + s),
+                (ox, oy + s),
+            ]
+        )
+    return _poly_pts(
+        [
+            (ox + s * 0.08, oy + s * 0.22),
+            (ox + s * 0.92, oy),
+            (ox + s, oy + s * 0.62),
+            (ox + s * 0.18, oy + s),
+        ]
     )
 
 
@@ -1149,3 +1232,10 @@ _RENDER = {
     "trapFour": _trap_four,
     "namedShapes": _named_shapes,
 }
+
+# 후반 학년 kind. 이 파일 아래에서 import 해야 _svg 등이 이미 있다.
+from elem_advanced import ADV_FIELDS, ADV_OPTIONAL, ADV_RENDER  # noqa: E402
+
+KIND_FIELDS.update(ADV_FIELDS)
+OPTIONAL.update(ADV_OPTIONAL)
+_RENDER.update(ADV_RENDER)
