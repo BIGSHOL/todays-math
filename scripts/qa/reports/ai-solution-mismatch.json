@@ -1732,5 +1732,23 @@
   "code": "HAL0204-TEVA",
   "dbAnswer": "①",
   "aiAnswer": "②"
+ },
+ {
+  "id": "47f9c9d9-4561-474b-a284-c33e4e710a63",
+  "code": "HAL0210-4334",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "8b3d506f-567a-4ec8-aaf8-cb61031f69b5",
+  "code": "HAL0210-BNNA",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "1ee413bd-6ab3-464e-89f4-e90a5f3cea14",
+  "code": "HAL0210-RG2K",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
  }
 ]
