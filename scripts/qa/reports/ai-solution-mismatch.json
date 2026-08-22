@@ -1996,5 +1996,17 @@
   "code": "HM10306-Y528",
   "dbAnswer": "④",
   "aiAnswer": "⑤"
+ },
+ {
+  "id": "ea4b825c-7ba2-4143-8388-211291b7b4f7",
+  "code": "HM10307-S9CT",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "a47135e4-bbdc-474a-8d42-c18100949e72",
+  "code": "HM10310-G9NP",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
  }
 ]
