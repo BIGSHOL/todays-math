@@ -6,11 +6,12 @@
 
 같은 그림이 두 번 나오면 좌표 일회성으로 맞추지 말고 kind 를 추가한다 (D-61, 09 §2.1).
 재발 금지: 사다리꼴 두 대각선, FigureSpec labels 로 가/나, 표 viewBox 키우기,
-피자 오림, 치수 손 곡선, 점격자 진한 점선 — 09 §4-6~4-11.
+피자 오림, 치수 손 곡선, 점격자 진한 점선, 원기둥 전개도 떠 있는 원, 원뿔 삼각형+타원 — 09 §4-6~4-13.
 """
 from __future__ import annotations
 
 import math
+import re
 from html import escape
 from typing import Any, Mapping
 
@@ -22,6 +23,11 @@ GRID = "#c8d7e4"
 GRID_SW = 0.7
 # 표 viewBox 를 이보다 키우면 화면에서 숫자가 본문보다 작아진다 (09 §4-8).
 TABLE_VIEWBOX_MAX = 240.0
+# 치수 점선이 도형에서 벌어지는 거리. 한 값만 쓴다 — 도형마다 다르면 같은 시험지에서
+# 삼각형 치수는 붙어 있고 직육면체 치수만 붕 뜬다 (09 §4-16).
+DIM_OFF = 12.0
+# 그린 것과 viewBox 사이 최소 여유. 획 굵기 절반 + 반올림.
+FIT_PAD = 2.0
 KIND_FIELDS: dict[str, frozenset[str]] = {
     "numberCards": frozenset({"cards"}),
     "placeValue": frozenset({"hundreds", "tens", "ones"}),
@@ -56,7 +62,9 @@ OPTIONAL: dict[str, frozenset[str]] = {
     "tape": frozenset({"unit", "segments"}),
     "boxedList": frozenset({"marks"}),
     "pointGrid": frozenset({"lines", "square"}),
-    "fracPie": frozenset({"start"}),
+    "fracPie": frozenset({"start", "fill"}),
+    "triRow": frozenset({"fill"}),
+    "trapFour": frozenset({"fill"}),
 }
 
 
@@ -79,10 +87,271 @@ def render_elementary(spec: Mapping[str, Any]) -> str:
 
 
 def _svg(w: float, h: float, body: str) -> str:
+    """viewBox 는 **그린 것을 모두 담는다** (09 §4-14).
+
+    kind 마다 여백을 손으로 맞추면 도형이 조금만 달라져도 같은 결함이 다시 난다 —
+    오각기둥 전개도에서 위·아래 꼭짓점이 잘려 나갔다(원장님 2026-08-22). 문항마다
+    좌표를 고치지 말고(D-61) 여기 한 곳에서 맞춘다: 몸통의 경계 상자를 재서
+    음수 쪽으로 나가면 **내용을 밀고**, 모자라면 viewBox 를 **넓힌다**.
+
+    ⚠️ `<g transform>` 로 못 민다 — `sanitize_svg` 가 `transform` 을 막는다.
+       그래서 좌표 숫자를 직접 옮긴다. 모르는 그리기 태그나 상대 경로 명령이 오면
+       **조용히 지나가지 않고 예외**를 낸다(못 옮긴 것이 잘려도 아무도 모른다).
+    """
+    box = _body_bbox(body)
+    if box is not None:
+        minx, miny, maxx, maxy = box
+        dx = max(0.0, FIT_PAD - minx)
+        dy = max(0.0, FIT_PAD - miny)
+        if dx or dy:
+            body = _shift_body(body, dx, dy)
+        w = max(w + dx, maxx + dx + FIT_PAD)
+        h = max(h + dy, maxy + dy + FIT_PAD)
+    return _svg_raw(w, h, body)
+
+
+def _svg_raw(w: float, h: float, body: str) -> str:
     return (
         f'<svg viewBox="0 0 {_n(w)} {_n(h)}" xmlns="http://www.w3.org/2000/svg">'
         f"{body}</svg>"
     )
+
+
+_NUM = r"[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?"
+_TAG_RE = re.compile(r"<([a-zA-Z][\w:-]*)((?:\s+[\w:-]+=\"[^\"]*\")*)\s*/?>")
+_ATTR_RE = re.compile(r"([\w:-]+)=\"([^\"]*)\"")
+_PATH_TOKEN_RE = re.compile(rf"[A-Za-z]|{_NUM}")
+_NUM_PAIR_RE = re.compile(rf"({_NUM})[ ,]+({_NUM})")
+# 좌표를 갖는 태그. `text` 는 **닻점만** 센다 — 글꼴 폭은 여기서 알 수 없다.
+# 라벨은 measured() 가 스스로 바깥으로 밀고, kind 가 그만큼 여백을 잡는다.
+_GEOM_TAGS = frozenset({"rect", "circle", "ellipse", "line", "polygon", "polyline", "path", "text"})
+_IGNORED_TAGS = frozenset({"svg", "g", "defs", "title", "desc", "tspan"})
+# 절대 명령만 쓴다. 상대(소문자)는 안 만들고, 오면 예외로 드러낸다.
+_PATH_ARGC = {"M": 2, "L": 2, "T": 2, "H": 1, "V": 1, "C": 6, "S": 4, "Q": 4, "A": 7, "Z": 0}
+
+
+def _body_bbox(body: str) -> tuple[float, float, float, float] | None:
+    pts: list[tuple[float, float]] = []
+    for tag, attrs in _iter_tags(body):
+        pts.extend(_tag_points(tag, attrs))
+    if not pts:
+        return None
+    xs = [p[0] for p in pts]
+    ys = [p[1] for p in pts]
+    return min(xs), min(ys), max(xs), max(ys)
+
+
+def _iter_tags(body: str):
+    for m in _TAG_RE.finditer(body):
+        tag = m.group(1)
+        if tag in _IGNORED_TAGS:
+            continue
+        if tag not in _GEOM_TAGS:
+            raise ValueError(f"경계 상자를 잴 수 없는 태그입니다: {tag}")
+        yield tag, dict(_ATTR_RE.findall(m.group(2)))
+
+
+def _f(attrs: Mapping[str, str], key: str, default: float = 0.0) -> float:
+    raw = attrs.get(key)
+    return default if raw is None else float(raw)
+
+
+def _tag_points(tag: str, attrs: Mapping[str, str]) -> list[tuple[float, float]]:
+    if tag == "rect":
+        x, y = _f(attrs, "x"), _f(attrs, "y")
+        return [(x, y), (x + _f(attrs, "width"), y + _f(attrs, "height"))]
+    if tag in ("circle", "ellipse"):
+        cx, cy = _f(attrs, "cx"), _f(attrs, "cy")
+        rx = _f(attrs, "r") or _f(attrs, "rx")
+        ry = _f(attrs, "r") or _f(attrs, "ry")
+        return [(cx - rx, cy - ry), (cx + rx, cy + ry)]
+    if tag == "line":
+        return [
+            (_f(attrs, "x1"), _f(attrs, "y1")),
+            (_f(attrs, "x2"), _f(attrs, "y2")),
+        ]
+    if tag in ("polygon", "polyline"):
+        return [
+            (float(a), float(b)) for a, b in _NUM_PAIR_RE.findall(attrs.get("points", ""))
+        ]
+    if tag == "path":
+        return _path_points(attrs.get("d", ""))
+    return [(_f(attrs, "x"), _f(attrs, "y"))]
+
+
+def _bezier_extrema(p0: float, ctrl: list[float], p1: float) -> list[float]:
+    """한 축의 베지에 극값 — 제어점을 그대로 담으면 measured() 곡선이 실제보다
+    두 배 부풀어 쓸데없는 여백이 생긴다(제어점은 곡선이 닿지 않는 자리다)."""
+    out = [p0, p1]
+    if len(ctrl) == 1:
+        den = p0 - 2 * ctrl[0] + p1
+        ts = [] if abs(den) < 1e-12 else [(p0 - ctrl[0]) / den]
+        for t in ts:
+            if 0 < t < 1:
+                out.append((1 - t) ** 2 * p0 + 2 * (1 - t) * t * ctrl[0] + t * t * p1)
+        return out
+    c0, c1 = ctrl
+    a = -p0 + 3 * c0 - 3 * c1 + p1
+    b = 2 * (p0 - 2 * c0 + c1)
+    c = c0 - p0
+    roots: list[float] = []
+    if abs(a) < 1e-12:
+        if abs(b) > 1e-12:
+            roots.append(-c / b)
+    else:
+        disc = b * b - 4 * a * c
+        if disc >= 0:
+            sq = math.sqrt(disc)
+            roots += [(-b + sq) / (2 * a), (-b - sq) / (2 * a)]
+    for t in roots:
+        if 0 < t < 1:
+            out.append(
+                (1 - t) ** 3 * p0
+                + 3 * (1 - t) ** 2 * t * c0
+                + 3 * (1 - t) * t * t * c1
+                + t**3 * p1
+            )
+    return out
+
+
+def _arc_points(
+    p0: tuple[float, float], rx: float, ry: float, large: float, sweep: float, p1: tuple[float, float]
+) -> list[tuple[float, float]]:
+    """호의 극값. 우리는 회전 없는 **정원** 호만 그린다 — 그 경우만 정확히 풀고,
+    그 밖은 반지름만큼 넉넉히 잡는다(넘치는 쪽이 잘리는 쪽보다 낫다)."""
+    if abs(rx - ry) > 1e-9 or rx <= 0:
+        return [
+            (p0[0] - rx, p0[1] - ry),
+            (p0[0] + rx, p0[1] + ry),
+            (p1[0] - rx, p1[1] - ry),
+            (p1[0] + rx, p1[1] + ry),
+        ]
+    mx, my = (p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2
+    dx, dy = (p1[0] - p0[0]) / 2, (p1[1] - p0[1]) / 2
+    d2 = dx * dx + dy * dy
+    hh = max(0.0, rx * rx - d2)
+    k = math.sqrt(hh / d2) if d2 > 0 else 0.0
+    # SVG 끝점→중심 변환: c' = ±(y', −x'), x'y' 는 (p0−p1)/2 다. (p1−p0) 로 잡으면
+    # 부호가 통째로 뒤집혀 중심이 반대편에 앉는다 — 분수 원 viewBox 가 112 → 264 가 됐다.
+    sign = 1.0 if (large != sweep) else -1.0
+    cx, cy = mx - sign * k * dy, my + sign * k * dx
+    a0 = math.atan2(p0[1] - cy, p0[0] - cx)
+    a1 = math.atan2(p1[1] - cy, p1[0] - cx)
+    if sweep:
+        while a1 < a0:
+            a1 += 2 * math.pi
+    else:
+        while a1 > a0:
+            a1 -= 2 * math.pi
+    out = [p0, p1]
+    for q in range(-4, 9):
+        ang = q * math.pi / 2
+        if min(a0, a1) - 1e-9 <= ang <= max(a0, a1) + 1e-9:
+            out.append((cx + rx * math.cos(ang), cy + rx * math.sin(ang)))
+    return out
+
+
+def _path_points(d: str) -> list[tuple[float, float]]:
+    out: list[tuple[float, float]] = []
+    cur = (0.0, 0.0)
+    for cmd, args in _walk_path(d):
+        if cmd == "Z":
+            continue
+        if cmd == "H":
+            cur = (args[0], cur[1])
+            out.append(cur)
+        elif cmd == "V":
+            cur = (cur[0], args[0])
+            out.append(cur)
+        elif cmd in ("M", "L", "T"):
+            for i in range(0, len(args), 2):
+                cur = (args[i], args[i + 1])
+                out.append(cur)
+        elif cmd in ("Q", "S", "C"):
+            cx_ctrl = [args[0]] if cmd != "C" else [args[0], args[2]]
+            cy_ctrl = [args[1]] if cmd != "C" else [args[1], args[3]]
+            end = (args[2], args[3]) if cmd != "C" else (args[4], args[5])
+            # 축마다 따로 극값을 낸다 — 상자는 x·y 를 독립으로 합치므로 짝은 상관없다.
+            xs = _bezier_extrema(cur[0], cx_ctrl, end[0])
+            ys = _bezier_extrema(cur[1], cy_ctrl, end[1])
+            out += [(x, cur[1]) for x in xs] + [(cur[0], y) for y in ys]
+            cur = end
+        elif cmd == "A":
+            end = (args[5], args[6])
+            out += _arc_points(cur, args[0], args[1], args[3], args[4], end)
+            cur = end
+    return out
+
+
+def _walk_path(d: str):
+    tokens = _PATH_TOKEN_RE.findall(d)
+    i = 0
+    cmd = ""
+    while i < len(tokens):
+        tok = tokens[i]
+        if tok.isalpha():
+            cmd = tok
+            i += 1
+            if cmd not in _PATH_ARGC:
+                raise ValueError(f"모르는 경로 명령입니다: {cmd}")
+        if not cmd:
+            raise ValueError("경로가 명령 없이 시작합니다")
+        argc = _PATH_ARGC[cmd]
+        if argc == 0:
+            yield cmd, []
+            continue
+        args = [float(t) for t in tokens[i : i + argc]]
+        if len(args) < argc:
+            raise ValueError(f"경로 명령 {cmd} 의 인자가 모자랍니다")
+        i += argc
+        yield cmd, args
+        if cmd == "M":
+            cmd = "L"
+
+
+def _shift_body(body: str, dx: float, dy: float) -> str:
+    def repl(m: re.Match[str]) -> str:
+        tag = m.group(1)
+        if tag in _IGNORED_TAGS:
+            return m.group(0)
+        if tag not in _GEOM_TAGS:
+            raise ValueError(f"옮길 수 없는 태그입니다: {tag}")
+        attrs = m.group(2)
+
+        def one(a: re.Match[str]) -> str:
+            key, val = a.group(1), a.group(2)
+            if key in ("x", "x1", "x2", "cx"):
+                return f'{key}="{_n(float(val) + dx)}"'
+            if key in ("y", "y1", "y2", "cy"):
+                return f'{key}="{_n(float(val) + dy)}"'
+            if key == "points":
+                moved = _NUM_PAIR_RE.sub(
+                    lambda p: f"{_n(float(p.group(1)) + dx)},{_n(float(p.group(2)) + dy)}", val
+                )
+                return f'{key}="{moved}"'
+            if key == "d":
+                return f'{key}="{_shift_path(val, dx, dy)}"'
+            return a.group(0)
+
+        return m.group(0).replace(attrs, _ATTR_RE.sub(one, attrs), 1) if attrs else m.group(0)
+
+    return _TAG_RE.sub(repl, body)
+
+
+def _shift_path(d: str, dx: float, dy: float) -> str:
+    out: list[str] = []
+    for cmd, args in _walk_path(d):
+        moved: list[float] = []
+        if cmd == "H":
+            moved = [args[0] + dx]
+        elif cmd == "V":
+            moved = [args[0] + dy]
+        elif cmd == "A":
+            moved = args[:5] + [args[5] + dx, args[6] + dy]
+        else:
+            moved = [a + (dx if i % 2 == 0 else dy) for i, a in enumerate(args)]
+        out.append(cmd + " " + " ".join(_n(v) for v in moved) if moved else cmd)
+    return " ".join(out)
 
 
 def _n(v: float) -> str:
@@ -165,15 +434,17 @@ def _length_mark(
     *,
     off: float = -10.0,
     fs: float = 11,
+    t: float = 0.5,
 ) -> str:
     """길이 치수 — 도형 엔진 `measured()` 와 같다.
 
     점선(`6 4`)이 잰 두 점에 닿고, 라벨은 곡선 정점에서 흰 halo 로 배경 처리한다
     (`core.figure_svg.measured` / `dim_label`). 여기서 다시 그리지 않는다.
+    t 는 선분 위 위치(0.5=중점). 교차점에 묻히면 밖으로 빼거나 t 를 옮긴다.
     """
     from core.figure_svg import measured
 
-    return measured(x0, y0, x1, y1, off, str(label), fs=fs)
+    return measured(x0, y0, x1, y1, off, str(label), fs=fs, t=t)
 
 
 def _number_cards(spec: Mapping[str, Any]) -> str:
@@ -452,22 +723,25 @@ def _column_op(spec: Mapping[str, Any]) -> str:
     result = spec.get("result")
     result_s = None if result is None else str(result)
     hi = spec.get("highlight")
-    width_d = max(len(top), len(bottom), len(result_s or ""))
+    # 자릿수와 무관하게 같은 viewBox·같은 글자 크기. 칸만 4자리로 고정한다.
+    slots = 4
     dw, dh = 18.0, 22.0
-    pad, box_pad = 14.0, 12.0
+    box_pad = 12.0
     x0 = box_pad + 22
     y_top = box_pad + 8
-    inner_w = x0 + width_d * dw + 10
+    inner_w = x0 + slots * dw + 10
     inner_h = box_pad * 2 + dh * 3 + 16
     parts = [_rect(6, 6, inner_w - 12, inner_h - 12, rx=6, sw=1.2)]
 
     def digits(s: str, y: float, key: str) -> None:
-        s = s.rjust(width_d)
+        raw = s
+        s = s.rjust(slots)
+        shift = slots - len(raw)
         for i, ch in enumerate(s):
             if ch == " ":
                 continue
             cx = x0 + i * dw + dw / 2
-            if hi == f"{key}{i}":
+            if hi == f"{key}{i - shift}":
                 bs = 15.0
                 parts.append(
                     _rect(cx - bs / 2, y - bs / 2, bs, bs, rx=1.5, sw=1.1, stroke="#b45a55")
@@ -483,13 +757,13 @@ def _column_op(spec: Mapping[str, Any]) -> str:
     digits(bottom, y_top + dh + 8, "b")
     y_line = y_top + dh * 2 + 2
     parts.append(
-        f'<line x1="{_n(x0 - 16)}" y1="{_n(y_line)}" x2="{_n(x0 + width_d * dw)}" '
+        f'<line x1="{_n(x0 - 16)}" y1="{_n(y_line)}" x2="{_n(x0 + slots * dw)}" '
         f'y2="{_n(y_line)}" stroke="{INK}" stroke-width="1.3"/>'
     )
     if result_s:
         digits(result_s, y_line + 16, "r")
     else:
-        parts.append(_rect(x0, y_line + 6, width_d * dw, 18, rx=2, sw=1.1))
+        parts.append(_rect(x0, y_line + 6, slots * dw, 18, rx=2, sw=1.1))
     return _svg(inner_w, inner_h, "".join(parts))
 
 
@@ -960,7 +1234,7 @@ def _frac_pie(spec: Mapping[str, Any]) -> str:
     r, pad = 48.0, 8.0
     cx = cy = pad + r
     step = 360.0 / n
-    leftover, eaten = "#e2b48a", "#f4efe6"
+    leftover, eaten = str(spec.get("fill") or "#e2b48a"), "#f4efe6"
     parts: list[str] = []
     for i in range(n):
         a0 = math.radians(start + i * step)
@@ -998,7 +1272,7 @@ def _tri_row(spec: Mapping[str, Any]) -> str:
     filled = _frac_filled(spec["filled"], n)
     w, h, pad = 32.0, 46.0, 8.0
     lo_y, hi_y = pad + h, pad
-    fill_on, fill_off = "#d7c2e4", PAPER
+    fill_on, fill_off = str(spec.get("fill") or "#d7c2e4"), PAPER
     parts: list[str] = []
     for i in range(n):
         x0 = pad + i * w
@@ -1032,7 +1306,7 @@ def _trap_four(spec: Mapping[str, Any]) -> str:
     tl = (pad + u, y_top)
     tr = (pad + 2 * u, y_top)
     tris = ((bl, b1, tl), (tl, b1, tr), (b1, b2, tr), (tr, b2, br))
-    fill_on = "#d7c2e4"
+    fill_on = str(spec.get("fill") or "#d7c2e4")
     parts: list[str] = []
 
     def _pts(tri: tuple[tuple[float, float], ...]) -> str:
@@ -1054,40 +1328,136 @@ def _trap_four(spec: Mapping[str, Any]) -> str:
 
 
 _SHAPE_KINDS = frozenset(
-    {"square", "rect", "rightTri", "isoTri", "wideTri", "diamond", "tallDiamond"}
+    {
+        "square",
+        "rect",
+        "rightTri",
+        "isoTri",
+        "wideTri",
+        "eqTri",
+        "diamond",
+        "tallDiamond",
+        "trap",
+        "para",
+        "irregQuad",
+    }
 )
+# 도형 항목의 허용 키. 오타(`mark`)가 조용히 무시되면 「옵션을 껐는데 왜 그대로냐」가 된다.
+_SHAPE_ITEM_KEYS = frozenset({"shape", "label", "marks"})
+# 이등변삼각형 밑변 (슬롯 한 변 대비). 정삼각형과 **윤곽으로** 갈려야 한다 — 09 §4-19.
+ISO_TRI_BASE = 0.58
+# 서로 다른 kind 의 윤곽이 이보다 가까우면 「이 중에서 고르시오」가 성립하지 않는다.
+# 실측 바닥은 para↔rect 7.92px 이고 결함이던 eqTri↔isoTri 는 3.93px 이었다.
+SHAPE_MIN_DISTANCE = 6.0
 
 
-def _draw_named_shape(kind: str, ox: float, oy: float, s: float) -> str:
+def _poly_pts(pts: list[tuple[float, float]], sw: float = 1.5) -> str:
+    s = " ".join(f"{_n(x)},{_n(y)}" for x, y in pts)
+    return f'<polygon points="{s}" fill="none" stroke="{INK}" stroke-width="{_n(sw)}"/>'
+
+
+def _tick_at(a: tuple[float, float], b: tuple[float, float], length: float = 3.4) -> str:
+    mx, my = (a[0] + b[0]) / 2, (a[1] + b[1]) / 2
+    dx, dy = b[0] - a[0], b[1] - a[1]
+    hyp = math.hypot(dx, dy) or 1.0
+    nx, ny = (-dy / hyp) * length, (dx / hyp) * length
+    return (
+        f'<line x1="{_n(mx - nx)}" y1="{_n(my - ny)}" x2="{_n(mx + nx)}" y2="{_n(my + ny)}" '
+        f'stroke="{INK}" stroke-width="1.2"/>'
+    )
+
+
+def _right_mark(
+    corner: tuple[float, float],
+    p: tuple[float, float],
+    q: tuple[float, float],
+    size: float = 7.0,
+) -> str:
+    def unit(dst: tuple[float, float]) -> tuple[float, float]:
+        dx, dy = dst[0] - corner[0], dst[1] - corner[1]
+        hyp = math.hypot(dx, dy) or 1.0
+        return dx / hyp * size, dy / hyp * size
+
+    ux, uy = unit(p)
+    vx, vy = unit(q)
+    a = (corner[0] + ux, corner[1] + uy)
+    c = (corner[0] + vx, corner[1] + vy)
+    b = (corner[0] + ux + vx, corner[1] + uy + vy)
+    return (
+        f'<polyline points="{_n(a[0])},{_n(a[1])} {_n(b[0])},{_n(b[1])} {_n(c[0])},{_n(c[1])}" '
+        f'fill="none" stroke="{INK}" stroke-width="1.15"/>'
+    )
+
+
+def _draw_named_shape(kind: str, ox: float, oy: float, s: float, marks: bool = False) -> str:
+    """`marks` 는 **등변 tick·직각 기호**를 그릴지다. 기본은 끈 쪽이다.
+
+    「세 변의 길이가 모두 같은 삼각형의 기호를 쓰시오」인데 가에 tick 이 찍혀 있으면
+    문제가 성립하지 않는다(원장님 2026-08-22). 그림이 묻는 것을 답해 주면 안 되므로
+    안전한 쪽을 기본값으로 두고, 성질을 **주고** 푸는 문항만 켠다. 도형 자체는 여전히
+    정확한 정삼각형·직각삼각형이라 재면 알 수 있다.
+    """
     if kind == "square":
         return _rect(ox, oy, s, s, sw=1.5)
     if kind == "rect":
         return _rect(ox + s * 0.18, oy, s * 0.64, s, sw=1.5)
     if kind == "rightTri":
-        return (
-            f'<polygon points="{_n(ox)},{_n(oy + s)} {_n(ox)},{_n(oy)} '
-            f'{_n(ox + s)},{_n(oy + s)}" fill="none" stroke="{INK}" stroke-width="1.5"/>'
-        )
+        pts = [(ox, oy + s), (ox, oy), (ox + s, oy + s)]
+        mark = _right_mark(pts[0], pts[1], pts[2]) if marks else ""
+        return _poly_pts(pts) + mark
     if kind == "isoTri":
-        return (
-            f'<polygon points="{_n(ox)},{_n(oy + s)} {_n(ox + s / 2)},{_n(oy)} '
-            f'{_n(ox + s)},{_n(oy + s)}" fill="none" stroke="{INK}" stroke-width="1.5"/>'
-        )
+        # 밑변을 좁힌다. 밑변 s·높이 s 이면 정삼각형(밑변 s·높이 0.866s)과 윤곽 거리가
+        # **3.93px** 뿐이라 tick 없이는 둘을 못 가른다 — 등변 표시를 옵트인으로 돌린
+        # 순간(원장님 결함 ⑤) 세 세션이 같은 자리에서 막혔다. 0.58s 로 좁히면 9.45px 가
+        # 되어 나머지 짝들(최소 7.92px) 사이에 묻힌다. 변 길이 비 1.12 → 1.80 (09 §4-19).
+        half = s * ISO_TRI_BASE / 2
+        return _poly_pts([(ox + s / 2 - half, oy + s), (ox + s / 2, oy), (ox + s / 2 + half, oy + s)])
     if kind == "wideTri":
-        return (
-            f'<polygon points="{_n(ox)},{_n(oy + s)} {_n(ox + s / 2)},{_n(oy + s * 0.42)} '
-            f'{_n(ox + s)},{_n(oy + s)}" fill="none" stroke="{INK}" stroke-width="1.5"/>'
-        )
+        return _poly_pts([(ox, oy + s), (ox + s / 2, oy + s * 0.42), (ox + s, oy + s)])
+    if kind == "eqTri":
+        h = s * math.sqrt(3) / 2
+        y0 = oy + (s - h) / 2
+        pts = [(ox, y0 + h), (ox + s / 2, y0), (ox + s, y0 + h)]
+        ticks = "".join(_tick_at(pts[i], pts[(i + 1) % 3]) for i in range(3)) if marks else ""
+        return _poly_pts(pts) + ticks
     if kind == "diamond":
-        return (
-            f'<polygon points="{_n(ox + s / 2)},{_n(oy)} {_n(ox + s)},{_n(oy + s / 2)} '
-            f'{_n(ox + s / 2)},{_n(oy + s)} {_n(ox)},{_n(oy + s / 2)}" fill="none" '
-            f'stroke="{INK}" stroke-width="1.5"/>'
+        return _poly_pts(
+            [(ox + s / 2, oy), (ox + s, oy + s / 2), (ox + s / 2, oy + s), (ox, oy + s / 2)]
         )
-    return (
-        f'<polygon points="{_n(ox + s / 2)},{_n(oy)} {_n(ox + s * 0.72)},{_n(oy + s / 2)} '
-        f'{_n(ox + s / 2)},{_n(oy + s)} {_n(ox + s * 0.28)},{_n(oy + s / 2)}" fill="none" '
-        f'stroke="{INK}" stroke-width="1.5"/>'
+    if kind == "tallDiamond":
+        return _poly_pts(
+            [
+                (ox + s / 2, oy),
+                (ox + s * 0.72, oy + s / 2),
+                (ox + s / 2, oy + s),
+                (ox + s * 0.28, oy + s / 2),
+            ]
+        )
+    if kind == "trap":
+        return _poly_pts(
+            [
+                (ox + s * 0.2, oy + s * 0.12),
+                (ox + s * 0.8, oy + s * 0.12),
+                (ox + s, oy + s),
+                (ox, oy + s),
+            ]
+        )
+    if kind == "para":
+        return _poly_pts(
+            [
+                (ox + s * 0.28, oy),
+                (ox + s, oy),
+                (ox + s * 0.72, oy + s),
+                (ox, oy + s),
+            ]
+        )
+    return _poly_pts(
+        [
+            (ox + s * 0.08, oy + s * 0.22),
+            (ox + s * 0.92, oy),
+            (ox + s, oy + s * 0.62),
+            (ox + s * 0.18, oy + s),
+        ]
     )
 
 
@@ -1108,14 +1478,20 @@ def _named_shapes(spec: Mapping[str, Any]) -> str:
     for i, item in enumerate(items):
         if not isinstance(item, Mapping):
             raise ValueError("namedShapes items 는 객체여야 합니다")
+        extra = set(item) - _SHAPE_ITEM_KEYS
+        if extra:
+            raise ValueError(f"허용되지 않은 도형 키: {', '.join(sorted(str(k) for k in extra))}")
         kind = str(item.get("shape", ""))
         if kind not in _SHAPE_KINDS:
             raise ValueError(f"모르는 도형입니다: {kind}")
+        marks = item.get("marks", False)
+        if not isinstance(marks, bool):
+            raise ValueError("marks 는 참·거짓이어야 합니다")
         label = str(item.get("label", ""))
         col, row = i % cols, i // cols
         ox = pad + col * (slot + gap)
         oy = pad + row * (slot + lab + gap)
-        parts.append(_draw_named_shape(kind, ox + (slot - size) / 2, oy, size))
+        parts.append(_draw_named_shape(kind, ox + (slot - size) / 2, oy, size, marks))
         if label:
             parts.append(_text(ox + slot / 2, oy + size + 12, label, size=13, weight="700"))
     width = pad * 2 + cols * slot + (cols - 1) * gap
@@ -1149,3 +1525,10 @@ _RENDER = {
     "trapFour": _trap_four,
     "namedShapes": _named_shapes,
 }
+
+# 후반 학년 kind. 이 파일 아래에서 import 해야 _svg 등이 이미 있다.
+from elem_advanced import ADV_FIELDS, ADV_OPTIONAL, ADV_RENDER  # noqa: E402
+
+KIND_FIELDS.update(ADV_FIELDS)
+OPTIONAL.update(ADV_OPTIONAL)
+_RENDER.update(ADV_RENDER)
