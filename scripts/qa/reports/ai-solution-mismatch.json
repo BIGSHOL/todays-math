@@ -1486,5 +1486,41 @@
   "code": "HC10402-NQ3P",
   "dbAnswer": "③",
   "aiAnswer": "②"
+ },
+ {
+  "id": "a76a6652-3c59-40d9-aa20-b5924362b274",
+  "code": "HC10404-SJZQ",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "1dea7fe1-b679-46fb-bc3b-32484fc39f98",
+  "code": "HC10404-UDAF",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "153a68bd-1072-43fd-bec7-720c8a786527",
+  "code": "HC10404-VTS7",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "d10435fd-e300-4fa3-9e82-b64af97aad8a",
+  "code": "HC10404-X9LR",
+  "dbAnswer": "[[1, 0], [0, 1]] (단위행렬 E)",
+  "aiAnswer": "\\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix}"
+ },
+ {
+  "id": "1f5c65a9-4a2a-4ccb-8b22-eec76347e34f",
+  "code": "HC20103-FSQL",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "b2de295a-cbaa-4c6c-a9ce-95d9f4723578",
+  "code": "HC20106-K26R",
+  "dbAnswer": "정답 ④",
+  "aiAnswer": "④"
  }
 ]
