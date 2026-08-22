@@ -912,25 +912,32 @@ if (process.argv.includes("--unreadable")) {
             ? "D. 용어·이름·고르기 (정답이 수가 아니다)"
             : "Z. 낱개 문장제";
     if (!groups.has(key)) groups.set(key, []);
-    groups
-      .get(key)!
-      .push({
-        unit: `${unit.grade} ${unit.section}`,
-        content: c,
-        answer: p.answer,
-      });
+    groups.get(key)!.push({
+      unit: `${unit.grade} ${unit.section}`,
+      content: c,
+      answer: p.answer,
+    });
   }
   for (const [k, rows] of [...groups].sort(
     (a, b) => b[1].length - a[1].length,
   )) {
     console.log(`\n━━ ${k}  (${rows.length}개)`);
-    for (const r of rows.slice(
-      0,
-      process.argv.includes("--full") ? rows.length : 5,
-    )) {
+    const full = process.argv.includes("--full");
+    const shown = rows.slice(0, full ? rows.length : 5);
+    for (const r of shown) {
       console.log(`   ${r.unit}`);
       console.log(`     문 ${r.content.replace(/\n/g, " ").slice(0, 140)}`);
       console.log(`     답 ${r.answer}`);
+    }
+    // ⚠️ **잘렸다는 것을 반드시 찍는다.** 안 찍으면 이 목록을 `grep` 으로 훑는 사람이
+    //    「안 뜬다 → 이 소단원은 목록에서도 눈이 멀었다」로 **거짓 결론**을 낸다.
+    //    2026-08-22 에 실제로 그렇게 읽혔다(2-6-2 는 22개 안에 있었는데 5개만 찍혔다).
+    //    「(22개)」를 옆에 적어 두는 것만으로는 부족했다 — grep 은 그 줄을 안 본다.
+    if (shown.length < rows.length) {
+      console.log(
+        `   … 외 ${rows.length - shown.length}개 — 전부 보려면 \`--full\`. ` +
+          `**이 목록을 grep 으로 훑지 마라.**`,
+      );
     }
   }
   process.exit(0);

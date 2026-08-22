@@ -50,6 +50,101 @@ function labeled(content: string, label: string): number {
   return Number(hit![1]);
 }
 
+/**
+ * 「평균」 문항의 **꼴을 가르고 그 꼴의 식으로 검산**한다.
+ *
+ * 꼴이 셋이고 검산식이 서로 다르다 — 뭉뚱그리면 한쪽이 거짓 빨강이 된다.
+ *
+ * | 꼴 | 판별자 | 검산 |
+ * |---|---|---|
+ * | `평균묻기`   | `…의 평균을 구하시오`        | 답 `= Σ ÷ 개수` |
+ * | `합되찾기`   | `평균이 $A$…입니다 … 모두 더하면` | 답 `= N × A` |
+ * | `빠진값찾기` | `그중 $N-1$명의 … 이고, $N$명의 평균은` | 답 `= N × A − Σ나열`, 나열은 **N−1개** |
+ *
+ * ⚠️ 예전에는 「의 평균」으로 잘라 **앞의 수를 전부 자료로** 셌다. `빠진값찾기` 가 들어오자
+ *    인원수(`$6$명`·`$5$명`)까지 자료로 세고, 나열된 수는 **한 명이 빠진 것**이라 거짓 빨강이
+ *    났다(2026-08-22). 그때 「그 꼴은 건너뛴다」로 막으면 그 소단원은 이 검사에서 **구조적으로
+ *    0** 이 된다 — 그래서 건너뛰지 않고 **각자의 식으로** 검산한다.
+ *
+ * 어디에도 안 걸리면 `미분류` 를 낸다. **조용히 통과시키지 않는다** — 새 꼴이 들어오면
+ * 사람이 보고 식을 정해야 한다(「손 목록은 샌다」, 09 §4-22).
+ */
+export function averageVerdict(
+  content: string,
+  answer: number,
+): { form: string; ok: boolean; why: string } {
+  const missingOne = content.match(
+    /그중 \$(\d+)\$명의 [^$]*?\$([^$]+)\$[^$]*?\$(\d+)\$명의 평균은 \$([\d.]+)\$/,
+  );
+  if (missingOne) {
+    const shownCount = Number(missingOne[1]);
+    const shown = (missingOne[2]!.match(/\d+(?:\.\d+)?/g) ?? []).map(Number);
+    const count = Number(missingOne[3]);
+    const avg = Number(missingOne[4]);
+    const want = count * avg - shown.reduce((a, b) => a + b, 0);
+    if (shownCount !== count - 1)
+      return {
+        form: "빠진값찾기",
+        ok: false,
+        why: `나열 인원 ${shownCount} ≠ ${count - 1}`,
+      };
+    if (shown.length !== count - 1)
+      return {
+        form: "빠진값찾기",
+        ok: false,
+        why: `나열 ${shown.length}개 ≠ ${count - 1}개`,
+      };
+    if (answer !== want)
+      return {
+        form: "빠진값찾기",
+        ok: false,
+        why: `답 ${answer} ≠ ${count}×${avg}−Σ = ${want}`,
+      };
+    // 「나머지 한 명」이 음수·0 이면 문항이 성립하지 않는다.
+    if (answer <= 0)
+      return {
+        form: "빠진값찾기",
+        ok: false,
+        why: `답이 ${answer} — 양수가 아니다`,
+      };
+    return { form: "빠진값찾기", ok: true, why: "" };
+  }
+
+  const sumBack = content.match(/\$(\d+)\$명의 [^$]*?평균이 \$([\d.]+)\$/);
+  if (sumBack) {
+    const want = Number(sumBack[1]) * Number(sumBack[2]);
+    return answer === want
+      ? { form: "합되찾기", ok: true, why: "" }
+      : {
+          form: "합되찾기",
+          ok: false,
+          why: `답 ${answer} ≠ ${sumBack[1]}×${sumBack[2]} = ${want}`,
+        };
+  }
+
+  const asked = content.split("의 평균을 구하시오")[0];
+  if (asked !== undefined && asked !== content) {
+    const listed = (asked.match(/\d+(?:\.\d+)?/g) ?? []).map(Number);
+    if (listed.length <= 1)
+      return { form: "평균묻기", ok: false, why: `자료가 ${listed.length}개` };
+    const sum = listed.reduce((a, b) => a + b, 0);
+    if (sum % listed.length !== 0)
+      return {
+        form: "평균묻기",
+        ok: false,
+        why: `합 ${sum} 이 ${listed.length} 로 안 나눠떨어진다`,
+      };
+    const want = sum / listed.length;
+    return answer === want
+      ? { form: "평균묻기", ok: true, why: "" }
+      : { form: "평균묻기", ok: false, why: `답 ${answer} ≠ ${want}` };
+  }
+
+  return content.includes("평균")
+    ? { form: "미분류", ok: false, why: "평균 문항인데 검산할 꼴을 못 골랐다" }
+    : { form: "평균아님", ok: true, why: "" };
+}
+
 describe("[초등 엔진] 소단원 전량", () => {
   it("초3~초6 소단원이 230개다", () => {
     expect(UNITS).toHaveLength(230);
@@ -244,23 +339,139 @@ describe("[초등 엔진] 소단원 전량", () => {
           `${unit.section}: ${item.answer}`,
         ).toBe(true);
 
-        // 「… 의 평균을 구하시오」 꼴이면 나열된 수로 **직접 검산**한다.
-        // 수를 KaTeX 로 감싸든(`$15$, $11$, $13$) 한 덩어리로 쓰든(`$15,\ 11,\ 13$`) 같이 잡힌다.
-        const head = item.content.split("의 평균")[0];
-        if (head !== undefined && head !== item.content) {
-          const listed = (head.match(/\d+(?:\.\d+)?/g) ?? []).map(Number);
-          expect(
-            listed.length,
-            `${unit.section}: ${item.content}`,
-          ).toBeGreaterThan(1);
-          const sum = listed.reduce((a, b) => a + b, 0);
-          expect(sum % listed.length, `${unit.section}: ${item.content}`).toBe(
-            0,
-          );
-          expect(answer, item.content).toBe(sum / listed.length);
+        // 꼴을 가르고 **그 꼴의 식으로** 검산한다. 규칙은 `averageVerdict` 한 곳에만 두고
+        // 아래 「눈금」검사가 그 함수를 픽스처로 시험한다 — 두 벌이면 한쪽만 고쳐도 모른다.
+        const v = averageVerdict(item.content, answer);
+        expect(
+          v.ok,
+          `${unit.section} [${v.form}] ${v.why} — ${item.content}`,
+        ).toBe(true);
+      }
+    }
+  });
+
+  it("평균 문항의 수는 **세상에서 있을 수 있는** 값이다", () => {
+    // 「선수 $5$명의 **키**를 조사했더니 평균이 $33$ cm」가 실측 51/200 이었다(2026-08-22).
+    // **가드 넷이 전부 못 본다** — 산술도 표기도 소단원 조건도 맞다. 「이 수가 그 낱말과
+    // 어울리는가」는 코드가 아니라 **세상**이 정하기 때문이다.
+    //
+    // ⚠️ 기대 범위를 `AVG_TOPICS` 에서 **읽어 오면 안 된다.** 읽어 오면 제품 범위를 넓힐 때
+    //    기대값도 같이 넓어져 **영원히 초록**이다 — 참이 제품에서 오면 제품이 틀릴수록 좋은
+    //    점수를 낸다(2026-08-18). 그래서 아래 값은 손으로 못 박는다.
+    //
+    // ⚠️ 「흔한 값」이 아니라 **「있을 수 없는 값」**으로 긋는다. 좁게 그으면 멀쩡한 문항이
+    //    걸리고, **거짓 경보는 가드를 끈다**(2026-08-20). 그래서 `수학 점수 $2$점` 은
+    //    통과시키고 `$103$점`·`키 $33$cm` 처럼 **불가능한 것만** 잡는다.
+    const BANDS: { topic: string; unit: string; lo: number; hi: number }[] = [
+      { topic: "몸무게", unit: "kg", lo: 15, hi: 70 },
+      { topic: "키", unit: "cm", lo: 100, hi: 190 },
+      { topic: "점수", unit: "점", lo: 0, hi: 100 },
+      { topic: "줄넘기", unit: "번", lo: 1, hi: 300 },
+      { topic: "시간", unit: "분", lo: 1, hi: 240 },
+    ];
+    const avgUnits = UNITS.filter((u) => u.section.includes("평균"));
+    expect(avgUnits.length, "평균 소단원을 못 찾았다").toBeGreaterThan(0);
+
+    let checked = 0;
+    for (const unit of avgUnits) {
+      for (let seed = 0; seed < 60; seed += 1) {
+        const { content } = generateElementaryProblem(unit, seed);
+        for (const band of BANDS) {
+          if (!content.includes(band.topic)) continue;
+          // `$34$ kg` 과 `$62,\ 64$점` 을 같이 잡는다 — 한 덩어리 안의 수를 전부 본다.
+          const re = new RegExp(`\\$([^$]+)\\$\\s*${band.unit}`, "g");
+          for (const hit of content.matchAll(re)) {
+            for (const raw of hit[1]!.match(/\d+(?:\.\d+)?/g) ?? []) {
+              const value = Number(raw);
+              checked += 1;
+              expect(
+                value >= band.lo && value <= band.hi,
+                `${unit.section}: ${band.topic} ${value}${band.unit} 은 세상에 없다 ` +
+                  `(${band.lo}~${band.hi}) — ${content}`,
+              ).toBe(true);
+            }
+          }
         }
       }
     }
+    // **0 은 「깨끗」과 「못 셈」을 구분해 주지 않는다.** 아무것도 안 봤으면 멈춘다.
+    expect(
+      checked,
+      "수를 하나도 검사하지 못했다 — 발문 모양이 바뀌었나",
+    ).toBeGreaterThan(100);
+  });
+
+  it("평균 검산기 눈금 — 맞는 답은 통과하고 틀린 답은 걸린다", () => {
+    // ⚠️ **양성만 대면 「재현율」만 재고 「지어냄」은 구조적으로 0** 이다(2026-08-20).
+    //    그래서 꼴마다 «맞는 답»과 «틀린 답»을 **둘 다** 넣는다. 위 전량 검사는 늘
+    //    맞는 답만 주므로, 이 함수가 **빨개질 수 있는지**를 저 혼자서는 못 보여 준다.
+    const 빠진값 =
+      "학생 $6$명의 수학 점수를 조사했습니다. 그중 $5$명의 수학 점수는 " +
+      "$62,\\ 64,\\ 68,\\ 60,\\ 78$점이고, $6$명의 평균은 $68$점입니다. " +
+      "나머지 한 명의 수학 점수는 몇 점인가?";
+    const 합되찾기 =
+      "학생 $5$명의 몸무게를 조사했더니 평균이 $34$kg입니다. " +
+      "학생 $5$명의 몸무게를 모두 더하면 몇 kg인가?";
+    const 평균묻기 = "$24,\\ 18,\\ 21,\\ 29$의 평균을 구하시오.";
+
+    // 양성 — 맞는 답은 통과해야 한다. (408 = 6×68, Σ=332 → 76)
+    expect(averageVerdict(빠진값, 76)).toMatchObject({
+      form: "빠진값찾기",
+      ok: true,
+    });
+    expect(averageVerdict(합되찾기, 170)).toMatchObject({
+      form: "합되찾기",
+      ok: true,
+    });
+    expect(averageVerdict(평균묻기, 23)).toMatchObject({
+      form: "평균묻기",
+      ok: true,
+    });
+
+    // 음성 — 답이 틀리면 **반드시** 걸려야 한다. 안 걸리면 이 검사는 장식이다.
+    expect(averageVerdict(빠진값, 77).ok, "빠진값: 틀린 답이 통과했다").toBe(
+      false,
+    );
+    expect(
+      averageVerdict(합되찾기, 171).ok,
+      "합되찾기: 틀린 답이 통과했다",
+    ).toBe(false);
+    expect(
+      averageVerdict(평균묻기, 24).ok,
+      "평균묻기: 틀린 답이 통과했다",
+    ).toBe(false);
+
+    // 「나머지 한 명」이 0 이하인 문항은 성립하지 않는다.
+    const 음수 = 빠진값.replace(
+      "$6$명의 평균은 $68$점",
+      "$6$명의 평균은 $50$점",
+    );
+    expect(averageVerdict(음수, 300 - 332).ok, "음수 답이 통과했다").toBe(
+      false,
+    );
+
+    // 나열 개수가 인원과 안 맞으면 걸린다(한 명을 빠뜨리거나 더 적었다).
+    const 개수틀림 = 빠진값.replace(
+      "$62,\\ 64,\\ 68,\\ 60,\\ 78$",
+      "$62,\\ 64,\\ 68,\\ 60$",
+    );
+    expect(
+      averageVerdict(개수틀림, 76).ok,
+      "나열 개수가 틀렸는데 통과했다",
+    ).toBe(false);
+
+    // **새 꼴은 조용히 지나가지 않는다.** 이게 없으면 다음 갈래가 검산 밖으로 샌다.
+    expect(averageVerdict("평균 키가 가장 큰 반을 고르시오.", 3)).toMatchObject(
+      {
+        form: "미분류",
+        ok: false,
+      },
+    );
+    // 평균과 무관한 문항까지 붙잡지는 않는다(거짓 경보는 가드를 끈다 — 2026-08-20).
+    expect(averageVerdict("$3\\times4$ 의 값을 구하시오.", 12)).toMatchObject({
+      form: "평균아님",
+      ok: true,
+    });
   });
 
   it("선대칭·점대칭 그림은 격자 블록만 쓰지 않는다", () => {

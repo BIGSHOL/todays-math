@@ -1417,14 +1417,32 @@ function cuboid(unit: UnitSeed, rng: Rng): ElemProblem {
 
 /* ────────────────────────────── 2-6 평균과 가능성 ────────────────────────────── */
 
-/** 평균 문항의 소재 — (누구, 무엇, 단위). 「학생」 하나로 굳지 않게 한다. */
+/**
+ * 평균 문항의 소재 — (누구, 무엇, 단위, **그럴듯한 값의 범위**).
+ *
+ * ⚠️ 범위를 소재마다 두지 않으면 「선수 $5$명의 **키**를 조사했더니 평균이 $33$ cm」가
+ * 나온다(실측 51/200). 산술도 표기도 소단원 조건도 전부 맞아서 **어느 가드도 못 본다** —
+ * 수가 그 낱말과 어울리는지는 코드가 아니라 세상이 정하기 때문이다.
+ */
 const AVG_TOPICS = [
-  ["학생", "몸무게", "kg"],
-  ["선수", "키", "cm"],
-  ["친구", "줄넘기 횟수", "번"],
-  ["학생", "수학 점수", "점"],
-  ["친구", "하루 운동 시간", "분"],
+  ["학생", "몸무게", "kg", 28, 45],
+  ["선수", "키", "cm", 150, 180],
+  ["친구", "줄넘기 횟수", "번", 20, 60],
+  ["학생", "수학 점수", "점", 60, 95],
+  ["친구", "하루 운동 시간", "분", 20, 60],
 ] as const;
+
+/** `lo`~`hi` 에서 `count` 로 나눈 나머지가 `want` 인 수. 범위가 `count` 보다 넓으면 안 빈다. */
+function withResidue(
+  lo: number,
+  hi: number,
+  count: number,
+  want: number,
+): number[] {
+  const out: number[] = [];
+  for (let v = lo; v <= hi; v += 1) if (v % count === want) out.push(v);
+  return out;
+}
 
 function average(unit: UnitSeed, rng: Rng): ElemProblem {
   const s = unit.section;
@@ -1452,20 +1470,56 @@ function average(unit: UnitSeed, rng: Rng): ElemProblem {
     );
   }
 
-  // 2-6-2 평균을 이용하여 문제해결하기 — 평균에서 **합**을 되찾는다.
-  // ⚠️ 발문에 「의 평균」이라는 말을 넣지 않는다. `elementaryEngine.test.ts` 의 평균 검사는
-  //    「…의 평균」이 보이면 **그 앞의 수들로 직접 검산**하는데, 이 문항의 앞머리에는 자료가
-  //    아니라 사람 수 하나뿐이라 그 검산이 성립하지 않는다.
+  // 2-6-2 평균을 이용하여 문제해결하기 — 갈래 **둘**. 원장님 확정(2026-08-22, 「초5는 넣도록 해」).
+  //  ㉠ 평균에서 **합**을 되찾는다
+  //  ㉡ 자료 하나가 빠졌을 때 그 **값**을 되찾는다 (교과서에 있는데 우리가 안 내던 것)
+  //
+  // ⚠️ ㉡ 의 발문에는 「$5$명의 평균은」이 들어간다. `elementaryEngine.test.ts` 의 평균 검사가
+  //    「의 평균」을 보고 **앞의 수들로 직접 검산**하는데, 여기 나열된 수는 **한 명이 빠진 것**이라
+  //    그대로 두면 거짓 빨강이 난다. 그 검사는 team-lead 담당이라 발문 형태를 넘겨 맞추기로 했다
+  //    (검사를 피하려고 발문을 비틀지 않는다 — 제품을 시험에 맞추는 것이다).
   if (s.includes("이용하여")) {
-    const [who, what, unitName] = pick(rng, AVG_TOPICS);
-    const count = intBetween(rng, 4, 8);
-    const avg = intBetween(rng, 12, 60);
+    const [who, what, unitName, lo, hi] = pick(rng, AVG_TOPICS);
+    // `cm`·`kg` 은 수와 띄고, 한글 단위(`번`·`점`·`분`)는 붙여 쓴다.
+    const sp = /^[a-z]/i.test(unitName) ? " " : "";
+
+    // ㉠ 합 구하기
+    if (intBetween(rng, 0, 1) === 0) {
+      const count = intBetween(rng, 4, 8);
+      const avg = intBetween(rng, lo, hi);
+      return make(
+        unit,
+        `${who} ${n(count)}명의 ${wj(what, "을", "를")} 조사했더니 평균이 ${n(avg)}${sp}${unitName}입니다. ${who} ${n(count)}명의 ${wj(what, "을", "를")} 모두 더하면 몇 ${unitName}인가?`,
+        n(count * avg),
+        `합은 평균에 자료의 수를 곱한 값이므로 ${expr(`${avg}\\times${count}=${count * avg}`)}입니다.`,
+      );
+    }
+
+    // ㉡ 빠진 자료 값 구하기.
+    // **자료를 먼저 정하고 평균을 유도한다.** 평균을 먼저 뽑으면 빠진 값이 범위를 벗어나
+    // 「몸무게 $71$ kg 인 초등학생」이 나온다. 이렇게 하면 모든 값이 범위 안이고
+    // 평균이 자연수인 것이 **구성으로** 보장된다.
+    const count = intBetween(rng, 4, 6);
+    const head: number[] = [];
+    for (let i = 0; i < count - 1; i += 1) head.push(intBetween(rng, lo, hi));
+    const partial = head.reduce((x, y) => x + y, 0);
+    // 마지막 값은 합이 `count` 로 나누어떨어지게 고른다. 나머지가 같은 수는 `count` 마다
+    // 하나씩 있으므로 범위가 `count` 보다 넓으면(모든 소재가 그렇다) 반드시 있다.
+    const want = ((-partial % count) + count) % count;
+    head.push(pick(rng, withResidue(lo, hi, count, want)));
+    const total = head.reduce((x, y) => x + y, 0);
+    const avg = total / count;
+
+    // 가리는 자리를 씨앗마다 옮긴다 — 늘 마지막이 빠지면 자리가 단조롭다.
+    const ordered = shuffled(rng, head);
+    const missing = ordered[0]!;
+    const shown = ordered.slice(1);
+    const shownSum = shown.reduce((x, y) => x + y, 0);
     return make(
       unit,
-      // `cm`·`kg` 은 수와 띄고, 한글 단위(`번`·`점`·`분`)는 붙여 쓴다.
-      `${who} ${n(count)}명의 ${wj(what, "을", "를")} 조사했더니 평균이 ${n(avg)}${/^[a-z]/i.test(unitName) ? " " : ""}${unitName}입니다. ${who} ${n(count)}명의 ${wj(what, "을", "를")} 모두 더하면 몇 ${unitName}인가?`,
-      n(count * avg),
-      `합은 평균에 자료의 수를 곱한 값이므로 ${expr(`${avg}\\times${count}=${count * avg}`)}입니다.`,
+      `${who} ${n(count)}명의 ${wj(what, "을", "를")} 조사했습니다. 그중 ${n(count - 1)}명의 ${wj(what, "은", "는")} ${nums(shown)}${sp}${unitName}이고, ${n(count)}명의 평균은 ${n(avg)}${sp}${unitName}입니다. 나머지 한 명의 ${wj(what, "은", "는")} 몇 ${unitName}인가?`,
+      n(missing),
+      `${n(count)}명의 합은 ${expr(`${avg}\\times${count}=${total}`)}입니다. 여기에서 ${n(count - 1)}명의 합 ${nj(shownSum, "을", "를")} 빼면 ${expr(`${total}-${shownSum}=${missing}`)}입니다.`,
     );
   }
 
