@@ -84,6 +84,8 @@ docker compose up -d # 로컬 PostgreSQL
 ## 워크플로우
 
 - **기본**: 병렬 가능한 일은 오르카 다중 세션 → 완료 검수 → main 병합
+- `/elem-gen` — 자체 초등 엔진·난이도 4단(D-71)으로 초등 문항 생성·검수
+  (.claude/skills/elem-gen — DB 적재 없음, 커버리지는 `--list` 로)
 - `/orchestrate {태스크 ID 또는 요청}` — 06-tasks.md 기반으로 전문가 에이전트 호출
 - `/integration-validator` — 병렬 작업 후 계약/타입 일관성 검증
 - 에이전트 팀: backend / frontend / database / test specialist (.claude/agents/)
