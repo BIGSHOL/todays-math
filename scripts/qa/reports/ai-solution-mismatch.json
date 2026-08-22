@@ -1942,5 +1942,29 @@
   "code": "HM10209-PR3M",
   "dbAnswer": "②",
   "aiAnswer": "④"
+ },
+ {
+  "id": "cb1d415c-a5bd-479a-9f9f-c6f099a3fa61",
+  "code": "HM10209-UW3L",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "4fa06438-7607-4967-a3b9-203472b9d941",
+  "code": "HM10211-FX3B",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "cb824d95-21ae-4def-a2e5-bff581c5447f",
+  "code": "HM10302-4AP4",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "f658748f-7a27-4d17-9685-717cc981def6",
+  "code": "HM10302-85AT",
+  "dbAnswer": "⑤",
+  "aiAnswer": "②"
  }
 ]
