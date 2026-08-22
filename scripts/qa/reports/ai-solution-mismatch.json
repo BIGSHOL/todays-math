@@ -1666,5 +1666,23 @@
   "code": "HC20313-NL9Y",
   "dbAnswer": "④",
   "aiAnswer": "②"
+ },
+ {
+  "id": "9db42f85-d4bf-4449-ae9c-bda1a4f2678d",
+  "code": "HAL0109-6BHV",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "b2ed7812-1de5-4105-8e31-3e16d36905f8",
+  "code": "HAL0110-2TWV",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "6dea8ade-e003-427b-959b-1e2068e424dc",
+  "code": "HAL0111-79VU",
+  "dbAnswer": "①",
+  "aiAnswer": "⑤"
  }
 ]
