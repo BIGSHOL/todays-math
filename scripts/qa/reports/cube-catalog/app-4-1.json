@@ -1,0 +1,280 @@
+{
+ "grade": "4-1",
+ "series": "응용",
+ "file": "큐브수학 개념응용 4-1 진도북.pdf",
+ "pageCount": 176,
+ "units": [
+  {
+   "unit": 1,
+   "title": "큰 수",
+   "pageStart": 6,
+   "pageEnd": 33,
+   "plannerPage": 5,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 6,
+     "pageEnd": 13,
+     "items": [
+      "개념 1 ~ 개념 5"
+     ]
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 14,
+     "pageEnd": 23,
+     "items": [
+      "개념 6 ~ 개념 11"
+     ]
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 24,
+     "pageEnd": 27,
+     "items": [
+      "전체 금액 구하기",
+      "수직선에 나타낸 수 구하기",
+      "가 있는 수의 크기 비교",
+      "수 카드를 사용하여 큰 수 만들기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 28,
+     "pageEnd": 30,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 31,
+     "pageEnd": 33,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 2,
+   "title": "각도",
+   "pageStart": 36,
+   "pageEnd": 65,
+   "plannerPage": 35,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 36,
+     "pageEnd": 45,
+     "items": [
+      "개념 1 ~ 개념 6"
+     ]
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 46,
+     "pageEnd": 55,
+     "items": [
+      "개념 7 ~ 개념 11"
+     ]
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 56,
+     "pageEnd": 59,
+     "items": [
+      "여러 직선이 만나서 이루는 각도 구하기",
+      "직각 삼각자를 겹쳐서 만든 각도 구하기",
+      "도형에서 각도의 합 구하기",
+      "종이를 접었을 때 생기는 각도 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 60,
+     "pageEnd": 62,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 63,
+     "pageEnd": 65,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 3,
+   "title": "곱셈과 나눗셈",
+   "pageStart": 68,
+   "pageEnd": 97,
+   "plannerPage": 67,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 68,
+     "pageEnd": 75,
+     "items": [
+      "개념 1 ~ 개념 4"
+     ]
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 76,
+     "pageEnd": 87,
+     "items": [
+      "개념 5 ~ 개념 10"
+     ]
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 88,
+     "pageEnd": 91,
+     "items": [
+      "곱이 주어진 수에 가장 가까운 수 구하기",
+      "곱셈과 나눗셈의 활용",
+      "바르게 계산한 값 구하기",
+      "몫이 가장 큰 (작은) 나눗셈식 만들기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 92,
+     "pageEnd": 94,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 95,
+     "pageEnd": 97,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 4,
+   "title": "평면도형의 이동",
+   "pageStart": 100,
+   "pageEnd": 121,
+   "plannerPage": 99,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 100,
+     "pageEnd": 111,
+     "items": [
+      "개념 1 ~ 개념 6"
+     ]
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 112,
+     "pageEnd": 115,
+     "items": [
+      "처음 모양과 같은 모양 찾기",
+      "거울에 비친 모양 알아보기",
+      "여러 번 뒤집고 돌린 모양 알아보기",
+      "도형을 움직인 규칙 찾기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 116,
+     "pageEnd": 118,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 119,
+     "pageEnd": 121,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 5,
+   "title": "막대그래프",
+   "pageStart": 124,
+   "pageEnd": 145,
+   "plannerPage": 123,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 124,
+     "pageEnd": 135,
+     "items": [
+      "개념 1 ~ 개념 4"
+     ]
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 136,
+     "pageEnd": 139,
+     "items": [
+      "모르는 항목의 수량 구하기",
+      "조건에 맞게 막대그래프 완성하기",
+      "두 막대그래프를 연결하여 내용 알기",
+      "눈금 한 칸의 크기를 이용하여 다른 항목의 수량 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 140,
+     "pageEnd": 142,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 143,
+     "pageEnd": 145,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 6,
+   "title": "규칙 찾기",
+   "pageStart": 148,
+   "pageEnd": 175,
+   "plannerPage": 147,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 148,
+     "pageEnd": 155,
+     "items": [
+      "개념 1 ~ 개념 4"
+     ]
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 156,
+     "pageEnd": 165,
+     "items": [
+      "개념 5 ~ 개념 10"
+     ]
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 166,
+     "pageEnd": 169,
+     "items": [
+      "수 배열표를 보고 규칙 찾기",
+      "물건이 놓이는 순서 구하기",
+      "계산식의 결과 구하기",
+      "모양을 만드는 데 필요한 물건의 수 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 170,
+     "pageEnd": 172,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 173,
+     "pageEnd": 175,
+     "items": []
+    }
+   ]
+  }
+ ]
+}

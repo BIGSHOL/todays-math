@@ -1,0 +1,354 @@
+{
+ "grade": "3-1",
+ "series": "응용",
+ "file": "큐브수학 개념응용 3-1 진도북.pdf",
+ "pageCount": 176,
+ "units": [
+  {
+   "unit": 1,
+   "title": "덧셈과 뺄셈",
+   "pageStart": 6,
+   "pageEnd": 35,
+   "plannerPage": 5,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 6,
+     "pageEnd": 11,
+     "items": [
+      "개념 1 ~ 개념 4"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 12,
+     "pageEnd": 15,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 16,
+     "pageEnd": 21,
+     "items": [
+      "개념 5 ~ 개념 7"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 22,
+     "pageEnd": 25,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 26,
+     "pageEnd": 29,
+     "items": [
+      "모르는 수 구하여 계산하기",
+      "수 카드로 만든 두 수의 합과 차 구하기",
+      "합과 차를 아는 두 수 구하기",
+      "크기 비교에서 안에 알맞은 수 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 30,
+     "pageEnd": 32,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 33,
+     "pageEnd": 35,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 2,
+   "title": "평면도형",
+   "pageStart": 38,
+   "pageEnd": 63,
+   "plannerPage": 37,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 38,
+     "pageEnd": 41,
+     "items": [
+      "개념 1 ~ 개념 5"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 42,
+     "pageEnd": 45,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 46,
+     "pageEnd": 49,
+     "items": [
+      "개념 6 ~ 개념 9"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 50,
+     "pageEnd": 53,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 54,
+     "pageEnd": 57,
+     "items": [
+      "선분, 직선, 반직선의 수 구하기",
+      "사용한 모양 조각의 수 구하기",
+      "크고 작은 도형의 수 구하기",
+      "도형의 한 변의 길이 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 58,
+     "pageEnd": 60,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 61,
+     "pageEnd": 63,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 3,
+   "title": "나눗셈",
+   "pageStart": 66,
+   "pageEnd": 85,
+   "plannerPage": 65,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 66,
+     "pageEnd": 71,
+     "items": [
+      "개념 1 ~ 개념 5"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 72,
+     "pageEnd": 75,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 76,
+     "pageEnd": 79,
+     "items": [
+      "조건에 맞는 나눗셈식 만들기",
+      "다리 수를 보고 몇 마리인지 구하기",
+      "걸리는 시간 구하기",
+      "일정한 간격으로 놓인 물건의 수 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 80,
+     "pageEnd": 82,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 83,
+     "pageEnd": 85,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 4,
+   "title": "곱셈",
+   "pageStart": 88,
+   "pageEnd": 107,
+   "plannerPage": 87,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 88,
+     "pageEnd": 93,
+     "items": [
+      "개념 1 ~ 개념 5"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 94,
+     "pageEnd": 97,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 98,
+     "pageEnd": 101,
+     "items": [
+      "몇 도막으로 자르는 데 필요한 시간 구하기",
+      "곱이 가장 큰(작은) 곱셈식 만들기",
+      "규칙을 찾아 주어진 수 구하기",
+      "이어 붙인 전체 길이 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 102,
+     "pageEnd": 104,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 105,
+     "pageEnd": 107,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 5,
+   "title": "길이와 시간",
+   "pageStart": 110,
+   "pageEnd": 137,
+   "plannerPage": 109,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 110,
+     "pageEnd": 113,
+     "items": [
+      "개념 1 ~ 개념 4"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 114,
+     "pageEnd": 117,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 118,
+     "pageEnd": 123,
+     "items": [
+      "개념 5 ~ 개념 10"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 124,
+     "pageEnd": 127,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 128,
+     "pageEnd": 131,
+     "items": [
+      "오전과 오후 시각의 뺄셈 활용",
+      "일정한 빠르기로 갈 때 걸리는 시간 구하기",
+      "고장난 시계가 가리키는 시각 구하기",
+      "가장 짧은 길의 길이 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 132,
+     "pageEnd": 134,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 135,
+     "pageEnd": 137,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 6,
+   "title": "분수와 소수",
+   "pageStart": 140,
+   "pageEnd": 175,
+   "plannerPage": 139,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 140,
+     "pageEnd": 143,
+     "items": [
+      "개념 1 ~ 개념 5"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 144,
+     "pageEnd": 147,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 148,
+     "pageEnd": 151,
+     "items": [
+      "개념 6 ~ 개념 8"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 152,
+     "pageEnd": 155,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 156,
+     "pageEnd": 161,
+     "items": [
+      "개념 9 ~ 개념 13"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 162,
+     "pageEnd": 165,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 166,
+     "pageEnd": 169,
+     "items": [
+      "색칠한 부분을 소수로 나타내기",
+      "0.1이 몇 개인지 구하기",
+      "남은 양은 전체의 얼마인지 구하기",
+      "안에 공통으로 들어갈 수 있는 수 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 170,
+     "pageEnd": 172,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 173,
+     "pageEnd": 175,
+     "items": []
+    }
+   ]
+  }
+ ]
+}
