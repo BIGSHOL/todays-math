@@ -1618,5 +1618,35 @@
   "code": "HC20304-8MED",
   "dbAnswer": "(정답 없음)",
   "aiAnswer": "⑴ X의 각 원소에 Y의 원소가 오직 하나씩 대응 ⑵(가) h(x)=-x+1 (나) h(x)=-x+7"
+ },
+ {
+  "id": "7a8c2b78-6ad8-4a59-a6a8-ed9d54dc0b88",
+  "code": "HC20308-CG3L",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "e99615e8-7a92-41c1-9bc5-750e28b67df4",
+  "code": "HC20310-6NXF",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "82aa1a85-f939-4e3f-a8f6-2999165e548d",
+  "code": "HC20310-MEQX",
+  "dbAnswer": "최솟값 √2/2, P(5/2, 3/2), (3/2, 5/2)",
+  "aiAnswer": "최솟값은 $\\frac{\\sqrt2}{2}$이고, $\\mathrm{P}\\left(\\frac{5}{2},\\frac{3}{2}\\right)$ 또는 $\\mathrm{P}\\left(\\frac{3}{2},\\frac{5}{2}\\right)$"
+ },
+ {
+  "id": "2743618c-5360-4735-aea5-a99e6d7a1756",
+  "code": "HC20310-QZWG",
+  "dbAnswer": "-5",
+  "aiAnswer": "a+b+c=-5"
+ },
+ {
+  "id": "7dc15189-5fb7-4a27-be31-3d2a1c5940a6",
+  "code": "HC20313-5MCM",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
  }
 ]
