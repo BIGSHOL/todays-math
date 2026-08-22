@@ -1750,5 +1750,17 @@
   "code": "HAL0210-RG2K",
   "dbAnswer": "④",
   "aiAnswer": "①"
+ },
+ {
+  "id": "8846a15c-184a-4771-be17-58348491e067",
+  "code": "HAL0301-MGFC",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "f3f9637d-9f22-47a5-be87-86c70179cf96",
+  "code": "HAL0302-MTNJ",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
  }
 ]
