@@ -1384,5 +1384,71 @@
   "code": "HC10227-BVVT",
   "dbAnswer": "②",
   "aiAnswer": "④"
+ },
+ {
+  "id": "9b7bfc9b-619c-4239-a4b9-918cff180b7d",
+  "code": "HC10227-ZAFG",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "3b4a8732-7133-48ad-a599-4385d0d3a727",
+  "code": "HC10228-3ZB2",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "903a7c17-8103-4be3-b760-6c347124b5f2",
+  "code": "HC10228-7HCH",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "4471699f-1cdf-4741-b7ab-2a669a0081cd",
+  "code": "HC10230-CRXU",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "3ef76da2-3358-46a2-88a5-7031bf66a37c",
+  "code": "HC10301-GGTJ",
+  "dbAnswer": "⑤",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "c38003c8-e8c8-4796-9510-abed19f200c1",
+  "code": "HC10301-HYCL",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "3b999bfb-b651-4868-bb57-5fce51155463",
+  "code": "HC10301-L4ES",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "f5e58794-d71b-4e90-9fbf-6d2d20812e0f",
+  "code": "HC10301-M46B",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "5da03228-572b-4573-9c44-943c759485c4",
+  "code": "HC10301-YDX3",
+  "dbAnswer": "⑤",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "264de81b-1a3f-4721-9700-6faec43b5486",
+  "code": "HC10301-Z3GQ",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "a4212395-a7c4-4b9c-9343-baba98cd3925",
+  "code": "HC10302-8D3W",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
  }
 ]
