@@ -55,7 +55,8 @@ const ADOPT_LEDGER = "scripts/qa/reports/figure-svg-adopt.json";
 const SWAP_LEDGER = "scripts/qa/reports/figure-swap-ledger.json";
 
 function readLedger<T>(rel: string, key: string): T[] {
-  const p = path.join(process.cwd(), rel);
+  // 배포 추적 제외 — dev 전용 원장 읽기가 프로젝트 전체를 람다에 싣는다 (2026-08-21)
+  const p = path.join(/*turbopackIgnore: true*/ process.cwd(), rel);
   if (!existsSync(p)) return [];
   try {
     const j = JSON.parse(readFileSync(p, "utf-8")) as Record<string, unknown>;
@@ -70,7 +71,12 @@ function readLedger<T>(rel: string, key: string): T[] {
 function onDisk(url: string): boolean {
   if (!url.startsWith("/")) return false;
   return existsSync(
-    path.join(process.cwd(), "public", url.replace(/^\/+/, "")),
+    /*turbopackIgnore: true*/
+    path.join(
+      /*turbopackIgnore: true*/ process.cwd(),
+      "public",
+      url.replace(/^\/+/, ""),
+    ),
   );
 }
 

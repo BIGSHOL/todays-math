@@ -13,9 +13,12 @@
  */
 import type { RangeUnit } from "./resolveRange";
 
+/** 대단원 제한(D-63)용 — grade·chapter 가 있으면 첫 회 범위를 대단원 안으로 좁힌다. */
+export type ChapterAwareUnit = RangeUnit & { grade?: string; chapter?: string };
+
 export interface DefaultReviewRangeArgs {
-  /** 전체 단원 — id 와 orderIndex 만 본다. */
-  units: RangeUnit[];
+  /** 전체 단원 — id·orderIndex 에 더해 grade·chapter 가 있으면 D-63 을 적용한다. */
+  units: ChapterAwareUnit[];
   /** 현재 진도 소단원 id (반 또는 학생 개별 — 호출자가 이미 골라 넘긴다). */
   currentUnitId: string;
   /** 직전 확인테스트의 `rangeEndUnitId`. 한 번도 안 냈으면 null. */
@@ -31,12 +34,14 @@ export interface DefaultReviewRange {
    * 시작을 무엇이 정했나 — 화면 안내 문구가 갈린다.
    * · `last-review`     직전 확인테스트 다음부터
    * · `progress-start`  확인테스트를 안 냈으니 진도 이력 첫 단원부터
+   * · `chapter-start`   첫 회인데 이력이 길어 **현재 대단원 첫 단원**으로 좁혔다(D-63)
    * · `current-only`    시작을 **못 정했다** — 직전 확인 뒤로 진도가 안 나갔거나
    *                     진도 이력이 비어 있다. 범위는 현재 진도 한 단원이 된다.
    *                     («한 단원이다»가 아니라 «못 정했다»가 이 값의 뜻이다 —
    *                      이력 첫 단원이 곧 현재 진도인 경우는 `progress-start` 다.)
    */
-  startedFrom: "last-review" | "progress-start" | "current-only";
+  startedFrom:
+    "last-review" | "progress-start" | "chapter-start" | "current-only";
 }
 
 /**
@@ -52,7 +57,7 @@ export function resolveDefaultReviewRange(
   const current = byId.get(currentUnitId);
   if (!current) return null;
 
-  const { start, startedFrom } = resolveStart();
+  const { start, startedFrom } = resolveStart(current);
 
   // 🔒 **거꾸로 된 범위를 만들지 않는다.** 시작이 현재 진도보다 뒤면 그 한 단원이다.
   // `resolveRange` 는 시작·끝을 크기순으로 정렬하므로, 뒤집힌 채 넘기면 「직전에 이미
@@ -66,7 +71,7 @@ export function resolveDefaultReviewRange(
   }
   return { startUnitId: start.id, endUnitId: current.id, startedFrom };
 
-  function resolveStart(): {
+  function resolveStart(cur: ChapterAwareUnit): {
     start: RangeUnit | undefined;
     startedFrom: DefaultReviewRange["startedFrom"];
   } {
@@ -90,11 +95,31 @@ export function resolveDefaultReviewRange(
     // 학년 첫 단원이 아니다 — 학기 중간에 받은 반은 앞부분을 안 나갔다.
     const earliest = progressUnitIds
       .map((id) => byId.get(id))
-      .filter((u): u is RangeUnit => u !== undefined)
-      .reduce<RangeUnit | undefined>(
+      .filter((u): u is ChapterAwareUnit => u !== undefined)
+      .reduce<ChapterAwareUnit | undefined>(
         (best, u) => (!best || u.orderIndex < best.orderIndex ? u : best),
         undefined,
       );
+
+    // 🔴 D-63 (원장님 확정 2026-08-21): **첫 회는 현재 대단원을 넘지 않는다.**
+    // eywa 연계로 이력이 1년치가 되자 「이력 첫 단원부터」가 350단원짜리 첫 회
+    // 범위를 만들었다. 이력 첫 단원과 현재 대단원 첫 단원 중 **뒤의 것**을 시작으로
+    // 잡는다 — 안 배운 단원도(이력 밖), 대단원 밖도 들어오지 않는 쪽으로 좁힌다.
+    if (earliest && cur.grade && cur.chapter) {
+      const chapterStart = units
+        .filter(
+          (u) =>
+            u.grade === cur.grade &&
+            u.chapter === cur.chapter &&
+            u.orderIndex <= cur.orderIndex,
+        )
+        .reduce<ChapterAwareUnit | undefined>(
+          (best, u) => (!best || u.orderIndex < best.orderIndex ? u : best),
+          undefined,
+        );
+      if (chapterStart && chapterStart.orderIndex > earliest.orderIndex)
+        return { start: chapterStart, startedFrom: "chapter-start" };
+    }
     return { start: earliest, startedFrom: "progress-start" };
   }
 }

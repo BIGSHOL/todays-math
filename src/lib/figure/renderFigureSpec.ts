@@ -25,8 +25,7 @@ const RENDER_TIMEOUT_MS = 15_000;
 const MAX_OUTPUT_BYTES = 1_024 * 1_024;
 
 export type RenderFigureResult =
-  | { ok: true; svg: string }
-  | { ok: false; error: string };
+  { ok: true; svg: string } | { ok: false; error: string };
 
 const SCRIPT_PATH = path.join(
   process.cwd(),
@@ -57,7 +56,9 @@ export async function renderFigureSpec(
       resolve(result);
     };
 
-    const child = spawn(PYTHON_BIN, [SCRIPT_PATH], {
+    // 배포 추적 제외 — spawn 의 동적 경로가 프로젝트 전체를 람다에 싣는다. 람다엔 python 이
+    // 없어 어차피 error 콜백(ok:false)으로 떨어진다 — 도형 생성은 로컬 전용이다 (2026-08-21).
+    const child = spawn(/*turbopackIgnore: true*/ PYTHON_BIN, [SCRIPT_PATH], {
       // 한글 라벨이 Windows 기본 코드페이지에서 깨진다 — 파이썬 쪽도 UTF-8 로 못 박는다.
       env: { ...process.env, PYTHONIOENCODING: "utf-8" },
       stdio: ["pipe", "pipe", "pipe"],
@@ -98,7 +99,10 @@ export async function renderFigureSpec(
       try {
         parsed = JSON.parse(out);
       } catch {
-        return finish({ ok: false, error: "도형 엔진의 응답을 읽지 못했습니다" });
+        return finish({
+          ok: false,
+          error: "도형 엔진의 응답을 읽지 못했습니다",
+        });
       }
       const body = parsed as { svg?: unknown; error?: unknown };
       if (typeof body.svg === "string" && body.svg.length > 0) {

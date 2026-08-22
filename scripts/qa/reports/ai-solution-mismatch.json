@@ -1,0 +1,1652 @@
+[
+ {
+  "id": "de63fc43-bd13-49fa-bbef-d1d7c58f9190",
+  "code": "J20101-8CB9",
+  "dbAnswer": "1231",
+  "aiAnswer": "1106"
+ },
+ {
+  "id": "6a75d374-5178-45ba-bd87-26095139d881",
+  "code": "J20101-UCVS",
+  "dbAnswer": "소인수가 $2$와 $5$뿐",
+  "aiAnswer": "분모의 소인수가 $2$ 또는 $5$뿐이다"
+ },
+ {
+  "id": "c1669e79-0a43-45a0-b5c3-e5aa63f4c16e",
+  "code": "HAL0101-D3K3",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "2418cc8b-53a0-476a-bb86-cd4039759e70",
+  "code": "HAL0101-NDFL",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "827a63ba-5de9-425b-87f1-779d09412fa6",
+  "code": "HAL0103-V28L",
+  "dbAnswer": "①",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "49694bf9-d0b3-4eab-82e1-7042960ac9b8",
+  "code": "HAL0106-6EZE",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "d4fbf290-e630-47bd-b2db-6565f23fb51c",
+  "code": "HAL0106-74NY",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "280f9183-da9a-4ce0-a8f7-98ee968d03ce",
+  "code": "J10102-AUUY",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "bb6ea4b0-beb5-46cf-9fc7-f89668baebd8",
+  "code": "J10102-B7B7",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "e819de70-3f24-4eb8-bec6-781c824f914a",
+  "code": "J10102-CDPF",
+  "dbAnswer": "",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "e77cb09e-4b86-4c7f-8108-251451cc252d",
+  "code": "J10102-NE66",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "7bff2f5c-88fe-483c-aa8d-1fbd0c13629d",
+  "code": "J10105-F68M",
+  "dbAnswer": "a=3, b=4, c=2, d=5, 비밀번호 3425",
+  "aiAnswer": "3425"
+ },
+ {
+  "id": "3d8df302-6ee9-4cd2-a0ae-1be7bbe81661",
+  "code": "J10105-LWXM",
+  "dbAnswer": "(정답 없음)",
+  "aiAnswer": "$A=24, B=32$"
+ },
+ {
+  "id": "e9837cf1-f012-4d9e-a9a8-127ecf1b8645",
+  "code": "J10105-MYTZ",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "81985d00-6bfd-4b4e-abd9-bb2a6d872890",
+  "code": "J10105-V8W2",
+  "dbAnswer": "⑴ 48=2^4×3, 150=2×3×5^2, ⑵ G=6, ⑶ L=1200",
+  "aiAnswer": "$48=2^4×3$, $150=2×3×5^2$, $G=6$, $L=1200$"
+ },
+ {
+  "id": "ff748789-f8db-40ae-ba12-f5cd437ca5e7",
+  "code": "J10201-3PHX",
+  "dbAnswer": "",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "1a37cfc3-4b7e-488d-8d86-b913422101e3",
+  "code": "J10201-3Y9Y",
+  "dbAnswer": "④",
+  "aiAnswer": "②, ④"
+ },
+ {
+  "id": "fa4fbc0d-4cf4-485f-b83a-3c7def1ec241",
+  "code": "J10201-5NCU",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "5882062d-a0d1-4f85-bb55-03e7204c6c12",
+  "code": "J10201-5VQW",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "6288d4bf-8ba7-4ee5-96f9-61d330d5bb70",
+  "code": "J10201-97N4",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "1fe766ab-51d1-49c6-9bcf-ae4ddfeb7722",
+  "code": "J10201-CDV2",
+  "dbAnswer": "",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "841ad8b1-517d-4468-9292-e7a374ef1fc3",
+  "code": "J10201-CVMT",
+  "dbAnswer": "",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "cdbeb714-18dd-4caa-b9b8-1dca13d8b0cc",
+  "code": "J10201-E7Z9",
+  "dbAnswer": "",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "450a366d-cc70-4ed8-932f-f71053f08e17",
+  "code": "J10201-E8UE",
+  "dbAnswer": "a=-14/15, b=10 이므로 a÷b = -7/75",
+  "aiAnswer": "$-\\frac{7}{75}$"
+ },
+ {
+  "id": "26b2bbca-a66e-423d-b771-de90930777d5",
+  "code": "J10201-HPEE",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "47abf666-acb5-4bfc-b593-af417d7e054a",
+  "code": "J10201-J63P",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "3cd40b2c-8052-41a1-9e46-f7a2eced4216",
+  "code": "J10201-M9R3",
+  "dbAnswer": "①, ⑤",
+  "aiAnswer": "①, ④"
+ },
+ {
+  "id": "12259097-4f51-4489-8fbf-351408377b5e",
+  "code": "J10201-RMLG",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "a7849fce-8614-4fd8-9d96-f4b4f8b59dd0",
+  "code": "J10301-3SZD",
+  "dbAnswer": "1/a=-1/2, a+2=0, -a=2, a²=4, -a³=8 (작은 수부터 -1/2, 0, 2, 4, 8)",
+  "aiAnswer": "$\\frac{1}{a}<a+2<-a<a^{2}<-a^{3}$ (즉 $-\\frac{1}{2}<0<2<4<8$)"
+ },
+ {
+  "id": "e6bdab21-568d-4a4c-b1b7-bc6ffede9636",
+  "code": "J10301-5DJZ",
+  "dbAnswer": "⑴ 0.8a원 (=4a/5원), ⑵ 72000원",
+  "aiAnswer": "⑴ $0.8a$원 ⑵ $72000$원"
+ },
+ {
+  "id": "6faace8a-ef12-4701-9679-3c6c64a8759c",
+  "code": "J10301-8DER",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "e3ecf600-7516-412c-8d50-bbaa14e33074",
+  "code": "J10301-ATYF",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "6b95bb22-1fb1-4f63-aff8-816b402c6e89",
+  "code": "J10301-C6DW",
+  "dbAnswer": "㈎ 4a+5, ㈏ (30000-(3/5)b)원, ㈐ (1000+3c)원",
+  "aiAnswer": "㈎ 4a+5, ㈏ 30000-0.6b, ㈐ 1000+3c"
+ },
+ {
+  "id": "7086ca18-ae1e-451a-be24-40503b1f649b",
+  "code": "J10301-CT8B",
+  "dbAnswer": "⑴ 10a/11원, ⑵ 9a/10원, ⑶ B 가게 (9a/10<10a/11)",
+  "aiAnswer": "⑴ $\\frac{10}{11}a$, ⑵ $\\frac{9}{10}a$, ⑶ B 가게"
+ },
+ {
+  "id": "f227b09e-361d-46ec-9110-eadedd3ae874",
+  "code": "J10301-EJL8",
+  "dbAnswer": "⑴ A: 4x원, B: 3x원, C: 3.15x원 — B편의점이 가장 저렴 ⑵ 1100원",
+  "aiAnswer": "⑴ A: 4x, B: 3x, C: 3.15x, B 편의점 ⑵ 1100"
+ },
+ {
+  "id": "b8ba6f1b-78ca-4dd5-a378-e1c04e65c6c0",
+  "code": "J10301-FE5C",
+  "dbAnswer": "⑤",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "c6c1d190-cd2a-4bb7-9083-040e8bdae33d",
+  "code": "J10301-FYUB",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "37b9307d-b23d-4662-a284-ad1765df7632",
+  "code": "J10301-J6NK",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "1084622d-37f4-447b-8b66-de5df3895d12",
+  "code": "J10301-PN7N",
+  "dbAnswer": "-1/a=3/2, a/2=-1/3, 3(a+1)=1, a²=4/9, -a³=8/27, 최댓값+최솟값 = 7/6",
+  "aiAnswer": "\\frac{7}{6}"
+ },
+ {
+  "id": "20533265-4cde-4b2f-afce-1aa00f69d41e",
+  "code": "J10301-RSNM",
+  "dbAnswer": "⑴ 0.8a원 ⑵ 1.8a원 ⑶ (30000 - 2.4a)원",
+  "aiAnswer": "⑴ $0.8a$ ⑵ $1.6a$ ⑶ $30000-2.4a$"
+ },
+ {
+  "id": "f47a6547-a0c6-4b16-86da-51e836b83ade",
+  "code": "J10301-RU9Z",
+  "dbAnswer": "②",
+  "aiAnswer": "①, ②"
+ },
+ {
+  "id": "a100016b-19d3-4002-b921-c0024b0d0432",
+  "code": "J10301-UQFV",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "4378ff32-4ba9-4e17-b1d6-07aebfad5e13",
+  "code": "J10301-ZM9A",
+  "dbAnswer": "99/20 (=4.95)",
+  "aiAnswer": "\\frac{99}{20}"
+ },
+ {
+  "id": "99b470a0-a16d-475c-bc16-01aea8b64b43",
+  "code": "J10306-94B3",
+  "dbAnswer": "⑴ x=1/2 ⑵ 양변에 같은 수를 더·뺌, 0 아닌 같은 수로 곱·나눔",
+  "aiAnswer": "(1) $x=\\frac{1}{2}$ (2) 등식의 양변에 같은 수를 더하거나 빼어도 등식은 성립한다, 등식의 양변에 0이 아닌 같은 수를 곱하거나 나누어도 등식은 성립한다"
+ },
+ {
+  "id": "748b3153-d59e-43e5-a840-79f61a365174",
+  "code": "J10306-E8UP",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "310324ee-e63e-40c5-909d-24b30cd89fcd",
+  "code": "J10306-FWA7",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "5325be56-710a-4a5b-b972-bad13b5c45cd",
+  "code": "J10306-JFBX",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "378e474c-7bdc-4230-b557-0082425b059b",
+  "code": "J10306-TBT7",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "e46df594-fb24-4cb3-be33-af5f5c9eeb84",
+  "code": "J10306-Y2SN",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "7bfaf140-84e8-4dc7-9c51-2017011ba6ec",
+  "code": "J10403-A2PA",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "0acb287f-1b1f-4be9-b593-6e3c28a68d2a",
+  "code": "J10403-JX9J",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "9aa4460a-8638-4522-88c4-bbe6a526b904",
+  "code": "J10403-VKNJ",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "3025d430-20dd-4a57-9a15-c468dc83fb91",
+  "code": "J10404-W6TN",
+  "dbAnswer": "①",
+  "aiAnswer": "①, ⑤"
+ },
+ {
+  "id": "3055f43d-2f54-4208-bc8e-22d8f1552e6f",
+  "code": "J10701-WKYA",
+  "dbAnswer": "면의 개수 6개, 육면체",
+  "aiAnswer": "6개, 육면체"
+ },
+ {
+  "id": "1036c7bf-1a86-4bec-a47e-da6113c6ddbd",
+  "code": "J20101-2VSS",
+  "dbAnswer": "순환마디 12, 3.012 (1과 2 위에 점)",
+  "aiAnswer": "순환마디: $12$, $3.0\\dot{1}\\dot{2}$"
+ },
+ {
+  "id": "98a35558-80c2-4748-a534-0ee2954723d2",
+  "code": "J20101-594V",
+  "dbAnswer": "순환마디 05, 0.0̇5̇",
+  "aiAnswer": "순환마디: $05$, $0.\\dot{0}\\dot{5}$"
+ },
+ {
+  "id": "d36c9ce9-0462-479e-8788-23616c8c97a0",
+  "code": "J20101-77ZF",
+  "dbAnswer": "순환마디: 2, $1.43\\dot{2}$",
+  "aiAnswer": "$1.43\\dot{2}$"
+ },
+ {
+  "id": "2ed0011d-457d-4a13-ba33-2af19393032b",
+  "code": "J20102-63Y7",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "6333a8d0-3298-40c9-ae48-6537b26f5ad6",
+  "code": "J20104-EEEX",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "be73699e-27d2-4b4c-b446-3b3557243285",
+  "code": "J20104-GKBU",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "6aea6504-0fed-4749-badc-0f9407428fe0",
+  "code": "J20104-HYZL",
+  "dbAnswer": "풀이참조",
+  "aiAnswer": "85개"
+ },
+ {
+  "id": "8519ade3-0ef3-4bf4-80ab-13305f3a2559",
+  "code": "J20104-JVAL",
+  "dbAnswer": "A=13/3 (바르게 계산한 답 26/9)",
+  "aiAnswer": "$A=\\dfrac{13}{3}=4.\\dot3$ (순환마디: 3)"
+ },
+ {
+  "id": "87053997-c2d8-4d25-8be9-ccb97ab68630",
+  "code": "J20104-K8JU",
+  "dbAnswer": "①",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "c139c4fa-5794-4b25-afe3-b7ca68ec9319",
+  "code": "J20104-LNE3",
+  "dbAnswer": "7/30",
+  "aiAnswer": "$0.2\\dot{3}$"
+ },
+ {
+  "id": "173463dd-9787-449d-81a6-46ac33f9910f",
+  "code": "J20104-SFAR",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "39e93a40-5185-46d9-a484-ac61dae9ccf0",
+  "code": "J20104-UHXK",
+  "dbAnswer": "②",
+  "aiAnswer": "②, ③"
+ },
+ {
+  "id": "c3d76e57-e9b0-4298-9277-e7de6fca3279",
+  "code": "J20104-WPB5",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "12a19988-be5f-4648-b36c-0d154712d2a5",
+  "code": "J20104-WXKT",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "438eeda1-76ca-42f3-bb94-41eedc14fd37",
+  "code": "J20106-5G83",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "4ba35e32-9d05-4ac7-b7bf-287573953d5f",
+  "code": "J20106-6PEN",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "3d9a3e4e-2871-416c-972c-5f8a69cd3094",
+  "code": "J20106-JU2P",
+  "dbAnswer": "영수 7/30, 철수 11/15, 바르게 본 순환소수는 7/15 = 0.46̇",
+  "aiAnswer": "0.4\\dot{6}"
+ },
+ {
+  "id": "5ef5b39e-fb30-465d-8d02-405541fa33c3",
+  "code": "J20106-TL7Q",
+  "dbAnswer": "A = -(1/3)a⁴b² - a²b³ + (2/3)a²b²",
+  "aiAnswer": "-a^2b^3-\\frac{1}{3}a^4b^2+\\frac{2}{3}a^2b^2"
+ },
+ {
+  "id": "6530bb4f-fd6e-41ec-a132-9f957e064b74",
+  "code": "J20106-XF32",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "9a5d5a2b-5136-43cf-b2a3-d67c00dd8aba",
+  "code": "J20106-XMD5",
+  "dbAnswer": "①",
+  "aiAnswer": "$3^{10}$"
+ },
+ {
+  "id": "5190031e-ef68-4535-bae7-a4b7e911adcb",
+  "code": "J20106-Z5TN",
+  "dbAnswer": "a²b⁴/16",
+  "aiAnswer": "$\\frac{a^{2}b^{4}}{16}$"
+ },
+ {
+  "id": "d876a1f4-75d8-4de4-8076-af7a222d549f",
+  "code": "J20107-2JHN",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "93a082cb-bc47-48c6-986a-727f673f5dfc",
+  "code": "J20107-3J9T",
+  "dbAnswer": "A=2x²+3x-1, 옳게 계산한 식 5x²+x-5",
+  "aiAnswer": "$A=2x^{2}+3x-1$, 옳게 계산한 식은 $5x^{2}+x-5$"
+ },
+ {
+  "id": "898b96c1-ed15-4b4c-8258-82373145f829",
+  "code": "J20107-3L2Z",
+  "dbAnswer": "-x²+18xy²-6y",
+  "aiAnswer": "$-x^{2}+18xy^{2}-6y$"
+ },
+ {
+  "id": "d0c653d7-4464-4384-a593-805088d8f052",
+  "code": "J20107-6KYC",
+  "dbAnswer": "(5a+9b)/18 원",
+  "aiAnswer": "$\\frac{5a+9b}{18}$원"
+ },
+ {
+  "id": "773f0756-dd8a-4e01-ab4f-ffa5fae8cbe7",
+  "code": "J20107-6UY2",
+  "dbAnswer": "-3a²-5ab+3b²",
+  "aiAnswer": "$-3a^{2}-5ab+3b^{2}$"
+ },
+ {
+  "id": "3bc608a7-9843-4f63-9625-b6b9d94804a5",
+  "code": "J20107-E6BA",
+  "dbAnswer": "-4x²+9x-11",
+  "aiAnswer": "$-4x^2+9x-11$"
+ },
+ {
+  "id": "f31cc9f5-7a0f-448e-ac02-5c9582f99ae8",
+  "code": "J20107-FZB7",
+  "dbAnswer": "-x²-xy",
+  "aiAnswer": "$-x^2-xy$"
+ },
+ {
+  "id": "7c264602-84d6-4ad2-996b-9b7c040f9d6f",
+  "code": "J20107-JPXP",
+  "dbAnswer": "C=3x²-9xy",
+  "aiAnswer": "3x^{2}-9xy"
+ },
+ {
+  "id": "e61224c7-c320-490a-b48e-e543194119dd",
+  "code": "J20107-R3UY",
+  "dbAnswer": "⑴A=-a⁴/b ⑵B=9y²-7xy",
+  "aiAnswer": "(1) -\\frac{a^4}{b}, (2) -7xy+9y^2"
+ },
+ {
+  "id": "3c6d9f4f-d663-46b9-a5a6-7f32b8c3183e",
+  "code": "J20107-T97B",
+  "dbAnswer": "가능한 식 (-3x+10y)/6, (3x-10y)/6, (21x+14y)/6 / 합 (21x+14y)/6 (=7x/2+7y/3)",
+  "aiAnswer": "\\frac{7}{2}x+\\frac{7}{3}y"
+ },
+ {
+  "id": "c78bc3a2-426a-4e8b-9d0d-e1dd695b0a16",
+  "code": "J20107-VQ53",
+  "dbAnswer": "A=2x²-5x+5, 바르게 계산한 식은 2x²-8x+7",
+  "aiAnswer": "⑴ $2x^2-5x+5$, ⑵ $2x^2-8x+7$"
+ },
+ {
+  "id": "481ee85f-6e18-4d6d-af52-c5a6aa24776b",
+  "code": "J20107-WXXA",
+  "dbAnswer": "어떤 식 x²+8x-7, 바르게 계산한 식 x²+11x-8",
+  "aiAnswer": "어떤 식: $x^{2}+8x-7$, 바르게 계산한 식: $x^{2}+11x-8$"
+ },
+ {
+  "id": "d3037fa4-7139-4561-9689-15ccda4612c9",
+  "code": "J20107-YEXQ",
+  "dbAnswer": "A-B=-31a",
+  "aiAnswer": "-31a"
+ },
+ {
+  "id": "fb458912-e152-4bbe-a8a1-324baf4429e7",
+  "code": "J20205-2QWB",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "1f986c24-2116-4c3c-a5a6-9f9093c80e70",
+  "code": "J20205-KX7J",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "21ec10bf-0ed3-443b-af8f-1ea43e90d939",
+  "code": "J20301-A3S3",
+  "dbAnswer": "24 (x=8, y=8)",
+  "aiAnswer": "-1"
+ },
+ {
+  "id": "58fb28df-4b7c-4aac-8c19-e167c337cc58",
+  "code": "J20301-CVCL",
+  "dbAnswer": "⑤",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "d6959aaa-38d8-41d2-8c84-ba262b6b998e",
+  "code": "J20301-E9N3",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "fc3c5d18-7672-49f2-a0d4-4e3b0f815883",
+  "code": "J20301-H3JB",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "9223bd72-34c6-474d-94bf-8a5b3851e45a",
+  "code": "J20301-QBPQ",
+  "dbAnswer": "(정답 없음)",
+  "aiAnswer": "$x=3,~y=-\\frac{3}{2}$"
+ },
+ {
+  "id": "7b630a2d-e2f5-4662-962e-29e7da74a869",
+  "code": "J20306-MT86",
+  "dbAnswer": "-25℃, -55℃",
+  "aiAnswer": "$x=-25$ 또는 $x=-55$"
+ },
+ {
+  "id": "b77bef78-2a2f-43fc-82f0-7fddb1c5878c",
+  "code": "J20306-N6QK",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "e6a4f9d5-df2c-4867-88f5-1725e30ef6bc",
+  "code": "J20306-NDDX",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "6d391148-544d-48d6-a4e4-f93f0c6e0414",
+  "code": "J20306-RTRR",
+  "dbAnswer": "A는 12일, B는 8일",
+  "aiAnswer": "A: 12일, B: 8일"
+ },
+ {
+  "id": "cbc063b7-47bd-4c4c-9d0f-cac5a4925150",
+  "code": "J20402-4SWT",
+  "dbAnswer": "0",
+  "aiAnswer": "$a+b=0$"
+ },
+ {
+  "id": "9fc7b816-7832-41f4-aa7d-44f55522407a",
+  "code": "J20402-KWSW",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "58223086-525d-4fa6-b807-bc1a5e8b49cb",
+  "code": "J20402-RTPS",
+  "dbAnswer": "y = -(1/2)x + 3, 넓이 9",
+  "aiAnswer": "$y=-\\frac{1}{2}x+3$, 넓이 $9$"
+ },
+ {
+  "id": "c303d56f-71a2-42f2-a7e1-814fb34455cc",
+  "code": "J20402-T79Y",
+  "dbAnswer": "①",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "1c8d0a13-4d70-497a-90d3-18430d394f4b",
+  "code": "J20408-ER5Z",
+  "dbAnswer": "③ (11)",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "3177c3c0-4ff3-4a40-a74b-7189ee57ee35",
+  "code": "J20408-S69U",
+  "dbAnswer": "y=-(1/3)x+15 (x+3y-45=0)",
+  "aiAnswer": "x+3y-45=0"
+ },
+ {
+  "id": "949d2ffb-c3fc-4abb-8705-83b5ce145b91",
+  "code": "J20408-SBDA",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "c82d5b6d-dbc9-4b3c-9493-cec56082ec0e",
+  "code": "J20408-Y6RY",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "c72ae1f1-0630-45ea-9b2f-dd0f2c341888",
+  "code": "J20504-2FL5",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "ea719871-f49b-4676-8073-ca354c244a4d",
+  "code": "J20508-DFX2",
+  "dbAnswer": "③",
+  "aiAnswer": "③, ⑤"
+ },
+ {
+  "id": "bad9ae58-4d6c-4091-9098-9e1eab46b417",
+  "code": "J20508-JTKZ",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "cb6d288b-8663-4eb8-b196-1bf7f6177541",
+  "code": "J20705-SJB2",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "130c52d8-0396-44bd-8a82-c133ef092224",
+  "code": "J20902-D4LQ",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "8606447a-633a-4cb1-a9eb-d99127d3488b",
+  "code": "J20902-EYR9",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "3cb6e6e7-3875-4560-98ee-13e04166e373",
+  "code": "J20903-7SEJ",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "1a79dbd2-b5dd-4045-9a0b-ebf1adc87ffb",
+  "code": "J30101-8B4G",
+  "dbAnswer": "11, -11",
+  "aiAnswer": "$\\pm11$"
+ },
+ {
+  "id": "17458d7a-0e88-4f57-9c70-d990b8eb3639",
+  "code": "J30101-9LMM",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "5d7d9010-caf2-4707-be0f-444de238ff80",
+  "code": "J30101-E3V3",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "0e8c0e20-d4d8-4f44-a521-6770740fba22",
+  "code": "J30101-HE7V",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "970e1067-82c3-4339-a141-a4a191bc146e",
+  "code": "J30101-JP2C",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "7ebc1ada-1dd2-409b-bd9f-6f797dbf2fee",
+  "code": "J30101-PLP9",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "0b4cdb7b-c67e-4730-88ce-7e75d863b643",
+  "code": "J30101-QZ9Z",
+  "dbAnswer": "12 (a=6¹², b=6, n=6)",
+  "aiAnswer": "12"
+ },
+ {
+  "id": "555f6d1c-434e-4673-a49d-2ef93e91797c",
+  "code": "J30103-2DHU",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "15523d88-1475-4005-b694-1b572ec0d435",
+  "code": "J30103-2WF4",
+  "dbAnswer": "⑤",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "625a3d0f-a1dc-4aba-8433-b72ff861c5ec",
+  "code": "J30103-3ULR",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "71018553-74e7-4a48-9642-2686a9e2546c",
+  "code": "J30103-4K9P",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "779e2e2d-1d53-425d-9cf9-631848280e2d",
+  "code": "J30103-EC7D",
+  "dbAnswer": "(정답 없음)",
+  "aiAnswer": "$10\\sqrt3$"
+ },
+ {
+  "id": "f4105f54-ce3a-4031-bba2-6755ca5ff1d2",
+  "code": "J30103-FG24",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "03158335-a0eb-4abe-bb03-0a16a4b59ce6",
+  "code": "J30103-GKYB",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "5cbced34-d69d-4958-9cb9-8a206d18a718",
+  "code": "J30103-GU34",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "bf652688-a7d6-41e3-a2c8-85a8ee2d52a1",
+  "code": "J30103-HQW8",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "1917c0c7-858a-4325-a71f-b9177530aca7",
+  "code": "J30103-JYCF",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "51d90aff-b47e-4433-b415-2313d0f5a62a",
+  "code": "J30103-KG8Y",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "ed3db617-3fbd-4e19-9e35-6df18e77977b",
+  "code": "J30103-KQ8X",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "4b04518e-5084-4a61-96b5-44c99316d9c5",
+  "code": "J30103-MELV",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "40de2160-02ba-48a0-a3ca-ec109cc67f20",
+  "code": "J30103-PLEG",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "4598d677-9f58-4f4b-8433-b2b6f40e4b8e",
+  "code": "J30103-T93H",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "0e0930a2-f521-4215-a022-6299d83a4866",
+  "code": "J30103-VGSV",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "82faa561-4c5f-4c7e-bb4a-7545e64330d6",
+  "code": "J30201-25XH",
+  "dbAnswer": "$4$, $16$, $10816$",
+  "aiAnswer": "4, 16"
+ },
+ {
+  "id": "1283cbe9-95fd-4dd4-9419-4fef32300f70",
+  "code": "J30201-4T3B",
+  "dbAnswer": "-15√13",
+  "aiAnswer": "$-15sqrt{13}$"
+ },
+ {
+  "id": "2d121e7b-fe99-4c0c-b3ad-6cba0f028d07",
+  "code": "J30201-6CYU",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "ec94119f-98a8-4445-a802-e6503dd7c058",
+  "code": "J30201-AARK",
+  "dbAnswer": "(6a+5b)(6a-5b)=36a²-25b²",
+  "aiAnswer": "$36a^{2}-25b^{2}$"
+ },
+ {
+  "id": "0d016350-18e6-4c54-8a80-1606874cefed",
+  "code": "J30201-BPA6",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "aa271cb7-b21d-44a7-b935-84ba4af48b68",
+  "code": "J30201-L2Y4",
+  "dbAnswer": "(2x-3)(x+4)",
+  "aiAnswer": "2x^2+5x-12=(2x-3)(x+4)"
+ },
+ {
+  "id": "3fa3c989-156c-4991-b9a4-742898cb29c8",
+  "code": "J30203-2FMH",
+  "dbAnswer": "4",
+  "aiAnswer": "$n=4$"
+ },
+ {
+  "id": "a452854a-9c61-49b6-b00b-a3abed1229c2",
+  "code": "J30203-4J5A",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "3f66f09f-3e10-48fb-bb30-9a8e462b98c0",
+  "code": "J30203-4PT4",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "e0c281a7-483e-4416-8e1c-bbf05a93a189",
+  "code": "J30203-5HHT",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "1ebd599d-38bd-439f-bdaa-3f09736b3bb5",
+  "code": "J30203-B6Z2",
+  "dbAnswer": "⑤",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "d1e19610-ab6b-4153-a670-33679e31a49b",
+  "code": "J30203-BTMR",
+  "dbAnswer": "2",
+  "aiAnswer": "작은 정사각형의 한 변의 길이는 $11$, 큰 정사각형의 한 변의 길이는 $18$"
+ },
+ {
+  "id": "cd2633ef-8dd6-44c9-9fd7-3efe9ce473f7",
+  "code": "J30203-EE4C",
+  "dbAnswer": "(1, 8), (2, 32), (3, 72)",
+  "aiAnswer": "$(a,b)=(1,8),\\,(2,32),\\,(3,72)$"
+ },
+ {
+  "id": "930900a2-afbb-4e1a-8119-f0f60b449c35",
+  "code": "J30203-HQPE",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "93cac2c6-3f2e-4f52-aa90-cff571be7602",
+  "code": "J30203-JK3S",
+  "dbAnswer": "=a√⁄2+b√⁄3",
+  "aiAnswer": "46"
+ },
+ {
+  "id": "97336a64-65f0-47c0-bd6e-6af21bd03b71",
+  "code": "J30203-JVAD",
+  "dbAnswer": "1/2",
+  "aiAnswer": "2"
+ },
+ {
+  "id": "a471f624-2cdc-4c68-b725-d765a1d48dd0",
+  "code": "J30203-TB5T",
+  "dbAnswer": "⑴ -x+1 ⑵ -2x+2",
+  "aiAnswer": "⑴ $1-x$ ⑵ $2-2x$"
+ },
+ {
+  "id": "3f8a6d41-5076-4daa-8447-9ba64721466b",
+  "code": "J30301-3T2V",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "e38ce2c7-5e0d-4d7e-97f0-0635c921d3f6",
+  "code": "J30301-43W5",
+  "dbAnswer": "차례대로 25, 25, 5, 12",
+  "aiAnswer": "첫째·둘째 빈칸: $25$, 셋째 빈칸: $5$, 넷째 빈칸: $12$ (완성식 $(x+5)^{2}=12$)"
+ },
+ {
+  "id": "b7f1e634-6c7b-4310-b89d-0b8e4138264a",
+  "code": "J30301-5FYG",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "4125e5cd-7110-4bb7-9a78-f31d73b9a376",
+  "code": "J30301-BNAH",
+  "dbAnswer": "⑴x=-9 또는 5, a=5 ⑵b=(-3-√57)/8 ⑶2-√57",
+  "aiAnswer": "$2-\\sqrt{57}$"
+ },
+ {
+  "id": "2484668a-9be9-4d00-88ef-8519d9886013",
+  "code": "J30301-MG8W",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "41f03c05-acc9-4fee-b345-9372190ad5a8",
+  "code": "J30301-MHYQ",
+  "dbAnswer": "(a, b) = (8, 1), (6, 2), (4, 3), (2, 4) — 4개",
+  "aiAnswer": "$(a,b)=(8,1),(6,2),(4,3),(2,4)$, 개수 $4$개"
+ },
+ {
+  "id": "45aaceaa-cb8d-41c0-a0eb-0d8498e80983",
+  "code": "J30301-MLA5",
+  "dbAnswer": "90",
+  "aiAnswer": "$p^{2}q=90$"
+ },
+ {
+  "id": "28707f93-b85b-4537-b6df-0563e6e45ac3",
+  "code": "J30301-MMZ7",
+  "dbAnswer": "⑤",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "6c353ae3-f0ea-4149-91a9-a27aa72c9eed",
+  "code": "J30301-TNQ7",
+  "dbAnswer": "판별식 D=20-4a가 0 이상인 완전제곱수여야 하며, a=1, 4, 5",
+  "aiAnswer": "$a=1,4,5$"
+ },
+ {
+  "id": "00ea9254-26e9-41da-bc04-6245500d2e29",
+  "code": "J30301-YAKC",
+  "dbAnswer": "x=-1+√3 또는 x=-1-√3",
+  "aiAnswer": "⑴ $x^{2}+2x-2=0$ ⑵ $(x+1)^{2}=3$ ⑶ $x=-1\\pm\\sqrt{3}$"
+ },
+ {
+  "id": "04257524-57dd-4e03-aec8-34c13540ace0",
+  "code": "J30301-YXD4",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "f90614fa-7c95-4e9d-9eaa-86db0883eca1",
+  "code": "J30303-88PX",
+  "dbAnswer": "3/2",
+  "aiAnswer": "x=\\frac{3}{2}"
+ },
+ {
+  "id": "f88af9d1-3bc0-48a5-bb61-9f2fdfb173dd",
+  "code": "J30303-H7TB",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "6e4872b0-7608-4a22-ad63-d79a30d98fb6",
+  "code": "J30303-HDA9",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "e97585eb-e245-4c66-be51-4c98bdda5a40",
+  "code": "J30303-HQES",
+  "dbAnswer": "⑴ x(x+14)=207 (x²+14x-207=0) ⑵ x=9 — 윤희 7월 9일, 연주 7월 23일",
+  "aiAnswer": "⑴ $x^2+14x-207=0$ ⑵ 윤희: 7월 9일, 연주: 7월 23일"
+ },
+ {
+  "id": "e18ff479-9eec-4912-b617-ecc222922765",
+  "code": "J30303-RPW6",
+  "dbAnswer": "6",
+  "aiAnswer": "처음 원의 반지름의 길이는 $6$"
+ },
+ {
+  "id": "6e423b2b-97c6-41f2-964c-8316b08526ef",
+  "code": "J30303-S37Z",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "e2d12b64-939f-4dd2-8382-1a17332bf2eb",
+  "code": "J30303-XG82",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "44249357-c55a-42dd-8273-650f043363e1",
+  "code": "J30401-7TTV",
+  "dbAnswer": "⑴ y=-4(x-1)²+3 ⑵ 꼭짓점 (1, 3), 축의 방정식 x=1, 제1·제3·제4사분면을 지남 / (가) y=-4x² 를 x축 방향으로 1, y축 방향으로 3만큼 평행이동한 것",
+  "aiAnswer": "⑴ $y=-4(x-1)^2+3$ ⑵ 꼭짓점의 좌표: $(1, 3)$, 축의 방정식: $x=1$, 제1, 3, 4사분면을 지남. (가) $y=-4x^2$, $x$축 방향으로 $1$만큼, $y$축 방향으로 $3$만큼 평행이동"
+ },
+ {
+  "id": "96315b9a-15a8-4b9b-b877-ce16607e96c6",
+  "code": "J30401-9A6F",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "9d7053e4-0007-4daa-a74c-afa54a71c4fa",
+  "code": "J30401-9FG8",
+  "dbAnswer": "a=7 또는 a=-1",
+  "aiAnswer": "-1, 7"
+ },
+ {
+  "id": "1fb70720-eaa8-4a4e-a0d4-df59cdd2fa2e",
+  "code": "J30401-HR6N",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "fbf608a6-65d9-4f10-87a7-bbfa9d6f5016",
+  "code": "J30401-TDYT",
+  "dbAnswer": "y=2(x+1)(x-5)=2x²-8x-10",
+  "aiAnswer": "y=2x^2-8x-10"
+ },
+ {
+  "id": "713e8306-0a4c-47e6-963e-b583e8baded7",
+  "code": "J30401-URHM",
+  "dbAnswer": "a=-1/3, b=1/3",
+  "aiAnswer": "⑴ $-\\frac{1}{3}$ ⑵ $\\frac{1}{3}$"
+ },
+ {
+  "id": "a0cee858-e3ab-4005-a8b7-9c3fe7344cfc",
+  "code": "J30401-W42Y",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "c439df58-7383-494a-80d5-25261b503871",
+  "code": "J30401-XDU6",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "814ab5f8-750c-4507-8773-16611cdec270",
+  "code": "J30401-ZFS4",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "968d695f-50c9-485c-8dd3-c24af5fffef8",
+  "code": "J30402-D8HJ",
+  "dbAnswer": "꼭짓점 (2, -7), 축의 방정식 x=2",
+  "aiAnswer": "꼭짓점의 좌표: $(2, -7)$, 축의 방정식: $x=2$"
+ },
+ {
+  "id": "365a2db8-0bfc-4ece-b217-05fb27fc839c",
+  "code": "J30402-FTS7",
+  "dbAnswer": "꼭짓점 (0, -7), 축의 방정식 x=0",
+  "aiAnswer": "꼭짓점의 좌표: $(0, -7)$, 축의 방정식: $x=0$"
+ },
+ {
+  "id": "29e01024-0706-4227-b447-1540b8525397",
+  "code": "J30402-HWRF",
+  "dbAnswer": "꼭짓점 (4, 0), 축의 방정식 x=4",
+  "aiAnswer": "꼭짓점의 좌표: $(4, 0)$, 축의 방정식: $x=4$"
+ },
+ {
+  "id": "bd657f8b-9956-462f-b22e-9f935692c77d",
+  "code": "J30402-P9KS",
+  "dbAnswer": "꼭짓점 (0, 4), 축의 방정식 x=0",
+  "aiAnswer": "꼭짓점의 좌표: $(0, 4)$, 축의 방정식: $x=0$"
+ },
+ {
+  "id": "19d4a7c2-e27c-41cc-a16f-00c00ded9ae2",
+  "code": "J30402-WFRN",
+  "dbAnswer": "꼭짓점 (-1, 0), 축의 방정식 x=-1",
+  "aiAnswer": "(-1, 0), x=-1"
+ },
+ {
+  "id": "0ec691c7-b8c0-4755-b3c9-9e65457b985d",
+  "code": "J30402-ZS2E",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "cc07c59e-7b7b-4a2e-85d3-6b52d9e8b578",
+  "code": "J30403-2HHL",
+  "dbAnswer": "A(-1, 0), B(5, 0), C(0, 5), △ABC의 넓이 15",
+  "aiAnswer": "\\mathrm{A}(-1, 0), \\mathrm{B}(5, 0), \\mathrm{C}(0, 5), 넓이: 15"
+ },
+ {
+  "id": "c776db07-e67b-4be8-9d34-3824634080ec",
+  "code": "J30403-HHX5",
+  "dbAnswer": "m=1 또는 m=5",
+  "aiAnswer": "$1, 5$"
+ },
+ {
+  "id": "d6dc67f6-7209-4dba-b991-bff0d955bada",
+  "code": "J30403-VJLS",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "e6b9c361-7101-434a-a0c0-032aca93ee6a",
+  "code": "J30503-H5H3",
+  "dbAnswer": "⑤",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "efd4f1c8-91a7-4ab0-acdd-9e514b49cdd7",
+  "code": "J30701-4CL7",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "810c4501-fc0d-473c-91d0-9ac0bfbeef74",
+  "code": "J30701-CS3L",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "d4cb6629-0908-4a78-beac-2bd33218c37b",
+  "code": "HC10109-433Y",
+  "dbAnswer": "a=5, b=-3",
+  "aiAnswer": "⑴ $a=5,\\ b=-3$ ⑵ $8$"
+ },
+ {
+  "id": "0df5960b-27a1-4661-bb78-716d8d77e6aa",
+  "code": "HC10109-4UK6",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "7c64a259-91f7-445c-8cdd-ee172db2f9dc",
+  "code": "HC10109-AWWA",
+  "dbAnswer": "R(x)=x²+x+14",
+  "aiAnswer": "x^2+x+14"
+ },
+ {
+  "id": "28fd62f5-cee2-4f4d-9d74-459ad31a72f9",
+  "code": "HC10109-XQ8G",
+  "dbAnswer": "몫 = 2(2x-1)Q(x)+2R (나머지는 -4R)",
+  "aiAnswer": "$(4x-2)Q(x)+2R$"
+ },
+ {
+  "id": "5947f732-c925-46a0-90d6-d1ad2240f15e",
+  "code": "HC10201-3KGC",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "4adb796a-999d-411f-88fb-86f93fe617db",
+  "code": "HC10201-6BUH",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "ca70f8fe-fef8-405b-9f49-572ffb59246a",
+  "code": "HC10201-S6RD",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "a453ae32-44de-441e-8064-938cfa7d5759",
+  "code": "HC10201-SR2U",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "26f5ee21-a648-4aa2-86d8-9f165bdb72db",
+  "code": "HC10201-UQKQ",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "f1a9ddd2-776b-4f60-b063-c00e8e555257",
+  "code": "HC10201-ZLG7",
+  "dbAnswer": "⑤",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "9f22c90a-198c-4b10-a1e5-0ad0c343a43e",
+  "code": "HC10205-M3AA",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "2cfc64e6-9db1-4a31-84ea-4bdf76af74f7",
+  "code": "HC10206-M9F7",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "4766f435-0636-4f86-9d85-e459181d5a58",
+  "code": "HC10206-ZE6G",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "8f2e3245-eb57-48cd-90f1-d0854b1137ee",
+  "code": "HC10208-KXVM",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "28f7c388-b3ee-4d80-a7f4-98e43e5ded66",
+  "code": "HC10209-HW54",
+  "dbAnswer": "⑴ f(x)=3x²+2, ⑵ h(x)=(3/2)x²-2x-3",
+  "aiAnswer": "(1) f(x)=3x^2+2 (2) h(x)=\\frac{3}{2}x^2-2x-3"
+ },
+ {
+  "id": "8708de32-67ee-473a-aada-2bdde802732e",
+  "code": "HC10209-KFW9",
+  "dbAnswer": "i",
+  "aiAnswer": "합: $6$, 곱: $-1$"
+ },
+ {
+  "id": "eb3754f8-617c-435a-a0b1-e0be23bb0f8b",
+  "code": "HC10209-QPC7",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "dd9f1034-149b-417e-ade0-c7c3702378c6",
+  "code": "HC10211-3HMK",
+  "dbAnswer": "156 (n=12, M=144)",
+  "aiAnswer": "156"
+ },
+ {
+  "id": "58fb95e2-0f2e-4a7e-85c9-86b95b1bf980",
+  "code": "HC10211-F9Y2",
+  "dbAnswer": "⑴ a = 5/2, b = 1, ⑵ 0",
+  "aiAnswer": "⑴ $a=\\frac{5}{2}$, $b=1$ ⑵ 최솟값 $0$"
+ },
+ {
+  "id": "d146aa6b-118d-477b-a683-922f75a3a421",
+  "code": "HC10211-YXBB",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "2fde3df4-2428-4a82-934b-7332c6046cc2",
+  "code": "HC10211-ZFJ7",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "d01638d5-452b-4de5-b598-f13295154e22",
+  "code": "HC10211-ZTKN",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "4e041f76-0b36-4eb5-af42-9e1397ef7d10",
+  "code": "HC10212-X8TN",
+  "dbAnswer": "⑴ f(x) = a(x+3)(x-1), ⑵ 꼭짓점 x좌표 -1, a = 1, ⑶ -3",
+  "aiAnswer": "(1) $f(x)=(x+1)^2-4$ (2) 꼭짓점 $x$좌표는 $-1$, $a=1$ (3) $f(-2)=-3$"
+ },
+ {
+  "id": "e0c4f6f5-1c66-429a-a98e-38cd7bcaa386",
+  "code": "HC10214-JU3F",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "999dda22-d646-4a99-8329-15a7cdb26102",
+  "code": "HC10214-P8AD",
+  "dbAnswer": "a=-3, 나머지 두 근 1+i, 1-i",
+  "aiAnswer": "$a=-3$, 나머지 두 근은 $x=1+i$, $x=1-i$"
+ },
+ {
+  "id": "8affd201-bc64-4568-b9f5-e3969e52f5e3",
+  "code": "HC10214-QSD9",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "222f8d97-8f41-44e5-af1e-79d3c860ab48",
+  "code": "HC10214-TLU6",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "a7dfd0f8-37d9-40af-ae71-36eaf563db59",
+  "code": "HC10219-3NQC",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "40dc5069-4f3c-40e0-80b8-4af47fe2baac",
+  "code": "HC10219-7R43",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "6f176dcb-43b2-44bd-b2a5-7925e78cf91c",
+  "code": "HC10221-VWAB",
+  "dbAnswer": "⑴ f(x)=x⁴-17x²+16, ⑵ (x+1)(x-1)(x+4)(x-4)",
+  "aiAnswer": "⑴ $f(x)=x^{4}-17x^{2}+16$ ⑵ $f(x)=(x-1)(x+1)(x-4)(x+4)$"
+ },
+ {
+  "id": "11dffb8a-a385-4f87-bd2d-8d83c73254d0",
+  "code": "HC10223-4QDB",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "12d54fe8-978a-4411-8f2d-060cb07de0de",
+  "code": "HC10223-HFBW",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "b12d62d8-9ae0-474d-aeeb-72a6ffbb7e82",
+  "code": "HC10223-JPGD",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "4926bce8-2d94-4b3a-9712-adefedcb74ce",
+  "code": "HC10223-S9XS",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "7473ef1f-78ed-4527-9339-06675061c5b9",
+  "code": "HC10225-CUUR",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "ac173d28-6877-46af-a0a8-b50419768fae",
+  "code": "HC10225-NLVP",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "94c62112-efa4-4e16-8635-b036aa1f507c",
+  "code": "HC10225-RE8X",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "c789ad0b-bfba-4c82-bc24-21717d1f5744",
+  "code": "HC10227-BVVT",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "9b7bfc9b-619c-4239-a4b9-918cff180b7d",
+  "code": "HC10227-ZAFG",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "3b4a8732-7133-48ad-a599-4385d0d3a727",
+  "code": "HC10228-3ZB2",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "903a7c17-8103-4be3-b760-6c347124b5f2",
+  "code": "HC10228-7HCH",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "4471699f-1cdf-4741-b7ab-2a669a0081cd",
+  "code": "HC10230-CRXU",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "3ef76da2-3358-46a2-88a5-7031bf66a37c",
+  "code": "HC10301-GGTJ",
+  "dbAnswer": "⑤",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "c38003c8-e8c8-4796-9510-abed19f200c1",
+  "code": "HC10301-HYCL",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "3b999bfb-b651-4868-bb57-5fce51155463",
+  "code": "HC10301-L4ES",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "f5e58794-d71b-4e90-9fbf-6d2d20812e0f",
+  "code": "HC10301-M46B",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "5da03228-572b-4573-9c44-943c759485c4",
+  "code": "HC10301-YDX3",
+  "dbAnswer": "⑤",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "264de81b-1a3f-4721-9700-6faec43b5486",
+  "code": "HC10301-Z3GQ",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "a4212395-a7c4-4b9c-9343-baba98cd3925",
+  "code": "HC10302-8D3W",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "6c504b09-c8ba-428c-b79e-2137d8390dba",
+  "code": "HC10302-Q6NR",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "8444191c-5c66-400b-80e4-9a9f61ce341b",
+  "code": "HC10303-5AUJ",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "834e1be4-e781-4d74-bc41-6c8ae7ef3359",
+  "code": "HC10303-Y3DL",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "f9c7a45c-bf13-47a4-b088-5f768142f593",
+  "code": "HC10401-A2RJ",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "07224866-9f60-4ecb-8826-d1a4d422abe4",
+  "code": "HC10402-L6LF",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "5644e9db-2ad0-4249-b370-883b8c497d13",
+  "code": "HC10402-NQ3P",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "a76a6652-3c59-40d9-aa20-b5924362b274",
+  "code": "HC10404-SJZQ",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "1dea7fe1-b679-46fb-bc3b-32484fc39f98",
+  "code": "HC10404-UDAF",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "153a68bd-1072-43fd-bec7-720c8a786527",
+  "code": "HC10404-VTS7",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "d10435fd-e300-4fa3-9e82-b64af97aad8a",
+  "code": "HC10404-X9LR",
+  "dbAnswer": "[[1, 0], [0, 1]] (단위행렬 E)",
+  "aiAnswer": "\\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix}"
+ },
+ {
+  "id": "1f5c65a9-4a2a-4ccb-8b22-eec76347e34f",
+  "code": "HC20103-FSQL",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "b2de295a-cbaa-4c6c-a9ce-95d9f4723578",
+  "code": "HC20106-K26R",
+  "dbAnswer": "정답 ④",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "9b87c248-75cc-49d8-9f1f-a0e0709ab7f2",
+  "code": "HC20111-HR5N",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "fbe10dd9-ae42-41fc-abfc-a8055d8642cd",
+  "code": "HC20115-UDBB",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "e6f43e44-b411-4c2c-b53d-a1ddab98bee5",
+  "code": "HC20116-CSYZ",
+  "dbAnswer": "(정답 없음)",
+  "aiAnswer": "⑴ $-\\sqrt3<k<\\sqrt3$   ⑵ $y=-5x+4\\sqrt{13}$ 또는 $y=-5x-4\\sqrt{13}$"
+ },
+ {
+  "id": "9d2c77af-c8c1-4bbf-ae97-74af521b57c0",
+  "code": "HC20118-JZB2",
+  "dbAnswer": "(1, 18), (1, -2), (-1, 20), (-1, 0)",
+  "aiAnswer": "$(a,b)=(1,18),\\,(1,-2),\\,(-1,20),\\,(-1,0)$"
+ },
+ {
+  "id": "61955f09-16bd-4000-8256-21cc2337de16",
+  "code": "HC20120-9HYW",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "01e89ecf-c69d-45d1-8d18-21cd1e40b87d",
+  "code": "HC20120-MA2P",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "82a5b122-f9c2-4f60-a172-d28857c976d5",
+  "code": "HC20203-YN8L",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "3f0e99bb-fcdb-4b12-bddd-9119a8e1e22c",
+  "code": "HC20206-EBW7",
+  "dbAnswer": "⑴A={2,5},B={2,3,5,7,11,13},합7 ⑵M×m=527",
+  "aiAnswer": "⑴ 7 ⑵ M×m = 612"
+ },
+ {
+  "id": "c7a70b2c-3705-41e6-800a-83d53698cbe3",
+  "code": "HC20207-9W2E",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "d007f87c-5ead-4b1e-9d4f-ff3f9ceab792",
+  "code": "HC20208-TJXF",
+  "dbAnswer": "①",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "5550c295-c3cd-4c8a-8e5d-476f683c6205",
+  "code": "HC20209-JKYN",
+  "dbAnswer": "부정: 모든 실수 x에 대하여 x²-6x+a>0이다. a의 최솟값 10",
+  "aiAnswer": "부정: 모든 실수 $x$에 대하여 $x^{2}-6x+a>0$이다. 자연수 $a$의 최솟값: $10$"
+ },
+ {
+  "id": "633b46b4-c2fc-4e15-9547-14004340066d",
+  "code": "HC20209-ZL6M",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "803a7f37-97c3-4df0-b6cf-7d6d3a38e075",
+  "code": "HC20213-LHNV",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "e573f9a9-1110-4646-b035-8ffecff1cf41",
+  "code": "HC20213-XNTK",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "57ce9437-9635-48bc-837e-c47ebf8911d6",
+  "code": "HC20301-EFWF",
+  "dbAnswer": "감소, 증가",
+  "aiAnswer": "$x<0$일 때 감소, $x>0$일 때 증가"
+ },
+ {
+  "id": "f1354dfa-b4b1-4c58-9361-532e37f05c06",
+  "code": "HC20304-8MED",
+  "dbAnswer": "(정답 없음)",
+  "aiAnswer": "⑴ X의 각 원소에 Y의 원소가 오직 하나씩 대응 ⑵(가) h(x)=-x+1 (나) h(x)=-x+7"
+ },
+ {
+  "id": "7a8c2b78-6ad8-4a59-a6a8-ed9d54dc0b88",
+  "code": "HC20308-CG3L",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "e99615e8-7a92-41c1-9bc5-750e28b67df4",
+  "code": "HC20310-6NXF",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "82aa1a85-f939-4e3f-a8f6-2999165e548d",
+  "code": "HC20310-MEQX",
+  "dbAnswer": "최솟값 √2/2, P(5/2, 3/2), (3/2, 5/2)",
+  "aiAnswer": "최솟값은 $\\frac{\\sqrt2}{2}$이고, $\\mathrm{P}\\left(\\frac{5}{2},\\frac{3}{2}\\right)$ 또는 $\\mathrm{P}\\left(\\frac{3}{2},\\frac{5}{2}\\right)$"
+ },
+ {
+  "id": "2743618c-5360-4735-aea5-a99e6d7a1756",
+  "code": "HC20310-QZWG",
+  "dbAnswer": "-5",
+  "aiAnswer": "a+b+c=-5"
+ },
+ {
+  "id": "7dc15189-5fb7-4a27-be31-3d2a1c5940a6",
+  "code": "HC20313-5MCM",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ }
+]

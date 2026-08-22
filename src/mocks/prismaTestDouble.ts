@@ -64,8 +64,36 @@ interface StudentRow {
   classId: string;
   name: string;
   useIndividualProgress: boolean;
+  schoolLevel: string | null;
+  schoolGrade: number | null;
+  /** eywa 연계 축(D-64) — 시드는 전부 null, 필요한 테스트가 update 로 채운다. */
+  eywaStudentId: string | null;
+  eywaWithdrawnAt: Date | null;
+  eywaLastReportDate: Date | null;
+  eywaLastReportText: string | null;
   createdAt: Date;
   updatedAt: Date;
+}
+
+/** eywa 동기화 되돌리기 원장(DB sink) — 「지금 가져오기」 라우트가 쓴다. */
+interface EywaSyncLedgerRow {
+  id: string;
+  runId: string;
+  createdAt: Date;
+  payload: unknown;
+}
+
+/** eywa 동기화 실행 기록 — daily-review 라우트의 「마지막 동기화」 스트립. */
+interface EywaSyncRunRow {
+  id: string;
+  ranAt: Date;
+  transport: string;
+  students: number;
+  classes: number;
+  progressRows: number;
+  unresolvedLines: number;
+  ambiguous: number;
+  examOnly: number;
 }
 
 type UnitRow = MockUnit;
@@ -380,6 +408,12 @@ function toClassRow(entity: ClassEntity): ClassRow {
 
 function toStudentRow(entity: StudentEntity): StudentRow {
   return {
+    schoolLevel: null,
+    schoolGrade: null,
+    eywaStudentId: null,
+    eywaWithdrawnAt: null,
+    eywaLastReportDate: null,
+    eywaLastReportText: null,
     ...entity,
     createdAt: new Date(entity.createdAt),
     updatedAt: new Date(entity.updatedAt),
@@ -475,6 +509,8 @@ function toFixtureTestRow(): TestRow {
 
 let classRows: ClassRow[] = [];
 let studentRows: StudentRow[] = [];
+let eywaSyncRunRows: EywaSyncRunRow[] = [];
+let eywaSyncLedgerRows: EywaSyncLedgerRow[] = [];
 let unitRows: UnitRow[] = [];
 let progressRows: ProgressRow[] = [];
 let problemRows: ProblemRow[] = [];
@@ -494,6 +530,8 @@ let actualExamScoreRows: ActualExamScoreRow[] = [];
 export function resetPrismaTestDouble() {
   classRows = [...MOCK_CLASSES, MOCK_CLASS_OTHER_USER].map(toClassRow);
   studentRows = MOCK_STUDENTS.map(toStudentRow);
+  eywaSyncRunRows = [];
+  eywaSyncLedgerRows = [];
   unitRows = MOCK_UNITS.map((unit) => ({ ...unit }));
   progressRows = MOCK_PROGRESS.map(toProgressRow);
   problemRows = [
@@ -949,6 +987,73 @@ const prismaModels = {
       return removed!;
     },
   },
+  eywaSyncLedger: {
+    async create({ data }: { data: { runId: string; payload: unknown } }) {
+      const row: EywaSyncLedgerRow = {
+        id: randomUUID(),
+        createdAt: new Date(),
+        ...data,
+      };
+      eywaSyncLedgerRows.push(row);
+      return row;
+    },
+    async findMany({
+      orderBy,
+      skip = 0,
+      select,
+    }: {
+      orderBy?:
+        | { createdAt?: "asc" | "desc" }
+        | Array<{ createdAt?: "asc" | "desc" } | { runId?: "asc" | "desc" }>;
+      skip?: number;
+      select?: Record<string, unknown>;
+    } = {}) {
+      const specs = Array.isArray(orderBy) ? orderBy : orderBy ? [orderBy] : [];
+      const rows = [...eywaSyncLedgerRows].sort((a, b) => {
+        for (const spec of specs) {
+          if ("createdAt" in spec && spec.createdAt) {
+            const diff = a.createdAt.getTime() - b.createdAt.getTime();
+            if (diff !== 0) return spec.createdAt === "desc" ? -diff : diff;
+          }
+          if ("runId" in spec && spec.runId) {
+            const diff = a.runId.localeCompare(b.runId);
+            if (diff !== 0) return spec.runId === "desc" ? -diff : diff;
+          }
+        }
+        return 0;
+      });
+      return applySelect(rows.slice(skip), select, {});
+    },
+    async deleteMany({ where }: { where?: Record<string, unknown> } = {}) {
+      const keep = eywaSyncLedgerRows.filter((r) => !matchesWhere(r, where));
+      const count = eywaSyncLedgerRows.length - keep.length;
+      eywaSyncLedgerRows = keep;
+      return { count };
+    },
+  },
+
+  eywaSyncRun: {
+    async findFirst({
+      orderBy,
+    }: { orderBy?: { ranAt?: "asc" | "desc" } } = {}) {
+      const rows = [...eywaSyncRunRows].sort((a, b) =>
+        orderBy?.ranAt === "desc"
+          ? b.ranAt.getTime() - a.ranAt.getTime()
+          : a.ranAt.getTime() - b.ranAt.getTime(),
+      );
+      return rows[0] ?? null;
+    },
+    async create({ data }: { data: Omit<EywaSyncRunRow, "id" | "ranAt"> }) {
+      const row: EywaSyncRunRow = {
+        id: randomUUID(),
+        ranAt: new Date(),
+        ...data,
+      };
+      eywaSyncRunRows.push(row);
+      return row;
+    },
+  },
+
   student: {
     async create({
       data,
@@ -1834,6 +1939,8 @@ function snapshotRows() {
     problemReviewLogRows,
     predictionRunRows,
     actualExamScoreRows,
+    eywaSyncRunRows,
+    eywaSyncLedgerRows,
   });
 }
 
@@ -1854,6 +1961,8 @@ function restoreRows(snapshot: ReturnType<typeof snapshotRows>) {
   problemReviewLogRows = snapshot.problemReviewLogRows;
   predictionRunRows = snapshot.predictionRunRows;
   actualExamScoreRows = snapshot.actualExamScoreRows;
+  eywaSyncRunRows = snapshot.eywaSyncRunRows;
+  eywaSyncLedgerRows = snapshot.eywaSyncLedgerRows;
 }
 
 export const prismaTestDouble = {

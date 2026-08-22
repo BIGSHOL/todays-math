@@ -57,6 +57,15 @@ scripts/qa/reports/*
 # 그림 유실 잠금 원장 — **공유 DB 를 되돌리는 유일한 근거다.**
 # 여기 없으면 다른 컴퓨터에서 790건을 되돌릴 방법이 없다(적대적 리뷰 지적).
 !scripts/qa/reports/missing-figure-lock.json
+# 해설 rm 잔재 손수리 원장 (2026-08-21 원장님 검수 지적) — 공유 DB 되돌리기 근거
+!scripts/qa/reports/solution-rm-hotfix-2026-08-21.json
+!scripts/qa/reports/solution-rm-batch-2026-08-21.json
+!scripts/qa/reports/subnum-dup-2026-08-21.json
+!scripts/qa/reports/cm-sup-2026-08-21.json
+# Claude 생성 해설 원장 — 되돌리기 자료. 커밋 필수 (2026-08-22)
+!scripts/qa/reports/ai-solution-ledger.json
+!scripts/qa/reports/ai-solution-mismatch.json
+!scripts/qa/reports/ai-solution-skip.json
 # 중복 문항 삭제 원장 — **지운 행의 모든 컬럼**이 여기에만 있다.
 # 이게 없으면 `--revert` 가 아무것도 못 되살린다(영구 삭제가 된다).
 !scripts/qa/reports/duplicate-delete-ledger.json
@@ -254,3 +263,6 @@ scripts/qa/reports/svg-compare-blocked/
 !scripts/qa/reports/lim-arrow-repair.json
 !scripts/qa/reports/solution-hwp-repair.json
 !scripts/qa/reports/lsub-repair.json
+
+# 해설 생성 배치 산출물 — 재생성 가능, 원장(reports/ai-solution-*.json)만 커밋
+scripts/qa/nosol-out/

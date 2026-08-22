@@ -164,3 +164,81 @@ describe("[확인테스트] 기본 범위는 진도가 정한다", () => {
     ).toBeNull();
   });
 });
+
+/**
+ * 🔴 D-63 (원장님 확정 2026-08-21): **첫 회는 현재 대단원을 넘지 않는다.**
+ *
+ * eywa 연계 실측(92명)에서 「이력 첫 단원부터」가 첫 회에 350단원짜리 범위를
+ * 만들었다(이력이 1년치라서). 시작은 **이력 첫 단원과 현재 대단원 첫 단원 중
+ * 뒤의 것** — 안 배운 단원도, 대단원 밖도 들어오지 않는 쪽으로 좁힌다.
+ * 직전 확인테스트가 생기면 이 제한은 안 탄다(확정 규칙이 이어받는다).
+ */
+describe("[확인테스트] 첫 회는 현재 대단원을 넘지 않는다 (D-63)", () => {
+  const CH_UNITS = [
+    { id: "c1-1", orderIndex: 100, grade: "중2", chapter: "2. 부등식" },
+    { id: "c1-2", orderIndex: 101, grade: "중2", chapter: "2. 부등식" },
+    { id: "c2-1", orderIndex: 102, grade: "중2", chapter: "3. 방정식" },
+    { id: "c2-2", orderIndex: 103, grade: "중2", chapter: "3. 방정식" },
+    { id: "c2-3", orderIndex: 104, grade: "중2", chapter: "3. 방정식" },
+  ];
+
+  it("이력이 앞 대단원까지 걸쳐도 시작은 현재 대단원 첫 단원", () => {
+    expect(
+      resolveDefaultReviewRange({
+        units: CH_UNITS,
+        currentUnitId: "c2-3",
+        lastReviewEndUnitId: null,
+        progressUnitIds: ["c1-1", "c1-2", "c2-1", "c2-2", "c2-3"],
+      }),
+    ).toEqual({
+      startUnitId: "c2-1",
+      endUnitId: "c2-3",
+      startedFrom: "chapter-start",
+    });
+  });
+
+  it("대단원 중간부터 나간 이력이면 이력 첫 단원이 이긴다 — 안 배운 단원 금지", () => {
+    expect(
+      resolveDefaultReviewRange({
+        units: CH_UNITS,
+        currentUnitId: "c2-3",
+        lastReviewEndUnitId: null,
+        progressUnitIds: ["c2-2", "c2-3"],
+      }),
+    ).toEqual({
+      startUnitId: "c2-2",
+      endUnitId: "c2-3",
+      startedFrom: "progress-start",
+    });
+  });
+
+  it("직전 확인테스트가 있으면 대단원 제한을 안 탄다 — 지난 시험 다음부터 잇는다", () => {
+    expect(
+      resolveDefaultReviewRange({
+        units: CH_UNITS,
+        currentUnitId: "c2-3",
+        lastReviewEndUnitId: "c1-1",
+        progressUnitIds: ["c1-1", "c1-2", "c2-1", "c2-2", "c2-3"],
+      }),
+    ).toEqual({
+      startUnitId: "c1-2",
+      endUnitId: "c2-3",
+      startedFrom: "last-review",
+    });
+  });
+
+  it("대단원 정보가 없는 단원 목록이면 기존 동작 그대로(이력 첫 단원)", () => {
+    expect(
+      resolveDefaultReviewRange({
+        units: UNITS,
+        currentUnitId: "m2-4",
+        lastReviewEndUnitId: null,
+        progressUnitIds: ["m2-2", "m2-3", "m2-4"],
+      }),
+    ).toEqual({
+      startUnitId: "m2-2",
+      endUnitId: "m2-4",
+      startedFrom: "progress-start",
+    });
+  });
+});

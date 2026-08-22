@@ -10,6 +10,7 @@
 import { http, type HttpHandler } from "msw";
 
 import {
+  dailyReviewResponseSchema,
   defaultReviewRangeQuerySchema,
   defaultReviewRangeResponseSchema,
   insufficientProblemsErrorResponseSchema,
@@ -91,16 +92,33 @@ function defaultRangeFor(classId: string, studentId: string | null) {
 
 export const testHandlers: HttpHandler[] = [
   // GET /api/tests/default-range — 확인테스트가 손대지 않아도 맞는 범위(S-04)
+  /**
+   * 오늘의 학생별 확인테스트 (2단계 화면) — 기본은 «연계 학생 없음» 모양.
+   * 풍부한 픽스처가 필요한 테스트는 server.use 로 덮어쓴다.
+   */
+  http.get("/api/tests/daily-review", ({ request }) => {
+    const day = new URL(request.url).searchParams.get("day") ?? "2026-08-21";
+    return jsonOk(dailyReviewResponseSchema, {
+      data: {
+        day,
+        sync: null,
+        attended: 0,
+        auto: [],
+        lacking: [],
+        examOrUnread: [],
+        noRange: [],
+        todayTests: [],
+      },
+    });
+  }),
+
   http.get("/api/tests/default-range", ({ request }) => {
     const parsed = defaultReviewRangeQuerySchema.safeParse(
       Object.fromEntries(new URL(request.url).searchParams),
     );
     if (!parsed.success) return validationError(parsed.error);
     return jsonOk(defaultReviewRangeResponseSchema, {
-      data: defaultRangeFor(
-        parsed.data.classId,
-        parsed.data.studentId ?? null,
-      ),
+      data: defaultRangeFor(parsed.data.classId, parsed.data.studentId ?? null),
     });
   }),
 

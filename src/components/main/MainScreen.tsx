@@ -12,6 +12,7 @@ import { loadMainDashboard } from "@/lib/main/loadMainDashboard";
 import { buildClassRows, remainingCount } from "@/lib/main/pipeline";
 
 import { ClassCard } from "./ClassCard";
+import { DailyReviewSection } from "./DailyReviewSection";
 import { DoneSummaryRow } from "./DoneSummaryRow";
 import { LedgerTable } from "./LedgerTable";
 import { ProgressPanel } from "./ProgressPanel";
@@ -161,6 +162,8 @@ export function MainScreen() {
     >
       <div className="flex min-h-0 flex-1">
         <div className="min-w-0 flex-1">
+          {/* 오늘의 확인테스트 — eywa 학생별 진도 (원장님 확정 2026-08-21, 계기판) */}
+          <DailyReviewSection units={state.units} />
           {view === "stack" ? (
             <>
               {pending.map((row, i) => (

@@ -101,6 +101,8 @@ export const errorCodeSchema = z.enum([
   "NOT_FOUND",
   "INSUFFICIENT_PROBLEMS",
   "AI_GENERATION_FAILED",
+  // eywa 동기화(「지금 가져오기」) 실패 — eywa 쪽 장애·전송 미설정. 화면이 사유를 그대로 보여 준다.
+  "EYWA_SYNC_FAILED",
   "CONFLICT",
   "INTERNAL_ERROR",
 ]);

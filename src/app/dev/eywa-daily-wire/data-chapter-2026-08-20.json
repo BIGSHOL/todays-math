@@ -1,0 +1,1012 @@
+{
+ "measuredAt": "2026-08-21T06:55:04.757Z",
+ "day": "2026-08-20",
+ "sync": {
+  "ledger": "eywa-sync-2026-08-21T06-26-08-915Z.json",
+  "syncedAt": "2026-08-21T06:26:15.463Z",
+  "students": 193,
+  "progressRows": 13571,
+  "unresolvedLines": 3999,
+  "unresolvedKinds": 1364,
+  "ambiguous": 97
+ },
+ "totals": {
+  "attended": 78,
+  "withRange": 39,
+  "groups": 24,
+  "groupsLackingPool": 4,
+  "wideRangeGroups": 0,
+  "noProgressToday": 39
+ },
+ "noProgressToday": [
+  {
+   "name": "강도윤",
+   "grade": "중1",
+   "className": "중등M 개별 JJ2K",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "강서연",
+   "grade": "초4",
+   "className": "초등M 개별 CR1D",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "강주원",
+   "grade": "중3",
+   "className": "중등M 중3 CR3D",
+   "rawLines": [
+    "수학 내신대비"
+   ]
+  },
+  {
+   "name": "강하은",
+   "grade": "중3",
+   "className": "중등M 중3 CR3D",
+   "rawLines": [
+    "수학 내신대비"
+   ]
+  },
+  {
+   "name": "권서연",
+   "grade": "초6",
+   "className": "초등M 개별 JJ1I",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "권서준",
+   "grade": "중3",
+   "className": "중등M 중3 CR3D",
+   "rawLines": [
+    "수학 내신대비"
+   ]
+  },
+  {
+   "name": "권예린",
+   "grade": "중3",
+   "className": "중등M 중3 CR3D",
+   "rawLines": [
+    "수학 내신대비"
+   ]
+  },
+  {
+   "name": "권주원",
+   "grade": "중1",
+   "className": "중등M 개별 JJ3J",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "김서준",
+   "grade": "초6",
+   "className": "초등M 개별 CR1C",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "김주원",
+   "grade": "중3",
+   "className": "중등M 중3 CR3D",
+   "rawLines": [
+    "수학 내신대비"
+   ]
+  },
+  {
+   "name": "박민준",
+   "grade": "초6",
+   "className": "초등M 개별 JJ1I",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "박예린",
+   "grade": "중2",
+   "className": "고등M 중2 PS3A",
+   "rawLines": [
+    "수학 시험대비"
+   ]
+  },
+  {
+   "name": "서서연",
+   "grade": "초5",
+   "className": "초등M 개별 JJ2M",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "서주원",
+   "grade": "초6",
+   "className": "초등M 개별 BS2G",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "송도윤",
+   "grade": "초5",
+   "className": "초등M 초5 MS1A",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "송예린",
+   "grade": "중3",
+   "className": "고등M 중2 PS3A",
+   "rawLines": [
+    "수학 시험대비"
+   ]
+  },
+  {
+   "name": "신서준",
+   "grade": "초6",
+   "className": "중등M 중2 BS3E",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "오도윤",
+   "grade": "초6",
+   "className": "초등M 개별 CR1C",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "윤시우",
+   "grade": "중2",
+   "className": "고등M 중2 PS3A",
+   "rawLines": [
+    "수학 시험대비"
+   ]
+  },
+  {
+   "name": "이도윤",
+   "grade": "초5",
+   "className": "초등M 초5 MS1A",
+   "rawLines": [
+    "수학 모의고사"
+   ]
+  },
+  {
+   "name": "이서연",
+   "grade": "초6",
+   "className": "초등M 개별 CR1C",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "이서준",
+   "grade": "초5",
+   "className": "초등M 초5 MS1A",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "이주원",
+   "grade": "초4",
+   "className": "초등M 개별 CR1D",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "이하은",
+   "grade": "초5",
+   "className": "초등M 개별 JJ2I",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "임서준",
+   "grade": "초5",
+   "className": "초등M 초5 MS1A",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "임주원",
+   "grade": "초5",
+   "className": "초등M 개별 JJ2I",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "장지호",
+   "grade": "초4",
+   "className": "초등M 개별 CR1D",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "전도윤",
+   "grade": "중1",
+   "className": "중등M 중1 BS3C",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "전민준",
+   "grade": "초4",
+   "className": "중등M 개별 JJ2N",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "전서준",
+   "grade": "중2",
+   "className": "고등M 중2 PS3A",
+   "rawLines": [
+    "수학 시험대비"
+   ]
+  },
+  {
+   "name": "정서준",
+   "grade": "초5",
+   "className": "초등M 초5 MS1A",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "정지우",
+   "grade": "중2",
+   "className": "고등M 개별 TP4E",
+   "rawLines": [
+    "수학 시험대비"
+   ]
+  },
+  {
+   "name": "조민준",
+   "grade": "중1",
+   "className": "중등M 개별 JJ2K",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "조지호",
+   "grade": "중3",
+   "className": "중등M 중3 CR3D",
+   "rawLines": [
+    "수학 내신대비"
+   ]
+  },
+  {
+   "name": "최서준",
+   "grade": "중2",
+   "className": "중등M 개별 BS3G",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "최예린",
+   "grade": "중2",
+   "className": "고등M 중2 PS3A",
+   "rawLines": [
+    "수학 시험대비"
+   ]
+  },
+  {
+   "name": "최지호",
+   "grade": "중1",
+   "className": "중등M 개별 JJ3J",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "최하은",
+   "grade": "초5",
+   "className": "초등M 초5 MS1A",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  },
+  {
+   "name": "한예린",
+   "grade": "중1",
+   "className": "중등M 개별 JJ2K",
+   "rawLines": [
+    "수학 월말평가"
+   ]
+  }
+ ],
+ "groups": [
+  {
+   "key": "3e93bf73-4493-4299-b8a3-c4f5247e4413~0bf7d13f-6e7a-490d-bf0c-ba54a76e2e54",
+   "start": {
+    "grade": "중3",
+    "chapter": "5. 삼각비",
+    "section": "삼각비의 뜻"
+   },
+   "end": {
+    "grade": "중3",
+    "chapter": "5. 삼각비",
+    "section": "삼각비의 활용"
+   },
+   "unitCount": 3,
+   "students": [
+    {
+     "name": "서민준",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "안서연",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "장서준",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "장주원",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "정도윤",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "최민준",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "최서연",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "한서준",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 1515
+  },
+  {
+   "key": "5e897e62-5895-42a6-8ef4-fcfff35ad1ba~b69987d0-996c-4944-b85c-20ec0a9242a8",
+   "start": {
+    "grade": "중1",
+    "chapter": "7. 입체도형",
+    "section": "다면체"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "7. 입체도형",
+    "section": "회전체"
+   },
+   "unitCount": 3,
+   "students": [
+    {
+     "name": "권민준",
+     "grade": "중1",
+     "className": "중등M 개별 BS2F"
+    },
+    {
+     "name": "신하은",
+     "grade": "중1",
+     "className": "중등M 개별 BS2F"
+    },
+    {
+     "name": "임시우",
+     "grade": "중1",
+     "className": "중등M 개별 BS2F"
+    },
+    {
+     "name": "장도윤",
+     "grade": "중1",
+     "className": "중등M 개별 BS2F"
+    },
+    {
+     "name": "전서연",
+     "grade": "중1",
+     "className": "중등M 개별 BS2F"
+    },
+    {
+     "name": "조지우",
+     "grade": "중1",
+     "className": "중등M 개별 BS2F"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 120
+  },
+  {
+   "key": "07608b11-124b-4b25-a94c-43a5006ad0dc~85021277-ab34-44a4-b6b6-cde6d1094530",
+   "start": {
+    "grade": "초5",
+    "chapter": "2-4 소수의 곱셈",
+    "section": "2-4-1 (1보다 작은 소수)×(자연수)의 계산"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "2-4 소수의 곱셈",
+    "section": "2-4-3 (자연수)×(1보다 작은 소수)의 계산"
+   },
+   "unitCount": 3,
+   "students": [
+    {
+     "name": "안하은",
+     "grade": "초5",
+     "className": "중등M 초6 개별MS2B"
+    },
+    {
+     "name": "임하은",
+     "grade": "초5",
+     "className": "중등M 초6 개별MS2B"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 11
+  },
+  {
+   "key": "07608b11-124b-4b25-a94c-43a5006ad0dc~8c298d03-e7ff-495f-82b3-ab0bec1132e8",
+   "start": {
+    "grade": "초5",
+    "chapter": "2-4 소수의 곱셈",
+    "section": "2-4-1 (1보다 작은 소수)×(자연수)의 계산"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "2-4 소수의 곱셈",
+    "section": "2-4-2 (1보다 큰 소수)×(자연수)의 계산"
+   },
+   "unitCount": 2,
+   "students": [
+    {
+     "name": "김민준",
+     "grade": "초5",
+     "className": "초등M 개별 JJ1H"
+    },
+    {
+     "name": "윤서연",
+     "grade": "초5",
+     "className": "초등M 개별 JJ2M"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 8
+  },
+  {
+   "key": "cbcd09c1-da09-487e-aa88-f7d8591db110~e527bad9-1063-4003-8fcc-2e7c83813e5e",
+   "start": {
+    "grade": "초4",
+    "chapter": "2-1 분수의 덧셈과 뺄셈",
+    "section": "2-1-1 진분수의 덧셈"
+   },
+   "end": {
+    "grade": "초4",
+    "chapter": "2-1 분수의 덧셈과 뺄셈",
+    "section": "2-1-2 진분수의 뺄셈"
+   },
+   "unitCount": 2,
+   "students": [
+    {
+     "name": "임지우",
+     "grade": "초4",
+     "className": "초등M 개별 JJ1E"
+    },
+    {
+     "name": "조시우",
+     "grade": "초4",
+     "className": "초등M 초4 BS1J"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 0
+  },
+  {
+   "key": "4de2cffe-ee9c-419a-a924-177eb5a082cd~acc5b481-0b88-4100-9308-ff7f5169d027",
+   "start": {
+    "grade": "초6",
+    "chapter": "2-2 소수의 나눗셈",
+    "section": "2-2-1 자릿수가 같은 (소수)÷(소수) 알아보기"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "2-2 소수의 나눗셈",
+    "section": "2-2-2 자릿수가 다른 (소수)÷(소수) 알아보기"
+   },
+   "unitCount": 2,
+   "students": [
+    {
+     "name": "한주원",
+     "grade": "초6",
+     "className": "초등M 개별 BS2G"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 12
+  },
+  {
+   "key": "bf0bf4e5-3722-43ba-8fd3-62e371769155~a1ed06d6-2443-406e-a1e5-9b3c3f3aeaa0",
+   "start": {
+    "grade": "초6",
+    "chapter": "2-1 분수의 나눗셈",
+    "section": "2-1-1 분모가 같은 (분수)÷(분수) 알아보기"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "2-1 분수의 나눗셈",
+    "section": "2-1-5 (가분수)÷(분수), (대분수)÷(분수) 알아보기"
+   },
+   "unitCount": 5,
+   "students": [
+    {
+     "name": "황하은",
+     "grade": "초6",
+     "className": "초등M 개별 JJ1F"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 18
+  },
+  {
+   "key": "e63d61c6-2b41-4c83-a74b-a605fd343c42~40a7b4e1-88d2-4cc6-8097-6d1b5f0bbbf9",
+   "start": {
+    "grade": "중3",
+    "chapter": "2. 다항식의 곱셈과 인수분해",
+    "section": "다항식의 곱셈"
+   },
+   "end": {
+    "grade": "중3",
+    "chapter": "2. 다항식의 곱셈과 인수분해",
+    "section": "인수분해의 응용"
+   },
+   "unitCount": 3,
+   "students": [
+    {
+     "name": "정지호",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 1388
+  },
+  {
+   "key": "d583be25-29e8-42a7-8e03-d7708247f452~18f9b484-a233-44c3-bc95-cdf0fa66313a",
+   "start": {
+    "grade": "초5",
+    "chapter": "2-2 분수의 곱셈",
+    "section": "2-2-1 (분수)×(자연수)의 계산"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "2-2 분수의 곱셈",
+    "section": "2-2-3 진분수의 곱셈"
+   },
+   "unitCount": 3,
+   "students": [
+    {
+     "name": "전주원",
+     "grade": "초5",
+     "className": "초등M 초5 EL2T"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 11
+  },
+  {
+   "key": "83b0bcb7-b099-4503-9472-fc75bec861d1~1e4de77f-a37a-422b-a916-cb37b6e5f97a",
+   "start": {
+    "grade": "초4",
+    "chapter": "2-3 소수의 덧셈과 뺄셈",
+    "section": "2-3-1 소수 두 자리 수, 세 자리 수 알아보기"
+   },
+   "end": {
+    "grade": "초4",
+    "chapter": "2-3 소수의 덧셈과 뺄셈",
+    "section": "2-3-4 소수 한 자리 수의 덧셈"
+   },
+   "unitCount": 4,
+   "students": [
+    {
+     "name": "신주원",
+     "grade": "초6",
+     "className": "초등M 개별 BS1D"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 19
+  },
+  {
+   "key": "172e11d6-b5c4-4f3f-8b4f-dacc43fb4110~172e11d6-b5c4-4f3f-8b4f-dacc43fb4110",
+   "start": {
+    "grade": "중1",
+    "chapter": "3. 방정식",
+    "section": "문자의 사용과 식의 값"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "3. 방정식",
+    "section": "문자의 사용과 식의 값"
+   },
+   "unitCount": 1,
+   "students": [
+    {
+     "name": "전하은",
+     "grade": "초4",
+     "className": "초등M 개별 BS1L"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 933
+  },
+  {
+   "key": "bec75cad-80be-4cab-b183-5958b1aa4c78~7394219f-b9fc-4121-92e2-04be0c7f25e1",
+   "start": {
+    "grade": "초6",
+    "chapter": "2-4 비례식과 비례배분",
+    "section": "2-4-1 비의 성질 알아보기"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "2-4 비례식과 비례배분",
+    "section": "2-4-3 비례식 알아보기"
+   },
+   "unitCount": 3,
+   "students": [
+    {
+     "name": "조서연",
+     "grade": "초4",
+     "className": "초등M 개별 CR1D"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 6
+  },
+  {
+   "key": "d52a02c4-365a-4768-9cd3-ab4a6e9756a7~b107b8ef-1798-4878-aaaf-7bdf4eac5489",
+   "start": {
+    "grade": "중2",
+    "chapter": "3. 방정식",
+    "section": "미지수가 2개인 연립일차방정식"
+   },
+   "end": {
+    "grade": "중2",
+    "chapter": "3. 방정식",
+    "section": "해가 특수한 연립방정식"
+   },
+   "unitCount": 5,
+   "students": [
+    {
+     "name": "전지우",
+     "grade": "초6",
+     "className": "초등M 개별 JJ2G"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 774
+  },
+  {
+   "key": "43a21b1d-ded8-493e-a4e2-c7da8526ef85~c3f613de-16a6-4424-9c69-ceafec7273a7",
+   "start": {
+    "grade": "중2",
+    "chapter": "4. 함수",
+    "section": "함수와 함숫값"
+   },
+   "end": {
+    "grade": "중2",
+    "chapter": "4. 함수",
+    "section": "일차함수의 그래프와 절편"
+   },
+   "unitCount": 2,
+   "students": [
+    {
+     "name": "최도윤",
+     "grade": "초6",
+     "className": "초등M 개별 JJ2G"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 955
+  },
+  {
+   "key": "d52a02c4-365a-4768-9cd3-ab4a6e9756a7~c967065d-b309-4431-9d15-f6b12671ee6a",
+   "start": {
+    "grade": "중2",
+    "chapter": "3. 방정식",
+    "section": "미지수가 2개인 연립일차방정식"
+   },
+   "end": {
+    "grade": "중2",
+    "chapter": "3. 방정식",
+    "section": "연립방정식의 활용(일, 속력)"
+   },
+   "unitCount": 8,
+   "students": [
+    {
+     "name": "최주원",
+     "grade": "초6",
+     "className": "초등M 개별 JJ2G"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 1099
+  },
+  {
+   "key": "91b815cc-6fcd-4d22-898c-17f127ed010a~8c976c58-49fe-4a11-acca-cc2e10eb9f2c",
+   "start": {
+    "grade": "중1",
+    "chapter": "5. 기본 도형",
+    "section": "점, 선, 면"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "5. 기본 도형",
+    "section": "두 직선의 위치 관계"
+   },
+   "unitCount": 3,
+   "students": [
+    {
+     "name": "조도윤",
+     "grade": "중1",
+     "className": "중등M 중1 BS3E"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 336
+  },
+  {
+   "key": "91b815cc-6fcd-4d22-898c-17f127ed010a~cce5e825-71d2-4739-95a5-c90f496eb7f2",
+   "start": {
+    "grade": "중1",
+    "chapter": "5. 기본 도형",
+    "section": "점, 선, 면"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "5. 기본 도형",
+    "section": "평행선"
+   },
+   "unitCount": 5,
+   "students": [
+    {
+     "name": "오하은",
+     "grade": "중1",
+     "className": "중등M 개별 JJ3J"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 502
+  },
+  {
+   "key": "91b815cc-6fcd-4d22-898c-17f127ed010a~189cdb5f-7f9b-4b1b-9c37-44b871d058ce",
+   "start": {
+    "grade": "중1",
+    "chapter": "5. 기본 도형",
+    "section": "점, 선, 면"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "5. 기본 도형",
+    "section": "합동"
+   },
+   "unitCount": 7,
+   "students": [
+    {
+     "name": "이시우",
+     "grade": "중1",
+     "className": "중등M 중1 BS3E"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 592
+  },
+  {
+   "key": "478e42ea-5098-4da8-947b-f47e6ae1ed90~bd419f09-50f5-4e63-a83b-9cbb445c766b",
+   "start": {
+    "grade": "중1",
+    "chapter": "6. 평면도형",
+    "section": "다각형"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "6. 평면도형",
+    "section": "다각형의 내각과 외각"
+   },
+   "unitCount": 3,
+   "students": [
+    {
+     "name": "윤서준",
+     "grade": "중1",
+     "className": "중등M 중1 BS3E"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 139
+  },
+  {
+   "key": "478e42ea-5098-4da8-947b-f47e6ae1ed90~18642023-b049-4a2e-90a1-858d3875235e",
+   "start": {
+    "grade": "중1",
+    "chapter": "6. 평면도형",
+    "section": "다각형"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "6. 평면도형",
+    "section": "부채꼴의 호의 길이와 넓이"
+   },
+   "unitCount": 5,
+   "students": [
+    {
+     "name": "강예린",
+     "grade": "중1",
+     "className": "중등M 중1 BS3E"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 252
+  },
+  {
+   "key": "2bf89716-7a68-46d0-8bf4-099c51e4dba8~011b7d47-66b5-44ef-8834-57568952ebe4",
+   "start": {
+    "grade": "미적분1",
+    "chapter": "1. 함수의 극한과 연속",
+    "section": "함수의 극한"
+   },
+   "end": {
+    "grade": "미적분1",
+    "chapter": "1. 함수의 극한과 연속",
+    "section": "함수의 극한값의 계산"
+   },
+   "unitCount": 3,
+   "students": [
+    {
+     "name": "이예린",
+     "grade": "고2",
+     "className": "[특강] 고등개별"
+    }
+   ],
+   "schoolLevels": [
+    "고"
+   ],
+   "poolTotal": 475
+  },
+  {
+   "key": "8454ebb1-e405-4c44-8b29-5b18852255ba~80ae3c94-f040-4b1b-b089-93ae53395c64",
+   "start": {
+    "grade": "중2",
+    "chapter": "5. 도형의 성질",
+    "section": "이등변삼각형의 성질"
+   },
+   "end": {
+    "grade": "중2",
+    "chapter": "5. 도형의 성질",
+    "section": "삼각형의 내심"
+   },
+   "unitCount": 4,
+   "students": [
+    {
+     "name": "박하은",
+     "grade": "중2",
+     "className": "중등M 중3 CR3D"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 688
+  },
+  {
+   "key": "28b5f29c-c996-48c5-99bd-2f7fbcf03477~198af52d-541a-4462-bd19-1e55306afe27",
+   "start": {
+    "grade": "초5",
+    "chapter": "1-3 대응 관계",
+    "section": "1-3-1 두 양 사이의 대응 관계"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "1-3 대응 관계",
+    "section": "1-3-3 생활 속에서 대응 관계를 찾아 식으로 나타내기"
+   },
+   "unitCount": 3,
+   "students": [
+    {
+     "name": "장하은",
+     "grade": "초4",
+     "className": "중등M 개별 JJ2N"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 5
+  },
+  {
+   "key": "777dac75-0ef5-4856-b366-d432c83fdd50~777dac75-0ef5-4856-b366-d432c83fdd50",
+   "start": {
+    "grade": "초4",
+    "chapter": "1-5 막대그래프",
+    "section": "1-5-1 막대그래프 알아보기"
+   },
+   "end": {
+    "grade": "초4",
+    "chapter": "1-5 막대그래프",
+    "section": "1-5-1 막대그래프 알아보기"
+   },
+   "unitCount": 1,
+   "students": [
+    {
+     "name": "정주원",
+     "grade": "초2",
+     "className": "초등M 초3 BS2E"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 2
+  }
+ ]
+}

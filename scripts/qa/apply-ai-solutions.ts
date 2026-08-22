@@ -1,0 +1,371 @@
+/**
+ * Claude 생성 해설 적용 — **기록된 정답과 일치할 때만** (2026-08-22, 원장님 지시).
+ *
+ *   npx tsx --env-file=.env scripts/qa/apply-ai-solutions.ts <생성파일.json...>   # dry-run
+ *   ALLOW_AI_SOLUTION=1 npx tsx ... <생성파일.json...>                            # 실쓰기
+ *
+ * 생성 파일 형식: [{ id, finalAnswer, solution } | { id, skip: 사유 }]
+ *
+ * 가드 (이 저장소의 교훈 그대로):
+ *  · **답 대조가 문지기다.** 에이전트는 정답을 못 봤다 — 독립적으로 푼 답이
+ *    DB 정답과 일치할 때만 해설을 채운다. 불일치는 「정답 의심」 목록으로 남긴다
+ *    (오답 데이터를 잡는 부산물 — 본문 밖 근거끼리의 교차 검산).
+ *  · 해설의 수식 조각을 KaTeX 로 실렌더 — 실패 신호(#cc0000)면 그 행은 안 채운다.
+ *  · $ 홀수(수식 안 닫힘)면 안 채운다.
+ *  · 지금 해설이 비어 있을 때만 채운다 — 있는 해설을 덮지 않는다.
+ *  · 원장은 **누적**한다(append) — 두 번째 회차가 첫 회차를 덮으면 되돌리기가
+ *    죽는다(2026-08-20). 행이 줄면 멈춘다.
+ */
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
+
+import { PrismaClient } from "@prisma/client";
+import katex from "katex";
+
+const APPLY = process.env.ALLOW_AI_SOLUTION === "1";
+const LEDGER = path.join("scripts", "qa", "reports", "ai-solution-ledger.json");
+const MISMATCH = path.join(
+  "scripts",
+  "qa",
+  "reports",
+  "ai-solution-mismatch.json",
+);
+const SKIPLOG = path.join("scripts", "qa", "reports", "ai-solution-skip.json");
+
+const p = new PrismaClient();
+
+type Gen =
+  | { id: string; finalAnswer: string; solution: string }
+  | { id: string; skip: string };
+
+/** 답 표기 차이를 접는다 — ①↔1(객관식), $·공백·\left 류, √·분수. */
+function normalizeAnswer(s: string): string {
+  let t = s.trim();
+  // 원문자 보기 번호 — 표준(①…, U+2460~)뿐 아니라 HWP 추출이 남기는 딩뱃
+  // 변형(➀…, U+2780~)도 같은 뜻이다. 43건 실측(2026-08-22, J10102-GXYG 등).
+  const circledSets = ["①②③④⑤", "➀➁➂➃➄"];
+  for (const circled of circledSets)
+    for (let i = 0; i < circled.length; i += 1)
+      t = t.split(circled[i]!).join(String(i + 1));
+  // 소문항 표지 ⑴⑵⑶… (U+2474~) 를 "(1)(2)(3)…" 로 접는다 — 프롬프트가
+  // 이 원문자를 요구하지 않아 AI 는 흔히 맨 괄호 숫자를 쓴다(J10301-EDCG 등).
+  const parenDigits = "⑴⑵⑶⑷⑸⑹⑺⑻⑼⑽";
+  for (let i = 0; i < parenDigits.length; i += 1)
+    t = t.split(parenDigits[i]!).join(`(${i + 1})`);
+  t = t
+    .replace(/\$\s*/g, "")
+    .replace(/\\left|\\right|\\,|\\;|\\!|~/g, "")
+    // \pm → ± — \frac 의 괄호 보호(아래)보다 **먼저** 와야 한다. \frac 뒤에
+    // 두면 "\frac{7\pm\sqrt{69}}{2}" 를 처리할 때 분자에 아직 "+"·"-" 가
+    // 없어(전부 "\pm" 이라는 글자다) 괄호를 못 살리고 "7±√69/2"(뜻이
+    // 바뀜: 7±(√69/2))로 풀린다(2026-08-22 실측: J30301-W9YP).
+    .replace(/\\pm/g, "±")
+    .replace(/\\sqrt\{([^{}]+)\}/g, "√$1")
+    .replace(/\\sqrt(\d)/g, "√$1")
+    // \frac{5+√5}{4} → "(5+√5)/4" — 분자·분모에 이항연산자(+·-·±)가 있으면
+    // 괄호를 살려 둔다. 안 그러면 "5+√5/4" 로 풀려 «5 더하기 (√5 나누기
+    // 4)»로 뜻이 바뀐다 — DB 가 이미 괄호를 쓴 값과 어긋난다(2026-08-22
+    // 실측: J30203-XWGJ «(5+√5)/4» vs 괄호 없는 "5+√5/4"). ± 도 반드시
+    // 넣어야 한다 — 유니코드 ± 는 ASCII +/- 와 다른 글자라 [+-] 만으로는
+    // "7±√69" 를 못 잡는다(2026-08-22 실측: J30301-W9YP, 위에서 \pm 를
+    // 미리 ± 로 바꿔 둔 뒤에도 이 정규식이 놓쳤다). 첫 글자의 부호
+    // (-5 같은 단항)는 괄호가 필요 없어 slice(1) 부터 검사한다.
+    .replace(
+      /\\d?frac\{([^{}]+)\}\{([^{}]+)\}/g,
+      (_m, num: string, den: string) => {
+        const wrap = (s: string) => (/[+\-±]/.test(s.slice(1)) ? `(${s})` : s);
+        return `${wrap(num)}/${wrap(den)}`;
+      },
+    )
+    .replace(/\\times/g, "×")
+    .replace(/\\pi/g, "π")
+    .replace(/\\degree|°/g, "")
+    // \mathrm{A} 는 변수 라벨 감싸개일 뿐 — 벗기지 않으면 [{}\s] 가 중괄호만
+    // 지워 "\mathrmA" 로 뭉친다(2026-08-22 실측: J10201-Y9H3).
+    .replace(/\\mathrm\{([^{}]+)\}/g, "$1")
+    // \text{ cm} 도 같은 문제 — 안 벗기면 "\textcm" 으로 뭉쳐 뒤의 단위
+    // 제거 규칙이 "cm" 앞의 진짜 글자(t)에 걸려 엉뚱하게 지운다(2026-08-22
+    // 실측: J30103-PCEZ — DB «8√3 cm» vs AI «$8\sqrt3\text{ cm}$»).
+    .replace(/\\text\{([^{}]*)\}/g, "$1")
+    // x^{2} → x² — DB 는 유니코드 위첨자를 쓰는데 AI 는 LaTeX 지수를 쓴다
+    // (2026-08-22 실측: J20107-JPXP·V46C). \frac·\sqrt 뒤라 남은 ^ 는
+    // 전부 지수다.
+    .replace(/\^\{?(\d+)\}?/g, (_m, digits: string) =>
+      [...digits].map((d) => "⁰¹²³⁴⁵⁶⁷⁸⁹"[Number(d)]).join(""),
+    )
+    // \le·\leq·\ge·\geq → DB 가 쓰는 유니코드 부등호로. \leq 를 먼저 잡아야
+    // \le 규칙이 "leq" 의 앞 두 글자만 먹고 "q" 를 못 지우는 일이 없다.
+    .replace(/\\leq|\\le/g, "≤")
+    .replace(/\\geq|\\ge/g, "≥")
+    .replace(/[{}\s]/g, "")
+    // "N,-N"(부호만 다른 두 값 나열) → "±N" — DB 는 두 값을 나열하고 AI 는
+    // \pm 로 줄여 쓴다(2026-08-22 실측: J30101-NNDT «7,-7»↔«±7» ·
+    // VLFV «1.5,-1.5»↔«$\pm1.5$»). 다음 줄의 나열 구분자([,>:]) 제거보다
+    // 먼저 와야 한다 — 먼저 지우면 "7-7"처럼 부호 정보 자체가 사라진다.
+    .replace(/^([^,-][^,]*),-\1$/, "±$1")
+    .replace(/^-([^,]+),\1$/, "±$1")
+    // 나열형 답의 구분자 — "D > A > C > B" 와 "D, A, C, B" 는 같은 뜻인데
+    // 구분자만 다르다. 소문항 구분자 쉼표("⑴ 70, ⑵ 35" vs "⑴ 70 ⑵ 35")도
+    // 이걸로 접힌다. 콜론("A: 4.2km" vs "A 4.2km")도 라벨 구분자일 뿐이라
+    // 같이 접는다(2026-08-22 실측: J10201-5Y3Q·BVQQ · J20306-37S3).
+    .replace(/[,>:]/g, "")
+    // 숫자·변수 바로 뒤 단위 — DB 는 "45개"·"405원"·"40/7km" 처럼 단위를
+    // 남기고, 프롬프트는 finalAnswer 에 "값 자체"만 요구해 AI 는 단위를
+    // 뺀다. "3x원" 처럼 변수 뒤에 붙기도 해 숫자만이 아니라 영문자도
+    // 앞자리로 받는다(2026-08-22 실측: J10301-EDCG·GW5F·PM6G·J20306-FGNH).
+    // 소문항이 여럿이면 단위가 여러 번 나오니 전역(g)으로 — 서술형 문장
+    // 답(예: "소인수가 2와 5뿐")은 숫자·변수로 안 끝나 이 규칙에 안 걸린다.
+    .replace(/([0-9a-zA-Z])(개|가지|원|회|km|cm|kg)/g, "$1")
+    // 잔여 백슬래시 쓸어내기 — `\ `(간격 명령) 는 `[{}\s]` 가 공백만 지우고
+    // 백슬래시는 안 지워 "a=2\b" 처럼 남는다(2026-08-22 실측: J10201-F5EN).
+    // 여기까지 왔으면 \frac·\sqrt·\times·\pi·\degree·\left·\right·\,·\;·\!
+    // 는 이미 다 처리됐으므로, 남은 백슬래시는 전부 이런 찌꺼기다.
+    .replace(/\\/g, "");
+  return t;
+}
+
+/** content 의 번호 매김 보기("1. $85$\n2. $90$…")를 {번호: 값} 으로 뽑는다. */
+function extractChoices(content: string): Map<string, string> {
+  const map = new Map<string, string>();
+  const re = /(?:^|\n)\s*([1-5])[.)]\s*([^\n]+)/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(content))) map.set(m[1]!, m[2]!.trim());
+  return map;
+}
+
+/** AI 가 「보기 번호」 대신 「값 자체」를 낸 경우를 구제한다 — finalAnswer 가
+ *  본문 보기 중 정확히 하나와 값이 같으면 그 보기 번호로 취급한다. 값이
+ *  둘 이상의 보기와 같으면(모호) 구제하지 않는다.
+ *  (2026-08-22 실측: J10102-PWZN·RAE5 — AI 계산은 맞았는데 지시(「보기
+ *  번호로」)를 안 지켜 "④" 대신 "18" 을 내 거짓 불일치가 났다.) */
+function resolveViaChoices(
+  content: string,
+  finalAnswer: string,
+): string | null {
+  const choices = extractChoices(content);
+  if (choices.size === 0) return null;
+  const target = normalizeAnswer(finalAnswer);
+  const matches = [...choices.entries()].filter(
+    ([, v]) => normalizeAnswer(v) === target,
+  );
+  return matches.length === 1 ? matches[0]![0] : null;
+}
+
+/** AI 가 「보기 번호」 뒤에 검산값을 덧붙인 경우("③ $0.3464$")를 구제한다 —
+ *  선두 원문자만 취하고 뒤는 버린다. **DB 가 단일 보기 번호 하나일 때만**
+ *  main 에서 이 함수를 부른다 — 나열형·서술형 답까지 적용하면 위험하다
+ *  (2026-08-22 실측: J30103-ABDG 등 14건 — 프롬프트가 "보기 번호로" 라고
+ *  했는데 AI 가 계산값을 같이 적었다). */
+function extractLeadingChoice(raw: string): string | null {
+  const m = raw.trim().match(/^([①②③④⑤➀➁➂➃➄])\s*([\s\S]+)$/);
+  return m ? m[1]! : null;
+}
+
+/** AI 가 값 앞에 "변수=" 라벨을 붙인 경우("m=1"·"$a=-12$")를 구제한다 —
+ *  라벨을 떼고 값만 남긴다. **DB 가 라벨 없는 값 하나일 때만** 구제가
+ *  성립한다(둘 다 값이므로 라벨을 떼도 위험이 없다 — DB 가 실제로
+ *  "a=5" 처럼 자기 라벨을 쓰면 뗀 값과 안 맞아 자연히 불일치로 남는다).
+ *  (2026-08-22 실측: J30203-2FMH «n=4», J30303-88PX «x=3/2»,
+ *  J30401-L7M2 «a=-12», J30401-MJ5R «m=1» — 네 배치에 걸쳐 반복돼
+ *  일반화했다. 프롬프트가 "값 자체만" 이라고 했는데 AI 가 자꾸
+ *  변수명을 같이 적는다.) */
+function stripLeadingVarLabel(raw: string): string | null {
+  const t = raw.trim().replace(/^\$+|\$+$/g, "");
+  const m = t.match(/^[a-zA-Z](?:_\{?[a-zA-Z0-9]+\}?)?\s*=\s*(.+)$/);
+  return m ? m[1]! : null;
+}
+
+function rendersClean(solution: string): boolean {
+  const dollars = (solution.match(/\$/g) ?? []).length;
+  if (dollars % 2 !== 0) return false;
+  for (const seg of solution.match(/\$[^$]+\$/g) ?? []) {
+    try {
+      const html = katex.renderToString(seg.slice(1, -1), {
+        throwOnError: false,
+      });
+      if (html.includes("katex-error") || html.includes("#cc0000"))
+        return false;
+    } catch {
+      return false;
+    }
+  }
+  return true;
+}
+
+async function main() {
+  const files = process.argv.slice(2).filter((a) => a.endsWith(".json"));
+  if (files.length === 0) throw new Error("생성 파일을 하나 이상 넘겨라");
+  const gens: Gen[] = files.flatMap(
+    (f) => JSON.parse(readFileSync(f, "utf8")) as Gen[],
+  );
+  console.log("생성 항목:", gens.length, "(파일", files.length, ")");
+
+  const filled: Array<{
+    id: string;
+    code: string | null;
+    before: string | null;
+    after: string;
+    finalAnswer: string;
+  }> = [];
+  const mismatches: Array<{
+    id: string;
+    code: string | null;
+    dbAnswer: string;
+    aiAnswer: string;
+  }> = [];
+  const skipped: Record<string, number> = {};
+  const skipRows: Array<{ id: string; reason: string }> = [];
+  let renderFail = 0;
+  let alreadyHas = 0;
+
+  for (const g of gens) {
+    if ("skip" in g) {
+      skipped[g.skip] = (skipped[g.skip] ?? 0) + 1;
+      skipRows.push({ id: g.id, reason: g.skip });
+      continue;
+    }
+    const row = await p.problem.findUnique({
+      where: { id: g.id },
+      select: {
+        problemCode: true,
+        answer: true,
+        solution: true,
+        content: true,
+      },
+    });
+    if (!row) {
+      skipped["행 없음"] = (skipped["행 없음"] ?? 0) + 1;
+      continue;
+    }
+    if (row.solution && row.solution.trim() !== "") {
+      alreadyHas += 1;
+      continue;
+    }
+    const dbNorm = normalizeAnswer(row.answer ?? "");
+    let aiFinal = g.finalAnswer;
+    if (dbNorm !== normalizeAnswer(aiFinal)) {
+      let resolved: string | null = /^[1-5]$/.test(dbNorm)
+        ? extractLeadingChoice(aiFinal)
+        : null;
+      if (!resolved || dbNorm !== normalizeAnswer(resolved))
+        resolved = resolveViaChoices(row.content, aiFinal);
+      if (!resolved || dbNorm !== normalizeAnswer(resolved))
+        resolved = stripLeadingVarLabel(aiFinal);
+      if (resolved && dbNorm === normalizeAnswer(resolved)) {
+        aiFinal = resolved; // 값→보기번호 또는 번호+값→번호 구제 성공
+      } else {
+        mismatches.push({
+          id: g.id,
+          code: row.problemCode,
+          dbAnswer: row.answer ?? "",
+          aiAnswer: g.finalAnswer,
+        });
+        continue;
+      }
+    }
+    if (!rendersClean(g.solution)) {
+      renderFail += 1;
+      continue;
+    }
+    filled.push({
+      id: g.id,
+      code: row.problemCode,
+      before: row.solution,
+      after: g.solution.trim(),
+      finalAnswer: g.finalAnswer,
+    });
+  }
+
+  console.log(
+    `채움 ${filled.length} · 답 불일치 ${mismatches.length} · 렌더 실패 ${renderFail} · 이미 있음 ${alreadyHas}`,
+  );
+  for (const [k, v] of Object.entries(skipped))
+    console.log(`  건너뜀(${k}): ${v}`);
+  for (const m of mismatches.slice(0, 10))
+    console.log(
+      `  불일치) ${m.code}: DB «${m.dbAnswer}» vs AI «${m.aiAnswer}»`,
+    );
+
+  if (!APPLY) {
+    console.log("[dry-run] 실쓰기는 ALLOW_AI_SOLUTION=1");
+    return;
+  }
+
+  // 원장 누적 — 줄어들면 멈춘다
+  const prev = existsSync(LEDGER)
+    ? (JSON.parse(readFileSync(LEDGER, "utf8")) as {
+        rows: Array<{ id: string; before: string | null; after: string }>;
+      })
+    : { rows: [] };
+  const byId = new Map(prev.rows.map((r) => [r.id, r]));
+  for (const f of filled) {
+    const old = byId.get(f.id);
+    if (old)
+      old.after = f.after; // 같은 문항 재적용 — 처음 before 유지
+    else byId.set(f.id, { id: f.id, before: f.before, after: f.after });
+  }
+  if (byId.size < prev.rows.length) throw new Error("원장이 줄어든다 — 중단");
+  writeFileSync(
+    LEDGER,
+    JSON.stringify(
+      {
+        note: "Claude 생성 해설 (답 일치 시에만). apply-ai-solutions.ts",
+        rows: [...byId.values()],
+      },
+      null,
+      1,
+    ),
+    "utf8",
+  );
+
+  // 불일치도 누적 보존 — 정답 의심 목록
+  const prevMis = existsSync(MISMATCH)
+    ? (JSON.parse(readFileSync(MISMATCH, "utf8")) as typeof mismatches)
+    : [];
+  const misIds = new Set(prevMis.map((m) => m.id));
+  writeFileSync(
+    MISMATCH,
+    JSON.stringify(
+      [...prevMis, ...mismatches.filter((m) => !misIds.has(m.id))],
+      null,
+      1,
+    ),
+    "utf8",
+  );
+
+  // 건너뜀도 누적 — 내보내기가 이 목록을 빼야 매 배치 같은 문항을 다시 안 푼다
+  const prevSkip = existsSync(SKIPLOG)
+    ? (JSON.parse(readFileSync(SKIPLOG, "utf8")) as Array<{
+        id: string;
+        reason: string;
+      }>)
+    : [];
+  const skipIds = new Set(prevSkip.map((r) => r.id));
+  writeFileSync(
+    SKIPLOG,
+    JSON.stringify(
+      [...prevSkip, ...skipRows.filter((r) => !skipIds.has(r.id))],
+      null,
+      1,
+    ),
+    "utf8",
+  );
+
+  let applied = 0;
+  for (const f of filled) {
+    await p.problem.update({
+      where: { id: f.id },
+      data: { solution: f.after },
+    });
+    applied += 1;
+  }
+  console.log(
+    "적용:",
+    applied,
+    "· 원장 누적:",
+    byId.size,
+    "· 정답 의심 누적:",
+    prevMis.length + mismatches.filter((m) => !misIds.has(m.id)).length,
+  );
+}
+main().finally(() => p.$disconnect());

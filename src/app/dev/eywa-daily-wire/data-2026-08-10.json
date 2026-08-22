@@ -1,0 +1,1944 @@
+{
+ "measuredAt": "2026-08-21T06:43:50.952Z",
+ "day": "2026-08-10",
+ "sync": {
+  "ledger": "eywa-sync-2026-08-21T06-26-08-915Z.json",
+  "syncedAt": "2026-08-21T06:26:15.463Z",
+  "students": 193,
+  "progressRows": 13571,
+  "unresolvedLines": 3999,
+  "unresolvedKinds": 1364,
+  "ambiguous": 97
+ },
+ "totals": {
+  "attended": 92,
+  "withRange": 92,
+  "groups": 73,
+  "groupsLackingPool": 2,
+  "wideRangeGroups": 61,
+  "noProgressToday": 0
+ },
+ "noProgressToday": [],
+ "groups": [
+  {
+   "key": "3e0922cc-1fe9-4fc5-888e-0654c37debf3~068bcc39-0927-4f43-a919-24b61ca425f9",
+   "start": {
+    "grade": "초3",
+    "chapter": "1-1 덧셈과 뺄셈",
+    "section": "1-1-1 받아올림이 없는, 한 번 있는 (세 자리 수)+(세 자리 수)"
+   },
+   "end": {
+    "grade": "중3",
+    "chapter": "2. 다항식의 곱셈과 인수분해",
+    "section": "인수분해"
+   },
+   "unitCount": 343,
+   "students": [
+    {
+     "name": "서민준",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "안서연",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "장서준",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "장주원",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "정도윤",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "최민준",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "최서연",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    },
+    {
+     "name": "한서준",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 18349
+  },
+  {
+   "key": "f846b0fb-671b-4e5a-96e9-015fd4245444~5e00e378-3317-4564-9292-192b445223ed",
+   "start": {
+    "grade": "중1",
+    "chapter": "1. 소인수분해",
+    "section": "소수와 거듭제곱"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "6. 평면도형",
+    "section": "삼각형의 내각과 외각"
+   },
+   "unitCount": 37,
+   "students": [
+    {
+     "name": "전도윤",
+     "grade": "중1",
+     "className": "중등M 중1 BS3C"
+    },
+    {
+     "name": "조민준",
+     "grade": "중1",
+     "className": "중등M 개별 JJ2K"
+    },
+    {
+     "name": "최지호",
+     "grade": "중1",
+     "className": "중등M 개별 JJ3J"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 6445
+  },
+  {
+   "key": "f846b0fb-671b-4e5a-96e9-015fd4245444~bd419f09-50f5-4e63-a83b-9cbb445c766b",
+   "start": {
+    "grade": "중1",
+    "chapter": "1. 소인수분해",
+    "section": "소수와 거듭제곱"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "6. 평면도형",
+    "section": "다각형의 내각과 외각"
+   },
+   "unitCount": 38,
+   "students": [
+    {
+     "name": "권민준",
+     "grade": "중1",
+     "className": "중등M 개별 BS2F"
+    },
+    {
+     "name": "전서연",
+     "grade": "중1",
+     "className": "중등M 개별 BS2F"
+    },
+    {
+     "name": "조지우",
+     "grade": "중1",
+     "className": "중등M 개별 BS2F"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 6454
+  },
+  {
+   "key": "79b10dc0-9ee2-4ed1-8a04-cd8f5094394d~b6d4dc2e-0db8-44fe-a763-7214284d9bea",
+   "start": {
+    "grade": "초4",
+    "chapter": "2-4 사각형",
+    "section": "2-4-1 수직과 수선"
+   },
+   "end": {
+    "grade": "중3",
+    "chapter": "6. 원의 성질",
+    "section": "원주각의 활용"
+   },
+   "unitCount": 253,
+   "students": [
+    {
+     "name": "강하은",
+     "grade": "중3",
+     "className": "중등M 중3 CR3D"
+    },
+    {
+     "name": "김주원",
+     "grade": "중3",
+     "className": "중등M 중3 CR3D"
+    },
+    {
+     "name": "박하은",
+     "grade": "중2",
+     "className": "중등M 중3 CR3D"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 24633
+  },
+  {
+   "key": "3e0922cc-1fe9-4fc5-888e-0654c37debf3~b6d4dc2e-0db8-44fe-a763-7214284d9bea",
+   "start": {
+    "grade": "초3",
+    "chapter": "1-1 덧셈과 뺄셈",
+    "section": "1-1-1 받아올림이 없는, 한 번 있는 (세 자리 수)+(세 자리 수)"
+   },
+   "end": {
+    "grade": "중3",
+    "chapter": "6. 원의 성질",
+    "section": "원주각의 활용"
+   },
+   "unitCount": 357,
+   "students": [
+    {
+     "name": "권서준",
+     "grade": "중3",
+     "className": "중등M 중3 CR3D"
+    },
+    {
+     "name": "권예린",
+     "grade": "중3",
+     "className": "중등M 중3 CR3D"
+    },
+    {
+     "name": "조지호",
+     "grade": "중3",
+     "className": "중등M 중3 CR3D"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 24815
+  },
+  {
+   "key": "da7a052e-597d-4a48-a7c8-295c17e0c911~7e443597-c3a3-4e5e-bc82-ae5b43a507d2",
+   "start": {
+    "grade": "중2",
+    "chapter": "1. 수와 식",
+    "section": "유리수와 소수"
+   },
+   "end": {
+    "grade": "중2",
+    "chapter": "7. 닮음의 활용",
+    "section": "닮은 도형의 넓이의 비와 부피의 비"
+   },
+   "unitCount": 50,
+   "students": [
+    {
+     "name": "송시우",
+     "grade": "중2",
+     "className": "[특강]중2-2 문제 풀이반"
+    },
+    {
+     "name": "홍서준",
+     "grade": "중2",
+     "className": "[특강]중2-2 문제 풀이반"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 8008
+  },
+  {
+   "key": "ef503222-016b-4572-a420-8f363b9215a3~86516ee7-e8e2-4f22-8d93-23f02e81a65d",
+   "start": {
+    "grade": "초5",
+    "chapter": "1-1 자연수의 혼합 계산",
+    "section": "1-1-3 덧셈, 뺄셈, 곱셈, 나눗셈이 섞여 있는 식"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "2-3 합동과 대칭",
+    "section": "2-3-4 점대칭도형과 그 성질 알아보기"
+   },
+   "unitCount": 38,
+   "students": [
+    {
+     "name": "윤서연",
+     "grade": "초5",
+     "className": "초등M 개별 JJ2M"
+    },
+    {
+     "name": "이하은",
+     "grade": "초5",
+     "className": "초등M 개별 JJ2I"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 116
+  },
+  {
+   "key": "839c2c6c-9ca5-48a5-9139-8973559f0624~319e86ee-353a-4904-ad2b-d8d95f285ddc",
+   "start": {
+    "grade": "중2",
+    "chapter": "1. 수와 식",
+    "section": "다항식의 곱셈과 나눗셈"
+   },
+   "end": {
+    "grade": "공통수학2",
+    "chapter": "1. 도형의 방정식",
+    "section": "두 점 사이의 거리(2)"
+   },
+   "unitCount": 126,
+   "students": [
+    {
+     "name": "박예린",
+     "grade": "중2",
+     "className": "고등M 중2 PS3A"
+    },
+    {
+     "name": "최예린",
+     "grade": "중2",
+     "className": "고등M 중2 PS3A"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 19658
+  },
+  {
+   "key": "9f485e43-b90b-4c19-b6fb-e485a51b7fe2~5e00e378-3317-4564-9292-192b445223ed",
+   "start": {
+    "grade": "중1",
+    "chapter": "1. 소인수분해",
+    "section": "소인수분해"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "6. 평면도형",
+    "section": "삼각형의 내각과 외각"
+   },
+   "unitCount": 36,
+   "students": [
+    {
+     "name": "강도윤",
+     "grade": "중1",
+     "className": "중등M 개별 JJ2K"
+    },
+    {
+     "name": "권주원",
+     "grade": "중1",
+     "className": "중등M 개별 JJ3J"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 6445
+  },
+  {
+   "key": "3e0922cc-1fe9-4fc5-888e-0654c37debf3~82399e51-340d-4165-b016-3e941e65f810",
+   "start": {
+    "grade": "초3",
+    "chapter": "1-1 덧셈과 뺄셈",
+    "section": "1-1-1 받아올림이 없는, 한 번 있는 (세 자리 수)+(세 자리 수)"
+   },
+   "end": {
+    "grade": "중3",
+    "chapter": "3. 이차방정식",
+    "section": "이차방정식의 풀이"
+   },
+   "unitCount": 345,
+   "students": [
+    {
+     "name": "안민준",
+     "grade": "중2",
+     "className": "[특강] 고등개별"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 20223
+  },
+  {
+   "key": "e32e2483-7449-444e-9263-8f41096cc13b~56468ec3-5190-485a-a66b-89d0917b8576",
+   "start": {
+    "grade": "초3",
+    "chapter": "2-6 그림그래프",
+    "section": "2-6-1 그림그래프 알아보기"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "2. 정수와 유리수",
+    "section": "정수와 유리수"
+   },
+   "unitCount": 182,
+   "students": [
+    {
+     "name": "전하은",
+     "grade": "초4",
+     "className": "초등M 개별 BS1L"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 2896
+  },
+  {
+   "key": "198af52d-541a-4462-bd19-1e55306afe27~f11aa5be-eed8-4129-af1a-35cd6beedfd0",
+   "start": {
+    "grade": "초5",
+    "chapter": "1-3 대응 관계",
+    "section": "1-3-3 생활 속에서 대응 관계를 찾아 식으로 나타내기"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "2-2 분수의 곱셈",
+    "section": "2-2-2 (자연수)×(분수)의 계산"
+   },
+   "unitCount": 23,
+   "students": [
+    {
+     "name": "신예린",
+     "grade": "초6",
+     "className": "초등M 개별 BS1D"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 52
+  },
+  {
+   "key": "7f5e09ab-1f9f-4995-bc42-a47ff8894e1a~83b0bcb7-b099-4503-9472-fc75bec861d1",
+   "start": {
+    "grade": "초1",
+    "chapter": "2-5 규칙 찾기",
+    "section": "2-5-1 규칙 찾기"
+   },
+   "end": {
+    "grade": "초4",
+    "chapter": "2-3 소수의 덧셈과 뺄셈",
+    "section": "2-3-1 소수 두 자리 수, 세 자리 수 알아보기"
+   },
+   "unitCount": 181,
+   "students": [
+    {
+     "name": "신주원",
+     "grade": "초6",
+     "className": "초등M 개별 BS1D"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 158
+  },
+  {
+   "key": "7f5e09ab-1f9f-4995-bc42-a47ff8894e1a~95265576-5840-4c21-87a5-b906721c42d1",
+   "start": {
+    "grade": "초1",
+    "chapter": "2-5 규칙 찾기",
+    "section": "2-5-1 규칙 찾기"
+   },
+   "end": {
+    "grade": "초4",
+    "chapter": "2-3 소수의 덧셈과 뺄셈",
+    "section": "2-3-6 소수 두 자리 수의 덧셈"
+   },
+   "unitCount": 186,
+   "students": [
+    {
+     "name": "홍지우",
+     "grade": "초4",
+     "className": "초등M 개별 JJ1G"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 180
+  },
+  {
+   "key": "c194e64c-1729-4f1a-8446-454f04a4cd09~99086a79-6c0c-4a0f-9005-c3657b700303",
+   "start": {
+    "grade": "초6",
+    "chapter": "1-4 비와 비율",
+    "section": "1-4-1 두 수 비교하기"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "3. 방정식",
+    "section": "방정식과 그 해"
+   },
+   "unitCount": 57,
+   "students": [
+    {
+     "name": "박민준",
+     "grade": "초6",
+     "className": "초등M 개별 JJ1I"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 3562
+  },
+  {
+   "key": "7064c9fa-3a8b-4f44-9ca9-312cad1590ce~172e11d6-b5c4-4f3f-8b4f-dacc43fb4110",
+   "start": {
+    "grade": "초6",
+    "chapter": "1-2 각기둥과 각뿔",
+    "section": "1-2-5 각뿔의 이름과 구성 요소"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "3. 방정식",
+    "section": "문자의 사용과 식의 값"
+   },
+   "unitCount": 60,
+   "students": [
+    {
+     "name": "이서연",
+     "grade": "초6",
+     "className": "초등M 개별 CR1C"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 3568
+  },
+  {
+   "key": "c3dc1c8f-5208-4e1d-8553-d9c3023b3442~80c82517-7cad-43a7-af08-cca80a46251e",
+   "start": {
+    "grade": "초3",
+    "chapter": "2-6 그림그래프",
+    "section": "2-6-2 그림그래프로 나타내기"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "3. 방정식",
+    "section": "일차식의 뜻Ⅱ"
+   },
+   "unitCount": 188,
+   "students": [
+    {
+     "name": "권서연",
+     "grade": "초6",
+     "className": "초등M 개별 JJ1I"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 3875
+  },
+  {
+   "key": "71a9e81e-202c-40cc-8874-44462a6e80f1~8b065c44-38ca-4533-9da0-3323cd76e263",
+   "start": {
+    "grade": "초3",
+    "chapter": "2-1 곱셈",
+    "section": "2-1-1 (세 자리 수)×(한 자리 수) (1)"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "2-1 분수의 나눗셈",
+    "section": "2-1-2 분모가 다른 (분수)÷(분수) 알아보기"
+   },
+   "unitCount": 172,
+   "students": [
+    {
+     "name": "김서준",
+     "grade": "초6",
+     "className": "초등M 개별 CR1C"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 430
+  },
+  {
+   "key": "f2a28c99-b091-4af0-8194-3da1bdb129e6~b84c40d4-c075-4637-a00f-991a69809889",
+   "start": {
+    "grade": "초5",
+    "chapter": "1-2 약수와 배수",
+    "section": "1-2-1 약수와 배수"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "2-3 공간과 입체",
+    "section": "2-3-5 쌓은 모양과 쌓기나무의 개수 알아보기 (4)"
+   },
+   "unitCount": 95,
+   "students": [
+    {
+     "name": "안시우",
+     "grade": "초5",
+     "className": "초등M 개별 JJ2I"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 301
+  },
+  {
+   "key": "ae44c5a3-55f0-4434-a56e-4266fcd6628d~f846b0fb-671b-4e5a-96e9-015fd4245444",
+   "start": {
+    "grade": "초1",
+    "chapter": "1-4 비교하기",
+    "section": "1-4-1 길이 비교하기"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "1. 소인수분해",
+    "section": "소수와 거듭제곱"
+   },
+   "unitCount": 344,
+   "students": [
+    {
+     "name": "서지호",
+     "grade": "초6",
+     "className": "초등M 개별 BS1D"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 581
+  },
+  {
+   "key": "819cbf4b-630e-4b25-979f-f9138cc0c689~de1d4886-e12d-4f40-9686-2eabeeca13db",
+   "start": {
+    "grade": "초6",
+    "chapter": "1-1 분수의 나눗셈",
+    "section": "1-1-1 (자연수)÷(자연수)의 몫을 분수로 나타내기"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "2. 정수와 유리수",
+    "section": "유리수의 곱셈"
+   },
+   "unitCount": 65,
+   "students": [
+    {
+     "name": "서주원",
+     "grade": "초6",
+     "className": "초등M 개별 BS2G"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 2644
+  },
+  {
+   "key": "07608b11-124b-4b25-a94c-43a5006ad0dc~8f5241e1-4b8f-491a-bfcd-76166961afdb",
+   "start": {
+    "grade": "초5",
+    "chapter": "2-4 소수의 곱셈",
+    "section": "2-4-1 (1보다 작은 소수)×(자연수)의 계산"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "1-5 여러 가지 그래프",
+    "section": "1-5-1 띠그래프"
+   },
+   "unitCount": 36,
+   "students": [
+    {
+     "name": "이지호",
+     "grade": "초5",
+     "className": "초등M 개별 JJ2I"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 101
+  },
+  {
+   "key": "178574f2-5aa6-49e8-8f22-cfb6284268d8~e1704a1f-3f72-4bf3-b712-7929afb7cbf1",
+   "start": {
+    "grade": "초5",
+    "chapter": "2-4 소수의 곱셈",
+    "section": "2-4-7 곱의 소수점의 위치"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "1-4 비와 비율",
+    "section": "1-4-6 백분율이 사용되는 경우"
+   },
+   "unitCount": 29,
+   "students": [
+    {
+     "name": "황하은",
+     "grade": "초6",
+     "className": "초등M 개별 JJ1F"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 87
+  },
+  {
+   "key": "6c4ddba8-aa9b-4475-b857-1cb9dcebda0f~86516ee7-e8e2-4f22-8d93-23f02e81a65d",
+   "start": {
+    "grade": "초3",
+    "chapter": "2-4 분수",
+    "section": "2-4-1 분수로 나타내기"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "2-3 합동과 대칭",
+    "section": "2-3-4 점대칭도형과 그 성질 알아보기"
+   },
+   "unitCount": 116,
+   "students": [
+    {
+     "name": "김민준",
+     "grade": "초5",
+     "className": "초등M 개별 JJ1H"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 273
+  },
+  {
+   "key": "8fbbf9b0-a087-48f9-a8e7-dd75935aa968~86516ee7-e8e2-4f22-8d93-23f02e81a65d",
+   "start": {
+    "grade": "초5",
+    "chapter": "1-4 약분과 통분",
+    "section": "1-4-1 크기가 같은 분수 알아보기"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "2-3 합동과 대칭",
+    "section": "2-3-4 점대칭도형과 그 성질 알아보기"
+   },
+   "unitCount": 28,
+   "students": [
+    {
+     "name": "서서연",
+     "grade": "초5",
+     "className": "초등M 개별 JJ2M"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 65
+  },
+  {
+   "key": "79b10dc0-9ee2-4ed1-8a04-cd8f5094394d~8f8aa797-4aae-4d9a-a893-842338f974c4",
+   "start": {
+    "grade": "초4",
+    "chapter": "2-4 사각형",
+    "section": "2-4-1 수직과 수선"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "2-1 수의 범위와 어림하기",
+    "section": "2-1-6 반올림 알아보기와 어림의 활용"
+   },
+   "unitCount": 46,
+   "students": [
+    {
+     "name": "이지우",
+     "grade": "초6",
+     "className": "초등M 개별 JJ1F"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 152
+  },
+  {
+   "key": "7ade7886-463d-4988-9665-4b2da3d09d5b~86516ee7-e8e2-4f22-8d93-23f02e81a65d",
+   "start": {
+    "grade": "초5",
+    "chapter": "1-1 자연수의 혼합 계산",
+    "section": "1-1-1 덧셈과 뺄셈 / 곱셈과 나눗셈이 섞여 있는 식"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "2-3 합동과 대칭",
+    "section": "2-3-4 점대칭도형과 그 성질 알아보기"
+   },
+   "unitCount": 40,
+   "students": [
+    {
+     "name": "오지우",
+     "grade": "초5",
+     "className": "초등M 개별 JJ1H"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 139
+  },
+  {
+   "key": "c3dc1c8f-5208-4e1d-8553-d9c3023b3442~9f485e43-b90b-4c19-b6fb-e485a51b7fe2",
+   "start": {
+    "grade": "초3",
+    "chapter": "2-6 그림그래프",
+    "section": "2-6-2 그림그래프로 나타내기"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "1. 소인수분해",
+    "section": "소인수분해"
+   },
+   "unitCount": 177,
+   "students": [
+    {
+     "name": "신서준",
+     "grade": "초6",
+     "className": "중등M 중2 BS3E"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 1042
+  },
+  {
+   "key": "819cbf4b-630e-4b25-979f-f9138cc0c689~b0737e7e-25d9-448b-b77d-5f554745062c",
+   "start": {
+    "grade": "초6",
+    "chapter": "1-1 분수의 나눗셈",
+    "section": "1-1-1 (자연수)÷(자연수)의 몫을 분수로 나타내기"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "1-1 분수의 나눗셈",
+    "section": "1-1-2 (분수)÷(자연수) 알아보기"
+   },
+   "unitCount": 2,
+   "students": [
+    {
+     "name": "임주원",
+     "grade": "초5",
+     "className": "초등M 개별 JJ2I"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 12
+  },
+  {
+   "key": "8454ebb1-e405-4c44-8b29-5b18852255ba~15c4bdd0-5dba-4c07-9552-66cf1e62a500",
+   "start": {
+    "grade": "중2",
+    "chapter": "5. 도형의 성질",
+    "section": "이등변삼각형의 성질"
+   },
+   "end": {
+    "grade": "중2",
+    "chapter": "5. 도형의 성질",
+    "section": "직사각형, 마름모, 정사각형"
+   },
+   "unitCount": 7,
+   "students": [
+    {
+     "name": "신민준",
+     "grade": "중2",
+     "className": "중등M 개별 BS3G"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 912
+  },
+  {
+   "key": "7c8c8826-d313-4f1e-9072-6838b2612196~15c4bdd0-5dba-4c07-9552-66cf1e62a500",
+   "start": {
+    "grade": "초6",
+    "chapter": "1-4 비와 비율",
+    "section": "1-4-2 비"
+   },
+   "end": {
+    "grade": "중2",
+    "chapter": "5. 도형의 성질",
+    "section": "직사각형, 마름모, 정사각형"
+   },
+   "unitCount": 134,
+   "students": [
+    {
+     "name": "최서준",
+     "grade": "중2",
+     "className": "중등M 개별 BS3G"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 13963
+  },
+  {
+   "key": "0164d4c6-beaf-4496-bb44-bf8b82946613~319e86ee-353a-4904-ad2b-d8d95f285ddc",
+   "start": {
+    "grade": "중1",
+    "chapter": "2. 정수와 유리수",
+    "section": "유리수의 나눗셈"
+   },
+   "end": {
+    "grade": "공통수학2",
+    "chapter": "1. 도형의 방정식",
+    "section": "두 점 사이의 거리(2)"
+   },
+   "unitCount": 176,
+   "students": [
+    {
+     "name": "윤시우",
+     "grade": "중2",
+     "className": "고등M 중2 PS3A"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 26166
+  },
+  {
+   "key": "da7a052e-597d-4a48-a7c8-295c17e0c911~319e86ee-353a-4904-ad2b-d8d95f285ddc",
+   "start": {
+    "grade": "중2",
+    "chapter": "1. 수와 식",
+    "section": "유리수와 소수"
+   },
+   "end": {
+    "grade": "공통수학2",
+    "chapter": "1. 도형의 방정식",
+    "section": "두 점 사이의 거리(2)"
+   },
+   "unitCount": 133,
+   "students": [
+    {
+     "name": "정지우",
+     "grade": "중2",
+     "className": "고등M 개별 TP4E"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 21784
+  },
+  {
+   "key": "e321e4db-e3ac-44e5-b909-6a42c06a80ad~319e86ee-353a-4904-ad2b-d8d95f285ddc",
+   "start": {
+    "grade": "중2",
+    "chapter": "1. 수와 식",
+    "section": "순환소수"
+   },
+   "end": {
+    "grade": "공통수학2",
+    "chapter": "1. 도형의 방정식",
+    "section": "두 점 사이의 거리(2)"
+   },
+   "unitCount": 132,
+   "students": [
+    {
+     "name": "전서준",
+     "grade": "중2",
+     "className": "고등M 중2 PS3A"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 21587
+  },
+  {
+   "key": "f2a28c99-b091-4af0-8194-3da1bdb129e6~0dc2f680-f98c-44dc-9725-53e69456b663",
+   "start": {
+    "grade": "초5",
+    "chapter": "1-2 약수와 배수",
+    "section": "1-2-1 약수와 배수"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "2-6 원기둥, 원뿔, 구",
+    "section": "2-6-4 구 알아보기와 여러 가지 모양 만들기"
+   },
+   "unitCount": 109,
+   "students": [
+    {
+     "name": "이도윤",
+     "grade": "초5",
+     "className": "초등M 초5 MS1A"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 341
+  },
+  {
+   "key": "c3dc1c8f-5208-4e1d-8553-d9c3023b3442~0dc2f680-f98c-44dc-9725-53e69456b663",
+   "start": {
+    "grade": "초3",
+    "chapter": "2-6 그림그래프",
+    "section": "2-6-2 그림그래프로 나타내기"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "2-6 원기둥, 원뿔, 구",
+    "section": "2-6-4 구 알아보기와 여러 가지 모양 만들기"
+   },
+   "unitCount": 175,
+   "students": [
+    {
+     "name": "송도윤",
+     "grade": "초5",
+     "className": "초등M 초5 MS1A"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 477
+  },
+  {
+   "key": "8fbbf9b0-a087-48f9-a8e7-dd75935aa968~0dc2f680-f98c-44dc-9725-53e69456b663",
+   "start": {
+    "grade": "초5",
+    "chapter": "1-4 약분과 통분",
+    "section": "1-4-1 크기가 같은 분수 알아보기"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "2-6 원기둥, 원뿔, 구",
+    "section": "2-6-4 구 알아보기와 여러 가지 모양 만들기"
+   },
+   "unitCount": 100,
+   "students": [
+    {
+     "name": "최하은",
+     "grade": "초5",
+     "className": "초등M 초5 MS1A"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 290
+  },
+  {
+   "key": "79b10dc0-9ee2-4ed1-8a04-cd8f5094394d~0dc2f680-f98c-44dc-9725-53e69456b663",
+   "start": {
+    "grade": "초4",
+    "chapter": "2-4 사각형",
+    "section": "2-4-1 수직과 수선"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "2-6 원기둥, 원뿔, 구",
+    "section": "2-6-4 구 알아보기와 여러 가지 모양 만들기"
+   },
+   "unitCount": 126,
+   "students": [
+    {
+     "name": "이서준",
+     "grade": "초5",
+     "className": "초등M 초5 MS1A"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 399
+  },
+  {
+   "key": "d32b3290-b45a-4945-ab3e-7797fba24935~88723a8f-b671-4294-8893-f8c54c9ec8e8",
+   "start": {
+    "grade": "초5",
+    "chapter": "2-1 수의 범위와 어림하기",
+    "section": "2-1-1 이상과 이하 알아보기"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "2-6 원기둥, 원뿔, 구",
+    "section": "2-6-3 원뿔 알아보기"
+   },
+   "unitCount": 85,
+   "students": [
+    {
+     "name": "정서준",
+     "grade": "초5",
+     "className": "초등M 초5 MS1A"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 257
+  },
+  {
+   "key": "f2a28c99-b091-4af0-8194-3da1bdb129e6~88723a8f-b671-4294-8893-f8c54c9ec8e8",
+   "start": {
+    "grade": "초5",
+    "chapter": "1-2 약수와 배수",
+    "section": "1-2-1 약수와 배수"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "2-6 원기둥, 원뿔, 구",
+    "section": "2-6-3 원뿔 알아보기"
+   },
+   "unitCount": 108,
+   "students": [
+    {
+     "name": "임서준",
+     "grade": "초5",
+     "className": "초등M 초5 MS1A"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 338
+  },
+  {
+   "key": "3e0922cc-1fe9-4fc5-888e-0654c37debf3~81710710-e029-49d3-9e50-b3e23f882464",
+   "start": {
+    "grade": "초3",
+    "chapter": "1-1 덧셈과 뺄셈",
+    "section": "1-1-1 받아올림이 없는, 한 번 있는 (세 자리 수)+(세 자리 수)"
+   },
+   "end": {
+    "grade": "중3",
+    "chapter": "7. 통계",
+    "section": "상자그림"
+   },
+   "unitCount": 360,
+   "students": [
+    {
+     "name": "정지호",
+     "grade": "초6",
+     "className": "[특강]중3-2 개념 완성반"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 25400
+  },
+  {
+   "key": "079ab954-cbd5-47fe-9900-20a1d4893bf4~57e79cf9-60c9-4bab-8e17-bddfd48d5d8e",
+   "start": {
+    "grade": "초3",
+    "chapter": "2-2 나눗셈",
+    "section": "2-2-1 내림이 없는 (몇십)÷(몇), (몇십몇)÷(몇)"
+   },
+   "end": {
+    "grade": "초6",
+    "chapter": "2-5 원의 둘레와 넓이",
+    "section": "2-5-4 원의 넓이 구하는 방법 알아보기"
+   },
+   "unitCount": 191,
+   "students": [
+    {
+     "name": "조하은",
+     "grade": "중2",
+     "className": "중등M 개별 BS3G"
+    }
+   ],
+   "schoolLevels": [
+    "?"
+   ],
+   "poolTotal": 494
+  },
+  {
+   "key": "359d4bdc-c93c-41e0-ac08-c93c56050614~bd419f09-50f5-4e63-a83b-9cbb445c766b",
+   "start": {
+    "grade": "중1",
+    "chapter": "1. 소인수분해",
+    "section": "공배수와 최소공배수"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "6. 평면도형",
+    "section": "다각형의 내각과 외각"
+   },
+   "unitCount": 35,
+   "students": [
+    {
+     "name": "강예린",
+     "grade": "중1",
+     "className": "중등M 중1 BS3E"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 5864
+  },
+  {
+   "key": "895a8574-ebbd-4ef5-bb57-719dfd7fa81d~1615f69f-c01c-438a-ae55-5e935bfbfcff",
+   "start": {
+    "grade": "초3",
+    "chapter": "1-1 덧셈과 뺄셈",
+    "section": "1-1-4 받아내림이 두 번 있는 (세 자리 수)-(세 자리 수)"
+   },
+   "end": {
+    "grade": "초4",
+    "chapter": "1-3 곱셈과 나눗셈",
+    "section": "1-3-4 몇십으로 나누기"
+   },
+   "unitCount": 70,
+   "students": [
+    {
+     "name": "윤하은",
+     "grade": "초4",
+     "className": "초등M 개별 CR1D"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 128
+  },
+  {
+   "key": "7f5e09ab-1f9f-4995-bc42-a47ff8894e1a~8cdddb56-06c6-4e9c-afd4-485537e77021",
+   "start": {
+    "grade": "초1",
+    "chapter": "2-5 규칙 찾기",
+    "section": "2-5-1 규칙 찾기"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "1-2 약수와 배수",
+    "section": "1-2-2 약수와 배수의 관계"
+   },
+   "unitCount": 206,
+   "students": [
+    {
+     "name": "전민준",
+     "grade": "초4",
+     "className": "중등M 개별 JJ2N"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 249
+  },
+  {
+   "key": "7f5e09ab-1f9f-4995-bc42-a47ff8894e1a~055dbd6a-5245-4cc3-8b86-4f6add71d299",
+   "start": {
+    "grade": "초1",
+    "chapter": "2-5 규칙 찾기",
+    "section": "2-5-1 규칙 찾기"
+   },
+   "end": {
+    "grade": "초4",
+    "chapter": "2-1 분수의 덧셈과 뺄셈",
+    "section": "2-1-4 대분수의 뺄셈"
+   },
+   "unitCount": 175,
+   "students": [
+    {
+     "name": "강서연",
+     "grade": "초4",
+     "className": "초등M 개별 CR1D"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 143
+  },
+  {
+   "key": "7f5e09ab-1f9f-4995-bc42-a47ff8894e1a~ce85e170-e067-436f-8e6d-ca2b0060d5a5",
+   "start": {
+    "grade": "초1",
+    "chapter": "2-5 규칙 찾기",
+    "section": "2-5-1 규칙 찾기"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "1-1 자연수의 혼합 계산",
+    "section": "1-1-2 덧셈, 뺄셈, 곱셈(나눗셈)이 섞여 있는 식"
+   },
+   "unitCount": 203,
+   "students": [
+    {
+     "name": "이주원",
+     "grade": "초4",
+     "className": "초등M 개별 CR1D"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 240
+  },
+  {
+   "key": "142fa3ff-cee9-4022-8eb4-e6581c1632e0~2bbd8e4a-07fd-42db-85c8-e082cb85bff0",
+   "start": {
+    "grade": "초4",
+    "chapter": "2-2 삼각형",
+    "section": "2-2-2 이등변삼각형의 성질"
+   },
+   "end": {
+    "grade": "초4",
+    "chapter": "2-2 삼각형",
+    "section": "2-2-4 삼각형을 각의 크기에 따라 분류하기"
+   },
+   "unitCount": 3,
+   "students": [
+    {
+     "name": "장지호",
+     "grade": "초4",
+     "className": "초등M 개별 CR1D"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 7
+  },
+  {
+   "key": "ef503222-016b-4572-a420-8f363b9215a3~529d0cfe-db6c-418b-b9d5-bf5bc177f331",
+   "start": {
+    "grade": "초5",
+    "chapter": "1-1 자연수의 혼합 계산",
+    "section": "1-1-3 덧셈, 뺄셈, 곱셈, 나눗셈이 섞여 있는 식"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "2-1 수의 범위와 어림하기",
+    "section": "2-1-3 수의 범위를 알고 문제 해결하기"
+   },
+   "unitCount": 27,
+   "students": [
+    {
+     "name": "한도윤",
+     "grade": "초6",
+     "className": "초등M 개별 CR1C"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 86
+  },
+  {
+   "key": "079ab954-cbd5-47fe-9900-20a1d4893bf4~478e42ea-5098-4da8-947b-f47e6ae1ed90",
+   "start": {
+    "grade": "초3",
+    "chapter": "2-2 나눗셈",
+    "section": "2-2-1 내림이 없는 (몇십)÷(몇), (몇십몇)÷(몇)"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "6. 평면도형",
+    "section": "다각형"
+   },
+   "unitCount": 231,
+   "students": [
+    {
+     "name": "한예린",
+     "grade": "중1",
+     "className": "중등M 개별 JJ2K"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 6950
+  },
+  {
+   "key": "ef503222-016b-4572-a420-8f363b9215a3~dc4ca06a-b6dd-4ed2-8477-2383c7516463",
+   "start": {
+    "grade": "초5",
+    "chapter": "1-1 자연수의 혼합 계산",
+    "section": "1-1-3 덧셈, 뺄셈, 곱셈, 나눗셈이 섞여 있는 식"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "2-3 합동과 대칭",
+    "section": "2-3-3 선대칭도형과 그 성질 알아보기"
+   },
+   "unitCount": 37,
+   "students": [
+    {
+     "name": "임하은",
+     "grade": "초5",
+     "className": "중등M 초6 개별MS2B"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 114
+  },
+  {
+   "key": "502cdf7f-31d8-45d8-9b62-766d1d212bfd~f11aa5be-eed8-4129-af1a-35cd6beedfd0",
+   "start": {
+    "grade": "초5",
+    "chapter": "1-4 약분과 통분",
+    "section": "1-4-5 분수와 소수의 크기 비교"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "2-2 분수의 곱셈",
+    "section": "2-2-2 (자연수)×(분수)의 계산"
+   },
+   "unitCount": 18,
+   "students": [
+    {
+     "name": "안하은",
+     "grade": "초5",
+     "className": "중등M 초6 개별MS2B"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 38
+  },
+  {
+   "key": "f846b0fb-671b-4e5a-96e9-015fd4245444~58ee3a1a-a76b-41e1-8c65-d6aed1d57c4d",
+   "start": {
+    "grade": "중1",
+    "chapter": "1. 소인수분해",
+    "section": "소수와 거듭제곱"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "4. 그래프와 비례",
+    "section": "순서쌍과 좌표평면(기본)"
+   },
+   "unitCount": 24,
+   "students": [
+    {
+     "name": "전지우",
+     "grade": "초6",
+     "className": "초등M 개별 JJ2G"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 4759
+  },
+  {
+   "key": "91b815cc-6fcd-4d22-898c-17f127ed010a~5fce621a-7280-4e0b-9e53-2c52025fc1a1",
+   "start": {
+    "grade": "중1",
+    "chapter": "5. 기본 도형",
+    "section": "점, 선, 면"
+   },
+   "end": {
+    "grade": "중2",
+    "chapter": "3. 방정식",
+    "section": "연립방정식의 활용(가격, 개수, 증감, 도형)"
+   },
+   "unitCount": 46,
+   "students": [
+    {
+     "name": "최도윤",
+     "grade": "초6",
+     "className": "초등M 개별 JJ2G"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 5601
+  },
+  {
+   "key": "f846b0fb-671b-4e5a-96e9-015fd4245444~c1fe36b6-8f97-46e5-be13-f022636211f8",
+   "start": {
+    "grade": "중1",
+    "chapter": "1. 소인수분해",
+    "section": "소수와 거듭제곱"
+   },
+   "end": {
+    "grade": "중2",
+    "chapter": "2. 부등식",
+    "section": "부등식"
+   },
+   "unitCount": 61,
+   "students": [
+    {
+     "name": "최주원",
+     "grade": "초6",
+     "className": "초등M 개별 JJ2G"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 9094
+  },
+  {
+   "key": "9f485e43-b90b-4c19-b6fb-e485a51b7fe2~9acad796-0f05-47a2-82a3-a8413500b19c",
+   "start": {
+    "grade": "중1",
+    "chapter": "1. 소인수분해",
+    "section": "소인수분해"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "5. 기본 도형",
+    "section": "각"
+   },
+   "unitCount": 29,
+   "students": [
+    {
+     "name": "조도윤",
+     "grade": "중1",
+     "className": "중등M 중1 BS3E"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 6041
+  },
+  {
+   "key": "f846b0fb-671b-4e5a-96e9-015fd4245444~cce5e825-71d2-4739-95a5-c90f496eb7f2",
+   "start": {
+    "grade": "중1",
+    "chapter": "1. 소인수분해",
+    "section": "소수와 거듭제곱"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "5. 기본 도형",
+    "section": "평행선"
+   },
+   "unitCount": 33,
+   "students": [
+    {
+     "name": "이시우",
+     "grade": "중1",
+     "className": "중등M 중1 BS3E"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 6225
+  },
+  {
+   "key": "91b815cc-6fcd-4d22-898c-17f127ed010a~5e00e378-3317-4564-9292-192b445223ed",
+   "start": {
+    "grade": "중1",
+    "chapter": "5. 기본 도형",
+    "section": "점, 선, 면"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "6. 평면도형",
+    "section": "삼각형의 내각과 외각"
+   },
+   "unitCount": 9,
+   "students": [
+    {
+     "name": "윤서준",
+     "grade": "중1",
+     "className": "중등M 중1 BS3E"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 722
+  },
+  {
+   "key": "d29a8d4d-e335-4462-8839-ebfe151a8599~c0297a8c-f0b1-4aa6-baa6-120b982669db",
+   "start": {
+    "grade": "대수",
+    "chapter": "1. 지수함수와 로그함수",
+    "section": "지수함수의 뜻과 그래프"
+   },
+   "end": {
+    "grade": "확률과 통계",
+    "chapter": "2. 확률",
+    "section": "시행과 사건"
+   },
+   "unitCount": 64,
+   "students": [
+    {
+     "name": "안주원",
+     "grade": "고2",
+     "className": "[특강] 고등개별"
+    }
+   ],
+   "schoolLevels": [
+    "고"
+   ],
+   "poolTotal": 7663
+  },
+  {
+   "key": "e551583e-4fb4-4ea4-94cd-17dde793195d~bd419f09-50f5-4e63-a83b-9cbb445c766b",
+   "start": {
+    "grade": "초6",
+    "chapter": "2-6 원기둥, 원뿔, 구",
+    "section": "2-6-1 원기둥 알아보기"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "6. 평면도형",
+    "section": "다각형의 내각과 외각"
+   },
+   "unitCount": 42,
+   "students": [
+    {
+     "name": "장도윤",
+     "grade": "중1",
+     "className": "중등M 개별 BS2F"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 6466
+  },
+  {
+   "key": "6badebaa-2ab6-4a95-aee6-17d0f7e843e3~bd419f09-50f5-4e63-a83b-9cbb445c766b",
+   "start": {
+    "grade": "중1",
+    "chapter": "1. 소인수분해",
+    "section": "공약수와 최대공약수"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "6. 평면도형",
+    "section": "다각형의 내각과 외각"
+   },
+   "unitCount": 36,
+   "students": [
+    {
+     "name": "임시우",
+     "grade": "중1",
+     "className": "중등M 개별 BS2F"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 5889
+  },
+  {
+   "key": "9f485e43-b90b-4c19-b6fb-e485a51b7fe2~bd419f09-50f5-4e63-a83b-9cbb445c766b",
+   "start": {
+    "grade": "중1",
+    "chapter": "1. 소인수분해",
+    "section": "소인수분해"
+   },
+   "end": {
+    "grade": "중1",
+    "chapter": "6. 평면도형",
+    "section": "다각형의 내각과 외각"
+   },
+   "unitCount": 37,
+   "students": [
+    {
+     "name": "한지우",
+     "grade": "중1",
+     "className": "중등M 개별 BS2F"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 6454
+  },
+  {
+   "key": "189cdb5f-7f9b-4b1b-9c37-44b871d058ce~b6d4dc2e-0db8-44fe-a763-7214284d9bea",
+   "start": {
+    "grade": "중1",
+    "chapter": "5. 기본 도형",
+    "section": "합동"
+   },
+   "end": {
+    "grade": "중3",
+    "chapter": "6. 원의 성질",
+    "section": "원주각의 활용"
+   },
+   "unitCount": 93,
+   "students": [
+    {
+     "name": "강주원",
+     "grade": "중3",
+     "className": "중등M 중3 CR3D"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 17949
+  },
+  {
+   "key": "7f5e09ab-1f9f-4995-bc42-a47ff8894e1a~28b5f29c-c996-48c5-99bd-2f7fbcf03477",
+   "start": {
+    "grade": "초1",
+    "chapter": "2-5 규칙 찾기",
+    "section": "2-5-1 규칙 찾기"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "1-3 대응 관계",
+    "section": "1-3-1 두 양 사이의 대응 관계"
+   },
+   "unitCount": 211,
+   "students": [
+    {
+     "name": "장하은",
+     "grade": "초4",
+     "className": "중등M 개별 JJ2N"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 286
+  },
+  {
+   "key": "7f5e09ab-1f9f-4995-bc42-a47ff8894e1a~3cdd059d-dd54-4d1a-84bd-333e064654b5",
+   "start": {
+    "grade": "초1",
+    "chapter": "2-5 규칙 찾기",
+    "section": "2-5-1 규칙 찾기"
+   },
+   "end": {
+    "grade": "초4",
+    "chapter": "1-6 규칙 찾기",
+    "section": "1-6-4 규칙적인 계산식 찾기"
+   },
+   "unitCount": 170,
+   "students": [
+    {
+     "name": "박주원",
+     "grade": "초4",
+     "className": "초등M 개별 BS1B"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 143
+  },
+  {
+   "key": "ef503222-016b-4572-a420-8f363b9215a3~dfdafc07-462e-4659-8191-f33cb4f54467",
+   "start": {
+    "grade": "초5",
+    "chapter": "1-1 자연수의 혼합 계산",
+    "section": "1-1-3 덧셈, 뺄셈, 곱셈, 나눗셈이 섞여 있는 식"
+   },
+   "end": {
+    "grade": "초5",
+    "chapter": "1-6 다각형의 둘레와 넓이",
+    "section": "1-6-2 1cm², 직사각형과 정사각형의 넓이"
+   },
+   "unitCount": 21,
+   "students": [
+    {
+     "name": "신지우",
+     "grade": "초4",
+     "className": "초등M 초4 BS1J"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 75
+  },
+  {
+   "key": "96b21af7-3173-45b7-acec-15506d51688a~83b0bcb7-b099-4503-9472-fc75bec861d1",
+   "start": {
+    "grade": "초2",
+    "chapter": "1-1 세 자리 수",
+    "section": "1-1-6 세 자리 수의 크기 비교"
+   },
+   "end": {
+    "grade": "초4",
+    "chapter": "2-3 소수의 덧셈과 뺄셈",
+    "section": "2-3-1 소수 두 자리 수, 세 자리 수 알아보기"
+   },
+   "unitCount": 166,
+   "students": [
+    {
+     "name": "한하은",
+     "grade": "초2",
+     "className": "초등M 초3 BS2E"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 158
+  },
+  {
+   "key": "7fc487af-e613-4cfa-ac0f-0e8d33e1d84c~88d389c8-736f-4c39-af03-8c8e0c8cff87",
+   "start": {
+    "grade": "초2",
+    "chapter": "1-3 덧셈과 뺄셈",
+    "section": "1-3-1 받아올림이 있는 (두 자리 수)+(한 자리 수)"
+   },
+   "end": {
+    "grade": "초3",
+    "chapter": "1-3 나눗셈",
+    "section": "1-3-2 곱셈과 나눗셈의 관계"
+   },
+   "unitCount": 71,
+   "students": [
+    {
+     "name": "오시우",
+     "grade": "초2",
+     "className": "초등M 초3 BS2E"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 29
+  },
+  {
+   "key": "6dab4512-6af3-4d46-a25c-54ee0b6922a6~96aaf62a-6ad3-4a40-84e4-fddb587c0741",
+   "start": {
+    "grade": "초2",
+    "chapter": "1-1 세 자리 수",
+    "section": "1-1-1 백 알아보기"
+   },
+   "end": {
+    "grade": "초2",
+    "chapter": "1-6 곱셈",
+    "section": "1-6-4 곱셈식 알아보기"
+   },
+   "unitCount": 35,
+   "students": [
+    {
+     "name": "강지우",
+     "grade": "초2",
+     "className": "초등M 초3 BS2E"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 0
+  },
+  {
+   "key": "7fc487af-e613-4cfa-ac0f-0e8d33e1d84c~a3ea509b-28dc-4dc8-b461-bd880dee7258",
+   "start": {
+    "grade": "초2",
+    "chapter": "1-3 덧셈과 뺄셈",
+    "section": "1-3-1 받아올림이 있는 (두 자리 수)+(한 자리 수)"
+   },
+   "end": {
+    "grade": "초3",
+    "chapter": "1-6 분수와 소수",
+    "section": "1-6-2 분수 알아보기(1)"
+   },
+   "unitCount": 86,
+   "students": [
+    {
+     "name": "윤지우",
+     "grade": "초2",
+     "className": "초등M 초3 BS2E"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 57
+  },
+  {
+   "key": "3e0922cc-1fe9-4fc5-888e-0654c37debf3~c9dde391-afdc-4422-84ab-da5e50f15bff",
+   "start": {
+    "grade": "초3",
+    "chapter": "1-1 덧셈과 뺄셈",
+    "section": "1-1-1 받아올림이 없는, 한 번 있는 (세 자리 수)+(세 자리 수)"
+   },
+   "end": {
+    "grade": "초4",
+    "chapter": "1-4 평면도형의 이동",
+    "section": "1-4-4 평면도형 돌리기"
+   },
+   "unitCount": 80,
+   "students": [
+    {
+     "name": "정주원",
+     "grade": "초2",
+     "className": "초등M 초3 BS2E"
+    }
+   ],
+   "schoolLevels": [
+    "초"
+   ],
+   "poolTotal": 135
+  },
+  {
+   "key": "da7a052e-597d-4a48-a7c8-295c17e0c911~80ae3c94-f040-4b1b-b089-93ae53395c64",
+   "start": {
+    "grade": "중2",
+    "chapter": "1. 수와 식",
+    "section": "유리수와 소수"
+   },
+   "end": {
+    "grade": "중2",
+    "chapter": "5. 도형의 성질",
+    "section": "삼각형의 내심"
+   },
+   "unitCount": 37,
+   "students": [
+    {
+     "name": "조주원",
+     "grade": "중2",
+     "className": "중등M 개별 JJ3L"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 6761
+  },
+  {
+   "key": "7a810236-5d27-475a-afc4-7281c591904d~80ae3c94-f040-4b1b-b089-93ae53395c64",
+   "start": {
+    "grade": "중1",
+    "chapter": "3. 방정식",
+    "section": "일차방정식의 활용(비율, 시계, 규칙)"
+   },
+   "end": {
+    "grade": "중2",
+    "chapter": "5. 도형의 성질",
+    "section": "삼각형의 내심"
+   },
+   "unitCount": 67,
+   "students": [
+    {
+     "name": "박지호",
+     "grade": "중2",
+     "className": "중등M 중2 BS3B"
+    }
+   ],
+   "schoolLevels": [
+    "중"
+   ],
+   "poolTotal": 8869
+  }
+ ]
+}

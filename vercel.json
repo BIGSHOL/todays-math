@@ -1,0 +1,9 @@
+{
+  "regions": ["icn1"],
+  "crons": [
+    {
+      "path": "/api/eywa-sync/cron",
+      "schedule": "30 22 * * *"
+    }
+  ]
+}

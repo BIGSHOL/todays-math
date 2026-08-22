@@ -11,6 +11,23 @@
 > [`tracks/brief-handoff-20260820.md`](tracks/brief-handoff-20260820.md) (2026-08-20).
 > 이 문서(§2·§3)는 그보다 앞선 기출 이관 단계 기준이다.
 
+## 0-0. eywa 연계 (2026-08-21 — 최신)
+
+**끝난 것:** ⑴ eywa 진도 관(운영 API·DB 자격증명 제거·검증 계획 3판 §7 전부 [x],
+`tracks/plan-eywa-link.md`) ⑵ 2단계 화면 — D-07 절차(Wire 5안 → D 예외 우선,
+Hi-fi 4안 → ① 계기판, 위치 = 메인 상단)로 확정 후 구현. **D-63·D-64·D-65** 참조.
+메인 상단 `DailyReviewSection` + `GET /api/tests/daily-review`(`planDailyReview` 순수
+함수) + 「모두 출제」(기존 generate 를 학생별로, `todayTests` 로 중복 방지).
+동기화가 `EywaSyncRun` 실행 기록과 학생 `eywaLastReportDate/Text`(D-64)를 쓴다.
+시안: `/dev/eywa-daily-wire`·`/dev/eywa-daily-hifi` (실데이터, 이름만 가명).
+
+**남은 것:** 이중 트랙(정규+특강) 분리 — 계약의 classId 로.
+**운영은 2026-08-21 밤에 전부 살았다**: Vercel env 5개 투입 · production 배포 복구
+(어제 21:53부터 전량 Error — Hobby 12함수 한도, 동적 파일 접근 5곳 `turbopackIgnore`
+로 수리, 커밋 9fc65da0) · cron 실물 1회 성공(193명·13,618행, production 소요 **10.5초** —
+함수 지역을 서울 icn1 로 고정한 뒤(8cd5da12); 그 전엔 iad1 에서 2분 4초였다).
+공개 도메인은 todays-math.vercel.app (–bigshoul-project 별칭은 Vercel SSO 가 막는 게 정상).
+
 ## 0. 한 줄 요약 (2026-08-21 갱신)
 
 **지금:** 초3-1~초6-2 자체 출제 엔진. 화면 `/dev/elem-engine`. 공유 DB 적재 **0행**.

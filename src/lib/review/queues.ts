@@ -52,6 +52,13 @@ export const REVIEW_QUEUES: readonly ReviewQueueDef[] = [
     where: { directUseAllowed: false },
   },
   {
+    key: "figure",
+    label: "그림을 보라",
+    why: "그림이 붙은 문항 전부다. 화질이 낮은 래스터·지면과 다른 스타일·해설 그림이 본문에 딸려 온 것을 가려낸다 (2026-08-21 원장님: 그림 문제를 한번에 검수).",
+    look: "그림이 흐리지 않은가 · 흑백 지면 스타일인가 · 둘째 그림이 해설 그림은 아닌가. 이상하면 «신고 → 그림»",
+    where: { NOT: { figureUrls: { isEmpty: true } } },
+  },
+  {
     key: "nosolution",
     label: "해설이 없다",
     why: "정답만 있고 풀이가 없다. 답이 맞는지 이 화면에서 검산할 수 없다.",

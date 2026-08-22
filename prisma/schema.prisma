@@ -159,6 +159,11 @@ model Class {
   userId              String   @map("user_id") @db.Uuid
   name                String   @db.VarChar(100)
   grade               String   @db.VarChar(10)
+
+  /// eywa `classes.id` — 진도 연계의 매칭 키. NULL 이면 연계 밖의 반(수동·demo).
+  /// unique 는 (userId 무관) 전역 — 같은 eywa 반이 두 원장 계정에 복제되는 일은
+  /// 이 제품 범위에 없다(원장 1명).
+  eywaClassId String? @unique @map("eywa_class_id") @db.Uuid
   /// 기본 문항 수 (기본값 8)
   defaultProblemCount Int      @default(8) @map("default_problem_count")
   /// 난이도 배분 — 예: {"easy":3,"mid":4,"hard":1}
@@ -180,11 +185,61 @@ model Class {
 // FEAT-4: 학생 — 04 §2.6 (최소 수집: 이름만)
 // ─────────────────────────────────────────────
 
+/// eywa 동기화 실행 기록 — 화면의 「마지막 동기화 · 미분류 N줄」 스트립이 읽는다.
+/// 원장 파일(scripts/sync/ledgers)은 되돌리기용이고, 이건 **보여 주기용**이다 —
+/// 파일은 production 웹서버가 못 읽는다(같은 저장소·다른 기계).
+model EywaSyncRun {
+  id              String   @id @default(uuid()) @db.Uuid
+  ranAt           DateTime @default(now()) @map("ran_at")
+  transport       String   @db.VarChar(8)
+  students        Int
+  classes         Int
+  progressRows    Int      @map("progress_rows")
+  unresolvedLines Int      @map("unresolved_lines")
+  ambiguous       Int
+  examOnly        Int      @map("exam_only")
+
+  @@index([ranAt])
+  @@map("eywa_sync_run")
+}
+
+/// eywa 동기화 **되돌리기 원장** — 적용 전에 before 전량을 남긴다(JSON).
+/// CLI 는 파일(scripts/sync/ledgers)에도 남기지만, 서버(「지금 가져오기」)는
+/// 파일시스템이 없어(서버리스 read-only) 이 표가 유일한 원장이다.
+/// 회차별 행이라 덮어쓰기가 구조적으로 없다(2026-08-20 교훈). 오래된 것은
+/// 동기화가 최근 14회만 남기고 지운다.
+model EywaSyncLedger {
+  id        String   @id @default(uuid()) @db.Uuid
+  runId     String   @map("run_id") @db.VarChar(64)
+  createdAt DateTime @default(now()) @map("created_at")
+  payload   Json
+
+  @@index([createdAt])
+  @@map("eywa_sync_ledger")
+}
+
 model Student {
   id                    String  @id @default(uuid()) @db.Uuid
   classId               String  @map("class_id") @db.Uuid
   name                  String  @db.VarChar(50)
   useIndividualProgress Boolean @default(false) @map("use_individual_progress")
+
+  /// eywa `students.id` — 진도 연계의 유일한 매칭 키. **이름 매칭 금지**
+  /// (eywa 스스로 「이름-only 매칭 금지, 동명이인 fan-out」이라 못 박아 뒀다).
+  /// NULL 이면 이 연계 밖의 학생(수동 등록·demo). unique 라 같은 eywa 학생이
+  /// 두 번 만들어지지 않는다.
+  eywaStudentId String? @unique @map("eywa_student_id") @db.Uuid
+
+  /// 대사(reconciliation) 표시 — 동기화가 «받은 수 == total» 검증에 성공했는데
+  /// roster 에 이 학생이 없으면 여기에 시각을 적는다(퇴원·수학반 이탈).
+  /// 지우지 않는 이유: 시험 이력이 딸려 있다. 되돌아오면 NULL 로 푼다.
+  eywaWithdrawnAt DateTime? @map("eywa_withdrawn_at")
+
+  /// 마지막 eywa 수업보고서의 날짜·원문 (D-64). 시험기간(내신대비·모의고사)만
+  /// 적힌 날은 진도 행이 안 생기므로, «오늘 수업했는데 자동 출제에서 빠진 학생»을
+  /// 화면이 보여 주려면 진도와 별도로 이 둘이 필요하다. 동기화가 덮어쓴다.
+  eywaLastReportDate DateTime? @map("eywa_last_report_date") @db.Date
+  eywaLastReportText String?   @map("eywa_last_report_text")
 
   /// 재학 학교 — '오늘의 시험' 예측 대상을 정한다(트랙 E).
   /// 표기는 eywa `school-name.ts` 규칙으로 정규화해 넣는다("경명여자중학교" → "경명여중").
@@ -249,10 +304,18 @@ model Progress {
   recordedAt DateTime @map("recorded_at") @db.Date
   createdAt  DateTime @default(now()) @map("created_at")
 
+  /// eywa `lesson_reports.id` — 이 행이 어느 수업보고서에서 왔나.
+  /// 동기화는 **전량 재동기화**라(85.6% 가 수업일 이틀 뒤 이후 작성 — 증분 기준이
+  /// 없다) 이 키가 없으면 돌릴 때마다 같은 행이 또 생긴다.
+  /// 한 보고서가 여러 단원을 가리킬 수 있어 (report, unit) 짝으로 unique.
+  /// NULL 이면 연계 밖의 진도(화면에서 직접 기록).
+  eywaReportId String? @map("eywa_report_id") @db.Uuid
+
   class   Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
   student Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
   unit    Unit     @relation(fields: [unitId], references: [id], onDelete: Restrict)
 
+  @@unique([eywaReportId, unitId])
   @@index([classId, recordedAt(sort: Desc)])
   @@index([studentId, recordedAt(sort: Desc)])
   @@map("progress")
