@@ -1168,5 +1168,29 @@
   "code": "HC10109-4UK6",
   "dbAnswer": "③",
   "aiAnswer": "④"
+ },
+ {
+  "id": "7c64a259-91f7-445c-8cdd-ee172db2f9dc",
+  "code": "HC10109-AWWA",
+  "dbAnswer": "R(x)=x²+x+14",
+  "aiAnswer": "x^2+x+14"
+ },
+ {
+  "id": "28fd62f5-cee2-4f4d-9d74-459ad31a72f9",
+  "code": "HC10109-XQ8G",
+  "dbAnswer": "몫 = 2(2x-1)Q(x)+2R (나머지는 -4R)",
+  "aiAnswer": "$(4x-2)Q(x)+2R$"
+ },
+ {
+  "id": "5947f732-c925-46a0-90d6-d1ad2240f15e",
+  "code": "HC10201-3KGC",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "4adb796a-999d-411f-88fb-86f93fe617db",
+  "code": "HC10201-6BUH",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
  }
 ]
