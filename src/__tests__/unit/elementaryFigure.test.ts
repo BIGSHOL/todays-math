@@ -2,13 +2,19 @@
  * 초등 그림 스펙(elem-1) + 기존 FigureSpec v2.
  * 엔진이 실제로 SVG 를 내는지 본다. 모킹하지 않는다 — 없는 축은 변이시킬 수 없다.
  */
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
 import { CUBE_SCRAPE_ITEMS } from "@/app/dev/cube-scrape/fixtures";
 import { CUBE_RANDOM_20 } from "@/app/dev/cube-scrape/random20";
+import {
+  FIGURE_SVG_PAIR_MAX_PX,
+  FIGURE_SVG_PAIR_MM,
+  figureSvgFrameClass,
+  figureSvgSize,
+} from "@/lib/figure/figureSvgFrame";
 import { renderFigureSpec } from "@/lib/figure/renderFigureSpec";
 
 const ENGINE = process.env.FIGURE_ENGINE_PATH ?? "F:\\시험지변환기";
@@ -2133,7 +2139,8 @@ describe.skipIf(!hasEngine)(
     // 제목과 단위 라벨이 같은 줄에 앉으면 긴 제목에서 겹친다 — 실측으로 둘 사이가
     // 30px 뿐이었다. 제목이 **없을 때는** 지면이 한 픽셀도 안 바뀌어야 한다.
     it("제목은 단위 라벨과 **다른 줄**에 앉고, 없으면 지면이 안 바뀐다", async () => {
-      const TITLE = "아이스크림 한 개의 가격은 얼마인가";
+      // 제목 폭 가드가 막지 않는 길이여야 한다(세로형 plot 186단위 · 실측 156.6).
+      const TITLE = "아이스크림 한 개의 가격";
       const none = await renderFigureSpec(chartSpec("barChart", 45, ICE, 20));
       const titled = await renderFigureSpec({
         ...chartSpec("barChart", 45, ICE, 20),
@@ -2179,6 +2186,164 @@ describe.skipIf(!hasEngine)(
     });
   },
 );
+
+/* ── 그래프 짝 (chartPair, D-70 계열 · 원장님 확정 2026-08-23) ─────────────── */
+const PAIR_SOLD = {
+  kind: "barChart",
+  orient: "horizontal",
+  title: "팔린 수",
+  yMax: 40,
+  yStep: 10,
+  yLabel: "(개)",
+  values: [
+    { label: "딸기", value: 10 },
+    { label: "멜론", value: 40 },
+    { label: "초코", value: 20 },
+    { label: "바닐라", value: 30 },
+  ],
+};
+const PAIR_PRICE = {
+  kind: "barChart",
+  title: "한 개의 가격",
+  yMax: 800,
+  yStep: 100,
+  yLabel: "(원)",
+  values: [
+    { label: "딸기", value: 500 },
+    { label: "멜론", value: 800 },
+    { label: "초코", value: 600 },
+    { label: "바닐라", value: 700 },
+  ],
+};
+const pairSpec = (a: unknown = PAIR_SOLD, b: unknown = PAIR_PRICE) => ({
+  version: "elem-1",
+  kind: "chartPair",
+  charts: [a, b],
+});
+
+describe.skipIf(!hasEngine)("[초등 그림] 그래프 짝 (chartPair)", () => {
+  it("두 그래프를 나란히 그리고, 눈금 글자가 본문보다 크다", async () => {
+    const r = await renderFigureSpec(pairSpec());
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    const width = Number(r.svg.match(/viewBox="0 0 ([0-9.]+)/)![1]);
+    // 파이썬이 판정에 쓰는 폭과 **같은 상수**로 다시 잰다 — 두 파일이 갈리면 아래
+    // 「한 숫자를 쓴다」 시험이 빨개진다.
+    expect((14 * FIGURE_SVG_PAIR_MAX_PX) / width).toBeGreaterThanOrEqual(12.5);
+    expect(figureSvgSize(r.svg)).toBe("pair");
+    // 두 그래프가 다 들어 있다
+    expect(r.svg).toContain("팔린 수");
+    expect(r.svg).toContain("한 개의 가격");
+    // 합성은 좌표를 옮겨서 한다 — `sanitize_svg` 가 transform 을 막는다.
+    expect(r.svg).not.toContain("transform");
+  });
+
+  it("**한 숫자를 두 곳이 쓴다** — 파이썬 판정 폭과 화면 폭 등급이 같다", () => {
+    // 파이썬이 「눈금 글자가 본문 이상인가」를 PAIR_FRAME_PX 로 판정하고, 실제로
+    // 그려지는 폭은 figureSvgFrame 이 정한다. 한쪽만 고치면 **가드가 통과시킨 그림이
+    // 지면에서 작아진다** — 그래서 파일을 직접 읽어 대조한다.
+    const py = readFileSync(
+      path.join(process.cwd(), "scripts", "figure", "elem_advanced.py"),
+      "utf8",
+    );
+    expect(py).toMatch(
+      new RegExp(`PAIR_FRAME_PX = ${FIGURE_SVG_PAIR_MAX_PX}\\.0`),
+    );
+    expect(py).toMatch(new RegExp(`PAIR_FRAME_MM = ${FIGURE_SVG_PAIR_MM}\\.0`));
+    // 프레임 클래스도 같은 수여야 한다(문자열이라 따로 샌다).
+    expect(figureSvgFrameClass('<svg viewBox="0 0 405 206">')).toContain(
+      `max-w-[${FIGURE_SVG_PAIR_MAX_PX}px]`,
+    );
+    expect(figureSvgFrameClass('<svg viewBox="0 0 405 206">')).toContain(
+      `print:max-w-[${FIGURE_SVG_PAIR_MM}mm]`,
+    );
+  });
+
+  it("짝 등급 띠는 **오늘 비어 있다** — 짝 말고는 폭이 안 바뀐다", async () => {
+    // 380 을 넘는 그림이 이미 있으면 그 그림의 지면 폭이 조용히 바뀐다.
+    const wide: string[] = [];
+    for (const spec of [
+      { version: "elem-1", kind: "pills", items: ["아침", "점심", "저녁"] },
+      {
+        version: "elem-1",
+        kind: "opTree",
+        start: "725",
+        ops: ["-513", "+679"],
+      },
+      { version: "elem-1", kind: "cuboid", w: 8, d: 2, h: 4 },
+      chartSpec("barChart", 45, [30, 40, 20, 35], 20),
+      chartSpec("lineChart", 1153, [1150, 400, 880]),
+    ]) {
+      const r = await renderFigureSpec(spec);
+      if (!r.ok) continue;
+      if (figureSvgSize(r.svg) === "pair") wide.push(String(spec.kind));
+    }
+    expect(wide).toEqual([]);
+  });
+
+  it("안쪽 스펙은 단독 barChart 와 **같은 검증**을 탄다", async () => {
+    const typo = await renderFigureSpec(
+      pairSpec({ ...PAIR_SOLD, ystep: 10 }, PAIR_PRICE),
+    );
+    expect(typo.ok).toBe(false);
+    if (typo.ok) return;
+    expect(typo.error).toMatch(/허용|키/);
+  });
+
+  it("안쪽이 던지면 **그대로 올라온다** — 삼키고 한쪽만 그리지 않는다", async () => {
+    // ⚠️ 겹침 가드로는 이걸 못 본다 — 짝은 축을 «내용에 맞춰» 넓히므로 눈금이 겹치는
+    // 대신 폭이 늘고, 그러면 짝의 px 가드가 먼저 잡는다. 축 자체가 못 서는 것을 써야
+    // **안쪽 예외가 전파되는지**를 본다(걸음 1로는 눈금이 42줄).
+    const r = await renderFigureSpec(
+      pairSpec({ ...PAIR_SOLD, yMax: 40, yStep: 1 }, PAIR_PRICE),
+    );
+    expect(r.ok).toBe(false);
+    if (r.ok) return;
+    expect(r.error).toMatch(/눈금이 .*줄/);
+  });
+
+  it("제목이 제 그래프보다 넓으면 던진다 — 긴 정보는 발문 몫", async () => {
+    const r = await renderFigureSpec(
+      pairSpec(
+        { ...PAIR_SOLD, title: "종류별 팔린 아이스크림의 수" },
+        PAIR_PRICE,
+      ),
+    );
+    expect(r.ok).toBe(false);
+    if (r.ok) return;
+    expect(r.error).toMatch(/제목/);
+  });
+
+  it("짝이 너무 넓어 눈금 글자가 본문 아래로 내려가면 던진다", async () => {
+    // 항목 라벨이 길면 폭이 늘어난다 — 값이 아니라 **글자**가 폭을 정한다.
+    const long = {
+      ...PAIR_PRICE,
+      values: PAIR_PRICE.values.map((v) => ({
+        ...v,
+        label: `${v.label}맛아이스크림`,
+      })),
+    };
+    const r = await renderFigureSpec(pairSpec(PAIR_SOLD, long));
+    expect(r.ok).toBe(false);
+    if (r.ok) return;
+    expect(r.error).toMatch(/본문|px/);
+  });
+
+  it("charts 는 정확히 둘이어야 한다", async () => {
+    for (const charts of [
+      [PAIR_SOLD],
+      [PAIR_SOLD, PAIR_PRICE, PAIR_SOLD],
+      [],
+    ]) {
+      const r = await renderFigureSpec({
+        version: "elem-1",
+        kind: "chartPair",
+        charts,
+      });
+      expect(r.ok).toBe(false);
+    }
+  });
+});
 
 describe("[초등 그림] 무작위 20 스펙 계약", () => {
   it("이름 붙은 도형·분수 사다리꼴·곱셈표는 초등 kind 다", () => {

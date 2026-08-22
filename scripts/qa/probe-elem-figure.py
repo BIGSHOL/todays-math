@@ -128,6 +128,23 @@ SPECS: list[dict] = [
     {"version": "elem-1", "kind": "barChart", "orient": "horizontal", "yMax": 800, "yStep": 200, "values": [{"label": "딸기", "value": 800}, {"label": "멜론", "value": 500}, {"label": "바닐라", "value": 600}], "yLabel": "(원)"},
     # ㉢ 눈금이 겹칠 수밖에 없는 판 — **던져야** 한다(옛날엔 「0100200300…」 덩어리)
     {"version": "elem-1", "kind": "barChart", "orient": "horizontal", "yMax": 800, "yStep": 100, "values": [{"label": "딸기", "value": 800}, {"label": "멜론", "value": 500}], "yLabel": "(원)"},
+    # 그래프 짝 (D-70 계열) — ㉠ 정상(원장님 확정 조합) ㉡ 제목이 넘치는 판
+    # ㉢ 항목 라벨이 길어 짝이 넓어지는 판(눈금 글자가 본문 아래로 내려간다). ㉡㉢ 은 던진다.
+    {"version": "elem-1", "kind": "chartPair", "charts": [
+        {"kind": "barChart", "orient": "horizontal", "title": "팔린 수", "yMax": 40, "yStep": 10, "yLabel": "(개)",
+         "values": [{"label": "딸기", "value": 10}, {"label": "멜론", "value": 40}, {"label": "초코", "value": 20}, {"label": "바닐라", "value": 30}]},
+        {"kind": "barChart", "title": "한 개의 가격", "yMax": 800, "yStep": 100, "yLabel": "(원)",
+         "values": [{"label": "딸기", "value": 500}, {"label": "멜론", "value": 800}, {"label": "초코", "value": 600}, {"label": "바닐라", "value": 700}]}]},
+    {"version": "elem-1", "kind": "chartPair", "charts": [
+        {"kind": "barChart", "orient": "horizontal", "title": "종류별 팔린 아이스크림의 수", "yMax": 40, "yStep": 10, "yLabel": "(개)",
+         "values": [{"label": "딸기", "value": 10}, {"label": "멜론", "value": 40}]},
+        {"kind": "barChart", "title": "한 개의 가격", "yMax": 800, "yStep": 100, "yLabel": "(원)",
+         "values": [{"label": "딸기", "value": 500}, {"label": "멜론", "value": 800}]}]},
+    {"version": "elem-1", "kind": "chartPair", "charts": [
+        {"kind": "barChart", "orient": "horizontal", "title": "팔린 수", "yMax": 40, "yStep": 10, "yLabel": "(개)",
+         "values": [{"label": "딸기맛아이스크림", "value": 10}, {"label": "멜론맛아이스크림", "value": 40}]},
+        {"kind": "barChart", "title": "한 개의 가격", "yMax": 800, "yStep": 100, "yLabel": "(원)",
+         "values": [{"label": "딸기맛아이스크림", "value": 500}, {"label": "멜론맛아이스크림", "value": 800}]}]},
     {"version": "elem-1", "kind": "pictograph", "unit": 10, "items": [{"label": "가", "count": 3}, {"label": "나", "count": 5}]},
     {"version": "elem-1", "kind": "stripChart", "segments": [{"label": "가", "pct": 40}, {"label": "나", "pct": 35}, {"label": "다", "pct": 25}]},
     {"version": "elem-1", "kind": "pieChart", "slices": [{"label": "가", "pct": 45}, {"label": "나", "pct": 30}, {"label": "다", "pct": 25}]},

@@ -212,6 +212,35 @@ export const ITEMS: PrintCheckItem[] = [
     changedOn: "2026-08-19",
   },
   {
+    id: "chart-pair-frame",
+    title: "그래프 짝(chartPair) — 문항 열을 통째로 쓰는 **새 폭 등급**",
+    changed:
+      "두 그래프에서 값을 읽어 곱하는 유형(D-70 계열)을 그리려고 `chartPair` 를 넣으면서 " +
+      "`figureSvgFrame` 에 **네 번째 폭 등급**을 만들었다 — 화면 364px / 지면 **97mm**. " +
+      "지금까지 지면 폭은 70·64·37mm 셋뿐이었고, 97mm 는 그중 어느 것보다 넓다(문항 열 전체). " +
+      "짝은 viewBox 가 405단위라 기존 `wide`(70mm)에 넣으면 눈금 글자가 2.9mm 로 줄어 " +
+      "본문보다 작아진다. 97mm 에서 3.35mm(현행 단독 그래프의 90%)가 된다.",
+    look:
+      "① 짝이 문항 열 밖으로 넘치지 않는가 — 97mm 는 열을 꽉 채우는 폭이라 좌우 여백이 없다. " +
+      "② 두 그래프의 **눈금 숫자**가 본문 글자보다 작아 보이지 않는가(계산상 90%, 종이에서 확인). " +
+      "③ 가로 막대의 「0 10 20 30 40 (개)」가 서로 붙지 않고 읽히는가. " +
+      "④ 두 그래프의 가로축이 같은 줄에 서는가(값을 견주는 유형이라 이게 어긋나면 못 읽는다). " +
+      "⑤ 짝이 든 문항이 칸을 넘겨 다음 문항을 밀지 않는가(계산상 그림 197px · 칸 여유 225px).",
+    lookFromSource: false,
+    evidence: [
+      "src/lib/figure/figureSvgFrame.ts (FIGURE_SVG_PAIR_MAX_PX · FIGURE_SVG_PAIR_MM)",
+      "scripts/figure/elem_advanced.py (_chart_pair · PAIR_FRAME_PX · _assert_ticks_readable)",
+      "docs/planning/07-coding-convention.md D-70",
+    ],
+    scale:
+      "지금은 0건 — elem-g4 가 판매 결합 유형을 배선하면 생긴다. 초4 그래프 단원 몫",
+    needs:
+      "짝이 든 문항을 시험지에 넣어 실제로 뽑아야 드러난다. 화면으로는 364px 로 보여 " +
+      "지면 97mm 와 배율이 달라, **화면 검수로 대신할 수 없다**",
+    status: "대기",
+    changedOn: "2026-08-23",
+  },
+  {
     id: "figure-svg-inline",
     title:
       "AI 변형이 새로 그린 도형(SVG)의 지면 배치 — 처음 종이에 나가는 갈래",

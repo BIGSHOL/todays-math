@@ -533,6 +533,49 @@ io.open(p, "w", encoding="utf-8").write(s.replace(old, "", 1))
 PY
 run "가로형 viewBox 를 단위 라벨만큼 안 넓히기 (잘림)"
 
+# ㉝ 짝의 「눈금 글자가 본문 이상인가」 가드를 끈다 — 열에 넣으면 작아지는 그림이 나간다.
+python - "$ADV" <<'PY'
+import io, sys
+p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
+old = "    _assert_ticks_readable(total_w)\n"
+assert old in s, "앵커 없음 ㉝"
+io.open(p, "w", encoding="utf-8").write(s.replace(old, "", 1))
+PY
+run "짝 눈금 글자 크기 가드 끄기"
+
+# ㉞ **`TICK_MIN_GAP` 을 3 → 4 로.** 짝의 여유가 0.06px 뿐이라 이 상수가 움직이면
+#    눈금 글자가 본문 아래로 내려간다. 가드가 그 상수에서 계산되는지 확인하는 변이다.
+python - "$ADV" <<'PY'
+import io, sys
+p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
+old = "TICK_MIN_GAP = 3.0"
+assert old in s, "앵커 없음 ㉞"
+io.open(p, "w", encoding="utf-8").write(s.replace(old, "TICK_MIN_GAP = 4.0", 1))
+PY
+run "눈금 사이 틈 3 → 4 (짝이 본문 아래로)"
+
+# ㉟ 제목 폭 가드를 끈다 — 긴 제목이 옆 그래프를 침범한다.
+python - "$ADV" <<'PY'
+import io, sys
+p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
+old = "    if want > plot_w:"
+assert old in s, "앵커 없음 ㉟"
+io.open(p, "w", encoding="utf-8").write(s.replace(old, "    if False:", 1))
+PY
+run "제목 폭 가드 끄기"
+
+# ㊱ 안쪽 그래프를 **단독 폭**으로 그린다(compact 를 안 쓴다) — 짝이 498단위가 된다.
+python - "$ADV" <<'PY'
+import io, sys
+p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
+old = 'svg = ADV_RENDER[kind]({**inner, "version": "elem-1"}, compact=True)'
+assert old in s, "앵커 없음 ㊱"
+io.open(p, "w", encoding="utf-8").write(
+    s.replace(old, 'svg = ADV_RENDER[kind]({**inner, "version": "elem-1"}, compact=False)', 1)
+)
+PY
+run "짝 안쪽을 단독 폭으로 그리기"
+
 restore
 judged=$(grep -c "^\[" "$SUMMARY")
 if [ -n "$ONLY" ]; then
