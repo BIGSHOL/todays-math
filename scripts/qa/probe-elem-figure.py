@@ -121,6 +121,13 @@ SPECS: list[dict] = [
     # **던져야 하는** 자리 — 걸음 1로는 눈금이 42줄이다. 조용히 사다리로 올리면
     # 「한 칸 1명」 발문 옆에 5명 간격이 그려진다. 표본이 없으면 그 변이를 못 잡는다.
     {"version": "elem-1", "kind": "barChart", "yMax": 41, "yStep": 1, "values": [{"label": "가", "value": 38}, {"label": "나", "value": 20}, {"label": "다", "value": 30}], "yLabel": "(명)"},
+    # 가로형 — 값 눈금이 **옆으로** 늘어서는 유일한 자리라 글자 겹침이 여기서만 난다.
+    # ㉠ 맨 위 눈금이 축 끝에 딱 떨어지는 판(단위 라벨과 겹치던 자리, 2자리)
+    {"version": "elem-1", "kind": "barChart", "orient": "horizontal", "yMax": 40, "yStep": 10, "title": "팔린 수", "values": [{"label": "딸기", "value": 40}, {"label": "멜론", "value": 20}, {"label": "바닐라", "value": 30}], "yLabel": "(개)"},
+    # ㉡ 세 자리 눈금 — 단위가 viewBox 밖으로 나가 **닫는 괄호가 잘리던** 자리
+    {"version": "elem-1", "kind": "barChart", "orient": "horizontal", "yMax": 800, "yStep": 200, "values": [{"label": "딸기", "value": 800}, {"label": "멜론", "value": 500}, {"label": "바닐라", "value": 600}], "yLabel": "(원)"},
+    # ㉢ 눈금이 겹칠 수밖에 없는 판 — **던져야** 한다(옛날엔 「0100200300…」 덩어리)
+    {"version": "elem-1", "kind": "barChart", "orient": "horizontal", "yMax": 800, "yStep": 100, "values": [{"label": "딸기", "value": 800}, {"label": "멜론", "value": 500}], "yLabel": "(원)"},
     {"version": "elem-1", "kind": "pictograph", "unit": 10, "items": [{"label": "가", "count": 3}, {"label": "나", "count": 5}]},
     {"version": "elem-1", "kind": "stripChart", "segments": [{"label": "가", "pct": 40}, {"label": "나", "pct": 35}, {"label": "다", "pct": 25}]},
     {"version": "elem-1", "kind": "pieChart", "slices": [{"label": "가", "pct": 45}, {"label": "나", "pct": 30}, {"label": "다", "pct": 25}]},

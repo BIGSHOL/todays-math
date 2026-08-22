@@ -503,6 +503,36 @@ io.open(p, "w", encoding="utf-8").write(s.replace(old, new, 1))
 PY
 run "못 그리는 yStep 을 던지지 않고 사다리로 올린다"
 
+# ㉚ 단위 라벨을 **옛 자리**(축 끝 +6)로 되돌린다 — 마지막 눈금 숫자와 겹친다.
+python - "$ADV" <<'PY'
+import io, sys
+p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
+old = "        unit_x = left + plot_w + _digits_half(last) + UNIT_GAP"
+assert old in s, "앵커 없음 ㉚"
+io.open(p, "w", encoding="utf-8").write(s.replace(old, "        unit_x = left + plot_w + UNIT_GAP", 1))
+PY
+run "가로형 단위 라벨을 눈금 위로 되돌리기 (겹침)"
+
+# ㉛ 눈금 겹침 가드를 끈다 — 「0100200300…」 덩어리가 지면으로 나간다.
+python - "$ADV" <<'PY'
+import io, sys
+p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
+old = "    _assert_ticks_fit(_tick_values(axis_top, step), plot_w)\n"
+assert old in s, "앵커 없음 ㉛"
+io.open(p, "w", encoding="utf-8").write(s.replace(old, "", 1))
+PY
+run "값 눈금 겹침 가드 끄기"
+
+# ㉜ 단위 라벨 몫으로 viewBox 를 넓히지 않는다 — 닫는 괄호가 잘린다.
+python - "$ADV" <<'PY'
+import io, sys
+p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
+old = "        width = max(width, unit_x + _label_w_max(ylab) + 4)\n"
+assert old in s, "앵커 없음 ㉜"
+io.open(p, "w", encoding="utf-8").write(s.replace(old, "", 1))
+PY
+run "가로형 viewBox 를 단위 라벨만큼 안 넓히기 (잘림)"
+
 restore
 judged=$(grep -c "^\[" "$SUMMARY")
 if [ -n "$ONLY" ]; then

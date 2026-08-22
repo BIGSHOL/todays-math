@@ -1985,12 +1985,15 @@ describe.skipIf(!hasEngine)(
       expect(scaleMismatchX(r.svg, ICE)).toBeLessThan(0.5);
     });
 
+    // ⚠️ 여기 값은 **가로형이 실제로 그릴 수 있는 것**이어야 한다. 값 눈금이 옆으로
+    // 늘어서는 가로형은 숫자가 겹치면 던지므로, 촘촘한 조합(yMax 41·yStep 5 = 9눈금,
+    // yMax 1153 = 네 자리 7눈금)은 아래 「겹칠 수밖에 없는 눈금 수」 시험의 몫이다.
     it("축 규칙은 **방향과 무관하게 한 벌**이다 — 눈금 값이 두 방향에서 같다", async () => {
       for (const [yMax, values, yStep] of [
         [45, ICE, 20],
-        [41, [38, 20, 30], 5],
+        [40, [40, 20, 30], 10],
+        [800, [800, 500, 600], 200],
         [19, [16, 7, 12], undefined],
-        [1153, [1150, 400, 880], undefined],
       ] as [number, number[], number | undefined][]) {
         const v = await renderFigureSpec(
           chartSpec("barChart", yMax, values, yStep),
@@ -2004,6 +2007,98 @@ describe.skipIf(!hasEngine)(
         expect(xTicks(h.svg).map((t) => t.v)).toEqual(
           yTicks(v.svg).map((t) => t.v),
         );
+      }
+    });
+
+    /* ── 글자가 겹치지 않는다 (가로형) ─────────────────────────────────────────
+     * 값 눈금이 **옆으로 늘어서는** 것은 가로형뿐이라 여기만 겹칠 수 있다.
+     * 세로형은 눈금이 위아래로 쌓이고 `MAX_Y_TICKS`(9)가 줄 수를 막는다.
+     *
+     * ⚠️ 글자 폭은 **실측 리터럴**이다 — 파이썬에도 여기에도 글꼴 계측이 없다.
+     * 지면과 같은 렌더러(헤드리스 Chromium)의 `getComputedTextLength()` 로 쟀다:
+     *   14pt Batang bold 숫자 `0`8.62 · `20`17.21 · `500`25.83 · `1000`34.42
+     *   → 숫자는 고정폭이라 **8.605/자**. 글꼴을 바꾸면 다시 재야 한다.
+     */
+    const TICK_DIGIT_W = 8.605;
+
+    it("가로형 값 눈금 숫자는 **서로 겹치지 않는다**", async () => {
+      for (const [yMax, yStep, values] of [
+        [40, 10, [40, 20, 30]],
+        [800, 200, [800, 500, 600]],
+        [1200, 400, [1200, 400, 800]],
+        [25, 5, [25, 10, 15]],
+      ] as [number, number, number[]][]) {
+        const r = await renderFigureSpec({
+          ...chartSpec("barChart", yMax, values, yStep),
+          orient: "horizontal",
+        });
+        expect(r.ok).toBe(true);
+        if (!r.ok) return;
+        const ticks = xTicks(r.svg);
+        for (let i = 1; i < ticks.length; i++) {
+          const gap =
+            ticks[i]!.x -
+            ticks[i - 1]!.x -
+            (TICK_DIGIT_W * String(ticks[i]!.v).length) / 2 -
+            (TICK_DIGIT_W * String(ticks[i - 1]!.v).length) / 2;
+          expect(
+            gap,
+            `«${ticks[i - 1]!.v}»와 «${ticks[i]!.v}» 사이`,
+          ).toBeGreaterThan(0);
+        }
+      }
+    });
+
+    // 커밋 7d3edc42 에 있던 결함: 마지막 눈금은 축 끝에 **가운데** 정렬이라 오른쪽으로
+    // 절반을 더 뻗는데 단위를 축 끝 +6 에 놓아 겹쳤다(2자리 −2.60 · 3자리 −6.91).
+    // `yStep` 을 실으면 맨 위 눈금이 축 끝에 딱 떨어져 **거의 항상** 걸렸다.
+    it("가로형 단위 라벨은 마지막 눈금 숫자와 겹치지 않고, 잘리지도 않는다", async () => {
+      for (const [yMax, yStep, values, unit] of [
+        [40, 10, [40, 20, 30], "(개)"],
+        [800, 200, [800, 500, 600], "(원)"],
+        [1200, 400, [1200, 400, 800], "(원)"],
+      ] as [number, number, number[], string][]) {
+        const r = await renderFigureSpec({
+          ...chartSpec("barChart", yMax, values, yStep),
+          orient: "horizontal",
+          yLabel: unit,
+        });
+        expect(r.ok).toBe(true);
+        if (!r.ok) return;
+        const ticks = xTicks(r.svg);
+        const last = ticks[ticks.length - 1]!;
+        const lastRight = last.x + (TICK_DIGIT_W * String(last.v).length) / 2;
+        const unitX = Number(
+          r.svg.match(
+            /<text x="([0-9.]+)" y="[0-9.]+"[^>]*font-size="13"[^>]*text-anchor="start"/,
+          )![1],
+        );
+        expect(
+          unitX,
+          `«${last.v}» 오른쪽 끝 ${lastRight}`,
+        ).toBeGreaterThanOrEqual(lastRight);
+        // 잘림 — 단위가 viewBox 밖으로 나가면 닫는 괄호가 사라진다(실측 3자리 2.4단위).
+        // 폭은 **실측값**이다(「(개)」·「(원)」 둘 다 13pt 에서 23.54). 어림 상한을 쓰면
+        // 렌더러의 상한과 어긋나 거짓 빨강이 난다 — 실제로 한 번 그렇게 났다.
+        const UNIT_W: Record<string, number> = { "(개)": 23.54, "(원)": 23.54 };
+        const vbWidth = Number(r.svg.match(/viewBox="0 0 ([0-9.]+)/)![1]);
+        expect(unitX + UNIT_W[unit]!).toBeLessThanOrEqual(vbWidth);
+      }
+    });
+
+    it("겹칠 수밖에 없는 눈금 수는 **던진다** — 조용히 뭉개 그리지 않는다", async () => {
+      // 값 축 140단위에 9개는 못 그린다. 예전에는 「0100200300…」 덩어리로 나갔다.
+      for (const [yMax, yStep] of [
+        [40, 5],
+        [800, 100],
+      ] as [number, number][]) {
+        const r = await renderFigureSpec({
+          ...chartSpec("barChart", yMax, [yMax, yMax / 2], yStep),
+          orient: "horizontal",
+        });
+        expect(r.ok).toBe(false);
+        if (r.ok) return;
+        expect(r.error).toMatch(/겹칩니다/);
       }
     });
 

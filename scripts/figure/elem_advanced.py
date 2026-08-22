@@ -260,6 +260,61 @@ def _unit_label(left: float, top: float, ylab: str) -> str:
     return _text(left - 7, top - 20, ylab, size=13, anchor="end")
 
 
+# 눈금 숫자 한 자의 폭(그림 단위, 14pt). **실측값이다** — 지면과 같은 렌더러
+# (헤드리스 Chromium)에서 `getComputedTextLength()` 로 쟀다:
+#   `0`8.62 · `20`17.21 · `500`25.83 · `1000`34.42 → 전부 8.605/자
+# Batang bold 는 숫자가 고정폭이라 «자당 폭 × 자릿수» 가 어림이 아니라 정확하다.
+# 파이썬에는 글꼴 계측이 없어서 리터럴 말고는 방법이 없다.
+# ⚠️ 글꼴을 바꾸면 이 값을 **다시 재야 한다**(`scripts/qa/…` 시안의 measure-text.mjs).
+TICK_DIGIT_W = 8.605
+# 마지막 눈금 숫자와 단위 라벨 사이 틈. 지면에서 약 1.4mm.
+UNIT_GAP = 6.0
+# 이웃한 값 눈금 숫자 사이 최소 틈.
+TICK_MIN_GAP = 3.0
+
+
+# 13pt 글자 폭 **상한** — 실측 「바닐라」 39.72/3 = 13.24(한글), 숫자 7.99.
+# 라틴·괄호는 숫자보다도 좁아서(「(개)」 23.54 = 한글 13.24 + 괄호 둘 10.3) 8.0 이면 넉넉하다.
+# 잘림을 막는 용도라 **상한이면 맞다** — 다만 너무 헐거우면 짝 배치에서 폭을 낭비하므로
+# 한글과 나머지를 나눈다(모두 한글로 치면 「(개)」가 39.7 로 16단위 부풀었다).
+HANGUL_W_13 = 13.24
+ASCII_W_13 = 8.0
+
+
+def _digits_half(value: int) -> float:
+    """눈금 숫자가 가운데 정렬이라 **오른쪽으로 뻗는 만큼**(폭의 절반)."""
+    return TICK_DIGIT_W * len(str(int(value))) / 2
+
+
+def _label_w_max(text: str, size: float = 13.0) -> float:
+    """글자 폭 **상한**. 한글은 넓고 나머지는 좁다 — 넘치지 않을 만큼만 넉넉하게."""
+    scale = size / 13.0
+    return scale * sum(
+        HANGUL_W_13 if ord(ch) >= 0x1100 else ASCII_W_13 for ch in text
+    )
+
+
+def _assert_ticks_fit(ticks: list[int], plot_w: float) -> None:
+    """가로형 값 눈금이 **옆으로 늘어서므로** 숫자끼리 겹칠 수 있다.
+
+    세로형은 눈금이 위아래로 쌓여 이 결함이 없다 — **방향이 만드는 차이**다.
+    실측(커밋 7d3edc42): 값 축 140단위에 세 자리 눈금 9개를 그리면
+    「0100200300…」처럼 **읽을 수 없는 덩어리**가 된다. 에러도 안 나고 지면에만 나간다.
+
+    조용히 겹치게 두지 않고 **던진다** — 상한은 우리가 아니라 엔진이 정한다
+    (`yStep` 9줄 상한과 같은 무늬, D-70).
+    """
+    if len(ticks) < 2:
+        return
+    widest = TICK_DIGIT_W * max(len(str(t)) for t in ticks)
+    pitch = plot_w / (len(ticks) - 1)
+    if pitch < widest + TICK_MIN_GAP:
+        raise ValueError(
+            f"값 축 {plot_w:g} 단위에 눈금 {len(ticks)}개를 그리면 숫자가 겹칩니다 "
+            f"(간격 {pitch:.1f} · 숫자 폭 {widest:.1f}). 걸음을 키우거나 값을 줄이십시오"
+        )
+
+
 def _tick_values(axis_top: float, step: int) -> list[int]:
     """0부터 `axis_top` 까지 `step` 마다. **방향과 무관하다** — 값 축의 눈금은 하나다.
 
@@ -350,6 +405,7 @@ def _bar_chart_h(spec: Mapping[str, Any], values, axis_top: float, step: int) ->
     n = len(values)
     gap = 8.0
     bh = (plot_h - gap * (n + 1)) / n
+    _assert_ticks_fit(_tick_values(axis_top, step), plot_w)
     parts = _plot_axes(left, top, plot_w, plot_h, axis_top, step, horizontal=True)
     for i, (lab, val) in enumerate(values):
         w = 0 if axis_top <= 0 else min(plot_w, plot_w * val / axis_top)
@@ -361,11 +417,24 @@ def _bar_chart_h(spec: Mapping[str, Any], values, axis_top: float, step: int) ->
         parts.append(_text(nx, y + bh / 2, num, size=16))
         parts.append(_text(left - 7, y + bh / 2, lab, size=13, anchor="end"))
     ylab = str(spec.get("yLabel", ""))
+    # 단위 라벨은 **오른쪽 끝**에 오므로 viewBox 를 넘으면 잘린다. `_svg` 의 맞춤은
+    # 글자 «닻»만 보고 뻗는 폭은 모르므로 여기서 넉넉히 잡아 준다 — 실측으로 세 자리
+    # 눈금에서 2.4단위, 네 자리에서 6.8단위가 잘리고 있었다(닫는 괄호가 사라졌다).
+    width = TABLE_VIEWBOX_MAX
     if ylab:
         # 마지막 눈금 숫자 바로 뒤 — 교과서가 「0 20 40 (개)」로 적는 자리다.
-        parts.append(_text(left + plot_w + 6, top + plot_h + 14, ylab, size=13, anchor="start"))
+        #
+        # ⚠️ **마지막 눈금 숫자는 축 끝에 «가운데» 정렬이라 오른쪽으로 절반을 더 뻗는다.**
+        # 축 끝 + 6 에 그냥 놓으면 겹친다 — `yStep` 을 실으면 맨 위 눈금이 축 끝에
+        # 딱 떨어지는 것이 보통이라 **D-70 유형에서는 거의 항상** 겹쳤다
+        # (실측: 2자리 −2.60단위 · 3자리 −6.91단위, 커밋 7d3edc42).
+        # 세로형은 단위가 축 **위**(`top-20`)라 이 결함이 없다 — 줄이 다르기 때문이다.
+        last = _tick_values(axis_top, step)[-1]
+        unit_x = left + plot_w + _digits_half(last) + UNIT_GAP
+        parts.append(_text(unit_x, top + plot_h + 14, ylab, size=13, anchor="start"))
+        width = max(width, unit_x + _label_w_max(ylab) + 4)
     parts.append(_chart_title(title, left + plot_w / 2))
-    return _svg(TABLE_VIEWBOX_MAX, top + plot_h + pad_b, "".join(parts))
+    return _svg(width, top + plot_h + pad_b, "".join(parts))
 
 
 def _bar_chart(spec: Mapping[str, Any]) -> str:
