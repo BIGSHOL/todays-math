@@ -59,6 +59,13 @@ def call_codex(items, model: str, cwd: Path, timeout_s: int) -> list:
             raise RuntimeError(
                 f"빈 출력 (exit={proc.returncode}): {proc.stdout[-500:]} {proc.stderr[:500]}"
             )
+        # codex 가 LaTeX(\binom, \frac 등)를 JSON 문자열 안에서 \\ 로 이중
+        # 이스케이프하지 않고 그냥 낼 때가 있다. \b·\f 는 마침 유효한 JSON
+        # 이스케이프(백스페이스·폼피드)라 json.loads 가 에러 없이 조용히
+        # 삼켜 "\binom"→(제어문자)+"inom" 으로 깨진다(2026-08-23 b69-10 실측,
+        # 20개 중 16개 렌더실패). \n 은 해설 줄바꿈으로 실제 의도된 값이라
+        # 손대지 않는다 — \b·\f 만 선제 이중 이스케이프한다.
+        out = re.sub(r"(?<!\\)\\([bf])", lambda m: "\\\\" + m.group(1), out)
         return json.loads(out)
     finally:
         Path(out_path).unlink(missing_ok=True)

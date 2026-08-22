@@ -2044,5 +2044,29 @@
   "code": "HPS0101-WUXS",
   "dbAnswer": "②",
   "aiAnswer": "①"
+ },
+ {
+  "id": "dd539daf-a9d6-4103-afc2-ed74fda0c35f",
+  "code": "HPS0103-HNGA",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "a3772319-d770-418a-9745-a22f38b38b99",
+  "code": "HPS0103-TA95",
+  "dbAnswer": "$45$",
+  "aiAnswer": "36"
+ },
+ {
+  "id": "f773b63e-c2e1-4197-955f-39b14fc81fd2",
+  "code": "HPS0103-UKA8",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "5310d7f4-999e-4ddf-8a13-d704f65f3201",
+  "code": "HPS0104-4NZA",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
  }
 ]
