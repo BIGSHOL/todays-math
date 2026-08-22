@@ -1450,5 +1450,41 @@
   "code": "HC10302-8D3W",
   "dbAnswer": "④",
   "aiAnswer": "③"
+ },
+ {
+  "id": "6c504b09-c8ba-428c-b79e-2137d8390dba",
+  "code": "HC10302-Q6NR",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "8444191c-5c66-400b-80e4-9a9f61ce341b",
+  "code": "HC10303-5AUJ",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "834e1be4-e781-4d74-bc41-6c8ae7ef3359",
+  "code": "HC10303-Y3DL",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "f9c7a45c-bf13-47a4-b088-5f768142f593",
+  "code": "HC10401-A2RJ",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "07224866-9f60-4ecb-8826-d1a4d422abe4",
+  "code": "HC10402-L6LF",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "5644e9db-2ad0-4249-b370-883b8c497d13",
+  "code": "HC10402-NQ3P",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
  }
 ]
