@@ -333,7 +333,15 @@ describe.skipIf(!hasEngine)("[초등 그림] 무작위 20 스펙", () => {
     ).toBeGreaterThanOrEqual(3);
   });
 
-  it("원기둥 높이·반지름 치수는 서로 떨어지고 도형 한가운데에 앉지 않는다", async () => {
+  /**
+   * 원장님 확정 2026-08-22 — 「원기둥의 반지름도 마찬가지. 문제에 굳이 있는데 라벨로
+   * **이중표기**해서 너저분해질 필요가 없을듯」.
+   *
+   * 가르는 축은 「좁아서」가 아니라 **「발문이 이미 말했는가」**다. 값을 쓰는 갈래의 발문이
+   * 「밑면의 반지름이 $2$ cm 인 원기둥의 밑면의 지름은?」이라 **반지름은 발문에 있고 높이는
+   * 없다.** 그래서 반지름만 빼고 **높이는 남긴다** — 둘 다 빼면 설명 없는 점선만 남는다.
+   */
+  it("원기둥은 반지름을 안 적고 높이만 적는다 — 중심 점도 남기지 않는다", async () => {
     const r = await renderFigureSpec({
       version: "elem-1",
       kind: "cylinder",
@@ -342,28 +350,21 @@ describe.skipIf(!hasEngine)("[초등 그림] 무작위 20 스펙", () => {
     });
     expect(r.ok).toBe(true);
     if (!r.ok) return;
-    const pos = (label: string) => {
-      const m = r.svg.match(
-        new RegExp(`x="([0-9.-]+)" y="([0-9.-]+)"[^>]*>${label}<`),
-      );
-      expect(m, label).toBeTruthy();
-      return { x: Number(m![1]), y: Number(m![2]) };
-    };
-    const height = pos("3 cm");
-    const radius = pos("2 cm");
+    expect(r.svg, "높이는 적는다").toContain(">3 cm<");
+    expect(r.svg, "반지름은 발문에 있으므로 안 적는다").not.toContain(">2 cm<");
+    // 반지름 라벨이 없으면 중심 점은 **설명 없는 표시**다 — 같이 뺀다.
     expect(
-      Math.hypot(height.x - radius.x, height.y - radius.y),
-    ).toBeGreaterThan(28);
-    const xs = [...r.svg.matchAll(/points="([^"]+)"/g)].flatMap((m) =>
-      m[1].split(/\s+/).map((p) => Number(p.split(",")[0])),
-    );
-    const ys = [...r.svg.matchAll(/points="([^"]+)"/g)].flatMap((m) =>
-      m[1].split(/\s+/).map((p) => Number(p.split(",")[1])),
+      [...r.svg.matchAll(/<circle [^>]*r="1\.8"/g)],
+      "중심 점",
+    ).toHaveLength(0);
+    // 높이 치수는 도형 왼쪽 바깥이다.
+    const m = r.svg.match(/x="([0-9.-]+)" y="([0-9.-]+)"[^>]*>3 cm</);
+    expect(m).toBeTruthy();
+    const xs = [...r.svg.matchAll(/points="([^"]+)"/g)].flatMap((p) =>
+      p[1].split(/\s+/).map((q) => Number(q.split(",")[0])),
     );
     const midX = (Math.min(...xs) + Math.max(...xs)) / 2;
-    const midY = (Math.min(...ys) + Math.max(...ys)) / 2;
-    expect(height.x).toBeLessThan(midX - 8);
-    expect(radius.x > midX || radius.y < midY - 8).toBe(true);
+    expect(Number(m![1])).toBeLessThan(midX - 8);
   });
 
   it("쌓기나무 겨냥도와 위 보기는 겹치지 않는다", async () => {
@@ -975,11 +976,12 @@ describe.skipIf(!hasEngine)(
 describe.skipIf(!hasEngine)(
   "[초등 그림] 원기둥·원뿔 밑면은 타원기둥이 아니다 (원장님 2026-08-22 ②)",
   () => {
-    // 교과서 겨냥도의 밑면 타원 납작한 정도. 사방투영(45°)은 0.31 이지만 **기울어** 있다.
-    const LOW = 0.24;
-    const HIGH = 0.36;
+    // ⚠️ 납작한 **정도**는 여기서 안 잰다 — 「밑면 타원의 납작한 정도」 검사가
+    //    눈금을 맞춰 **정확히** 잡는다(0.15). 두 곳이 같은 것을 재면 값을 바꿀 때
+    //    한쪽만 고치고 다른 쪽이 낡는다. 여기 몫은 **기울기**뿐이다 —
+    //    사방투영(45°)은 납작한 정도가 범위 안이어도 **기울어** 있다(09 §4-15).
 
-    it("원기둥 윗면 타원은 축에 나란하고 납작한 정도가 교과서 범위다", async () => {
+    it("원기둥 윗면 타원은 **축에 나란**하다 — 사방투영처럼 기울지 않는다", async () => {
       for (const [rr, hh] of [
         [2, 3],
         [3, 8],
@@ -995,9 +997,6 @@ describe.skipIf(!hasEngine)(
         if (!r.ok) return;
         const top = polygonsByFill(r.svg, "#f2e6d4")[0]!;
         expect(top, `r=${rr} h=${hh} 윗면`).toBeTruthy();
-        const ratio = ellipseFlatness(top);
-        expect(ratio, `r=${rr} h=${hh} 납작한 정도`).toBeGreaterThan(LOW);
-        expect(ratio, `r=${rr} h=${hh} 납작한 정도`).toBeLessThan(HIGH);
         expect(axisTilt(top), `r=${rr} h=${hh} 기울기`).toBeLessThan(1.0);
       }
     });
@@ -1023,7 +1022,95 @@ describe.skipIf(!hasEngine)(
       expect(body!.length).toBeGreaterThan(20);
     });
 
-    it("원뿔 밑면도 축에 나란하고 같은 범위다", async () => {
+    /**
+     * **구도 같은 자로 잰다.** 이 검사에 구가 빠져 있어서 구만 `0.32` 인 것을 아무도
+     * 못 봤다 — 그때는 `ROUND_RATIO` 를 원기둥·원뿔만 쓰고 구는 **날 리터럴**이라
+     * 상수를 조여도 구는 그대로 남았다(2026-08-18 「배선이 한쪽만」).
+     * 지금은 **셋이 한 상수를 쓴다.** 이 검사가 그 배선을 지킨다 — 누가 다시 갈라놓으면
+     * 구 칸이 혼자 빨개진다.
+     *
+     * ⚠️ 셋이 서로 다른 «요소»로 그려진다 — 원기둥·원뿔은 **폴리곤**, 구만 `<ellipse>` 다.
+     *    `<ellipse>` 만 찾는 자를 쓰면 앞의 둘은 **구조적으로 0**이 된다(못 재는 것이
+     *    깨끗한 것으로 보인다). 그래서 kind 마다 재는 자리를 따로 적는다.
+     */
+    /**
+     * **밑면 타원의 납작한 정도를 «눈금 맞춘» 자로 잰다.**
+     *
+     * ⚠️ 「수가 나오나」도 「값이 변하나」도 자를 지켜 주지 못한다 — 엉뚱한 요소를 재도
+     *    **값이 같이 움직인다.** 실측(elem_advanced 기준): 비율을 0.30 → 0.15 로 바꾸면
+     *    원기둥 **몸통**이 0.900 → 0.825 로 따라 움직이고, 원뿔 **실루엣**도 그렇다.
+     *    그걸 재면 비율을 잠가 놓고 몸통을 지키는 **동어반복**이 된다.
+     *
+     * 그래서 눈금은 **「그 수가 비율과 같은가」**로 맞춘다. 그리고 **`r·h` 가 다른 두 점**을
+     *    쓴다 — 밑면 타원의 비는 `r·h` 와 무관하게 일정하지만(0.300 · 0.300),
+     *    몸통·실루엣은 `r·h` 에 따라 **0.900 / 0.550** 으로 갈린다. 엉뚱한 요소를 재면
+     *    두 점에서 같은 값이 나올 수 없다.
+     *
+     * ⚠️ 셋이 서로 다른 «요소»로 그려진다 — 원기둥·원뿔은 **폴리곤**, 구만 `<ellipse>` 다.
+     *    `<ellipse>` 만 찾는 자를 쓰면 앞의 둘은 **구조적으로 0**이 된다.
+     *
+     * ⚠️ 기대값은 **여기 적힌 리터럴**이다. 제품 상수를 읽으면 상수를 바꿀 때 기대값이
+     *    따라가서 영원히 초록이다. 상수를 바꾸면 이 줄도 **일부러** 같이 고쳐야 한다.
+     */
+    it("밑면 타원의 납작한 정도 — 자가 «비율 그 자체»를 재는지 눈금까지 맞춘다", async () => {
+      // 원장님 확정 2026-08-22 — 「절대 … 타원이 그려지지 않도록」. **셋이 한 숫자를 쓴다.**
+      // 예전엔 구만 `0.32` 라 상수를 조여도 안 따라왔다(배선이 한쪽만).
+      // 눈금 실측 12/12: p ∈ {0.30, 0.20, 0.15, 0.12} × r2h3·r5h4 에서 잰 값 = p (오차 <0.002).
+      const RATIO = 0.15;
+
+      for (const [rr, hh] of [
+        [2, 3],
+        [5, 4],
+      ]) {
+        const cyl = await renderFigureSpec({
+          version: "elem-1",
+          kind: "cylinder",
+          r: rr,
+          h: hh,
+        });
+        expect(cyl.ok, `원기둥 r${rr}h${hh}`).toBe(true);
+        if (!cyl.ok) return;
+        const top = polygonsByFill(cyl.svg, "#f2e6d4")[0]!;
+        expect(top, "원기둥 윗면").toBeTruthy();
+        expect(ellipseFlatness(top), `원기둥 r${rr}h${hh} 밑면 비`).toBeCloseTo(
+          RATIO,
+          3,
+        );
+
+        const cone = await renderFigureSpec({
+          version: "elem-1",
+          kind: "cone",
+          r: rr,
+          h: hh,
+        });
+        expect(cone.ok, `원뿔 r${rr}h${hh}`).toBe(true);
+        if (!cone.ok) return;
+        // 원뿔은 밑면 다각형이 따로 없다 — 실루엣에서 꼭대기를 뺀 앞쪽 호 + 뒤쪽 점선 호.
+        const body = polygonsByFill(cone.svg, "#e4d3b8")[0]!;
+        const far = parsePoints(
+          cone.svg.match(
+            /<polyline points="([^"]+)"[^>]*stroke-dasharray/,
+          )![1]!,
+        );
+        expect(
+          ellipseFlatness([...body.slice(1), ...far]),
+          `원뿔 r${rr}h${hh} 밑면 비`,
+        ).toBeCloseTo(RATIO, 3);
+      }
+
+      const ball = await renderFigureSpec({
+        version: "elem-1",
+        kind: "sphere",
+        r: 3,
+      });
+      expect(ball.ok).toBe(true);
+      if (!ball.ok) return;
+      const m = ball.svg.match(/<ellipse[^>]*rx="([\d.]+)" ry="([\d.]+)"/);
+      expect(m, "구 적도 타원").toBeTruthy();
+      expect(Number(m![2]) / Number(m![1]), "구 적도 비").toBeCloseTo(RATIO, 3);
+    });
+
+    it("원뿔 밑면 타원도 **축에 나란**하다", async () => {
       for (const [rr, hh] of [
         [2, 4],
         [4, 3],
@@ -1041,10 +1128,6 @@ describe.skipIf(!hasEngine)(
         const far = parsePoints(
           r.svg.match(/<polyline points="([^"]+)"[^>]*stroke-dasharray/)![1]!,
         );
-        const ring = [...near.slice(1), ...far];
-        const ratio = ellipseFlatness(ring);
-        expect(ratio, `r=${rr} h=${hh}`).toBeGreaterThan(LOW);
-        expect(ratio, `r=${rr} h=${hh}`).toBeLessThan(HIGH);
         expect(axisTilt(far), `r=${rr} h=${hh} 기울기`).toBeLessThan(1.0);
       }
     });
@@ -1078,9 +1161,8 @@ describe.skipIf(!hasEngine)(
         height: 4,
         top: 5,
       },
-      // ⚠️ `rhombus` 는 일부러 뺐다 — 원장님이 라벨을 안 적기로 확정하셨다(2026-08-22).
-      //    「라벨이 있으면 halo 여야 한다」는 규칙은 그대로이고, 마름모는 그 라벨이
-      //    아예 없다. 대신 「비율대로 그려지는가」를 따로 잰다(위 시험).
+      // ⚠️ `rhombus`·`sphere` 는 일부러 뺐다 — 원장님이 라벨을 안 적기로 확정하셨다
+      //    (2026-08-22, 이중표기). 「라벨이 있으면 halo 여야 한다」는 규칙은 그대로다.
       { version: "elem-1", kind: "cuboid", w: 8, d: 2, h: 4 },
       { version: "elem-1", kind: "cylinder", r: 2, h: 3 },
       { version: "elem-1", kind: "netCuboid", w: 7, d: 4, h: 5 },
@@ -1181,7 +1263,121 @@ describe.skipIf(!hasEngine)(
       }
     });
 
-    it("cm 라벨은 전부 halo 치수 글자다 — 도형 위에 얹은 날 텍스트가 없다", async () => {
+    /**
+     * **전 kind 를 훑는다.** 예전엔 `WITH_DIMS` 라는 손 목록만 봤고, 거기 `sphere` 가
+     * 없어서 「반지름 3 cm」 **날 텍스트**를 구조적으로 못 봤다 — 09 §4-22 에 「손 목록은
+     * 샌다」를 적어 놓고 **내 시험이 바로 그 모양**이었다. 라벨이 있어야 한다고 요구하지
+     * 않고, **있으면 halo 여야 한다**만 본다. 그래야 라벨을 뺀 kind 도 같이 훑을 수 있다.
+     */
+    /**
+     * 원기둥도 마름모와 같다 — 반지름 라벨을 뺐으니(원장님 확정 2026-08-22, 이중표기)
+     * **그린 비가 스펙과 맞는지 아무도 안 본다.** 그 조명을 여기로 옮긴다.
+     *
+     * 절대 크기는 원래 안 지킨다(`scale = 70/max(2r,h)` 라 `2r ≥ h` 면 반지름이 늘 35px).
+     * 지키는 것은 **`r:h` 비**뿐이고, 그것만은 정확하다 — 둘 다 같은 `scale` 을 곱하니까.
+     */
+    it("원기둥은 라벨이 없어도 스펙의 r:h 비율대로 그려진다", async () => {
+      for (const [rr, hh] of [
+        [2, 3],
+        [5, 4],
+        [3, 8],
+      ]) {
+        const r = await renderFigureSpec({
+          version: "elem-1",
+          kind: "cylinder",
+          r: rr,
+          h: hh,
+        });
+        expect(r.ok, `r=${rr} h=${hh}`).toBe(true);
+        if (!r.ok) return;
+        const top = polygonsByFill(r.svg, "#f2e6d4")[0]!;
+        const body = polygonsByFill(r.svg, "#e4d3b8")[0]!;
+        const rpx =
+          (Math.max(...top.map((p) => p[0])) -
+            Math.min(...top.map((p) => p[0]))) /
+          2;
+        // 높이 = 왼쪽 모선. 옆면 폴리곤의 최좌점 둘(위·아래)의 y 차이다.
+        const xmin = Math.min(...body.map((p) => p[0]));
+        const leftYs = body.filter((p) => p[0] - xmin < 0.3).map((p) => p[1]);
+        const hpx = Math.max(...leftYs) - Math.min(...leftYs);
+        expect(rpx / hpx, `r:h = ${rr}:${hh}`).toBeCloseTo(rr / hh, 1);
+      }
+    });
+
+    /**
+     * **구는 `r` 을 그림에 안 담는다** — `pr = 36.0` 리터럴이라 `r=1` 과 `r=20` 이 같은 원이다.
+     * 지금 구 문항은 길이를 그림에서 읽지 않으므로(전부 「어떤 도형인가」류) 성립하지만,
+     * 「그림을 보고 반지름을 구하시오」가 생기면 **그 순간 못 쓴다.**
+     *
+     * 이 시험은 고치라는 것이 아니라 **지금이 어떤 상태인지 적어 두는 것**이다 —
+     * 어디에도 안 적혀 있어서 의도인지 결함인지 다음 사람이 알 수 없었다.
+     * 누가 `r` 을 반영하게 고치면 여기가 빨개지고, 그때 이 주석을 지우면 된다.
+     */
+    it("구는 반지름을 그림 크기에 반영하지 않는다 (알려진 상태)", async () => {
+      const sizes: number[] = [];
+      for (const rr of [1, 3, 20]) {
+        const r = await renderFigureSpec({
+          version: "elem-1",
+          kind: "sphere",
+          r: rr,
+        });
+        expect(r.ok, `r=${rr}`).toBe(true);
+        if (!r.ok) return;
+        sizes.push(
+          Number(
+            r.svg.match(/<circle cx="[\d.]+" cy="[\d.]+" r="([\d.]+)"/)![1],
+          ),
+        );
+      }
+      expect(new Set(sizes).size, "r 이 달라도 원 크기는 같다").toBe(1);
+    });
+
+    it("어느 kind 든 cm 라벨은 halo 치수 글자다 — 날 텍스트가 없다", async () => {
+      const bare: string[] = [];
+      for (const spec of [
+        ...WITH_DIMS,
+        { version: "elem-1", kind: "sphere", r: 3 },
+        { version: "elem-1", kind: "cone", r: 4, h: 3 },
+        {
+          version: "elem-1",
+          kind: "areaPoly",
+          shape: "rhombus",
+          base: 8,
+          height: 4,
+          d2: 4,
+        },
+        { version: "elem-1", kind: "prism", sides: 5, h: 3 },
+        { version: "elem-1", kind: "pyramid", sides: 5, h: 3 },
+        {
+          version: "elem-1",
+          kind: "netCylinder",
+          r: 2,
+          h: 5,
+          pi: 3,
+          layout: "opp",
+        },
+        {
+          version: "elem-1",
+          kind: "stackCubes",
+          voxels: [[0, 0, 0]],
+          views: ["iso"],
+        },
+      ]) {
+        const r = await renderFigureSpec(spec);
+        expect(r.ok, String(spec.kind)).toBe(true);
+        if (!r.ok) return;
+        for (const m of r.svg.matchAll(
+          /<text\b([^>]*)>([^<]*\d\s*cm[^<]*)<\/text>/g,
+        )) {
+          if (!m[1]!.includes('paint-order="stroke"')) {
+            bare.push(`${spec.kind}: ${m[2]}`);
+          }
+        }
+      }
+      expect(bare, "날 텍스트 치수").toEqual([]);
+    });
+
+    it("치수를 적기로 한 kind 는 실제로 적는다 — 검사가 빈 껍데기가 아니다", async () => {
       const bare: string[] = [];
       for (const spec of WITH_DIMS) {
         const r = await renderFigureSpec(spec);
@@ -1439,6 +1635,217 @@ describe.skipIf(!hasEngine)(
       expect(r.ok).toBe(false);
       if (r.ok) return;
       expect(r.error).toMatch(/허용|키/);
+    });
+  },
+);
+
+/* ── 그래프 세로축 ───────────────────────────────────────────────────────────
+ * 「눈금이 231줄」과 「제일 높은 점이 맨 위 눈금선 위로 떴다」는 **한 뿌리**다 —
+ * `yMax` 는 TS 가 정하고 걸음은 파이썬이 정하는데, 서로 상대가 무엇을 할지 모른다.
+ * 아래 검사는 전부 **그려진 SVG 의 눈금 글자와 도형 좌표**만 본다. 파이썬 상수를
+ * 읽지 않는다 — 참이 제품에서 오면 제품이 틀릴수록 좋은 점수가 나온다.
+ * (09 §4-23)
+ */
+const NICE_STEPS = [
+  1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000,
+];
+const TICK_CAP = 9;
+
+/** 세로 눈금 글자 — 14pt·오른쪽 정렬. 단위(13pt)·막대 숫자(16pt·가운데)와 갈린다. */
+function yTicks(svg: string): { v: number; y: number }[] {
+  return [
+    ...svg.matchAll(
+      /<text x="[0-9.]+" y="([0-9.]+)"[^>]*font-size="14"[^>]*text-anchor="end"[^>]*>(-?[0-9.]+)<\/text>/g,
+    ),
+  ]
+    .map((m) => ({ v: Number(m[2]), y: Number(m[1]) }))
+    .sort((a, b) => a.v - b.v);
+}
+
+/** 그려진 데이터의 «맨 위» — 막대는 rect 의 윗변, 꺾은선은 점의 중심. */
+function dataTopY(svg: string): number {
+  const rects = [...svg.matchAll(/<rect x="[0-9.]+" y="([0-9.]+)"/g)].map((m) =>
+    Number(m[1]),
+  );
+  const dots = [
+    ...svg.matchAll(/<circle cx="[0-9.]+" cy="([0-9.]+)" r="2.4"/g),
+  ].map((m) => Number(m[1]));
+  return Math.min(...[...rects, ...dots]);
+}
+
+/**
+ * 그려진 마크의 y — 막대는 rect 윗변, 꺾은선은 점 중심. **스펙에 준 순서 그대로**다.
+ * `dataTopY` 와 달리 «제일 위» 하나가 아니라 전부 돌려준다.
+ */
+function markYs(svg: string): number[] {
+  const rects = [...svg.matchAll(/<rect x="[0-9.]+" y="([0-9.]+)"/g)].map((m) =>
+    Number(m[1]),
+  );
+  const dots = [
+    ...svg.matchAll(/<circle cx="[0-9.]+" cy="([0-9.]+)" r="2.4"/g),
+  ].map((m) => Number(m[1]));
+  return rects.length ? rects : dots;
+}
+
+/**
+ * **눈금이 말하는 자리**에 그 값이 있는가 — 눈금 둘로 선형보간해 y 를 구한다.
+ *
+ * ⚠️ 이것이 「데이터가 맨 위 눈금선보다 아래인가」를 **대신**한다. 그 검사로는
+ * 「눈금은 새 축, 막대는 옛 `yMax`」인 배선을 **못 잡는다** — 축을 올리면 맨 위
+ * 눈금 아래로 여유가 생기고, 그 여유 안에서는 틀린 자로 그려도 여전히 «아래»다.
+ * 실측(변이 ㉕, `yMax 19` · 값 16): 막대 윗변 54.63 · 맨 위 눈금 36 → 옛 검사 통과.
+ * 그런데 눈금이 말하는 자리는 59.60 이라 **5.0px 어긋나 있었다**(막대가 16이 아니라
+ * 16.8쯤을 가리킨다). 변이 시험이 이 문장을 반증해서 알았다 (09 §4-23).
+ */
+function scaleMismatch(svg: string, values: number[]): number {
+  const ticks = yTicks(svg);
+  const [lo, hi] = [ticks[0]!, ticks[ticks.length - 1]!];
+  const marks = markYs(svg);
+  let worst = 0;
+  for (const [i, v] of values.entries()) {
+    const want = lo.y + ((v - lo.v) * (hi.y - lo.y)) / (hi.v - lo.v);
+    worst = Math.max(worst, Math.abs(want - marks[i]!));
+  }
+  return worst;
+}
+
+function chartSpec(
+  kind: "barChart" | "lineChart",
+  yMax: number,
+  values: number[],
+) {
+  return {
+    version: "elem-1",
+    kind,
+    values: values.map((v, i) => ({ label: `${i + 1}월`, value: v })),
+    yMax,
+    yLabel: "명",
+  };
+}
+
+/** 「지금 잘 나오는 장」의 눈금 — 고치기 **전에** 실제로 그려 본 값을 그대로 못 박는다. */
+const KEEP_AS_IS: [number, number[], number[]][] = [
+  [8, [3, 7, 5, 6], [0, 1, 2, 3, 4, 5, 6, 7, 8]],
+  [11, [4, 10, 7, 9], [0, 2, 4, 6, 8, 10]],
+  [12, [5, 12, 8, 9], [0, 2, 4, 6, 8, 10, 12]],
+  [15, [9, 12, 10, 11], [0, 5, 10, 15]],
+  [37, [30, 34, 31, 33], [0, 5, 10, 15, 20, 25, 30, 35]],
+  [41, [33, 38, 35, 36], [0, 5, 10, 15, 20, 25, 30, 35, 40]],
+  [43, [34, 40, 37, 38], [0, 5, 10, 15, 20, 25, 30, 35, 40]],
+];
+
+describe.skipIf(!hasEngine)(
+  "[초등 그림] 그래프 세로축 (원장님 2026-08-22)",
+  () => {
+    it.each(KEEP_AS_IS)(
+      "yMax %i — 지금 맞게 나오는 장은 눈금이 한 줄도 안 바뀐다",
+      async (yMax, values, ticks) => {
+        for (const kind of ["barChart", "lineChart"] as const) {
+          const r = await renderFigureSpec(chartSpec(kind, yMax, values));
+          expect(r.ok).toBe(true);
+          if (!r.ok) return;
+          expect(yTicks(r.svg).map((t) => t.v)).toEqual(ticks);
+        }
+      },
+    );
+
+    // 사다리를 못 올라가면 `yMax` 가 커질수록 눈금이 무한정 늘어난다 —
+    // 실측으로 「박물관 관람객」 소재에서 231줄이 나왔다.
+    it.each([45, 60, 63, 150, 400, 1153, 1600, 9999])(
+      "yMax %i — 눈금은 아홉 줄을 넘지 않는다",
+      async (yMax) => {
+        const r = await renderFigureSpec(
+          chartSpec("lineChart", yMax, [
+            Math.round(yMax * 0.4),
+            yMax - 3,
+            Math.round(yMax * 0.6),
+          ]),
+        );
+        expect(r.ok).toBe(true);
+        if (!r.ok) return;
+        const ticks = yTicks(r.svg);
+        expect(ticks.length).toBeGreaterThanOrEqual(2);
+        expect(ticks.length).toBeLessThanOrEqual(TICK_CAP);
+      },
+    );
+
+    it("눈금 한 칸은 1·2·5 를 열 배씩 한 것뿐이다 — 3칸·7칸은 암산이 안 된다", async () => {
+      for (const yMax of [8, 12, 19, 41, 45, 63, 150, 400, 1153, 9999]) {
+        const r = await renderFigureSpec(
+          chartSpec("lineChart", yMax, [1, yMax - 3, 2]),
+        );
+        expect(r.ok).toBe(true);
+        if (!r.ok) return;
+        const vs = yTicks(r.svg).map((t) => t.v);
+        const gaps = new Set(vs.slice(1).map((v, i) => v - vs[i]!));
+        expect([...gaps]).toHaveLength(1);
+        expect(NICE_STEPS).toContain([...gaps][0]);
+      }
+    });
+
+    // ⚠️ 이것이 이 묶음의 핵심이다. 「몇 줄인가」만 재면 **눈금이 데이터보다 낮은 장**은
+    //    구조적으로 안 보인다 — 실측 2,400장 중 214장이 그랬고, 하필 그 점이
+    //    「가장 많은 때는 언제인가」의 답이다.
+    it.each([
+      [13, [12, 5, 9]],
+      [19, [16, 7, 12]],
+      [24, [21, 9, 15]],
+      [39, [36, 20, 28]],
+      [44, [44, 20, 30]],
+      [49, [46, 21, 33]],
+      [59, [56, 25, 40]],
+    ])("yMax %i — 제일 높은 값 위에 눈금선이 있다", async (yMax, values) => {
+      for (const kind of ["barChart", "lineChart"] as const) {
+        const r = await renderFigureSpec(
+          chartSpec(kind, yMax, values as number[]),
+        );
+        expect(r.ok).toBe(true);
+        if (!r.ok) return;
+        const ticks = yTicks(r.svg);
+        const top = ticks[ticks.length - 1]!;
+        // ⑴ 값으로 — 맨 위 눈금 값이 데이터 최댓값 이상
+        expect(top.v).toBeGreaterThanOrEqual(Math.max(...(values as number[])));
+        // ⑵ 픽셀로 — 그려진 것 중 제일 위가 맨 위 눈금선보다 아래(y 가 큼)
+        expect(dataTopY(r.svg)).toBeGreaterThanOrEqual(top.y - 0.5);
+        // ⑶ **눈금이 말하는 자리에 있는가.** ⑴·⑵ 로는 「눈금은 새 축, 막대는 옛 yMax」
+        //    배선을 못 잡는다 — 축을 올리면 생기는 여유 안에 숨는다(변이 ㉕·㉖).
+        expect(scaleMismatch(r.svg, values as number[])).toBeLessThan(0.5);
+      }
+    });
+
+    // 이 셋은 **축이 올라가는** 장이다 — 여유가 커서 ⑵ 가 가장 무력해지는 자리다.
+    it.each([
+      ["barChart", 19, [16, 7, 12]],
+      ["lineChart", 49, [46, 21, 33]],
+      ["barChart", 44, [44, 20, 30]],
+      ["lineChart", 1153, [1150, 400, 880]],
+    ] as ["barChart" | "lineChart", number, number[]][])(
+      "%s yMax %i — 막대·점은 **눈금이 말하는 자리**에 그려진다 (눈금과 같은 자)",
+      async (kind, yMax, values) => {
+        const r = await renderFigureSpec(chartSpec(kind, yMax, values));
+        expect(r.ok).toBe(true);
+        if (!r.ok) return;
+        expect(markYs(r.svg)).toHaveLength(values.length);
+        expect(scaleMismatch(r.svg, values)).toBeLessThan(0.5);
+      },
+    );
+
+    it("막대와 꺾은선은 **같은 자**를 쓴다 — 한쪽만 배선하면 그쪽 지표만 좋아진다", async () => {
+      for (const [yMax, values] of [
+        [19, [16, 7, 12]],
+        [49, [46, 21, 33]],
+        [1153, [1150, 400, 800]],
+      ] as [number, number[]][]) {
+        const bar = await renderFigureSpec(chartSpec("barChart", yMax, values));
+        const line = await renderFigureSpec(
+          chartSpec("lineChart", yMax, values),
+        );
+        expect(bar.ok && line.ok).toBe(true);
+        if (!bar.ok || !line.ok) return;
+        expect(yTicks(bar.svg).map((t) => t.v)).toEqual(
+          yTicks(line.svg).map((t) => t.v),
+        );
+      }
     });
   },
 );

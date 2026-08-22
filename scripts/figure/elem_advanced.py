@@ -33,11 +33,33 @@ FACE_SIDE = "#d4c09e"
 CHART = ("#c5d6c2", "#d7c2e4", "#e2b48a", "#c5d4e8", "#e8d4a8", "#d4c0b0")
 # 겨냥도 숨은 모서리. 실선과 눈에 띄게 갈려야 면·모서리를 셀 수 있다 (09 §4-14).
 HIDDEN_DASH = "5 4"
-# 원기둥·원뿔 밑면 타원의 납작한 정도(ry/rx). 교과서 겨냥도는 0.25~0.35 다.
+# 둥근 입체(원기둥·원뿔·**구**) 타원의 납작한 정도(ry/rx).
 # 사방(45°) 투영은 타원이 기울어 「타원기둥」처럼 보인다 — 깊이축을 화면 위(90°)로
 # 세우면 축에 나란한 타원이 되고 depth_ratio 가 곧 ry/rx 가 된다 (09 §4-15).
-ROUND_RATIO = 0.30
+#
+# **0.15 — 원장님 확정 2026-08-22**: 「강력하게 조여. 절대 초등과정에서 원기둥 원뿔
+# 구에서 타원이 그려지지 않도록」. 0.30·0.20·0.15·0.12 를 셋 다 렌더해 견주고 고르셨다
+# (`scripts/qa/shot-round-ratio.py` 로 다시 낼 수 있다). 0.12 는 납작한 원기둥이
+# 직사각형처럼 보이고 구 적도가 거의 직선이 된다 — 그게 하한이다 (09 §4-20-d).
+#
+# ⚠️ **셋이 이 한 숫자를 쓴다.** 예전에는 구만 날 리터럴 `0.32` 라 상수를 조여도
+#    구는 안 따라왔다 — 게다가 셋 중 **가장 뚱뚱한 것**이 안 고쳐지고 남았다
+#    (2026-08-18 「배선이 한쪽만 되면 그쪽 지표만 좋아진다」).
+ROUND_RATIO = 0.15
 ROUND_DEG = 90.0
+
+# 세로 눈금 걸음 사다리 — `1·2·5` 를 열 배씩. 초등에서 「한 칸이 몇인가」를 암산할 수
+# 있는 것은 이 셋뿐이다(3칸·7칸은 눈금을 세게 만든다).
+NICE_STEPS: tuple[int, ...] = tuple(m * 10**k for k in range(5) for m in (1, 2, 5))
+# 0 을 포함한 세로 눈금 줄 수 상한.
+#
+# ⚠️ **9 는 「읽기 좋은 수」가 아니라 「지금 규칙이 내는 최대」다.** `y_max = 8` 은
+#    걸음 1로 0~8 아홉 줄을 낸다 — 상한을 8로 두면 그 장들이 같이 바뀐다. 상한은
+#    **결함(눈금 과밀)만 걸러야** 하고 멀쩡한 장을 건드리면 안 된다. 실측: 이 값을
+#    8로 낮추면 **지금 결함이 없는 장 829장**(2,400장 중)이 같이 바뀌고, 7이면
+#    1,123장이 바뀐다. 9에서는 0장이다 — 그래서 9다.
+#    (잰 자: `scripts/qa/measure-elem-charts.py`, 씨앗 400 · 그래프 2,400장)
+MAX_Y_TICKS = 9
 
 
 def _int(value: Any, name: str, lo: int, hi: int) -> int:
@@ -131,11 +153,60 @@ def _chart_values(raw: Any, name: str) -> list[tuple[str, float]]:
 
 
 def _y_step(y_max: float) -> int:
-    if y_max <= 8:
-        return 1
-    if y_max <= 12:
-        return 2
-    return 5
+    """세로 눈금 한 칸.
+
+    지금 규칙(`≤8→1` · `≤12→2` · 그 위 `5`)을 **바닥**으로 깔고, 그 걸음이 눈금을
+    `MAX_Y_TICKS` 줄보다 많이 만들 때에만 사다리를 올린다 — **넘칠 때만 키운다.**
+
+    ⚠️ 「5~8줄이 읽기 좋다」로 걸음을 다시 고르면 **지금 잘 나오는 장이 같이 바뀐다**
+    (`y_max` 15·16·17 은 지금 4줄인데 그 규칙이면 8~9줄이 된다). 결함이 아닌 장을
+    바꾸는 것은 수리가 아니라 **다른 그림으로 갈아 끼우는 것**이라, 원장님 확정
+    없이는 못 한다(D-07). 그래서 상한만 두고 나머지는 손대지 않는다 (09 §4-23).
+
+    사다리는 `1·2·5` 를 열 배씩 — 그 셋 말고는 「한 칸이 몇인가」가 암산이 안 된다.
+    """
+    base = 1 if y_max <= 8 else (2 if y_max <= 12 else 5)
+    for step in NICE_STEPS:
+        if step >= base and _tick_count(y_max, step) <= MAX_Y_TICKS:
+            return step
+    return NICE_STEPS[-1]
+
+
+def _tick_count(axis_top: float, step: int) -> int:
+    """0 을 포함한 눈금 줄 수 — `_plot_axes` 의 고리가 실제로 그리는 수와 같아야 한다."""
+    return int(math.floor(axis_top / step + 1e-9)) + 1
+
+
+def _axis_top(y_max: float, data_max: float) -> tuple[float, int]:
+    """축 맨 위와 걸음.
+
+    **`yMax` 는 「진실」이 아니라 「최소 높이 요청」이다.** 걸음을 아는 쪽은 여기이므로,
+    맨 위 눈금선이 데이터보다 낮으면(=제일 높은 점이 눈금 밖으로 뜨면) 여기서 올린다.
+    실측으로 꺾은선 `yMax = 최댓값 + 3` 은 최댓값이 5로 나눠 1이 남을 때마다 떴다
+    (2,400장 중 214장). 하필 그 점이 「가장 많은 때는 언제인가」의 답이다.
+
+    올리면 걸음이 다시 커질 수 있고, 걸음이 커지면 필요한 높이가 또 달라진다 —
+    그래서 **더 안 움직일 때까지** 되풀이한다. 한 번만 돌면 `yMax 44 · 값 44` 가
+    45(걸음 10, 맨 위 눈금 40)에서 멈춰 **값 44가 다시 뜬다**(실측: 6,000칸 중 1,119칸).
+
+    `max(...)` 라서 **필요 없으면 아무것도 안 올린다** — 지금 맞게 나오는 장은
+    `y_max` 도 걸음도 그대로고, 따라서 픽셀도 그대로다.
+
+    ⚠️ **못 끝나면 조용히 도는 대신 던진다.** 고리가 안 끝나는 것은 걸음이 사다리를
+    한 칸씩만 올라간다는 전제가 깨졌다는 뜻이고, 그때 마지막 값을 그냥 돌려주면
+    **눈금과 데이터가 어긋난 그림이 조용히 지면으로 나간다.** 입력 전 범위
+    (`yMax` 1~10000 × 데이터 5종 = 50,000칸)에서 여기 닿는 조합은 없다.
+    """
+    top = max(float(y_max), 1.0)
+    # 사다리 칸을 한 번씩 다 밟아도 끝난다 — 같은 걸음이면 필요 높이가 그대로라
+    # 다음 바퀴에서 반드시 돌아간다. +1 은 마지막 확인 한 바퀴.
+    for _ in range(len(NICE_STEPS) + 1):
+        step = _y_step(top)
+        need = math.ceil(data_max / step - 1e-9) * step if data_max > 0 else 0.0
+        if need <= top:
+            return top, step
+        top = float(need)
+    raise ValueError(f"축 맨 위가 수렴하지 않습니다 (yMax={y_max}, 값 최댓값={data_max})")
 
 
 def _unit_label(left: float, top: float, ylab: str) -> str:
@@ -145,15 +216,18 @@ def _unit_label(left: float, top: float, ylab: str) -> str:
     return _text(left - 7, top - 20, ylab, size=13, anchor="end")
 
 
-def _plot_axes(left: float, top: float, plot_w: float, plot_h: float, y_max: float) -> list[str]:
+def _plot_axes(left: float, top: float, plot_w: float, plot_h: float, axis_top: float) -> list[str]:
+    """세로축·가로축·눈금. `axis_top` 은 `_axis_top()` 이 정한 **축 맨 위**다 —
+    막대·꺾은선의 세로 배율도 반드시 같은 값을 써야 한다(안 그러면 눈금과 데이터가
+    다른 자로 그려진다)."""
     parts = [
         _line((left, top), (left, top + plot_h)),
         _line((left, top + plot_h), (left + plot_w, top + plot_h)),
     ]
-    step = _y_step(y_max)
+    step = _y_step(axis_top)
     v = 0
-    while v <= y_max + 1e-6:
-        y = top + plot_h - plot_h * v / y_max
+    while v <= axis_top + 1e-6:
+        y = top + plot_h - plot_h * v / axis_top
         # 0 눈금은 가로축과 겹친다. 흰 외곽선 halo 는 mix-blend-multiply 에서
         # 가장자리가 회색으로 뭉개지므로 쓰지 않는다.
         if v > 0:
@@ -166,14 +240,16 @@ def _plot_axes(left: float, top: float, plot_w: float, plot_h: float, y_max: flo
 
 def _bar_chart(spec: Mapping[str, Any]) -> str:
     values = _chart_values(spec["values"], "values")
-    y_max = _num(spec.get("yMax", max(v for _, v in values) or 1), "yMax", 1, 10000)
+    data_max = max((v for _, v in values), default=0.0)
+    y_max = _num(spec.get("yMax", data_max or 1), "yMax", 1, 10000)
+    axis_top, _ = _axis_top(y_max, data_max)
     left, top, plot_w, plot_h, pad_b = 46.0, 36.0, 186.0, 118.0, 32.0
     n = len(values)
     gap = 8.0
     bw = (plot_w - gap * (n + 1)) / n
-    parts = _plot_axes(left, top, plot_w, plot_h, y_max)
+    parts = _plot_axes(left, top, plot_w, plot_h, axis_top)
     for i, (lab, val) in enumerate(values):
-        h = 0 if y_max <= 0 else min(plot_h, plot_h * val / y_max)
+        h = 0 if axis_top <= 0 else min(plot_h, plot_h * val / axis_top)
         x = left + gap + i * (bw + gap)
         y = top + plot_h - h
         parts.append(_rect(x, y, bw, h, fill=CHART[i % len(CHART)], sw=1.05))
@@ -189,14 +265,16 @@ def _bar_chart(spec: Mapping[str, Any]) -> str:
 
 def _line_chart(spec: Mapping[str, Any]) -> str:
     values = _chart_values(spec["values"], "values")
-    y_max = _num(spec.get("yMax", max(v for _, v in values) or 1), "yMax", 1, 10000)
+    data_max = max((v for _, v in values), default=0.0)
+    y_max = _num(spec.get("yMax", data_max or 1), "yMax", 1, 10000)
+    axis_top, _ = _axis_top(y_max, data_max)
     left, top, plot_w, plot_h, pad_b = 46.0, 36.0, 186.0, 100.0, 28.0
     n = len(values)
-    parts = _plot_axes(left, top, plot_w, plot_h, y_max)
+    parts = _plot_axes(left, top, plot_w, plot_h, axis_top)
     pts: list[tuple[float, float]] = []
     for i, (lab, val) in enumerate(values):
         x = left + (plot_w * i / max(n - 1, 1))
-        y = top + plot_h - (0 if y_max <= 0 else min(plot_h, plot_h * val / y_max))
+        y = top + plot_h - (0 if axis_top <= 0 else min(plot_h, plot_h * val / axis_top))
         pts.append((x, y))
         parts.append(_text(x, top + plot_h + 12, lab, size=10))
     for a, b in zip(pts, pts[1:]):
@@ -1140,7 +1218,9 @@ def _sphere(spec: Mapping[str, Any]) -> str:
     parts = [
         f'<circle cx="{_n(cx)}" cy="{_n(cy)}" r="{_n(pr)}" fill="{FACE_TOP}" '
         f'stroke="{INK}" stroke-width="1.4"/>',
-        f'<ellipse cx="{_n(cx)}" cy="{_n(cy)}" rx="{_n(pr)}" ry="{_n(pr * 0.32)}" '
+        # 적도도 **같은 상수**를 쓴다. 예전엔 여기만 날 리터럴 `0.32` 라
+        # `ROUND_RATIO` 를 조여도 구는 안 따라왔다 (09 §4-20-d).
+        f'<ellipse cx="{_n(cx)}" cy="{_n(cy)}" rx="{_n(pr)}" ry="{_n(pr * ROUND_RATIO)}" '
         f'fill="none" stroke="{INK}" stroke-width="1.05" stroke-dasharray="5 4"/>',
     ]
     # 반지름은 **안 적는다** (원장님 확정 2026-08-22, 이중표기). 값을 쓰는 갈래의 발문이
