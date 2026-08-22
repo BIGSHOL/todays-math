@@ -2068,5 +2068,29 @@
   "code": "HPS0104-4NZA",
   "dbAnswer": "⑤",
   "aiAnswer": "④"
+ },
+ {
+  "id": "987a0900-b631-458d-8ad1-a07733eb4668",
+  "code": "HPS0104-XPV5",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "b7ea8df5-4f6b-4a1f-8021-272f2a13b413",
+  "code": "HPS0104-YHBY",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "dc2b3337-4764-4995-a292-0d34e1f50ac3",
+  "code": "HPS0201-K4ZJ",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "668042d6-de05-4e09-b797-ef0ee86065f3",
+  "code": "HPS0202-6J48",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
  }
 ]
