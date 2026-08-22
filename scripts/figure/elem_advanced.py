@@ -7,6 +7,7 @@ elementary.render_elementary 이 KIND 를 합친다. 같은 그림이 두 번이
 from __future__ import annotations
 
 import math
+import re
 from typing import Any, Mapping
 
 from elementary import (
@@ -21,7 +22,9 @@ from elementary import (
     _length_mark,
     _n,
     _rect,
+    _shift_body,
     _svg,
+    _svg_raw,
     _text,
 )
 
@@ -272,6 +275,41 @@ UNIT_GAP = 6.0
 # 이웃한 값 눈금 숫자 사이 최소 틈.
 TICK_MIN_GAP = 3.0
 
+# ── 그래프 짝 (chartPair) ────────────────────────────────────────────────────
+# 두 그래프 사이 틈.
+PAIR_GAP = 10.0
+# 짝이 화면에서 차지하는 폭(px)과 지면 폭(mm).
+#
+# ⚠️ **이 두 수는 `src/lib/figure/figureSvgFrame.ts` 와 반드시 같아야 한다.**
+#    거기서 정한 폭으로 그려지는데 여기서 다른 수로 판정하면, 가드가 통과시킨 그림이
+#    지면에서는 글자가 작아진다. `elementaryFigure.test.ts` 가 **두 파일의 숫자가
+#    같은지** 대조한다(한쪽만 고치면 빨개진다).
+#    근거: 문항 열 폭 실측 363.5px(`printGeometry.ts` `problemColumn`)과
+#    그 지면 환산 96.9mm(= 363.5 ÷ 3.75px/mm, 중간 등급 240px/64mm 에서 나온 배율).
+PAIR_FRAME_PX = 364.0
+PAIR_FRAME_MM = 97.0
+# 문항 본문 글자 크기(px). `printGeometry.ts` 의 `line` 20.3125 = 12.5 × 1.625.
+# **눈금 글자가 이보다 작아지면 안 된다** — 원장님이 내건 조건이다.
+BODY_TEXT_PX = 12.5
+# 눈금 글자 크기(그림 단위). `_plot_axes` 가 실제로 쓰는 값과 같아야 한다.
+TICK_FONT = 14.0
+
+_SVG_SPLIT = re.compile(r'^<svg viewBox="0 0 ([0-9.]+) ([0-9.]+)"[^>]*>(.*)</svg>$', re.S)
+
+
+def _assert_ticks_readable(total_w: float) -> None:
+    """짝이 화면에서 줄어든 뒤에도 **눈금 글자가 본문 이상**인가.
+
+    참을 어림으로 만들지 않는다 — 그림을 그리는 그 상수들(`TICK_FONT`·`PAIR_FRAME_PX`)과
+    실제 합성 폭에서 바로 계산한다. 따로 세워 둔 추정치를 쓰면 그림과 판정이 갈린다.
+    """
+    px = TICK_FONT * PAIR_FRAME_PX / total_w
+    if px < BODY_TEXT_PX:
+        raise ValueError(
+            f"짝이 {total_w:.0f}단위라 눈금 글자가 화면에서 {px:.2f}px 이 됩니다 "
+            f"(본문 {BODY_TEXT_PX}px 이상이어야 합니다). 값을 줄이거나 걸음을 키우십시오"
+        )
+
 
 # 13pt 글자 폭 **상한** — 실측 「바닐라」 39.72/3 = 13.24(한글), 숫자 7.99.
 # 라틴·괄호는 숫자보다도 좁아서(「(개)」 23.54 = 한글 13.24 + 괄호 둘 10.3) 8.0 이면 넉넉하다.
@@ -388,22 +426,48 @@ def _orient(spec: Mapping[str, Any]) -> bool:
     return raw == "horizontal"
 
 
-def _chart_title(title: str, cx: float) -> str:
-    """그래프 제목 — 값 축 눈금(14)보다 크지 않게, 가운데."""
-    return _text(cx, 16, title, size=14) if title else ""
+def _chart_title(title: str, cx: float, plot_w: float, y: float = 16.0) -> str:
+    """그래프 제목 — 값 축 눈금(14)보다 크지 않게, plot 가운데.
+
+    ⚠️ **제목이 제 그래프보다 넓으면 던진다.** 짝으로 놓으면 옆 그래프를 침범하고,
+    혼자여도 viewBox 밖으로 나가 잘린다. 긴 정보는 **발문 몫**이다 — 원장님 확정
+    2026-08-23: 제목은 「팔린 수」·「한 개의 가격」처럼 짧게 쓰고, 「종류별 팔린
+    아이스크림의 수」 같은 설명은 발문이 이미 하고 있다(실측 185.1단위로 폭을 넘겼다).
+    """
+    if not title:
+        return ""
+    want = _label_w_max(title, 14.0)
+    if want > plot_w:
+        raise ValueError(
+            f"제목 「{title}」이 그래프 폭보다 넓습니다 ({want:.0f} > {plot_w:.0f}단위). "
+            f"제목은 짧게 쓰고 설명은 발문에 두십시오"
+        )
+    return _text(cx, y, title, size=14)
 
 
-def _bar_chart_h(spec: Mapping[str, Any], values, axis_top: float, step: int) -> str:
+def _bar_chart_h(
+    spec: Mapping[str, Any], values, axis_top: float, step: int, compact: bool = False
+) -> str:
     """가로 막대. 항목 라벨이 왼쪽, **값 축이 아래**로 눕는다.
 
     축 계산(`_axis_top`)은 세로형과 **같은 것을 이미 받아** 온다 — 여기서 다시 정하지
     않는다. 이 함수가 정하는 것은 «어디에 그리는가»뿐이다.
     """
     title = str(spec.get("title", ""))
-    left, top, plot_w, plot_h = 60.0, (34.0 if title else 16.0), 140.0, 118.0
-    pad_b = 34.0
     n = len(values)
     gap = 8.0
+    if compact:
+        # 짝으로 놓을 때는 **내용이 폭을 정한다** — 고정 폭이면 둘을 나란히 놓았을 때
+        # 열을 넘겨 글자가 본문보다 작아진다(실측 498단위 · 10.24px).
+        # 항목 라벨이 들어갈 만큼만 왼쪽을, 눈금 숫자가 안 겹칠 만큼만 값 축을 준다.
+        ticks = _tick_values(axis_top, step)
+        left = max(_label_w_max(str(lab)) for lab, _ in values) + 7
+        widest = TICK_DIGIT_W * max(len(str(t)) for t in ticks)
+        plot_w = (len(ticks) - 1) * (widest + TICK_MIN_GAP)
+    else:
+        left, plot_w = 60.0, 140.0
+    top, plot_h = (34.0 if title else 16.0), 118.0
+    pad_b = 34.0
     bh = (plot_h - gap * (n + 1)) / n
     _assert_ticks_fit(_tick_values(axis_top, step), plot_w)
     parts = _plot_axes(left, top, plot_w, plot_h, axis_top, step, horizontal=True)
@@ -420,7 +484,9 @@ def _bar_chart_h(spec: Mapping[str, Any], values, axis_top: float, step: int) ->
     # 단위 라벨은 **오른쪽 끝**에 오므로 viewBox 를 넘으면 잘린다. `_svg` 의 맞춤은
     # 글자 «닻»만 보고 뻗는 폭은 모르므로 여기서 넉넉히 잡아 준다 — 실측으로 세 자리
     # 눈금에서 2.4단위, 네 자리에서 6.8단위가 잘리고 있었다(닫는 괄호가 사라졌다).
-    width = TABLE_VIEWBOX_MAX
+    # 짝으로 놓을 때는 **내용이 폭을 정한다**. 혼자 쓸 때는 240 이 기준이고
+    # 넘칠 때만 넓힌다(지금 지면과 같은 크기를 유지하려고).
+    width = (left + plot_w + 4) if compact else TABLE_VIEWBOX_MAX
     if ylab:
         # 마지막 눈금 숫자 바로 뒤 — 교과서가 「0 20 40 (개)」로 적는 자리다.
         #
@@ -433,25 +499,83 @@ def _bar_chart_h(spec: Mapping[str, Any], values, axis_top: float, step: int) ->
         unit_x = left + plot_w + _digits_half(last) + UNIT_GAP
         parts.append(_text(unit_x, top + plot_h + 14, ylab, size=13, anchor="start"))
         width = max(width, unit_x + _label_w_max(ylab) + 4)
-    parts.append(_chart_title(title, left + plot_w / 2))
+    parts.append(_chart_title(title, left + plot_w / 2, plot_w))
     return _svg(width, top + plot_h + pad_b, "".join(parts))
 
 
-def _bar_chart(spec: Mapping[str, Any]) -> str:
+def _chart_pair(spec: Mapping[str, Any]) -> str:
+    """그래프 둘을 **옆으로 나란히** (D-70 계열, 원장님 확정 2026-08-23).
+
+    두 그래프에서 같은 항목의 값을 읽어 곱하는 유형(「멜론이 팔린 수 × 멜론 한 개의 값」)
+    에 쓴다. **안쪽 스펙은 단독으로 쓸 때와 완전히 같은 모양**이고, 여기서는 배치만 한다.
+
+    ## 규칙을 두 벌로 만들지 않는다
+
+    안쪽은 `render_elementary` 로 **같은 검증·같은 렌더 함수**를 탄다. 좌표만 옮겨 붙이므로
+    (`transform` 은 `sanitize_svg` 가 막는다) 축 규칙·겹침 가드가 그대로 적용된다.
+    안쪽이 던지면 **그대로 올려 보낸다** — 삼키면 그 그래프만 조용히 빠진다.
+
+    ## 눈금 글자가 본문보다 작아지면 안 된다
+
+    짝은 폭이 두 배라 화면에서 축소된다. 그 축소율이 눈금 글자를 본문(12.5px) 아래로
+    끌어내리면 **던진다.** 실측으로 짝은 405단위 · 12.56px 이라 여유가 0.06px 뿐이고,
+    그 값을 정하는 것이 `TICK_MIN_GAP` 이다 — 상수가 움직이면 이 가드가 빨개진다.
+    """
+    from elementary import validate_elementary  # 순환 import 라 여기서
+
+    charts = spec["charts"]
+    if not isinstance(charts, list) or len(charts) != 2:
+        raise ValueError("charts 는 그래프 스펙 2개여야 합니다")
+    boxes: list[tuple[float, float, str]] = []
+    for i, inner in enumerate(charts):
+        if not isinstance(inner, Mapping):
+            raise ValueError(f"charts[{i}] 는 객체여야 합니다")
+        if inner.get("kind") not in ("barChart", "lineChart"):
+            raise ValueError(f"charts[{i}].kind 는 barChart 또는 lineChart 여야 합니다")
+        # 검증은 **단독 스펙과 같은 것**을 탄다 — 짝 안에서만 오타 키가 통과하면 안 된다.
+        # 그린 뒤에는 «좁게»(compact) 라 폭을 내용이 정한다. 안쪽이 던지면 그대로 전파.
+        kind = validate_elementary({**inner, "version": "elem-1"})
+        svg = ADV_RENDER[kind]({**inner, "version": "elem-1"}, compact=True)
+        m = _SVG_SPLIT.match(svg)
+        if m is None:  # pragma: no cover — 우리 렌더러 산출물이라 늘 맞는다
+            raise ValueError("그래프 SVG 를 읽지 못했습니다")
+        boxes.append((float(m.group(1)), float(m.group(2)), m.group(3)))
+
+    total_w = boxes[0][0] + PAIR_GAP + boxes[1][0]
+    total_h = max(b[1] for b in boxes)
+    _assert_ticks_readable(total_w)
+    # 아래를 맞춘다 — 두 그래프의 가로축이 같은 줄에 와야 견주기 쉽다.
+    body = "".join(
+        _shift_body(b, x, total_h - b_h)
+        for x, (b_w, b_h, b) in zip((0.0, boxes[0][0] + PAIR_GAP), boxes)
+    )
+    return _svg_raw(total_w, total_h, body)
+
+
+def _bar_chart(spec: Mapping[str, Any], compact: bool = False) -> str:
     values = _chart_values(spec["values"], "values")
     data_max = max((v for _, v in values), default=0.0)
     y_max = _num(spec.get("yMax", data_max or 1), "yMax", 1, 10000)
     # 축 규칙은 **방향보다 위**에 있다 — 사다리·9줄·yStep·인상·던짐이 한 벌뿐이다.
     axis_top, step = _axis_top(y_max, data_max, _y_step_spec(spec))
     if _orient(spec):
-        return _bar_chart_h(spec, values, axis_top, step)
+        return _bar_chart_h(spec, values, axis_top, step, compact=compact)
     title = str(spec.get("title", ""))
     # 제목이 있으면 **한 줄 내린다.** 단위 라벨이 `top - 20` 에 앉으므로 그대로 두면
     # 긴 제목과 같은 줄에서 부딪힌다. 제목이 없으면 `top` 은 36 그대로라
     # **지금 지면 2,400장이 한 픽셀도 안 바뀐다.**
-    left, top, plot_w, plot_h, pad_b = 46.0, (56.0 if title else 36.0), 186.0, 118.0, 32.0
     n = len(values)
     gap = 8.0
+    if compact:
+        # 세로형의 폭을 정하는 것은 눈금 숫자가 아니라 **항목 라벨 간격**이다 —
+        # 이웃 라벨이 겹치지 않을 만큼이 최소다(실측: 「바닐라」 39.7단위).
+        ticks = _tick_values(axis_top, step)
+        left = TICK_DIGIT_W * max(len(str(t)) for t in ticks) + 7
+        label_w = max(_label_w_max(str(lab)) for lab, _ in values)
+        plot_w = (label_w + TICK_MIN_GAP) * n + gap
+    else:
+        left, plot_w = 46.0, 186.0
+    top, plot_h, pad_b = (56.0 if title else 36.0), 118.0, 32.0
     bw = (plot_w - gap * (n + 1)) / n
     parts = _plot_axes(left, top, plot_w, plot_h, axis_top, step)
     for i, (lab, val) in enumerate(values):
@@ -465,18 +589,33 @@ def _bar_chart(spec: Mapping[str, Any]) -> str:
         parts.append(_text(x + bw / 2, ny, num, size=16))
         parts.append(_text(x + bw / 2, top + plot_h + 16, lab, size=13))
     parts.append(_unit_label(left, top, str(spec.get("yLabel", ""))))
-    parts.append(_chart_title(title, left + plot_w / 2))
-    w = min(TABLE_VIEWBOX_MAX, left + plot_w + 8)
+    parts.append(_chart_title(title, left + plot_w / 2, plot_w, y=18.0))
+    if compact:
+        # 마지막 항목 라벨이 마지막 막대보다 넓으면 오른쪽으로 삐져나간다.
+        last_cx = left + gap + (n - 1) * (bw + gap) + bw / 2
+        label_w = max(_label_w_max(str(lab)) for lab, _ in values)
+        w = max(left + plot_w + gap, last_cx + label_w / 2 + 2)
+    else:
+        w = min(TABLE_VIEWBOX_MAX, left + plot_w + 8)
     return _svg(w, top + plot_h + pad_b, "".join(parts))
 
 
-def _line_chart(spec: Mapping[str, Any]) -> str:
+def _line_chart(spec: Mapping[str, Any], compact: bool = False) -> str:
     values = _chart_values(spec["values"], "values")
     data_max = max((v for _, v in values), default=0.0)
     y_max = _num(spec.get("yMax", data_max or 1), "yMax", 1, 10000)
     axis_top, step = _axis_top(y_max, data_max, _y_step_spec(spec))
-    left, top, plot_w, plot_h, pad_b = 46.0, 36.0, 186.0, 100.0, 28.0
     n = len(values)
+    title = str(spec.get("title", ""))
+    if compact:
+        # 세로형 막대와 같은 이유 — 가로축 라벨 간격이 폭을 정한다.
+        ticks = _tick_values(axis_top, step)
+        left = TICK_DIGIT_W * max(len(str(t)) for t in ticks) + 7
+        label_w = max(_label_w_max(str(lab), 10.0) for lab, _ in values)
+        plot_w = (label_w + TICK_MIN_GAP) * n
+    else:
+        left, plot_w = 46.0, 186.0
+    top, plot_h, pad_b = (56.0 if title else 36.0), 100.0, 28.0
     parts = _plot_axes(left, top, plot_w, plot_h, axis_top, step)
     pts: list[tuple[float, float]] = []
     for i, (lab, val) in enumerate(values):
@@ -489,7 +628,12 @@ def _line_chart(spec: Mapping[str, Any]) -> str:
     for x, y in pts:
         parts.append(f'<circle cx="{_n(x)}" cy="{_n(y)}" r="2.4" fill="{INK}"/>')
     parts.append(_unit_label(left, top, str(spec.get("yLabel", ""))))
-    w = min(TABLE_VIEWBOX_MAX, left + plot_w + 8)
+    parts.append(_chart_title(title, left + plot_w / 2, plot_w, y=18.0))
+    if compact:
+        label_w = max(_label_w_max(str(lab), 10.0) for lab, _ in values)
+        w = max(left + plot_w + 8, left + plot_w + label_w / 2 + 2)
+    else:
+        w = min(TABLE_VIEWBOX_MAX, left + plot_w + 8)
     return _svg(w, top + plot_h + pad_b, "".join(parts))
 
 
@@ -1607,6 +1751,7 @@ ADV_FIELDS: dict[str, frozenset[str]] = {
     "groupDots": frozenset({"groups", "each"}),
     "barChart": frozenset({"values"}),
     "lineChart": frozenset({"values"}),
+    "chartPair": frozenset({"charts"}),
     "pictograph": frozenset({"unit", "items"}),
     "stripChart": frozenset({"segments"}),
     "pieChart": frozenset({"slices"}),
@@ -1644,6 +1789,7 @@ ADV_RENDER = {
     "fracBars": _frac_bars,
     "groupDots": _group_dots,
     "barChart": _bar_chart,
+    "chartPair": _chart_pair,
     "lineChart": _line_chart,
     "pictograph": _pictograph,
     "stripChart": _strip_chart,

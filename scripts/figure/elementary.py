@@ -68,7 +68,12 @@ OPTIONAL: dict[str, frozenset[str]] = {
 }
 
 
-def render_elementary(spec: Mapping[str, Any]) -> str:
+def validate_elementary(spec: Mapping[str, Any]) -> str:
+    """스펙을 검증하고 kind 를 돌려준다. **검증은 한 벌뿐이다.**
+
+    `chartPair` 는 안쪽 그래프를 «좁게» 그려야 해서 렌더 함수를 직접 부르는데,
+    그때도 이 검증을 그대로 탄다 — 안 그러면 짝 안에서만 오타 키가 통과한다.
+    """
     if not isinstance(spec, Mapping):
         raise ValueError("초등 스펙이 객체가 아닙니다")
     if spec.get("version") != "elem-1":
@@ -83,7 +88,11 @@ def render_elementary(spec: Mapping[str, Any]) -> str:
     missing = KIND_FIELDS[kind] - set(spec)
     if missing:
         raise ValueError(f"빠진 키: {', '.join(sorted(missing))}")
-    return _RENDER[kind](spec)
+    return kind
+
+
+def render_elementary(spec: Mapping[str, Any]) -> str:
+    return _RENDER[validate_elementary(spec)](spec)
 
 
 def _svg(w: float, h: float, body: str) -> str:
