@@ -1858,5 +1858,41 @@
   "code": "HM10205-5HHU",
   "dbAnswer": "①",
   "aiAnswer": "②"
+ },
+ {
+  "id": "50661162-f411-4aed-921e-f19e64c00654",
+  "code": "HM10205-XBPJ",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "ad0ea121-4333-4401-9eba-c1a2f5c89472",
+  "code": "HM10205-Z9ZP",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "7e5a692d-2780-49ef-a9f8-7796ecf9802d",
+  "code": "HM10206-TG59",
+  "dbAnswer": "⑤",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "054c307e-4ea5-40fa-991a-ecbf68e8d26f",
+  "code": "HM10207-53YK",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "dec40597-075b-43f9-99df-cfcc5597a664",
+  "code": "HM10207-6U4P",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "ab46d047-e0b2-4d6f-8af2-9bb19d6e265c",
+  "code": "HM10207-MLPB",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
  }
 ]
