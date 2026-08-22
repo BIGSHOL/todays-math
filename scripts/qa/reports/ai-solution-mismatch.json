@@ -2110,5 +2110,29 @@
   "code": "HPS0204-ASBC",
   "dbAnswer": "②",
   "aiAnswer": "④"
+ },
+ {
+  "id": "7f926d36-fbba-450c-935a-d48a13eb4159",
+  "code": "HPS0204-VQ36",
+  "dbAnswer": "$3over4$",
+  "aiAnswer": "$\\frac{3}{4}$"
+ },
+ {
+  "id": "a26545d8-57ff-4dda-9234-82fef741e9c9",
+  "code": "HPS0206-3NML",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "75680375-e45c-4b4b-bc18-a4b96894a42c",
+  "code": "HPS0206-NFY4",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "a74131ee-e317-4ac1-83c1-e3a27ffe43c7",
+  "code": "HPS0206-WTPT",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
  }
 ]
