@@ -467,6 +467,31 @@ describe("[초등 엔진] 소단원 전량", () => {
     expect(checked, "막대 표본을 하나도 못 모았다").toBeGreaterThan(200);
   });
 
+  // ⚠️ 위 검사는 발문에서 규모를 `content.includes(who)` 로 되찾는다. 그래서 어떤 `who` 가
+  //    다른 `who` 를 **품으면** `find` 가 «먼저 있는 쪽»을 집어 **엉뚱한 규모의 띠로 채점**한다.
+  //    실제로 걸릴 뻔했다 — 걸음 10 규모를 「$3$학년과 $4$학년 학생들」로 적으면 그 문자열이
+  //    「$4$학년 학생들」을 통째로 품는다. 이름을 「…전체 학생」으로 바꿔 피했고, 다음 사람이
+  //    자연스러운 이름을 골랐다가 **조용히** 같은 자리에 빠지지 않게 여기서 막는다.
+  it("규모 이름은 서로를 품지 않는다 — 안 그러면 발문에서 규모를 되찾을 수 없다", () => {
+    const bad: string[] = [];
+    for (const a of G4_BAR_SCALES) {
+      for (const b of G4_BAR_SCALES) {
+        if (a === b) continue;
+        if (a.who.includes(b.who)) {
+          bad.push(
+            `「${a.who}」 가 「${b.who}」 를 품는다 — find 가 뒤엣것을 못 집는다`,
+          );
+        }
+      }
+    }
+    expect(bad, bad.join("\n")).toEqual([]);
+    // 「짝이 하나도 없어서」 조용히 통과하지 않게 — 셀 수 있는 형태인지 확인한다.
+    expect(
+      G4_BAR_SCALES.length,
+      "규모가 둘 미만이면 이 검사는 아무것도 안 본다",
+    ).toBeGreaterThan(1);
+  });
+
   // ⚠️ 조건 넷(총원 고정 · 서로 다름 · 눈금의 배수 · 최댓값이 절반 이하)이 겹치면
   //    **못 푸는 총원**이 생긴다. 그러면 생성기가 실행 중에 던진다 — 원장님 화면에서.
   //    그러니 총원 후보 전부에 해가 있는지 **커밋 전에** 여기서 센다.
@@ -484,6 +509,96 @@ describe("[초등 엔진] 소단원 전량", () => {
     // 그리고 못 푸는 총원을 대면 실제로 0 이 나오는지 — 이 검사가 셀 수 있는 형태인지 본다.
     const impossible = G4_BAR_SPLITS(3, G4_BAR_SCALES[0]!);
     expect(impossible, "못 푸는 총원인데 해가 있다고 한다").toEqual([]);
+  });
+
+  // 원장님 (D-70): 「눈금 몇칸 유형도 넣어. 유형은 다양할수록 환영」
+  //
+  // ⚠️ 이 유형이 한때 통째로 빠졌던 까닭은 **발문이 그림과 다른 말을 해서**였다 —
+  //    발문은 「한 칸 $1$명」이라 우기는데 그림은 `_y_step` 이 고른 걸음으로 그렸다.
+  //    이제 걸음을 `yStep` 으로 스펙에 실으므로, **발문·해설이 말하는 수 == 스펙의 yStep**
+  //    을 여기서 잠근다. (그려진 SVG 의 걸음 == yStep 은 파이썬 쪽 시험이 잠근다.)
+  //
+  //    「$5$명」처럼 KaTeX 로 감싸인 수만 본다 — R1 때문에 발문의 수는 전부 그 꼴이다.
+  it("눈금을 말하는 발문·해설의 수는 스펙에 실은 yStep 과 같다", () => {
+    const graphUnits = UNITS.filter(
+      (u) =>
+        u.grade === "초4" &&
+        (u.chapter.includes("막대") || u.chapter.includes("꺾은선")),
+    );
+    expect(graphUnits.length).toBeGreaterThan(0);
+    let checked = 0;
+    const bad: string[] = [];
+    for (const unit of graphUnits) {
+      for (let i = 0; i < 120; i += 1) {
+        const item = generateElementaryProblem(unit, 20260000 + i * 7);
+        const spec = item.figureSpec as { yStep?: number } | null;
+        const text = `${item.content}\n${item.solution}`;
+        // 「한 칸은/이 $N$…」 — 걸음을 말하는 자리를 **전부** 모은다.
+        //
+        // ⚠️ 처음엔 `눈금 한 칸` 으로 잡았는데 해설의 「한 칸이 $2$명이고」·「한 칸은 $5$명입니다」
+        //    를 통째로 놓쳤다(19자리만 셌다). **「눈금」이 늘 앞에 붙지는 않는다** —
+        //    좁게 잡은 열쇠는 세는 쪽만 눈이 멀게 한다.
+        const said = [...text.matchAll(/한 칸[은이]\s*\$([\d.]+)\$/g)].map(
+          (m) => Number(m[1]),
+        );
+        if (said.length === 0) continue;
+        expect(
+          spec?.yStep,
+          `걸음을 말하는데 스펙에 yStep 이 없다: ${item.content}`,
+        ).toBeTruthy();
+        checked += said.length;
+        for (const v of said) {
+          if (v !== spec!.yStep) {
+            bad.push(
+              `${unit.section}: 발문/해설은 한 칸 ${v} 라는데 스펙 yStep 은 ${spec!.yStep} ` +
+                `— 발문이 그림과 다른 말을 한다\n    ${item.content}`,
+            );
+          }
+        }
+      }
+    }
+    const uniq = [...new Set(bad)];
+    expect(uniq, uniq.join("\n")).toEqual([]);
+    // 0 은 「깨끗」과 「못 셈」을 구분해 주지 않는다 — 눈금 유형이 사라지면 여기서 걸린다.
+    expect(
+      checked,
+      "눈금을 말하는 발문을 하나도 못 찾았다 — 유형이 빠졌나",
+    ).toBeGreaterThan(20);
+  });
+
+  // 걸음을 실으면 엔진은 **그 걸음 그대로** 긋는다 — 사다리를 안 탄다. 그래서 눈금이
+  // `MAX_Y_TICKS`(9)줄을 넘으면 **던진다.** 범위를 넓히다 그 선을 넘는 것을 여기서 먼저 잡는다.
+  it("실은 yStep 으로 눈금이 9줄을 넘지 않는다", () => {
+    const graphUnits = UNITS.filter(
+      (u) =>
+        u.grade === "초4" &&
+        (u.chapter.includes("막대") || u.chapter.includes("꺾은선")),
+    );
+    let checked = 0;
+    const bad: string[] = [];
+    for (const unit of graphUnits) {
+      for (let i = 0; i < 120; i += 1) {
+        const spec = generateElementaryProblem(unit, 20260000 + i * 7)
+          .figureSpec as {
+          values?: { value: number }[];
+          yStep?: number;
+        } | null;
+        if (!spec?.values || !spec.yStep) continue;
+        checked += 1;
+        const top = Math.max(...spec.values.map((v) => v.value));
+        const ticks = Math.ceil(top / spec.yStep) + 1;
+        if (ticks > 9) {
+          bad.push(
+            `${unit.section}: 최댓값 ${top} · 걸음 ${spec.yStep} → 눈금 ${ticks}줄 (9줄 이하여야 한다)`,
+          );
+        }
+      }
+    }
+    const uniq = [...new Set(bad)];
+    expect(uniq, uniq.join("\n")).toEqual([]);
+    expect(checked, "yStep 을 실은 그림을 하나도 못 찾았다").toBeGreaterThan(
+      200,
+    );
   });
 
   /** 꺾은선 소단원의 값들을 훑는다 — 값은 발문이 아니라 **그림 스펙**에 있다. */

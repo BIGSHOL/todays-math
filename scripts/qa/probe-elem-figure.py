@@ -113,6 +113,14 @@ SPECS: list[dict] = [
     #    맨 위 눈금이 40이 되고 값 44가 다시 뜬다. 되풀이해야 50에 닿는다.
     #    이 표본이 없으면 「한 번만 돌기」 변이가 산출물을 안 바꿔 판정이 안 된다.
     {"version": "elem-1", "kind": "lineChart", "yMax": 44, "values": [{"label": "1월", "value": 44}, {"label": "2월", "value": 20}, {"label": "3월", "value": 30}], "yLabel": "(권)"},
+    # `yStep` — 「눈금 한 칸은 몇」 (D-70). **3은 사다리(1·2·5×10ⁿ)에 없는 수**라,
+    # 간격이 3으로 나오면 스펙 값이 실제로 쓰였다는 증거가 된다(우연히 같을 수 없다).
+    {"version": "elem-1", "kind": "barChart", "yMax": 15, "yStep": 3, "values": [{"label": "가", "value": 14}, {"label": "나", "value": 6}, {"label": "다", "value": 9}], "yLabel": "(명)"},
+    # 축이 올라가는데(49→50) 걸음은 그대로 두는 자리 — 눈금 수만 는다.
+    {"version": "elem-1", "kind": "lineChart", "yMax": 49, "yStep": 10, "values": [{"label": "1월", "value": 46}, {"label": "2월", "value": 21}, {"label": "3월", "value": 33}], "yLabel": "(권)"},
+    # **던져야 하는** 자리 — 걸음 1로는 눈금이 42줄이다. 조용히 사다리로 올리면
+    # 「한 칸 1명」 발문 옆에 5명 간격이 그려진다. 표본이 없으면 그 변이를 못 잡는다.
+    {"version": "elem-1", "kind": "barChart", "yMax": 41, "yStep": 1, "values": [{"label": "가", "value": 38}, {"label": "나", "value": 20}, {"label": "다", "value": 30}], "yLabel": "(명)"},
     {"version": "elem-1", "kind": "pictograph", "unit": 10, "items": [{"label": "가", "count": 3}, {"label": "나", "count": 5}]},
     {"version": "elem-1", "kind": "stripChart", "segments": [{"label": "가", "pct": 40}, {"label": "나", "pct": 35}, {"label": "다", "pct": 25}]},
     {"version": "elem-1", "kind": "pieChart", "slices": [{"label": "가", "pct": 45}, {"label": "나", "pct": 30}, {"label": "다", "pct": 25}]},

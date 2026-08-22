@@ -1709,16 +1709,24 @@ function scaleMismatch(svg: string, values: number[]): number {
   return worst;
 }
 
+/** 눈금 간격 — 고르지 않으면 그 자체가 결함이라 «서로 다른 간격»을 다 돌려준다. */
+function tickGaps(svg: string): number[] {
+  const vs = yTicks(svg).map((t) => t.v);
+  return [...new Set(vs.slice(1).map((v, i) => v - vs[i]!))];
+}
+
 function chartSpec(
   kind: "barChart" | "lineChart",
   yMax: number,
   values: number[],
+  yStep?: number,
 ) {
   return {
     version: "elem-1",
     kind,
     values: values.map((v, i) => ({ label: `${i + 1}월`, value: v })),
     yMax,
+    ...(yStep === undefined ? {} : { yStep }),
     yLabel: "명",
   };
 }
@@ -1827,6 +1835,96 @@ describe.skipIf(!hasEngine)(
         if (!r.ok) return;
         expect(markYs(r.svg)).toHaveLength(values.length);
         expect(scaleMismatch(r.svg, values)).toBeLessThan(0.5);
+      },
+    );
+
+    /* ── yStep — 「눈금 한 칸은 몇」 (D-70) ───────────────────────────────────
+     * 발문이 걸음을 말하는 유형이라, 파이썬이 걸음을 **다시 고르면 발문이 그림과 다른
+     * 말을 한다.** D-67 이 이 유형을 통째로 뺐던 이유가 그것이었다.
+     *
+     * ⚠️ 여기 쓰는 `yStep 3` 은 **사다리(1·2·5×10ⁿ)에 없는 수**다. 기본값 계산은
+     * 3을 절대 못 고르므로, 간격이 3으로 나오면 **스펙 값이 실제로 쓰였다는 증거**가
+     * 된다 — 「우연히 같은 값」으로는 통과할 수 없다.
+     */
+    it.each([
+      ["barChart", 15, [14, 6, 9], 3, 3],
+      ["lineChart", 15, [14, 6, 9], 3, 3],
+      ["barChart", 41, [38, 20, 30], 5, 5],
+      ["lineChart", 63, [60, 30, 40], 10, 10],
+      // 축이 올라가는 자리 — 걸음은 그대로 두고 **눈금 수만** 는다 (19 → 20)
+      ["barChart", 19, [16, 7, 12], 5, 5],
+      ["lineChart", 49, [46, 21, 33], 10, 10],
+    ] as ["barChart" | "lineChart", number, number[], number, number][])(
+      "%s yMax %i yStep %i — 스펙이 실어 온 걸음 그대로 긋는다",
+      async (kind, yMax, values, yStep, want) => {
+        const r = await renderFigureSpec(chartSpec(kind, yMax, values, yStep));
+        expect(r.ok).toBe(true);
+        if (!r.ok) return;
+        expect(tickGaps(r.svg)).toEqual([want]);
+        // 걸음만 맞고 데이터가 딴 자로 그려지면 발문은 여전히 거짓말이 된다.
+        expect(scaleMismatch(r.svg, values)).toBeLessThan(0.5);
+        const ticks = yTicks(r.svg);
+        expect(ticks[ticks.length - 1]!.v).toBeGreaterThanOrEqual(
+          Math.max(...values),
+        );
+        expect(ticks.length).toBeLessThanOrEqual(TICK_CAP);
+      },
+    );
+
+    it("yStep 은 기본값을 **이긴다** — 같은 스펙에서 뺐다 넣으면 간격이 달라진다", async () => {
+      const off = await renderFigureSpec(chartSpec("barChart", 15, [14, 6, 9]));
+      const on = await renderFigureSpec(
+        chartSpec("barChart", 15, [14, 6, 9], 3),
+      );
+      expect(off.ok && on.ok).toBe(true);
+      if (!off.ok || !on.ok) return;
+      expect(tickGaps(off.svg)).toEqual([5]); // 기본값(사다리)
+      expect(tickGaps(on.svg)).toEqual([3]); // 스펙 값
+    });
+
+    it("yStep 을 안 주면 지금 지면이 **한 픽셀도 안 바뀐다**", async () => {
+      // 전수(2,400장)는 `scripts/qa/measure-elem-charts.py` 가 본다. 여기서는
+      // 「yStep 필드를 넣은 것만으로 없던 장이 달라지지 않는가」를 못 박는다.
+      for (const [yMax, values, ticks] of KEEP_AS_IS) {
+        const r = await renderFigureSpec(chartSpec("barChart", yMax, values));
+        expect(r.ok).toBe(true);
+        if (!r.ok) return;
+        expect(yTicks(r.svg).map((t) => t.v)).toEqual(ticks);
+      }
+    });
+
+    // 조용히 다른 걸음으로 그리면 「한 칸 5명」 발문 옆에 10명 간격이 나간다 —
+    // 에러도 안 나고 학생만 틀린다. **방어는 침묵이 아니라 던짐이다.**
+    it.each([
+      [41, [38, 20, 30], 1, /눈금이 .*줄/],
+      [19, [16, 7, 12], 2, /눈금이 .*줄/],
+      [8, [7, 3, 5], 100, /yMax/],
+    ] as [number, number[], number, RegExp][])(
+      "yMax %i 에 yStep %i — 그 걸음으로 못 그리면 **던진다**",
+      async (yMax, values, yStep, why) => {
+        const r = await renderFigureSpec(
+          chartSpec("barChart", yMax, values, yStep),
+        );
+        expect(r.ok).toBe(false);
+        if (r.ok) return;
+        expect(r.error).toMatch(why);
+      },
+    );
+
+    it.each([
+      ["소문자 오타", { ystep: 1 }, /허용|키/],
+      ["0", { yStep: 0 }, /1 이상/],
+      ["정수 아님", { yStep: 2.5 }, /정수/],
+    ] as [string, Record<string, number>, RegExp][])(
+      "yStep %s 은 조용히 무시되지 않는다",
+      async (_why, extra, want) => {
+        const r = await renderFigureSpec({
+          ...chartSpec("barChart", 8, [7, 3, 5]),
+          ...extra,
+        });
+        expect(r.ok).toBe(false);
+        if (r.ok) return;
+        expect(r.error).toMatch(want);
       },
     );
 

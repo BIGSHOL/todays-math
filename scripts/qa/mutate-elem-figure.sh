@@ -460,6 +460,49 @@ io.open(p, "w", encoding="utf-8").write(
 PY
 run "꺾은선만 옛 자로 그리기 (눈금은 새 축)"
 
+# ㉗ 눈금을 그을 때 **넘겨받은 걸음을 버리고** `_y_step` 을 다시 부른다 —
+#    스펙의 yStep 이 조용히 무시되어 「한 칸 3명」 발문 옆에 5명 간격이 그려진다 (D-70).
+python - "$ADV" <<'PY'
+import io, sys
+p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
+old = """        _line((left, top + plot_h), (left + plot_w, top + plot_h)),
+    ]
+    v = 0"""
+assert old in s, "앵커 없음 ㉗"
+new = """        _line((left, top + plot_h), (left + plot_w, top + plot_h)),
+    ]
+    step = _y_step(axis_top)
+    v = 0"""
+io.open(p, "w", encoding="utf-8").write(s.replace(old, new, 1))
+PY
+run "눈금이 yStep 을 버리고 _y_step 을 다시 부른다"
+
+# ㉘ `_axis_top` 이 yStep 을 통째로 무시하고 사다리를 탄다.
+python - "$ADV" <<'PY'
+import io, sys
+p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
+old = "    if y_step is not None:"
+assert old in s, "앵커 없음 ㉘"
+io.open(p, "w", encoding="utf-8").write(s.replace(old, "    if False:", 1))
+PY
+run "축 계산이 yStep 을 통째로 무시한다"
+
+# ㉙ 못 그리는 yStep 에서 **던지는 대신 조용히 사다리로** 올린다 — D-67 이 그 유형을
+#    뺐던 바로 그 결함이다. 에러가 안 나고 학생만 틀린다.
+python - "$ADV" <<'PY'
+import io, sys
+p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
+old = """        if ticks > MAX_Y_TICKS:
+            raise ValueError("""
+assert old in s, "앵커 없음 ㉙"
+new = """        if ticks > MAX_Y_TICKS:
+            return top, _y_step(top)
+        if False:
+            raise ValueError("""
+io.open(p, "w", encoding="utf-8").write(s.replace(old, new, 1))
+PY
+run "못 그리는 yStep 을 던지지 않고 사다리로 올린다"
+
 restore
 judged=$(grep -c "^\[" "$SUMMARY")
 if [ -n "$ONLY" ]; then

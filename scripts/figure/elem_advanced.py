@@ -177,8 +177,23 @@ def _tick_count(axis_top: float, step: int) -> int:
     return int(math.floor(axis_top / step + 1e-9)) + 1
 
 
-def _axis_top(y_max: float, data_max: float) -> tuple[float, int]:
+def _axis_top(
+    y_max: float, data_max: float, y_step: int | None = None
+) -> tuple[float, int]:
     """축 맨 위와 걸음.
+
+    ## `yStep` 이 오면 **그 걸음 그대로 긋는다** (D-70)
+
+    「눈금 한 칸은 몇 명인가」 유형은 발문이 걸음을 말한다. 그 값을 여기서 다시
+    고르면 **발문이 그림과 다른 말을 한다** — D-67 이 그 유형을 통째로 뺐던 이유다.
+    그래서 `yStep` 이 있으면 사다리를 **안 탄다.** 축을 올려야 하면 걸음은 그대로 두고
+    **눈금 수만** 늘린다.
+
+    ⚠️ **그 걸음으로 못 그리면 던진다.** 조용히 사다리로 올리면 발문이 「한 칸 5명」인데
+    그림은 10명 간격이 된다 — 에러도 안 나고 학생만 틀린다. TS 가 옳게 정하면 안 밟는
+    경로지만, **방어는 침묵이 아니라 던짐이다.**
+
+    ## `yStep` 이 없으면 (기존 그대로)
 
     **`yMax` 는 「진실」이 아니라 「최소 높이 요청」이다.** 걸음을 아는 쪽은 여기이므로,
     맨 위 눈금선이 데이터보다 낮으면(=제일 높은 점이 눈금 밖으로 뜨면) 여기서 올린다.
@@ -198,6 +213,24 @@ def _axis_top(y_max: float, data_max: float) -> tuple[float, int]:
     (`yMax` 1~10000 × 데이터 5종 = 50,000칸)에서 여기 닿는 조합은 없다.
     """
     top = max(float(y_max), 1.0)
+    if y_step is not None:
+        # 걸음이 요청한 높이보다 크면 **부르는 쪽이 스스로 어긋난 것**이다 — 「8까지
+        # 그려 달라」면서 「한 칸은 100」이라 한 셈. 그대로 그리면 눈금이 0과 100 둘뿐이고
+        # 막대가 바닥에 깔린다(231줄과 **반대 방향의 같은 병**). 문턱을 지어낸 게 아니라
+        # 부르는 쪽이 준 두 수를 견준 것이다.
+        if y_step > y_max:
+            raise ValueError(
+                f"yStep {y_step} 이 yMax {y_max:g} 보다 큽니다 — 눈금이 데이터를 못 가릅니다"
+            )
+        need = math.ceil(data_max / y_step - 1e-9) * y_step if data_max > 0 else 0.0
+        top = max(top, float(need))
+        ticks = _tick_count(top, y_step)
+        if ticks > MAX_Y_TICKS:
+            raise ValueError(
+                f"yStep {y_step} 으로는 눈금이 {ticks}줄이 됩니다 "
+                f"({MAX_Y_TICKS}줄 이하여야 합니다. 축 맨 위 {top:g})"
+            )
+        return top, y_step
     # 사다리 칸을 한 번씩 다 밟아도 끝난다 — 같은 걸음이면 필요 높이가 그대로라
     # 다음 바퀴에서 반드시 돌아간다. +1 은 마지막 확인 한 바퀴.
     for _ in range(len(NICE_STEPS) + 1):
@@ -209,6 +242,17 @@ def _axis_top(y_max: float, data_max: float) -> tuple[float, int]:
     raise ValueError(f"축 맨 위가 수렴하지 않습니다 (yMax={y_max}, 값 최댓값={data_max})")
 
 
+def _y_step_spec(spec: Mapping[str, Any]) -> int | None:
+    """스펙이 실어 온 눈금 걸음. 없으면 `None` — 그때만 `_y_step` 이 고른다 (D-70).
+
+    「눈금 한 칸은 몇 명인가」 발문은 **TS 가 정한 걸음**을 말한다. 그 값을 여기서
+    다시 고르면 발문과 그림이 갈린다.
+    """
+    if "yStep" not in spec:
+        return None
+    return _int(spec["yStep"], "yStep", 1, 10000)
+
+
 def _unit_label(left: float, top: float, ylab: str) -> str:
     """세로축 단위는 눈금과 같은 열, 맨 위 눈금보다 한 줄 위."""
     if not ylab:
@@ -216,15 +260,22 @@ def _unit_label(left: float, top: float, ylab: str) -> str:
     return _text(left - 7, top - 20, ylab, size=13, anchor="end")
 
 
-def _plot_axes(left: float, top: float, plot_w: float, plot_h: float, axis_top: float) -> list[str]:
-    """세로축·가로축·눈금. `axis_top` 은 `_axis_top()` 이 정한 **축 맨 위**다 —
-    막대·꺾은선의 세로 배율도 반드시 같은 값을 써야 한다(안 그러면 눈금과 데이터가
-    다른 자로 그려진다)."""
+def _plot_axes(
+    left: float, top: float, plot_w: float, plot_h: float, axis_top: float, step: int
+) -> list[str]:
+    """세로축·가로축·눈금.
+
+    `axis_top` 과 `step` 은 **둘 다 `_axis_top()` 이 낸 것을 그대로** 받는다.
+    막대·꺾은선의 세로 배율도 같은 `axis_top` 을 써야 한다 — 안 그러면 눈금과 데이터가
+    다른 자로 그려진다(변이 ㉕·㉖).
+
+    ⚠️ **여기서 `_y_step` 을 다시 부르면 안 된다.** 그러면 스펙이 실어 온 `yStep` 이
+    조용히 무시되어 「한 칸 5명」 발문 옆에 10명 간격이 그려진다 (D-70).
+    """
     parts = [
         _line((left, top), (left, top + plot_h)),
         _line((left, top + plot_h), (left + plot_w, top + plot_h)),
     ]
-    step = _y_step(axis_top)
     v = 0
     while v <= axis_top + 1e-6:
         y = top + plot_h - plot_h * v / axis_top
@@ -242,12 +293,12 @@ def _bar_chart(spec: Mapping[str, Any]) -> str:
     values = _chart_values(spec["values"], "values")
     data_max = max((v for _, v in values), default=0.0)
     y_max = _num(spec.get("yMax", data_max or 1), "yMax", 1, 10000)
-    axis_top, _ = _axis_top(y_max, data_max)
+    axis_top, step = _axis_top(y_max, data_max, _y_step_spec(spec))
     left, top, plot_w, plot_h, pad_b = 46.0, 36.0, 186.0, 118.0, 32.0
     n = len(values)
     gap = 8.0
     bw = (plot_w - gap * (n + 1)) / n
-    parts = _plot_axes(left, top, plot_w, plot_h, axis_top)
+    parts = _plot_axes(left, top, plot_w, plot_h, axis_top, step)
     for i, (lab, val) in enumerate(values):
         h = 0 if axis_top <= 0 else min(plot_h, plot_h * val / axis_top)
         x = left + gap + i * (bw + gap)
@@ -267,10 +318,10 @@ def _line_chart(spec: Mapping[str, Any]) -> str:
     values = _chart_values(spec["values"], "values")
     data_max = max((v for _, v in values), default=0.0)
     y_max = _num(spec.get("yMax", data_max or 1), "yMax", 1, 10000)
-    axis_top, _ = _axis_top(y_max, data_max)
+    axis_top, step = _axis_top(y_max, data_max, _y_step_spec(spec))
     left, top, plot_w, plot_h, pad_b = 46.0, 36.0, 186.0, 100.0, 28.0
     n = len(values)
-    parts = _plot_axes(left, top, plot_w, plot_h, axis_top)
+    parts = _plot_axes(left, top, plot_w, plot_h, axis_top, step)
     pts: list[tuple[float, float]] = []
     for i, (lab, val) in enumerate(values):
         x = left + (plot_w * i / max(n - 1, 1))
@@ -1419,8 +1470,9 @@ ADV_FIELDS: dict[str, frozenset[str]] = {
 }
 ADV_OPTIONAL: dict[str, frozenset[str]] = {
     "fracBars": frozenset({"fill"}),
-    "barChart": frozenset({"yMax", "yLabel", "xLabel"}),
-    "lineChart": frozenset({"yMax", "yLabel"}),
+    # `yStep` — 「눈금 한 칸은 몇」 발문이 말하는 걸음. 있으면 **그대로 긋는다** (D-70).
+    "barChart": frozenset({"yMax", "yStep", "yLabel", "xLabel"}),
+    "lineChart": frozenset({"yMax", "yStep", "yLabel"}),
     "stripChart": frozenset(),
     "pieChart": frozenset(),
     "rotateFlip": frozenset({"n"}),
