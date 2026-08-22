@@ -60,6 +60,10 @@ scripts/qa/reports/*
 # 해설 rm 잔재 손수리 원장 (2026-08-21 원장님 검수 지적) — 공유 DB 되돌리기 근거
 !scripts/qa/reports/solution-rm-hotfix-2026-08-21.json
 !scripts/qa/reports/solution-rm-batch-2026-08-21.json
+# 큐브 개념 카탈로그(대단원·개념·쪽 지도·발문 표본) — 재생성에 N드라이브가 필요해서
+# 다른 컴퓨터가 바로 읽으려면 커밋돼야 한다. 8파일 ~400KB.
+# (디렉터리 재포함 — `reports/*` 는 한 단계만 무시하므로 이 예외로 안이 전부 살아난다.)
+!scripts/qa/reports/cube-catalog
 !scripts/qa/reports/subnum-dup-2026-08-21.json
 !scripts/qa/reports/cm-sup-2026-08-21.json
 # Claude 생성 해설 원장 — 되돌리기 자료. 커밋 필수 (2026-08-22)

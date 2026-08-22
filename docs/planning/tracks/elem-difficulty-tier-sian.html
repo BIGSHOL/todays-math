@@ -1,0 +1,290 @@
+<title>초등 난이도 4단 시안</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#ffffff; --ink:#23272d; --faint:#79818c; --line:#d9dde3; --card:#fafbfc;
+  --t1:#5c7d91; --t2:#48708a; --t3:#2f5d7d; --t4:#173f5f;
+  --t1-bg:#eef3f6; --t2-bg:#e7eef3; --t3-bg:#dfe9f0; --t4-bg:#d6e2ec;
+  --note-bg:#f4f6f8;
+}
+:root:not([data-theme="light"]){}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#14171b; --ink:#e4e8ec; --faint:#98a1ab; --line:#343b43; --card:#1a1e23;
+    --t1:#8fb3c7; --t2:#7ea9c2; --t3:#6a9dbd; --t4:#5b93b8;
+    --t1-bg:#1e262c; --t2-bg:#1e2830; --t3-bg:#1e2a34; --t4-bg:#1e2c38;
+    --note-bg:#1b2026;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14171b; --ink:#e4e8ec; --faint:#98a1ab; --line:#343b43; --card:#1a1e23;
+  --t1:#8fb3c7; --t2:#7ea9c2; --t3:#6a9dbd; --t4:#5b93b8;
+  --t1-bg:#1e262c; --t2-bg:#1e2830; --t3-bg:#1e2a34; --t4-bg:#1e2c38;
+  --note-bg:#1b2026;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans KR",-apple-system,"Malgun Gothic",sans-serif;
+  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:840px;margin:0 auto;padding:48px 24px 80px}
+header h1{font-family:"Noto Serif KR",serif;font-weight:600;font-size:27px;margin:0 0 6px;text-wrap:balance}
+header .sub{color:var(--faint);margin:0 0 4px}
+.decided{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 0;padding:0;list-style:none}
+.decided li{border:1px solid var(--line);border-radius:4px;padding:4px 10px;font-size:13px;color:var(--faint)}
+.decided b{color:var(--ink);font-weight:500}
+section{margin-top:52px}
+.sec-head{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:4px}
+.sec-head .kind{font-size:12px;letter-spacing:.08em;color:var(--faint)}
+.sec-head h2{font-size:17px;font-weight:700;margin:0}
+.sec-note{font-size:13px;color:var(--faint);margin:6px 0 18px}
+.q{display:grid;grid-template-columns:86px 1fr;gap:0;border:1px solid var(--line);border-radius:6px;background:var(--card);margin-bottom:14px;overflow:hidden}
+.tier{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:14px 8px;border-right:1px solid var(--line)}
+.tier .nm{font-size:13px;font-weight:700;letter-spacing:.12em}
+.tier .no{font-size:11px;color:var(--faint)}
+.q.t1 .tier{background:var(--t1-bg)} .q.t1 .nm{color:var(--t1)}
+.q.t2 .tier{background:var(--t2-bg)} .q.t2 .nm{color:var(--t2)}
+.q.t3 .tier{background:var(--t3-bg)} .q.t3 .nm{color:var(--t3)}
+.q.t4 .tier{background:var(--t4-bg)} .q.t4 .nm{color:var(--t4)}
+.body{padding:14px 18px 12px}
+.stem{font-family:"Noto Serif KR",serif;font-size:15.5px;line-height:1.75;max-width:62ch}
+.stem .num{font-variant-numeric:tabular-nums}
+.why{margin-top:10px;padding:7px 11px;background:var(--note-bg);border-radius:4px;font-size:12.5px;color:var(--faint)}
+.why b{color:var(--ink);font-weight:500}
+.ans{font-size:12px;color:var(--faint);margin-top:6px}
+.fig{margin:10px 0 2px}
+.fig svg{max-width:100%;height:auto;display:block}
+.fig-cap{font-size:12px;color:var(--faint);margin-top:2px}
+table.axis{width:100%;border-collapse:collapse;margin-top:14px;font-size:14px}
+table.axis th,table.axis td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+table.axis th{background:var(--note-bg);font-weight:600;white-space:nowrap}
+table.axis td.tn{font-weight:700;white-space:nowrap}
+.t1c{color:var(--t1)} .t2c{color:var(--t2)} .t3c{color:var(--t3)} .t4c{color:var(--t4)}
+.ratio{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px;font-variant-numeric:tabular-nums}
+.ratio th,.ratio td{border:1px solid var(--line);padding:6px 12px;text-align:right}
+.ratio th{background:var(--note-bg);font-weight:600;text-align:center}
+.ratio td:first-child,.ratio th:first-child{text-align:left}
+.ask{margin-top:44px;border:1px solid var(--line);border-left:4px solid var(--t4);border-radius:4px;padding:16px 20px;background:var(--card)}
+.ask h3{margin:0 0 8px;font-size:15px}
+.ask ol{margin:0;padding-left:20px}
+.ask li{margin-bottom:6px}
+svg text{font-family:"Noto Sans KR",sans-serif}
+</style>
+
+<div class="wrap">
+<header>
+  <h1>초등 난이도 4단 시안</h1>
+  <p class="sub">「무엇이 단계를 가르나」를 정하기 위한 실물 예시 — 성격이 다른 소단원 셋 × 4단 = 12문항</p>
+  <ul class="decided">
+    <li>확정 <b>4단 연산·기본·응용·심화</b> (D-71)</li>
+    <li>확정 <b>소단원 안에서 가른다</b></li>
+    <li>확정 <b>반 프리셋 안A</b></li>
+    <li>이 시안 <b>단계를 가르는 축</b></li>
+    <li>구현됨 <b>초3·초5 파일럿 — 아래 「엔진 실물」</b></li>
+  </ul>
+</header>
+
+<!-- ① 연산형 -->
+<section>
+  <div class="sec-head"><span class="kind">연산형 소단원</span><h2>초3 · 받아올림이 두 번, 세 번 있는 (세 자리 수)+(세 자리 수)</h2></div>
+  <p class="sec-note">수 연산 소단원 — 4단이 「식 그대로 → 문장 한 겹 → 두 단계 → 거꾸로」로 갈립니다.</p>
+
+  <div class="q t1"><div class="tier"><span class="nm">연산</span><span class="no">1단</span></div>
+    <div class="body">
+      <p class="stem">계산을 하시오.<br><span class="num">347 + 185 =</span> □</p>
+      <div class="why"><b>가르는 것</b> — 식이 그대로 주어진다. 받아올림 절차 한 번이면 끝.</div>
+      <p class="ans">답 532</p>
+    </div>
+  </div>
+
+  <div class="q t2"><div class="tier"><span class="nm">기본</span><span class="no">2단</span></div>
+    <div class="body">
+      <p class="stem">진호네 학교 3학년은 남학생이 <span class="num">347</span>명, 여학생이 <span class="num">185</span>명입니다. 3학년 학생은 모두 몇 명입니까?</p>
+      <div class="why"><b>가르는 것</b> — 상황 문장 한 겹. 「모두」를 읽고 덧셈식을 스스로 세운다.</div>
+      <p class="ans">답 532명</p>
+    </div>
+  </div>
+
+  <div class="q t3"><div class="tier"><span class="nm">응용</span><span class="no">3단</span></div>
+    <div class="body">
+      <p class="stem">어제 딸기를 <span class="num">268</span>개 땄고, 오늘은 어제보다 <span class="num">157</span>개 더 많이 땄습니다. 어제와 오늘 딴 딸기는 모두 몇 개입니까?</p>
+      <div class="why"><b>가르는 것</b> — 중간값을 만들어야 한다. 오늘(268+157)을 먼저 구해야 합이 나온다 — <b>두 단계</b>.</div>
+      <p class="ans">답 693개 (오늘 425개)</p>
+    </div>
+  </div>
+
+  <div class="q t4"><div class="tier"><span class="nm">심화</span><span class="no">4단</span></div>
+    <div class="body">
+      <p class="stem">어떤 수에 <span class="num">278</span>을 더해야 할 것을 잘못하여 <span class="num">287</span>을 더했더니 <span class="num">612</span>가 되었습니다. 바르게 계산한 값은 얼마입니까?</p>
+      <div class="why"><b>가르는 것</b> — 거꾸로 간다. 어떤 수를 역산(612−287)한 뒤 바른 식을 다시 세운다 — <b>역산 + 재구성</b>.</div>
+      <p class="ans">답 603 (어떤 수 325)</p>
+    </div>
+  </div>
+</section>
+
+<!-- ② 도형형 -->
+<section>
+  <div class="sec-head"><span class="kind">도형형 소단원</span><h2>초5 · 직사각형과 정사각형의 넓이</h2></div>
+  <p class="sec-note">도형 소단원 — 4단이 「공식 한 번 → 그림에서 읽기 → 둘레·넓이 결합 → 개념 두 겹 연결」로 갈립니다.</p>
+
+  <div class="q t1"><div class="tier"><span class="nm">연산</span><span class="no">1단</span></div>
+    <div class="body">
+      <p class="stem">가로가 <span class="num">8</span> cm, 세로가 <span class="num">6</span> cm인 직사각형의 넓이는 몇 cm²입니까?</p>
+      <div class="why"><b>가르는 것</b> — 치수가 글로 주어진다. 공식(가로×세로) 한 번.</div>
+      <p class="ans">답 48 cm²</p>
+    </div>
+  </div>
+
+  <div class="q t2"><div class="tier"><span class="nm">기본</span><span class="no">2단</span></div>
+    <div class="body">
+      <p class="stem">다음 직사각형의 넓이는 몇 cm²입니까?</p>
+      <div class="fig"><svg viewBox="0 0 200 96" width="200" role="img" aria-label="가로 9cm 세로 7cm 직사각형">
+        <rect x="30" y="14" width="126" height="62" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <text x="93" y="10" font-size="12" text-anchor="middle" fill="currentColor">9 cm</text>
+        <text x="166" y="49" font-size="12" fill="currentColor">7 cm</text>
+      </svg></div>
+      <div class="why"><b>가르는 것</b> — 치수를 그림에서 스스로 읽는다. 공식은 같다.</div>
+      <p class="ans">답 63 cm²</p>
+    </div>
+  </div>
+
+  <div class="q t3"><div class="tier"><span class="nm">응용</span><span class="no">3단</span></div>
+    <div class="body">
+      <p class="stem">둘레가 <span class="num">36</span> cm인 직사각형의 가로가 <span class="num">10</span> cm입니다. 이 직사각형의 넓이는 몇 cm²입니까?</p>
+      <div class="why"><b>가르는 것</b> — 둘레에서 세로를 먼저 구한다(36−10−10=16, 16÷2=8) — <b>둘레·넓이 개념 결합, 두 단계</b>.</div>
+      <p class="ans">답 80 cm² (세로 8 cm)</p>
+    </div>
+  </div>
+
+  <div class="q t4"><div class="tier"><span class="nm">심화</span><span class="no">4단</span></div>
+    <div class="body">
+      <p class="stem">넓이가 <span class="num">64</span> cm²인 정사각형이 있습니다. 이 정사각형과 둘레가 같은 직사각형의 가로가 <span class="num">12</span> cm일 때, 직사각형의 넓이는 몇 cm²입니까?</p>
+      <div class="why"><b>가르는 것</b> — 넓이→한 변(역산), 한 변→둘레, 둘레→세로, 세로→넓이. <b>개념 사슬 네 걸음</b>.</div>
+      <p class="ans">답 48 cm² (한 변 8 → 둘레 32 → 세로 4)</p>
+    </div>
+  </div>
+</section>
+
+<!-- ③ 자료형 -->
+<section>
+  <div class="sec-head"><span class="kind">자료형 소단원</span><h2>초4 · 막대그래프의 활용</h2></div>
+  <p class="sec-note">자료 소단원 — 4단이 「값 읽기 → 비교 한 번 → 배·눈금 결합 → 전체에서 역산」으로 갈립니다. 실제 시험지에는 문항마다 그래프가 함께 인쇄됩니다.</p>
+
+  <div class="fig"><svg viewBox="0 0 320 170" width="320" role="img" aria-label="좋아하는 계절별 학생 수 막대그래프">
+    <line x1="46" y1="18" x2="46" y2="138" stroke="currentColor" stroke-width="1.2"/>
+    <line x1="46" y1="138" x2="300" y2="138" stroke="currentColor" stroke-width="1.2"/>
+    <g stroke="currentColor" stroke-opacity=".22" stroke-width="1">
+      <line x1="46" y1="121" x2="300" y2="121"/><line x1="46" y1="104" x2="300" y2="104"/>
+      <line x1="46" y1="87" x2="300" y2="87"/><line x1="46" y1="70" x2="300" y2="70"/>
+      <line x1="46" y1="53" x2="300" y2="53"/><line x1="46" y1="36" x2="300" y2="36"/>
+    </g>
+    <g font-size="10.5" text-anchor="end" fill="currentColor">
+      <text x="40" y="141">0</text><text x="40" y="124">2</text><text x="40" y="107">4</text>
+      <text x="40" y="90">6</text><text x="40" y="73">8</text><text x="40" y="56">10</text><text x="40" y="39">12</text>
+    </g>
+    <rect x="66" y="70" width="30" height="68" fill="currentColor" fill-opacity=".55"/>
+    <rect x="126" y="36" width="30" height="102" fill="currentColor" fill-opacity=".55"/>
+    <rect x="186" y="70" width="30" height="68" fill="none" stroke="currentColor" stroke-dasharray="4 3" stroke-width="1.3"/>
+    <text x="201" y="108" font-size="14" text-anchor="middle" fill="currentColor">?</text>
+    <rect x="246" y="87" width="30" height="51" fill="currentColor" fill-opacity=".55"/>
+    <g font-size="11" text-anchor="middle" fill="currentColor">
+      <text x="81" y="153">봄</text><text x="141" y="153">여름</text><text x="201" y="153">가을</text><text x="261" y="153">겨울</text>
+    </g>
+    <text x="46" y="167" font-size="10.5" fill="currentColor" fill-opacity=".65">(명) 세로 눈금 한 칸 = 2명</text>
+  </svg>
+  <p class="fig-cap">좋아하는 계절별 학생 수 — 가을 막대는 심화 문항에서 지워진 채 주어집니다.</p></div>
+
+  <div class="q t1"><div class="tier"><span class="nm">연산</span><span class="no">1단</span></div>
+    <div class="body">
+      <p class="stem">여름을 좋아하는 학생은 몇 명입니까?</p>
+      <div class="why"><b>가르는 것</b> — 막대 하나를 눈금으로 읽는다. 절차 한 번.</div>
+      <p class="ans">답 12명</p>
+    </div>
+  </div>
+
+  <div class="q t2"><div class="tier"><span class="nm">기본</span><span class="no">2단</span></div>
+    <div class="body">
+      <p class="stem">가장 많은 학생이 좋아하는 계절과 가장 적은 학생이 좋아하는 계절의 학생 수의 차는 몇 명입니까?</p>
+      <div class="why"><b>가르는 것</b> — 최대·최소를 고르고 한 번 뺀다. 읽기 + 비교 한 겹.</div>
+      <p class="ans">답 6명 (여름 12 − 겨울 6)</p>
+    </div>
+  </div>
+
+  <div class="q t3"><div class="tier"><span class="nm">응용</span><span class="no">3단</span></div>
+    <div class="body">
+      <p class="stem">여름을 좋아하는 학생 수는 겨울을 좋아하는 학생 수의 몇 배입니까?</p>
+      <div class="why"><b>가르는 것</b> — 두 값을 읽고 배(나눗셈) 개념과 결합한다 — <b>읽기 + 다른 개념</b>. 「눈금 한 칸이 2명일 때 …」(D-70 유형)도 이 단.</div>
+      <p class="ans">답 2배 (12 ÷ 6)</p>
+    </div>
+  </div>
+
+  <div class="q t4"><div class="tier"><span class="nm">심화</span><span class="no">4단</span></div>
+    <div class="body">
+      <p class="stem">조사에 참여한 학생이 모두 <span class="num">34</span>명일 때, 가을을 좋아하는 학생은 몇 명입니까?</p>
+      <div class="why"><b>가르는 것</b> — 그래프에 없는 값을 전체에서 역산한다(34 − 8 − 12 − 6) — <b>거꾸로 + 여러 값 결합</b>.</div>
+      <p class="ans">답 8명</p>
+    </div>
+  </div>
+</section>
+
+<!-- 축 요약 -->
+<section>
+  <div class="sec-head"><span class="kind">요약</span><h2>단계를 가르는 축 — 소단원이 달라도 같은 잣대</h2></div>
+  <table class="axis">
+    <tr><th>단계</th><th>가르는 것</th><th>발문의 모양</th></tr>
+    <tr><td class="tn t1c">연산 (1단)</td><td>절차 한 번. 식·값이 그대로 주어진다</td><td>「계산을 하시오」 「몇 명입니까(값 읽기)」</td></tr>
+    <tr><td class="tn t2c">기본 (2단)</td><td>식을 스스로 세운다. 상황·그림 한 겹</td><td>문장 한 겹, 그림에서 치수 읽기, 최대·최소 비교</td></tr>
+    <tr><td class="tn t3c">응용 (3단)</td><td>중간값을 만들거나 다른 개념과 결합한다 — 두 단계</td><td>「~보다 더」 경유, 둘레→넓이, 배 개념 결합</td></tr>
+    <tr><td class="tn t4c">심화 (4단)</td><td>거꾸로 가거나 조건을 조합한다 — 역산·어떤 수</td><td>「잘못 계산했더니」 「전체가 ~일 때 빈 값은」</td></tr>
+  </table>
+
+  <table class="ratio">
+    <tr><th>반 프리셋 (안A, 확정)</th><th class="t1c">연산</th><th class="t2c">기본</th><th class="t3c">응용</th><th class="t4c">심화</th></tr>
+    <tr><td>하위반</td><td>40%</td><td>40%</td><td>20%</td><td>0%</td></tr>
+    <tr><td>중위반</td><td>15%</td><td>40%</td><td>30%</td><td>15%</td></tr>
+    <tr><td>상위반</td><td>0%</td><td>25%</td><td>40%</td><td>35%</td></tr>
+  </table>
+</section>
+
+<!-- 엔진 실물 -->
+<section>
+  <div class="sec-head"><span class="kind">엔진 실물</span><h2>파일럿 두 소단원 — 엔진이 실제로 뽑은 문항</h2></div>
+  <p class="sec-note">위 시안은 손으로 쓴 예시였고, 아래는 구현된 생성기가 씨앗에서 뽑은 그대로입니다.
+  숫자·소재가 씨앗마다 갈리고, 산술은 전량 독립 검산·변이 검증(초3 6/6·초5 8/8)을 거쳤습니다.</p>
+
+  <div class="q t1"><div class="tier"><span class="nm">연산</span><span class="no">초3</span></div>
+    <div class="body"><p class="stem">다음을 계산하시오. <span class="num">673 + 227 =</span> □ <span style="color:var(--faint);font-size:12px">(세로셈 그림 포함)</span></p><p class="ans">답 900 · 받아올림 2회</p></div>
+  </div>
+  <div class="q t2"><div class="tier"><span class="nm">기본</span><span class="no">초3</span></div>
+    <div class="body"><p class="stem">어른은 <span class="num">799</span>명이고, 어린이는 <span class="num">758</span>명입니다. 사람은 모두 몇 명입니까?</p><p class="ans">답 1557명 · 받아올림 3회 · 소재 6종에서 뽑힘</p></div>
+  </div>
+  <div class="q t3"><div class="tier"><span class="nm">응용</span><span class="no">초3</span></div>
+    <div class="body"><p class="stem">형은 딱지를 <span class="num">291</span>장 모았고, 동생은 형보다 <span class="num">429</span>장 더 모았습니다. 두 사람이 모은 딱지는 모두 몇 장입니까?</p><p class="ans">답 1011장 (동생 720장을 먼저 구한다)</p></div>
+  </div>
+  <div class="q t4"><div class="tier"><span class="nm">심화</span><span class="no">초3</span></div>
+    <div class="body"><p class="stem">어떤 수에 <span class="num">594</span> 만큼 더해야 할 것을 잘못하여 <span class="num">495</span> 만큼 더했더니 합이 <span class="num">983</span> 입니다. 바르게 계산한 값은 얼마입니까?</p><p class="ans">답 1082 (어떤 수 488) · 잘못 더한 수는 자릿수를 맞바꾼 것</p></div>
+  </div>
+
+  <div class="q t1"><div class="tier"><span class="nm">연산</span><span class="no">초5</span></div>
+    <div class="body"><p class="stem">가로가 <span class="num">16</span> cm, 세로가 <span class="num">14</span> cm인 직사각형의 넓이는 몇 cm²입니까?</p><p class="ans">답 224 cm²</p></div>
+  </div>
+  <div class="q t2"><div class="tier"><span class="nm">기본</span><span class="no">초5</span></div>
+    <div class="body"><p class="stem">다음 정사각형 모양 게시판의 넓이는 몇 cm²입니까? <span style="color:var(--faint);font-size:12px">(치수는 그림에만 — 발문에 수가 하나도 없다)</span></p><p class="ans">답 169 cm² · 소재: 액자·타일·게시판·방석 …</p></div>
+  </div>
+  <div class="q t3"><div class="tier"><span class="nm">응용</span><span class="no">초5</span></div>
+    <div class="body"><p class="stem">둘레가 <span class="num">40</span> cm인 정사각형의 넓이는 몇 cm²입니까?</p><p class="ans">답 100 cm² · 직사각형 갈래도 있음 (둘레 34, 가로 6 → 66)</p></div>
+  </div>
+  <div class="q t4"><div class="tier"><span class="nm">심화</span><span class="no">초5</span></div>
+    <div class="body"><p class="stem">넓이가 <span class="num">121</span> cm²인 정사각형과 둘레가 같은 직사각형이 있습니다. 이 직사각형의 세로가 <span class="num">5</span> cm일 때, 넓이는 몇 cm²입니까?</p><p class="ans">답 85 cm² · 넓이→변→둘레→변→넓이 네 걸음 · 완전제곱수만 나온다</p></div>
+  </div>
+</section>
+
+<div class="ask">
+  <h3>원장님이 보실 것</h3>
+  <ol>
+    <li>위 12문항과 「엔진 실물」의 <b>단계 배치가 현장 감각과 맞습니까?</b> 어긋나 보이는 문항이 있으면 짚어 주십시오.</li>
+    <li><b>「축」 표(절차 → 문장 한 겹 → 두 단계 → 역산)</b>가 4단의 기준으로 맞습니까? 확정되면 230개 소단원 전체에 같은 방식으로 갈래를 답니다.</li>
+    <li>연산형·도형형·자료형에서 <b>축을 다르게 둘 부분</b>이 있습니까? (예: 자료형의 1단을 「값 읽기」로 둔 것)</li>
+    <li>초3 심화의 해설이 <b>세 자리 뺄셈</b>(983−495)을 씁니다 — 뺄셈 소단원(1-1-3)이 한 차시 뒤입니다. 받아내림 자체는 초2에서 배웠고 시중 교재도 어떤 수 유형을 덧셈 차시 심화에 두어 그대로 뒀습니다. <b>「덧셈만으로」로 바꾸시려면</b> 심화 축을 달리 잡아야 하니 알려 주십시오.</li>
+  </ol>
+</div>
+</div>
