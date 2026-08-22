@@ -51,6 +51,11 @@ def call_agy(items, model: str, timeout_s: int) -> list:
     out = re.sub(r"\n?```\s*$", "", out)
     if not out:
         raise RuntimeError(f"빈 출력 (exit={proc.returncode}): {proc.stderr[:500]}")
+    # \binom·\frac 등이 JSON 안에서 이중 이스케이프 안 된 채로 오면 \b·\f 가
+    # 유효한 JSON 이스케이프(백스페이스·폼피드)라 조용히 삼켜진다(2026-08-23
+    # codex 채널 실측 — 같은 위험이 이쪽에도 있어 선제 방어). \n 은 해설
+    # 줄바꿈이라 손대지 않는다.
+    out = re.sub(r"(?<!\\)\\([bf])", lambda m: "\\\\" + m.group(1), out)
     return json.loads(out)
 
 
