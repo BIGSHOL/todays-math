@@ -146,6 +146,84 @@ describe("[초등 출제 CLI] 세트 생성", () => {
     ).toThrow();
   });
 
+  it("직접 배분(tierCounts) — 준 구성 그대로 나오고, 개수는 합에서 나온다", () => {
+    const items = generateSet({
+      grade: "초3",
+      code: "1-1-2",
+      seed: 20260823,
+      tierCounts: { 연산: 1, 응용: 2, 심화: 1 },
+    });
+    expect(items).toHaveLength(4);
+    const got: Record<string, number> = {};
+    for (const item of items) {
+      got[item.tier as ElemTier] = (got[item.tier as ElemTier] ?? 0) + 1;
+    }
+    expect(got).toEqual({ 연산: 1, 응용: 2, 심화: 1 });
+  });
+
+  it("직접 배분에 count 를 같이 주면 합과 같아야 한다 — 어긋나면 던진다", () => {
+    expect(() =>
+      generateSet({
+        grade: "초3",
+        code: "1-1-2",
+        seed: 1,
+        count: 5,
+        tierCounts: { 연산: 1, 기본: 1 },
+      }),
+    ).toThrow(/합/);
+  });
+
+  it("갈래 없는 소단원에 직접 배분이면 던진다", () => {
+    expect(() =>
+      generateSet({
+        grade: "초4",
+        code: "1-5-3",
+        seed: 1,
+        tierCounts: { 기본: 2 },
+      }),
+    ).toThrow(/갈래/);
+  });
+
+  it("직접 배분과 preset/tier 를 섞으면 던진다", () => {
+    expect(() =>
+      generateSet({
+        grade: "초3",
+        code: "1-1-2",
+        seed: 1,
+        preset: "중위반",
+        tierCounts: { 기본: 2 },
+      }),
+    ).toThrow();
+    expect(() =>
+      generateSet({
+        grade: "초3",
+        code: "1-1-2",
+        seed: 1,
+        tier: "기본",
+        tierCounts: { 기본: 2 },
+      }),
+    ).toThrow();
+  });
+
+  it("직접 배분의 엉뚱한 갈래 이름·0 이하 개수는 던진다", () => {
+    expect(() =>
+      generateSet({
+        grade: "초3",
+        code: "1-1-2",
+        seed: 1,
+        tierCounts: { 고급: 2 } as never,
+      }),
+    ).toThrow(/갈래|연산/);
+    expect(() =>
+      generateSet({
+        grade: "초3",
+        code: "1-1-2",
+        seed: 1,
+        tierCounts: { 기본: 0 },
+      }),
+    ).toThrow();
+  });
+
   it("파일럿 소단원의 프리셋 세트 — 갈래 구성이 배분과 같다", () => {
     const items = generateSet({
       grade: "초3",

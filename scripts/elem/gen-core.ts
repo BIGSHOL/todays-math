@@ -109,10 +109,13 @@ export type GenItem = {
 export type GenSetOptions = {
   grade: string;
   code: string;
-  count: number;
+  /** tierCounts 를 주면 생략 가능 — 그때 개수는 배분의 합이다. 둘 다 주면 같아야 한다. */
+  count?: number;
   seed: number;
   tier?: ElemTier;
   preset?: ClassPreset;
+  /** 갈래별 개수 직접 배분 (예: {연산:1, 응용:2}) — 프리셋 비율 대신 손으로 정할 때. */
+  tierCounts?: Partial<Record<ElemTier, number>>;
 };
 
 /** 씨앗 보폭. 엔진이 안에서 orderIndex·소금을 다시 섞으므로 서로 다르기만 하면 된다. */
@@ -126,31 +129,75 @@ const DEDUPE_TRIES = 50;
  * 변형 공간이 좁아 못 피하면 **던진다** — 조용히 같은 문항을 두 번 내지 않는다.
  */
 export function generateSet(opts: GenSetOptions): GenItem[] {
-  const { grade, code, count, seed } = opts;
-  if (opts.tier !== undefined && opts.preset !== undefined) {
-    throw new Error("tier 와 preset 은 하나만 고르십시오");
-  }
-  if (!Number.isInteger(count) || count <= 0) {
-    throw new Error(`문항 수가 이상합니다: ${count}`);
+  const { grade, code, seed } = opts;
+  const modes = [opts.tier, opts.preset, opts.tierCounts].filter(
+    (m) => m !== undefined,
+  ).length;
+  if (modes > 1) {
+    throw new Error(
+      "tier · preset · tierCounts(직접 배분)는 하나만 고르십시오",
+    );
   }
   const unit = findUnit(grade, code);
+  const needTierRegistry = (): void => {
+    if (supportedTiers(unit).length === 0) {
+      throw new Error(
+        `${grade} ${unit.section} 은 난이도 갈래가 아직 없습니다 — 갈래 없이 내거나, --list 로 갈래 있는 소단원을 고르십시오`,
+      );
+    }
+  };
 
   // 이 세트가 낼 갈래 나열 (null = 갈래 없이)
   let tierPlan: (ElemTier | null)[];
-  if (opts.preset !== undefined) {
-    if (supportedTiers(unit).length === 0) {
+  let count: number;
+  if (opts.tierCounts !== undefined) {
+    needTierRegistry();
+    const entries = Object.entries(opts.tierCounts) as [ElemTier, number][];
+    if (entries.length === 0) {
+      throw new Error("직접 배분이 비어 있습니다 — 갈래별 개수를 주십시오");
+    }
+    for (const [t, n] of entries) {
+      if (!(ELEM_TIERS as readonly string[]).includes(t)) {
+        throw new Error(
+          `모르는 갈래입니다: «${t}» — ${ELEM_TIERS.join("·")} 중에서 고르십시오`,
+        );
+      }
+      if (!Number.isInteger(n) || n <= 0) {
+        throw new Error(`«${t}» 개수가 이상합니다: ${n} (1 이상 정수)`);
+      }
+    }
+    const sum = entries.reduce((a, [, n]) => a + n, 0);
+    if (opts.count !== undefined && opts.count !== sum) {
       throw new Error(
-        `${grade} ${unit.section} 은 난이도 갈래가 아직 없습니다 — 프리셋 대신 갈래 없이 내거나, --list 로 갈래 있는 소단원을 고르십시오`,
+        `count(${opts.count})와 직접 배분의 합(${sum})이 다릅니다 — 배분의 합이 곧 개수이니 count 는 생략하십시오`,
       );
     }
-    const alloc = allocateByPreset(opts.preset, count);
+    count = sum;
+    // ELEM_TIERS 선언 순서로 낸다 — 연산이 앞, 심화가 뒤 (지면 배치 관행)
     tierPlan = ELEM_TIERS.flatMap((t) =>
-      Array<ElemTier | null>(alloc[t]).fill(t),
+      Array<ElemTier | null>(opts.tierCounts![t] ?? 0).fill(t),
     );
-  } else if (opts.tier !== undefined) {
-    tierPlan = Array<ElemTier | null>(count).fill(opts.tier);
   } else {
-    tierPlan = Array<ElemTier | null>(count).fill(null);
+    if (
+      opts.count === undefined ||
+      !Number.isInteger(opts.count) ||
+      opts.count <= 0
+    ) {
+      throw new Error(`문항 수가 이상합니다: ${opts.count}`);
+    }
+    count = opts.count;
+    if (opts.preset !== undefined) {
+      needTierRegistry();
+      const alloc = allocateByPreset(opts.preset, count);
+      tierPlan = ELEM_TIERS.flatMap((t) =>
+        Array<ElemTier | null>(alloc[t]).fill(t),
+      );
+    } else if (opts.tier !== undefined) {
+      needTierRegistry();
+      tierPlan = Array<ElemTier | null>(count).fill(opts.tier);
+    } else {
+      tierPlan = Array<ElemTier | null>(count).fill(null);
+    }
   }
 
   const items: GenItem[] = [];

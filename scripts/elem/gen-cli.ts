@@ -137,7 +137,6 @@ async function main(): Promise<void> {
       "필수: --grade 초3|초4|초5|초6 --section <코드>  (목록은 --list). 예: --grade 초4 --section 1-5-1 --count 6",
     );
   }
-  const count = Number(args.count ?? 6);
   const seed = Number(args.seed ?? 20260821);
   const tier =
     typeof args.tier === "string" ? (args.tier as ElemTier) : undefined;
@@ -146,17 +145,44 @@ async function main(): Promise<void> {
   }
   const preset =
     typeof args.preset === "string" ? (args.preset as ClassPreset) : undefined;
+  // --mix "연산:2,기본:3" — 갈래별 개수 직접 배분. 합이 곧 개수라 --count 는 생략한다.
+  let tierCounts: Partial<Record<ElemTier, number>> | undefined;
+  if (typeof args.mix === "string") {
+    tierCounts = {};
+    for (const part of args.mix.split(",")) {
+      const [name, n] = part.split(":").map((s) => s.trim());
+      if (!name || n === undefined) {
+        throw new Error(`--mix 형식: "연산:2,기본:3" — 받은 것: "${args.mix}"`);
+      }
+      tierCounts[name as ElemTier] = Number(n);
+    }
+  }
+  const count =
+    args.count !== undefined
+      ? Number(args.count)
+      : tierCounts !== undefined
+        ? undefined
+        : 6;
 
-  const items = generateSet({ grade, code, count, seed, tier, preset });
+  const items = generateSet({
+    grade,
+    code,
+    count,
+    seed,
+    tier,
+    preset,
+    tierCounts,
+  });
   const payload = {
     meta: {
       grade,
       section: items[0]!.problem.section,
       code,
-      count,
+      count: items.length,
       seed,
       tier: tier ?? null,
       preset: preset ?? null,
+      mix: tierCounts ?? null,
       generatedAt: new Date().toISOString(),
     },
     items,
@@ -172,7 +198,7 @@ async function main(): Promise<void> {
   }
 
   if (typeof args.html === "string") {
-    const title = `${grade} ${payload.meta.section} — ${count}문항 (씨앗 ${seed}${preset ? ` · ${preset}` : tier ? ` · ${tier}` : ""})`;
+    const title = `${grade} ${payload.meta.section} — ${items.length}문항 (씨앗 ${seed}${preset ? ` · ${preset}` : tier ? ` · ${tier}` : tierCounts ? " · 직접 배분" : ""})`;
     const { html, figureErrors } = await buildHtml(title, items);
     mkdirSync(dirname(resolve(args.html)), { recursive: true });
     writeFileSync(args.html, html, "utf-8");
