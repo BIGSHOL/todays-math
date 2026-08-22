@@ -13,6 +13,9 @@ import {
   G4_BAR_SPLITS,
   G4_BAR_THEMES,
   G4_LINE_THEMES,
+  G4_SALE_COMBO,
+  G4_SALE_LIMITS,
+  G4_SALE_THEMES,
   G4_THEME_SHARE,
 } from "@/lib/elementary/g4";
 import {
@@ -22,6 +25,8 @@ import {
   handlerKeys,
 } from "@/lib/elementary/generate";
 import { renderFigureSpec } from "@/lib/figure/renderFigureSpec";
+import { createRng } from "@/lib/elementary/rng";
+import { bareNumbers } from "@/lib/elementary/rules";
 
 const VENDOR = path.join(process.cwd(), "vendor", "figure-engine");
 const LEGACY = "F:\\시험지변환기";
@@ -465,6 +470,214 @@ describe("[초등 엔진] 소단원 전량", () => {
     const uniq = [...new Set(bad)];
     expect(uniq, uniq.join("\n")).toEqual([]);
     expect(checked, "막대 표본을 하나도 못 모았다").toBeGreaterThan(200);
+  });
+
+  // 원장님 예시(동아 「실력」): 「$1$반보다 많고 $5$반보다 적은 반을 **모두** 찾아 써 보세요.」
+  //
+  // ⚠️ 답을 생성기의 논리로 다시 만들면 **동어반복**이다. 여기서는 «참»을 **그림 값**에서
+  //    가져온다 — 발문에 적힌 두 기준 이름을 그림에서 찾아 값을 읽고, 나머지 항목을
+  //    범위와 견주어 **직접** 답을 만든 뒤 생성기의 답과 대조한다.
+  it("범위 비교 답은 그림 값으로 다시 세어도 같고, 지면 순서로 적힌다", () => {
+    const bars = UNITS.filter(
+      (u) => u.grade === "초4" && u.chapter.includes("막대"),
+    );
+    const bad: string[] = [];
+    let checked = 0;
+    const answerSizes = new Set<number>();
+    for (const unit of bars) {
+      for (let i = 0; i < 300; i += 1) {
+        const item = generateElementaryProblem(unit, 20260000 + i * 7);
+        const m = item.content.match(
+          /학생 수가 (.+?)보다 많고 (.+?)보다 적은 .+?를? 모두 찾아 쓰시오/,
+        );
+        if (!m) continue;
+        checked += 1;
+        const spec = item.figureSpec as {
+          values: { label: string; value: number }[];
+        };
+        const lo = spec.values.find((v) => v.label === m[1]);
+        const hi = spec.values.find((v) => v.label === m[2]);
+        if (!lo || !hi) {
+          bad.push(
+            `${unit.section}: 기준 이름이 그림에 없다 — ${m[1]} / ${m[2]}`,
+          );
+          continue;
+        }
+        // 지면 순서 = `spec.values` 차례. 필터가 그 차례를 지키므로 정렬하지 않는다.
+        const want = spec.values
+          .filter((v) => v.value > lo.value && v.value < hi.value)
+          .map((v) => v.label);
+        answerSizes.add(want.length);
+        if (want.length === 0) {
+          bad.push(
+            `${unit.section}: 사이에 드는 항목이 **0개** — 답이 「없음」이 된다 (${lo.label}=${lo.value}, ${hi.label}=${hi.value})`,
+          );
+        }
+        if (item.answer !== want.join(", ")) {
+          bad.push(
+            `${unit.section}: 답이 「${item.answer}」인데 그림으로 세면 「${want.join(", ")}」 ` +
+              `[${spec.values.map((v) => `${v.label}=${v.value}`).join(" ")}]`,
+          );
+        }
+        // 기준과 **같은 값**의 다른 항목이 있으면 「많고/적은」의 경계가 헷갈린다.
+        for (const v of spec.values) {
+          if (v !== lo && v.value === lo.value) {
+            bad.push(
+              `${unit.section}: ${v.label} 이 기준 ${lo.label} 과 같은 값이다`,
+            );
+          }
+          if (v !== hi && v.value === hi.value) {
+            bad.push(
+              `${unit.section}: ${v.label} 이 기준 ${hi.label} 과 같은 값이다`,
+            );
+          }
+        }
+      }
+    }
+    const uniq = [...new Set(bad)];
+    expect(uniq, uniq.join("\n")).toEqual([]);
+    // 0 은 「깨끗」과 「못 셈」을 구분해 주지 않는다 — 유형이 사라지면 여기서 걸린다.
+    expect(
+      checked,
+      "범위 비교 문항을 하나도 못 찾았다 — 유형이 빠졌나",
+    ).toBeGreaterThan(20);
+    // **복수 답의 맛**: 답이 하나인 씨앗과 둘인 씨앗이 **둘 다** 나와야 한다.
+    expect(
+      [...answerSizes].sort(),
+      `답 개수가 ${[...answerSizes].join(",")} 뿐이다 — 하나짜리와 둘짜리가 다 나와야 한다`,
+    ).toEqual([1, 2]);
+  });
+
+  // 원장님 예시 ②: 「팔린 **수**와 한 개의 **가격**을 조사하여 나타낸 막대그래프 — 멜론
+  // 아이스크림을 팔고 받은 돈은?」 두 자료에서 같은 항목의 값을 읽어 **곱한다.**
+  //
+  // ⚠️ **아직 갈래에 배선되지 않았다**(가로 막대 두 개를 나란히 그리는 스펙 계약 대기).
+  //    그래서 생성기가 아니라 `G4_SALE_COMBO` 를 **직접** 부른다. 배선되면 이 검사는 그대로
+  //    두고, 아래 「그래프를 가리키면 그림이 있다」가 배선을 지킨다.
+  it("두 그래프 결합: 발문이 지목한 항목의 두 값을 곱한 것이 답이다", () => {
+    const bad: string[] = [];
+    const seenThemes = new Set<string>();
+    const seenAnswers = new Set<string>();
+    const { countStep, priceStep } = G4_SALE_LIMITS;
+    for (let i = 0; i < 300; i += 1) {
+      const c = G4_SALE_COMBO(createRng(20260000 + i * 7));
+      seenThemes.add(c.theme.goods);
+      seenAnswers.add(c.answer);
+
+      // 「참」을 `c.at` 에서 가져오면 동어반복이다 — **발문이 부른 이름**으로 자리를 되찾는다.
+      // ⚠️ 「오늘 …」로 잡으면 안 된다. 발문 앞머리에 「오늘 팔린 종류별」이 **먼저** 있어서
+      //    게으른 `.+?` 조차 그 「오늘」부터 시작해 문장을 통째로 삼킨다(처음에 그렇게 걸렸다).
+      //    이름은 늘 «꾸밈말 + 물건» 두 낱말이므로 **꼬리**에 붙여 두 낱말만 집는다.
+      const m = c.content.match(/(\S+) (\S+)[을를] 팔고 받은 돈/);
+      if (!m) {
+        bad.push(`발문에서 항목 이름을 못 찾았다: ${c.content}`);
+        continue;
+      }
+      const label = m[1]!;
+      if (m[2] !== c.theme.goods) {
+        bad.push(
+          `발문이 부른 물건 「${m[2]}」 이 소재의 「${c.theme.goods}」 과 다르다`,
+        );
+        continue;
+      }
+      const at = c.theme.labels.indexOf(label);
+      if (at < 0) {
+        bad.push(
+          `발문의 「${label}」 이 항목 목록 [${c.theme.labels.join(",")}] 에 없다`,
+        );
+        continue;
+      }
+      const want = c.counts[at]! * c.prices[at]!;
+      if (c.answer !== `$${want}$원`) {
+        bad.push(
+          `답이 「${c.answer}」인데 ${label} 은 ${c.counts[at]}×${c.prices[at]}=${want} 이다`,
+        );
+      }
+      // 해설이 **그 항목의** 두 값을 읽는지 (엉뚱한 항목 값을 읽어도 곱은 맞을 수 있다)
+      const sc = c.solution.match(
+        new RegExp(`\\$(\\d+)\\$${c.theme.counter} 팔렸`),
+      );
+      const sp = c.solution.match(/가격은 \$(\d+)\$원/);
+      if (
+        Number(sc?.[1]) !== c.counts[at] ||
+        Number(sp?.[1]) !== c.prices[at]
+      ) {
+        bad.push(
+          `해설이 읽은 값 ${sc?.[1]}·${sp?.[1]} 이 ${label} 의 ${c.counts[at]}·${c.prices[at]} 과 다르다`,
+        );
+      }
+
+      // 값 설계 — **눈금 위에 서야** 「읽어서 곱한다」가 성립한다.
+      for (const v of c.counts) {
+        if (v % countStep !== 0)
+          bad.push(`수 ${v} 가 걸음 ${countStep} 의 배수가 아니다`);
+        if (v < 10 || v > 99) bad.push(`수 ${v} 가 두 자리가 아니다`);
+        if (v > 8 * countStep)
+          bad.push(`수 ${v} 가 8×걸음(${8 * countStep})을 넘어 엔진이 던진다`);
+      }
+      for (const p of c.prices) {
+        if (p % 100 !== 0) bad.push(`가격 ${p} 이 $100$원 단위가 아니다`);
+        if (p < 100 || p > 999) bad.push(`가격 ${p} 이 세 자리가 아니다`);
+        if (p > 8 * priceStep)
+          bad.push(
+            `가격 ${p} 이 8×걸음(${8 * priceStep})을 넘어 엔진이 던진다`,
+          );
+      }
+      // ⚠️ 이 유형은 아직 갈래에 없어서 `probe-elem-rules` 가 **볼 수 없다** — R1(모든 수는
+      //    KaTeX)이 여기서는 구조적으로 안 걸린다. 그래서 규칙을 옮겨 적지 않고 **그 가드가
+      //    쓰는 함수 그대로**(`bareNumbers`) 여기서 부른다.
+      for (const [where, text] of [
+        ["발문", c.content],
+        ["정답", c.answer],
+        ["해설", c.solution],
+      ] as const) {
+        const bare = bareNumbers(text);
+        if (bare.length > 0)
+          bad.push(`${where}에 KaTeX 밖의 수: ${bare.join(",")}`);
+      }
+      if (new Set(c.counts).size !== 3)
+        bad.push(`수가 겹친다 [${c.counts.join(",")}]`);
+      if (new Set(c.prices).size !== 3)
+        bad.push(`가격이 겹친다 [${c.prices.join(",")}]`);
+      // 두 자료가 **같은 항목 목록**을 쓰는 것이 이 유형의 뼈대다.
+      if (
+        c.counts.length !== c.theme.labels.length ||
+        c.prices.length !== c.theme.labels.length
+      ) {
+        bad.push(`두 자료의 항목 수가 라벨 수와 다르다`);
+      }
+    }
+    const uniq = [...new Set(bad)];
+    expect(uniq, uniq.join("\n")).toEqual([]);
+    // 소재가 전부 나오는가 (R9 — 씨앗이 바뀌면 갈린다)
+    expect(seenThemes.size, "소재가 하나로 굳었다").toBe(G4_SALE_THEMES.length);
+    expect(seenAnswers.size, "씨앗을 바꿔도 답이 안 바뀐다").toBeGreaterThan(
+      10,
+    );
+  });
+
+  // ⚠️ **배선을 지키는 자리.** 발문이 「그래프」를 가리키는데 그림이 없으면 지면에 빈 자리가
+  //    나간다 — 이 저장소가 1,420건으로 겪은 부류이고, 오류도 경고도 없이 조용하다.
+  //    「두 그래프 결합」을 갈래에 붙이는 사람이 그림을 안 붙이면 여기서 걸린다.
+  it("「그래프」를 가리키는 문항에는 반드시 그림이 있다", () => {
+    const bad: string[] = [];
+    let hits = 0;
+    for (const unit of UNITS.filter((u) => u.grade === "초4")) {
+      for (let i = 0; i < 40; i += 1) {
+        const item = generateElementaryProblem(unit, 20260000 + i * 7);
+        if (!/그래프/.test(item.content)) continue;
+        hits += 1;
+        if (!item.figureSpec) {
+          bad.push(
+            `${unit.section}: 「그래프」를 가리키는데 그림이 없다 — ${item.content.slice(0, 50)}…`,
+          );
+        }
+      }
+    }
+    const uniq = [...new Set(bad)];
+    expect(uniq, uniq.join("\n")).toEqual([]);
+    // 0 은 「깨끗」과 「못 셈」을 구분해 주지 않는다.
+    expect(hits, "그래프 문항을 하나도 못 찾았다").toBeGreaterThan(50);
   });
 
   // ⚠️ 위 검사는 발문에서 규모를 `content.includes(who)` 로 되찾는다. 그래서 어떤 `who` 가

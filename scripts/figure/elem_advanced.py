@@ -260,41 +260,127 @@ def _unit_label(left: float, top: float, ylab: str) -> str:
     return _text(left - 7, top - 20, ylab, size=13, anchor="end")
 
 
+def _tick_values(axis_top: float, step: int) -> list[int]:
+    """0부터 `axis_top` 까지 `step` 마다. **방향과 무관하다** — 값 축의 눈금은 하나다.
+
+    가로형·세로형이 각자 눈금을 세면 규칙이 두 벌이 되어 한쪽만 고쳐진다
+    (2026-08-18 「같은 규칙을 쓰는 자리가 둘이면 한 숫자를 두 곳이 쓰게 하라」).
+    """
+    out: list[int] = []
+    v = 0
+    while v <= axis_top + 1e-6:
+        out.append(v)
+        v += step
+    return out
+
+
 def _plot_axes(
-    left: float, top: float, plot_w: float, plot_h: float, axis_top: float, step: int
+    left: float,
+    top: float,
+    plot_w: float,
+    plot_h: float,
+    axis_top: float,
+    step: int,
+    horizontal: bool = False,
 ) -> list[str]:
-    """세로축·가로축·눈금.
+    """축 두 줄과 **값 축**의 눈금.
 
     `axis_top` 과 `step` 은 **둘 다 `_axis_top()` 이 낸 것을 그대로** 받는다.
-    막대·꺾은선의 세로 배율도 같은 `axis_top` 을 써야 한다 — 안 그러면 눈금과 데이터가
+    막대·꺾은선의 배율도 같은 `axis_top` 을 써야 한다 — 안 그러면 눈금과 데이터가
     다른 자로 그려진다(변이 ㉕·㉖).
 
     ⚠️ **여기서 `_y_step` 을 다시 부르면 안 된다.** 그러면 스펙이 실어 온 `yStep` 이
     조용히 무시되어 「한 칸 5명」 발문 옆에 10명 간격이 그려진다 (D-70).
+
+    `horizontal` 은 **값 축을 어느 화면 축에 눕히는가**만 바꾼다. 눈금 값 자체는
+    `_tick_values` 하나가 낸다 — 방향마다 규칙이 갈리지 않는다.
     """
     parts = [
         _line((left, top), (left, top + plot_h)),
         _line((left, top + plot_h), (left + plot_w, top + plot_h)),
     ]
-    v = 0
-    while v <= axis_top + 1e-6:
-        y = top + plot_h - plot_h * v / axis_top
-        # 0 눈금은 가로축과 겹친다. 흰 외곽선 halo 는 mix-blend-multiply 에서
-        # 가장자리가 회색으로 뭉개지므로 쓰지 않는다.
-        if v > 0:
-            parts.append(_line((left, y), (left + plot_w, y), sw=0.4, dash="3 3"))
-        parts.append(_line((left - 4, y), (left, y), sw=0.9))
-        parts.append(_text(left - 7, y, str(v), size=14, anchor="end"))
-        v += step
+    for v in _tick_values(axis_top, step):
+        if horizontal:
+            x = left + plot_w * v / axis_top
+            # 0 눈금은 세로축과 겹친다.
+            if v > 0:
+                parts.append(_line((x, top), (x, top + plot_h), sw=0.4, dash="3 3"))
+            parts.append(_line((x, top + plot_h), (x, top + plot_h + 4), sw=0.9))
+            parts.append(_text(x, top + plot_h + 14, str(v), size=14))
+        else:
+            y = top + plot_h - plot_h * v / axis_top
+            # 0 눈금은 가로축과 겹친다. 흰 외곽선 halo 는 mix-blend-multiply 에서
+            # 가장자리가 회색으로 뭉개지므로 쓰지 않는다.
+            if v > 0:
+                parts.append(_line((left, y), (left + plot_w, y), sw=0.4, dash="3 3"))
+            parts.append(_line((left - 4, y), (left, y), sw=0.9))
+            parts.append(_text(left - 7, y, str(v), size=14, anchor="end"))
     return parts
+
+
+def _orient(spec: Mapping[str, Any]) -> bool:
+    """가로형인가. 기본은 세로 — **없으면 지금 지면과 완전히 같다.**
+
+    ⚠️ `yMax`·`yStep`·`yLabel` 은 화면의 세로축이 아니라 **값 축**을 가리킨다.
+    가로형이면 그 축이 아래로 눕을 뿐 이름은 그대로다. **`valueMax` 로 «개선»하지 마라**
+    — 한 가지에 이름이 둘이 되면 축 규칙을 고칠 때 한쪽만 고쳐진다
+    (2026-08-18 「같은 규칙을 쓰는 자리가 둘이면 한 숫자를 두 곳이 쓰게 하라」).
+    읽는 법: **y = 값 · x = 항목, 화면 방향과 무관.**
+    """
+    raw = spec.get("orient", "vertical")
+    if raw not in ("vertical", "horizontal"):
+        raise ValueError('orient 는 "vertical" 또는 "horizontal" 이어야 합니다')
+    return raw == "horizontal"
+
+
+def _chart_title(title: str, cx: float) -> str:
+    """그래프 제목 — 값 축 눈금(14)보다 크지 않게, 가운데."""
+    return _text(cx, 16, title, size=14) if title else ""
+
+
+def _bar_chart_h(spec: Mapping[str, Any], values, axis_top: float, step: int) -> str:
+    """가로 막대. 항목 라벨이 왼쪽, **값 축이 아래**로 눕는다.
+
+    축 계산(`_axis_top`)은 세로형과 **같은 것을 이미 받아** 온다 — 여기서 다시 정하지
+    않는다. 이 함수가 정하는 것은 «어디에 그리는가»뿐이다.
+    """
+    title = str(spec.get("title", ""))
+    left, top, plot_w, plot_h = 60.0, (34.0 if title else 16.0), 140.0, 118.0
+    pad_b = 34.0
+    n = len(values)
+    gap = 8.0
+    bh = (plot_h - gap * (n + 1)) / n
+    parts = _plot_axes(left, top, plot_w, plot_h, axis_top, step, horizontal=True)
+    for i, (lab, val) in enumerate(values):
+        w = 0 if axis_top <= 0 else min(plot_w, plot_w * val / axis_top)
+        y = top + gap + i * (bh + gap)
+        parts.append(_rect(left, y, w, bh, fill=CHART[i % len(CHART)], sw=1.05))
+        num = str(int(val)) if val == int(val) else _n(val)
+        # 막대 안쪽이면 격자선과 안 겹친다. 짧은 막대만 바깥 오른쪽에 둔다.
+        nx = left + w - 16 if w >= 34 else left + w + 12
+        parts.append(_text(nx, y + bh / 2, num, size=16))
+        parts.append(_text(left - 7, y + bh / 2, lab, size=13, anchor="end"))
+    ylab = str(spec.get("yLabel", ""))
+    if ylab:
+        # 마지막 눈금 숫자 바로 뒤 — 교과서가 「0 20 40 (개)」로 적는 자리다.
+        parts.append(_text(left + plot_w + 6, top + plot_h + 14, ylab, size=13, anchor="start"))
+    parts.append(_chart_title(title, left + plot_w / 2))
+    return _svg(TABLE_VIEWBOX_MAX, top + plot_h + pad_b, "".join(parts))
 
 
 def _bar_chart(spec: Mapping[str, Any]) -> str:
     values = _chart_values(spec["values"], "values")
     data_max = max((v for _, v in values), default=0.0)
     y_max = _num(spec.get("yMax", data_max or 1), "yMax", 1, 10000)
+    # 축 규칙은 **방향보다 위**에 있다 — 사다리·9줄·yStep·인상·던짐이 한 벌뿐이다.
     axis_top, step = _axis_top(y_max, data_max, _y_step_spec(spec))
-    left, top, plot_w, plot_h, pad_b = 46.0, 36.0, 186.0, 118.0, 32.0
+    if _orient(spec):
+        return _bar_chart_h(spec, values, axis_top, step)
+    title = str(spec.get("title", ""))
+    # 제목이 있으면 **한 줄 내린다.** 단위 라벨이 `top - 20` 에 앉으므로 그대로 두면
+    # 긴 제목과 같은 줄에서 부딪힌다. 제목이 없으면 `top` 은 36 그대로라
+    # **지금 지면 2,400장이 한 픽셀도 안 바뀐다.**
+    left, top, plot_w, plot_h, pad_b = 46.0, (56.0 if title else 36.0), 186.0, 118.0, 32.0
     n = len(values)
     gap = 8.0
     bw = (plot_w - gap * (n + 1)) / n
@@ -310,6 +396,7 @@ def _bar_chart(spec: Mapping[str, Any]) -> str:
         parts.append(_text(x + bw / 2, ny, num, size=16))
         parts.append(_text(x + bw / 2, top + plot_h + 16, lab, size=13))
     parts.append(_unit_label(left, top, str(spec.get("yLabel", ""))))
+    parts.append(_chart_title(title, left + plot_w / 2))
     w = min(TABLE_VIEWBOX_MAX, left + plot_w + 8)
     return _svg(w, top + plot_h + pad_b, "".join(parts))
 
@@ -1471,8 +1558,9 @@ ADV_FIELDS: dict[str, frozenset[str]] = {
 ADV_OPTIONAL: dict[str, frozenset[str]] = {
     "fracBars": frozenset({"fill"}),
     # `yStep` — 「눈금 한 칸은 몇」 발문이 말하는 걸음. 있으면 **그대로 긋는다** (D-70).
-    "barChart": frozenset({"yMax", "yStep", "yLabel", "xLabel"}),
-    "lineChart": frozenset({"yMax", "yStep", "yLabel"}),
+    # `orient` — "vertical"(기본) / "horizontal". 값 축을 어느 화면 축에 눕히는가만 바꾼다.
+    "barChart": frozenset({"yMax", "yStep", "yLabel", "xLabel", "orient", "title"}),
+    "lineChart": frozenset({"yMax", "yStep", "yLabel", "title"}),
     "stripChart": frozenset(),
     "pieChart": frozenset(),
     "rotateFlip": frozenset({"n"}),
