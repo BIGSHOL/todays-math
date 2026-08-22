@@ -1219,8 +1219,181 @@ export const G3: Record<string, ChapterHandler> = {
   "초3|2-6 그림그래프": pictograph,
 };
 
+// ── 난이도 갈래 (D-71) ────────────────────────────────────────────────
+//
+// 「받아올림이 두 번, 세 번」은 **나열**이다(둘 중 하나면 된다) — 곱이 아니다.
+// `addWithCarries` 는 일→십·십→백 두 자리만 세므로 실제로는 늘 두 번이고,
+// 그것으로 소단원 조건을 만족한다. 갈래를 넷으로 갈라도 **이 조건은 안 흔든다** —
+// 「응용」의 둘째 덧셈·「심화」의 바른 덧셈까지 같은 조건을 걸어 확인한다.
+
+/**
+ * 세 자리 덧셈의 받아올림 횟수. `addWithCarries` 와 **같은 셈**이어야 한다 —
+ * 일→십 · 십→백 · **백→천** 셋을 다 센다. 둘만 세면 「세 번」이 이 함수에서만
+ * 구조적으로 0이 되어, 조건을 재는 쪽과 만드는 쪽이 서로 다른 것을 보게 된다.
+ */
+function carryCount(a: number, b: number): number {
+  const [a2, a1, a0] = digits(a);
+  const [b2, b1, b0] = digits(b);
+  let carries = 0;
+  let c = 0;
+  if (a0 + b0 >= 10) {
+    carries += 1;
+    c = 1;
+  }
+  if (a1 + b1 + c >= 10) {
+    carries += 1;
+    c = 1;
+  } else {
+    c = 0;
+  }
+  if (a2 + b2 + c >= 10) carries += 1;
+  return carries;
+}
+
+/**
+ * 「응용」의 두 단계 — 처음 수 `base`, 더 많은 만큼 `more`.
+ *
+ * **두 덧셈이 모두 (세 자리)+(세 자리)** 여야 소단원 안이다. 그래서 첫 덧셈의 합
+ * `second` 는 세 자리로 묶는다(네 자리가 되면 둘째 덧셈이 네 자리+세 자리가 된다).
+ * 둘째 덧셈의 합은 네 자리여도 좋다 — 그게 「받아올림 세 번」이다.
+ * 못 찾으면 **던진다** — 조건을 어긴 문항을 조용히 내보내지 않는다.
+ */
+function twoStepAdd(rng: Rng): [number, number] {
+  for (let k = 0; k < 240; k += 1) {
+    const [base, more] = addWithCarries(rng, 2, 2);
+    const second = base + more;
+    if (second > 999) continue;
+    if (carryCount(base, second) < 2) continue;
+    return [base, more];
+  }
+  throw new Error("응용 두 단계 수를 못 만들었습니다");
+}
+
+/** 자릿수 두 개를 맞바꾼다($278\to287$). 백의 자리가 $0$ 이 되면 그대로 돌려준다(호출자가 버린다). */
+function swapDigits(value: number, rng: Rng): number {
+  const d = digits(value);
+  const [i, j] = pick(rng, [
+    [0, 1],
+    [1, 2],
+    [0, 2],
+  ] as const);
+  const out = [...d];
+  out[i] = d[j]!;
+  out[j] = d[i]!;
+  if (out[0] === 0) return value;
+  return out[0]! * 100 + out[1]! * 10 + out[2]!;
+}
+
+/** 「심화」의 역산 — 어떤 수 · 바르게 더할 수 · 잘못 더한 수 · 잘못된 합 · 바른 합. */
+function reverseAdd(rng: Rng): {
+  some: number;
+  right: number;
+  wrong: number;
+  wrongSum: number;
+  rightSum: number;
+} {
+  for (let k = 0; k < 240; k += 1) {
+    const [some, right] = addWithCarries(rng, 2, 3);
+    const wrong = swapDigits(right, rng);
+    if (wrong === right) continue;
+    const rightSum = some + right;
+    const wrongSum = some + wrong;
+    // 어떤 수도 잘못된 합도 세 자리여야 학생이 아는 범위 안에서 되짚을 수 있다.
+    if (some < 100 || wrongSum < 100 || wrongSum > 999) continue;
+    // **잘못 더한 쪽도** 받아올림이 두 번이라야 한다. `addWithCarries` 는 바른 쪽만
+    // 보장하는데, 학생이 실제로 푸는 것은 그 합을 되짚는 뺄셈이다 — 여기가 헐거우면
+    // 심화인데 받아내림 없는 뺄셈이 나온다(실측: 씨앗 1 에서 $196+342$, 받아올림 0번).
+    if (carryCount(some, wrong) < 2) continue;
+    return { some, right, wrong, wrongSum, rightSum };
+  }
+  throw new Error("심화 역산 수를 못 만들었습니다");
+}
+
+/** 「기본」 — 두 갈래를 합치는 문장. 조사는 낱말마다 `josa()` 가 정한다. */
+const ADD_PAIRS = [
+  { left: "남학생", right: "여학생", unit: "명", whole: "학생" },
+  { left: "사과", right: "배", unit: "개", whole: "과일" },
+  { left: "동화책", right: "위인전", unit: "권", whole: "책" },
+  { left: "빨간 색종이", right: "파란 색종이", unit: "장", whole: "색종이" },
+  { left: "어른", right: "어린이", unit: "명", whole: "사람" },
+  { left: "찹쌀떡", right: "송편", unit: "개", whole: "떡" },
+] as const;
+
+/** 「응용」 — 한쪽이 다른 쪽보다 더 많은 두 단계. */
+const ADD_PEOPLE = [
+  { a: "형", b: "동생", thing: "딱지", unit: "장" },
+  { a: "지수", b: "현우", thing: "구슬", unit: "개" },
+  { a: "서연", b: "도윤", thing: "붙임딱지", unit: "장" },
+  { a: "준서", b: "윤아", thing: "우표", unit: "장" },
+  { a: "민재", b: "하린", thing: "사탕", unit: "개" },
+] as const;
+
+/** 연산 — 식 그대로. 지금 기본 문항과 같은 모양이다. */
+function add3Calc(unit: UnitSeed, rng: Rng): ElemProblem {
+  const [a, b] = addWithCarries(rng, 2, 3);
+  return make(
+    unit,
+    `다음을 계산하시오.\n\n$${a}+${b}=\\square$`,
+    n(a + b),
+    expr(`${a}+${b}=${a + b}`),
+    fig("columnOp", { top: String(a), op: "+", bottom: String(b) }),
+  );
+}
+
+/** 기본 — 문장 한 겹. 식을 학생이 세운다(그래서 세로셈 그림을 붙이지 않는다). */
+function add3Word(unit: UnitSeed, rng: Rng): ElemProblem {
+  const [a, b] = addWithCarries(rng, 2, 3);
+  const p = pick(rng, ADD_PAIRS);
+  return make(
+    unit,
+    `${p.left}${josa(p.left, "은", "는")} ${n(a)}${p.unit}이고, ${p.right}${josa(p.right, "은", "는")} ${n(b)}${p.unit}입니다. ${p.whole}${josa(p.whole, "은", "는")} 모두 몇 ${p.unit}입니까?`,
+    n(a + b),
+    `${p.left} 수와 ${p.right} 수를 더합니다. ${expr(`${a}+${b}=${a + b}`)} 이므로 모두 ${n(a + b)}${p.unit}입니다.`,
+  );
+}
+
+/** 응용 — 두 단계. 「더 많은 쪽」을 먼저 구하고 둘을 합친다. */
+function add3TwoStep(unit: UnitSeed, rng: Rng): ElemProblem {
+  const [base, more] = twoStepAdd(rng);
+  const second = base + more;
+  const total = base + second;
+  const p = pick(rng, ADD_PEOPLE);
+  return make(
+    unit,
+    `${p.a}${josa(p.a, "은", "는")} ${p.thing}${josa(p.thing, "을", "를")} ${n(base)}${p.unit} 모았고, ${p.b}${josa(p.b, "은", "는")} ${p.a}보다 ${n(more)}${p.unit} 더 모았습니다. 두 사람이 모은 ${p.thing}${josa(p.thing, "은", "는")} 모두 몇 ${p.unit}입니까?`,
+    n(total),
+    `먼저 ${p.b}${josa(p.b, "이", "가")} 모은 수를 구합니다. ${expr(`${base}+${more}=${second}`)} 이므로 ${n(second)}${p.unit}입니다. 두 사람이 모은 수를 더하면 ${expr(`${base}+${second}=${total}`)} 이므로 모두 ${n(total)}${p.unit}입니다.`,
+  );
+}
+
+/**
+ * 심화 — 역산. 잘못 더한 수는 바른 수의 **자릿수를 맞바꾼** 것이라 그럴듯하다.
+ *
+ * ⚠️ 해설이 **세 자리 뺄셈**을 쓴다. 이 소단원(`1-1-2`, orderIndex 132)은 뺄셈
+ * `1-1-3`(133)보다 **앞**이다. 그래도 두는 근거(리드 판단 2026-08-22): 받아내림은
+ * 두 자리로 초2에서 배웠고 세 자리가 1-1-3 의 새 내용일 뿐이며, 교재들도 「어떤 수」
+ * 유형을 덧셈 차시의 심화에 둔다. **갈릴 수 있는 판단이라 원장님 확정 자료에 표기해
+ * 여쭙는다** — 「덧셈만으로」로 확정되면 역산 대신 다른 축을 찾아야 한다.
+ */
+function add3Reverse(unit: UnitSeed, rng: Rng): ElemProblem {
+  const r = reverseAdd(rng);
+  return make(
+    unit,
+    `어떤 수에 $${r.right}$ 만큼 더해야 할 것을 잘못하여 $${r.wrong}$ 만큼 더했더니 합이 $${r.wrongSum}$ 입니다. 바르게 계산한 값은 얼마입니까?`,
+    n(r.rightSum),
+    `잘못 더한 식에서 어떤 수를 먼저 구합니다. ${expr(`${r.wrongSum}-${r.wrong}=${r.some}`)} 이므로 어떤 수는 ${n(r.some)} 입니다. 바르게 계산하면 ${expr(`${r.some}+${r.right}=${r.rightSum}`)} 입니다.`,
+  );
+}
+
 /**
  * 난이도 갈래 (D-71 파일럿) — 키는 `tierKey` 형식(`"초3|1-1-2"`), 값은 넷 전부.
  * 축은 시안(연산=식 그대로 · 기본=문장 한 겹 · 응용=두 단계 · 심화=역산·어떤 수)을 따른다.
  */
-export const G3_TIERS: ElemTierMap = {};
+export const G3_TIERS: ElemTierMap = {
+  "초3|1-1-2": {
+    연산: add3Calc,
+    기본: add3Word,
+    응용: add3TwoStep,
+    심화: add3Reverse,
+  },
+};

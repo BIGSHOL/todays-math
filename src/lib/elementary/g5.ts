@@ -1562,8 +1562,145 @@ export const G5: Record<string, ChapterHandler> = {
   "초5|2-6 평균과 가능성": average,
 };
 
+/* ────────── 난이도 갈래 (D-71) — 초5 `1-6-2` 파일럿 ────────── */
+
+/** 넓이 문항의 소재. 「직사각형」한 낱말만 되풀이하면 단조롭다(원장님 「유형은 다양할수록 환영」). */
+const AREA_THINGS = [
+  "색종이",
+  "액자",
+  "타일",
+  "손수건",
+  "스케치북",
+  "게시판",
+  "방석",
+] as const;
+
+/** 연산 — 치수가 **글로** 주어진다. 공식을 한 번 쓰면 끝난다. 그림 없음. */
+function area62Calc(unit: UnitSeed, rng: Rng): ElemProblem {
+  if (intBetween(rng, 0, 1) === 0) {
+    const side = intBetween(rng, 4, 15);
+    return make(
+      unit,
+      `한 변의 길이가 ${n(side)} cm인 정사각형의 넓이는 몇 cm²입니까?`,
+      n(side * side),
+      `정사각형의 넓이는 한 변을 두 번 곱합니다. ${expr(`${side}\\times${side}=${side * side}`)}입니다.`,
+    );
+  }
+  const w = intBetween(rng, 6, 18);
+  const h = intBetween(rng, 3, w - 1);
+  return make(
+    unit,
+    `가로가 ${n(w)} cm, 세로가 ${n(h)} cm인 직사각형의 넓이는 몇 cm²입니까?`,
+    n(w * h),
+    `직사각형의 넓이는 가로와 세로의 곱입니다. ${expr(`${w}\\times${h}=${w * h}`)}입니다.`,
+  );
+}
+
+/**
+ * 기본 — 치수를 **그림에서 읽는다**. 그래서 발문에 수가 없다.
+ *
+ * 그림이 주는 것은 «묻는 값(넓이)»이 아니라 «재료(가로·세로)»다 — 답을 알려 주지 않는다(R6).
+ * 치수는 `areaPoly` 가 `measured()` 규칙으로 두 변에 적는다.
+ */
+function area62Read(unit: UnitSeed, rng: Rng): ElemProblem {
+  const thing = pick(rng, AREA_THINGS);
+  if (intBetween(rng, 0, 1) === 0) {
+    const side = intBetween(rng, 4, 14);
+    return make(
+      unit,
+      `다음 정사각형 모양 ${thing}의 넓이는 몇 cm²입니까?`,
+      n(side * side),
+      `그림에서 한 변이 ${n(side)} cm임을 읽습니다. ${expr(`${side}\\times${side}=${side * side}`)}입니다.`,
+      fig("areaPoly", { shape: "rect", base: side, height: side }),
+    );
+  }
+  const w = intBetween(rng, 7, 16);
+  const h = intBetween(rng, 3, w - 1);
+  return make(
+    unit,
+    `다음 직사각형 모양 ${thing}의 넓이는 몇 cm²입니까?`,
+    n(w * h),
+    `그림에서 가로가 ${n(w)} cm, 세로가 ${n(h)} cm임을 읽습니다. ${expr(`${w}\\times${h}=${w * h}`)}입니다.`,
+    fig("areaPoly", { shape: "rect", base: w, height: h }),
+  );
+}
+
+/**
+ * 응용 — 둘레와 넓이를 **잇는다**. 한 걸음 더 가야 공식에 넣을 수를 얻는다.
+ * 둘레는 언제나 짝수(`2(가로+세로)`)이고 나눗셈이 딱 떨어지는 것을 **구성이** 보장한다.
+ */
+function area62Apply(unit: UnitSeed, rng: Rng): ElemProblem {
+  if (intBetween(rng, 0, 1) === 0) {
+    const side = intBetween(rng, 4, 15);
+    const per = side * 4;
+    return make(
+      unit,
+      `둘레가 ${n(per)} cm인 정사각형의 넓이는 몇 cm²입니까?`,
+      n(side * side),
+      `정사각형은 네 변의 길이가 같으므로 한 변은 ${expr(`${per}\\div4=${side}`)} cm입니다. 넓이는 ${expr(`${side}\\times${side}=${side * side}`)}입니다.`,
+    );
+  }
+  const w = intBetween(rng, 5, 16);
+  // 세로가 가로와 같으면 정사각형이라 「직사각형」이라 부르기 어색하다.
+  const h = pick(
+    rng,
+    [3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter((v) => v !== w),
+  );
+  const per = 2 * (w + h);
+  return make(
+    unit,
+    `둘레가 ${n(per)} cm인 직사각형의 가로가 ${n(w)} cm입니다. 이 직사각형의 넓이는 몇 cm²입니까?`,
+    n(w * h),
+    `둘레의 절반이 가로와 세로의 합이므로 ${expr(`${per}\\div2=${w + h}`)} cm입니다. 세로는 ${expr(`${w + h}-${w}=${h}`)} cm이고, 넓이는 ${expr(`${w}\\times${h}=${w * h}`)}입니다.`,
+  );
+}
+
+/**
+ * 심화 — 넓이 → 한 변 → 둘레 → 세로 → 넓이. **네 걸음**이다.
+ *
+ * ⚠️ 「넓이 → 한 변」 역산은 **완전제곱수만** 쓴다. 초5 는 제곱근을 안 배웠고,
+ * 곱셈구구로 `8\times8=64` 를 떠올려야 서는 문항이다. 그래서 한 변을 **먼저** 뽑고
+ * 넓이를 유도한다 — 넓이를 먼저 뽑으면 제곱근이 없는 수가 나온다.
+ */
+function area62Deep(unit: UnitSeed, rng: Rng): ElemProblem {
+  // ⚠️ 한 변이 `4` 면 넓이와 둘레가 **둘 다 16** 이라, 해설에 `4×4=16` 이 뜻이 다른 채로
+  //    두 번 나온다(넓이 한 번, 둘레 한 번). 초5 가 읽으면 헷갈린다 — 그래서 `5` 부터다.
+  const side = intBetween(rng, 5, 12);
+  const area = side * side;
+  const half = side * 2; // 둘레가 같은 직사각형의 (가로+세로)
+  // 양쪽 변을 `4` 이상으로 두어 지나치게 납작한 직사각형(`19×3`)을 피한다.
+  const cands: number[] = [];
+  for (let v = 4; v <= half - 4; v += 1) if (v !== side) cands.push(v);
+  const w = pick(rng, cands);
+  const h = half - w;
+  const chain =
+    `정사각형의 넓이가 ${n(area)} cm²이고 ${expr(`${side}\\times${side}=${area}`)}이므로 한 변은 ${n(side)} cm입니다. ` +
+    `둘레는 ${expr(`${side}\\times4=${side * 4}`)} cm이고, 직사각형도 둘레가 같으므로 가로와 세로의 합은 ${expr(`${side * 4}\\div2=${half}`)} cm입니다. `;
+  if (intBetween(rng, 0, 1) === 0) {
+    return make(
+      unit,
+      `넓이가 ${n(area)} cm²인 정사각형과 둘레가 같은 직사각형이 있습니다. 이 직사각형의 가로가 ${n(w)} cm일 때, 넓이는 몇 cm²입니까?`,
+      n(w * h),
+      `${chain}세로는 ${expr(`${half}-${w}=${h}`)} cm이므로 넓이는 ${expr(`${w}\\times${h}=${w * h}`)}입니다.`,
+    );
+  }
+  return make(
+    unit,
+    `넓이가 ${n(area)} cm²인 정사각형과 둘레가 같은 직사각형이 있습니다. 이 직사각형의 세로가 ${n(h)} cm일 때, 넓이는 몇 cm²입니까?`,
+    n(w * h),
+    `${chain}가로는 ${expr(`${half}-${h}=${w}`)} cm이므로 넓이는 ${expr(`${w}\\times${h}=${w * h}`)}입니다.`,
+  );
+}
+
 /**
  * 난이도 갈래 (D-71 파일럿) — 키는 `tierKey` 형식(`"초5|1-6-2"`), 값은 넷 전부.
  * 축은 시안(연산=치수 글로 · 기본=그림 읽기 · 응용=둘레→넓이 · 심화=개념 사슬)을 따른다.
  */
-export const G5_TIERS: ElemTierMap = {};
+export const G5_TIERS: ElemTierMap = {
+  "초5|1-6-2": {
+    연산: area62Calc,
+    기본: area62Read,
+    응용: area62Apply,
+    심화: area62Deep,
+  },
+};
