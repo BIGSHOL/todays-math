@@ -678,7 +678,12 @@ describe.skipIf(!hasEngine)("[초등 그림] 무작위 20 스펙", () => {
     expect(sb.w).toBeGreaterThan(sa.w);
   });
 
-  it("마름모 대각선 길이는 교차점을 피하고 measured() 치수선을 쓴다", async () => {
+  /**
+   * 원장님 확정 2026-08-22 — 「마름모는 … 내부에는 라벨 표기 안 하는 걸로 하자.
+   * 표기하니까 오히려 너저분해지는듯」. 네 안을 다 그려 본 뒤 나온 결정이다.
+   * **대각선 점선은 남기고 라벨만 뺀다** — 넓이 규칙이 그 선에서 보인다.
+   */
+  it("마름모는 대각선 점선만 그리고 길이 라벨은 적지 않는다", async () => {
     const r = await renderFigureSpec({
       version: "elem-1",
       kind: "areaPoly",
@@ -689,27 +694,11 @@ describe.skipIf(!hasEngine)("[초등 그림] 무작위 20 스펙", () => {
     });
     expect(r.ok).toBe(true);
     if (!r.ok) return;
-    const poly = r.svg.match(/<polygon points="([^"]+)"/);
-    expect(poly).toBeTruthy();
-    const pts = poly![1].split(/\s+/).map((p) => p.split(",").map(Number));
-    const xs = pts.map((p) => p[0]!);
-    const ys = pts.map((p) => p[1]!);
-    const midX = (Math.min(...xs) + Math.max(...xs)) / 2;
-    const midY = (Math.min(...ys) + Math.max(...ys)) / 2;
-    const textAt = (label: string) => {
-      const m = r.svg.match(
-        new RegExp(`x="([0-9.-]+)" y="([0-9.-]+)"[^>]*>${label}<`),
-      );
-      expect(m, label).toBeTruthy();
-      return { x: Number(m![1]), y: Number(m![2]) };
-    };
-    const eight = textAt("8 cm");
-    const four = textAt("4 cm");
-    expect(Math.hypot(eight.x - midX, eight.y - midY)).toBeGreaterThan(10);
-    expect(Math.hypot(four.x - midX, four.y - midY)).toBeGreaterThan(10);
-    expect(Math.hypot(eight.x - four.x, eight.y - four.y)).toBeGreaterThan(16);
-    expect(eight.y).toBeLessThan(Math.max(...ys) + 22);
-    expect(four.x).toBeLessThan(Math.max(...xs) + 22);
+    expect(r.svg, "마름모는 라벨을 적지 않는다").not.toMatch(/\d\s*cm/);
+    expect(
+      [...r.svg.matchAll(/<line [^>]*stroke-dasharray="5 4"/g)],
+      "대각선 점선 둘",
+    ).toHaveLength(2);
   });
 
   it("정삼각형은 세 변의 길이가 같다", async () => {
@@ -1089,14 +1078,9 @@ describe.skipIf(!hasEngine)(
         height: 4,
         top: 5,
       },
-      {
-        version: "elem-1",
-        kind: "areaPoly",
-        shape: "rhombus",
-        base: 8,
-        height: 4,
-        d2: 4,
-      },
+      // ⚠️ `rhombus` 는 일부러 뺐다 — 원장님이 라벨을 안 적기로 확정하셨다(2026-08-22).
+      //    「라벨이 있으면 halo 여야 한다」는 규칙은 그대로이고, 마름모는 그 라벨이
+      //    아예 없다. 대신 「비율대로 그려지는가」를 따로 잰다(위 시험).
       { version: "elem-1", kind: "cuboid", w: 8, d: 2, h: 4 },
       { version: "elem-1", kind: "cylinder", r: 2, h: 3 },
       { version: "elem-1", kind: "netCuboid", w: 7, d: 4, h: 5 },
@@ -1117,10 +1101,11 @@ describe.skipIf(!hasEngine)(
           spec: { shape: "trap", base: 10, height: 6, top: 4 },
           want: [10, 6, 4],
         },
-        {
-          spec: { shape: "rhombus", base: 12, height: 8, d2: 8 },
-          want: [12, 8],
-        },
+        // 마름모는 `want: []` 다 — 원장님 확정으로 **라벨을 안 적는다**(2026-08-22).
+        // 「하나도 빠뜨리지 않는다」와 「안 적는다」가 부딪히므로 여기서 빼고,
+        // 대신 「비율대로 그려지는가」로 잰다. 다만 **설명 없는 점선** 검사(아래)는
+        // 마름모에도 그대로 대야 한다 — 대각선 둘이 라벨 없이 남기 때문이다.
+        { spec: { shape: "rhombus", base: 12, height: 8, d2: 8 }, want: [] },
       ];
       const missing: string[] = [];
       for (const c of cases) {
@@ -1141,35 +1126,59 @@ describe.skipIf(!hasEngine)(
             missing.push(`${c.spec.shape}: ${v} cm 가 지면에 없다`);
         }
         // 설명 없는 점선이 남지 않는가 — 안내선은 치수 곡선과 **짝**이어야 한다.
-        const guides = (r.svg.match(/stroke-dasharray="5 4"/g) ?? []).length;
-        const dims = (r.svg.match(/stroke-dasharray="6 4"/g) ?? []).length;
-        expect(dims, `${c.spec.shape} 치수 곡선`).toBeGreaterThanOrEqual(
-          guides,
-        );
+        //
+        // ⚠️ 마름모는 **일부러 예외**다. 원장님이 라벨을 안 적기로 확정하셔서(2026-08-22)
+        //    대각선 점선 둘이 설명 없이 남는다 — 그건 결함이 아니라 결정이다. 규칙을
+        //    조용히 약하게 만들지 않고 **예외라고 적는다.** 대신 마름모가 잃은 조명은
+        //    「비율대로 그려지는가」가 대신 켠다(바로 위 시험).
+        if (c.want.length > 0) {
+          const guides = (r.svg.match(/stroke-dasharray="5 4"/g) ?? []).length;
+          const dims = (r.svg.match(/stroke-dasharray="6 4"/g) ?? []).length;
+          expect(dims, `${c.spec.shape} 치수 곡선`).toBeGreaterThanOrEqual(
+            guides,
+          );
+        } else {
+          expect(shown.size, `${c.spec.shape} 는 라벨이 없어야 한다`).toBe(0);
+        }
       }
       expect(missing).toEqual([]);
     });
 
-    it("마름모는 적힌 대각선 길이대로 그려진다 — 라벨과 그림이 갈리지 않는다", async () => {
-      const r = await renderFigureSpec({
-        version: "elem-1",
-        kind: "areaPoly",
-        shape: "rhombus",
-        base: 12,
-        height: 4,
-        d2: 8,
-      });
-      expect(r.ok).toBe(true);
-      if (!r.ok) return;
-      const pts = parsePoints(r.svg.match(/<polygon points="([^"]+)"/)![1]!);
-      const xs = pts.map((p) => p[0]);
-      const ys = pts.map((p) => p[1]);
-      const w = Math.max(...xs) - Math.min(...xs);
-      const h = Math.max(...ys) - Math.min(...ys);
-      // 적힌 값은 12 와 8 이다. `height` 4 로 그리면 비가 3.0 이 되어 여기서 갈린다.
-      expect(w / h, "가로:세로 = 12:8").toBeCloseTo(12 / 8, 2);
-      expect(r.svg).toContain(">12 cm<");
-      expect(r.svg).toContain(">8 cm<");
+    /**
+     * **지면에서 끈 조명을 여기로 옮긴 것이다.**
+     *
+     * 원장님이 마름모 라벨을 빼기로 하셨으므로(2026-08-22) §4-20 의 「값이 곧 조명」이
+     * 지면에서 사라진다 — 그리고 §4-21(`height` 로 그리고 `d2` 로 적던 자리)을 지면에서
+     * 잡아 줄 근거가 **그 라벨이었다.** 원장님 결정은 **지면**에 대한 것이지 **검사**에
+     * 대한 것이 아니다. 그래서 라벨이 하던 일을 시험이 대신 한다 —
+     * 「그린 가로:세로가 스펙의 `d1:d2` 와 맞는가」를 SVG 에서 **직접** 잰다.
+     *
+     * ⚠️ `height != d2` 인 입력이 이 검사의 핵심이다. 같은 값만 넣으면 무엇으로 그리든
+     *    비가 같아서 §4-21 자리가 구조적으로 안 갈린다.
+     */
+    it("마름모는 라벨이 없어도 스펙의 대각선 비율대로 그려진다", async () => {
+      for (const [d1, d2, height] of [
+        [12, 8, 4], // height != d2 — §4-21 자리. height 로 그리면 비가 3.0 이 된다
+        [18, 6, 6],
+        [6, 11, 11],
+      ]) {
+        const r = await renderFigureSpec({
+          version: "elem-1",
+          kind: "areaPoly",
+          shape: "rhombus",
+          base: d1,
+          height,
+          d2,
+        });
+        expect(r.ok, `${d1}x${d2}`).toBe(true);
+        if (!r.ok) return;
+        const pts = parsePoints(r.svg.match(/<polygon points="([^"]+)"/)![1]!);
+        const xs = pts.map((p) => p[0]);
+        const ys = pts.map((p) => p[1]);
+        const w = Math.max(...xs) - Math.min(...xs);
+        const h = Math.max(...ys) - Math.min(...ys);
+        expect(w / h, `가로:세로 = ${d1}:${d2}`).toBeCloseTo(d1 / d2, 1);
+      }
     });
 
     it("cm 라벨은 전부 halo 치수 글자다 — 도형 위에 얹은 날 텍스트가 없다", async () => {

@@ -141,19 +141,28 @@ io.open(p, "w", encoding="utf-8").write(
 PY
 run "viewBox 맞춤 끄기"
 
-# ⑥ 마름모 치수를 날 텍스트로 되돌린다 — 도형 위에 겹치는 그 결함
+# ⑥ 마름모에 라벨을 되돌린다 — 원장님이 「너저분하다」고 빼기로 하신 그것
+#    (예전 변이는 「날 텍스트로 되돌리기」였는데 그 코드가 통째로 사라져 앵커가 죽었다.
+#     변이는 **지금 지키는 규칙**을 겨눠야 낡지 않는다.)
 python - "$ADV" <<'PY'
-import io, re, sys
+import io, sys
 p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
-old = re.search(r"        parts\.append\(\n            _length_mark\(\n                pts\[3\].*?\n        \)\n", s, re.S)
-assert old, "앵커 없음 ⑥"
-io.open(p, "w", encoding="utf-8").write(
-    s[: old.start()]
-    + '        parts.append(_text(cx, cy + 13, f"{_n(base)} cm", size=12))\n'
-    + s[old.end() :]
-)
+old = '        parts.append(_line(pts[1], pts[3], sw=1.05, dash="5 4"))'
+assert old in s, "앵커 없음 ⑥"
+new = old + '\n        parts.append(_text(cx, cy + 13, f"{_n(base)} cm", size=12))  # 변이'
+io.open(p, "w", encoding="utf-8").write(s.replace(old, new, 1))
 PY
-run "마름모 치수를 날 텍스트로"
+run "마름모에 라벨 되돌리기"
+
+# ⑮ 마름모 대각선 점선을 뺀다 — 라벨을 뺐으니 이 선마저 없으면 넓이 규칙이 안 보인다
+python - "$ADV" <<'PY'
+import io, sys
+p = sys.argv[1]; s = io.open(p, encoding="utf-8").read()
+old = '        parts.append(_line(pts[0], pts[2], sw=1.05, dash="5 4"))\n'
+assert old in s, "앵커 없음 ⑮"
+io.open(p, "w", encoding="utf-8").write(s.replace(old, "", 1))
+PY
+run "마름모 대각선 점선 빼기"
 
 # ⑦ 등변 tick·직각 기호를 기본으로 켠다 — 그림이 답을 알려 준다
 #    ⚠️ 함수 기본값(`marks: bool = False`)을 바꾸는 변이는 **산출물이 그대로**다 —
