@@ -1966,5 +1966,35 @@
   "code": "HM10302-85AT",
   "dbAnswer": "⑤",
   "aiAnswer": "②"
+ },
+ {
+  "id": "07864bdb-3d8b-42c8-876c-06336b925fb5",
+  "code": "HM10302-YXCB",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "e9ee76c6-0151-465d-854d-0221341d83cb",
+  "code": "HM10306-LEXF",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "4396f3e7-457b-4434-b011-a447e8971ce2",
+  "code": "HM10306-U47R",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "427966f7-00b7-4193-8917-0d5ff62d0002",
+  "code": "HM10306-ULTG",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "9e2cbeac-469b-4726-aee8-f071cd71ea07",
+  "code": "HM10306-Y528",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
  }
 ]
