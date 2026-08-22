@@ -39,6 +39,75 @@ function decimalPlaces(text: string): number[] {
   return [...text.matchAll(/\d+\.(\d+)/g)].map((m) => m[1]!.length);
 }
 
+/**
+ * 식의 피연산자 하나 — `2\frac{1}{3}`(대분수)·`\frac{1}{3}`·`4.83`·`16` 을 가른다.
+ * `dp` 는 소수점 아래 자릿수(소수만), `denom` 은 분모(분수만).
+ */
+type Operand = {
+  kind: "자연수" | "소수" | "분수";
+  value: number;
+  dp: number;
+  denom?: number;
+};
+
+const NUM_TOKEN = String.raw`(?:\d+\s*)?\\frac\{\d+\}\{\d+\}|\d+\.\d+|\d+`;
+
+function classifyOperand(tok: string): Operand {
+  const frac = tok.match(/^(\d+)?\s*\\frac\{(\d+)\}\{(\d+)\}$/);
+  if (frac) {
+    const whole = frac[1] ? Number(frac[1]) : 0;
+    return {
+      kind: "분수",
+      value: whole + Number(frac[2]) / Number(frac[3]),
+      dp: 0,
+      denom: Number(frac[3]),
+    };
+  }
+  if (tok.includes(".")) {
+    return { kind: "소수", value: Number(tok), dp: tok.split(".")[1]!.length };
+  }
+  return { kind: "자연수", value: Number(tok), dp: 0 };
+}
+
+/**
+ * `a\div b`·`a\times b` 의 두 피연산자. 식이 없으면 null.
+ *
+ * ⚠️ null 을 받는 검사는 **위반**으로 처리한다 — 이 소단원들의 발문은 전부 식 하나다
+ * (씨앗 120개 실측: 소단원 16개 모두 뼈대 1가지). 문장형이 생기면 여기서 빨개지므로
+ * 그때 이 추출기를 넓힌다 — 조용히 통과시키면 그 부류가 통째로 사각지대가 된다.
+ */
+function operandsOf(
+  content: string,
+  op: "div" | "times",
+): [Operand, Operand] | null {
+  const m = content.match(
+    new RegExp(`(${NUM_TOKEN})\\s*\\\\${op}\\s*(${NUM_TOKEN})`),
+  );
+  return m
+    ? [classifyOperand(m[1]!.trim()), classifyOperand(m[2]!.trim())]
+    : null;
+}
+
+/** 「(A)÷(B)」·「(A)×(B)」 — 식의 두 피연산자 종류가 소단원 이름 그대로인가. */
+function opShape(
+  op: "div" | "times",
+  left: Operand["kind"],
+  right: Operand["kind"],
+): (content: string) => boolean {
+  return (c) => {
+    const o = operandsOf(c, op);
+    return o !== null && o[0].kind === left && o[1].kind === right;
+  };
+}
+
+/** 몫이 소수 몇 자리에서 나누어떨어지는가 — 부동소수 오차는 1e-6 으로 눌러 잰다. */
+function quotientDp(q: number): number {
+  for (let d = 0; d <= 6; d += 1) {
+    if (Math.abs(q * 10 ** d - Math.round(q * 10 ** d)) < 1e-6) return d;
+  }
+  return 7;
+}
+
 const DIGIT_WORD: Record<string, number> = { 한: 1, 두: 2, 세: 3, 네: 4 };
 
 /**
@@ -150,6 +219,76 @@ const CHECKS: Check[] = [
     },
     when: decimalContext,
   },
+  // ── 「(A)÷(B)」·「(A)×(B)」 피연산자 종류 (2026-08-22, 미판정이던 16개 소단원) ──
+  // needle 이 실제로 닿는 소단원은 `scripts/qa` 에서 전수 열거로 확인했다 —
+  // 「(분수)×(분수)」 는 일부러 안 만든다: 2-1-4 의 그 구절은 **답** 쪽 조건이라
+  // 발문에 걸면 멀쩡한 소단원이 통째로 위반이 된다.
+  { needle: "(분수)×(자연수)", ok: opShape("times", "분수", "자연수") },
+  { needle: "(자연수)×(분수)", ok: opShape("times", "자연수", "분수") },
+  { needle: "(자연수)÷(자연수)", ok: opShape("div", "자연수", "자연수") },
+  { needle: "(분수)÷(자연수)", ok: opShape("div", "분수", "자연수") },
+  { needle: "(소수)÷(자연수)", ok: opShape("div", "소수", "자연수") },
+  { needle: "(분수)÷(분수)", ok: opShape("div", "분수", "분수") },
+  { needle: "(자연수)÷(분수)", ok: opShape("div", "자연수", "분수") },
+  { needle: "(소수)÷(소수)", ok: opShape("div", "소수", "소수") },
+  { needle: "(자연수)÷(소수)", ok: opShape("div", "자연수", "소수") },
+  {
+    needle: "몫이 1보다 작은",
+    ok: (c) => {
+      const o = operandsOf(c, "div");
+      return o !== null && o[0].value < o[1].value;
+    },
+  },
+  {
+    // 「0 을 내린다」 = 피제수의 소수 자리를 다 쓰고도 안 나누어떨어진다
+    // — 곧 몫의 소수 자릿수가 피제수보다 깊다 (42.4÷5 = 8.48).
+    needle: "소수점 아래 0을 내려",
+    ok: (c) => {
+      const o = operandsOf(c, "div");
+      return o !== null && quotientDp(o[0].value / o[1].value) > o[0].dp;
+    },
+  },
+  {
+    needle: "몫의 소수 첫째 자리에 0",
+    ok: (c) => {
+      const o = operandsOf(c, "div");
+      if (o === null) return false;
+      const q = o[0].value / o[1].value;
+      const dp = quotientDp(q);
+      // 몫이 정수·한 자리(6.8)면 「첫째 자리의 0」 자체가 없다.
+      return dp >= 2 && q.toFixed(dp).split(".")[1]![0] === "0";
+    },
+  },
+  {
+    needle: "자릿수가 같은",
+    ok: (c) => {
+      const o = operandsOf(c, "div");
+      return o !== null && o[0].dp > 0 && o[0].dp === o[1].dp;
+    },
+  },
+  {
+    needle: "자릿수가 다른",
+    ok: (c) => {
+      const o = operandsOf(c, "div");
+      return o !== null && o[0].dp > 0 && o[1].dp > 0 && o[0].dp !== o[1].dp;
+    },
+  },
+  {
+    // 초6 「분모가 같은 (분수)÷(분수)」만이 아니라 **초3 「분모가 같은 분수의 크기 비교」**도
+    // 이 이름을 쓴다 — 거기엔 나눗셈이 없다. 그래서 식이 아니라 발문의 분수 **전부**를 본다.
+    needle: "분모가 같은",
+    ok: (c) => {
+      const f = fracs(c);
+      return f.length >= 2 && f.every(([, d]) => d === f[0]![1]);
+    },
+  },
+  {
+    needle: "분모가 다른",
+    ok: (c) => {
+      const f = fracs(c);
+      return f.length >= 2 && f.some(([, d]) => d !== f[0]![1]);
+    },
+  },
 ];
 
 /**
@@ -249,6 +388,88 @@ const FIXTURES: Fixture[] = [
     want: true,
     why: "대분수가 피연산자로 있다",
   },
+  // ── (A)÷(B) 피연산자 검사 (2026-08-22) — 걸려야 하는 것 ──────────────
+  {
+    section: "1-3-2 몫이 1보다 작은 (소수)÷(자연수) 알아보기",
+    content: "몫을 구하시오.\n\n$3.2\\div2=\\square$",
+    want: false,
+    why: "몫 1.6 — 1보다 작지 않다",
+  },
+  {
+    section: "1-3-3 소수점 아래 0을 내려 계산하는 (소수)÷(자연수) 알아보기",
+    content: "몫을 구하시오.\n\n$9.5\\div5=\\square$",
+    want: false,
+    why: "몫 1.9 — 내릴 0 이 없다",
+  },
+  {
+    section: "1-3-4 몫의 소수 첫째 자리에 0이 있는 (소수)÷(자연수) 알아보기",
+    content: "몫을 구하시오.\n\n$27.2\\div4=\\square$",
+    want: false,
+    why: "몫 6.8 — 첫째 자리가 8 이다",
+  },
+  {
+    section: "2-2-1 자릿수가 같은 (소수)÷(소수) 알아보기",
+    content: "몫을 구하시오.\n\n$15.47\\div3.5=\\square$",
+    want: false,
+    why: "두 자리 ÷ 한 자리 — 자릿수가 다르다",
+  },
+  {
+    section: "2-1-1 분모가 같은 (분수)÷(분수) 알아보기",
+    content: "다음을 계산하시오.\n\n$\\frac{1}{4}\\div\\frac{1}{6}=\\square$",
+    want: false,
+    why: "분모 4 ≠ 6",
+  },
+  {
+    section: "2-2-1 (분수)×(자연수)의 계산",
+    content: "$6\\times\\frac{3}{4}=\\square$",
+    want: false,
+    why: "차례가 뒤집혔다 — (자연수)×(분수)다",
+  },
+  {
+    section: "1-3-1 (소수)÷(자연수) 알아보기",
+    content: "몫을 구하시오.\n\n$12\\div4=\\square$",
+    want: false,
+    why: "피제수에 소수가 없다",
+  },
+  // ── (A)÷(B) 피연산자 검사 — 걸리면 안 되는 것 ────────────────────────
+  {
+    section: "1-3-2 몫이 1보다 작은 (소수)÷(자연수) 알아보기",
+    content: "몫을 구하시오.\n\n$1.2\\div6=\\square$",
+    want: true,
+    why: "몫 0.2",
+  },
+  {
+    section: "1-3-3 소수점 아래 0을 내려 계산하는 (소수)÷(자연수) 알아보기",
+    content: "몫을 구하시오.\n\n$8.7\\div2=\\square$",
+    want: true,
+    why: "몫 4.35 — 0 을 한 번 내린다",
+  },
+  {
+    section: "1-3-4 몫의 소수 첫째 자리에 0이 있는 (소수)÷(자연수) 알아보기",
+    content: "몫을 구하시오.\n\n$25.4\\div5=\\square$",
+    want: true,
+    why: "몫 5.08",
+  },
+  {
+    section: "2-2-2 자릿수가 다른 (소수)÷(소수) 알아보기",
+    content: "몫을 구하시오.\n\n$15.47\\div3.5=\\square$",
+    want: true,
+    why: "두 자리 ÷ 한 자리",
+  },
+  {
+    section: "1-6-4 분모가 같은 분수의 크기 비교",
+    content:
+      "다음 두 분수 중 더 큰 분수를 쓰시오.\n\n$\\frac{2}{7}$,  $\\frac{5}{7}$",
+    want: true,
+    why: "나눗셈이 없어도 분모가 같으면 통과 — 초3 비교 소단원",
+  },
+  {
+    section: "2-1-4 (분수)÷(분수)를 (분수)×(분수)로 나타내기",
+    content:
+      "다음 나눗셈식을 곱셈식으로 나타내시오.\n\n$\\frac{2}{3}\\div\\frac{5}{6}$",
+    want: true,
+    why: "「×(분수)」 구절은 답 쪽 조건이다 — 발문에는 나눗셈식만 있어도 옳다",
+  },
 ];
 
 /**
@@ -296,9 +517,11 @@ if (process.argv.includes("--selftest")) {
       `  ${mark} ${f.want ? "통과해야" : "걸려야"} — ${f.why}\n       ${f.section}\n       ${f.content}`,
     );
   }
+  // 개수를 손으로 적으면 fixture 를 늘릴 때마다 거짓말이 된다 — 세어서 찍는다.
+  const positives = FIXTURES.filter((f) => !f.want).length;
   console.log(
     failed === 0
-      ? `\n✅ 눈금 ${FIXTURES.length}건 전부 맞다 (양성 7 · 음성 7)`
+      ? `\n✅ 눈금 ${FIXTURES.length}건 전부 맞다 (양성 ${positives} · 음성 ${FIXTURES.length - positives})`
       : `\n❌ 눈금 ${failed}건 어긋남 — **가드를 믿을 수 없다**`,
   );
   process.exit(failed === 0 ? 0 : 1);
