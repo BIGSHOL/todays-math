@@ -1762,5 +1762,11 @@
   "code": "HAL0302-MTNJ",
   "dbAnswer": "②",
   "aiAnswer": "④"
+ },
+ {
+  "id": "3963a9e6-c1e7-444c-84d4-362fcf5281a6",
+  "code": "HAL0305-7JA3",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
  }
 ]
