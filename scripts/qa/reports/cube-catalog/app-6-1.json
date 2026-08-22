@@ -1,0 +1,354 @@
+{
+ "grade": "6-1",
+ "series": "응용",
+ "file": "큐브수학 개념응용 6-1 진도북.pdf",
+ "pageCount": 176,
+ "units": [
+  {
+   "unit": 1,
+   "title": "분수의 나눗셈",
+   "pageStart": 6,
+   "pageEnd": 27,
+   "plannerPage": 5,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 6,
+     "pageEnd": 13,
+     "items": [
+      "개념 1 ~ 개념 9"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 14,
+     "pageEnd": 17,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 18,
+     "pageEnd": 21,
+     "items": [
+      "계산 결과가 자연수가 되는 값 구하기",
+      "일정한 빠르기로 간 거리 구하기",
+      "몫이 가장 큰(작은) 분수의 나눗셈식 만들기",
+      "하루에 하는 일의 양을 분수로 나타내기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 22,
+     "pageEnd": 24,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 25,
+     "pageEnd": 27,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 2,
+   "title": "각기둥과 각뿔",
+   "pageStart": 30,
+   "pageEnd": 57,
+   "plannerPage": 29,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 30,
+     "pageEnd": 35,
+     "items": [
+      "개념 1 ~ 개념 6"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 36,
+     "pageEnd": 39,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 40,
+     "pageEnd": 43,
+     "items": [
+      "개념 7 ~ 개념 10"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 44,
+     "pageEnd": 47,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 48,
+     "pageEnd": 51,
+     "items": [
+      "각기둥의 전개도에서 면의 넓이 구하기",
+      "각기둥(각뿔)의 구성 요소 사이의 관계",
+      "밑면의 모양이 같은 각기둥과 각뿔",
+      "모든 모서리의 길이의 합을 알 때 모서리의 길이 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 52,
+     "pageEnd": 54,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 55,
+     "pageEnd": 57,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 3,
+   "title": "소수의 나눗셈",
+   "pageStart": 60,
+   "pageEnd": 87,
+   "plannerPage": 59,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 60,
+     "pageEnd": 63,
+     "items": [
+      "개념 1 ~ 개념 3"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 64,
+     "pageEnd": 67,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 68,
+     "pageEnd": 73,
+     "items": [
+      "개념 4 ~ 개념 7"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 74,
+     "pageEnd": 77,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 78,
+     "pageEnd": 81,
+     "items": [
+      "도형의 넓이를 이용하여 선분의 길이 구하기",
+      "몫이 가장 큰(작은) 소수의 나눗셈식 만들기",
+      "무게가 똑같은 물건의 무게 구하기",
+      "빨라지는(늦어지는) 시계의 시각 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 82,
+     "pageEnd": 84,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 85,
+     "pageEnd": 87,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 4,
+   "title": "비와 비율",
+   "pageStart": 90,
+   "pageEnd": 117,
+   "plannerPage": 89,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 90,
+     "pageEnd": 95,
+     "items": [
+      "개념 1 ~ 개념 7"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 96,
+     "pageEnd": 99,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 100,
+     "pageEnd": 103,
+     "items": [
+      "개념 8 ~ 개념 12"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 104,
+     "pageEnd": 107,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 108,
+     "pageEnd": 111,
+     "items": [
+      "비의 관계를 비율로 나타내기",
+      "비율을 이용하여 기준량(비교하는 양) 구하기",
+      "길이를 늘이거나 줄여서 새로 만든 도형",
+      "이자율 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 112,
+     "pageEnd": 114,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 115,
+     "pageEnd": 117,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 5,
+   "title": "여러 가지 그래프",
+   "pageStart": 120,
+   "pageEnd": 147,
+   "plannerPage": 119,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 120,
+     "pageEnd": 123,
+     "items": [
+      "개념 1 ~ 개념 4"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 124,
+     "pageEnd": 127,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 128,
+     "pageEnd": 133,
+     "items": [
+      "개념 5 ~ 개념 9"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 134,
+     "pageEnd": 137,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 138,
+     "pageEnd": 141,
+     "items": [
+      "평균을 이용하여 그림그래프 완성하기",
+      "항목 사이의 관계를 이용하여 모르는 항목 구하기",
+      "한 항목이 다른 그래프의 전체가 되는 그래프",
+      "한 항목을 이용하여 전체의 수 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 142,
+     "pageEnd": 144,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 145,
+     "pageEnd": 147,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 6,
+   "title": "직육면체의",
+   "pageStart": 150,
+   "pageEnd": 175,
+   "plannerPage": 149,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 150,
+     "pageEnd": 153,
+     "items": [
+      "개념 1 ~ 개념 6"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 154,
+     "pageEnd": 157,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 158,
+     "pageEnd": 161,
+     "items": [
+      "개념 7 ~ 개념 10"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 162,
+     "pageEnd": 165,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 166,
+     "pageEnd": 169,
+     "items": [
+      "직육면체의 부피를 알 때 겉넓이 구하기",
+      "복잡한 입체도형의 겉넓이 구하기",
+      "물속에 넣은 물건의 부피 구하기",
+      "직육면체를 쌓아서 가장 작은 정육면체 만들기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 170,
+     "pageEnd": 172,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 173,
+     "pageEnd": 175,
+     "items": []
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,354 @@
+{
+ "grade": "5-1",
+ "series": "응용",
+ "file": "큐브수학 개념응용 5-1 진도북.pdf",
+ "pageCount": 176,
+ "units": [
+  {
+   "unit": 1,
+   "title": "자연수의 혼합 계산",
+   "pageStart": 6,
+   "pageEnd": 25,
+   "plannerPage": 5,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 6,
+     "pageEnd": 11,
+     "items": [
+      "개념 1 ~ 개념 6"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 12,
+     "pageEnd": 15,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 16,
+     "pageEnd": 19,
+     "items": [
+      "약속한 기호대로 계산하기",
+      "계산 결과를 가장 크게(작게) 만들기",
+      "안에 들어갈 수 있는 수 구하기",
+      "바르게 계산한 값 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 20,
+     "pageEnd": 22,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 23,
+     "pageEnd": 25,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 2,
+   "title": "약수와 배수",
+   "pageStart": 28,
+   "pageEnd": 55,
+   "plannerPage": 27,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 28,
+     "pageEnd": 31,
+     "items": [
+      "개념 1 ~ 개념 4"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 32,
+     "pageEnd": 35,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 36,
+     "pageEnd": 41,
+     "items": [
+      "개념 5 ~ 개념 12"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 42,
+     "pageEnd": 45,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 46,
+     "pageEnd": 49,
+     "items": [
+      "어떤 수의 배수 중에서 ▒ 번째 수 구하기",
+      "주어진 조건에 알맞은 공배수 구하기",
+      "나머지가 있을 때 어떤 수 구하기",
+      "최대공약수와 최소공배수를 알 때 두 수 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 50,
+     "pageEnd": 52,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 53,
+     "pageEnd": 55,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 3,
+   "title": "규칙과 대응",
+   "pageStart": 58,
+   "pageEnd": 77,
+   "plannerPage": 57,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 58,
+     "pageEnd": 63,
+     "items": [
+      "개념 1 ~ 개념 4"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 64,
+     "pageEnd": 67,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 68,
+     "pageEnd": 71,
+     "items": [
+      "두 수 사이의 대응 관계를 찾아 알맞은 값 구하기",
+      "규칙적인 배열에서 ▒ 째의 수 구하기",
+      "필요한 물건의 수 구하기",
+      "자르는 데 걸리는 시간 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 72,
+     "pageEnd": 74,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 75,
+     "pageEnd": 77,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 4,
+   "title": "약분과 통분",
+   "pageStart": 80,
+   "pageEnd": 107,
+   "plannerPage": 79,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 80,
+     "pageEnd": 83,
+     "items": [
+      "개념 1 ~ 개념 5"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 84,
+     "pageEnd": 87,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 88,
+     "pageEnd": 93,
+     "items": [
+      "개념 6 ~ 개념 11"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 94,
+     "pageEnd": 97,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 98,
+     "pageEnd": 101,
+     "items": [
+      "크기가 같은 분수 만들 때 더한 수(뺀 수) 구하기",
+      "약분하기 전의 분수 구하기",
+      "을 이용하여 분수의 크기 비교하기",
+      "안에 들어갈 수 있는 수 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 102,
+     "pageEnd": 104,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 105,
+     "pageEnd": 107,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 5,
+   "title": "분수의 덧셈과 뺄셈",
+   "pageStart": 110,
+   "pageEnd": 135,
+   "plannerPage": 109,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 110,
+     "pageEnd": 113,
+     "items": [
+      "개념 1 ~ 개념 4"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 114,
+     "pageEnd": 117,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 118,
+     "pageEnd": 121,
+     "items": [
+      "개념 5 ~ 개념 8"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 122,
+     "pageEnd": 125,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 126,
+     "pageEnd": 129,
+     "items": [
+      "안에 들어갈 수 있는 수 구하기",
+      "바르게 계산한 값 구하기",
+      "겹쳐진 부분이 있을 때 전체 길이 구하기",
+      "시간을 분수로 나타내어 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 130,
+     "pageEnd": 132,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 133,
+     "pageEnd": 135,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 6,
+   "title": "다각형의 둘레와 넓이",
+   "pageStart": 138,
+   "pageEnd": 175,
+   "plannerPage": 137,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 138,
+     "pageEnd": 141,
+     "items": [
+      "개념 1 ~ 개념 4"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 142,
+     "pageEnd": 145,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 146,
+     "pageEnd": 149,
+     "items": [
+      "개념 5 ~ 개념 9"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 150,
+     "pageEnd": 153,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 154,
+     "pageEnd": 161,
+     "items": [
+      "개념 10 ~ 개념 16"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 162,
+     "pageEnd": 165,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 166,
+     "pageEnd": 169,
+     "items": [
+      "직각으로 이루어진 도형의 넓이 구하기",
+      "한 도형에서 넓이를 이용하여 모르는 길이 구하기",
+      "넓이를 이용하여 도형의 둘레 구하기",
+      "넓이를 이용하여 모르는 선분의 길이 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 170,
+     "pageEnd": 172,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 173,
+     "pageEnd": 175,
+     "items": []
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,354 @@
+{
+ "grade": "6-2",
+ "series": "응용",
+ "file": "큐브수학 개념응용 6-2 진도북.pdf",
+ "pageCount": 176,
+ "units": [
+  {
+   "unit": 1,
+   "title": "분수의 나눗셈",
+   "pageStart": 6,
+   "pageEnd": 33,
+   "plannerPage": 5,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 6,
+     "pageEnd": 9,
+     "items": [
+      "개념 1 ~ 개념 5"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 10,
+     "pageEnd": 13,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 14,
+     "pageEnd": 19,
+     "items": [
+      "개념 6 ~ 개념 10"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 20,
+     "pageEnd": 23,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 24,
+     "pageEnd": 27,
+     "items": [
+      "도형의 넓이를 이용하여 길이 구하기",
+      "전체와 부분의 양 구하기",
+      "몫이 가장 큰(작은) 분수의 나눗셈식 만들기",
+      "양초가 타는 시간 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 28,
+     "pageEnd": 30,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 31,
+     "pageEnd": 33,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 2,
+   "title": "소수의 나눗셈",
+   "pageStart": 36,
+   "pageEnd": 63,
+   "plannerPage": 35,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 36,
+     "pageEnd": 39,
+     "items": [
+      "개념 1 ~ 개념 3"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 40,
+     "pageEnd": 43,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 44,
+     "pageEnd": 49,
+     "items": [
+      "개념 4 ~ 개념 7"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 50,
+     "pageEnd": 53,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 54,
+     "pageEnd": 57,
+     "items": [
+      "남김없이 나누어 줄 때 더 필요한 양 구하기",
+      "몫이 가장 큰(작은) 소수의 나눗셈식 만들기",
+      "일정하게 놓인 물건의 수 구하기",
+      "빈 병의 무게 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 58,
+     "pageEnd": 60,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 61,
+     "pageEnd": 63,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 3,
+   "title": "공간과 입체",
+   "pageStart": 66,
+   "pageEnd": 93,
+   "plannerPage": 65,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 66,
+     "pageEnd": 69,
+     "items": [
+      "개념 1 ~ 개념 4"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 70,
+     "pageEnd": 73,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 74,
+     "pageEnd": 79,
+     "items": [
+      "개념 5 ~ 개념 10"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 80,
+     "pageEnd": 83,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 84,
+     "pageEnd": 87,
+     "items": [
+      "쌓기나무를 더 쌓거나 빼낸 모양 알아보기",
+      "쌓기나무로 가장 작은 정육면체 만들기",
+      "쌓기나무의 개수가 최대(최소)인 경우 구하기",
+      "쌓은 모양의 겉넓이 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 88,
+     "pageEnd": 90,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 91,
+     "pageEnd": 93,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 4,
+   "title": "비례식과 비례배분",
+   "pageStart": 96,
+   "pageEnd": 123,
+   "plannerPage": 95,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 96,
+     "pageEnd": 101,
+     "items": [
+      "개념 1 ~ 개념 9"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 102,
+     "pageEnd": 105,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 106,
+     "pageEnd": 109,
+     "items": [
+      "개념 10 ~ 개념 14"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 110,
+     "pageEnd": 113,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 114,
+     "pageEnd": 117,
+     "items": [
+      "넓이의 비를 이용하여 길이 구하기",
+      "이익금을 비례배분하기",
+      "겹쳐진 두 도형에서 넓이의 비 구하기",
+      "톱니바퀴의 회전수(톱니 수) 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 118,
+     "pageEnd": 120,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 121,
+     "pageEnd": 123,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 5,
+   "title": "원의 넓이",
+   "pageStart": 126,
+   "pageEnd": 151,
+   "plannerPage": 125,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 126,
+     "pageEnd": 129,
+     "items": [
+      "개념 1 ~ 개념 5"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 130,
+     "pageEnd": 133,
+     "items": []
+    },
+    {
+     "name": "개념 꽉!",
+     "pageStart": 134,
+     "pageEnd": 137,
+     "items": [
+      "개념 6 ~ 개념 10"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 138,
+     "pageEnd": 141,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 142,
+     "pageEnd": 145,
+     "items": [
+      "넓이가 주어진 원의 원주 구하기",
+      "원의 일부분의 넓이 구하기",
+      "여러 개의 원을 묶는 데 사용한 끈의 길이 구하기",
+      "색칠한 부분의 둘레(넓이) 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 146,
+     "pageEnd": 148,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 149,
+     "pageEnd": 151,
+     "items": []
+    }
+   ]
+  },
+  {
+   "unit": 6,
+   "title": "원기둥, 원뿔, 구",
+   "pageStart": 154,
+   "pageEnd": 175,
+   "plannerPage": 153,
+   "sections": [
+    {
+     "name": "개념 꽉!",
+     "pageStart": 154,
+     "pageEnd": 161,
+     "items": [
+      "개념 1 ~ 개념 9"
+     ]
+    },
+    {
+     "name": "문제 콕!",
+     "pageStart": 162,
+     "pageEnd": 165,
+     "items": []
+    },
+    {
+     "name": "응용 쑥!",
+     "pageStart": 166,
+     "pageEnd": 169,
+     "items": [
+      "원기둥의 전개도를 이용하여 길이 구하기",
+      "돌리기 전의 평면도형의 넓이 구하기",
+      "입체도형을 여러 방향에서 본 모양의 둘레 구하기",
+      "일정한 크기의 종이로 만들 수 있는 원기둥의 높이 구하기"
+     ]
+    },
+    {
+     "name": "단원 마무리 1회",
+     "pageStart": 170,
+     "pageEnd": 172,
+     "items": []
+    },
+    {
+     "name": "단원 마무리 2회",
+     "pageStart": 173,
+     "pageEnd": 175,
+     "items": []
+    }
+   ]
+  }
+ ]
+}
