@@ -2146,5 +2146,11 @@
   "code": "HPS0302-PLYW",
   "dbAnswer": "④",
   "aiAnswer": "③"
+ },
+ {
+  "id": "8b2b4251-203d-4223-a53d-88a21a4b8214",
+  "code": "HPS0303-ARXV",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
  }
 ]
