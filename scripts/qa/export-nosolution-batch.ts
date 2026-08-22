@@ -77,6 +77,10 @@ async function main() {
      WHERE (pr.solution IS NULL OR pr.solution = '')
        AND pr.direct_use_allowed = true
        AND pr.answer IS NOT NULL AND pr.answer <> ''
+       -- DB 에 "(정답 없음)" 이 문자 그대로 답으로 박힌 행이 2,072개 있다(NULL 이어야 할 자리).
+       -- 빼지 않으면 매 배치 AI 가 독립적으로 풀어낸 진짜 답과 항상 불일치로 걸려
+       -- 정답 의심 원장만 채우고 절대 채워지지 않는다(2026-08-22, b46/b49 실측).
+       AND pr.answer <> '(정답 없음)'
        AND cardinality(pr.figure_urls) = 0
        AND (pr.figure_svg IS NULL OR pr.figure_svg = '')
        ${exclude.length > 0 ? `AND pr.id NOT IN (${exclude.map((i) => `'${i}'`).join(",")})` : ""}

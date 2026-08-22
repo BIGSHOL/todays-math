@@ -1594,5 +1594,29 @@
   "code": "HC20209-ZL6M",
   "dbAnswer": "④",
   "aiAnswer": "⑤"
+ },
+ {
+  "id": "803a7f37-97c3-4df0-b6cf-7d6d3a38e075",
+  "code": "HC20213-LHNV",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "e573f9a9-1110-4646-b035-8ffecff1cf41",
+  "code": "HC20213-XNTK",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "57ce9437-9635-48bc-837e-c47ebf8911d6",
+  "code": "HC20301-EFWF",
+  "dbAnswer": "감소, 증가",
+  "aiAnswer": "$x<0$일 때 감소, $x>0$일 때 증가"
+ },
+ {
+  "id": "f1354dfa-b4b1-4c58-9361-532e37f05c06",
+  "code": "HC20304-8MED",
+  "dbAnswer": "(정답 없음)",
+  "aiAnswer": "⑴ X의 각 원소에 Y의 원소가 오직 하나씩 대응 ⑵(가) h(x)=-x+1 (나) h(x)=-x+7"
  }
 ]
