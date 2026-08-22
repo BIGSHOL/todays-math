@@ -1684,5 +1684,41 @@
   "code": "HAL0111-79VU",
   "dbAnswer": "①",
   "aiAnswer": "⑤"
+ },
+ {
+  "id": "b716134e-b16c-41f1-9e71-1c96bdb22aef",
+  "code": "HAL0113-JN9J",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "1ea91324-2edb-41ba-af9e-aa05ec8b6139",
+  "code": "HAL0113-Q59B",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "75fc862c-6cf5-423c-b80d-346533622d34",
+  "code": "HAL0114-2B2S",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "507a21fc-f617-4ecc-90d3-f20a9af31ca3",
+  "code": "HAL0201-V743",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "87a7627c-1b62-4df6-9c21-278cce3c71e3",
+  "code": "HAL0202-M79P",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "2765cd64-72e9-448f-a897-9497d0a6e36e",
+  "code": "HAL0203-3PE2",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
  }
 ]
