@@ -79,7 +79,6 @@ export function allocateByPreset(
   const exact = ELEM_TIERS.map((t) => (count * pct[t]) / 100);
   const floors = exact.map(Math.floor);
   let rest = count - floors.reduce((a, b) => a + b, 0);
-  // 잔여가 큰 순 — 같으면 선언 순서 앞이 먼저 (sort 안정성이 그 순서를 지킨다)
   // 잔여가 큰 순 — 같으면 선언 순서 앞이 먼저 (sort 안정성이 그 순서를 지킨다).
   // 0% 갈래 보호는 따로 두지 않는다 — 잔여 총수(rest)는 잔여들의 합이고 각 잔여가
   // 1 미만이므로 rest < «양의 잔여 갈래 수», 즉 잔여는 항상 양의 잔여 갈래에만 간다.
