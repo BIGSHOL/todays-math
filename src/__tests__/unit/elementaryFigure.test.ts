@@ -1709,6 +1709,43 @@ function scaleMismatch(svg: string, values: number[]): number {
   return worst;
 }
 
+/**
+ * 가로형의 값 눈금 — 아래로 누웠으므로 **가운데 정렬**이고 x 를 읽는다.
+ * 제목도 14pt·가운데라 **숫자인 것만** 고른다(제목은 숫자가 아니다).
+ */
+function xTicks(svg: string): { v: number; x: number }[] {
+  return [
+    ...svg.matchAll(
+      /<text x="([0-9.]+)" y="[0-9.]+"[^>]*font-size="14"[^>]*text-anchor="middle"[^>]*>(-?[0-9.]+)<\/text>/g,
+    ),
+  ]
+    .map((m) => ({ v: Number(m[2]), x: Number(m[1]) }))
+    .sort((a, b) => a.v - b.v);
+}
+
+/** 가로 막대의 오른쪽 끝 x — 스펙에 준 순서 그대로. */
+function barRightXs(svg: string): number[] {
+  return [
+    ...svg.matchAll(/<rect x="([0-9.]+)" y="[0-9.]+" width="([0-9.]+)"/g),
+  ].map((m) => Number(m[1]) + Number(m[2]));
+}
+
+/**
+ * 가로형 픽셀 결합 — 막대 끝이 **눈금이 말하는 x** 에 있는가.
+ * 세로형 `scaleMismatch` 와 같은 질문이고 축만 눕는다.
+ */
+function scaleMismatchX(svg: string, values: number[]): number {
+  const ticks = xTicks(svg);
+  const [lo, hi] = [ticks[0]!, ticks[ticks.length - 1]!];
+  const ends = barRightXs(svg);
+  let worst = 0;
+  for (const [i, v] of values.entries()) {
+    const want = lo.x + ((v - lo.v) * (hi.x - lo.x)) / (hi.v - lo.v);
+    worst = Math.max(worst, Math.abs(want - ends[i]!));
+  }
+  return worst;
+}
+
 /** 눈금 간격 — 고르지 않으면 그 자체가 결함이라 «서로 다른 간격»을 다 돌려준다. */
 function tickGaps(svg: string): number[] {
   const vs = yTicks(svg).map((t) => t.v);
@@ -1927,6 +1964,106 @@ describe.skipIf(!hasEngine)(
         expect(r.error).toMatch(want);
       },
     );
+
+    /* ── 가로 막대 (orient) ──────────────────────────────────────────────────
+     * 값 축이 아래로 눕을 뿐, **축 규칙은 한 벌**이다. 방향마다 규칙이 갈리면
+     * 한쪽만 고쳐진다(2026-08-18). 그래서 눈금 «값»은 두 방향이 같아야 한다.
+     */
+    const ICE = [30, 40, 20, 35];
+
+    it("가로형은 값 축이 아래로 눕는다 — 막대 끝이 **눈금이 말하는 x** 에 있다", async () => {
+      const r = await renderFigureSpec({
+        ...chartSpec("barChart", 45, ICE, 20),
+        orient: "horizontal",
+      });
+      expect(r.ok).toBe(true);
+      if (!r.ok) return;
+      expect(xTicks(r.svg).map((t) => t.v)).toEqual([0, 20, 40]);
+      expect(barRightXs(r.svg)).toHaveLength(ICE.length);
+      // 세로 눈금(오른쪽 정렬 14pt)은 하나도 없어야 한다 — 축이 누웠으므로.
+      expect(yTicks(r.svg)).toHaveLength(0);
+      expect(scaleMismatchX(r.svg, ICE)).toBeLessThan(0.5);
+    });
+
+    it("축 규칙은 **방향과 무관하게 한 벌**이다 — 눈금 값이 두 방향에서 같다", async () => {
+      for (const [yMax, values, yStep] of [
+        [45, ICE, 20],
+        [41, [38, 20, 30], 5],
+        [19, [16, 7, 12], undefined],
+        [1153, [1150, 400, 880], undefined],
+      ] as [number, number[], number | undefined][]) {
+        const v = await renderFigureSpec(
+          chartSpec("barChart", yMax, values, yStep),
+        );
+        const h = await renderFigureSpec({
+          ...chartSpec("barChart", yMax, values, yStep),
+          orient: "horizontal",
+        });
+        expect(v.ok && h.ok).toBe(true);
+        if (!v.ok || !h.ok) return;
+        expect(xTicks(h.svg).map((t) => t.v)).toEqual(
+          yTicks(v.svg).map((t) => t.v),
+        );
+      }
+    });
+
+    it("가로형도 못 그리는 yStep 은 던진다 — 방향이 규칙을 비켜 가지 않는다", async () => {
+      const r = await renderFigureSpec({
+        ...chartSpec("barChart", 41, [38, 20, 30], 1),
+        orient: "horizontal",
+      });
+      expect(r.ok).toBe(false);
+      if (r.ok) return;
+      expect(r.error).toMatch(/눈금이 .*줄/);
+    });
+
+    it("orient 를 안 주면 세로형이고, 모르는 값은 조용히 무시되지 않는다", async () => {
+      const plain = await renderFigureSpec(chartSpec("barChart", 45, ICE, 20));
+      const explicit = await renderFigureSpec({
+        ...chartSpec("barChart", 45, ICE, 20),
+        orient: "vertical",
+      });
+      expect(plain.ok && explicit.ok).toBe(true);
+      if (!plain.ok || !explicit.ok) return;
+      expect(explicit.svg).toBe(plain.svg); // 기본값을 적어 내도 지면이 같다
+      const bad = await renderFigureSpec({
+        ...chartSpec("barChart", 45, ICE, 20),
+        orient: "가로",
+      });
+      expect(bad.ok).toBe(false);
+      if (bad.ok) return;
+      expect(bad.error).toMatch(/orient/);
+    });
+
+    // 제목과 단위 라벨이 같은 줄에 앉으면 긴 제목에서 겹친다 — 실측으로 둘 사이가
+    // 30px 뿐이었다. 제목이 **없을 때는** 지면이 한 픽셀도 안 바뀌어야 한다.
+    it("제목은 단위 라벨과 **다른 줄**에 앉고, 없으면 지면이 안 바뀐다", async () => {
+      const TITLE = "아이스크림 한 개의 가격은 얼마인가";
+      const none = await renderFigureSpec(chartSpec("barChart", 45, ICE, 20));
+      const titled = await renderFigureSpec({
+        ...chartSpec("barChart", 45, ICE, 20),
+        title: TITLE,
+      });
+      expect(none.ok && titled.ok).toBe(true);
+      if (!none.ok || !titled.ok) return;
+
+      expect(none.svg).not.toContain(TITLE);
+      // 제목 없는 장은 KEEP_AS_IS 와 같은 눈금 — 제목 필드를 더한 것만으로 안 바뀐다.
+      expect(yTicks(none.svg).map((t) => t.v)).toEqual([0, 20, 40]);
+
+      const titleY = Number(
+        titled.svg.match(
+          new RegExp(`<text x="[0-9.]+" y="([0-9.]+)"[^>]*>${TITLE}<`),
+        )![1],
+      );
+      // 단위 라벨 — 13pt·오른쪽 정렬
+      const unitY = Number(
+        titled.svg.match(
+          /<text x="[0-9.]+" y="([0-9.]+)"[^>]*font-size="13"[^>]*text-anchor="end"/,
+        )![1],
+      );
+      expect(Math.abs(titleY - unitY)).toBeGreaterThanOrEqual(14);
+    });
 
     it("막대와 꺾은선은 **같은 자**를 쓴다 — 한쪽만 배선하면 그쪽 지표만 좋아진다", async () => {
       for (const [yMax, values] of [
