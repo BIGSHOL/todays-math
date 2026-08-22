@@ -1240,5 +1240,35 @@
   "code": "HC10208-KXVM",
   "dbAnswer": "③",
   "aiAnswer": "①"
+ },
+ {
+  "id": "28f7c388-b3ee-4d80-a7f4-98e43e5ded66",
+  "code": "HC10209-HW54",
+  "dbAnswer": "⑴ f(x)=3x²+2, ⑵ h(x)=(3/2)x²-2x-3",
+  "aiAnswer": "(1) f(x)=3x^2+2 (2) h(x)=\\frac{3}{2}x^2-2x-3"
+ },
+ {
+  "id": "8708de32-67ee-473a-aada-2bdde802732e",
+  "code": "HC10209-KFW9",
+  "dbAnswer": "i",
+  "aiAnswer": "합: $6$, 곱: $-1$"
+ },
+ {
+  "id": "eb3754f8-617c-435a-a0b1-e0be23bb0f8b",
+  "code": "HC10209-QPC7",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "dd9f1034-149b-417e-ade0-c7c3702378c6",
+  "code": "HC10211-3HMK",
+  "dbAnswer": "156 (n=12, M=144)",
+  "aiAnswer": "156"
+ },
+ {
+  "id": "58fb95e2-0f2e-4a7e-85c9-86b95b1bf980",
+  "code": "HC10211-F9Y2",
+  "dbAnswer": "⑴ a = 5/2, b = 1, ⑵ 0",
+  "aiAnswer": "⑴ $a=\\frac{5}{2}$, $b=1$ ⑵ 최솟값 $0$"
  }
 ]
