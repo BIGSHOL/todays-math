@@ -1324,5 +1324,65 @@
   "code": "HC10219-3NQC",
   "dbAnswer": "③",
   "aiAnswer": "①"
+ },
+ {
+  "id": "40dc5069-4f3c-40e0-80b8-4af47fe2baac",
+  "code": "HC10219-7R43",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "6f176dcb-43b2-44bd-b2a5-7925e78cf91c",
+  "code": "HC10221-VWAB",
+  "dbAnswer": "⑴ f(x)=x⁴-17x²+16, ⑵ (x+1)(x-1)(x+4)(x-4)",
+  "aiAnswer": "⑴ $f(x)=x^{4}-17x^{2}+16$ ⑵ $f(x)=(x-1)(x+1)(x-4)(x+4)$"
+ },
+ {
+  "id": "11dffb8a-a385-4f87-bd2d-8d83c73254d0",
+  "code": "HC10223-4QDB",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "12d54fe8-978a-4411-8f2d-060cb07de0de",
+  "code": "HC10223-HFBW",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "b12d62d8-9ae0-474d-aeeb-72a6ffbb7e82",
+  "code": "HC10223-JPGD",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "4926bce8-2d94-4b3a-9712-adefedcb74ce",
+  "code": "HC10223-S9XS",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "7473ef1f-78ed-4527-9339-06675061c5b9",
+  "code": "HC10225-CUUR",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "ac173d28-6877-46af-a0a8-b50419768fae",
+  "code": "HC10225-NLVP",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "94c62112-efa4-4e16-8635-b036aa1f507c",
+  "code": "HC10225-RE8X",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "c789ad0b-bfba-4c82-bc24-21717d1f5744",
+  "code": "HC10227-BVVT",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
  }
 ]
