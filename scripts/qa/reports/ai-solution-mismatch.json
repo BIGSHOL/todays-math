@@ -1648,5 +1648,299 @@
   "code": "HC20313-5MCM",
   "dbAnswer": "④",
   "aiAnswer": "②"
+ },
+ {
+  "id": "26c736a5-b9cf-4079-aad0-2305cf1a0f26",
+  "code": "HC20313-G6QT",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "e0e3b490-dc9a-4881-a95a-468808a4387c",
+  "code": "HC20313-MTG6",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "136f0416-4a8e-4397-98e6-3ad6cc946510",
+  "code": "HC20313-NL9Y",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "9db42f85-d4bf-4449-ae9c-bda1a4f2678d",
+  "code": "HAL0109-6BHV",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "b2ed7812-1de5-4105-8e31-3e16d36905f8",
+  "code": "HAL0110-2TWV",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "6dea8ade-e003-427b-959b-1e2068e424dc",
+  "code": "HAL0111-79VU",
+  "dbAnswer": "①",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "b716134e-b16c-41f1-9e71-1c96bdb22aef",
+  "code": "HAL0113-JN9J",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "1ea91324-2edb-41ba-af9e-aa05ec8b6139",
+  "code": "HAL0113-Q59B",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "75fc862c-6cf5-423c-b80d-346533622d34",
+  "code": "HAL0114-2B2S",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "507a21fc-f617-4ecc-90d3-f20a9af31ca3",
+  "code": "HAL0201-V743",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "87a7627c-1b62-4df6-9c21-278cce3c71e3",
+  "code": "HAL0202-M79P",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "2765cd64-72e9-448f-a897-9497d0a6e36e",
+  "code": "HAL0203-3PE2",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "42640651-9703-42d3-8926-f1e1eaf40821",
+  "code": "HAL0204-DDTX",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "5127e448-396c-45f1-9ebc-b053353103ba",
+  "code": "HAL0204-TEVA",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "47f9c9d9-4561-474b-a284-c33e4e710a63",
+  "code": "HAL0210-4334",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "8b3d506f-567a-4ec8-aaf8-cb61031f69b5",
+  "code": "HAL0210-BNNA",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "1ee413bd-6ab3-464e-89f4-e90a5f3cea14",
+  "code": "HAL0210-RG2K",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "8846a15c-184a-4771-be17-58348491e067",
+  "code": "HAL0301-MGFC",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "f3f9637d-9f22-47a5-be87-86c70179cf96",
+  "code": "HAL0302-MTNJ",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "3963a9e6-c1e7-444c-84d4-362fcf5281a6",
+  "code": "HAL0305-7JA3",
+  "dbAnswer": "③",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "39e45bac-1067-49ae-a2cd-fb1d3c22e83c",
+  "code": "HAL0306-JSVV",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "e80ef572-19df-4437-bf2b-55ba930fe16a",
+  "code": "HAL0306-U2CK",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "d8a29ec6-9b05-4526-92b1-f882e23e6da8",
+  "code": "HAL0307-F4G5",
+  "dbAnswer": "①",
+  "aiAnswer": "② 46"
+ },
+ {
+  "id": "94c24dbb-0147-4476-83b6-ea0894987644",
+  "code": "HAL0307-UZC7",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "b6eaf3fe-cf25-4907-a857-5e863971b5dc",
+  "code": "HM10101-6GDX",
+  "dbAnswer": "③",
+  "aiAnswer": "① $2$"
+ },
+ {
+  "id": "a7a37ba1-f577-4788-baf7-3035f9856147",
+  "code": "HM10101-7PEG",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "73d81d2d-0e2c-43fd-8fb2-c41a92033cee",
+  "code": "HM10101-XFBA",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "a26e54eb-529c-46ef-9910-b9a5bd931b43",
+  "code": "HM10105-8DBQ",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "c9e9eb98-4c31-4091-940b-d2e1bf9ef65b",
+  "code": "HM10105-9BD7",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "c4e51d95-4b93-4b77-941b-144fe3bbb2a3",
+  "code": "HM10105-L7S6",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "96cfd2da-fd56-4b2c-a73b-eb2e41ff7c1c",
+  "code": "HM10106-6H49",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "f6b8e295-7b3f-4a49-8912-d3a8b11259aa",
+  "code": "HM10106-FTN9",
+  "dbAnswer": "①",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "39bcb349-2060-4f63-b4d5-54dfd49b9b68",
+  "code": "HM10106-XRZQ",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "f79bd1c8-0d55-4a95-a672-bf1dfbc038dd",
+  "code": "HM10201-8Y7G",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "14ec3199-a263-4508-b419-78a601ce5feb",
+  "code": "HM10205-5HHU",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "50661162-f411-4aed-921e-f19e64c00654",
+  "code": "HM10205-XBPJ",
+  "dbAnswer": "③",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "ad0ea121-4333-4401-9eba-c1a2f5c89472",
+  "code": "HM10205-Z9ZP",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "7e5a692d-2780-49ef-a9f8-7796ecf9802d",
+  "code": "HM10206-TG59",
+  "dbAnswer": "⑤",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "054c307e-4ea5-40fa-991a-ecbf68e8d26f",
+  "code": "HM10207-53YK",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "dec40597-075b-43f9-99df-cfcc5597a664",
+  "code": "HM10207-6U4P",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "ab46d047-e0b2-4d6f-8af2-9bb19d6e265c",
+  "code": "HM10207-MLPB",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "d3a12149-4dfc-4977-84d0-a1bcbd7884e5",
+  "code": "HM10208-D6BB",
+  "dbAnswer": "x축",
+  "aiAnswer": "x"
+ },
+ {
+  "id": "2e3949d7-03e2-4a7e-bd11-d1c656a7b0b7",
+  "code": "HM10208-HGDU",
+  "dbAnswer": "a=-3, b≠-2",
+  "aiAnswer": "$a=-3, b \\neq -2$"
+ },
+ {
+  "id": "b5193830-2037-4818-a4a9-de33a4a26b19",
+  "code": "HM10208-RGSX",
+  "dbAnswer": "y=3x²와 y=-3x²",
+  "aiAnswer": "$y=3x^{2}, y=-3x^{2}$"
+ },
+ {
+  "id": "0cfe2805-cb32-4755-ba9b-f3c6b5b77270",
+  "code": "HM10209-6647",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "7034fcac-dcb2-4e69-b84d-299060a68915",
+  "code": "HM10209-FSUG",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "8b74e651-765b-4cb3-a1b9-a960d183eef5",
+  "code": "HM10209-LFQ4",
+  "dbAnswer": "⑤",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "cd749e9d-2a28-4c15-8373-f82ec527f5eb",
+  "code": "HM10209-MPFA",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "e269a4d9-058f-4908-b0c1-4889dc512931",
+  "code": "HM10209-PR3M",
+  "dbAnswer": "②",
+  "aiAnswer": "④"
  }
 ]
