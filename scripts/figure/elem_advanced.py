@@ -10,6 +10,7 @@ import math
 from typing import Any, Mapping
 
 from elementary import (
+    DIM_OFF,
     GRID,
     GRID_SW,
     INK,
@@ -30,6 +31,13 @@ FACE_TOP = "#f2e6d4"
 FACE_FRONT = "#e4d3b8"
 FACE_SIDE = "#d4c09e"
 CHART = ("#c5d6c2", "#d7c2e4", "#e2b48a", "#c5d4e8", "#e8d4a8", "#d4c0b0")
+# 겨냥도 숨은 모서리. 실선과 눈에 띄게 갈려야 면·모서리를 셀 수 있다 (09 §4-14).
+HIDDEN_DASH = "5 4"
+# 원기둥·원뿔 밑면 타원의 납작한 정도(ry/rx). 교과서 겨냥도는 0.25~0.35 다.
+# 사방(45°) 투영은 타원이 기울어 「타원기둥」처럼 보인다 — 깊이축을 화면 위(90°)로
+# 세우면 축에 나란한 타원이 되고 depth_ratio 가 곧 ry/rx 가 된다 (09 §4-15).
+ROUND_RATIO = 0.30
+ROUND_DEG = 90.0
 
 
 def _int(value: Any, name: str, lo: int, hi: int) -> int:
@@ -715,43 +723,188 @@ def _cuboid(spec: Mapping[str, Any]) -> str:
         _poly([p(w, 0, 0), p(w, d, 0), p(w, d, h), p(w, 0, h)], FACE_SIDE),
         _poly([p(0, 0, h), p(w, 0, h), p(w, d, h), p(0, d, h)], FACE_TOP),
     ]
+    # 각기둥·각뿔과 같은 기준: 안 보이는 모서리는 점선이다 (09 §4-14).
+    verts3 = [(x, y, z) for x in (0.0, w) for y in (0.0, d) for z in (0.0, h)]
 
-    def dim(a: tuple[float, float], b: tuple[float, float], label: str, mag: float) -> None:
+    def vi(x: float, y: float, z: float) -> int:
+        return verts3.index((x, y, z))
+
+    faces_idx = [
+        [vi(0, 0, 0), vi(w, 0, 0), vi(w, 0, h), vi(0, 0, h)],
+        [vi(0, d, 0), vi(w, d, 0), vi(w, d, h), vi(0, d, h)],
+        [vi(0, 0, 0), vi(0, d, 0), vi(0, d, h), vi(0, 0, h)],
+        [vi(w, 0, 0), vi(w, d, 0), vi(w, d, h), vi(w, 0, h)],
+        [vi(0, 0, 0), vi(w, 0, 0), vi(w, d, 0), vi(0, d, 0)],
+        [vi(0, 0, h), vi(w, 0, h), vi(w, d, h), vi(0, d, h)],
+    ]
+    parts += _hidden_lines(view, verts3, faces_idx)
+
+    def dim(a: tuple[float, float], b: tuple[float, float], label: str) -> None:
         span = math.hypot(b[0] - a[0], b[1] - a[1])
-        off = _outward_off(a, b, inside, mag if span >= 28 else mag + 6)
+        off = _outward_off(a, b, inside, DIM_OFF if span >= 28 else DIM_OFF + 6)
         parts.append(_length_mark(a[0], a[1], b[0], b[1], label, off=off, fs=12))
 
-    dim(p(0, 0, 0), p(w, 0, 0), f"{_n(w)} cm", 18)
-    dim(p(0, 0, 0), p(0, 0, h), f"{_n(h)} cm", 18)
-    dim(p(w, 0, 0), p(w, d, 0), f"{_n(d)} cm", 18)
+    dim(p(0, 0, 0), p(w, 0, 0), f"{_n(w)} cm")
+    dim(p(0, 0, 0), p(0, 0, h), f"{_n(h)} cm")
+    dim(p(w, 0, 0), p(w, d, 0), f"{_n(d)} cm")
     return _svg((maxx - minx) + pad_l + pad_r, (maxy - miny) + pad_t + pad_b, "".join(parts))
 
 
-def _ngon_xy(n: int, r: float, *, vertex_front: bool = False) -> list[tuple[float, float]]:
-    pts: list[tuple[float, float]] = []
-    extra = 0.0 if vertex_front else -math.pi / n
-    for i in range(n):
-        a = -math.pi / 2 + extra + i * 2 * math.pi / n
-        pts.append((r * math.cos(a), r * math.sin(a)))
-    return pts
+# 서로 다른 꼭짓점의 **화면 x** 가 이보다 가까우면 세로 모서리가 겹쳐 보인다(반지름 1 기준).
+# 오각기둥에서 앞왼쪽·뒤왼쪽 모서리가 0.03 차이라 숨은 점선이 실선에 딱 붙었다.
+NGON_MIN_GAP = 0.18
+# 각뿔에는 세로 모서리가 없다 — 밑면 꼭짓점이 화면 x 로 가까워도 높이가 달라 읽힌다.
+# 여기서 x 를 세게 잡으면 정작 겹치는 **모선**을 갈라 줄 각이 남지 않는다.
+NGON_MIN_GAP_APEX = 0.08
+# 각뿔 모선은 꼭대기에서 부챗살로 퍼진다 — 겹침을 가르는 것은 x 가 아니라 **극각**이다.
+# 칠각뿔에서 v2·v3 극각이 1.1° 차이라 숨은 모선이 실선 모선 위에 겹쳐 그려졌다.
+# ⚠️ 이 값은 **닿을 수 있는 값**이어야 한다. 부챗살은 실루엣 쪽에서 반드시 몰리므로
+#    각형 수가 커지면 아무리 돌려도 못 넘는다(팔각뿔 최선 3.1°). 못 넘으면 최선을 쓴다 —
+#    「닿을 수 없는 목표」를 두면 조용히 0°(=안 돌림)로 되돌아간다(CLAUDE.md 2026-08-18).
+NGON_MIN_APEX_DEG = 4.0
+
+
+def _screen_xy(angle: float, ratio: float, deg: float) -> tuple[float, float]:
+    """사방투영에서 밑면 위 한 점의 **화면 좌표**(반지름 1, 배율 1, y 는 위가 +).
+
+    깊이 y 가 화면 x 와 화면 y 양쪽에 섞여 들어온다.
+    """
+    a = math.radians(deg)
+    return (
+        math.cos(angle) + ratio * math.cos(a) * math.sin(angle),
+        ratio * math.sin(a) * math.sin(angle),
+    )
+
+
+def _spread_gaps(
+    angles: list[float], ratio: float, deg: float, apex_h: float | None
+) -> tuple[float, float]:
+    """(가장 가까운 두 꼭짓점의 화면 x 차이, 가장 가까운 두 모선의 극각 차이)."""
+    pts = [_screen_xy(a, ratio, deg) for a in angles]
+    us = sorted(p[0] for p in pts)
+    x_gap = min(b - a for a, b in zip(us, us[1:]))
+    if apex_h is None:
+        return x_gap, math.inf
+    polar = sorted(math.atan2(apex_h - p[1], p[0]) for p in pts)
+    return x_gap, min(b - a for a, b in zip(polar, polar[1:]))
+
+
+def _spread_rotation(
+    n: int, base: float, ratio: float, deg: float, apex_h: float | None
+) -> float:
+    """꼭짓점이 화면에서 겹치지 않을 만큼만 밑면을 돌리는 **추가 각**.
+
+    교과서 배치(옆면 하나가 정면 / 꼭짓점이 정면)를 그대로 두고, 겹칠 때만 필요한
+    만큼만 돌린다 — 그래서 **가장 조금 도는** 각부터 본다. 각형 수마다 각도를 손으로
+    맞추면 다음 각형에서 또 겹친다 (D-61).
+
+    가로 간격이 먼저다(밑면 윤곽이 무너지면 도형 자체가 안 읽힌다). 그 안에서
+    극각 문턱을 넘는 첫 각을 쓰고, 못 넘으면 **가장 나은 각**을 쓴다.
+    """
+    step = 2 * math.pi / n
+    period = 2 * math.pi / n
+    min_gap = NGON_MIN_GAP_APEX if apex_h is not None else NGON_MIN_GAP
+    best_d, best_gap = 0.0, -1.0
+    for k in range(0, 1441):
+        for sign in (1.0, -1.0):
+            d = sign * math.radians(k * 0.25)
+            if abs(d) > period:
+                continue
+            x_gap, apex_gap = _spread_gaps(
+                [base + d + i * step for i in range(n)], ratio, deg, apex_h
+            )
+            if x_gap < min_gap:
+                continue
+            if apex_gap >= math.radians(NGON_MIN_APEX_DEG):
+                return d
+            if apex_gap > best_gap:
+                best_d, best_gap = d, apex_gap
+            if k == 0:
+                break
+    return best_d
+
+
+def _ngon_xy(
+    n: int,
+    r: float,
+    *,
+    vertex_front: bool = False,
+    ratio: float = 0.5,
+    deg: float = 45.0,
+    apex_h: float | None = None,
+) -> list[tuple[float, float]]:
+    base = -math.pi / 2 + (0.0 if vertex_front else -math.pi / n)
+    base += _spread_rotation(n, base, ratio, deg, apex_h)
+    return [
+        (r * math.cos(base + i * 2 * math.pi / n), r * math.sin(base + i * 2 * math.pi / n))
+        for i in range(n)
+    ]
 
 
 def _fitted_cabinet(
     points: list[tuple[float, float, float]],
     scale: float,
     pad: tuple[float, float, float, float] = (14.0, 14.0, 14.0, 14.0),
+    *,
+    ratio: float = 0.5,
+    deg: float = 45.0,
 ):
     from core.figure_solid import View
 
-    probe = View(0.5, 45, scale, (0.0, 0.0))
+    probe = View(ratio, deg, scale, (0.0, 0.0))
     pts2 = [probe(p) for p in points]
     minx = min(p[0] for p in pts2)
     maxx = max(p[0] for p in pts2)
     miny = min(p[1] for p in pts2)
     maxy = max(p[1] for p in pts2)
     pl, pt, pr, pb = pad
-    view = View(0.5, 45, scale, (pl - minx, pt - miny))
+    view = View(ratio, deg, scale, (pl - minx, pt - miny))
     return view, (maxx - minx) + pl + pr, (maxy - miny) + pt + pb
+
+
+def _hidden_edges(
+    view: Any,
+    verts3: list[tuple[float, float, float]],
+    faces: list[list[int]],
+) -> list[tuple[int, int]]:
+    """볼록 입체에서 **숨은 모서리** — 양쪽 면이 둘 다 뒤를 보는 모서리다.
+
+    09 §4-4 는 「관찰자 반대편 꼭짓점에 닿는 모서리」라고 적었는데 그건 직육면체에만
+    맞다. 오각기둥·육각뿔에서는 뒤 꼭짓점이 둘 이상이라 손으로 고른 목록이 샌다
+    (원장님 2026-08-22: 각기둥이 막힌 덩어리, 각뿔 모선 점선 없음). 면 두 장으로
+    판정하면 각형 수와 무관하게 맞는다.
+
+    면의 감김 방향은 믿지 않는다 — 무게중심에서 바깥쪽으로 법선을 돌려세운다.
+    감김이 틀리면 숨은 모서리가 통째로 뒤집히는데 그건 화면에서 티가 잘 안 난다.
+    """
+    from core.figure_solid import cross, dot, sub
+
+    n = len(verts3)
+    cen = tuple(sum(p[i] for p in verts3) / n for i in range(3))
+    back: list[bool] = []
+    for f in faces:
+        nrm = cross(sub(verts3[f[1]], verts3[f[0]]), sub(verts3[f[2]], verts3[f[0]]))
+        if dot(nrm, sub(verts3[f[0]], cen)) < 0:
+            nrm = (-nrm[0], -nrm[1], -nrm[2])
+        back.append(view.is_back_facing(nrm))
+    seen: dict[tuple[int, int], list[bool]] = {}
+    for fi, f in enumerate(faces):
+        for i, a in enumerate(f):
+            b = f[(i + 1) % len(f)]
+            seen.setdefault((min(a, b), max(a, b)), []).append(back[fi])
+    return sorted(e for e, flags in seen.items() if len(flags) == 2 and all(flags))
+
+
+def _hidden_lines(
+    view: Any,
+    verts3: list[tuple[float, float, float]],
+    faces: list[list[int]],
+) -> list[str]:
+    pts = [view(p) for p in verts3]
+    return [
+        _line(pts[a], pts[b], sw=1.0, dash=HIDDEN_DASH)
+        for a, b in _hidden_edges(view, verts3, faces)
+    ]
 
 
 def _ngon_on_edge(
@@ -783,8 +936,10 @@ def _ngon_on_edge(
 
 def _net_prism(sides: int) -> str:
     ww, hh = 22.0, 38.0
-    apothem = ww / (2 * math.tan(math.pi / sides))
-    pad_x, pad_t, pad_b = 10.0, apothem + 14.0, apothem + 14.0
+    # 밑면 각형이 옆면 위·아래로 얼마나 솟는지 손으로 셈하지 않는다 — 변 수가 바뀌면
+    # 그 셈이 어긋나 꼭짓점이 잘렸다(내접원 반지름을 썼는데 정오각형은 그보다 높다).
+    # `_svg` 가 그린 것을 다 담게 viewBox 를 맞춘다 (09 §4-14).
+    pad_x, pad_t, pad_b = 10.0, 10.0, 10.0
     ox, oy = pad_x, pad_t
     parts: list[str] = []
     for i in range(sides):
@@ -798,8 +953,6 @@ def _net_prism(sides: int) -> str:
 
 
 def _prism(spec: Mapping[str, Any]) -> str:
-    from core.figure_solid import cross, sub
-
     sides = _int(spec["sides"], "sides", 3, 8)
     _num(spec["h"], "h", 0.5, 20)
     if spec.get("net"):
@@ -811,48 +964,91 @@ def _prism(spec: Mapping[str, Any]) -> str:
     view, svg_w, svg_h = _fitted_cabinet(bot3 + top3, 48.0)
     bot = [view(p) for p in bot3]
     top = [view(p) for p in top3]
-    hidden: list[str] = []
+    verts3 = bot3 + top3
+    # 밑면 · 윗면 · 옆면 n 장. 감김은 `_hidden_edges` 가 무게중심으로 바로잡는다.
+    faces_idx = [list(range(sides)), [sides + i for i in range(sides)]]
+    for i in range(sides):
+        j = (i + 1) % sides
+        faces_idx.append([i, j, sides + j, sides + i])
     faces: list[tuple[float, str]] = []
     for i in range(sides):
         j = (i + 1) % sides
-        nrm = cross(sub(bot3[j], bot3[i]), sub(top3[i], bot3[i]))
         depth = (bot3[i][1] + bot3[j][1]) / 2
-        if view.is_back_facing(nrm):
-            hidden.append(_line(bot[i], bot[j], sw=1.0, dash="5 4"))
-            continue
         fill = FACE_FRONT if depth < 0 else FACE_SIDE
         faces.append((depth, _poly([bot[i], bot[j], top[j], top[i]], fill, 1.15)))
     faces.sort(key=lambda t: t[0], reverse=True)
-    parts = hidden + [svg for _, svg in faces] + [_poly(top, FACE_TOP, 1.2)]
+    # 숨은 모서리는 **맨 위에** 그린다. 면 아래에 깔면 칠에 덮여 겨냥도가 막힌
+    # 덩어리가 된다 — 그러면 면·모서리를 셀 수 없다(원장님 2026-08-22).
+    parts = (
+        [svg for _, svg in faces]
+        + [_poly(top, FACE_TOP, 1.2)]
+        + _hidden_lines(view, verts3, faces_idx)
+    )
     return _svg(svg_w, svg_h, "".join(parts))
 
 
 def _pyramid(spec: Mapping[str, Any]) -> str:
-    from core.figure_solid import cross, sub
-
     sides = _int(spec["sides"], "sides", 3, 8)
     _num(spec["h"], "h", 0.5, 20)
     r, h = 1.0, 1.45
     # 꼭짓점을 카메라 쪽으로 — 앞면 하나를 정면으로 보면 삼각뿔이 납작한 삼각형이 된다.
-    xy = _ngon_xy(sides, r, vertex_front=True)
+    # `apex_h` 를 주면 모선끼리 겹치지 않는 각까지 같이 본다.
+    xy = _ngon_xy(sides, r, vertex_front=True, apex_h=h)
     base3 = [(x, y, 0.0) for x, y in xy]
     apex3 = (0.0, 0.0, h)
     view, svg_w, svg_h = _fitted_cabinet(base3 + [apex3], 50.0, (14.0, 18.0, 14.0, 16.0))
     base = [view(p) for p in base3]
     apex = view(apex3)
-    hidden: list[str] = []
+    verts3 = base3 + [apex3]
+    # 밑면 + 옆면 n 장. 밑면 모서리만 보고 숨김을 정하면 **모선**(꼭대기→뒤 꼭짓점)이
+    # 실선으로 남는다 — 원장님이 「모선 점선이 없음」이라 하신 자리다.
+    faces_idx = [list(range(sides))] + [
+        [i, (i + 1) % sides, sides] for i in range(sides)
+    ]
     faces: list[tuple[float, str]] = []
     for i in range(sides):
         j = (i + 1) % sides
-        nrm = cross(sub(base3[j], base3[i]), sub(apex3, base3[i]))
         depth = (base3[i][1] + base3[j][1]) / 2
         fill = FACE_FRONT if depth < 0 else FACE_SIDE
         faces.append((depth, _poly([base[i], base[j], apex], fill, 1.15)))
-        if view.is_back_facing(nrm):
-            hidden.append(_line(base[i], base[j], sw=1.0, dash="5 4"))
     faces.sort(key=lambda t: t[0], reverse=True)
-    parts = [_poly(base, FACE_TOP, 1.1)] + [svg for _, svg in faces] + hidden
+    parts = (
+        [_poly(base, FACE_TOP, 1.1)]
+        + [svg for _, svg in faces]
+        + _hidden_lines(view, verts3, faces_idx)
+    )
     return _svg(svg_w, svg_h, "".join(parts))
+
+
+def _split_ring(
+    ring: list[tuple[float, float]], i0: int, i1: int
+) -> tuple[list[tuple[float, float]], list[tuple[float, float]]]:
+    """고리를 두 점에서 잘라 (가까운 호, 먼 호). 화면 아래쪽이 가까운 호다."""
+    n = len(ring)
+
+    def walk(a: int, b: int) -> list[tuple[float, float]]:
+        pts = [ring[a]]
+        i = a
+        for _ in range(n):
+            if i == b:
+                return pts
+            i = (i + 1) % n
+            pts.append(ring[i])
+        return pts
+
+    one, two = walk(i0, i1), walk(i1, i0)
+
+    def mid_y(pts: list[tuple[float, float]]) -> float:
+        return sum(p[1] for p in pts) / len(pts)
+
+    return (one, two) if mid_y(one) >= mid_y(two) else (two, one)
+
+
+def _round_ring(view: Any, pts3: list[tuple[float, float, float]]) -> list[tuple[float, float]]:
+    ring = [view(p) for p in pts3]
+    if math.hypot(ring[0][0] - ring[-1][0], ring[0][1] - ring[-1][1]) < 0.05:
+        ring = ring[:-1]
+    return ring
 
 
 def _cylinder(spec: Mapping[str, Any]) -> str:
@@ -861,31 +1057,46 @@ def _cylinder(spec: Mapping[str, Any]) -> str:
     r = _num(spec["r"], "r", 0.4, 20)
     h = _num(spec["h"], "h", 0.4, 30)
     scale = 70.0 / max(2 * r, h)
-    bot3 = circle3((0, 0, 0), r, (0, 0, 1), 48)
-    top3 = circle3((0, 0, h), r, (0, 0, 1), 48)
-    view, svg_w, svg_h = _fitted_cabinet(bot3 + top3, scale, (42.0, 26.0, 44.0, 24.0))
-    top = [view(p) for p in top3]
-    bot = [view(p) for p in bot3]
-    tl = min(top, key=lambda p: p[0])
-    tr = max(top, key=lambda p: p[0])
-    bl = min(bot, key=lambda p: p[0])
-    br = max(bot, key=lambda p: p[0])
-    c_top = view((0.0, 0.0, h))
+    bot3 = circle3((0, 0, 0), r, (0, 0, 1), 64)
+    top3 = circle3((0, 0, h), r, (0, 0, 1), 64)
+    view, svg_w, svg_h = _fitted_cabinet(
+        bot3 + top3, scale, (40.0, 24.0, 30.0, 24.0), ratio=ROUND_RATIO, deg=ROUND_DEG
+    )
+    top = _round_ring(view, top3)
+    bot = _round_ring(view, bot3)
+    # 축에 나란한 타원이라 좌·우 끝이 곧 모선이 닿는 자리다.
+    i_l = min(range(len(bot)), key=lambda i: bot[i][0])
+    i_r = max(range(len(bot)), key=lambda i: bot[i][0])
+    near_bot, far_bot = _split_ring(bot, i_l, i_r)
+    near_top, _far_top = _split_ring(top, i_l, i_r)
+    if near_top[0][0] > near_top[-1][0]:
+        near_top = near_top[::-1]
+    if near_bot[0][0] < near_bot[-1][0]:
+        near_bot = near_bot[::-1]
+    # 옆면은 곧은 사다리꼴이 아니다 — 위·아래 앞쪽 호를 그대로 잇는다.
+    # 예전처럼 네 점 사각형으로 덮으면 밑면 타원을 가로지르는 실선이 남는다.
     parts = [
-        _poly(bot, FACE_SIDE, 1.05),
-        _poly([bl, br, tr, tl], FACE_FRONT, 1.15),
+        _poly(near_top + near_bot, FACE_FRONT, 1.15),
+        _polyline(far_bot, sw=1.05, dash=HIDDEN_DASH),
         _poly(top, FACE_TOP, 1.15),
     ]
-    # 높이: 왼쪽 모선 바깥. 반지름: 윗면 원에서 오른쪽 바깥.
+    tl, bl = top[i_l], bot[i_l]
+    c_top = view((0.0, 0.0, h))
+    rim = top[i_r]
+    # 높이는 왼쪽 모선 바깥, 반지름은 윗면 안 — 둘 다 measured() 하나로 (09 §2.1).
     parts.append(
-        _length_mark(tl[0], tl[1], bl[0], bl[1], f"{_n(h)} cm", off=_off_towards(tl, bl, (-1.0, 0.0), 18), fs=12)
+        _length_mark(
+            tl[0], tl[1], bl[0], bl[1], f"{_n(h)} cm",
+            off=_off_towards(tl, bl, (-1.0, 0.0), DIM_OFF), fs=12,
+        )
     )
-    rim = max(top, key=lambda p: p[0])
+    # 중심 점이 없으면 「2cm 가 어디를 가리키는지 모르겠다」가 된다 — 반지름은
+    # **중심에서** 재는 것이라 그 끝을 찍어 줘야 읽힌다(원장님 2026-08-22).
+    parts.append(f'<circle cx="{_n(c_top[0])}" cy="{_n(c_top[1])}" r="1.8" fill="{INK}"/>')
     parts.append(
         _length_mark(
             c_top[0], c_top[1], rim[0], rim[1], f"{_n(r)} cm",
-            off=_off_towards(c_top, rim, (0.0, -1.0), 14),
-            fs=12,
+            off=_off_towards(c_top, rim, (0.0, -1.0), 9.0), fs=12,
         )
     )
     return _svg(svg_w, svg_h, "".join(parts))
@@ -899,41 +1110,23 @@ def _cone(spec: Mapping[str, Any]) -> str:
     scale = 70.0 / max(2 * r, h)
     base3 = circle3((0, 0, 0), r, (0, 0, 1), 64)
     apex3 = (0.0, 0.0, h)
-    view, svg_w, svg_h = _fitted_cabinet(base3 + [apex3], scale, (18.0, 20.0, 18.0, 16.0))
+    view, svg_w, svg_h = _fitted_cabinet(
+        base3 + [apex3], scale, (18.0, 20.0, 18.0, 16.0), ratio=ROUND_RATIO, deg=ROUND_DEG
+    )
     apex = view(apex3)
-    ring = [view(p) for p in base3]
-    if math.hypot(ring[0][0] - ring[-1][0], ring[0][1] - ring[-1][1]) < 0.05:
-        ring = ring[:-1]
+    ring = _round_ring(view, base3)
     n = len(ring)
 
     def polar(p: tuple[float, float]) -> float:
         return math.atan2(p[1] - apex[1], p[0] - apex[0])
 
+    # 꼭대기에서 타원에 그은 두 접선이 모선이다. 좌·우 끝점이 아니다 (09 §4-13).
     i_right = min(range(n), key=lambda i: polar(ring[i]))
     i_left = max(range(n), key=lambda i: polar(ring[i]))
-
-    def walk(i0: int, i1: int) -> list[tuple[float, float]]:
-        pts = [ring[i0]]
-        i = i0
-        for _ in range(n):
-            if i == i1:
-                return pts
-            i = (i + 1) % n
-            pts.append(ring[i])
-        return pts
-
-    a_rt_lt = walk(i_right, i_left)
-    a_lt_rt = walk(i_left, i_right)
-    def mid_y(pts: list[tuple[float, float]]) -> float:
-        return sum(p[1] for p in pts) / len(pts)
-    # 화면 아래(가까운 호)가 보이는 밑면, 위쪽 호는 숨은 선.
-    if mid_y(a_rt_lt) >= mid_y(a_lt_rt):
-        near, far = a_rt_lt, a_lt_rt
-    else:
-        near, far = a_lt_rt, a_rt_lt
+    near, far = _split_ring(ring, i_right, i_left)
     parts = [
         _poly([apex] + near, FACE_FRONT, 1.15),
-        _polyline(far, sw=1.05, dash="5 4"),
+        _polyline(far, sw=1.05, dash=HIDDEN_DASH),
     ]
     return _svg(svg_w, svg_h, "".join(parts))
 
@@ -1042,7 +1235,11 @@ def _area_poly(spec: Mapping[str, Any]) -> str:
     base = _num(spec["base"], "base", 0.5, 40)
     height = _num(spec["height"], "height", 0.5, 40)
     pad = 16.0
-    bw, bh = _area_box(base, height)
+    # 마름모의 세로 길이는 **적히는 값**(`d2`)이다. 세로 자리에 `height` 를 쓰면
+    # `d2` 를 따로 준 순간 그림과 라벨이 어긋난다 — 「4」 길이로 그려 놓고 「8 cm」로
+    # 적는다. 지금 부르는 쪽은 늘 `height == d2` 라 안 드러날 뿐이다(09 §4-20).
+    vertical = _num(spec.get("d2", height), "d2", 0.5, 40) if shape == "rhombus" else height
+    bw, bh = _area_box(base, vertical)
     extra_r, extra_b = 24.0, 18.0
     parts: list[str] = []
     if shape == "rect":
@@ -1070,30 +1267,38 @@ def _area_poly(spec: Mapping[str, Any]) -> str:
         parts.append(_poly(pts, FAINT, 1.4))
         parts.append(_length_mark(pts[3][0], pts[3][1], pts[2][0], pts[2][1], f"{_n(base)} cm", off=12))
         parts.append(_length_mark(pts[0][0], pts[0][1], pts[1][0], pts[1][1], f"{_n(top)} cm", off=-10))
-        parts.append(_line(((pts[0][0] + pts[3][0]) / 2, pts[0][1]), ((pts[0][0] + pts[3][0]) / 2, pts[3][1]), sw=1.05, dash="5 4"))
+        # 높이는 **윗변 왼쪽 끝에서 수직으로** 내린다. 예전에는 윗변·아랫변 왼쪽 끝의
+        # 가운데 x 에 그어 윗절반이 빗변 **바깥**으로 삐져나왔다 — 값을 안 적어 두어
+        # 아무도 못 봤을 뿐이다. 삼각형·평행사변형과 같은 자리(꼭짓점에서 수직)로 맞춘다.
+        hx = pts[0][0]
+        parts.append(_line((hx, pts[0][1]), (hx, pts[3][1]), sw=1.05, dash="5 4"))
+        # 높이 점선에 **값을 적는다.** 삼각형·평행사변형은 적는데 사다리꼴만 안 적어
+        # 지면에 「설명 없는 점선」이 남았다(2026-08-22). 발문이 높이를 말해 주더라도
+        # 이유 없는 선은 원장님 ⑭「어디를 가리키는지 모르겠다」와 같은 부류다.
+        parts.append(
+            _length_mark(hx, pts[0][1], hx, pts[3][1], f"{_n(height)} cm", off=-12)
+        )
     elif shape == "rhombus":
-        d2 = _num(spec.get("d2", height), "d2", 0.5, 40)
+        d2 = vertical
         cx, cy = pad + bw / 2, pad + bh / 2
         pts = [(cx, pad), (pad + bw, cy), (cx, pad + bh), (pad, cy)]
         parts.append(_poly(pts, FAINT, 1.4))
-        parts.append(_line(pts[0], pts[2], sw=1.05, dash="5 4"))
-        parts.append(_line(pts[1], pts[3], sw=1.05, dash="5 4"))
-        # 대각선 치수는 바깥 곡선이 아니라 선 옆에 둔다. 교차점만 피한다.
+        # 대각선 치수도 `measured()` 하나로. 날 텍스트로 얹으면 같은 areaPoly 안에서
+        # 삼각형만 치수선이고 마름모만 도형 위에 겹친다(원장님 2026-08-22, 09 §4-16).
+        # ⚠️ 대각선을 따로 긋고 그 옆에 치수 곡선을 두면 **점선이 두 겹**이 되어
+        #    더 어수선하다(실측). off=0 으로 두어 **대각선 자체가 치수선**이 되게 하고,
+        #    라벨만 t 로 옮겨 교차점을 피한다. 세로는 아래→위로 재야 라벨이 오른쪽에 붙는다.
         extra_r, extra_b = 28.0, 24.0
         parts.append(
-            _text(
-                pts[3][0] + (pts[1][0] - pts[3][0]) * 0.78,
-                cy + 13,
-                f"{_n(base)} cm",
-                size=12,
+            _length_mark(
+                pts[3][0], pts[3][1], pts[1][0], pts[1][1], f"{_n(base)} cm",
+                off=0, fs=12, t=0.28,
             )
         )
         parts.append(
-            _text(
-                cx + 16,
-                pts[0][1] + (pts[2][1] - pts[0][1]) * 0.22,
-                f"{_n(d2)} cm",
-                size=12,
+            _length_mark(
+                pts[2][0], pts[2][1], pts[0][0], pts[0][1], f"{_n(d2)} cm",
+                off=0, fs=12, t=0.72,
             )
         )
     else:
