@@ -1768,5 +1768,23 @@
   "code": "HAL0305-7JA3",
   "dbAnswer": "③",
   "aiAnswer": "②"
+ },
+ {
+  "id": "39e45bac-1067-49ae-a2cd-fb1d3c22e83c",
+  "code": "HAL0306-JSVV",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "e80ef572-19df-4437-bf2b-55ba930fe16a",
+  "code": "HAL0306-U2CK",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "d8a29ec6-9b05-4526-92b1-f882e23e6da8",
+  "code": "HAL0307-F4G5",
+  "dbAnswer": "①",
+  "aiAnswer": "② 46"
  }
 ]
