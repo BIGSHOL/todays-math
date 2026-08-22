@@ -2008,5 +2008,41 @@
   "code": "HM10310-G9NP",
   "dbAnswer": "②",
   "aiAnswer": "①"
+ },
+ {
+  "id": "aff9f65b-3aac-4ca2-a1bb-eaa1ec6e0cc3",
+  "code": "HPS0101-39L5",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "4ee20eca-4944-4489-b60d-7086b619c98a",
+  "code": "HPS0101-KNV5",
+  "dbAnswer": "⑤",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "83f0bdfb-6ada-46a2-a001-a2741e64abb8",
+  "code": "HPS0101-LT9V",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "5e6eeb3c-4079-424e-8310-befa916518f2",
+  "code": "HPS0101-P2DJ",
+  "dbAnswer": "④",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "1af316f0-bb54-4eba-b764-c371dcc164ae",
+  "code": "HPS0101-Q464",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "d9f39fb7-a9d1-4186-8eaf-d9ed3e76ad97",
+  "code": "HPS0101-WUXS",
+  "dbAnswer": "②",
+  "aiAnswer": "①"
  }
 ]
