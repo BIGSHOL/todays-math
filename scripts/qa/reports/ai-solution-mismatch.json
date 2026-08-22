@@ -2152,5 +2152,11 @@
   "code": "HPS0303-ARXV",
   "dbAnswer": "③",
   "aiAnswer": "①"
+ },
+ {
+  "id": "7caa35bb-a41e-492f-9424-2a87ade30dbb",
+  "code": "HPS0306-GMF9",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
  }
 ]
