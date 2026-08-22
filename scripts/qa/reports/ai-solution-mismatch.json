@@ -1852,5 +1852,11 @@
   "code": "HM10201-8Y7G",
   "dbAnswer": "③",
   "aiAnswer": "①"
+ },
+ {
+  "id": "14ec3199-a263-4508-b419-78a601ce5feb",
+  "code": "HM10205-5HHU",
+  "dbAnswer": "①",
+  "aiAnswer": "②"
  }
 ]
