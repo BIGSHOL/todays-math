@@ -36,20 +36,36 @@ function addWithCarries(
   minCarries: number,
   maxCarries: number,
 ): [number, number] {
+  // 「세 번」은 백의 자리에서 천의 자리로 넘어가는 받아올림이다 — 합이 네 자리라야
+  // 나온다. 예전에는 `a + b < 1000` 으로 묶고 받아올림을 일·십에서만 세어,
+  // 소단원 이름이 약속한 「세 번」이 **구조적으로 0** 이었다(1-1-2).
+  const wantThird = maxCarries >= 3;
   for (let k = 0; k < 80; k += 1) {
-    const a = intBetween(rng, 101, 799);
-    const b = intBetween(rng, 101, 899 - a);
-    const [, a1, a0] = digits(a);
-    const [, b1, b0] = digits(b);
+    // 「세 번」이 없는 소단원은 예전처럼 합을 세 자리로 **구성으로** 묶는다.
+    // ⚠️ `b` 의 아래끝이 101 이므로 `a` 상한은 798 — 799 를 뽑으면 `b` 범위가
+    // `[101, 100]` 으로 뒤집혀 던진다(실측: 씨앗의 0.55%에서 문항이 아예 안 나왔다).
+    // 문턱으로 걸러 내지 않고 뽑는 범위를 막는다: 가드가 걸러 낼 값을 생성기가
+    // 만들면 안 된다.
+    const a = intBetween(rng, 101, wantThird ? 898 : 798);
+    const b = wantThird
+      ? intBetween(rng, 101, 898)
+      : intBetween(rng, 101, 899 - a);
+    const [a2, a1, a0] = digits(a);
+    const [b2, b1, b0] = digits(b);
     let carries = 0;
-    let c0 = 0;
+    let c = 0;
     if (a0 + b0 >= 10) {
       carries += 1;
-      c0 = 1;
+      c = 1;
     }
-    if (a1 + b1 + c0 >= 10) carries += 1;
-    if (carries >= minCarries && carries <= maxCarries && a + b < 1000)
-      return [a, b];
+    if (a1 + b1 + c >= 10) {
+      carries += 1;
+      c = 1;
+    } else {
+      c = 0;
+    }
+    if (a2 + b2 + c >= 10) carries += 1;
+    if (carries >= minCarries && carries <= maxCarries) return [a, b];
   }
   return minCarries === 0 ? [123, 45] : [567, 278];
 }
