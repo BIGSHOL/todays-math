@@ -1324,6 +1324,42 @@ function buildSaleCombo(rng: Rng): SaleCombo {
   };
 }
 
+/**
+ * 두 자료를 **안쪽 그래프 스펙 둘**로 만든다.
+ *
+ * 계약(2026-08-23 확정 방향): `chartPair` 는 `charts` 배열로 감싸고 **각 안쪽 스펙은 단독
+ * `barChart` 와 동일**하다. 그래서 «감싸는 것»(아직 미확정)과 «안쪽»(확정)을 갈라 두고,
+ * 여기서는 **안쪽만** 만든다. 배선할 때 이 결과를 `charts` 에 그대로 넣으면 된다.
+ *
+ * ⚠️ 이 함수를 시험이 **직접** 부른다. 시험이 스펙을 따로 만들면 규칙이 두 벌이 되어
+ * 「자와 조판이 다른 것을 본다」가 된다 — 지면 값(`yMax`·`yStep`)은 한 곳에서만 정한다.
+ */
+function saleChartSpecs(c: SaleCombo): {
+  role: string;
+  step: number;
+  spec: Record<string, unknown>;
+}[] {
+  return [
+    {
+      role: "수",
+      vals: c.counts,
+      step: SALE_COUNT_STEP,
+      unit: c.theme.counter,
+    },
+    { role: "가격", vals: c.prices, step: SALE_PRICE_STEP, unit: "원" },
+  ].map(({ role, vals, step, unit }) => ({
+    role,
+    step,
+    // `yMax` 는 «하한»만 준다 — 축 맨 위는 엔진이 `ceil(최댓값 / 걸음) × 걸음` 으로 올린다.
+    spec: fig("barChart", {
+      values: c.theme.labels.map((label, i) => ({ label, value: vals[i]! })),
+      yMax: Math.max(...vals) + 1,
+      yStep: step,
+      yLabel: unit,
+    }),
+  }));
+}
+
 /* ───────────────────────── 1-6 규칙 찾기 ───────────────────────── */
 
 function pattern(unit: UnitSeed, rng: Rng): ElemProblem {
@@ -2321,6 +2357,7 @@ export const G4_BAR_SPLITS = barSplits;
 // 두 그래프 결합 — **아직 갈래에 배선하지 않았다**(그림 계약 대기). 시험이 여기를 직접 부른다.
 export const G4_SALE_THEMES = SALE_THEMES;
 export const G4_SALE_COMBO = buildSaleCombo;
+export const G4_SALE_CHART_SPECS = saleChartSpecs;
 export const G4_SALE_LIMITS = {
   countStep: SALE_COUNT_STEP,
   priceStep: SALE_PRICE_STEP,

@@ -13,6 +13,7 @@ import {
   G4_BAR_SPLITS,
   G4_BAR_THEMES,
   G4_LINE_THEMES,
+  G4_SALE_CHART_SPECS,
   G4_SALE_COMBO,
   G4_SALE_LIMITS,
   G4_SALE_THEMES,
@@ -1520,6 +1521,78 @@ describe.skipIf(!hasEngine)("[초등 엔진] 그림 렌더", () => {
     }
     expect(checked.size, "규모를 하나도 못 밟았다").toBe(G4_BAR_SCALES.length);
     expect(bad, bad.join("\n")).toEqual([]);
+  });
+
+  // 「`chartPair` 의 **안쪽** 스펙은 단독 `barChart` 와 동일」이 계약이므로, 감싸는 것이
+  // 확정되기 전에도 **안쪽 두 장이 실제로 그려지는지**는 지금 잠글 수 있다.
+  //
+  // ⚠️ 값을 여기 **베끼지 않는다.** 걸음도 상한도 `G4_SALE_*` 에서 읽어 오므로, 시안 뒤에
+  //    가격 상한이 바뀌어도(예: $800$→$600$) 풀만 고치면 이 검사는 그대로 산다.
+  //    스펙도 제품 함수(`G4_SALE_CHART_SPECS`)가 만든 것을 쓴다 — 여기서 따로 만들면
+  //    지면 값을 정하는 규칙이 두 벌이 된다.
+  it("두 그래프 결합의 안쪽 스펙 두 장이 실제로 그려진다", async () => {
+    const bad: string[] = [];
+    const shapesBy = new Map<string, Set<string>>();
+    const SEEDS = 16;
+    let drawn = 0;
+    for (let i = 0; i < SEEDS; i += 1) {
+      const combo = G4_SALE_COMBO(createRng(20260000 + i * 7));
+      for (const { role, step, spec } of G4_SALE_CHART_SPECS(combo)) {
+        const r = await renderFigureSpec(spec);
+        if (!r.ok) {
+          bad.push(`${role}: 못 그린다 — ${r.error}`);
+          continue;
+        }
+        drawn += 1;
+        // 세로축 눈금은 `text-anchor="end"`, 막대 값 이름표는 `"middle"` 이다.
+        // 정수 전부를 모으면 **막대 값이 눈금으로 섞여** 간격이 엉킨다(실제로 겪었다).
+        const ticks = [
+          ...new Set(
+            [...r.svg.matchAll(/<text\b([^>]*)>\s*(\d+)\s*<\/text>/g)]
+              .filter((m) => /text-anchor="end"/.test(m[1]!))
+              .map((m) => Number(m[2])),
+          ),
+        ].sort((a, b) => a - b);
+        const gaps = [...new Set(ticks.slice(1).map((v, j) => v - ticks[j]!))];
+        if (gaps.length !== 1 || gaps[0] !== step) {
+          bad.push(
+            `${role}: 걸음 ${step} 을 실었는데 그려진 간격이 [${gaps.join(",")}]`,
+          );
+        }
+        if (ticks[0] !== 0)
+          bad.push(`${role}: 눈금이 ${ticks[0]} 에서 시작한다`);
+        // 눈금이 9줄을 넘으면 엔진이 던진다 — 상한을 올리다 넘기면 여기서 먼저 걸린다.
+        if (ticks.length > 9) bad.push(`${role}: 눈금이 ${ticks.length}줄이다`);
+        if (!shapesBy.has(role)) shapesBy.set(role, new Set());
+        shapesBy
+          .get(role)!
+          .add(`${ticks.length}줄 맨위 ${ticks[ticks.length - 1]}`);
+      }
+    }
+
+    // 축이 하나로 굳으면 씨앗을 바꿔도 같은 그림이라는 뜻이다.
+    //
+    // ⚠️ 처음엔 「모양이 3가지보다 많다」로 적었는데, 그건 **오늘 풀 크기를 시험에 베낀 것**
+    //    이었다 — 가격 상한을 $800$→$600$ 으로 낮추자 3가지가 되어 **멀쩡한 변경이 빨개졌다.**
+    //    기대값도 풀에서 끌어와야 한다: 셋을 고를 때 최댓값이 될 수 있는 값은 `풀 − 2` 가지이므로,
+    //    그 수가 둘 이상일 때만 「둘 이상 나와야 한다」고 요구한다.
+    for (const [role, pool] of [
+      ["수", G4_SALE_LIMITS.counts],
+      ["가격", G4_SALE_LIMITS.prices],
+    ] as const) {
+      const possible = pool.length - 2;
+      const got = shapesBy.get(role)?.size ?? 0;
+      if (possible > 1 && got < 2) {
+        bad.push(
+          `${role}: 축 모양이 ${got}가지 — 씨앗을 바꿔도 안 갈린다 (풀은 ${possible}가지 가능)`,
+        );
+      }
+    }
+
+    const uniq = [...new Set(bad)];
+    expect(uniq, uniq.join("\n")).toEqual([]);
+    // 0 은 「깨끗」과 「못 셈」을 구분해 주지 않는다 — 한 장도 안 그렸으면 걸린다.
+    expect(drawn, "안쪽 스펙을 한 장도 못 그렸다").toBe(SEEDS * 2);
   });
 
   it("크기가 같은 분수 그림이 실제로 그려진다", async () => {
