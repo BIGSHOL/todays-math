@@ -103,6 +103,7 @@ describe("초등 전 교육과정 — 모든 소단원에서 문항이 나온다
     expect(SEEDS.length).toBeGreaterThanOrEqual(60);
     // 실측: 뒤집힘 변이의 첫 히트가 328번째 — 이보다 줄이면 그 부류가 안 보인다.
     expect(DENSE_SEEDS.length).toBeGreaterThanOrEqual(1200);
+    // 학년 4 = 초3~초6 — 원장님 확정 범위 (D-68). 늘리려면 그 결정부터.
     expect(new Set(UNITS.map((u) => u.grade)).size).toBe(4);
   });
 
