@@ -1822,5 +1822,35 @@
   "code": "HM10105-9BD7",
   "dbAnswer": "①",
   "aiAnswer": "③"
+ },
+ {
+  "id": "c4e51d95-4b93-4b77-941b-144fe3bbb2a3",
+  "code": "HM10105-L7S6",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "96cfd2da-fd56-4b2c-a73b-eb2e41ff7c1c",
+  "code": "HM10106-6H49",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "f6b8e295-7b3f-4a49-8912-d3a8b11259aa",
+  "code": "HM10106-FTN9",
+  "dbAnswer": "①",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "39bcb349-2060-4f63-b4d5-54dfd49b9b68",
+  "code": "HM10106-XRZQ",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "f79bd1c8-0d55-4a95-a672-bf1dfbc038dd",
+  "code": "HM10201-8Y7G",
+  "dbAnswer": "③",
+  "aiAnswer": "①"
  }
 ]
