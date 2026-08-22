@@ -1156,5 +1156,17 @@
   "code": "J30701-CS3L",
   "dbAnswer": "④",
   "aiAnswer": "②"
+ },
+ {
+  "id": "d4cb6629-0908-4a78-beac-2bd33218c37b",
+  "code": "HC10109-433Y",
+  "dbAnswer": "a=5, b=-3",
+  "aiAnswer": "⑴ $a=5,\\ b=-3$ ⑵ $8$"
+ },
+ {
+  "id": "0df5960b-27a1-4661-bb78-716d8d77e6aa",
+  "code": "HC10109-4UK6",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
  }
 ]
