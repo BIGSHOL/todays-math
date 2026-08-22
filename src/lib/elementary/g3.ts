@@ -1,5 +1,7 @@
 import type { UnitSeed } from "../../../prisma/seed-data/units";
 
+import type { ElemTierMap } from "./difficulty";
+
 import { expr, fracLatex, n, unitNum } from "./format";
 import { fracSpec } from "./fracFig";
 import { fig, make } from "./make";
@@ -1216,3 +1218,9 @@ export const G3: Record<string, ChapterHandler> = {
   "초3|2-5 들이와 무게": capacity,
   "초3|2-6 그림그래프": pictograph,
 };
+
+/**
+ * 난이도 갈래 (D-71 파일럿) — 키는 `tierKey` 형식(`"초3|1-1-2"`), 값은 넷 전부.
+ * 축은 시안(연산=식 그대로 · 기본=문장 한 겹 · 응용=두 단계 · 심화=역산·어떤 수)을 따른다.
+ */
+export const G3_TIERS: ElemTierMap = {};

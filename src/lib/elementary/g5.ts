@@ -10,6 +10,8 @@
  */
 import type { UnitSeed } from "../../../prisma/seed-data/units";
 
+import type { ElemTierMap } from "./difficulty";
+
 import { decLatex, expr, fracLatex, n, polyName } from "./format";
 import { fracSpec } from "./fracFig";
 import { fig, make } from "./make";
@@ -1559,3 +1561,9 @@ export const G5: Record<string, ChapterHandler> = {
   "초5|2-5 직육면체": cuboid,
   "초5|2-6 평균과 가능성": average,
 };
+
+/**
+ * 난이도 갈래 (D-71 파일럿) — 키는 `tierKey` 형식(`"초5|1-6-2"`), 값은 넷 전부.
+ * 축은 시안(연산=치수 글로 · 기본=그림 읽기 · 응용=둘레→넓이 · 심화=개념 사슬)을 따른다.
+ */
+export const G5_TIERS: ElemTierMap = {};
