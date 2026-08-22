@@ -1522,5 +1522,29 @@
   "code": "HC20106-K26R",
   "dbAnswer": "정답 ④",
   "aiAnswer": "④"
+ },
+ {
+  "id": "9b87c248-75cc-49d8-9f1f-a0e0709ab7f2",
+  "code": "HC20111-HR5N",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "fbe10dd9-ae42-41fc-abfc-a8055d8642cd",
+  "code": "HC20115-UDBB",
+  "dbAnswer": "②",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "e6f43e44-b411-4c2c-b53d-a1ddab98bee5",
+  "code": "HC20116-CSYZ",
+  "dbAnswer": "(정답 없음)",
+  "aiAnswer": "⑴ $-\\sqrt3<k<\\sqrt3$   ⑵ $y=-5x+4\\sqrt{13}$ 또는 $y=-5x-4\\sqrt{13}$"
+ },
+ {
+  "id": "9d2c77af-c8c1-4bbf-ae97-74af521b57c0",
+  "code": "HC20118-JZB2",
+  "dbAnswer": "(1, 18), (1, -2), (-1, 20), (-1, 0)",
+  "aiAnswer": "$(a,b)=(1,18),\\,(1,-2),\\,(-1,20),\\,(-1,0)$"
  }
 ]
