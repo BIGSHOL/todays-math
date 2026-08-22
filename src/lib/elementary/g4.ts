@@ -5,7 +5,10 @@
  * 표기는 `format.ts` 한 곳을 거친다(R1 모든 수는 KaTeX · R4 한자 수사).
  * 해설은 그 학년까지 배운 연산만 쓴다(R3) — 소수의 곱셈·나눗셈은 초5 다.
  */
-import type { UnitSeed } from "../../../prisma/seed-data/units";
+import {
+  CURRICULUM_UNITS,
+  type UnitSeed,
+} from "../../../prisma/seed-data/units";
 
 import { expr, n, polyName, unitNum } from "./format";
 import { fracSpec } from "./fracFig";
@@ -39,6 +42,46 @@ function code(unit: UnitSeed): string {
 /** 분기를 다 못 타면 던진다. 손대지 않은 소단원이 조용히 남으면 안 된다. */
 function noBranch(unit: UnitSeed): never {
   throw new Error(`초4 생성기에 없는 소단원입니다: ${unit.section}`);
+}
+
+/**
+ * 한 대단원 안에서 이 소단원이 몇 번째이고 형제가 몇인가.
+ * `generate.ts` 가 g4 를 import 하므로 되부르면 순환이다 — 시드에서 바로 센다.
+ */
+function chapterSlot(unit: UnitSeed): { index: number; total: number } {
+  const siblings = CURRICULUM_UNITS.filter(
+    (u) => u.grade === unit.grade && u.chapter === unit.chapter,
+  );
+  const index = siblings.findIndex((u) => u.orderIndex === unit.orderIndex);
+  if (index < 0) {
+    throw new Error(`대단원에서 소단원을 못 찾았습니다: ${unit.section}`);
+  }
+  return { index, total: siblings.length };
+}
+
+/**
+ * 소재를 소단원끼리 **나눠 갖는다** — 소단원 `i` 는 `j % total === i` 인 소재만 쓴다.
+ *
+ * ⚠️ 예전에는 `FAMILIES[orderIndex % FAMILIES.length]` 로 무리를 골랐다. 무리가 소단원보다
+ * 많으면 **남는 무리가 영영 안 걸린다** — 실측으로 막대 소재 14개 중 **8개**, 꺾은선 8개 중
+ * **2개**가 한 번도 안 나오고 있었다(2026-08-22, 소단원 3 × 씨앗 400 = 표본 1,200).
+ * 원장님의 「소재는 다양할수록 좋다」에 정면으로 어긋나는데, **「소단원마다·씨앗마다 갈린다」
+ * 가드는 이걸 구조적으로 못 본다** — 살아남은 것만으로도 그 조건은 참이기 때문이다.
+ *
+ * 나눠 갖기는 **수를 맞추는 것이 아니라 성질로 막는다**: 소단원 수가 몇으로 바뀌든 모든
+ * 소재는 어느 한 몫에 반드시 들어가므로 **죽는 소재가 생길 수 없다.**
+ * 몫이 서로 겹치지 않으므로 「소단원마다 다른 소재」도 저절로 지켜진다.
+ */
+function themeShare<T>(unit: UnitSeed, themes: readonly T[]): readonly T[] {
+  const { index, total } = chapterSlot(unit);
+  const mine = themes.filter((_, j) => j % total === index);
+  if (mine.length < 2) {
+    throw new Error(
+      `소재가 모자랍니다: ${unit.chapter} — 소단원 ${total}개에 소재 ${themes.length}개. ` +
+        `씨앗을 바꿔도 소재가 안 갈립니다(소단원마다 2개 이상 필요).`,
+    );
+  }
+  return mine;
 }
 
 /** 받침에 따라 조사를 고른다 — 「사과을」 이 지면에 나가지 않게. */
@@ -101,13 +144,6 @@ function tenths(rng: Rng, lo: number, hi: number): number {
 }
 function hundredths(rng: Rng, lo: number, hi: number): number {
   return intBetween(rng, lo, hi) * 10 + intBetween(rng, 1, 9);
-}
-
-/** 겹치지 않는 값 넷. 최댓값·최솟값이 하나씩만 나오게 한다. */
-function distinctFour(rng: Rng): number[] {
-  const seen = new Set<number>();
-  while (seen.size < 4) seen.add(intBetween(rng, 3, 16));
-  return [...seen];
 }
 
 /* ────────────────────────────── 1-1 큰 수 ────────────────────────────── */
@@ -738,58 +774,199 @@ function move(unit: UnitSeed, rng: Rng): ElemProblem {
   return noBranch(unit);
 }
 
-/* ───────────────────────── 1-5 막대그래프 ───────────────────────── */
-
-type BarTheme = { item: string; labels: readonly string[] };
+/* ───────────────────────── 1-5 막대그래프 ─────────────────────────
+ *
+ * ## 엔진이 못 해서 **미뤄 둔 것 셋** (2026-08-22)
+ *
+ * 셋 다 「우리가 안 하는 것」이 아니라 **「그림 엔진이 아직 못 하는 것」**이다.
+ * 조건이 풀리면 되살린다. 되살리는 법까지 여기 적는다 — 「나중에」만 적으면
+ * 다음 사람은 무엇을 해야 하는지 모른다.
+ *
+ * ### ⑴ 꺾은선 소재 「박물관에 온 관람객 수」
+ * 월 관람객은 수백~수천이라야 자연스러운데 `_y_step` 이 걸음 5에서 멈춰 **눈금이
+ * 수백 줄**이 된다(실측: y_max 1153 → 231줄, 세로축이 검은 얼룩).
+ * → **되살리는 법**: `LINE_THEMES` 에 아래를 넣고 `MAX_READABLE` 상한을 올린다.
+ *   `{ topic: "박물관에 온 관람객 수", unit: "명", labels: timeLabels([1,2,3,4,5], "월"),
+ *      base: [8, 14], step: 50 }`
+ *   ⚠️ **한계 검사 자체는 지우지 말 것** — 숫자만 올린다.
+ *
+ * ### ⑵ 막대 규모 「전교 학생들」
+ * 60 안에서는 참일 수 없다 — 넷 중 하나가 10~55명이면 전교생이 100명 안팎이 된다.
+ * ⑴ 과 같은 뿌리(값을 줄이고 그 값에 안 맞는 이름을 붙이는 것)라 **쓰지 않는다.**
+ * → **되살리는 법**: ⑴ 이 풀리면 `BAR_SCALES` 에 총원 300~500 · 눈금 25~50 으로 넣는다.
+ *
+ * ### ⑶ 눈금 문항이 **선언에 기대고 있다**
+ * `BarScale.step` 은 우리가 적은 «선언»인데, 실제로 그려지는 걸음은 `_y_step(y_max)` 가
+ * 정한다. 지금은 실측으로 100% 맞지만 **축·걸음 규칙이 바뀌면 조용히 어긋난다** —
+ * 그러면 발문이 그림과 다른 말을 한다.
+ * → **제대로 하는 법**: 스펙이 걸음을 실어야 한다. TS 가 걸음을 정해 `yStep` 으로 스펙에
+ *   넣고 파이썬이 그 값을 그대로 쓴다(`_y_step` 은 `yStep` 이 없을 때의 기본값 +
+ *   넘침 안전망으로 남긴다). 그러면 발문이 말하는 걸음과 그려지는 걸음이 **한 값**이 된다.
+ *   지금 안 하는 이유: 축·걸음 규칙을 elem-figures 가 고치는 중이라, 그 위에 요구를 하나 더
+ *   얹으면 두 작업이 서로를 무르게 한다. **축 규칙이 확정된 뒤 별건으로.**
+ *   그때까지는 **그려진 SVG 의 눈금 간격과 `step` 을 맞대는 검사**로 버틴다.
+ */
 
 /**
- * 소재는 **무리(family)** 로 묶는다. 무리는 `orderIndex` 로 고르므로 이웃한 소단원끼리
- * 항상 다른 소재가 되고, 무리 안에서는 씨앗으로 갈린다(R9).
+ * 막대그래프 소재.
+ *
+ * `unit` 은 **필수**다 — 지금은 열넷이 전부 「좋아하는 것을 고른 **학생 수(명)**」라
+ * 값 범위를 **한 벌**로 함께 써도 된다. 꺾은선은 소재마다 단위가 달라(kg·℃·cm·mm)
+ * 소재별로 갈랐지만, 여기서 똑같이 갈랐다면 **안 갈라도 되는 축을 가르는** 것이다.
+ *
+ * 그래서 「언제 갈라야 하는가」를 시험이 알려 주게 한다 — 단위가 「명」이 아닌 소재가
+ * 하나라도 들어오면 빨개진다. 그때가 나눌 때다. **지금이 아니라.**
+ * (`unit` 을 필수로 둔 것은 그래야 새 소재를 넣는 사람이 반드시 선언하기 때문이다.
+ *  전에는 「명」이 문구 안에 박혀 있어 **시험이 볼 수 있는 값이 아예 없었다.**)
  */
-const BAR_FAMILIES: readonly (readonly BarTheme[])[] = [
-  [
-    { item: "과일", labels: ["사과", "배", "포도", "딸기"] },
-    { item: "과일", labels: ["수박", "참외", "감", "귤"] },
-  ],
-  [
-    { item: "운동", labels: ["축구", "농구", "배구", "야구"] },
-    { item: "운동", labels: ["줄넘기", "수영", "달리기", "태권도"] },
-  ],
-  [
-    { item: "책", labels: ["동화책", "과학책", "역사책", "만화책"] },
-    { item: "책", labels: ["위인전", "시집", "사전", "잡지"] },
-  ],
-  [
-    { item: "동물", labels: ["개", "고양이", "토끼", "햄스터"] },
-    { item: "동물", labels: ["닭", "오리", "염소", "돼지"] },
-  ],
-  [
-    { item: "간식", labels: ["빵", "과자", "사탕", "젤리"] },
-    { item: "간식", labels: ["김밥", "만두", "떡", "튀김"] },
-  ],
-  [
-    { item: "계절", labels: ["봄", "여름", "가을", "겨울"] },
-    { item: "장소", labels: ["산", "바다", "계곡", "공원"] },
-  ],
-  [
-    { item: "색", labels: ["빨강", "파랑", "노랑", "초록"] },
-    { item: "색", labels: ["보라", "주황", "분홍", "연두"] },
-  ],
+type BarTheme = { item: string; unit: string; labels: readonly string[] };
+
+/**
+ * 조사 **규모**. 값의 크기를 정하는 축은 소재가 아니라 이쪽이다.
+ *
+ * 초4 는 **눈금 한 칸이 1·2·5명**인 그래프를 읽는 학년인데, 지금은 늘 1칸=5로만 그려진다.
+ * 걸음은 `_y_step` 이 **축 맨 위(`y_max`)만 보고** 정하기 때문이다(`≤8→1` · `≤12→2` · 그 위 `5`).
+ * 그래서 규모를 「총원」이 아니라 **값의 크기**로 갈라 걸음이 실제로 1·2·5 로 나뉘게 한다.
+ *
+ * ⚠️ `who` 는 **그 총원에서 참인 이름**이어야 한다. 「전교」를 60명 안에 넣으면
+ * 학교 전체가 100명이 되어 버린다 — 박물관·전교가 걸린 자리와 같다.
+ */
+type BarScale = {
+  who: string;
+  totals: readonly number[];
+  minTop: number;
+  maxTop: number;
+  /**
+   * 이 규모에서 **실제로 그려지는** 세로 눈금 한 칸.
+   *
+   * ⚠️ 이 값을 정하는 것은 우리가 아니라 `_y_step(y_max)` 다. 여기 적은 것은 «선언»이고,
+   * 시험이 **실제로 그려진 SVG 의 눈금 간격**과 맞대어 확인한다 — 문턱을 여기 옮겨 적으면
+   * 두 곳이 같은 것을 정하게 되므로, 참은 **그려진 그림**에서 가져온다.
+   * 어긋나면 「눈금 한 칸을 $1$명으로」 같은 발문이 그림과 다른 말을 하게 된다.
+   */
+  step: number;
+};
+
+const BAR_SCALES: readonly BarScale[] = [
+  // 한 반 스무 명 남짓. 최댓값 ≤7 이라 축이 8 이하 → 눈금 한 칸 1명.
+  {
+    who: "우리 반 학생들",
+    totals: [18, 19, 20, 21, 22],
+    minTop: 1,
+    maxTop: 7,
+    step: 1,
+  },
+  // 방과후 교실 서른 명 남짓. 최댓값 8~11 → 축이 9~12 → 눈금 한 칸 2명.
+  {
+    who: "방과후 교실 학생들",
+    totals: [20, 22, 24, 26, 28],
+    minTop: 8,
+    maxTop: 10,
+    step: 2,
+  },
+  // 한 학년 백 명 남짓. 최댓값 12 이상 → 눈금 한 칸 5명.
+  // 「4학년」의 `4` 도 수다 — 날 글자로 두면 R1 에 걸린다(`probe-elem-rules` 가 잡았다).
+  //
+  // ⚠️ **`maxTop` 을 43 위로 올리지 말 것.** `yMax = 최댓값 + 1` 이고 걸음 5가 버티는
+  // 상한이 `yMax ≤ 44` 다(실측: `45~49` 면 걸음 10). 넘기면 그림은 걸음 10으로 그리는데
+  // `step: 5` 선언은 그대로여서 **발문이 그림과 다른 말을 한다.** 지금 40이라 여유가 3뿐이다.
+  // 아래 「선언한 눈금이 실제로 그려진다」 시험이 이 자리를 지킨다.
+  {
+    who: "$4$학년 학생들",
+    totals: [90, 95, 100, 105, 110],
+    minTop: 15,
+    maxTop: 40,
+    step: 5,
+  },
+];
+
+/**
+ * 총원을 **먼저 정하고 넷으로 나눈다.**
+ *
+ * 「조사한 학생은 모두 몇 명인가」의 답이 곧 그 규모의 인원이므로, 합계는 상한으로
+ * **막는** 것이 아니라 구성으로 **참이 되어야** 한다. 값 넷이 각각 그럴듯해도 합이
+ * 40이면 그런 반은 없다 — 가드가 걸릴 값을 생성기가 만들면 그건 가드가 아니라 사고다.
+ *
+ * 조건 넷을 **동시에** 만족해야 한다: 합이 총원 · 넷이 서로 다름(「가장 많은 것」의 답이
+ * 하나여야 하므로) · 최댓값이 규모의 띠 안 · 최댓값이 총원의 절반 이하(한 항목 쏠림 금지).
+ * 그래서 **세어 본다** — 못 푸는 총원은 애초에 후보에서 빠져야 한다(시험이 잠근다).
+ */
+function barSplits(total: number, scale: BarScale): number[][] {
+  const out: number[][] = [];
+  const half = Math.floor(total / 2);
+  const k = scale.step;
+  // 값은 **눈금의 배수**여야 한다 — 「몇 칸인가」의 답이 자연수여야 하기 때문이다.
+  for (let a = k; a <= scale.maxTop; a += k) {
+    for (let b = a + k; b <= scale.maxTop; b += k) {
+      for (let c = b + k; c <= scale.maxTop; c += k) {
+        const d = total - a - b - c;
+        if (d <= c) continue;
+        if (d % k !== 0) continue;
+        if (d > scale.maxTop || d < scale.minTop || d > half) continue;
+        out.push([a, b, c, d]);
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * 막대그래프 소재. **한 줄로 편다** — 소단원끼리 `themeShare` 로 나눠 가지므로
+ * 여기 적은 소재는 **전부 언젠가 나온다**(무리로 묶으면 남는 무리가 죽는다).
+ * 이웃한 항목이 서로 다른 소단원으로 가도록 같은 갈래를 **붙여서** 적는다.
+ */
+const BAR_THEMES: readonly BarTheme[] = [
+  { item: "과일", unit: "명", labels: ["사과", "배", "포도", "딸기"] },
+  { item: "과일", unit: "명", labels: ["수박", "참외", "감", "귤"] },
+  { item: "운동", unit: "명", labels: ["축구", "농구", "배구", "야구"] },
+  { item: "운동", unit: "명", labels: ["줄넘기", "수영", "달리기", "태권도"] },
+  { item: "책", unit: "명", labels: ["동화책", "과학책", "역사책", "만화책"] },
+  { item: "책", unit: "명", labels: ["위인전", "시집", "사전", "잡지"] },
+  { item: "동물", unit: "명", labels: ["개", "고양이", "토끼", "햄스터"] },
+  { item: "동물", unit: "명", labels: ["닭", "오리", "염소", "돼지"] },
+  { item: "간식", unit: "명", labels: ["빵", "과자", "사탕", "젤리"] },
+  { item: "간식", unit: "명", labels: ["김밥", "만두", "떡", "튀김"] },
+  { item: "계절", unit: "명", labels: ["봄", "여름", "가을", "겨울"] },
+  { item: "장소", unit: "명", labels: ["산", "바다", "계곡", "공원"] },
+  { item: "색", unit: "명", labels: ["빨강", "파랑", "노랑", "초록"] },
+  { item: "색", unit: "명", labels: ["보라", "주황", "분홍", "연두"] },
 ];
 
 function barGraph(unit: UnitSeed, rng: Rng): ElemProblem {
   const c = code(unit);
-  const family = BAR_FAMILIES[unit.orderIndex % BAR_FAMILIES.length]!;
-  const theme = pick(rng, family);
-  const nums = distinctFour(rng);
-  const values = theme.labels.map((label, i) => ({ label, value: nums[i]! }));
-  const max = Math.max(...nums);
-  const min = Math.min(...nums);
+  const theme = pick(rng, themeShare(unit, BAR_THEMES));
+  const scale = pick(rng, BAR_SCALES);
+  const total = pick(rng, scale.totals);
+  const parts = barSplits(total, scale);
+  if (parts.length === 0) {
+    throw new Error(
+      `나눌 수 없는 총원입니다: ${scale.who} ${total} (최댓값 ${scale.minTop}~${scale.maxTop})`,
+    );
+  }
+  const picked = [...pick(rng, parts)];
+  // 늘 오름차순이면 마지막 항목이 항상 가장 크다 — 자리를 섞는다.
+  for (let i = picked.length - 1; i > 0; i -= 1) {
+    const j = intBetween(rng, 0, i);
+    [picked[i], picked[j]] = [picked[j]!, picked[i]!];
+  }
+  const values = theme.labels.map((label, i) => ({ label, value: picked[i]! }));
+  const max = Math.max(...picked);
+  const min = Math.min(...picked);
   const top = values.find((v) => v.value === max)!.label;
   const bottom = values.find((v) => v.value === min)!.label;
   const one = values[intBetween(rng, 0, 3)]!;
-  const intro = `학생들이 좋아하는 ${josa(theme.item, "을", "를")} 조사하여 나타낸 막대그래프입니다.`;
-  const figure = fig("barChart", { values, yMax: 18, yLabel: "명" });
+  // 두 번째로 많은 것 — 값이 서로 다르므로(나눔 조건) 순위가 하나로 정해진다.
+  const ranked = [...values].sort((x, y) => y.value - x.value);
+  const second = ranked[1]!.label;
+  const secondValue = ranked[1]!.value;
+  // 두 항목을 견주는 문항용. `1-5-3` 이 「가장 많은 것과 가장 적은 것의 차」를 묻고 있으므로
+  // 여기서는 **최대·최소가 아닌 두 항목**을 골라 같은 것을 두 번 묻지 않는다(R5).
+  const pairA = ranked[1]!;
+  const pairB = ranked[2]!;
+  const intro = `${josa(scale.who, "이", "가")} 좋아하는 ${josa(theme.item, "을", "를")} 조사하여 나타낸 막대그래프입니다.`;
+  // 축 맨 위는 **걸음을 아는 쪽**(파이썬 `_y_step`)이 올린다. 여기서는 «하한»만 준다 —
+  // 상수 `18` 은 규모가 커지면 막대가 칸을 뚫고, 넉넉한 상수는 작은 그래프를 바닥에 깐다.
+  const figure = fig("barChart", { values, yMax: max + 1, yLabel: theme.unit });
 
   if (c === "1-5-1") {
     if (intBetween(rng, 0, 1) === 0) {
@@ -814,17 +991,19 @@ function barGraph(unit: UnitSeed, rng: Rng): ElemProblem {
     if (intBetween(rng, 0, 1) === 0) {
       return make(
         unit,
-        `${intro} 세로 눈금 한 칸을 ${n(1)}명으로 하여 막대그래프를 그릴 때 가장 높은 막대는 몇 칸인가?`,
-        `${n(max)}칸`,
-        `가장 많은 것은 ${josa(top, "으로", "로")} ${n(max)}명이므로 눈금 ${n(max)}칸으로 그립니다.`,
+        `${intro} 학생 수가 두 번째로 많은 것은 어느 ${theme.item}인가?`,
+        second,
+        `${josa(top, "이", "가")} ${n(max)}명으로 가장 많고, 그다음이 ` +
+          `${josa(second, "으로", "로")} ${n(secondValue)}명입니다.`,
         figure,
       );
     }
     return make(
       unit,
-      `${intro} 세로 눈금 한 칸을 ${n(1)}명으로 할 때 ${josa(one.label, "은", "는")} 눈금 몇 칸으로 그려야 하는가?`,
-      `${n(one.value)}칸`,
-      `${josa(one.label, "을", "를")} 좋아하는 학생이 ${n(one.value)}명이므로 눈금 ${n(one.value)}칸으로 그립니다.`,
+      `${intro} ${josa(pairA.label, "은", "는")} ${pairB.label}보다 몇 명 더 많은가?`,
+      `${n(pairA.value - pairB.value)}명`,
+      `${josa(pairA.label, "이", "가")} ${n(pairA.value)}명, ${josa(pairB.label, "이", "가")} ` +
+        `${n(pairB.value)}명이므로 ${expr(`${pairA.value}-${pairB.value}=${pairA.value - pairB.value}`)} 입니다.`,
       figure,
     );
   }
@@ -840,12 +1019,12 @@ function barGraph(unit: UnitSeed, rng: Rng): ElemProblem {
         figure,
       );
     }
-    const sum = nums.reduce((a, b) => a + b, 0);
+    // 합계는 «막는 문턱»이 아니라 **구성으로 참이 되는 값**이다 — 곧 그 규모의 총원이다.
     return make(
       unit,
       `${intro} 조사한 학생은 모두 몇 명인가?`,
-      `${n(sum)}명`,
-      `${expr(`${nums.join("+")}=${sum}`)} 이므로 모두 ${n(sum)}명입니다.`,
+      `${n(total)}명`,
+      `${expr(`${picked.join("+")}=${total}`)} 이므로 모두 ${n(total)}명입니다.`,
       figure,
     );
   }
@@ -1703,7 +1882,27 @@ function quad(unit: UnitSeed, rng: Rng): ElemProblem {
 /* ─────────────────────── 2-5 꺾은선그래프 ─────────────────────── */
 
 type TimeLabel = { text: string; math: string };
-type LineTheme = { topic: string; unit: string; labels: readonly TimeLabel[] };
+/**
+ * 꺾은선 소재. **값의 크기는 소재마다 다르다** — 그래서 범위를 소재가 들고 있다.
+ *
+ * ⚠️ 예전에는 소재와 무관하게 한 범위(첫값 9~14)를 같이 썼다. 그래서 **「강아지의 무게가
+ * 1개월에 9~14kg」** 이 표본의 100%, **「박물관 월 관람객이 9~32명」** 이 100% 였다
+ * (2026-08-22 실측). 갓난 강아지는 그 무게가 아니고 박물관은 그 인원이 아니다.
+ * 초5 평균이 「키 $33$cm」로 겪은 것과 **같은 뿌리**다(`AVG_TOPICS`).
+ *
+ * - `base` · `step` — 첫값은 `base` 에서 골라 `step` 을 곱한다. 이후 값도 `step` 의 배수라
+ *   지면에 **읽히는 수**만 나온다(`237` 이 아니라 `250`). 원장님: 「큰 눈금 써도 된다」.
+ * - `rising` — 키·무게처럼 **자라기만 하는** 것은 내려가지 않는다.
+ *   기온·관람객 수·비의 양은 오르내려도 된다.
+ */
+type LineTheme = {
+  topic: string;
+  unit: string;
+  labels: readonly TimeLabel[];
+  base: readonly [number, number];
+  step: number;
+  rising?: boolean;
+};
 
 /** 그림의 축 이름은 `3월`, 본문은 `$3$월`. 본문에 날 숫자를 남기지 않는다(R1). */
 function timeLabels(values: readonly number[], suffix: string): TimeLabel[] {
@@ -1713,84 +1912,142 @@ function timeLabels(values: readonly number[], suffix: string): TimeLabel[] {
   }));
 }
 
-const LINE_FAMILIES: readonly (readonly LineTheme[])[] = [
-  [
-    {
-      topic: "교실의 기온",
-      unit: "℃",
-      labels: timeLabels([3, 4, 5, 6, 7], "월"),
-    },
-    {
-      topic: "운동장의 기온",
-      unit: "℃",
-      labels: timeLabels([9, 10, 11, 12, 1], "시"),
-    },
-  ],
-  [
-    {
-      topic: "강낭콩의 키",
-      unit: "cm",
-      labels: timeLabels([5, 10, 15, 20, 25], "일"),
-    },
-    {
-      topic: "고구마 싹의 키",
-      unit: "cm",
-      labels: timeLabels([1, 2, 3, 4, 5], "주"),
-    },
-  ],
-  [
-    {
-      topic: "도서관에 온 학생 수",
-      unit: "명",
-      labels: ["월", "화", "수", "목", "금"].map((d) => ({
-        text: `${d}요일`,
-        math: `${d}요일`,
-      })),
-    },
-    {
-      topic: "박물관에 온 관람객 수",
-      unit: "명",
-      labels: timeLabels([1, 2, 3, 4, 5], "월"),
-    },
-  ],
-  [
-    {
-      topic: "강아지의 무게",
-      unit: "kg",
-      labels: timeLabels([1, 2, 3, 4, 5], "개월"),
-    },
-    {
-      topic: "하루 동안 내린 비의 양",
-      unit: "mm",
-      labels: timeLabels([6, 7, 8, 9, 10], "일"),
-    },
-  ],
+/**
+ * 꺾은선그래프 소재. 막대와 같은 이유로 **한 줄로 편다** — 무리로 묶었을 때
+ * 「강낭콩의 키」·「고구마 싹의 키」가 한 번도 안 나오고 있었다(실측 0/1200).
+ */
+const LINE_THEMES: readonly LineTheme[] = [
+  {
+    topic: "교실의 기온",
+    unit: "℃",
+    labels: timeLabels([3, 4, 5, 6, 7], "월"),
+    base: [9, 14],
+    step: 1,
+  },
+  {
+    topic: "운동장의 기온",
+    unit: "℃",
+    labels: timeLabels([9, 10, 11, 12, 1], "시"),
+    base: [10, 15],
+    step: 1,
+  },
+  {
+    topic: "강낭콩의 키",
+    unit: "cm",
+    labels: timeLabels([5, 10, 15, 20, 25], "일"),
+    base: [3, 5],
+    step: 2,
+    rising: true,
+  },
+  {
+    topic: "고구마 싹의 키",
+    unit: "cm",
+    labels: timeLabels([1, 2, 3, 4, 5], "주"),
+    base: [4, 7],
+    step: 2,
+    rising: true,
+  },
+  {
+    topic: "도서관에 온 학생 수",
+    unit: "명",
+    labels: ["월", "화", "수", "목", "금"].map((d) => ({
+      text: `${d}요일`,
+      math: `${d}요일`,
+    })),
+    base: [8, 12],
+    step: 2,
+  },
+  {
+    // **되살렸다** (2026-08-22). 한때 뺐던 소재다 — 월 관람객은 수백~수천이라야
+    // 자연스러운데 `_y_step` 이 5에서 멈춰 눈금이 231줄이 되어 지면을 못 읽었다.
+    // 그림 세션이 `_axis_top` 으로 걸음을 사다리 삼게 고쳐, 실측으로 `yMax 1153` 이
+    // **7줄**(`0·200·…·1200`)로 나온다. 원장님: 「큰 눈금 써도 된다」.
+    topic: "박물관에 온 관람객 수",
+    unit: "명",
+    labels: timeLabels([1, 2, 3, 4, 5], "월"),
+    base: [8, 14],
+    step: 50,
+  },
+  {
+    // 박물관을 뺐던 동안 대신 넣었던 소재. 되살린 뒤에도 **함께 둔다** — 소재가 하나
+    // 늘어 다양해지고, 규모가 작은 쪽도 있어야 지면이 한쪽으로 쏠리지 않는다.
+    topic: "우리 반이 읽은 책 수",
+    unit: "권",
+    labels: timeLabels([1, 2, 3, 4, 5], "월"),
+    base: [6, 10],
+    step: 2,
+  },
+  {
+    topic: "강아지의 무게",
+    unit: "kg",
+    // 중형견 기준 — 1개월 2~4kg, 5개월에 20kg 안팎. 갓난 강아지가 9kg 이던 자리다.
+    labels: timeLabels([1, 2, 3, 4, 5], "개월"),
+    base: [2, 4],
+    step: 1,
+    rising: true,
+  },
+  {
+    topic: "하루 동안 내린 비의 양",
+    unit: "mm",
+    labels: timeLabels([6, 7, 8, 9, 10], "일"),
+    base: [8, 12],
+    step: 2,
+  },
 ];
 
-/** 이웃한 값의 차가 **모두 다르게** 만든다 — 「가장 많이 변한 때」의 답이 하나여야 한다. */
-function lineValues(rng: Rng): number[] {
+/**
+ * 시험이 **「적어 둔 소재가 전부 실제로 나오는가」**를 손 목록 없이 세도록 내보낸다.
+ * 손으로 나열한 목록은 샌다 — 세는 쪽과 만드는 쪽이 **같은 배열**을 봐야 한다.
+ */
+export const G4_BAR_THEMES = BAR_THEMES;
+/** 규모↔값 짝과 「해가 있는 총원」을 시험이 직접 세도록 내보낸다. */
+export const G4_BAR_SCALES = BAR_SCALES;
+export const G4_BAR_SPLITS = barSplits;
+export const G4_LINE_THEMES = LINE_THEMES;
+
+/**
+ * 나눠 갖기를 시험이 **일부러 터뜨려 볼 수 있게** 내보낸다.
+ * 「소재가 모자라면 던진다」는 가드는 터뜨려 보지 않으면 장식인지 알 수 없다.
+ */
+export const G4_THEME_SHARE = themeShare;
+
+/**
+ * 이웃한 값의 차가 **모두 다르게** 만든다 — 「가장 많이 변한 때」의 답이 하나여야 한다.
+ *
+ * 걸음은 서로 다른 넷(1~6)을 뽑아 **`step` 을 곱한다.** `step` 이 상수라 차도 서로 다름이
+ * 그대로 보존되고, 모든 값이 `step` 의 배수라 지면에 읽히는 수만 나온다.
+ * (자동으로 지켜지더라도 시험은 따로 둔다 — `step` 이 상수가 아니게 되면 조용히 깨진다.)
+ */
+function lineValues(rng: Rng, theme: LineTheme): number[] {
   const pool = [1, 2, 3, 4, 5, 6];
   const rest = [...pool];
   const steps: number[] = [];
   for (let i = 0; i < 4; i += 1) {
     steps.push(rest.splice(intBetween(rng, 0, rest.length - 1), 1)[0]!);
   }
-  const base = intBetween(rng, 9, 14);
-  const signs = [1, 1, intBetween(rng, 0, 1) === 0 ? -1 : 1, 1];
-  let vals = [base];
-  for (let i = 0; i < 4; i += 1) vals.push(vals[i]! + steps[i]! * signs[i]!);
-  if (new Set(vals).size !== vals.length) {
-    vals = [base];
-    for (let i = 0; i < 4; i += 1) vals.push(vals[i]! + steps[i]!);
+  const first = intBetween(rng, theme.base[0], theme.base[1]) * theme.step;
+  // 자라는 것(키·무게)은 줄어들 수 없다. 기온·관람객 수는 오르내려도 된다.
+  const dip = !theme.rising && intBetween(rng, 0, 1) === 0;
+  const signs = [1, 1, dip ? -1 : 1, 1];
+  const walk = (ss: number[]) => {
+    const out = [first];
+    for (let i = 0; i < 4; i += 1) {
+      out.push(out[i]! + steps[i]! * ss[i]! * theme.step);
+    }
+    return out;
+  };
+  const vals = walk(signs);
+  // 값이 겹치면 「가장 높은 때」의 답이 둘이 되고, 0 이하는 세상에 없는 값이다 — 오르막으로 다시.
+  if (new Set(vals).size !== vals.length || Math.min(...vals) < theme.step) {
+    return walk([1, 1, 1, 1]);
   }
   return vals;
 }
 
 function lineGraph(unit: UnitSeed, rng: Rng): ElemProblem {
   const c = code(unit);
-  const family = LINE_FAMILIES[unit.orderIndex % LINE_FAMILIES.length]!;
-  const theme = pick(rng, family);
-  const nums = lineValues(rng);
+  const theme = pick(rng, themeShare(unit, LINE_THEMES));
+  const nums = lineValues(rng, theme);
   const values = theme.labels.map((label, i) => ({
     label: label.text,
     value: nums[i]!,
@@ -1798,6 +2055,8 @@ function lineGraph(unit: UnitSeed, rng: Rng): ElemProblem {
   const max = Math.max(...nums);
   const min = Math.min(...nums);
   const topLabel = theme.labels[nums.indexOf(max)]!;
+  /** 값이 늘어난 구간 수. 이웃한 값이 같은 경우는 없다(나눔·걸음 조건이 막는다). */
+  const rises = nums.slice(1).filter((v, i) => v > nums[i]!).length;
   const figure = fig("lineChart", {
     values,
     yMax: max + 3,
@@ -1813,7 +2072,11 @@ function lineGraph(unit: UnitSeed, rng: Rng): ElemProblem {
         unit,
         `${intro} ${label.math}의 ${josa(theme.topic, "은", "는")} 몇 ${theme.unit}인가?`,
         `${n(nums[at]!)}${theme.unit}`,
-        `${label.math}의 점이 눈금 ${n(nums[at]!)}에 있으므로 ${n(nums[at]!)}${theme.unit}입니다.`,
+        // ⚠️ 「**눈금** ${v} 에 있으므로」 라고 쓰지 않는다. 꺾은선 값은 `theme.step` 의
+        // 배수인데 **그려지는 눈금은 `_y_step` 이 따로 정하므로**(대개 더 성기다) 값이
+        // 눈금선 위에 없는 경우가 대부분이다 — 실측 6,000점 중 4,760점.
+        // 「눈금 사이를 읽는 것」이 오히려 이 학년이 배우는 것이라, 점의 값만 말한다.
+        `${label.math}의 점이 가리키는 값은 ${n(nums[at]!)}${theme.unit}입니다.`,
         figure,
       );
     }
@@ -1862,13 +2125,14 @@ function lineGraph(unit: UnitSeed, rng: Rng): ElemProblem {
 
   if (c === "2-5-3") {
     if (intBetween(rng, 0, 1) === 0) {
-      const at = intBetween(rng, 0, theme.labels.length - 1);
       return make(
         unit,
-        `${intro} 세로 눈금 한 칸이 ${n(1)}${theme.unit}인 꺾은선그래프로 그릴 때 ` +
-          `${theme.labels[at]!.math}의 점은 눈금 몇 칸 높이에 찍어야 하는가?`,
-        `${n(nums[at]!)}칸`,
-        `${theme.labels[at]!.math}의 값이 ${n(nums[at]!)}${theme.unit}이므로 눈금 ${n(nums[at]!)}칸 높이에 점을 찍습니다.`,
+        // 「눈금 몇 칸」 이었다 — 발문은 한 칸을 $1$ 이라 말하는데 그림은 `_y_step` 이 고른
+        // 걸음(대개 5)으로 그린다. **발문과 그림이 다른 말을 한다.** 위 「미뤄 둔 것 ⑶」 참고.
+        `${intro} ${theme.topic}의 값이 늘어난 구간은 모두 몇 번인가?`,
+        `${n(rises)}번`,
+        `이웃한 두 점을 차례로 견주면 값이 늘어난 구간이 ${n(rises)}번, ` +
+          `줄어든 구간이 ${n(nums.length - 1 - rises)}번입니다.`,
         figure,
       );
     }

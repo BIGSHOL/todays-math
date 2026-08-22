@@ -9,6 +9,13 @@ import { describe, expect, it } from "vitest";
 
 import { FRAC_FIG_MAX, fracFigParts, fracSpec } from "@/lib/elementary/fracFig";
 import {
+  G4_BAR_SCALES,
+  G4_BAR_SPLITS,
+  G4_BAR_THEMES,
+  G4_LINE_THEMES,
+  G4_THEME_SHARE,
+} from "@/lib/elementary/g4";
+import {
   elementaryChapters,
   elementaryUnits,
   generateElementaryProblem,
@@ -295,6 +302,392 @@ describe("[초등 엔진] 소단원 전량", () => {
         `${unit.section} 씨앗별 소재\n${[...bySeed].join("\n")}`,
       ).toBeGreaterThan(1);
     }
+  });
+
+  // 원장님 (2026-08-22): 「소재는 다양할수록 좋다」
+  //
+  // ⚠️ 위 검사는 이 결함을 **구조적으로 못 본다.** 「소단원마다 다르다 · 씨앗마다 다르다」는
+  // 살아남은 소재 몇 개만으로도 참이기 때문이다. 실제로 `FAMILIES[orderIndex % length]` 로
+  // 무리를 고르던 때 **막대 14개 중 8개, 꺾은선 8개 중 2개가 한 번도 안 나오고 있었다**
+  // (실측 소단원 3 × 씨앗 400). 위 검사는 그동안 내내 초록이었다.
+  //
+  // ⚠️ 기대 목록을 **손으로 나열하지 않는다** — 손 목록은 샌다. 생성기가 쓰는 **바로 그 배열**을
+  //    가져와 대조한다(세는 쪽과 만드는 쪽이 같은 것을 봐야 한다).
+  it("적어 둔 소재는 하나도 빠짐없이 나오고, 소단원끼리 겹치지 않는다", () => {
+    const SEEDS = Array.from({ length: 120 }, (_, i) => 20260000 + i * 7);
+
+    // ⚠️ **열쇠는 소재를 하나로 가려낼 수 있어야 한다.** 처음엔 가로축 라벨로 셌는데,
+    //    「박물관에 온 관람객 수」와 「우리 반이 읽은 책 수」가 둘 다 `1월~5월` 이라
+    //    **서로 다른 소재가 같은 것으로 보였다** — 겹치지도 않았는데 겹쳤다고 빨개졌다.
+    //    소재의 신원은 «주제»다. 꺾은선은 발문의 주제로, 막대는 라벨 묶음으로 가른다
+    //    (막대는 주제가 겹쳐도 라벨이 다르고, 발문에 주제가 그대로 안 나온다).
+    const sweep = (
+      chapter: string,
+      expected: Set<string>,
+      keyOf: (content: string, labels: string[]) => string | undefined,
+    ) => {
+      const units = UNITS.filter(
+        (u) => u.grade === "초4" && u.chapter.includes(chapter),
+      );
+      expect(units.length, `${chapter} 소단원을 못 찾았다`).toBeGreaterThan(0);
+      // 소재를 하나도 안 적었으면 「전부 나왔다」가 공허하게 참이 된다.
+      expect(expected.size, `${chapter} 소재 목록이 비었다`).toBeGreaterThan(5);
+
+      const seenBy = new Map<string, Set<string>>();
+      for (const unit of units) {
+        const mine = new Set<string>();
+        for (const seed of SEEDS) {
+          const item = generateElementaryProblem(unit, seed);
+          const spec = item.figureSpec as {
+            values?: { label: string }[];
+          } | null;
+          if (!spec?.values) continue;
+          const key = keyOf(
+            item.content,
+            spec.values.map((v) => v.label),
+          );
+          expect(key, `소재를 가려내지 못했다: ${item.content}`).toBeTruthy();
+          mine.add(key!);
+        }
+        seenBy.set(unit.section, mine);
+      }
+
+      // ① 적어 둔 소재가 전부 나온다 — 죽은 소재가 하나도 없다
+      const seen = new Set([...seenBy.values()].flatMap((s) => [...s]));
+      const dead = [...expected].filter((row) => !seen.has(row));
+      expect(
+        dead,
+        `${chapter}: 한 번도 안 나오는 소재\n${dead.join("\n")}`,
+      ).toEqual([]);
+
+      // ② 소단원끼리 소재가 겹치지 않는다 — 시험지에 같은 것이 나란히 안 나간다
+      const rows = [...seenBy.entries()];
+      for (let i = 0; i < rows.length; i += 1) {
+        for (let j = i + 1; j < rows.length; j += 1) {
+          const both = [...rows[i]![1]].filter((r) => rows[j]![1].has(r));
+          expect(
+            both,
+            `${rows[i]![0]} 와 ${rows[j]![0]} 가 소재를 공유한다\n${both.join("\n")}`,
+          ).toEqual([]);
+        }
+      }
+    };
+
+    sweep(
+      "막대그래프",
+      new Set(G4_BAR_THEMES.map((t) => t.labels.join(","))),
+      (_content, labels) => labels.join(","),
+    );
+    sweep(
+      "꺾은선그래프",
+      new Set(G4_LINE_THEMES.map((t) => t.topic)),
+      (content) =>
+        // 긴 주제가 짧은 주제를 품는 일이 없게 **긴 것부터** 맞춰 본다.
+        [...G4_LINE_THEMES]
+          .map((t) => t.topic)
+          .sort((a, b) => b.length - a.length)
+          .find((topic) => content.includes(topic)),
+    );
+  });
+
+  // 막대 소재 열넷은 **전부 「좋아하는 것을 고른 학생 수(명)」** 라 값 범위를 한 벌로 함께 쓴다.
+  // 꺾은선은 소재마다 단위가 달라(kg·℃·cm·mm) 소재별로 갈랐지만, 여기서 똑같이 갈랐다면
+  // **안 갈라도 되는 축을 가르는** 것이다(손 표가 하나 늘고, 그 표가 낡는다).
+  //
+  // 그래서 「언제 갈라야 하는가」를 이 검사가 알려 준다 — 단위가 「명」이 아닌 소재가 들어오면
+  // 빨개진다. **그때가 나눌 때다. 지금이 아니라.**
+  it("막대그래프 소재는 전부 학생 수다 — 아니면 값 범위를 갈라야 한다", () => {
+    const notPeople = G4_BAR_THEMES.filter((t) => t.unit !== "명");
+    expect(
+      notPeople.map((t) => `${t.item}(${t.unit})`),
+      "단위가 「명」이 아닌 소재가 생겼다 — 값 범위를 한 벌로 쓸 수 없다. 규모/띠를 나누십시오",
+    ).toEqual([]);
+    expect(G4_BAR_THEMES.length, "소재가 비었다").toBeGreaterThan(5);
+    // 이 검사가 실제로 무엇을 보는지 — 단위가 다른 소재를 대면 걸려야 한다.
+    const poison = [
+      ...G4_BAR_THEMES,
+      { item: "학용품", unit: "원", labels: ["a", "b", "c", "d"] },
+    ];
+    expect(
+      poison.filter((t) => t.unit !== "명"),
+      "단위가 다른 소재를 못 잡는다",
+    ).not.toEqual([]);
+  });
+
+  // ⚠️ 「우리 반 학생 40명」은 「1개월에 9kg」과 **같은 부류**다 — 값 하나하나가 그럴듯해도
+  //    **이름이 그 값에서 참이 아니다.** 그래서 합계를 상한으로 «막지» 않고, 총원을 먼저 뽑아
+  //    나눠서 **구성으로 참이 되게** 한다. 이 검사는 그 짝이 어긋나면 빨개진다.
+  it("막대그래프의 규모 이름과 값이 짝이 맞는다", () => {
+    const bars = UNITS.filter(
+      (u) => u.grade === "초4" && u.chapter.includes("막대"),
+    );
+    expect(bars.length).toBeGreaterThan(0);
+    let checked = 0;
+    const bad: string[] = [];
+    for (const unit of bars) {
+      for (let i = 0; i < 120; i += 1) {
+        const item = generateElementaryProblem(unit, 20260000 + i * 7);
+        const spec = item.figureSpec as { values: { value: number }[] };
+        const scale = G4_BAR_SCALES.find((sc) => item.content.includes(sc.who));
+        expect(scale, `규모 이름을 못 찾았다: ${item.content}`).toBeTruthy();
+        const values = spec.values.map((v) => v.value);
+        const sum = values.reduce((a, b) => a + b, 0);
+        const top = Math.max(...values);
+        checked += 1;
+        if (!scale!.totals.includes(sum)) {
+          bad.push(
+            `${scale!.who}: 합계 ${sum} — 그 규모의 총원이 아니다 [${scale!.totals.join(",")}]`,
+          );
+        }
+        if (top > scale!.maxTop || top < scale!.minTop) {
+          bad.push(
+            `${scale!.who}: 최댓값 ${top} — ${scale!.minTop}~${scale!.maxTop} 이어야 한다`,
+          );
+        }
+        if (top > sum / 2)
+          bad.push(
+            `${scale!.who}: 한 항목이 총원의 절반을 넘는다 (${top}/${sum})`,
+          );
+        for (const v of values) {
+          if (v % scale!.step !== 0) {
+            bad.push(
+              `${scale!.who}: ${v} 는 눈금 ${scale!.step} 의 배수가 아니다 — 「몇 칸」이 자연수가 아니게 된다`,
+            );
+          }
+        }
+        if (new Set(values).size !== values.length) {
+          bad.push(
+            `${scale!.who}: 값이 겹친다 [${values.join(",")}] — 「가장 많은 것」의 답이 둘이 된다`,
+          );
+        }
+      }
+    }
+    const uniq = [...new Set(bad)];
+    expect(uniq, uniq.join("\n")).toEqual([]);
+    expect(checked, "막대 표본을 하나도 못 모았다").toBeGreaterThan(200);
+  });
+
+  // ⚠️ 조건 넷(총원 고정 · 서로 다름 · 눈금의 배수 · 최댓값이 절반 이하)이 겹치면
+  //    **못 푸는 총원**이 생긴다. 그러면 생성기가 실행 중에 던진다 — 원장님 화면에서.
+  //    그러니 총원 후보 전부에 해가 있는지 **커밋 전에** 여기서 센다.
+  it("막대그래프 총원 후보는 전부 나눌 수 있다", () => {
+    const bad: string[] = [];
+    for (const scale of G4_BAR_SCALES) {
+      for (const total of scale.totals) {
+        const n = G4_BAR_SPLITS(total, scale).length;
+        if (n === 0) bad.push(`${scale.who} 총원 ${total}: 나눌 방법이 없다`);
+      }
+    }
+    expect(bad, bad.join("\n")).toEqual([]);
+    // 「하나도 못 셌다」로 조용히 통과하지 않게.
+    expect(G4_BAR_SCALES.length, "규모가 비었다").toBeGreaterThan(1);
+    // 그리고 못 푸는 총원을 대면 실제로 0 이 나오는지 — 이 검사가 셀 수 있는 형태인지 본다.
+    const impossible = G4_BAR_SPLITS(3, G4_BAR_SCALES[0]!);
+    expect(impossible, "못 푸는 총원인데 해가 있다고 한다").toEqual([]);
+  });
+
+  /** 꺾은선 소단원의 값들을 훑는다 — 값은 발문이 아니라 **그림 스펙**에 있다. */
+  const sweepLine = (
+    visit: (topic: string, values: number[], content: string) => void,
+  ) => {
+    let seen = 0;
+    for (const unit of UNITS.filter(
+      (u) => u.grade === "초4" && u.chapter.includes("꺾은선"),
+    )) {
+      for (let i = 0; i < 120; i += 1) {
+        const item = generateElementaryProblem(unit, 20260000 + i * 7);
+        const spec = item.figureSpec as { values?: { value: number }[] } | null;
+        if (!spec?.values) continue;
+        const topic = G4_LINE_THEMES.map((t) => t.topic).find((t) =>
+          item.content.includes(t),
+        );
+        expect(topic, `소재를 못 찾았다: ${item.content}`).toBeTruthy();
+        visit(
+          topic!,
+          spec.values.map((v) => v.value),
+          item.content,
+        );
+        seen += 1;
+      }
+    }
+    // 0 은 「깨끗」과 「못 셈」을 구분해 주지 않는다.
+    expect(seen, "꺾은선 표본을 하나도 못 모았다").toBeGreaterThan(200);
+  };
+
+  // 원장님 (2026-08-22): 「소재는 알아서 다양하게 · 4학년 꺾은선 수준에 맞게」 「큰 눈금 써도 된다」
+  //
+  // 「강아지의 무게가 **1개월에 9~14kg**」이 표본의 100% 였다(실측 2026-08-22).
+  //
+  // ⚠️ **평평한 띠로는 이걸 못 잡는다.** 9kg 은 강아지 무게로 «있을 수 있는» 값이다 — 틀린 것은
+  //    크기가 아니라 **자리와 값의 어긋남**(1개월인데 9kg)이다. 그래서 `first` 를 따로 둔다.
+  //    박물관(월 9~32명)은 반대로 `all` 로 걸린다 — **두 결함이 서로 다른 축에서 잡힌다.**
+  //    한 축만 만들었으면 하나는 샜을 것이다.
+  // ⚠️ 기대 범위를 `G4_LINE_THEMES` 에서 읽어 오면 안 된다 — 제품 범위를 넓히면 기대도 같이
+  //    넓어져 **영원히 초록**이다(2026-08-18). 손으로 못 박고, 「흔한 값」이 아니라
+  //    **「있을 수 없는 값」**으로 긋는다(좁게 그으면 거짓 경보가 나고, 거짓 경보는 가드를 끈다).
+  it("꺾은선그래프 값은 그 소재에 **세상에서 있을 수 있는** 값이다", () => {
+    const BANDS: {
+      topic: string;
+      unit: string;
+      first?: [number, number];
+      all: [number, number];
+    }[] = [
+      { topic: "교실의 기온", unit: "℃", all: [-20, 40] },
+      { topic: "운동장의 기온", unit: "℃", all: [-20, 40] },
+      { topic: "강낭콩의 키", unit: "cm", first: [1, 20], all: [1, 80] },
+      { topic: "고구마 싹의 키", unit: "cm", first: [1, 20], all: [1, 80] },
+      { topic: "도서관에 온 학생 수", unit: "명", all: [1, 2000] },
+      { topic: "박물관에 온 관람객 수", unit: "명", all: [50, 100000] },
+      { topic: "우리 반이 읽은 책 수", unit: "권", all: [1, 500] },
+      { topic: "강아지의 무게", unit: "kg", first: [1, 6], all: [1, 60] },
+      { topic: "하루 동안 내린 비의 양", unit: "mm", all: [0, 300] },
+    ];
+    const check = (topic: string, values: number[]): string[] => {
+      const band = BANDS.find((b) => b.topic === topic);
+      if (!band) return [`띠를 안 정한 소재: ${topic}`];
+      const bad: string[] = [];
+      const head = values[0]!;
+      if (band.first && (head < band.first[0] || head > band.first[1])) {
+        bad.push(
+          `${topic}: 첫값 ${head}${band.unit} — ${band.first[0]}~${band.first[1]} 이어야 한다`,
+        );
+      }
+      for (const v of values) {
+        if (v < band.all[0] || v > band.all[1]) {
+          bad.push(
+            `${topic}: ${v}${band.unit} 은 세상에 없다 (${band.all[0]}~${band.all[1]})`,
+          );
+        }
+      }
+      return bad;
+    };
+
+    // ── 눈금: 틀린 것은 걸리고(양성) 멀쩡한 것은 통과해야(음성) 한다
+    expect(
+      check("강아지의 무게", [12, 14, 17, 20, 24]),
+      "1개월 12kg 을 못 잡는다",
+    ).not.toEqual([]);
+    expect(
+      check("강낭콩의 키", [90, 95, 100, 110, 120]),
+      "강낭콩 90cm 를 못 잡는다",
+    ).not.toEqual([]);
+    expect(
+      check("강낭콩의 키", [6, 12, 20, 30, 44]),
+      "강낭콩 12cm 은 멀쩡하다",
+    ).toEqual([]);
+    expect(
+      check("교실의 기온", [9, 12, 18, 25, 31]),
+      "기온 9℃ 는 멀쩡하다",
+    ).toEqual([]);
+    expect(
+      check("강아지의 무게", [3, 6, 10, 15, 20]),
+      "정상 강아지가 걸린다",
+    ).toEqual([]);
+
+    // ── 전량
+    const bad: string[] = [];
+    sweepLine((topic, values) => bad.push(...check(topic, values)));
+    const uniq = [...new Set(bad)];
+    expect(uniq, `세상에 없는 값\n${uniq.join("\n")}`).toEqual([]);
+  });
+
+  // ⚠️ `step` 이 상수라 「차가 모두 다르다」는 **자동으로** 지켜진다. 그래도 시험을 뺄 수 없다 —
+  //    `step` 이 상수가 아니게 되는 순간 조용히 깨지고, 그러면 「가장 많이 변한 때」의 답이 둘이 된다.
+  it("꺾은선 값은 자연수이고, 이웃한 차가 모두 다르고, 자라는 소재는 줄지 않는다", () => {
+    // 손으로 못 박는다 — `G4_LINE_THEMES.rising` 을 읽으면 제품이 곧 기대가 되어 영원히 초록이다.
+    const RISING = new Set(["강낭콩의 키", "고구마 싹의 키", "강아지의 무게"]);
+    // 큰 눈금을 쓰는 소재는 값이 **읽히는 수**여야 한다 (`237` 이 아니라 `250`).
+    const READABLE: Record<string, number> = {
+      "도서관에 온 학생 수": 2,
+      "우리 반이 읽은 책 수": 2,
+      "하루 동안 내린 비의 양": 2,
+    };
+    const bad: string[] = [];
+    sweepLine((topic, values) => {
+      for (const v of values) {
+        if (!Number.isInteger(v) || v < 1)
+          bad.push(`${topic}: ${v} 는 자연수가 아니다`);
+        const unit = READABLE[topic];
+        if (unit && v % unit !== 0)
+          bad.push(`${topic}: ${v} 는 ${unit} 의 배수가 아니다`);
+      }
+      const diffs = values.slice(1).map((v, i) => Math.abs(v - values[i]!));
+      if (new Set(diffs).size !== diffs.length) {
+        bad.push(
+          `${topic}: 이웃한 차가 겹친다 [${diffs.join(",")}] — 「가장 많이 변한 때」의 답이 둘이 된다`,
+        );
+      }
+      if (RISING.has(topic)) {
+        for (let i = 1; i < values.length; i += 1) {
+          if (values[i]! <= values[i - 1]!) {
+            bad.push(`${topic}: 자라는 것이 줄었다 [${values.join(",")}]`);
+          }
+        }
+      }
+    });
+    const uniq = [...new Set(bad)];
+    expect(uniq, uniq.join("\n")).toEqual([]);
+  });
+
+  // ⚠️ **값이 맞는 것과 지면이 읽히는 것은 다르다.** 「박물관 월 관람객 400~1600명」은
+  //    세상에 있을 수 있는 값이고 위 검사들을 전부 통과했다. 그런데 실제로 그려 보니
+  //    **세로축 눈금이 231줄**이라 숫자가 뭉개진 그림이 나왔다 — PNG 로 눈으로 보고서야 알았다.
+  //
+  //    원인은 `scripts/figure/elem_advanced.py` 의 `_y_step` 이다. `y_max` 가 12 를 넘으면
+  //    눈금 간격을 **5 로 고정**해서, 최댓값이 커질수록 눈금 줄이 그대로 늘어난다.
+  //    (`y_max/5` 줄. 그래서 최댓값 150 짜리 도서관 그래프도 23줄로 못 읽었다.)
+  //
+  //    원장님이 「큰 눈금 써도 된다」고 하셨지만 **엔진이 아직 못 그린다.** `_y_step` 이
+  //    눈금을 스스로 고르게 되면 이 한계를 올리고 박물관 같은 소재를 되살릴 수 있다.
+  it("꺾은선 값은 지면이 **읽히게 그릴 수 있는** 눈금 안이다", () => {
+    // **한계를 올렸다** (2026-08-22). 예전 60 은 「`_y_step` 이 5에서 멈춰 눈금이 y_max/5 줄」
+    // 이던 때의 값이다. 그림 세션이 `_axis_top` 으로 걸음을 사다리 삼게 고쳐, 실측으로
+    // `yMax 1153` 이 **7줄**(`0·200·…·1200`)로 나온다(브루트포스 5만 조합 위반 0).
+    // ⚠️ **검사 자체는 남긴다** — 숫자만 올린다. 없애면 다음 사람이 또 231줄을 만든다.
+    const MAX_READABLE = 2000;
+    const bad: string[] = [];
+    sweepLine((topic, values) => {
+      const top = Math.max(...values);
+      if (top > MAX_READABLE) {
+        bad.push(
+          `${topic}: 최댓값 ${top} — 세로축 눈금이 ${Math.ceil(top / 5)}줄이 되어 못 읽는다 ` +
+            `(${MAX_READABLE} 이하여야 한다)`,
+        );
+      }
+    });
+    const uniq = [...new Set(bad)];
+    expect(uniq, uniq.join("\n")).toEqual([]);
+  });
+
+  it("소재 나눠 갖기는 전 학년에서 안 터지고, 소재가 모자라면 터진다", () => {
+    // ⚠️ `themeShare` 의 `throw` 가 **실행 중에** 터지면 그 순간 문항이 안 나온다 — 원장님 화면에서.
+    //    그러니 소단원이 늘거나 소재를 줄일 때 **커밋 전에** 여기서 빨개져야 한다.
+    const failed: string[] = [];
+    for (const unit of UNITS) {
+      for (const seed of [7, 20260821, 99991]) {
+        try {
+          generateElementaryProblem(unit, seed);
+        } catch (err) {
+          failed.push(
+            `${unit.grade} ${unit.section} (씨앗 ${seed}): ${String(err)}`,
+          );
+        }
+      }
+    }
+    expect(failed, failed.join("\n")).toEqual([]);
+
+    // 그리고 그 `throw` 자체를 **일부러 터뜨려 본다.** 안 터지면 그 가드는 장식이다.
+    const anyUnit = UNITS.find(
+      (u) => u.grade === "초4" && u.chapter.includes("막대그래프"),
+    )!;
+    expect(
+      () => G4_THEME_SHARE(anyUnit, ["하나뿐"]),
+      "소재가 하나인데 안 터진다",
+    ).toThrow(/소재가 모자랍니다/);
+    // 넉넉하면 안 터진다 (음성 대조군)
+    expect(() =>
+      G4_THEME_SHARE(anyUnit, [1, 2, 3, 4, 5, 6, 7, 8, 9]),
+    ).not.toThrow();
   });
 
   it("띠그래프·원그래프는 비율 구성이 여러 가지다", () => {
@@ -732,6 +1125,75 @@ describe("[초등 엔진] 소단원 전량", () => {
 });
 
 describe.skipIf(!hasEngine)("[초등 엔진] 그림 렌더", () => {
+  // ⚠️ `BarScale.step` 은 우리가 적은 **선언**이고, 실제로 그려지는 걸음은 파이썬
+  //    `_y_step(y_max)` 가 정한다. 두 값이 갈라지면 발문(「세로 눈금 한 칸은 $5$명」)이
+  //    그림과 다른 말을 한다 — 그런데 **어느 숫자 가드도 그걸 못 본다.**
+  //
+  //    문턱(`≤8→1`·`≤12→2`…)을 여기 옮겨 적으면 두 곳이 같은 것을 정하게 되므로,
+  //    참을 **그려진 SVG 의 눈금 간격**에서 가져온다. 그러면 파이썬이 규칙을 바꿔도
+  //    이 검사는 그대로 서 있다.
+  //
+  //    실측 여유가 크지 않다: 걸음 5 는 `yMax ≤ 44` 까지다(`maxTop ≤ 43`). 지금 40.
+  it("규모가 선언한 눈금이 실제로 그려진다", async () => {
+    const bars = UNITS.filter(
+      (u) => u.grade === "초4" && u.chapter.includes("막대"),
+    );
+    // ⚠️ **가장 큰 최댓값을 골라 그린다.** 걸음은 축 맨 위에서 갈리므로 경계는 «위»에 있다.
+    //    처음엔 규모마다 «맨 처음 만난» 문항 하나를 그렸는데, `maxTop` 을 48 로 올리는
+    //    변이에도 **초록이었다** — 하필 그 표본의 최댓값이 낮아 경계를 안 밟았다.
+    //    픽스처가 경계를 안 가르면 가드가 아니라 장식이다.
+    const worst = new Map<string, { spec: unknown; top: number }>();
+    for (const unit of bars) {
+      for (let i = 0; i < 120; i += 1) {
+        const item = generateElementaryProblem(unit, 20260000 + i * 7);
+        const scale = G4_BAR_SCALES.find((sc) => item.content.includes(sc.who));
+        if (!scale) continue;
+        const vals = (item.figureSpec as { values: { value: number }[] })
+          .values;
+        const top = Math.max(...vals.map((v) => v.value));
+        if ((worst.get(scale.who)?.top ?? -1) < top) {
+          worst.set(scale.who, { spec: item.figureSpec, top });
+        }
+      }
+    }
+
+    const checked = new Set<string>();
+    const bad: string[] = [];
+    for (const scale of G4_BAR_SCALES) {
+      const hit = worst.get(scale.who);
+      expect(hit, `${scale.who} 표본을 못 모았다`).toBeTruthy();
+      if (hit) {
+        checked.add(scale.who);
+        const drawn = await renderFigureSpec(
+          hit.spec as Record<string, unknown>,
+        );
+        expect(drawn.ok, drawn.ok ? "" : drawn.error).toBe(true);
+        if (!drawn.ok) continue;
+        // 세로축 눈금 숫자 — `text-anchor="end"` 로 축 왼쪽에 찍힌다.
+        const ticks = [
+          ...drawn.svg.matchAll(
+            /<text[^>]*text-anchor="end"[^>]*>(\d+)<\/text>/g,
+          ),
+        ]
+          .map((m) => Number(m[1]))
+          .sort((a, b) => a - b);
+        expect(
+          ticks.length,
+          `${scale.who}: 눈금 숫자를 못 읽었다`,
+        ).toBeGreaterThan(2);
+        const gaps = new Set(ticks.slice(1).map((v, k) => v - ticks[k]!));
+        if (gaps.size !== 1 || !gaps.has(scale.step)) {
+          bad.push(
+            `${scale.who}: 선언한 눈금 ${scale.step} · 실제로 그려진 간격 [${[...gaps].join(",")}] ` +
+              `(눈금 ${ticks.join(",")}) — 발문이 그림과 다른 말을 한다`,
+          );
+        }
+      }
+    }
+    expect(checked.size, "규모를 하나도 못 밟았다").toBe(G4_BAR_SCALES.length);
+    expect(bad, bad.join("\n")).toEqual([]);
+  });
+
   it("크기가 같은 분수 그림이 실제로 그려진다", async () => {
     const unit = UNITS.find((u) => u.section.includes("크기가 같은 분수"))!;
     const item = generateElementaryProblem(unit, 20260821);
