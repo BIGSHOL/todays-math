@@ -2134,5 +2134,17 @@
   "code": "HPS0206-WTPT",
   "dbAnswer": "②",
   "aiAnswer": "⑤"
+ },
+ {
+  "id": "d453a108-2c13-48e2-9044-3246e0b6c0c8",
+  "code": "HPS0207-JFMM",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
+ },
+ {
+  "id": "05453984-6c29-444f-a423-265802aa1875",
+  "code": "HPS0302-PLYW",
+  "dbAnswer": "④",
+  "aiAnswer": "③"
  }
 ]
