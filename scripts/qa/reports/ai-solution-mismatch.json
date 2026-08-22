@@ -1804,5 +1804,23 @@
   "code": "HM10101-7PEG",
   "dbAnswer": "②",
   "aiAnswer": "①"
+ },
+ {
+  "id": "73d81d2d-0e2c-43fd-8fb2-c41a92033cee",
+  "code": "HM10101-XFBA",
+  "dbAnswer": "③",
+  "aiAnswer": "④"
+ },
+ {
+  "id": "a26e54eb-529c-46ef-9910-b9a5bd931b43",
+  "code": "HM10105-8DBQ",
+  "dbAnswer": "②",
+  "aiAnswer": "⑤"
+ },
+ {
+  "id": "c9e9eb98-4c31-4091-940b-d2e1bf9ef65b",
+  "code": "HM10105-9BD7",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
  }
 ]
