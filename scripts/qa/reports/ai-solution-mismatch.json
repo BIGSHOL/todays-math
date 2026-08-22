@@ -1648,5 +1648,23 @@
   "code": "HC20313-5MCM",
   "dbAnswer": "④",
   "aiAnswer": "②"
+ },
+ {
+  "id": "26c736a5-b9cf-4079-aad0-2305cf1a0f26",
+  "code": "HC20313-G6QT",
+  "dbAnswer": "①",
+  "aiAnswer": "③"
+ },
+ {
+  "id": "e0e3b490-dc9a-4881-a95a-468808a4387c",
+  "code": "HC20313-MTG6",
+  "dbAnswer": "④",
+  "aiAnswer": "①"
+ },
+ {
+  "id": "136f0416-4a8e-4397-98e6-3ad6cc946510",
+  "code": "HC20313-NL9Y",
+  "dbAnswer": "④",
+  "aiAnswer": "②"
  }
 ]
